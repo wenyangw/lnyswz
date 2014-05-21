@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TSpdl" table="t_spdl" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="1" />
+            <generator class="assigned" />
+        </id>
+        <property name="spdlmc" type="string">
+            <column name="spdlmc" length="50" not-null="true" />
+        </property>
+        <set name="TDepartments" table="t_bm_spdl" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="spdlId" length="1" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TDepartment">
+                <column name="depId" length="2" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="TSplbs" table="t_splb" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="spdlId" length="1" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TSplb" />
+        </set>
+    </class>
+</hibernate-mapping>

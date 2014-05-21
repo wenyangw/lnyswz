@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TYfzz" table="t_yfzz" schema="dbo" catalog="lnyswz1">
+	    <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+	    <property name="bmbh" type="string">
+	        <column name="bmbh" length="2"  not-null="true" />
+	    </property>
+	    <property name="bmmc" type="string">
+	        <column name="bmmc" length="100"  not-null="true" />
+	    </property>
+	    <property name="khbh" type="string">
+	        <column name="khbh" length="8"  not-null="true" />
+	    </property>
+	    <property name="khmc" type="string">
+	        <column name="khmc" length="100"  not-null="true" />
+	    </property>
+	    <property name="yufje" type="big_decimal">
+	        <column name="yufje" precision="18"  not-null="true" />
+	    </property>
+	    <property name="yingfje" type="big_decimal">
+	        <column name="yingfje" precision="18"  not-null="true" />
+	    </property>
+    </class>
+</hibernate-mapping>

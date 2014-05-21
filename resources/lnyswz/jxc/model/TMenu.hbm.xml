@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TMenu" table="t_menu" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="36" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TCatalog" class="lnyswz.jxc.model.TCatalog" fetch="select">
+            <column name="cid" length="36" />
+        </many-to-one>
+        <many-to-one name="TMenu" class="lnyswz.jxc.model.TMenu" fetch="select">
+            <column name="pid" length="36" />
+        </many-to-one>
+        <property name="text" type="string">
+            <column name="text" length="100" not-null="true" unique="true" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" />
+        </property>
+        <property name="orderNum" type="int">
+            <column name="orderNum" not-null="true" />
+        </property>
+        <property name="iconCls" type="string">
+            <column name="iconCls" length="50" />
+        </property>
+        <property name="lx" type="string">
+            <column name="lx" length="2" />
+        </property>
+        <property name="query" type="string">
+            <column name="query" length="50" />
+        </property>
+        <set name="TButtons" table="t_button" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="menuId" length="36" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TButton" />
+        </set>
+        <set name="TRoles" table="t_role_menu" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="menuId" length="36" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TRole">
+                <column name="roleId" length="36" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="TMenus" table="t_menu" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pid" length="36" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TMenu" />
+        </set>
+    </class>
+</hibernate-mapping>

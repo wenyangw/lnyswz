@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<div align="center">
+	<form id="admin_dictEdit_form" method="post">
+	<table>
+		<tr>
+			<th><label for="ename">名称</label></th>
+			<td><input name="ename" class="easyui-validatebox"
+				data-options="required:true,missingMessage:'请填写名称'"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="cname">中文名称</label></th>
+			<td><input name="cname" class="easyui-validatebox"
+				data-options="required:true,missingMessage:'请填写中文名称'"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="tname">所属表名</label></th>
+			<td><input name="tname" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="orderNum">排序</label></th>
+			<td><input name="orderNum" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="genre">类别</label></th>
+			<td><input name="genre" style="width: 160px;"></td>
+		</tr>
+		<tr>
+			<th><label for="show">提示信息</label></th>
+			<td><input name="show" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="specialValues">特殊值</label></th>
+			<td><input name="specialValues" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="tree">分类</label></th>
+			<td><input type="checkbox" value="1"  name="tree"></td>
+		</tr>
+		<tr>
+			<th><label for="frozen">是否固定</label></th>
+			<td><input type="checkbox" value="1"  name="frozen"></td>
+		</tr>
+		<tr>
+			<th><label for="display">是否查询</label></th>
+			<td><input type="checkbox" value="1"  name="display"></td>
+		</tr>
+		<tr>
+			<th><label for=specials>特殊类型</label></th>
+			<td><input name="specials" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="orderBy">排序条件</label></th>
+			<td><input name="orderBy" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<input name="id" type="hidden">
+		<input name="depId" type="hidden">
+		<input name="menuId" type="hidden">
+	</table>
+		
+	</form>
+</div>

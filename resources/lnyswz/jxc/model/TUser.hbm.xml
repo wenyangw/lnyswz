@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TUser" table="t_user" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TDepartment" class="lnyswz.jxc.model.TDepartment" fetch="select">
+            <column name="depId" length="2" not-null="true" />
+        </many-to-one>
+        <property name="userName" type="string">
+            <column name="userName" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" not-null="true" />
+        </property>
+        <property name="realName" type="string">
+            <column name="realName" />
+        </property>
+        <property name="sex" type="string">
+            <column name="sex" />
+        </property>
+        <property name="orderNum" type="java.lang.Integer">
+            <column name="orderNum" />
+        </property>
+        <property name="isYwy" type="java.lang.Character">
+            <column name="isYwy" length="1" />
+        </property>
+        <property name="isBgy" type="java.lang.Character">
+            <column name="isBgy" length="1" />
+        </property>
+        <property name="postId" type="string">
+            <column name="postId" length="2" />
+        </property>
+        <property name="createTime" type="timestamp">
+            <column name="createTime" length="23" />
+        </property>
+        <property name="modifyTime" type="timestamp">
+            <column name="modifyTime" length="23" />
+        </property>
+        <property name="lastTime" type="timestamp">
+            <column name="lastTime" length="23" />
+        </property>
+        <set name="TRoles" table="t_user_role" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="userId" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TRole">
+                <column name="roleId" length="36" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

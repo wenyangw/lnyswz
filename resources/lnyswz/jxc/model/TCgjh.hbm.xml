@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TCgjh" table="t_cgjh" schema="dbo" catalog="lnyswz1">
+        <id name="cgjhlsh" type="string">
+            <column name="cgjhlsh" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="createTime" length="23" not-null="true" />
+        </property>
+        <property name="createId" type="int">
+            <column name="createId" not-null="true" />
+        </property>
+        <property name="createName" type="string">
+            <column name="createName" length="20" not-null="true" />
+        </property>
+        <property name="bmbh" type="string">
+            <column name="bmbh" length="2" not-null="true" />
+        </property>
+        <property name="bmmc" type="string">
+            <column name="bmmc" length="20" not-null="true" />
+        </property>
+        <property name="ywyId" type="java.lang.Integer">
+            <column name="ywyId" />
+        </property>
+        <property name="ywymc" type="string">
+            <column name="ywymc" length="20" />
+        </property>
+        <property name="gysbh" type="string">
+            <column name="gysbh" length="8" not-null="true" />
+        </property>
+        <property name="gysmc" type="string">
+            <column name="gysmc" length="20" not-null="true" />
+        </property>
+        <property name="dhfs" type="string">
+            <column name="dhfs" length="50" />
+        </property>
+        <property name="shdz" type="string">
+            <column name="shdz" length="50" />
+        </property>
+        <property name="dhsj" type="timestamp">
+            <column name="dhsj" length="23" />
+        </property>
+        <property name="xqsj" type="java.lang.Integer">
+            <column name="xqsj" />
+        </property>
+        <property name="jsfsId" type="string">
+            <column name="jsfsId" length="2" />
+        </property>
+        <property name="jsfsmc" type="string">
+            <column name="jsfsmc" length="20" />
+        </property>
+        <property name="hjje" type="big_decimal">
+            <column name="hjje" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="bz" type="string">
+            <column name="bz" length="100" />
+        </property>
+        <property name="isCancel" type="char">
+            <column name="isCancel" length="1" not-null="true" />
+        </property>
+        <property name="cancelTime" type="timestamp">
+            <column name="cancelTime" length="23" />
+        </property>
+        <property name="cancelId" type="java.lang.Integer">
+            <column name="cancelId" />
+        </property>
+        <property name="cancelName" type="string">
+            <column name="cancelName" length="20" />
+        </property>
+        <property name="isCompleted" type="char">
+            <column name="isCompleted" length="1" not-null="true" />
+        </property>
+        <property name="completeTime" type="timestamp">
+            <column name="completeTime" length="23" />
+        </property>
+        <property name="completeId" type="java.lang.Integer">
+            <column name="completeId" />
+        </property>
+        <property name="completeName" type="string">
+            <column name="completeName" length="20" />
+        </property>
+        <set name="TCgjhDets" table="t_cgjh_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cgjhlsh" length="12" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TCgjhDet" />
+        </set>
+        <set name="TCgxqs" table="t_cgxq" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cgjhlsh" length="12" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TCgxq" />
+        </set>
+        <set name="TKfrks" table="t_cgjh_kfrk" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cgjhlsh" length="12" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TKfrk">
+                <column name="kfrklsh" length="12" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

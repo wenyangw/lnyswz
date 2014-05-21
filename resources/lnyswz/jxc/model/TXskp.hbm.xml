@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TXskp" table="t_xskp" schema="dbo" catalog="lnyswz1">
+        <id name="xskplsh" type="string">
+            <column name="xskplsh" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="createTime" length="23" not-null="true" />
+        </property>
+        <property name="createId" type="int">
+            <column name="createId" not-null="true" />
+        </property>
+        <property name="createName" type="string">
+            <column name="createName" length="50" not-null="true" />
+        </property>
+        <property name="bmbh" type="string">
+            <column name="bmbh" length="2" not-null="true" />
+        </property>
+        <property name="bmmc" type="string">
+            <column name="bmmc" length="20" not-null="true" />
+        </property>
+        <property name="khbh" type="string">
+            <column name="khbh" length="8" not-null="true" />
+        </property>
+        <property name="khmc" type="string">
+            <column name="khmc" length="50" not-null="true" />
+        </property>
+        <property name="dzdh" type="string">
+            <column name="dzdh" length="100" />
+        </property>
+        <property name="khh" type="string">
+            <column name="khh" length="100" />
+        </property>
+        <property name="sh" type="string">
+            <column name="sh" length="15" />
+        </property>
+        <property name="ckId" type="string">
+            <column name="ckId" length="2" not-null="true" />
+        </property>
+        <property name="ckmc" type="string">
+            <column name="ckmc" length="20" not-null="true" />
+        </property>
+        <property name="fhId" type="string">
+            <column name="fhId" length="2" />
+        </property>
+        <property name="fhmc" type="string">
+            <column name="fhmc" length="20" />
+        </property>
+        <property name="jsfsId" type="string">
+            <column name="jsfsId" length="2" not-null="true" />
+        </property>
+        <property name="jsfsmc" type="string">
+            <column name="jsfsmc" length="20" not-null="true" />
+        </property>
+        <property name="fplxId" type="char">
+            <column name="fplxId" length="1" not-null="true" />
+        </property>
+        <property name="fplxmc" type="string">
+            <column name="fplxmc" length="20" />
+        </property>
+        <property name="bookmc" type="string">
+            <column name="bookmc" length="100" />
+        </property>
+        <property name="fyr" type="string">
+            <column name="fyr" length="20" />
+        </property>
+        <property name="ywyId" type="int">
+            <column name="ywyId" not-null="true" />
+        </property>
+        <property name="ywymc" type="string">
+            <column name="ywymc" length="20" not-null="true" />
+        </property>
+        <property name="hjje" type="big_decimal">
+            <column name="hjje" precision="18" scale="6" />
+        </property>
+        <property name="hjse" type="big_decimal">
+            <column name="hjse" precision="18" scale="6" />
+        </property>
+        <property name="bz" type="string">
+            <column name="bz" length="100" />
+        </property>
+        <property name="isCj" type="char">
+            <column name="isCj" length="1" not-null="true" />
+        </property>
+        <property name="cjId" type="java.lang.Integer">
+            <column name="cjId" />
+        </property>
+        <property name="cjName" type="string">
+            <column name="cjName" length="20" />
+        </property>
+        <property name="cjTime" type="timestamp">
+            <column name="cjTime" length="23" />
+        </property>
+        <property name="cjXskplsh" type="string">
+            <column name="cjXskplsh" length="12" />
+        </property>
+        <property name="isTh" type="char">
+            <column name="isTh" length="1" not-null="true" />
+        </property>
+        <property name="thTime" type="timestamp">
+            <column name="thTime" length="23" />
+        </property>
+        <property name="xsthlsh" type="string">
+            <column name="xsthlsh" length="12" />
+        </property>
+        <property name="isHk" type="char">
+            <column name="isHk" length="1" not-null="true" />
+        </property>
+        <property name="hkTime" type="timestamp">
+            <column name="hkTime" length="23" />
+        </property>
+        <set name="TXskpDets" table="t_xskp_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="xskplsh" length="12" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TXskpDet" />
+        </set>
+        <set name="TXsths" table="t_xsth" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="xskplsh" length="12" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TXsth" />
+        </set>
+    </class>
+</hibernate-mapping>

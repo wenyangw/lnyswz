@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TGysDet" table="t_gys_det" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="36" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TGys" class="lnyswz.jxc.model.TGys" fetch="select">
+            <column name="gysbh" length="8" not-null="true" />
+        </many-to-one>
+        <property name="depId" type="string">
+            <column name="depId" length="10" not-null="true" />
+        </property>
+        <property name="lxr" type="string">
+            <column name="lxr" length="20" />
+        </property>
+        <property name="sxzq" type="java.lang.Integer">
+            <column name="sxzq" />
+        </property>
+        <property name="sxje" type="big_decimal">
+            <column name="sxje" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TSp" table="t_sp" schema="dbo" catalog="lnyswz1">
+        <id name="spbh" type="string">
+            <column name="spbh" length="7" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TSpdw" class="lnyswz.jxc.model.TSpdw" fetch="select">
+            <column name="spdwId" length="5" not-null="true" />
+        </many-to-one>
+        <many-to-one name="zjldw" class="lnyswz.jxc.model.TJldw" fetch="select">
+            <column name="zjldwId" length="2" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cjldw" class="lnyswz.jxc.model.TJldw" fetch="select">
+            <column name="cjldwId" length="2" />
+        </many-to-one>
+        <property name="spcd" type="string">
+            <column name="spcd" length="50" not-null="true" />
+        </property>
+        <property name="sppp" type="string">
+            <column name="sppp" length="50" />
+        </property>
+        <property name="spbz" type="string">
+            <column name="spbz" length="50" />
+        </property>
+        <property name="zhxs" type="big_decimal">
+            <column name="zhxs" precision="18" scale="3" />
+        </property>
+        <property name="yxq" type="java.lang.Integer">
+            <column name="yxq" />
+        </property>
+        <set name="TSpDets" table="t_sp_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="spbh" length="7" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TSpDet" />
+        </set>
+    </class>
+</hibernate-mapping>

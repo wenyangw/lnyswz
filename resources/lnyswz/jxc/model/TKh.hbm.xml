@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TKh" table="t_kh" schema="dbo" catalog="lnyswz1">
+        <id name="khbh" type="string">
+            <column name="khbh" length="8" />
+            <generator class="assigned" />
+        </id>
+        <property name="khmc" type="string">
+            <column name="khmc" length="100" not-null="true" />
+        </property>
+        <property name="dzdh" type="string">
+            <column name="dzdh" length="200" />
+        </property>
+        <property name="fr" type="string">
+            <column name="fr" length="20" />
+        </property>
+        <property name="khh" type="string">
+            <column name="khh" length="200" />
+        </property>
+        <property name="sh" type="string">
+            <column name="sh" length="15" />
+        </property>
+        <property name="isNsr" type="char">
+            <column name="isNsr" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

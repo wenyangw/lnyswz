@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TOperalog" table="t_operalog" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="logTime" type="timestamp">
+            <column name="logTime" length="23" not-null="true" />
+        </property>
+        <property name="userId" type="int">
+            <column name="userId" not-null="true" />
+        </property>
+        <property name="bmbh" type="string">
+            <column name="bmbh" length="2" not-null="true" />
+        </property>
+        <property name="menuId" type="string">
+            <column name="menuId" length="36" not-null="true" />
+        </property>
+        <property name="keyId" type="string">
+            <column name="keyId" length="100" not-null="true" />
+        </property>
+        <property name="operation" type="string">
+            <column name="operation" length="100" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

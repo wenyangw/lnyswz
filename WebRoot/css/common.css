@@ -1,0 +1,32 @@
+.info {
+	background: #FFFEE6;
+	color: #8F5700;
+	padding: 12px;
+}
+.show {
+	background: #FFFEE6;
+	color: #8F5700;
+	padding: 0px;
+}
+
+.tip {
+	width: 24px;
+	height: 16px;
+	float: left;
+}
+
+table.tinfo{
+	padding: 5px;
+}
+
+table.tinfo td{
+	padding-right: 15px;
+}
+
+table th{
+	text-align: right;
+}
+
+.read{
+	color: #8F5700;
+}

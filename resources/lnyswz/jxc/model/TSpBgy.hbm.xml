@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TSpBgy" table="t_sp_bgy" schema="dbo" catalog="lnyswz1">
+    	
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="depId" type="string">
+            <column name="depId" length="2" not-null="true"/>
+        </property>
+        <property name="depName" type="string">
+            <column name="depName" length="20" not-null="true"/>
+        </property>
+        <property name="ckId" type="string">
+            <column name="ckId" length="2" not-null="true"/>
+        </property>
+        <property name="ckmc" type="string">
+            <column name="ckmc" length="20" not-null="true"/>
+        </property>
+        <property name="bgyId" type="java.lang.Integer">
+            <column name="bgyId" not-null="true"/>
+        </property>
+        <property name="bgyName" type="string">
+            <column name="bgyName" length="20" not-null="true"/>
+        </property>
+        <property name="spbh" type="string">
+            <column name="spbh" length="7" not-null="true"/>
+        </property>
+        <property name="spmc" type="string">
+            <column name="spmc" length="100" not-null="true"/>
+        </property>
+        <property name="spcd" type="string">
+            <column name="spcd" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

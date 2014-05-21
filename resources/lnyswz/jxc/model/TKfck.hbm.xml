@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TKfck" table="t_kfck" schema="dbo" catalog="lnyswz1">
+        <id name="kfcklsh" type="string">
+            <column name="kfcklsh" length="12" />
+            <generator class="assigned" />
+        </id>
+        <property name="createTime" type="timestamp">
+            <column name="createTime" length="23" not-null="true" />
+        </property>
+        <property name="createId" type="int">
+            <column name="createId" not-null="true" />
+        </property>
+        <property name="createName" type="string">
+            <column name="createName" length="20" not-null="true" />
+        </property>
+        <property name="bmbh" type="string">
+            <column name="bmbh" length="2" not-null="true" />
+        </property>
+        <property name="bmmc" type="string">
+            <column name="bmmc" length="20" not-null="true" />
+        </property>
+        <property name="khbh" type="string">
+            <column name="khbh" length="8" not-null="true" />
+        </property>
+        <property name="khmc" type="string">
+            <column name="khmc" length="100" not-null="true" />
+        </property>
+        <property name="thr" type="string">
+            <column name="thr" length="20" />
+        </property>
+        <property name="ch" type="string">
+            <column name="ch" length="20" />
+        </property>
+        <property name="bz" type="string">
+            <column name="bz" length="50" />
+        </property>
+        <property name="cjKfcklsh" type="string">
+            <column name="cjKfcklsh" length="12" />
+        </property>
+        <property name="isCj" type="char">
+            <column name="isCj" length="1" not-null="true" />
+        </property>
+        <property name="cjTime" type="timestamp">
+            <column name="cjTime" length="23" />
+        </property>
+        <property name="cjId" type="java.lang.Integer">
+            <column name="cjId" />
+        </property>
+        <property name="cjName" type="string">
+            <column name="cjName" length="20" />
+        </property>
+        <property name="xsthlsh" type="string">
+            <column name="xsthlsh" length="12" not-null="true" />
+        </property>
+        <set name="TKfckDets" table="t_kfck_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="kfcklsh" length="12" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TKfckDet" />
+        </set>
+    </class>
+</hibernate-mapping>

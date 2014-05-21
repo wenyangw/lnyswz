@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TDict" table="t_dict" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="ename" type="string">
+            <column name="ename" length="50" not-null="true" />
+        </property>
+        <property name="cname" type="string">
+            <column name="cname" length="100" not-null="true" />
+        </property>
+        <property name="specials" type="string">
+            <column name="specials" length="200" />
+        </property>
+        <property name="genre" type="string">
+            <column name="genre" length="100" not-null="true" />
+        </property>
+        <property name="tname" type="string">
+            <column name="tname" length="100" />
+        </property>
+        <property name="display" type="string">
+            <column name="display" length="50" />
+        </property>
+        <property name="orderNum" type="java.lang.Integer">
+            <column name="orderNum" />
+        </property>
+    </class>
+</hibernate-mapping>

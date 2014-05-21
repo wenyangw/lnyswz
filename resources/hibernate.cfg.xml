@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.microsoft.jdbc.sqlserver.SQLServerDriver</property>
+        <property name="hibernate.connection.password">sine</property>
+        <property name="hibernate.connection.url">jdbc:sqlserver://192.168.0.2:1433;databaseName=lnyswz1</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+<!--         <mapping resource="lnyswz/jxc/model/TFhzz.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TKfckDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCk.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TSpdl.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TFplx.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TXsth.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TSpDet.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TOperalog.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TButton.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TDepartment.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TKfrk.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TMenu.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCatalog.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TKhDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TGysDet.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TJldw.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TYwrkDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TKh.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TRole.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TGys.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TLsh.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCgxq.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TSpdw.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TRklx.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TUpdateLog.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TYfzz.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TFh.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TKfzz.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TYwrk.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TUser.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TSp.hbm.xml" />
+        <mapping resource="lnyswz/jxc/model/TSpBgy.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TKfck.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TJsfs.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TYwzz.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TPost.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TXsthDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TXskpDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TXskp.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/THw.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCgxqDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCgjhDet.hbm.xml" /> -->
+        <mapping resource="lnyswz/jxc/model/TSplb.hbm.xml" />
+<!--         <mapping resource="lnyswz/jxc/model/TKfrkDet.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TCgjh.hbm.xml" /> -->
+<!--         <mapping resource="lnyswz/jxc/model/TDict.hbm.xml" /> -->
+    </session-factory>
+</hibernate-configuration>

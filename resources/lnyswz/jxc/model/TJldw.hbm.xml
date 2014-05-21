@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TJldw" table="t_jldw" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="2" />
+            <generator class="assigned" />
+        </id>
+        <property name="jldwmc" type="string">
+            <column name="jldwmc" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

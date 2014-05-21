@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TYwzz" table="t_ywzz" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="jzsj" type="string">
+            <column name="jzsj" length="6" not-null="true" />
+        </property>
+        <property name="bmbh" type="string">
+            <column name="bmbh" length="2" not-null="true" />
+        </property>
+        <property name="bmmc" type="string">
+            <column name="bmmc" length="20" not-null="true" />
+        </property>
+        <property name="ckId" type="string">
+            <column name="ckId" length="2" />
+        </property>
+        <property name="ckmc" type="string">
+            <column name="ckmc" length="20" />
+        </property>
+        <property name="spbh" type="string">
+            <column name="spbh" length="7" not-null="true" />
+        </property>
+        <property name="spmc" type="string">
+            <column name="spmc" length="100" not-null="true" />
+        </property>
+        <property name="spcd" type="string">
+            <column name="spcd" length="20" not-null="true" />
+        </property>
+        <property name="sppp" type="string">
+            <column name="sppp" length="20" />
+        </property>
+        <property name="spbz" type="string">
+            <column name="spbz" length="20" />
+        </property>
+        <property name="zjldwId" type="string">
+            <column name="zjldwId" length="2" not-null="true" />
+        </property>
+        <property name="zjldwmc" type="string">
+            <column name="zjldwmc" length="20" not-null="true" />
+        </property>
+        <property name="cjldwId" type="string">
+            <column name="cjldwId" length="2" />
+        </property>
+        <property name="cjldwmc" type="string">
+            <column name="cjldwmc" length="20" />
+        </property>
+        <property name="zhxs" type="big_decimal">
+            <column name="zhxs" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="qcsl" type="big_decimal">
+            <column name="qcsl" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="qcje" type="big_decimal">
+            <column name="qcje" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="dwcb" type="big_decimal">
+            <column name="dwcb" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="rksl" type="big_decimal">
+            <column name="rksl" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="rkje" type="big_decimal">
+            <column name="rkje" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="xssl" type="big_decimal">
+            <column name="xssl" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="xsje" type="big_decimal">
+            <column name="xsje" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="xsse" type="big_decimal">
+            <column name="xsse" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="xscb" type="big_decimal">
+            <column name="xscb" precision="18" scale="6" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

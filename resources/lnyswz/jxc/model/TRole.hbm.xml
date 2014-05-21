@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TRole" table="t_role" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="36" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TDepartment" class="lnyswz.jxc.model.TDepartment" fetch="select">
+            <column name="depId" length="2" />
+        </many-to-one>
+        <property name="roleName" type="string">
+            <column name="roleName" length="100" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <set name="TUsers" table="t_user_role" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="roleId" length="36" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TUser">
+                <column name="userId" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="TMenus" table="t_role_menu" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="roleId" length="36" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TMenu">
+                <column name="menuId" length="36" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="TButtons" table="t_role_button" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="roleId" length="36" not-null="true" />
+            </key>
+            <many-to-many entity-name="lnyswz.jxc.model.TButton">
+                <column name="btnId" length="36" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

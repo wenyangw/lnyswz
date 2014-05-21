@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TSpdw" table="t_spdw" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="string">
+            <column name="id" length="5" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TSplb" class="lnyswz.jxc.model.TSplb" fetch="select">
+            <column name="splbId" not-null="true" />
+        </many-to-one>
+        <property name="spdwmc" type="string">
+            <column name="spdwmc" length="50" not-null="true" />
+        </property>
+        <set name="TSps" table="t_sp" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="spdwId" length="5" not-null="true" />
+            </key>
+            <one-to-many class="lnyswz.jxc.model.TSp" />
+        </set>
+    </class>
+</hibernate-mapping>

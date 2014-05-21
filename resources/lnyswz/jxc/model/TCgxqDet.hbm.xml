@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-30 11:41:16 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="lnyswz.jxc.model.TCgxqDet" table="t_cgxq_det" schema="dbo" catalog="lnyswz1">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="TCgxq" class="lnyswz.jxc.model.TCgxq" fetch="select">
+            <column name="cgxqlsh" length="12" not-null="true" />
+        </many-to-one>
+        <property name="spbh" type="string">
+            <column name="spbh" length="7" not-null="true" />
+        </property>
+        <property name="spmc" type="string">
+            <column name="spmc" length="100" not-null="true" />
+        </property>
+        <property name="spcd" type="string">
+            <column name="spcd" length="20" not-null="true" />
+        </property>
+        <property name="sppp" type="string">
+            <column name="sppp" length="20" />
+        </property>
+        <property name="spbz" type="string">
+            <column name="spbz" length="20" />
+        </property>
+        <property name="zjldwId" type="string">
+            <column name="zjldwId" length="2" not-null="true" />
+        </property>
+        <property name="zjldwmc" type="string">
+            <column name="zjldwmc" length="20" not-null="true" />
+        </property>
+        <property name="cjldwId" type="string">
+            <column name="cjldwId" length="2" />
+        </property>
+        <property name="cjldwmc" type="string">
+            <column name="cjldwmc" length="20" />
+        </property>
+        <property name="zhxs" type="big_decimal">
+            <column name="zhxs" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="zdwsl" type="big_decimal">
+            <column name="zdwsl" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="cdwsl" type="big_decimal">
+            <column name="cdwsl" precision="18" scale="3" not-null="true" />
+        </property>
+        <property name="zdwdj" type="big_decimal">
+            <column name="zdwdj" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="cdwdj" type="big_decimal">
+            <column name="cdwdj" precision="18" scale="6" not-null="true" />
+        </property>
+        <property name="zdwxsdj" type="big_decimal">
+            <column name="zdwxsdj" precision="18" scale="6" />
+        </property>
+        <property name="cdwxsdj" type="big_decimal">
+            <column name="cdwxsdj" precision="18" scale="6" />
+        </property>
+        <property name="spje" type="big_decimal">
+            <column name="spje" precision="18" scale="6" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
