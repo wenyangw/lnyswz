@@ -835,7 +835,12 @@ function saveAll(){
 		effectRow['isFh'] = '0';
 	}
 	effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
-	effectRow['isLs'] = $('input[name=isFhth]').is(':checked') ? '0' : '1';
+	
+	if($('input[name=xskpDetIds]').val().trim().length > 0){
+		effectRow['isLs'] = '0';
+	}else{
+		effectRow['isLs'] = $('input[name=isFhth]').is(':checked') ? '0' : '1';
+	}
 	
 	effectRow['khbh'] = $('input[name=khbh]').val();
 	effectRow['khmc'] = $('input[name=khmc]').val();
