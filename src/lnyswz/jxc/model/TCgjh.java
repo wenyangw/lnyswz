@@ -56,7 +56,7 @@ public class TCgjh implements java.io.Serializable {
 	private String isZs;
 	private Set<TCgjhDet> TCgjhDets = new HashSet<TCgjhDet>(0);
 	private Set<TCgxqDet> TCgxqs = new HashSet<TCgxqDet>(0);
-	private TYwrk TYwrk;
+//	private TYwrk TYwrk;
 	
 
 	public TCgjh() {
@@ -68,7 +68,7 @@ public class TCgjh implements java.io.Serializable {
 			String isHt, String returnHt, Integer htId, Date htTime, String htName, String isCancel, Date cancelTime,
 			Integer cancelId, String cancelName, String isCompleted, Date completeTime, Integer completeId, 
 			String completeName, String needAudit, String isAudit, String isZs, Set<TCgjhDet> TCgjhDets, 
-			Set<TCgxqDet> TCgxqs, TYwrk TYwrk) {
+			Set<TCgxqDet> TCgxqs) {
 		this.cgjhlsh = cgjhlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -100,7 +100,7 @@ public class TCgjh implements java.io.Serializable {
 		this.isZs = isZs;
 		this.TCgjhDets = TCgjhDets;
 		this.TCgxqs = TCgxqs;
-		this.TYwrk = TYwrk;
+//		this.TYwrk = TYwrk;
 	}
 
 	@Id
@@ -396,14 +396,14 @@ public class TCgjh implements java.io.Serializable {
 		this.TCgxqs = TCgxqs;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ywrklsh")
-	public TYwrk getTYwrk() {
-		return this.TYwrk;
-	}
-
-	public void setTYwrk(TYwrk TYwrk) {
-		this.TYwrk = TYwrk;
-	}
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "ywrklsh")
+//	public TYwrk getTYwrk() {
+//		return this.TYwrk;
+//	}
+//
+//	public void setTYwrk(TYwrk TYwrk) {
+//		this.TYwrk = TYwrk;
+//	}
 
 }

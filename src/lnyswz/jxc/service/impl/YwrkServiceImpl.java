@@ -69,7 +69,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TXskp> xskpDao;
-	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TSpDet> spDetDao;
@@ -510,11 +509,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;
-	}
-
-	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired

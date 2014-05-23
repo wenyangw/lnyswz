@@ -267,9 +267,9 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			Cgjh c = new Cgjh();
 			BeanUtils.copyProperties(t, c);
 			
-			if(t.getTYwrk() != null){
-				c.setIsKfrk("1");
-			}
+//			if(t.getTYwrk() != null){
+//				c.setIsKfrk("1");
+//			}
 			
 			Set<TCgxqDet> tCgxqs = t.getTCgxqs();
 			if(tCgxqs != null && tCgxqs.size() > 0){
@@ -284,11 +284,24 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				}
 				c.setCgxqlshs(cgxqlshs);
 			}
+			boolean flag = false;
 			Set<TCgjhDet> tDets = t.getTCgjhDets();
 			for(TCgjhDet tDet : tDets){
 				if(tDet.getTKfrks() != null && tDet.getTKfrks().size() > 0){
 					c.setIsKfrk("1");
-					break;
+					if(flag){
+						break;
+					}else{
+						flag = true;
+					}
+				}
+				if(tDet.getTYwrks() != null && tDet.getTYwrks().size() > 0){
+					c.setIsKfrk("1");
+					if(flag){
+						break;
+					}else{
+						flag = true;
+					}
 				}
 			}
 			nl.add(c);
