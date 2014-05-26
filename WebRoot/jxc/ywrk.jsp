@@ -1398,7 +1398,8 @@ function toYwrk(){
 						depChange(row.bmbh);
 						$('input[name=gysbh]').val(jxc.otherBm(did)['gysbh']);
 						$('input[name=gysmc]').val(jxc.otherBm(did)['gysmc']);
-						$('input[name=bz]').val(row.bz);
+						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
+						$('input[name=bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
 						ywrk_tabs.tabs('select', 0);
 						ywrk_spdg.datagrid('loadData', d.rows);
