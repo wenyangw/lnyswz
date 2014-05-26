@@ -229,6 +229,7 @@ $(function(){
 				styler:function(){
 					return 'color:red;';
 				}},
+			{field:'zdwdj',title:'单价1',align:'center'},
 // 			{field:'zdwytsl',title:'开票数量',align:'center',
 // 				formatter: function(value){
 // 					return value == 0 ? '' : value;
@@ -238,6 +239,7 @@ $(function(){
 // 				}},
 			{field:'cjldwmc',title:'单位2',align:'center'},
 			{field:'cdwsl',title:'数量2',align:'center'},
+			{field:'cdwdj',title:'单价2',align:'center'},
 			{field:'bookmc',title:'书名',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
