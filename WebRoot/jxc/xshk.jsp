@@ -2,6 +2,7 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
+var test;
 var did;
 var lx;
 var xshk_khDg;
