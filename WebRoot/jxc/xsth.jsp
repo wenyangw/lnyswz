@@ -634,6 +634,7 @@ $(function(){
 	});
 	
 	$('input[name=khmc]').change(function(){
+		alert(jxc.checkKh(NEED_AUDIT, $('input[name=khbh]').val().trim(), did));
 		if($('input[name=isSx]').is(':checked')){
 			checkKh();
 		}
@@ -660,6 +661,18 @@ function init(){
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
 	$('.isFhth').css('display','none');
+	
+	if(jxc.showFh(did)){
+		$('.fh').css('display', 'inline');
+	}else{
+		$('.fh').css('display', 'none');
+	}
+	
+	if(jxc.showBookmc(did)){
+		$('.bookmc').css('display', 'table-row');
+	}else{
+		$('.bookmc').css('display', 'none');
+	}
 	
 	//收回商品库存信息
 	$('#jxc_xsth_layout').layout('collapse', 'east');
@@ -823,6 +836,11 @@ function saveAll(){
 	}
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
+	if(NEED_AUDIT == "1"){
+		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+			effectRow['needAudit'] = "1";
+		}
+	}
 	//将表头内容传入后台
 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 	effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
@@ -1507,8 +1525,10 @@ function searchXskpInXsth(){
 							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp;
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
+							<span class="fh" style="display:none">
 							分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
 							<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
+							</span>
 						</td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td colspan="4"><div id="xsthLsh" class="read"></div></td>
@@ -1527,7 +1547,7 @@ function searchXskpInXsth(){
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
 						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
 					</tr>
-					<tr>
+					<tr class='bookmc'>
 						<th>书名</th><td colspan="10"><input name="bookmc" type="text" style="width:71%"></td>
 					</tr>
 					<tr>

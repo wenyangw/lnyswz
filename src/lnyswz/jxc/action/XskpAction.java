@@ -118,6 +118,10 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		writeJson(xskpService.getSpkc(xskp));
 	}
 	
+	public void getXskpNoHk(){
+		writeJson(xskpService.getXskpNoHk(xskp));
+	}
+	
 	@Override
 	public Xskp getModel() {
 		return xskp;

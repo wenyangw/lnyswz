@@ -21,6 +21,7 @@ import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
+import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.KhServiceI;
@@ -33,6 +34,7 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TKhDet> khdetDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
+	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TOperalog>opeDao;
 
 	/**
@@ -199,6 +201,9 @@ public class KhServiceImpl implements KhServiceI {
 							nc.setYwyId(m.getYwyId());
 							nc.setYwyName(userDao.load(TUser.class, m.getYwyId()).getRealName());
 						}
+						if(m.getKhlxId() != null){
+							nc.setKhlxmc(khlxDao.load(TKhlx.class, m.getKhlxId()).getKhlxmc());
+						}
 					}
 				}
 			}
@@ -351,6 +356,44 @@ public class KhServiceImpl implements KhServiceI {
 		}
 		return null;
 	}
+	
+	@Override
+	public int getAuditLevel(Kh kh) {
+		String hql = "from TKHDet t where t.TKh.khbh = :khbh and t.TDepartment.id = :depId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("khbh", kh.getKhbh());
+		params.put("depId", kh.getDepId());
+		TKhDet khDet = khdetDao.get(hql, params);
+		if(khDet != null){
+			
+		}
+		return 0;
+	}
+	
+	@Override
+	public DataGrid listKhByYwy(Kh kh) {
+		String hql = "from TKhDet t where t.TDepartment.id = :depId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("depId", kh.getDepId());
+		if(kh.getYwyId() > 0){
+			hql += " and t.ywyId = :ywyId";
+			params.put("ywyId", kh.getYwyId());
+		}
+		List<TKhDet> tDets = khdetDao.find(hql, params);
+		List<Kh> khs = new ArrayList<Kh>();
+		for(TKhDet tDet : tDets){
+			Kh k = new Kh();
+			BeanUtils.copyProperties(tDet, k);
+			
+			k.setKhbh(tDet.getTKh().getKhbh());
+			k.setKhmc(tDet.getTKh().getKhmc());
+			
+			khs.add(k);
+		}
+		DataGrid dg = new DataGrid();
+		dg.setRows(khs);
+		return dg;
+	}
 
 	@Autowired
 	public void setKhDao(BaseDaoI<TKh> khDao) {
@@ -371,8 +414,10 @@ public class KhServiceImpl implements KhServiceI {
 	public void setUserDao(BaseDaoI<TUser> userDao) {
 		this.userDao = userDao;
 	}
+	
 	@Autowired
-	public void setOpeDao(BaseDaoI<TOperalog> opeDao) {
-		this.opeDao = opeDao;
+	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
+		this.khlxDao = khlxDao;
 	}
+
 }

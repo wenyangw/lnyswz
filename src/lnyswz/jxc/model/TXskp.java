@@ -58,6 +58,7 @@ public class TXskp implements java.io.Serializable {
 	private String ywymc;
 	private BigDecimal hjje;
 	private BigDecimal hjse;
+	private BigDecimal hkje;
 	private String bz;
 	private String fromTh;
 	private String isZs;
@@ -85,7 +86,7 @@ public class TXskp implements java.io.Serializable {
 	public TXskp(String xskplsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
 			String khmc, String dzdh, String khh, String sh, String ckId, String ckmc, String fhId, String fhmc, String jsfsId,
 			String jsfsmc, String fplxId, String fplxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
-			BigDecimal hjse, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
+			BigDecimal hjse, BigDecimal hkje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
 			String isTh, Date thTime, String xsthlsh, String isHk, Date hkTime, String needAudit, String isAudit, 
 			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk) {
 		this.xskplsh = xskplsh;
@@ -117,6 +118,7 @@ public class TXskp implements java.io.Serializable {
 		this.ywymc = ywymc;
 		this.hjje = hjje;
 		this.hjse = hjse;
+		this.hkje = hkje;
 		this.bz = bz;
 		this.fromTh = fromTh;
 		this.isZs = isZs;
@@ -383,7 +385,7 @@ public class TXskp implements java.io.Serializable {
 		this.ywymc = ywymc;
 	}
 
-	@Column(name = "hjje", nullable = false, precision = 18, scale = 6)
+	@Column(name = "hjje", nullable = false, precision = 18, scale = 4)
 	public BigDecimal getHjje() {
 		return hjje;
 	}
@@ -392,13 +394,22 @@ public class TXskp implements java.io.Serializable {
 		this.hjje = hjje;
 	}
 
-	@Column(name = "hjse", nullable = false, precision = 18, scale = 6)
+	@Column(name = "hjse", nullable = false, precision = 18, scale = 4)
 	public BigDecimal getHjse() {
 		return hjse;
 	}
 
+	@Column(name = "hkje", nullable = false, precision = 18, scale = 4)
 	public void setHjse(BigDecimal hjse) {
 		this.hjse = hjse;
+	}
+
+	public BigDecimal getHkje() {
+		return hkje;
+	}
+
+	public void setHkje(BigDecimal hkje) {
+		this.hkje = hkje;
 	}
 
 	@Column(name = "bz", length = 100)

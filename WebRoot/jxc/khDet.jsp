@@ -21,6 +21,10 @@
 			<td><input name="ywyId" style="width:160px;"></td>
 		</tr>
 		<tr>
+			<th><label for="khlxId">客户类型</label></th>
+			<td><input name="khlxId" style="width:160px;"></td>
+		</tr>
+		<tr>
 			<th><label for="isSx">授信客户</label></th>
 			<td><input name="isSx" type="checkbox" value="1"></td>
 		</tr>

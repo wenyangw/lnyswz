@@ -184,6 +184,10 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		writeJson(khService.sxkhDg(kh));
 	}
 	
+	public void listKhByYwy(){
+		writeJson(khService.listKhByYwy(kh));
+	}
+	
 	public Kh getModel() {
 		return kh;
 	}

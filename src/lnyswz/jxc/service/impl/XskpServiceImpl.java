@@ -27,6 +27,8 @@ import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TKh;
+import lnyswz.jxc.model.TKhDet;
+import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
@@ -65,6 +67,8 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TKhDet> khDetDao;
+	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
@@ -85,6 +89,11 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setCreateName(xskp.getCreateName());
 		tXskp.setXskplsh(lsh);
 		tXskp.setIsCj("0");
+		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+			tXskp.setHkje(Constant.BD_ZERO);
+		}else{
+			tXskp.setHkje(tXskp.getHjje().add(tXskp.getHjse()));
+		}
 		
 		String bmmc = depDao.load(TDepartment.class, xskp.getBmbh()).getDepName();
 		tXskp.setBmmc(bmmc);
@@ -915,6 +924,41 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 	}
 	
+	@Override
+	public DataGrid getXskpNoHk(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		List<Xskp> xskps = new ArrayList<Xskp>();
+		
+		String khHql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xskp.getBmbh());
+		params.put("khbh", xskp.getKhbh());
+		TKhDet tKhDet = khDetDao.get(khHql, params);
+		Kh kh = null;
+		if(tKhDet != null){
+			kh = new Kh();
+			BeanUtils.copyProperties(tKhDet, kh);
+			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
+			
+			String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
+			params.put("jsfsId", Constant.XSKP_JSFS_QK);
+			List<TXskp> tXskps = xskpDao.find(hql, params);
+			
+			for(TXskp tXskp : tXskps){
+				Xskp x = new Xskp();
+				x.setXskplsh(tXskp.getXskplsh());
+				x.setCreateTime(tXskp.getCreateTime());
+				x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
+				x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+				x.setHkedje(tXskp.getHkje());
+				xskps.add(x);
+			}
+			dg.setObj(kh);
+			dg.setRows(xskps);
+		}
+		return dg;
+	}
+	
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;
@@ -958,6 +1002,16 @@ public class XskpServiceImpl implements XskpServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
+	@Autowired
+	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
+		this.khlxDao = khlxDao;
 	}
 
 	@Autowired

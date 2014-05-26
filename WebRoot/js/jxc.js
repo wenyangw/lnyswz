@@ -41,6 +41,31 @@ jxc.otherBm = function(bmbh){
 	}
 };
 
+jxc.showFh = function(bmbh){
+	switch(bmbh){
+	case '04':
+		return true;
+	default:
+		return false;
+	}
+};
+
+jxc.showBookmc = function(bmbh){
+	switch(bmbh){
+	case '04':
+		return true;
+	default:
+		return false;
+	}
+};
+
+jxc.checkKh = function(needAudit, khbh, depId){
+	if(needAudit == '1'){
+		return '需要审核';
+	}else{
+		return '不需要审核';
+	}
+};
 
 
 //var dictType = [ {

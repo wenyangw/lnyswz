@@ -21,6 +21,8 @@ public class Kh {
 	private String lxr;
 	private int ywyId;
 	private String ywyName;
+	private String khlxId;
+	private String khlxmc;
 	private String isSx;
 	private int sxzq;
 	private String bh;
@@ -158,6 +160,22 @@ public class Kh {
 		this.ywyName = ywyName;
 	}
 
+	public String getKhlxId() {
+		return khlxId;
+	}
+
+	public void setKhlxId(String khlxId) {
+		this.khlxId = khlxId;
+	}
+
+	public String getKhlxmc() {
+		return khlxmc;
+	}
+
+	public void setKhlxmc(String khlxmc) {
+		this.khlxmc = khlxmc;
+	}
+	
 	public String getIsSx() {
 		return isSx;
 	}

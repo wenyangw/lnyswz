@@ -21,6 +21,7 @@ public class TKhDet implements java.io.Serializable {
 	private TKh TKh;
 	private TDepartment TDepartment;
 	private Integer ywyId;
+	private String khlxId;
 	private String isSx;
 	private String lxr;
 	private Integer sxzq;
@@ -32,12 +33,13 @@ public class TKhDet implements java.io.Serializable {
 	}
 
 	public TKhDet(String id, TKh TKh, TDepartment TDepartment, String lxr,
-			Integer ywyId, String isSx, Integer sxzq, BigDecimal sxje, BigDecimal yfje) {
+			Integer ywyId, String khlxId, String isSx, Integer sxzq, BigDecimal sxje, BigDecimal yfje) {
 		this.id = id;
 		this.TKh = TKh;
 		this.TDepartment = TDepartment;
 		this.lxr = lxr;
 		this.ywyId = ywyId;
+		this.khlxId = khlxId;
 		this.isSx = isSx;
 		this.sxzq = sxzq;
 		this.sxje = sxje;
@@ -81,6 +83,15 @@ public class TKhDet implements java.io.Serializable {
 
 	public void setYwyId(Integer ywyId) {
 		this.ywyId = ywyId;
+	}
+
+	@Column(name = "khlxId")
+	public String getKhlxId() {
+		return khlxId;
+	}
+
+	public void setKhlxId(String khlxId) {
+		this.khlxId = khlxId;
 	}
 
 	@Column(name = "isSx", length = 1)

@@ -43,6 +43,7 @@ public class Xskp {
 	private String ywymc;
 	private BigDecimal hjje;
 	private BigDecimal hjse;
+	private BigDecimal hkje;
 	private String bz;
 	private String fromTh;
 	private String isCj;
@@ -83,6 +84,8 @@ public class Xskp {
 	private String datagrid;
 	
 	private String search;
+	private Date payTime;
+	private BigDecimal hkedje;
 	
 	private String ywrklsh;
 	private String xsthlshs;
@@ -329,6 +332,14 @@ public class Xskp {
 
 	public void setHjse(BigDecimal hjse) {
 		this.hjse = hjse;
+	}
+
+	public BigDecimal getHkje() {
+		return hkje;
+	}
+
+	public void setHkje(BigDecimal hkje) {
+		this.hkje = hkje;
 	}
 
 	public String getBz() {
@@ -633,6 +644,22 @@ public class Xskp {
 
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+
+	public BigDecimal getHkedje() {
+		return hkedje;
+	}
+
+	public void setHkedje(BigDecimal hkedje) {
+		this.hkedje = hkedje;
 	}
 
 	public int getPage() {

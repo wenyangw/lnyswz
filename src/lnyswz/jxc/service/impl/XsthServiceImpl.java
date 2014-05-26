@@ -103,10 +103,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		String depName = depDao.load(TDepartment.class, xsth.getBmbh()).getDepName();
 		tXsth.setBmmc(depName);
 		
-		tXsth.setNeedAudit("0");
-		if(tXsth.getNeedAudit().equals("1")){
+		//根据系统设定进行处理
+		if(xsth.getNeedAudit() != null){
+			tXsth.setNeedAudit(xsth.getNeedAudit());
 			tXsth.setIsAudit("0");
 		}else{
+			tXsth.setNeedAudit("0");
 			tXsth.setIsAudit("1");
 		}
 		
@@ -527,6 +529,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		//只查询未完成的有效数据
 		if(xsth.getFromOther() != null){
 			hql += " and t.TXsth.isCancel = '0'";
+			if(Constant.NEED_AUDIT.equals("1")){
+				hql += " and t.TXsth.isAudit = '1'";
+			}
 		}
 		
 		//保管员筛选
