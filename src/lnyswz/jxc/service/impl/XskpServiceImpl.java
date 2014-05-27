@@ -268,7 +268,9 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		tXskp.setTXsths(xsthDets);
 		tXskp.setTXskpDets(tDets);
-		tXskp.setBz(xskp.getBz() + thdlshs.toString());
+		if(thdlshs != null){
+			tXskp.setBz(xskp.getBz() + thdlshs.toString());
+		}
 		
 		
 		//保存销售提货数据
