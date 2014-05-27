@@ -140,7 +140,7 @@ $(function(){
 				  xshk_xskpDg.datagrid('updateRow', {
 					  index:index,
 					  row: {
-					  	hkje: hkje,
+					  	hkje: hkje.toFixed(4),
 					  }
 				  });
 				  if(je == 0){
@@ -205,6 +205,51 @@ function selectKh(rowData){
 			$('#sxzq').html(data.obj.sxzq + '天');
 			$('#sxje').html(data.obj.sxje + '元');
 			$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+		}
+	});
+}
+
+//提交数据到后台
+function saveAll(){
+	
+	if($('#khbh').val() == ''){
+		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
+		return false;
+	}
+	if($('#hkje').val() == ''){
+		$.messager.alert('提示', '没有输入回款金额,请重新操作！', 'error');
+		return false;
+	}
+	
+	var effectRow = new Object();
+	
+	//将表头内容传入后台
+	effectRow['khbh'] = $('#khbh').val();
+	effectRow['hkje'] = $('#hkje').val();
+	
+	effectRow['bmbh'] = did;
+	effectRow['lxbh'] = lx;
+	effectRow['menuId'] = menuId;
+	
+	//将表格中的数据去掉最后一个空行后，转换为json格式
+	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
+	//提交到action
+	$.ajax({
+		type: "POST",
+		url: '${pageContext.request.contextPath}/jxc/xshkAction!save.action',
+		data: effectRow,
+		dataType: 'json',
+		success: function(rsp){
+			if(rsp.success){
+		    	$.messager.show({
+					title : '提示',
+					msg : '提交成功！'
+				});
+		    	init();
+			}  
+		},
+		error: function(){
+			$.messager.alert("提示", "提交错误了！");
 		}
 	});
 }

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -79,6 +80,7 @@ public class TXskp implements java.io.Serializable {
 	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
 //	private Set<TXsth> TXsths = new HashSet<TXsth>(0);
 	private TYwrk TYwrk;
+	private TXshk TXshk;
 
 	public TXskp() {
 	}
@@ -88,7 +90,7 @@ public class TXskp implements java.io.Serializable {
 			String jsfsmc, String fplxId, String fplxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
 			BigDecimal hjse, BigDecimal hkje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
 			String isTh, Date thTime, String xsthlsh, String isHk, Date hkTime, String needAudit, String isAudit, 
-			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk) {
+			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk, TXshk TXshk) {
 		this.xskplsh = xskplsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -138,6 +140,7 @@ public class TXskp implements java.io.Serializable {
 		this.TXskpDets = TXskpDets;
 		this.TXsths = TXsths;
 		this.TYwrk = TYwrk;
+		this.TXshk = TXshk;
 	}
 
 	@Id
@@ -399,11 +402,11 @@ public class TXskp implements java.io.Serializable {
 		return hjse;
 	}
 
-	@Column(name = "hkje", nullable = false, precision = 18, scale = 4)
 	public void setHjse(BigDecimal hjse) {
 		this.hjse = hjse;
 	}
 
+	@Column(name = "hkje", nullable = false, precision = 18, scale = 4)
 	public BigDecimal getHkje() {
 		return hkje;
 	}
@@ -586,5 +589,15 @@ public class TXskp implements java.io.Serializable {
 
 	public void setTYwrk(TYwrk tYwrk) {
 		TYwrk = tYwrk;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "xshklsh", nullable = false)
+	public TXshk getTXshk() {
+		return this.TXshk;
+	}
+
+	public void setTXshk(TXshk TXshk) {
+		this.TXshk = TXshk;
 	}
 }
