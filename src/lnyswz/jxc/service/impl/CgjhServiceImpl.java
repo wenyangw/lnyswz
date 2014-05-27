@@ -286,6 +286,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			}
 			boolean flag = false;
 			Set<TCgjhDet> tDets = t.getTCgjhDets();
+			loop:
 			for(TCgjhDet tDet : tDets){
 				if(tDet.getTKfrks() != null && tDet.getTKfrks().size() > 0){
 					c.setIsKfrk("1");
@@ -296,12 +297,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					}
 				}
 				if(tDet.getTYwrks() != null && tDet.getTYwrks().size() > 0){
-					c.setIsKfrk("1");
-					if(flag){
-						break;
-					}else{
-						flag = true;
+					for(TYwrk tYwrk : tDet.getTYwrks()){
+						if(tYwrk.getRklxId().equals(Constant.RKLX_ZG)){
+							//暂估
+							c.setIsKfrk("3");
+							break loop;
+						}
 					}
+					//正式
+					c.setIsKfrk("2");
 				}
 			}
 			nl.add(c);
