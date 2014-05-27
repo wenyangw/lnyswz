@@ -26,32 +26,37 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-		String sql = "select " + d.getCon() + " from " + d.getQuery() + "";
+		String dictSql = "from TDict t where t.genre = '03' and tname= '"
+				+ d.getQuery() + "'";
+		TDict dicts = dictDao.get(dictSql);
+
+		String sql = "select " + d.getCon() + " from " + dicts.getEname() + "";
 		condition += " where bmbh = " + d.getDid() + "";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
 		}
-	
 		sql += condition;
-		String hql = "from TDict t where ename='" + d.getQuery() + "'";
+
+		String hql = "from TDict t where ename='" + dicts.getEname() + "'";
 		TDict dict = dictDao.get(hql);
 		String n = dict.getOrderBy();
 		if (dict.getOrderBy().trim().length() > 0) {
-			sql += " " + dict.getOrderBy();
+			sql += " " + dicts.getOrderBy();
 		}
-		String totalHql = "select count(*) from " + d.getQuery() + condition;
+		String totalHql = "select count(*) from " + dicts.getEname()
+				+ condition;
 		List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
 				d.getRows());
 		if (dict.getSpecials().trim().length() > 0) {
 
 			String hq = "select * from " + dict.getSpecials();
-			String sq="('"+ d.getDid() + "',";
-			if (d.getSpbh()==null) {
-				sq += d.getSpbh()+ ",";
+			String sq = "('" + d.getDid() + "',";
+			if (d.getSpbh() == null) {
+				sq += d.getSpbh() + ",";
 			} else {
 				sq += "'" + d.getSpbh() + "',";
 			}
-			
+
 			if (d.getSpmc() == null) {
 				sq += d.getSpmc() + ",";
 			} else {
@@ -67,14 +72,15 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			} else {
 				sq += "'" + d.getB_time() + "')";
 			}
-			hq +=sq;
+			hq += sq;
 			List<Object[]> l = selectCommonDao.findBySQL(hq, d.getPage(),
 					d.getRows());
-			String dhq="select * from kfmx"+sq; 
+			String dhq = "select * from kfmx" + sq;
+			
 			List<Object[]> h = selectCommonDao.findBySQL(dhq, d.getPage(),
 					d.getRows());
 			list.addAll(h);
-			list.addAll(l);					
+			list.addAll(l);
 		}
 		
 		dg.setRows(list);
@@ -87,8 +93,11 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonTree(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-		String sql = "select distinct  " + d.getCon() + " from " + d.getQuery()
-				+ "";
+		String dictSql = "from TDict t where t.genre = '03' and tname= '"
+				+ d.getQuery() + "'";
+		TDict dicts = dictDao.get(dictSql);
+		String sql = "select distinct  " + d.getCon() + " from "
+				+ dicts.getEname() + "";
 		condition += " where bmbh = " + d.getDid() + "";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
@@ -103,16 +112,19 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	@Override
 	public List<Object[]> Exprot(SelectCommon d) {
 		String condition = "";
-		String sql = "select distinct  " + d.getCon() + " from " + d.getQuery()
-				+ "";
+		String dictSql = "from TDict t where t.genre = '03' and tname= '"
+				+ d.getQuery() + "'";
+		TDict dicts = dictDao.get(dictSql);
+		String sql = "select distinct  " + d.getCon() + " from "
+				+ dicts.getEname() + "";
 		condition += " where bmbh = " + d.getDid() + "";
-		
+
 		if (d.getSqls().trim().length() > 0) {
 			condition += " " + d.getSqls();
 		}
+
+		sql += condition;
 		
-		sql += condition;	
-	
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
 		return list;
 	}

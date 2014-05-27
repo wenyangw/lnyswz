@@ -106,6 +106,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		Set<TXsthDet> xsthDets = null;
+		Set<String> thdlshs = null;
 		int[] intDetIds = null;
 		//如果从销售提货生成的销售开票，进行关联
 		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
@@ -114,6 +115,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			String[] strDetIds = xsthDetIds.split(",");
 			intDetIds = new int[strDetIds.length];
 //			Set<TXsthDet> tXsthDets = new HashSet<TXsthDet>();
+			thdlshs = new HashSet<String>();
 			xsthDets = new HashSet<TXsthDet>();
 			int i = 0;
 			for(String detId : strDetIds){
@@ -247,6 +249,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				BigDecimal kpsl = xskpDet.getZdwsl();
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
+					thdlshs.add(xsthDet.getTXsth().getXsthlsh());
 					if(xskpDet.getSpbh().equals(xsthDet.getSpbh())){
 						BigDecimal wksl = xsthDet.getZdwsl().subtract(xsthDet.getKpsl());
 						xsthDets.add(xsthDet);
@@ -265,6 +268,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		tXskp.setTXsths(xsthDets);
 		tXskp.setTXskpDets(tDets);
+		tXskp.setBz(xskp.getBz() + thdlshs.toString());
+		
 		
 		//保存销售提货数据
 		if(needXsth){

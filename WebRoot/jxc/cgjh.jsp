@@ -86,9 +86,14 @@ $(function(){
        			formatter : function(value) {
    					if (value == '1') {
    						return '是';
-   					} else {
-   						return '';
    					}
+   					if(value == '2'){
+   						return '正';
+   					}
+   					if(value == '3'){
+   						return '暂';
+   					}
+   					return '';
    				},
            		sorter: function(a,b){
            			a = a == undefined ? 0 : a;
@@ -96,9 +101,7 @@ $(function(){
    					return (a-b);  
    				},
    				styler: function(value){
-              			if(value == '1'){
-                  			return 'color:blue;';
-                  		}
+                  	return 'color:blue;';
        			}},	
 //         	{field:'kfrklshs',title:'库房入库流水号',align:'center',
 //             	formatter: function(value){

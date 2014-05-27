@@ -71,9 +71,9 @@ public class DictServiceImpl implements DictServiceI {
 				if (!id.trim().equals("0")) {
 					TDict t = dictDao.load(TDict.class, id);
 					dictDao.delete(t);
-					OperalogServiceImpl
-							.addOperalog(dict.getUserId(), dict.getDepId(),
-									dict.getMenuId(), id, "删除字典信息", opeDao);
+//					OperalogServiceImpl
+//							.addOperalog(dict.getUserId(), dict.getDepId(),
+//									dict.getMenuId(), id, "删除字典信息", opeDao);
 				}
 
 			}
@@ -137,6 +137,10 @@ public class DictServiceImpl implements DictServiceI {
 	public List<Dict> listFields(Dict dict) {
 		String hql = "from TDict t";
 		Map<String, Object> params = new HashMap<String, Object>();
+//		String sql="from TDict t where t.genre = '03' and tname= '"+dict.getSelectType()+"'";
+//		System.out.println("_____________________________________________"+sql);
+//		TDict d=dictDao.get(sql);
+//		System.out.println("_________________________________________"+d.getEname());
 		if (dict.getSelectType() != null && dict.getSelectType().length() > 0) {
 			// SqlSelected 用来判断sql语句选择 用于区别查询条件字段 和显示字段区别
 			// 当SqlSelected 有值时为查询条件字段
@@ -165,7 +169,7 @@ public class DictServiceImpl implements DictServiceI {
 			BeanUtils.copyProperties(td, d);
 			d.setText(td.getCname());
 			Map<String, Object> attributes = new HashMap<String, Object>();
-			attributes.put("ename", td.getEname());
+			attributes.put("ename", td.getTname());
 			d.setAttributes(attributes);
 			nl.add(d);
 		}
