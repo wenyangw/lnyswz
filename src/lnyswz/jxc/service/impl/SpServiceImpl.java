@@ -282,7 +282,7 @@ public class SpServiceImpl implements SpServiceI {
 					s.setDepId(depId);
 					s.setMaxKc(det.getMaxKc());
 					s.setMinKc(det.getMinKc());
-					s.setXsdj(det.getXsdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
+					s.setXsdj(det.getXsdj());
 					s.setLimitXsdj(det.getLimitXsdj());
 				}
 			}
