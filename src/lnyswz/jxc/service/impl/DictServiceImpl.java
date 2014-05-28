@@ -124,7 +124,10 @@ public class DictServiceImpl implements DictServiceI {
 	 */
 	@Override
 	public List<Dict> selectTree(Dict dict) {
-		String hql = "from TDict t where genre = '01' and t.tname ='"+dict.getSelectType()+"' order by orderNum";
+		String dictSql = "from TDict t where t.genre = '03' and ename= '"
+				+ dict.getSelectType() + "'";
+		TDict dicts = dictDao.get(dictSql);
+		String hql = "from TDict t where genre = '01' and t.tname ='"+dicts.getEname()+"' order by orderNum";
 		List<TDict> list = dictDao.find(hql);
 		return changeDict(list);
 	}
@@ -150,7 +153,10 @@ public class DictServiceImpl implements DictServiceI {
 			}
 			where += " and t.tname = :tname order by orderNum";
 			hql += where;
-			params.put("tname", dict.getSelectType());
+			String dictSql = "from TDict t where t.genre = '03' and ename= '"
+					+ dict.getSelectType() + "'";
+			TDict dicts = dictDao.get(dictSql);
+			params.put("tname", dicts.getEname());
 		}
 		List<TDict> list = dictDao.find(hql, params);
 		return changeDict(list);
@@ -169,7 +175,8 @@ public class DictServiceImpl implements DictServiceI {
 			BeanUtils.copyProperties(td, d);
 			d.setText(td.getCname());
 			Map<String, Object> attributes = new HashMap<String, Object>();
-			attributes.put("ename", td.getTname());
+			attributes.put("ename", td.getEname());
+
 			d.setAttributes(attributes);
 			nl.add(d);
 		}
