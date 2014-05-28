@@ -33,7 +33,6 @@ import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xshk;
-import lnyswz.jxc.bean.XshkDet;
 import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjh;
@@ -52,7 +51,6 @@ import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXshk;
-import lnyswz.jxc.model.TXshkDet;
 import lnyswz.jxc.model.TJsfs;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwrk;
@@ -72,7 +70,6 @@ import lnyswz.jxc.util.Constant;
 public class XshkServiceImpl implements XshkServiceI {
 	private Logger logger = Logger.getLogger(XshkServiceImpl.class);
 	private BaseDaoI<TXshk> xshkDao;
-	private BaseDaoI<TXshkDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -95,10 +92,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		tXshk.setCreateId(xshk.getCreateId());
 		tXshk.setCreateName(xshk.getCreateName());
 		tXshk.setIsCancel("0");
-		tXshk.setIsHk("0");
-		tXshk.setIsKp("0");
-		tXshk.setLocked("0");
-		tXshk.setFromFp("0");
+		
 
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
