@@ -28,7 +28,7 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 	/**
 	 * 保存回款
 	 */
-	public void save(){
+	public void save(){		
 		User user = (User)session.get("user");
 		xshk.setCreateId(user.getId());
 		xshk.setCreateName(user.getRealName());

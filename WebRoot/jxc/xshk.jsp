@@ -2,9 +2,9 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
-var test;
 var did;
 var lx;
+var menuId;
 var xshk_khDg;
 var xshk_xskpDg;
 var jxc_xshk_ywyCombo;
@@ -12,6 +12,7 @@ var jxc_xshk_ywyCombo;
 $(function(){
 	did = lnyw.tab_options().did;
 	lx = lnyw.tab_options().lx;
+	menuId = lnyw.tab_options().id;
 	
 	$('#jxc_xshk_layout').layout({
 		fit : true,
@@ -211,13 +212,13 @@ function selectKh(rowData){
 
 //提交数据到后台
 function saveAll(){
-	console.info('khbh:' + $('#khbh').html());
-	console.info('hkje:' + $('#hkje').val());
-	if($('#khbh').html() == ''){
+	var khbh = $('#khbh').html();
+	var hkje = $('#hkje').val();
+	if(khbh == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
 		return false;
 	}
-	if($('#hkje').val() == ''){
+	if(hkje == ''){
 		$.messager.alert('提示', '没有输入回款金额,请重新操作！', 'error');
 		return false;
 	}
@@ -225,8 +226,8 @@ function saveAll(){
 	var effectRow = new Object();
 	
 	//将表头内容传入后台
-	effectRow['khbh'] = $('#khbh').val();
-	effectRow['hkje'] = $('#hkje').val();
+	effectRow['khbh'] = khbh;
+	effectRow['hkje'] = hkje;
 	
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -234,7 +235,7 @@ function saveAll(){
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	
-	effectRow['datagrid'] = JSON.stringify(rows);
+	effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows'));
 	//提交到action
 	$.ajax({
 		type: "POST",

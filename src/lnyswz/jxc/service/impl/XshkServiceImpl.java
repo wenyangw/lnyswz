@@ -121,9 +121,9 @@ public class XshkServiceImpl implements XshkServiceI {
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 //				"生成销售提货单", operalogDao);
 //		
-//		Xshk rXshk = new Xshk();
-//		rXshk.setXshklsh(lsh);
-//		return rXshk;
+		Xshk rXshk = new Xshk();
+		rXshk.setXshklsh(lsh);
+		return rXshk;
 		
 	}
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface Constant {
 	
-	public static final String NEED_AUDIT = "1";
+	public static final String NEED_AUDIT = "0";
 	//发票税率
 	public static final BigDecimal SHUILV = new BigDecimal("0.17");
 	
