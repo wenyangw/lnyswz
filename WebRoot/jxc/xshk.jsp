@@ -156,8 +156,6 @@ $(function(){
 	init();
 	
 	
-	//根据权限，动态加载功能按钮
-// 	lnyw.toolbar(0, xshk_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
 });
 
 //以下为商品列表处理代码
@@ -185,6 +183,8 @@ function init(){
 			}  
 		},
 	});
+	//根据权限，动态加载功能按钮
+ 	lnyw.toolbar(0, xshk_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
 }
 
 function selectKh(rowData){
@@ -211,8 +211,9 @@ function selectKh(rowData){
 
 //提交数据到后台
 function saveAll(){
-	
-	if($('#khbh').val() == ''){
+	console.info('khbh:' + $('#khbh').html());
+	console.info('hkje:' + $('#hkje').val());
+	if($('#khbh').html() == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
 		return false;
 	}
@@ -232,7 +233,8 @@ function saveAll(){
 	effectRow['menuId'] = menuId;
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
-	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
+	
+	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
 	$.ajax({
 		type: "POST",

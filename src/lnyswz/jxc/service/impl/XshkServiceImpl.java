@@ -33,6 +33,7 @@ import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xshk;
+import lnyswz.jxc.bean.XskpDet;
 import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjh;
@@ -107,16 +108,22 @@ public class XshkServiceImpl implements XshkServiceI {
 		
 		//处理商品明细
 		Set<TXskp> tXskps = new HashSet<TXskp>();
-
-		tXshk.setTXskps(tXskps);
-		xshkDao.save(tXshk);
-				
-		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
-				"生成销售提货单", operalogDao);
+		ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
+		for(Xskp x : xskps){
+			System.out.println(x.getXskplsh());
+			System.out.println(x.getHkje());
+		}
 		
-		Xshk rXshk = new Xshk();
-		rXshk.setXshklsh(lsh);
-		return rXshk;
+		
+		//tXshk.setTXskps(tXskps);
+		//xshkDao.save(tXshk);
+				
+//		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
+//				"生成销售提货单", operalogDao);
+//		
+//		Xshk rXshk = new Xshk();
+//		rXshk.setXshklsh(lsh);
+//		return rXshk;
 		
 	}
 
@@ -665,11 +672,6 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setXshkDao(BaseDaoI<TXshk> xshkDao) {
 		this.xshkDao = xshkDao;
-	}
-
-	@Autowired
-	public void setDetDao(BaseDaoI<TXshkDet> detDao) {
-		this.detDao = detDao;
 	}
 
 	@Autowired

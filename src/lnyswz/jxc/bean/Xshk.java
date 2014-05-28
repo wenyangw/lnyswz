@@ -26,7 +26,8 @@ public class Xshk {
 	
 	private int page;
 	private int rows;
-	
+
+	private String datagrid;
 	private String lxbh; 
 	private String menuId;
 	
@@ -132,6 +133,12 @@ public class Xshk {
 	}
 	public void setRows(int rows) {
 		this.rows = rows;
+	}
+	public String getDatagrid() {
+		return datagrid;
+	}
+	public void setDatagrid(String datagrid) {
+		this.datagrid = datagrid;
 	}
 	public String getLxbh() {
 		return lxbh;
