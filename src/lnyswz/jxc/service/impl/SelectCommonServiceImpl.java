@@ -113,15 +113,19 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		String dictSql = "from TDict t where t.genre = '03' and ename= '"
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
-		String sql = "select distinct  " + d.getCon() + " from "
+		String sql = "select  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
 		condition += " where bmbh = " + d.getDid() + "";
 
+			
 		if (d.getSqls().trim().length() > 0) {
 			condition += " " + d.getSqls();
 		}
-
 		sql += condition;
+		if (dicts.getOrderBy().trim().length() > 0) {
+			sql += " " + dicts.getOrderBy();
+		}
+			
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
 		return list;
 	}
