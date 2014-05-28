@@ -17,6 +17,8 @@ public class Xshk {
 	private String khbh;
 	private String khmc;
 	private BigDecimal hkje;
+	private BigDecimal lastHkje;
+	private String isYf;
 	private String isCancel;
 	private Integer cancelId;
 	private String cancelName;
@@ -85,6 +87,18 @@ public class Xshk {
 	}
 	public void setHkje(BigDecimal hkje) {
 		this.hkje = hkje;
+	}
+	public BigDecimal getLastHkje() {
+		return lastHkje;
+	}
+	public void setLastHkje(BigDecimal lastHkje) {
+		this.lastHkje = lastHkje;
+	}
+	public String getIsYf() {
+		return isYf;
+	}
+	public void setIsYf(String isYf) {
+		this.isYf = isYf;
 	}
 	public String getIsCancel() {
 		return isCancel;

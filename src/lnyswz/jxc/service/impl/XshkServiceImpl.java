@@ -71,7 +71,7 @@ import lnyswz.jxc.util.Constant;
 public class XshkServiceImpl implements XshkServiceI {
 	private Logger logger = Logger.getLogger(XshkServiceImpl.class);
 	private BaseDaoI<TXshk> xshkDao;
-	private BaseDaoI<TXskpDet> xskpDetDao;
+	private BaseDaoI<TXskp> xskpDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -93,7 +93,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		tXshk.setCreateId(xshk.getCreateId());
 		tXshk.setCreateName(xshk.getCreateName());
 		tXshk.setIsCancel("0");
-		
 
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
@@ -110,13 +109,14 @@ public class XshkServiceImpl implements XshkServiceI {
 		Set<TXskp> tXskps = new HashSet<TXskp>();
 		ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
 		for(Xskp x : xskps){
-			System.out.println(x.getXskplsh());
-			System.out.println(x.getHkje());
+			TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
+			tXskp.setHkje(x.getHkje());
+			tXskp.setTXshk(tXshk);
+			//tXskps.add(tXskp);
 		}
 		
-		
 		//tXshk.setTXskps(tXskps);
-		//xshkDao.save(tXshk);
+		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 //				"生成销售提货单", operalogDao);
@@ -675,8 +675,8 @@ public class XshkServiceImpl implements XshkServiceI {
 	}
 
 	@Autowired
-	public void setXskpDetDao(BaseDaoI<TXskpDet> xskpDetDao) {
-		this.xskpDetDao = xskpDetDao;
+	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
+		this.xskpDao = xskpDao;
 	}
 
 	@Autowired

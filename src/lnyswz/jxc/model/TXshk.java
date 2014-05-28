@@ -33,6 +33,7 @@ public class TXshk implements java.io.Serializable {
 	private String khmc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
+	private String isYf;
 	private String isCancel;
 	private Integer cancelId;
 	private String cancelName;
@@ -44,7 +45,7 @@ public class TXshk implements java.io.Serializable {
 	}
 
 	public TXshk(String xshklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
-			String khmc, BigDecimal hkje, BigDecimal lastHkje, String isCancel, Integer cancelId, String cancelName, Date cancelTime,
+			String khmc, BigDecimal hkje, BigDecimal lastHkje, String isYf, String isCancel, Integer cancelId, String cancelName, Date cancelTime,
 			String cancelXshklsh, Set<TXskp> TXskps) {
 		this.xshklsh = xshklsh;
 		this.createTime = createTime;
@@ -56,6 +57,7 @@ public class TXshk implements java.io.Serializable {
 		this.khmc = khmc;
 		this.hkje = hkje;
 		this.lastHkje = lastHkje;
+		this.isYf = isYf;
 		this.isCancel = isCancel;
 		this.cancelId = cancelId;
 		this.cancelName = cancelName;
@@ -156,7 +158,15 @@ public class TXshk implements java.io.Serializable {
 		this.lastHkje = lastHkje;
 	}
 
+	@Column(name = "isYf", nullable = false, length = 1)
+	public String getIsYf() {
+		return this.isYf;
+	}
 
+	public void setIsYf(String isYf) {
+		this.isYf = isYf;
+	}
+	
 	@Column(name = "isCancel", nullable = false, length = 1)
 	public String getIsCancel() {
 		return this.isCancel;

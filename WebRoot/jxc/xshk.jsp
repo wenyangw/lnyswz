@@ -9,6 +9,12 @@ var xshk_khDg;
 var xshk_xskpDg;
 var jxc_xshk_ywyCombo;
 
+//本次回款对应发票笔数
+var countHk;
+//每行回款后剩余金额
+var je;
+var lastHkje;
+
 $(function(){
 	did = lnyw.tab_options().did;
 	lx = lnyw.tab_options().lx;
@@ -73,6 +79,11 @@ $(function(){
 	        {field:'payTime',title:'应付款时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
+	        	},
+	        	styler:function(value){
+	        		if(moment().subtract('days', 1).isAfter(value)){
+	        			return 'color:red;';
+	        		}
 	        	}},
 	        {field:'hjje',title:'发票金额',width:100,align:'center'},
 	        {field:'hkedje',title:'已还金额',width:100,align:'center',
@@ -124,33 +135,40 @@ $(function(){
 	});
 	
 	$('#hkje').keyup(function() {
-		  var rows = xshk_xskpDg.datagrid('getRows');
-		  var je = Number($('#hkje').val());
-		  console.info('hkje:' + je);
-		  if(rows != undefined){
-			  $.each(rows, function(index){
-				  var hkje = 0;
-				  var whkje = rows[index].hjje - rows[index].hkedje
-				  if(je > whkje){
-					  hkje = whkje;
-					  je -= hkje;
-				  }else{
-					  hkje = je;
-					  je = 0;
-				  }
-				  xshk_xskpDg.datagrid('updateRow', {
-					  index:index,
-					  row: {
-					  	hkje: hkje.toFixed(4),
-					  }
-				  });
-				  if(je == 0){
-					  return;
-				  }
-			  });
-		  }else{
-			  $.messager.alert('提示', '回款的客户没有销售记录！', 'error');
-		  }
+		countHk = 0;
+		var rows = xshk_xskpDg.datagrid('getRows');
+		//本次回款金额
+		je = Number($('#hkje').val());
+		if(rows != undefined){
+			$.each(rows, function(index){
+				if(je != 0){
+				}
+				//每行回款金额
+				lastHkje = 0;
+				//每行未回款金额
+				var whkje = rows[index].hjje - rows[index].hkedje;
+				if(je > whkje){
+					lastHkje = whkje;
+				}else{
+					lastHkje = je;
+				}
+				je -= lastHkje;
+				xshk_xskpDg.datagrid('updateRow', {
+					index:index,
+					row: {
+						hkje: lastHkje.toFixed(4),
+					}
+				});
+					countHk++;
+				if(je == 0){
+					console.info('countHk:' + countHk);
+					console.info('lastHkje:' + lastHkje);
+					return false;
+				}
+			});
+		}else{
+			$.messager.alert('提示', '回款的客户没有销售记录！', 'error');
+		}
 	});
 	
 	//初始化信息
@@ -214,6 +232,7 @@ function selectKh(rowData){
 function saveAll(){
 	var khbh = $('#khbh').html();
 	var hkje = $('#hkje').val();
+	
 	if(khbh == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
 		return false;
@@ -227,7 +246,10 @@ function saveAll(){
 	
 	//将表头内容传入后台
 	effectRow['khbh'] = khbh;
+	effectRow['khmc'] = $('#khmc').html();
 	effectRow['hkje'] = hkje;
+	effectRow['lastHkje'] = lastHkje;
+	effectRow['isYf'] = je > 0 ? '1' : '0';
 	
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -235,7 +257,7 @@ function saveAll(){
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	
-	effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows'));
+	effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
 	//提交到action
 	$.ajax({
 		type: "POST",
@@ -249,6 +271,10 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	xshk_xskpDg.datagrid('load', {
+	    			bmbh:did,
+	    			khbh:$('#khbh').html(),
+		    	});
 			}  
 		},
 		error: function(){
