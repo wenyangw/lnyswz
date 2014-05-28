@@ -97,36 +97,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
 		
-		//根据系统设定进行处理
-		if(xshk.getNeedAudit() != null){
-			tXshk.setNeedAudit(xshk.getNeedAudit());
-			tXshk.setIsAudit("0");
-		}else{
-			tXshk.setNeedAudit("0");
-			tXshk.setIsAudit("1");
-		}
-		
-		String xskpDetIds= xshk.getXskpDetIds();
-		TXskp xskp = null;
-		int[] intDetIds = null;
-		//如果从销售开票生成的销售提货，进行关联
-		if(xskpDetIds != null && xskpDetIds.trim().length() > 0){
-			tXshk.setFromFp("1");
-			String[] strDetIds = xskpDetIds.split(",");
-			intDetIds = new int[strDetIds.length];
-//			Set<TXshkDet> tXshkDets = new HashSet<TXshkDet>();
-			int i = 0;
-			for(String detId : strDetIds){
-				intDetIds[i] = Integer.valueOf(detId);
-//				TXshkDet tXshkDet = xshkDetDao.load(TXshkDet.class, Integer.valueOf(detId));
-//				tXshkDets.add(tXshkDet);
-				i++;
-			}
-			xskp = xskpDetDao.load(TXskpDet.class, intDetIds[0]).getTXskp();
-//			tXskp.setTXshks(tXshkDets);
-			Arrays.sort(intDetIds);
-		}
-		
 		Department dep = new Department();
 		dep.setId(xshk.getBmbh());
 		dep.setDepName(depName);
@@ -135,96 +105,12 @@ public class XshkServiceImpl implements XshkServiceI {
 		kh.setKhbh(xshk.getKhbh());
 		kh.setKhmc(xshk.getKhmc());
 		
-		Fh fh = null;
-		if("1".equals(xshk.getIsFh())){
-			fh = new Fh();
-			fh.setId(xshk.getFhId());
-			fh.setFhmc(xshk.getFhmc());
-		}
-		
-		if("1".equals(xshk.getIsSx()) && "0".equals(xshk.getIsFhth())){
-			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, xshk.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
-		}
-		
 		//处理商品明细
-		Set<TXshkDet> tDets = new HashSet<TXshkDet>();
-		ArrayList<XshkDet> xshkDets = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<XshkDet>>(){});
-		for(XshkDet xshkDet : xshkDets){
-			TXshkDet tDet = new TXshkDet();
-			BeanUtils.copyProperties(xshkDet, tDet, new String[]{"id"});
-			
-			if(tDet.getCksl() == null){
-				tDet.setCksl(Constant.BD_ZERO);
-			}
-			
-			if(tDet.getKpsl() == null){
-				tDet.setKpsl(Constant.BD_ZERO);
-			}
-			
-			if(tDet.getSpje() == null){
-				tDet.setSpje(Constant.BD_ZERO);
-			}
-			
-			if(tDet.getZdwdj() == null){
-				tDet.setZdwdj(Constant.BD_ZERO);
-			}
-			
-			if(tDet.getCdwdj() == null){
-				tDet.setCdwdj(Constant.BD_ZERO);
-			}
-			
-			if("".equals(xshkDet.getCjldwId()) || null == xshkDet.getCjldwId()){
-				tDet.setCdwdj(Constant.BD_ZERO);
-				tDet.setCdwsl(Constant.BD_ZERO);
-				tDet.setZhxs(Constant.BD_ZERO);
-			}else{
-				if(xshkDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
-				}
-			}
-			
-			tDet.setTXshk(tXshk);
-			tDets.add(tDet);
+		Set<TXskp> tXskps = new HashSet<TXskp>();
 
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(xshkDet, sp);
-			
-			if("0".equals(xshk.getIsFhth())){
-				LszzServiceImpl.updateLszzSl(sp, dep, xshkDet.getZdwsl(), xshkDet.getSpje(), Constant.UPDATE_RK, lszzDao);
-				if("1".equals(xshk.getIsFh())){
-					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-				}
-			}
-			
-			if(intDetIds != null){
-				for(int detId : intDetIds){
-					TXskpDet xskpDet = xskpDetDao.load(TXskpDet.class, detId);
-					if(xshkDet.getSpbh().equals(xskpDet.getSpbh())){
-						xskpDet.setThsl(xskpDet.getThsl().add(xshkDet.getZdwsl()));
-						break;
-//						BigDecimal wksl = xshkDet.getZdwsl().subtract(xshkDet.getKpsl());
-//						xshkDets.add(xshkDet);
-//						if(kpsl.compareTo(wksl) == 1){
-//							xshkDet.setKpsl(xshkDet.getKpsl().add(wksl));
-//							kpsl = kpsl.subtract(wksl);
-//						}else{
-//							xshkDet.setKpsl(xshkDet.getKpsl().add(kpsl));
-//							tDet.setLastThsl(kpsl);
-//							break;
-//						}
-					}
-				}
-			}
-		}
-		tXshk.setTXshkDets(tDets);
+		tXshk.setTXskps(tXskps);
 		xshkDao.save(tXshk);
-
-		if(intDetIds != null){
-			xskp.getTXshks().addAll(tDets);
-		}
-		
+				
 		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 				"生成销售提货单", operalogDao);
 		
