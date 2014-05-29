@@ -136,6 +136,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			if(zTSp.getCjldw() != null){
 				zsp.setCjldwId(zTSp.getCjldw().getId());
 				zsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
+				zsp.setZhxs(zTSp.getZhxs());
 			}
 			
 
@@ -172,6 +173,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			if(jTSp.getCjldw() != null){
 				jsp.setCjldwId(zTSp.getCjldw().getId());
 				jsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
+				jsp.setZhxs(jTSp.getZhxs());
 			}
 			
 			//更新业务总账
