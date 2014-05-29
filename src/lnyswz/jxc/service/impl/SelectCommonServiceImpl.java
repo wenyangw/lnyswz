@@ -31,7 +31,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 
 		String sql = "select " + d.getCon() + " from " + dicts.getTname() + "";
-		condition += " where bmbh = " + d.getDid() + "";
+		condition += " where bmbh = '" + d.getDid() + "'";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
 		}
@@ -96,7 +96,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select distinct  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
-		condition += " where bmbh = " + d.getDid() + "";
+		condition += " where bmbh = '" + d.getDid() + "'";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
 		}
@@ -115,7 +115,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
-		condition += " where bmbh = " + d.getDid() + "";
+		condition += " where bmbh = '" + d.getDid() + "'";
 
 			
 		if (d.getSqls().trim().length() > 0) {

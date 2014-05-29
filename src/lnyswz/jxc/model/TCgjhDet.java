@@ -148,7 +148,7 @@ public class TCgjhDet implements java.io.Serializable {
 		this.spbz = spbz;
 	}
 	
-	@Column(name = "spdj", length = 4)
+	@Column(name = "spdj", length = 20)
 	public String getSpdj() {
 		return spdj;
 	}
