@@ -3,9 +3,9 @@
 
 
 <script type="text/javascript">
-var did;
-var lx;
-var menuId;
+var ywrk_did;
+var ywrk_lx;
+var ywrk_menuId;
 var ywrk_spdg;
 var ywrk_dg;
 var ywrk_kfrkDg;
@@ -44,9 +44,9 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 
 $(function(){
-	did = lnyw.tab_options().did;
-	lx = lnyw.tab_options().lx;
-	menuId = lnyw.tab_options().id;
+	ywrk_did = lnyw.tab_options().did;
+	ywrk_lx = lnyw.tab_options().lx;
+	ywrk_menuId = lnyw.tab_options().id;
 	
 	$('#jxc_ywrk_layout').layout({
 		fit : true,
@@ -123,7 +123,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_ywrk_tb',
 	});
-	lnyw.toolbar(1, ywrk_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(1, ywrk_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
 	
 	ywrk_dg.datagrid({
@@ -209,7 +209,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_ywrk_kfrkTb',
 	});
-	lnyw.toolbar(2, ywrk_kfrkDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(2, ywrk_kfrkDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
 	ywrk_kfrkDg.datagrid({
         view: detailview,
@@ -330,7 +330,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_ywrk_cgjhTb',
 	});
-	lnyw.toolbar(3, ywrk_cgjhDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(3, ywrk_cgjhDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
 // 	ywrk_cgjhDg.datagrid({
 //         view: detailview,
@@ -449,7 +449,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_ywrk_xskpTb',
 	});
-	lnyw.toolbar(4, ywrk_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(4, ywrk_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
 	ywrk_xskpDg.datagrid({
         view: detailview,
@@ -508,7 +508,7 @@ $(function(){
 				ywrk_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/ywrkAction!datagrid.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: ywrk_did,
 						createTime: countYwrk == 0 ? undefined : $('input[name=createTimeYwrk]').val(),
 						search: countYwrk == 0 ? undefined : $('input[name=searchYwrk]').val(),
 					}
@@ -519,7 +519,7 @@ $(function(){
 				ywrk_kfrkDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/kfrkAction!datagrid.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: ywrk_did,
 						fromOther: 'fromYwrk',
 						createTime: countKfrkInYwrk == 0 ? undefined : $('input[name=createTimeKfrkInYwrk]').val(),
 						search: countKfrkInYwrk == 0 ? undefined : $('input[name=searchKfrkInYwrk]').val(),
@@ -531,7 +531,7 @@ $(function(){
 				ywrk_cgjhDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagridDet.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: ywrk_did,
 						fromOther: 'fromYwrk',
 						createTime: countCgjhInYwrk == 0 ? undefined : $('input[name=createTimeCgjhInYwrk]').val(),
 						search: countCgjhInYwrk == 0 ? undefined : $('input[name=searchCgjhInYwrk]').val(),
@@ -544,11 +544,11 @@ $(function(){
 				ywrk_xskpDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xskpAction!datagrid.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: ywrk_did,
 						fromOther: 'fromYwrk',
 						createTime: countXskpInYwrk == 0 ? undefined : $('input[name=createTimeXskpInYwrk]').val(),
 						search: countXskpInYwrk == 0 ? undefined : $('input[name=searchXskpInYwrk]').val(),
-						otherBm: jxc.otherBm(did)['bmbh']
+						otherBm: jxc.otherBm(ywrk_did)['bmbh']
 						//isZs : '1',
 						},
 				});
@@ -647,7 +647,7 @@ $(function(){
 	jxc_ywrk_rklxCombo = lnyw.initCombo($("#jxc_ywrk_rklxId"), 'id', 'rklxmc', '${pageContext.request.contextPath}/jxc/rklxAction!listRklx.action');
 	
 	//初始化仓库列表
-	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + did);
+	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + ywrk_did);
 	
 
 	//初始化信息
@@ -676,8 +676,8 @@ function init(){
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/lshAction!getLsh.action',
 		data: {
-			bmbh: did,
-			lxbh: lx,
+			bmbh: ywrk_did,
+			lxbh: ywrk_lx,
 		},
 		dataType: 'json',
 		success: function(d){
@@ -688,7 +688,7 @@ function init(){
 	});
 	
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, ywrk_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, ywrk_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
 	//清空合计内容
 	ywrk_spdg.datagrid('reloadFooter',[{}]);
@@ -869,9 +869,9 @@ function saveAll(){
 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
-	effectRow['bmbh'] = did;
-	effectRow['lxbh'] = lx;
-	effectRow['menuId'] = menuId;
+	effectRow['bmbh'] = ywrk_did;
+	effectRow['lxbh'] = ywrk_lx;
+	effectRow['menuId'] = ywrk_menuId;
 	
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
@@ -892,7 +892,7 @@ function saveAll(){
 		    	init();
 		    	$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 					if (r) {
-						var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + rsp.obj.ywrklsh + '&bmbh=' + did;
+						var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + rsp.obj.ywrklsh + '&bmbh=' + ywrk_did;
 						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 					}
 				});
@@ -937,7 +937,7 @@ function setEditing(){
     	jxc.showKc('#jxc_ywrk_layout', 
     			'${pageContext.request.contextPath}/jxc/ywrkAction!getSpkc.action', 
     			{
-    				bmbh : did, 
+    				bmbh : ywrk_did, 
     				ckId : jxc_ywrk_ckCombo.combobox('getValue'),
     				spbh : $(spbhEditor.target).val(),
     			});
@@ -975,7 +975,7 @@ function setEditing(){
     					context:this,
     					data:{
     						spbh: $(this).val(),
-    						depId: did,
+    						depId: ywrk_did,
     					},
     					dataType:'json',
     					success:function(data){
@@ -1000,7 +1000,7 @@ function setEditing(){
     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
-    				did,
+    				ywrk_did,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor
@@ -1107,7 +1107,7 @@ function expandKc(bmbh, spbh){
 		url:'${pageContext.request.contextPath}/jxc/spAction!getSpKc.action',
 // 		async: false,
 		data:{
-			bmbh : did,
+			bmbh : ywrk_did,
 			spbh : spbh
 		},
 		dataType:'json',
@@ -1171,7 +1171,7 @@ function setValueBySpbh(rowData){
 	jxc.showKc('#jxc_ywrk_layout', 
 			'${pageContext.request.contextPath}/jxc/ywrkAction!getSpkc.action', 
 			{
-				bmbh : did, 
+				bmbh : ywrk_did, 
 				ckId : jxc_ywrk_ckCombo.combobox('getValue'),
 				spbh : $(spbhEditor.target).val(),
 			});
@@ -1227,9 +1227,9 @@ function cjYwrk(){
 							url : '${pageContext.request.contextPath}/jxc/ywrkAction!cjYwrk.action',
 							data : {
 								ywrklsh : row.ywrklsh,
-								bmbh: did,
-								lxbh: lx,
-								menuId : menuId,
+								bmbh: ywrk_did,
+								lxbh: ywrk_lx,
+								menuId : ywrk_menuId,
 								bz : bz
 							},
 							method: 'post',
@@ -1243,7 +1243,7 @@ function cjYwrk(){
 								});
 								$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 									if (r) {
-										var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + d.obj.ywrklsh + '&bmbh=' + did;
+										var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + d.obj.ywrklsh + '&bmbh=' + ywrk_did;
 										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 									}
 								});
@@ -1278,7 +1278,7 @@ function printYwrk(){
 
 function searchYwrk(){
 	ywrk_dg.datagrid('load',{
-		bmbh: did,
+		bmbh: ywrk_did,
 		createTime: $('input[name=createTimeYwrk]').val(),
 		search: $('input[name=searchYwrk]').val(),
 	});
@@ -1321,7 +1321,7 @@ function generateYwrk(){
 
 function searchKfrkInYwrk(){
 	ywrk_kfrkDg.datagrid('load',{
-		bmbh: did,
+		bmbh: ywrk_did,
 		createTime: $('input[name=createTimeKfrkInYwrk]').val(),
 		search: $('input[name=searchKfrkInYwrk]').val(),
 		fromOther: 'fromYwrk'
@@ -1371,7 +1371,7 @@ function createYwrkFromCgjh(){
 
 function searchCgjhInYwrk(){
 	ywrk_cgjhDg.datagrid('load',{
-		bmbh: did,
+		bmbh: ywrk_did,
 		createTime: $('input[name=createTimeCgjhInYwrk]').val(),
 		search: $('input[name=searchCgjhInYwrk]').val(),
 		fromOther: 'fromYwrk',
@@ -1396,8 +1396,8 @@ function toYwrk(){
 					success : function(d) {
 						$('input[name=isDep]').prop('checked', 'checked');
 						depChange(row.bmbh);
-						$('input[name=gysbh]').val(jxc.otherBm(did)['gysbh']);
-						$('input[name=gysmc]').val(jxc.otherBm(did)['gysmc']);
+						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
+						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
 						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
 						$('input[name=bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
@@ -1415,11 +1415,11 @@ function toYwrk(){
 
 function searchXskpInYwrk(){
 	ywrk_xskpDg.datagrid('load',{
-		bmbh: did,
+		bmbh: ywrk_did,
 		createTime: $('input[name=createTimeXskpInYwrk]').val(),
 		search: $('input[name=searchXskpInYwrk]').val(),
 		fromOther: 'fromYwrk',
-		otherBm: jxc.otherBm(did)['bmbh']
+		otherBm: jxc.otherBm(ywrk_did)['bmbh']
 // 		isZs: '1'
 	});
 }
