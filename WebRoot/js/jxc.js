@@ -200,7 +200,7 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget){
 			        {field:'spbz',title:'包装'},
 			        {field:'zjldwId',title:'主计量单位id',hidden:true},
 			        {field:'zjldwmc',title:'主计量单位'},
-			        {field:'xsdj',title:'销售单价'},
+			        {field:'xsdj',title:'销售单价(无税)'},
 			        {field:'limitXsdj',title:'最低销价',hidden:true},
 			        
 			    ]],
