@@ -6,6 +6,7 @@ var did;
 var lx;
 var menuId;
 var xshk_khDg;
+var xshk_dg;
 var xshk_xskpDg;
 var jxc_xshk_ywyCombo;
 
@@ -56,6 +57,37 @@ $(function(){
     			
 	    	});
 	    }
+	});
+	
+	xshk_dg = $('#jxc_xshk_dg').datagrid({
+		url:'${pageContext.request.contextPath}/jxc/xshkAction!datagrid.action',
+		queryParams:{
+			bmbh:did,
+		},
+		fit : true,
+	    border : false,
+	    singleSelect : true,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+	        {field:'xshklsh',title:'流水号',width:100,align:'center'},
+	        {field:'createTime',title:'回款时间',width:100,align:'center',
+	        	formatter:function(value){
+	        		return moment(value).format('YYYY-MM-DD');
+	        	}},
+	        	
+	        {field:'khbh',title:'客户编号',width:100,align:'center',hidden:true},
+	        {field:'khmc',title:'客户名称',width:100,align:'center'},
+	        {field:'hkje',title:'还款金额',width:100,align:'center'},
+	    ]],
+	    onLoadSuccess:function(data){
+			$('#khlx').html(data.obj.khlxmc);
+			$('#sxzq').html(data.obj.sxzq + '天');
+			$('#sxje').html(data.obj.sxje + '元');
+			$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+		}
 	});
 	
 	xshk_xskpDg = $('#jxc_xshk_xskpDg').datagrid({
@@ -159,7 +191,7 @@ $(function(){
 						hkje: lastHkje.toFixed(4),
 					}
 				});
-					countHk++;
+				countHk++;
 				if(je == 0){
 					console.info('countHk:' + countHk);
 					console.info('lastHkje:' + lastHkje);
@@ -248,7 +280,7 @@ function saveAll(){
 	effectRow['khbh'] = khbh;
 	effectRow['khmc'] = $('#khmc').html();
 	effectRow['hkje'] = hkje;
-	effectRow['lastHkje'] = lastHkje;
+	effectRow['lastHkje'] = xshk_xskpDg.datagrid('getRows')[countHk - 1].hkje;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
 	
 	effectRow['bmbh'] = did;
@@ -295,37 +327,44 @@ function saveAll(){
 		</div>
 	</div>
     <div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
-    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'商品分类',split:true" style="height:120px;width:100%">
-				<table class="tinfo">
-					<tr>
-						<td></td>
-						<td></td>
-						<th class="read">时间</th><td colspan="3"><div id="createDate" class="read"></div></td>
-						<th class="read">单据号</th><td colspan="4"><div id="xshkLsh" class="read"></div></td>
-					</tr>
-					<tr>
-					<td colspan="10"><hr/></td>
-					</tr>
-					<tr class="read">
-						<th>客户编号</th><td><div id="khbh"></div></td>
-						<th>客户名称</th><td colspan="3"><div id="khmc"></div></td>
-						<th>客户类型</th><td><div id="khlx"></div></td>
-					</tr>
-					<tr class="read">
-						<th>授信期</th><td><div id="sxzq"></div></td>
-						<th>授信金额</th><td style="width:100px"><div id="sxje"></div></td>
-						<th>历史陈欠</th><td style="width:100px"><div id="yfje">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
-						<th>目前欠款</th><td><div id="ysje"></div></td>
-					</tr>
-					<tr>
-						<th>本次还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
-					</tr>
-				</table>
+    	<div id="jxc_xshk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
+    		<div title="新增记录" data-options="closable:false">
+		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
+					<div data-options="region:'north',title:'商品分类',split:true" style="height:120px;width:100%">
+						<table class="tinfo">
+							<tr>
+								<td></td>
+								<td></td>
+								<th class="read">时间</th><td colspan="3"><div id="createDate" class="read"></div></td>
+								<th class="read">单据号</th><td colspan="4"><div id="xshkLsh" class="read"></div></td>
+							</tr>
+							<tr>
+							<td colspan="10"><hr/></td>
+							</tr>
+							<tr class="read">
+								<th>客户编号</th><td><div id="khbh"></div></td>
+								<th>客户名称</th><td colspan="3"><div id="khmc"></div></td>
+								<th>客户类型</th><td><div id="khlx"></div></td>
+							</tr>
+							<tr class="read">
+								<th>授信期</th><td><div id="sxzq"></div></td>
+								<th>授信金额</th><td style="width:100px"><div id="sxje"></div></td>
+								<th>历史陈欠</th><td style="width:100px"><div id="yfje">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
+								<th>目前欠款</th><td><div id="ysje"></div></td>
+							</tr>
+							<tr>
+								<th>本次还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
+							</tr>
+						</table>
+					</div>
+					<div data-options="region:'center',title:'商品分类',split:true" style="height:100%;width:100%">
+		    			<div id='jxc_xshk_xskpDg'></div>
+					</div>
+				</div>
 			</div>
-			<div data-options="region:'center',title:'商品分类',split:true" style="height:100%;width:100%">
-    			<div id='jxc_xshk_xskpDg'></div>
-			</div>
+		    <div title="销售回款列表" data-options="closable:false" >
+		    	<div id='jxc_xshk_dg'></div>
+		    </div>
 		</div>
     </div>
 </div>

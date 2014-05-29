@@ -93,6 +93,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		tXshk.setCreateId(xshk.getCreateId());
 		tXshk.setCreateName(xshk.getCreateName());
 		tXshk.setIsCancel("0");
+		tXshk.setLastHkje(xshk.getLastHkje());
 
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
@@ -114,7 +115,7 @@ public class XshkServiceImpl implements XshkServiceI {
 			tXskp.setTXshk(tXshk);
 			//tXskps.add(tXskp);
 		}
-		
+		YszzServiceImpl.updateYszzJe(dep, kh, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 		//tXshk.setTXskps(tXskps);
 		xshkDao.save(tXshk);
 				
