@@ -197,11 +197,13 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			if("0".equals(xsth.getIsFhth())){
+			if("1".equals(xsth.getIsLs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, xsthDet.getZdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
-				if("1".equals(xsth.getIsFh())){
+			}
+			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
+//				if("1".equals(xsth.getIsFh())){
 					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-				}
+//				}
 			}
 			
 			if(intDetIds != null){
@@ -329,11 +331,13 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
 
-			if("0".equals(yTXsth.getIsFhth())){
+			if("1".equals(yTXsth.getIsLs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, tDet.getZdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
-				if("1".equals(yTXsth.getIsFh())){
+			}
+			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
+//				if("1".equals(yTXsth.getIsFh())){
 					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-				}
+//				}
 			}
 		}
 
