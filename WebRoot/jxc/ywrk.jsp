@@ -1106,6 +1106,7 @@ function expandKc(bmbh, spbh){
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/spAction!getSpKc.action',
 // 		async: false,
+		cache: false,
 		data:{
 			bmbh : ywrk_did,
 			spbh : spbh
