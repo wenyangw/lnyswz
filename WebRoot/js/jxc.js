@@ -463,6 +463,7 @@ jxc.showKc = function(area, url, params){
 	$.ajax({
 		url: url,
 		data: params,
+		cache: false,
 		dataType: 'json',
 		success: function(data){
 			$('#show_spkc').propertygrid({
