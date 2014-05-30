@@ -77,9 +77,6 @@ public class XshkServiceImpl implements XshkServiceI {
 	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TYszz> yszzDao;
-	private BaseDaoI<TYwzz> ywzzDao;
-	private BaseDaoI<TFhzz> fhzzDao;
-	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -128,15 +125,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		
 	}
 
-//	private void updateKhSx(String bmbh, String khbh, BigDecimal hjje) {
-//		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("depId", bmbh);
-//		params.put("khbh", khbh);
-//		TKhDet tDet = khDetDao.get(hql, params);
-//		tDet.setYfje(tDet.getYfje().add(hjje));
-//	}
-	
 	@Override
 	public void cancelXshk(Xshk xshk) {
 		Date now = new Date();
@@ -155,7 +143,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		yTXshk.setCancelTime(now);
 		
 		tXshk.setXshklsh(lsh);
-		tXshk.setCjXshklsh(yTXshk.getXshklsh());
+		tXshk.setCancelXshklsh(yTXshk.getXshklsh());
 		tXshk.setCreateId(xshk.getCancelId());
 		tXshk.setCreateTime(now);
 		tXshk.setCreateName(xshk.getCancelName());
@@ -163,7 +151,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		tXshk.setCancelId(xshk.getCancelId());
 		tXshk.setCancelName(xshk.getCancelName());
 		tXshk.setCancelTime(now);
-		tXshk.setHjje(yTXshk.getHjje().negate());
+		tXshk.setHkje(yTXshk.getHkje().negate());
 		
 		Department dep = new Department();
 		dep.setId(tXshk.getBmbh());
@@ -173,17 +161,10 @@ public class XshkServiceImpl implements XshkServiceI {
 		kh.setKhbh(tXshk.getKhbh());
 		kh.setKhmc(tXshk.getKhmc());
 		
-		Fh fh= null;
-		if("1".equals(tXshk.getIsFh())){
-			fh = new Fh();
-			fh.setId(tXshk.getFhId());
-			fh.setFhmc(tXshk.getFhmc());
-		}
+		//更新授信客户应付金额
+		YszzServiceImpl.updateYszzJe(dep, kh, tXshk.getHkje(), Constant.UPDATE_YS_KP, yszzDao);
 		
-		if("1".equals(tXshk.getIsSx()) && "0".equals(tXshk.getIsFhth())){
-			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, tXshk.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
-		}
+		
 		
 		Set<TXshkDet> yTXshkDets = yTXshk.getTXshkDets();
 		Set<TXshkDet> tDets = new HashSet<TXshkDet>();
@@ -396,280 +377,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		return datagrid;
 	}
 	
-	@Override
-	public DataGrid datagridDet(Xshk xshk) {
-		//库房出库流程查询，保管员只可查看本人负责商品记录，其他(总账员)可以查看全部
-		DataGrid datagrid = new DataGrid();
-		String hql = "from TXshkDet t where t.TXshk.bmbh = :bmbh and t.TXshk.createTime > :createTime";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", xshk.getBmbh());
-		if(xshk.getCreateTime() != null){
-			params.put("createTime", xshk.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-		}
-		if(xshk.getSearch() != null){
-			hql += " and (t.TXshk.xshklsh like :search or t.TXshk.khmc like :search or t.TXshk.bz like :search or t.TXshk.ywymc like :search)"; 
-			params.put("search", "%" + xshk.getSearch() + "%");
-			
-		}
-		
-		//只查询未完成的有效数据
-		if(xshk.getFromOther() != null){
-			hql += " and t.TXshk.isCancel = '0'";
-			if(Constant.NEED_AUDIT.equals("1")){
-				hql += " and t.TXshk.isAudit = '1'";
-			}
-		}
-		
-		//保管员筛选
-		if(xshk.getBgyId() > 0){
-			hql += " and t.spbh in (select sb.spbh from TSpBgy sb where sb.depId = :depId and sb.bgyId = :bgyId and sb.ckId = :ckId)";
-			params.put("depId", xshk.getBmbh());
-			params.put("ckId", xshk.getCkId());
-			params.put("bgyId", xshk.getBgyId());
-		}
-		
-		//通过isKp字段来判断该查询来源，
-		if("1".equals(xshk.getIsKp())){
-			hql += " and t.TXshk.isLs = '1' and t.TXshk.isKp = '0'";
-			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TXskpDet tkd where tkd.TXskp in elements(t.TXskps) and tkd.spbh = t.spbh)";
-			hql += " and t.zdwsl <> t.kpsl";
-		}else{
-			hql += " and t.TXshk.isZs = '0' and ((t.TXshk.isFh = '0' and t.TXshk.isFhth = '0') or (t.TXshk.isFh = '1' and t.TXshk.isFhth = '1'))";
-			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
-			hql += " and t.zdwsl <> t.cksl";
-		}
-		
-		String countHql = "select count(*) " + hql;
-		hql += " order by t.TXshk.createTime desc ";
-		List<TXshkDet> l = detDao.find(hql, params, xshk.getPage(), xshk.getRows());
-		List<Xshk> nl = new ArrayList<Xshk>();
-		for(TXshkDet t : l){
-			Xshk c = new Xshk();
-			BeanUtils.copyProperties(t, c);
-			
-			if(t.getTXshk().getKhbh() != null && t.getTXshk().getKhbh().trim().length() > 0){
-				TKh tKh = khDao.load(TKh.class, t.getTXshk().getKhbh());
-				c.setSh(tKh.getSh());
-				c.setKhh(tKh.getKhh());
-				c.setDzdh(tKh.getDzdh());
-			}
-			TXshk tXshk = t.getTXshk();
-			BeanUtils.copyProperties(tXshk, c);
-
-//			if(t.getTKfcks() != null){
-//				//c.setKfcklshs(t.getTKfcks().getKfcklsh());
-//				if("1".equals(xshk.getIsKp())){
-//					c.setZdwytsl(getYksl(t.getTXshk().getXshklsh(), t.getSpbh()));
-//				}else{
-//					c.setZdwytsl(getYtsl(t.getTXshk().getXshklsh(), t.getSpbh()));
-//				}
-//			}
-			nl.add(c);
-		}
-		datagrid.setTotal(detDao.count(countHql, params));
-		datagrid.setRows(nl);
-		return datagrid;
-	}
-	
-	private BigDecimal getYtsl(String xshklsh, String spbh) {
-		String detHql = "select isnull(sum(kfDet.zdwsl), 0) from t_kfck_det kfDet "
-				+ "left join t_xshk_kfck xk on kfDet.kfcklsh = xk.kfcklsh "
-				+ "left join t_xshk_det thDet on thDet.id = xk.xshkdetId and thDet.spbh = kfDet.spbh "
-				+ "where thDet.xshklsh = ? and thDet.spbh = ?";
-		Map<String, Object> detParams = new HashMap<String, Object>();
-		detParams.put("0", xshklsh);
-		detParams.put("1", spbh);
-		BigDecimal yrsl = new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
-		return yrsl;
-	}
-	
-	private BigDecimal getYksl(String xshklsh, String spbh) {
-		String detHql = "select isnull(sum(kpDet.zdwsl), 0) from t_xskp_det kpDet "
-				+ "left join t_xshk_xskp xx on kpDet.xskplsh = xx.xskplsh "
-				+ "left join t_xshk_det thDet on thDet.id = xx.xshkdetId and thDet.spbh = kpDet.spbh "
-				+ "where thDet.xshklsh = ? and thDet.spbh = ?";
-		Map<String, Object> detParams = new HashMap<String, Object>();
-		detParams.put("0", xshklsh);
-		detParams.put("1", spbh);
-		BigDecimal yksl = new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
-		return yksl;
-	}
-	
-		
-	@Override
-	public DataGrid toKfck(Xshk xshk){
-//		String sql = "select xd.spbh, isnull(max(xd.zdwsl), 0) zdwthsl, isnull(sum(kd.zdwsl), 0) zdwytsl from t_xshk_det xd " +
-//				"left join t_xshk_kfck xk on xd.id = xk.xshkdetId " +
-//				"left join t_kfck_det kd on xk.kfcklsh = kd.kfcklsh and kd.spbh = xd.spbh ";
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(cksl), 0) zdwytsl from t_xshk_det ";
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		String xshkDetIds = xshk.getXshkDetIds();
-		if(xshkDetIds != null && xshkDetIds.trim().length() > 0){
-//			String[] xs = xshkDetIds.split(",");
-			sql += "where id in (" + xshkDetIds + ")";
-//			sql += "where ";
-//			for(int i = 0; i < xs.length; i++){
-//				sql += " xd.id = ? ";
-//				params.put(String.valueOf(i), xs[i]);
-//				if(i != xs.length - 1){
-//					sql += " or ";
-//				}
-// 			}
-		}
-		sql += " group by spbh";
-		
-		List<Object[]> l = detDao.findBySQL(sql, params);
-		
-		List<XshkDet> nl = new ArrayList<XshkDet>();
-		
-		for(Object[] os : l){
-			String spbh = (String)os[0];
-			BigDecimal zdwthsl = new BigDecimal(os[1].toString());
-			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
-			
-			TSp sp = spDao.get(TSp.class, spbh);
-			XshkDet xd = new XshkDet();
-			BeanUtils.copyProperties(sp, xd);
-			xd.setZjldwId(sp.getZjldw().getId());
-			xd.setZjldwmc(sp.getZjldw().getJldwmc());
-			xd.setZdwthsl(zdwthsl);
-			xd.setZdwytsl(zdwytsl);
-			if(sp.getCjldw() != null){
-				xd.setCjldwId(sp.getCjldw().getId());
-				xd.setCjldwmc(sp.getCjldw().getJldwmc());
-				xd.setZhxs(sp.getZhxs());
-				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
-					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				}else{
-					xd.setCdwthsl(Constant.BD_ZERO);
-					xd.setCdwytsl(Constant.BD_ZERO);
-				}
-			}
-			nl.add(xd);
-		}
-		nl.add(new XshkDet());
-		DataGrid dg = new DataGrid();
-		dg.setRows(nl);
-		return dg;
-		
-	}
-	
-	@Override
-	public void updateLock(Xshk xshk) {
-		TXshk tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
-		tXshk.setLockId(xshk.getLockId());
-		tXshk.setLockTime(new Date());
-		tXshk.setLockName(xshk.getLockName());
-		tXshk.setLocked("1");
-		OperalogServiceImpl.addOperalog(xshk.getLockId(), xshk.getBmbh(), xshk.getMenuId(), xshk.getXshklsh(), 
-				"锁定销售提货", operalogDao);
-	}
-	
-	@Override
-	public void updateUnlock(Xshk xshk) {
-		TXshk tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
-		tXshk.setLockId(xshk.getLockId());
-		tXshk.setLockTime(new Date());
-		tXshk.setLockName(xshk.getLockName());
-		tXshk.setLocked("0");
-		OperalogServiceImpl.addOperalog(xshk.getLockId(), xshk.getBmbh(), xshk.getMenuId(), xshk.getXshklsh(), 
-				"解锁销售提货", operalogDao);
-	}
-	
-	@Override
-	public DataGrid toXskp(String xshkDetIds){
-//		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xshk_det xd " +
-//				"left join t_xshk_xskp xk on xd.id = xk.xshkdetId " +
-//				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl from t_xshk_det ";
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		if(xshkDetIds != null && xshkDetIds.trim().length() > 0){
-//			String[] xs = xshkDetIds.split(",");
-			sql += "where id in (" + xshkDetIds + ")";
-//			for(int i = 0; i < xs.length; i++){
-//				sql += " xd.id = ? ";
-//				params.put(String.valueOf(i), xs[i]);
-//				if(i != xs.length - 1){
-//					sql += " or ";
-//				}
-// 			}
-		}
-		sql += " group by spbh";
-		
-		List<Object[]> l = detDao.findBySQL(sql, params);
-		
-		List<XshkDet> nl = new ArrayList<XshkDet>();
-		
-		for(Object[] os : l){
-			String spbh = (String)os[0];
-			BigDecimal zdwthsl = new BigDecimal(os[1].toString());
-			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
-			
-			TSp sp = spDao.get(TSp.class, spbh);
-			XshkDet xd = new XshkDet();
-			BeanUtils.copyProperties(sp, xd);
-			xd.setZjldwId(sp.getZjldw().getId());
-			xd.setZjldwmc(sp.getZjldw().getJldwmc());
-			xd.setZdwthsl(zdwthsl);
-			xd.setZdwytsl(zdwytsl);
-			if(sp.getCjldw() != null){
-				xd.setCjldwId(sp.getCjldw().getId());
-				xd.setCjldwmc(sp.getCjldw().getJldwmc());
-				xd.setZhxs(sp.getZhxs());
-				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
-					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				}else{
-					xd.setCdwthsl(Constant.BD_ZERO);
-					xd.setCdwytsl(Constant.BD_ZERO);
-				}
-			}
-			nl.add(xd);
-		}
-		//nl.add(new XshkDet());
-		DataGrid dg = new DataGrid();
-		dg.setRows(nl);
-		return dg;
-		
-	}
-	
-	
-	@Override
-	public DataGrid getSpkc(Xshk xshk) {
-		DataGrid dg = new DataGrid();
-		List<ProBean> lists = new ArrayList<ProBean>();
-		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(xshk.getBmbh(), xshk.getSpbh(), xshk.getCkId(), ywzzDao);
-		if(yw != null){
-			lists.addAll(yw);
-		}
-		
-//		List<ProBean> kf = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, null, kfzzDao);
-//		if(kf != null){
-//			lists.addAll(kf);
-//		}
-//		List<ProBean> pc = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, "", kfzzDao);
-//		if(pc != null){
-//			lists.addAll(pc);
-//		}
-		if(xshk.getFhId() != null && xshk.getFhId().trim().length() > 0){
-			List<ProBean> fh = FhzzServiceImpl.getZzsl(xshk.getBmbh(), xshk.getSpbh(), xshk.getFhId(), fhzzDao);
-			if(fh != null){
-				lists.addAll(fh);
-			}
-		}
-		
-		dg.setRows(lists);
-		dg.setTotal((long)lists.size());
-		return dg;
-	}
-	
-	
 	@Autowired
 	public void setXshkDao(BaseDaoI<TXshk> xshkDao) {
 		this.xshkDao = xshkDao;
@@ -703,21 +410,6 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
-	}
-
-	@Autowired
-	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {
-		this.ywzzDao = ywzzDao;
-	}
-
-	@Autowired
-	public void setFhzzDao(BaseDaoI<TFhzz> fhzzDao) {
-		this.fhzzDao = fhzzDao;
-	}
-	
-	@Autowired
-	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
-		this.lszzDao = lszzDao;
 	}
 
 	@Autowired
