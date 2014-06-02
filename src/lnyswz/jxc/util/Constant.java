@@ -18,6 +18,13 @@ public interface Constant {
 	public static final String JS_PT_FILENAME = "billpt.txt";
 	//金穗接口文本通用标识文件
 	public static final String FP_ONE = "10590";
+	
+	public static final String KHLX_XK = "01";
+	public static final String KHLX_XK_NAME = "现款";
+	public static final String KHLX_SX = "02";
+	public static final String KHLX_YJ = "03";
+	public static final String KHLX_HT = "04";
+	
 
 
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
@@ -145,5 +152,5 @@ public interface Constant {
 		put("05","21010103");
 	}};
 	
-	public static final String XSKP_JSFS_QK = "06"; 
+	public static final String XSKP_JSFS_QK = "06";
 }

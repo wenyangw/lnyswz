@@ -80,7 +80,7 @@ public class TXskp implements java.io.Serializable {
 	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
 //	private Set<TXsth> TXsths = new HashSet<TXsth>(0);
 	private TYwrk TYwrk;
-	private TXshk TXshk;
+//	private Set<TXshk> TXshks;
 
 	public TXskp() {
 	}
@@ -90,7 +90,7 @@ public class TXskp implements java.io.Serializable {
 			String jsfsmc, String fplxId, String fplxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
 			BigDecimal hjse, BigDecimal hkje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
 			String isTh, Date thTime, String xsthlsh, String isHk, Date hkTime, String needAudit, String isAudit, 
-			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk, TXshk TXshk) {
+			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk) {
 		this.xskplsh = xskplsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -140,7 +140,7 @@ public class TXskp implements java.io.Serializable {
 		this.TXskpDets = TXskpDets;
 		this.TXsths = TXsths;
 		this.TYwrk = TYwrk;
-		this.TXshk = TXshk;
+//		this.TXshks = TXshks;
 	}
 
 	@Id
@@ -591,13 +591,12 @@ public class TXskp implements java.io.Serializable {
 		TYwrk = tYwrk;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "xshklsh", nullable = false)
-	public TXshk getTXshk() {
-		return this.TXshk;
-	}
-
-	public void setTXshk(TXshk TXshk) {
-		this.TXshk = TXshk;
-	}
+//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TXskps")
+//	public Set<TXshk> getTXshks() {
+//		return this.TXshks;
+//	}
+//	
+//	public void setTXshks(Set<TXshk> TXshks) {
+//		this.TXshks = TXshks;
+//	}
 }

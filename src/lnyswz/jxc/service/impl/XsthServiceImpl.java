@@ -148,7 +148,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			fh.setFhmc(xsth.getFhmc());
 		}
 		
-		if("1".equals(xsth.getIsSx()) && "0".equals(xsth.getIsFhth())){
+		if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(xsth.getIsFhth())){
+		//if("1".equals(xsth.getIsSx()) && "0".equals(xsth.getIsFhth())){
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, xsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
@@ -294,7 +295,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			fh.setFhmc(tXsth.getFhmc());
 		}
 		
-		if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
+		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
+		//if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, tXsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
 		}

@@ -144,7 +144,8 @@ public class XskpServiceImpl implements XskpServiceI {
 
 		tXskp.setIsHk("0");
 		//授信客户，并且未从销售提货导入，更新应收
-		if("1".equals(xskp.getIsSx())){
+		//if("1".equals(xskp.getIsSx())){
+		if(xskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 			if(xsthDetIds == null){
 				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
@@ -420,7 +421,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		//授信客户，并且未从销售提货导入
-		if("1".equals(tXskp.getIsSx())){
+		//if("1".equals(tXskp.getIsSx())){
+		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 			Kh kh = new Kh();
 			kh.setKhbh(tXskp.getKhbh());
 			kh.setKhmc(tXskp.getKhmc());
@@ -937,33 +939,44 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		String khHql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh";
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao);
+//		String khHql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh";
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("bmbh", xskp.getBmbh());
+//		params.put("khbh", xskp.getKhbh());
+//		TKhDet tKhDet = khDetDao.get(khHql, params);
+//		Kh kh = new Kh();
+//		if(tKhDet != null){
+//			BeanUtils.copyProperties(tKhDet, kh);
+//			if(kh.getKhlxId() == null){
+//				kh.setKhlxId(Constant.KHLX_XK);
+//			}
+//			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
+//		}else{
+//			kh.setKhlxId(Constant.KHLX_XK);
+//			kh.setKhlxmc(khlxDao.load(TKhlx.class, Constant.KHLX_XK).getKhlxmc());
+//			kh.setSxje(Constant.BD_ZERO);
+//			kh.setSxzq(0);
+//		}
+		
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
 		params.put("khbh", xskp.getKhbh());
-		TKhDet tKhDet = khDetDao.get(khHql, params);
-		Kh kh = null;
-		if(tKhDet != null){
-			kh = new Kh();
-			BeanUtils.copyProperties(tKhDet, kh);
-			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
-			
-			String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
-			params.put("jsfsId", Constant.XSKP_JSFS_QK);
-			List<TXskp> tXskps = xskpDao.find(hql, params);
-			
-			for(TXskp tXskp : tXskps){
-				Xskp x = new Xskp();
-				x.setXskplsh(tXskp.getXskplsh());
-				x.setCreateTime(tXskp.getCreateTime());
-				x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
-				x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
-				x.setHkedje(tXskp.getHkje());
-				xskps.add(x);
-			}
-			dg.setObj(kh);
-			dg.setRows(xskps);
+		params.put("jsfsId", Constant.XSKP_JSFS_QK);
+		List<TXskp> tXskps = xskpDao.find(hql, params);
+		
+		for(TXskp tXskp : tXskps){
+			Xskp x = new Xskp();
+			x.setXskplsh(tXskp.getXskplsh());
+			x.setCreateTime(tXskp.getCreateTime());
+			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
+			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+			x.setHkedje(tXskp.getHkje());
+			xskps.add(x);
 		}
+		dg.setObj(kh);
+		dg.setRows(xskps);
 		return dg;
 	}
 	

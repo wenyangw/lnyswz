@@ -394,6 +394,25 @@ public class KhServiceImpl implements KhServiceI {
 		dg.setRows(khs);
 		return dg;
 	}
+	
+	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao) {
+		Kh kh = new Kh();
+
+		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("depId", depId);
+		params.put("khbh", khbh);
+		TKhDet tKhDet = khDetDao.get(hql, params);
+		if(tKhDet != null){
+			BeanUtils.copyProperties(tKhDet, kh);
+		}else{
+			kh.setKhlxId(Constant.KHLX_XK);
+			kh.setKhlxmc(Constant.KHLX_XK_NAME);
+			kh.setSxje(Constant.BD_ZERO);
+			kh.setSxzq(0);
+		}
+		return kh;
+	}
 
 	@Autowired
 	public void setKhDao(BaseDaoI<TKh> khDao) {

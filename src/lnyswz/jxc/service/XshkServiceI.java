@@ -7,5 +7,5 @@ public interface XshkServiceI {
 	public Xshk save(Xshk xshk);
 	public void cancelXshk(Xshk xshk);
 	public DataGrid datagrid(Xshk xshk);
-	public DataGrid detDatagrid(String xshklsh);
+	public DataGrid detDatagrid(Xshk xshk);
 }

@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -39,14 +42,14 @@ public class TXshk implements java.io.Serializable {
 	private String cancelName;
 	private Date cancelTime;
 	private String cancelXshklsh;
-	private Set<TXskp> TXskps = new HashSet<TXskp>(0);
+	private Set<THkKp> THkKps = new HashSet<THkKp>(0);
 
 	public TXshk() {
 	}
 
 	public TXshk(String xshklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
 			String khmc, BigDecimal hkje, BigDecimal lastHkje, String isYf, String isCancel, Integer cancelId, String cancelName, Date cancelTime,
-			String cancelXshklsh, Set<TXskp> TXskps) {
+			String cancelXshklsh, Set<THkKp> THkKps) {
 		this.xshklsh = xshklsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -63,7 +66,7 @@ public class TXshk implements java.io.Serializable {
 		this.cancelName = cancelName;
 		this.cancelTime = cancelTime;
 		this.cancelXshklsh = cancelXshklsh;
-		this.TXskps = TXskps;
+		this.THkKps = THkKps;
 	}
 
 	@Id
@@ -213,13 +216,13 @@ public class TXshk implements java.io.Serializable {
 		this.cancelXshklsh = cancelXshklsh;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXshk", cascade=CascadeType.ALL)
-	public Set<TXskp> getTXskps() {
-		return this.TXskps;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TXshk")
+	public Set<THkKp> getTHkKps() {
+		return this.THkKps;
 	}
 
-	public void setTXskps(Set<TXskp> TXskps) {
-		this.TXskps = TXskps;
+	public void setTHkKps(Set<THkKp> THkKps) {
+		this.THkKps = THkKps;
 	}
-
+	
 }

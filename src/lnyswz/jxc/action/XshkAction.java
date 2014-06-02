@@ -50,7 +50,7 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 	/**
 	 * 取消回款
 	 */
-	public void cancelXsth(){
+	public void cancelXshk(){
 		User user = (User)session.get("user");
 		xshk.setCancelId(user.getId());
 		xshk.setCancelName(user.getRealName());
@@ -72,6 +72,10 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 	 */
 	public void datagrid(){
 		writeJson(xshkService.datagrid(xshk));
+	}
+	
+	public void detDatagrid(){
+		writeJson(xshkService.detDatagrid(xshk));
 	}
 	
 	@Override

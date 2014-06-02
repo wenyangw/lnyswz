@@ -28,6 +28,8 @@ public class Xshk {
 	
 	private int page;
 	private int rows;
+	
+	private String search;
 
 	private String datagrid;
 	private String lxbh; 
@@ -153,6 +155,12 @@ public class Xshk {
 	}
 	public void setDatagrid(String datagrid) {
 		this.datagrid = datagrid;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
 	}
 	public String getLxbh() {
 		return lxbh;
