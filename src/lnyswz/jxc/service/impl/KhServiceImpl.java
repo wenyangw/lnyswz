@@ -379,6 +379,7 @@ public class KhServiceImpl implements KhServiceI {
 			hql += " and t.ywyId = :ywyId";
 			params.put("ywyId", kh.getYwyId());
 		}
+		hql += " order by t.TKh.khbh";
 		List<TKhDet> tDets = khdetDao.find(hql, params);
 		List<Kh> khs = new ArrayList<Kh>();
 		for(TKhDet tDet : tDets){
@@ -395,7 +396,7 @@ public class KhServiceImpl implements KhServiceI {
 		return dg;
 	}
 	
-	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao) {
+	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
 		Kh kh = new Kh();
 
 		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
@@ -405,6 +406,7 @@ public class KhServiceImpl implements KhServiceI {
 		TKhDet tKhDet = khDetDao.get(hql, params);
 		if(tKhDet != null){
 			BeanUtils.copyProperties(tKhDet, kh);
+			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
 		}else{
 			kh.setKhlxId(Constant.KHLX_XK);
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);

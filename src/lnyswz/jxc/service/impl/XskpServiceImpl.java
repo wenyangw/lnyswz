@@ -939,7 +939,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao);
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
 //		String khHql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh";
 //		Map<String, Object> params = new HashMap<String, Object>();
 //		params.put("bmbh", xskp.getBmbh());

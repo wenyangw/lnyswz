@@ -305,43 +305,13 @@ function editKhDet(){
 				    valueField:'id',
 				    textField:'khlxmc',
 
-	        {field:'isSx',title:'授信客户',
-	        	formatter : function(value, rowData, rowIndex) {
-	        	if(value == '1'){
-	        		return '是';
-	        	}else{
-	        		return '否';
-	        	}				
-				}},
-	        {field:'sxzq',title:'授信账期(天)',
-	        	formatter : function(value, rowData, rowIndex) {
-	        	if(value==0){
-	        		return '';
-	        	}else{
-	        		return value;
-	        	}				
-				}},
-	        {field:'sxje',title:'授信金额(元)',width:100,align:'right',
-					formatter : function(value, rowData, rowIndex) {
-	        	if(value==0){
-	        		return '';
-	        	}else{
-	        		return value;
-	        	}				
-				}},
-// 	        {field:'yfje',title:'应付金额',width:100,align:'right',
-// 					formatter : function(value, rowData, rowIndex) {
-// 	        	if(value==0){
-// 	        		return '';
-// 	        	}else{
-// 	        		return value;
-// 	        	}				
-// 				}},
-	        ]],
-	});
+				});
+			}
+		});
+	}
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(0, kh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
-});
+}
 
 function appendKh() {
 	var p = $('#jxc_kh_addDialog');

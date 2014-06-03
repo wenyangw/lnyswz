@@ -193,10 +193,13 @@ $(function(){
 	        	}},
 	    ]],
 	    onLoadSuccess:function(data){
-			$('#khlx').html(data.obj.khlxmc);
-			$('#sxzq').html(data.obj.sxzq + '天');
-			$('#sxje').html(data.obj.sxje + '元');
-			$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+	    	console.info('|' + $('khbh').html() + '|');
+	    	if($('khbh').html() != ''){
+				$('#khlx').html(data.obj.khlxmc);
+				$('#sxzq').html(data.obj.sxzq + '天');
+				$('#sxje').html(data.obj.sxje + '元');
+				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+	    	}
 		}
 	});
 	//根据权限，动态加载功能按钮
