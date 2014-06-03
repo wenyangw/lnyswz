@@ -43,14 +43,14 @@
 				disabled="disabled"></td>
 		</tr>
 		<tr>
-			<th><label for="yfje">应付金额</label></th>
+			<th><label for="yfje">历史金额</label></th>
 			<td><input name="yfje" class="easyui-validatebox"
 				data-options="validType:'integer'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 	</table>
-	<input type="hidden" name="id">
+<!-- 	<input type="hidden" name="id"> -->
 	<input type="hidden" name="detId">
 	<input type="hidden" name="depId" >
 	<input type="hidden" name="menuId" >	

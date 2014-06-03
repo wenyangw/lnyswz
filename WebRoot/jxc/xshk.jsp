@@ -193,8 +193,8 @@ $(function(){
 	        	}},
 	    ]],
 	    onLoadSuccess:function(data){
-	    	console.info('|' + $('khbh').html() + '|');
-	    	if($('khbh').html() != ''){
+	    	console.info('|' + $('#khbh').html() + '|');
+	    	if($('#khbh').html() != ''){
 				$('#khlx').html(data.obj.khlxmc);
 				$('#sxzq').html(data.obj.sxzq + '天');
 				$('#sxje').html(data.obj.sxje + '元');

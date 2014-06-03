@@ -35,7 +35,7 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
-	private BaseDaoI<TOperalog>opeDao;
+	private BaseDaoI<TOperalog> opeDao;
 
 	/**
 	 * 保存客户
@@ -90,7 +90,7 @@ public class KhServiceImpl implements KhServiceI {
 		if (kh.getDetId().equals("")) {
 			Set<TKhDet> gdt = g.getTKhDets();
 			TKhDet khDet = new TKhDet();
-			BeanUtils.copyProperties(kh, khDet);
+			BeanUtils.copyProperties(kh, khDet, new String[]{"id"});
 			khDet.setId(UUID.randomUUID().toString());
 			TDepartment dep = depDao.get(TDepartment.class, kh.getDepId());
 			khDet.setTDepartment(dep);
@@ -109,7 +109,7 @@ public class KhServiceImpl implements KhServiceI {
 			keyId = kh.getKhbh() + "/" + khDet.getId();
 		} else {
 			TKhDet v = khdetDao.get(TKhDet.class, kh.getDetId());
-			keyId=kh.getBh() + "/" + kh.getDetId();
+			keyId=kh.getKhbh() + "/" + kh.getDetId();
 			BeanUtils.copyProperties(kh, v);
 		}
 		
@@ -412,6 +412,7 @@ public class KhServiceImpl implements KhServiceI {
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);
 			kh.setSxje(Constant.BD_ZERO);
 			kh.setSxzq(0);
+			kh.setYfje(Constant.BD_ZERO);
 		}
 		return kh;
 	}
@@ -439,6 +440,11 @@ public class KhServiceImpl implements KhServiceI {
 	@Autowired
 	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
 		this.khlxDao = khlxDao;
+	}
+
+	@Autowired
+	public void setOpeDao(BaseDaoI<TOperalog> opeDao) {
+		this.opeDao = opeDao;
 	}
 
 }

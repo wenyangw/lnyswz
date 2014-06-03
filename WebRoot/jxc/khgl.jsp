@@ -22,7 +22,7 @@ $(function(){
 		pageList : pageList,
 	    columns:[[
 	    	{title:'通用信息',colspan:7},
-			{title:'专属信息',colspan:6},
+			{title:'专属信息',colspan:7},
 			],[
 	        {field:'khbh',title:'客户编号'},
 	        {field:'khmc',title:'客户名称',width:100},
@@ -31,11 +31,11 @@ $(function(){
 	        {field:'sh',title:'税号',	width:100},
 	        {field:'fr',title:'法人代表',width:100},
 	        {field:'address',title:'送货地址',width:100},
+// 	        {field:'detId',title:'detId',width:100,hidden:true},
 	        {field:'ywyId',title:'业务员id',width:100,hidden:true},
 	        {field:'ywyName',title:'业务员',width:100},
 	        {field:'lxr',title:'联系人'},
 	        {field:'did',title:'部门id',width:100, hidden:true},
-
 	        {field:'khlxId',title:'客户类型id',width:100,hidden:true},
 	        {field:'khlxmc',title:'客户类型',width:100},
 	        {field:'isSx',title:'授信客户',
@@ -62,14 +62,14 @@ $(function(){
 	        		return value;
 	        	}				
 				}},
-// 	        {field:'yfje',title:'应付金额',width:100,align:'right',
-// 					formatter : function(value, rowData, rowIndex) {
-// 	        	if(value==0){
-// 	        		return '';
-// 	        	}else{
-// 	        		return value;
-// 	        	}				
-// 				}},
+	        {field:'yfje',title:'历史金额',width:100,align:'right',
+					formatter : function(value, rowData, rowIndex) {
+	        	if(value==0){
+	        		return '';
+	        	}else{
+	        		return value;
+	        	}				
+				}},
 	        ]],
 	});
 	//根据权限，动态加载功能按钮
@@ -254,6 +254,7 @@ function removeKh(){
 	}
 }
 
+
 function editKhDet(){
 	var row = kh_dg.datagrid('getSelected');
 	if(row != undefined){	
@@ -262,7 +263,7 @@ function editKhDet(){
 			title : '编辑客户专属信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 350,
-			height : 300,
+			height : 360,
 			buttons : [ {
 				text : '编辑',
 				handler : function() {
@@ -299,243 +300,8 @@ function editKhDet(){
 				    textField:'realName',
 				    panelHeight: 'auto',
 				});
-				var khlxId = $("input[name=khlxId]");
-				var khlxCombo = khlxId.combobox({
-				    url:'${pageContext.request.contextPath}/jxc/khlxAction!listKhlx.action',
-				    valueField:'id',
-				    textField:'khlxmc',
-
-				});
-			}
-		});
-	}
-	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, kh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
-}
-
-function appendKh() {
-	var p = $('#jxc_kh_addDialog');
-	p.dialog({
-		title : '增加客户',
-		href : '${pageContext.request.contextPath}/jxc/khAdd.jsp',
-		width : 340,
-		height : 290,
-		modal : true,
-		buttons: [{
-            text:'增加',
-            iconCls:'icon-ok',
-            handler:function(){
-            	$('#jxc_khAdd_form').form('submit', {
-					url : '${pageContext.request.contextPath}/jxc/khAction!add.action',
-					onSubmit: function(){	
-						if($(this).form('validate')){
-							var flag=true;
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/khAction!existKh.action',
-								async: false,
-								data : {
-									khbh :$('input[name=khbh]').val()
-								},
-								dataType : 'json',
-								success : function(d) {
-									if(!d.success){								
-										flag=false;
-									}
-									
-								}								
-							});	
-							if(!flag){
-	            				$.messager.alert('提示', '客户编号已存在！', 'error');
-	            			}
-	            			return flag;
-	            		}else{
-	            			return false;
-	            		}
-					},
-					success : function(d) {
-						var json = $.parseJSON(d);
-						if (json.success) {
-							kh_dg.datagrid('appendRow', json.obj);
-							p.dialog('close');
-						}
-						$.messager.show({
-							title : "提示",
-							msg : json.msg
-						});
-					}
-				});
-            }
-        }],
-        onLoad : function() {
-			var f = p.find('form');	
-			f.form('load', {
-				//sxzq :0,
-				//sxje :0,
-				depId:did,
-				menuId:mid,		
-			});			
-			f.find('input[name=khbh]').focus();
-
-			initNsr($('form input[name=isNsr]'));
-			$('form input[name=isNsr]').click(function(){
-				initNsr(this);
-			});
-		}
-	});
-}
-
-function editKh(){
-	var row = kh_dg.datagrid('getSelected');
-	if(row != undefined){	
-		var p = $('#jxc_kh_addDialog');
-		p.dialog({
-			title : '编辑客户',
-			href : '${pageContext.request.contextPath}/jxc/khAdd.jsp',
-			width : 350,
-			height : 290,
-			buttons : [ {
-				text : '编辑',
-				handler : function() {
-					var f = p.find('form');
-					f.form('submit', {
-						url : '${pageContext.request.contextPath}/jxc/khAction!edit.action',
-						onSubmit: function(){	
-							if($(this).form('validate')){
-								return true;
-							}else{
-	            				return false;
-	            			}
-						},
-						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
-								kh_dg.datagrid('reload');
-								p.dialog('close');
-							}
-							$.messager.show({
-								msg : json.msg,
-								title : '提示'
-							});
-						}
-					});
-				}
-			} ],
-			onLoad : function() {
-				var f = p.find('form');
-				row["depId"] = did;
-				row["menuId"] = mid;
-				f.form('load', row);
-// 				f.form('load', {
-// 					khbh : rows[0].khbh,
-// 					khmc: rows[0].khmc,
-// 					dzdh: rows[0].dzdh,
-// 					khh:rows[0].khh,
-// 					sh:rows[0].sh,
-// 					fr:rows[0].fr,
-// 					isNsr:rows[0].isNsr,
-// 					depId:did,
-// 					menuId:mid,		
-// 				});
-				initNsr($('form input[name=isNsr]'));
-								
-				f.find('input[name=khbh]').focus();
-				$('form input[name=isNsr]').click(function(){
-					initNsr(this);
-				});
-			}
-		});
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行修改！',  'warning');
-	}
-}
-
-function initNsr(target){
-	if($(target).is(':checked')){
-		$('form input[name=sh]').removeAttr('disabled');
-		$('form input[name=khh]').removeAttr('disabled');
-	}else{
-		$('form input[name=sh]').attr('disabled','disabled');
-		$('form input[name=khh]').attr('disabled','disabled');
-	}
-};
-function removeKh(){
-	var row = kh_dg.datagrid('getSelected');
-	if (row != undefined) {
-		$.messager.confirm('请确认', '您要删除当前所选项目？', function(r) {
-			if (r) {
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/khAction!delete.action',
-					async: false,
-					data : {
-						khbh : row.khbh,
-						depId : did,
-						menuId : mid,		
-					},
-					dataType : 'json',
-					success : function(d) {
-						if(!d.success){
-							$.messager.alert('警告', '对不起！此客户被其他部门占用！',  'warning');
-						}
-						kh_dg.datagrid('load');
-						kh_dg.datagrid('unselectAll');
-						$.messager.show({
-							title : '提示',
-							msg : d.msg
-						});
-					}
-				});
-			}
-		});
-	} else {
-		$.messager.alert('警告', '请选择一条记录进行删除！',  'warning');
-	}
-}
-
-function editKhDet(){
-	var row = kh_dg.datagrid('getSelected');
-	if(row != undefined){	
-		var p = $('#jxc_kh_addDialog');
-		p.dialog({
-			title : '编辑客户专属信息',
-			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
-			width : 350,
-			height : 260,
-			buttons : [ {
-				text : '编辑',
-				handler : function() {
-					var f = p.find('form');
-					f.form('submit', {
-						url : '${pageContext.request.contextPath}/jxc/khAction!editDet.action',
-						onSubmit: function(){
-							if($(this).form('validate')){
-								return true;
-							}else{
-	            				return false;
-	            			}
-						},
-						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
-								kh_dg.datagrid('reload');
-								p.dialog('close');
-							}
-							$.messager.show({
-								msg : json.msg,
-								title : '提示'
-							});
-						}
-					});
-				}
-			} ],
-			onLoad : function() {
-				var f = p.find('form');
-				var ywyId = $("input[name=ywyId]");
-				var ywyCombo = ywyId.combobox({
-				    url:'${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + did,
-				    valueField:'id',
-				    textField:'realName',
-				    panelHeight: 'auto',
-				});
+				
+// 				row["id"] = row.detId;
 				row["depId"] = did;
 				row["menuId"] = mid;
 				f.form('load', row);
