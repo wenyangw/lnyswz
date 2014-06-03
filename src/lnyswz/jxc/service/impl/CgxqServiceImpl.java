@@ -259,6 +259,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 					cd.setCdwsl(Constant.BD_ZERO);
 				}
 			}
+			
 			nl.add(cd);
 		}
 		nl.add(new CgxqDet());

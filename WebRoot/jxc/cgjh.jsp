@@ -1414,7 +1414,15 @@ function createCgjh(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$.each(d.rows, function(index){
+							if(index == d.rows.length - 1){
+								return false;
+							}
+							d.rows[index].shdz = rows[0].shdz;
+							d.rows[index].dhsj = rows[0].dhsj;
+						});
 						cgjh_spdg.datagrid('loadData', d.rows);
+						
 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
 						cgjh_tabs.tabs('select', 0);
 					}
