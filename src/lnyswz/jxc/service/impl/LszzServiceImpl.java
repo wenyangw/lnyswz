@@ -72,8 +72,6 @@ public class LszzServiceImpl implements LszzServiceI {
 						
 			tLszz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
 			
-			
-			
 			tLszz.setQcsl(Constant.BD_ZERO);
 			tLszz.setQcje(Constant.BD_ZERO);
 			if(type.equals(Constant.UPDATE_RK)){

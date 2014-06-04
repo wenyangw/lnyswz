@@ -376,10 +376,10 @@ public class XskpServiceImpl implements XskpServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 
-			if(tXskp.getFhId() != null && tXskp.getTXsths() == null){
+			if(yTXskp.getFhId() != null && yTXskp.getTXsths() == null){
 				Fh fh = new Fh();
-				fh.setId(tXskp.getFhId());
-				fh.setFhmc(tXskp.getFhmc());
+				fh.setId(yTXskp.getFhId());
+				fh.setFhmc(yTXskp.getFhmc());
 				
 				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
