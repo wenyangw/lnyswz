@@ -941,6 +941,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
 
+		
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
