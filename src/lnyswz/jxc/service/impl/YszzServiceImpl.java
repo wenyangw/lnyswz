@@ -95,10 +95,12 @@ public class YszzServiceImpl implements YszzServiceI {
 		}
 	}
 	
-	public static BigDecimal getYsje(String bmbh){
+	public static BigDecimal getYsje(String bmbh, String khbh){
 		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.jzsj = :jzsj";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", bmbh);
+		params.put("khbh", khbh);
+		params.put
 		return null; 
 	}
 }

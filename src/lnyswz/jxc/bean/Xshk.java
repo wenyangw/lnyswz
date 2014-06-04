@@ -18,6 +18,7 @@ public class Xshk {
 	private String khmc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
+	private Date payTime;
 	private String isYf;
 	private String isCancel;
 	private Integer cancelId;
@@ -95,6 +96,12 @@ public class Xshk {
 	}
 	public void setLastHkje(BigDecimal lastHkje) {
 		this.lastHkje = lastHkje;
+	}
+	public Date getPayTime() {
+		return payTime;
+	}
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
 	}
 	public String getIsYf() {
 		return isYf;

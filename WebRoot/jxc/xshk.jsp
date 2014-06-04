@@ -354,6 +354,7 @@ function saveAll(){
 	effectRow['khbh'] = khbh;
 	effectRow['khmc'] = $('#khmc').html();
 	effectRow['hkje'] = hkje;
+	effectRow['payTime'] = $('input[name=payTime]').val();
 	effectRow['lastHkje'] = xshk_xskpDg.datagrid('getRows')[countHk - 1].hkje;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
 	
@@ -474,7 +475,8 @@ function searchXshk(){
 								<th>目前欠款</th><td><div id="ysje"></div></td>
 							</tr>
 							<tr>
-								<th>本次还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
+								<th>还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
+								<th>还款日期</th><td><input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px"></td>
 							</tr>
 						</table>
 					</div>
