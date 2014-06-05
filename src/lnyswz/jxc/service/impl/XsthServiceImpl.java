@@ -137,6 +137,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		dep.setId(xsth.getBmbh());
 		dep.setDepName(depName);
 		
+		Ck ck = new Ck();
+		ck.setId(xsth.getCkId());
+		ck.setCkmc(xsth.getCkmc());
+		
 		Kh kh = new Kh();
 		kh.setKhbh(xsth.getKhbh());
 		kh.setKhmc(xsth.getKhmc());
@@ -199,7 +203,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(xsthDet, sp);
 			
 			if("1".equals(xsth.getIsLs())){
-				LszzServiceImpl.updateLszzSl(sp, dep, xsthDet.getZdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, xsthDet.getZdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
 //				if("1".equals(xsth.getIsFh())){
@@ -284,6 +288,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		dep.setId(tXsth.getBmbh());
 		dep.setDepName(tXsth.getBmmc());
 		
+		Ck ck = new Ck();
+		ck.setId(yTXsth.getCkId());
+		ck.setCkmc(yTXsth.getCkmc());
+		
 		Kh kh = new Kh();
 		kh.setKhbh(tXsth.getKhbh());
 		kh.setKhmc(tXsth.getKhmc());
@@ -334,7 +342,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if("1".equals(yTXsth.getIsLs())){
-				LszzServiceImpl.updateLszzSl(sp, dep, tDet.getZdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
 //				if("1".equals(yTXsth.getIsFh())){
