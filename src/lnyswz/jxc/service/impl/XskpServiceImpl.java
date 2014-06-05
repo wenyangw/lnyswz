@@ -232,7 +232,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			//从销售提货生成销售开票，更新临时总账
 			if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
-				LszzServiceImpl.updateLszzSl(sp, dep, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
 			}
 			
 //			TXsthDet tXsthDet = xsthDetDao.load(TXsthDet.class, Integer.valueOf(detId));
@@ -377,7 +377,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			//从销售提货生成销售开票，更新临时总账
 			if("1".equals(yTXskp.getFromTh())){
 //			if(yTXskp.getTXsths() != null){
-				LszzServiceImpl.updateLszzSl(sp, dep, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
 				
 				//冲减对应销售提货单中的kpsl
 				BigDecimal kpsl = yTDet.getZdwsl();

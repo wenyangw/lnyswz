@@ -23,6 +23,8 @@ public class TLszz implements java.io.Serializable {
 	private String jzsj;
 	private String bmbh;
 	private String bmmc;
+	private String ckId;
+	private String ckmc;
 	private String spbh;
 	private String spmc;
 	private String spcd;
@@ -43,14 +45,15 @@ public class TLszz implements java.io.Serializable {
 	public TLszz() {
 	}
 
-	public TLszz(int id, String jzsj, String bmbh, String bmmc, String spbh, String spmc, String spcd,
-			String sppp, String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc,
-			BigDecimal zhxs, BigDecimal qcsl, BigDecimal qcje, BigDecimal lssl, BigDecimal lsje,
-			BigDecimal kpsl, BigDecimal kpje) {
+	public TLszz(int id, String jzsj, String bmbh, String bmmc, String ckId, String ckmc, String spbh, String spmc, 
+			String spcd, String sppp, String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc,
+			BigDecimal zhxs, BigDecimal qcsl, BigDecimal qcje, BigDecimal lssl, BigDecimal lsje, BigDecimal kpsl, BigDecimal kpje) {
 		this.id = id;
 		this.jzsj = jzsj;
 		this.bmbh = bmbh;
 		this.bmmc = bmmc;
+		this.ckId = ckId;
+		this.ckmc = ckmc;
 		this.spbh = spbh;
 		this.spmc = spmc;
 		this.spcd = spcd;
@@ -106,6 +109,24 @@ public class TLszz implements java.io.Serializable {
 	
 	public void setBmmc(String bmmc) {
 		this.bmmc = bmmc;
+	}
+	
+	@Column(name = "ckId", length = 2)
+	public String getCkId() {
+		return ckId;
+	}
+	
+	public void setCkId(String ckId) {
+		this.ckId = ckId;
+	}
+	
+	@Column(name = "ckmc", length = 20)
+	public String getCkmc() {
+		return ckmc;
+	}
+	
+	public void setCkmc(String ckmc) {
+		this.ckmc = ckmc;
 	}
 	
 	@Column(name = "spbh", nullable = false, length = 7)
