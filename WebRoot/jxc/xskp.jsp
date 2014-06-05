@@ -1368,6 +1368,9 @@ function generateXskp(){
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
 							$('input[name=bookmc]').val(rows[0].bookmc);
+							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
+							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
+							
 							if(rows[0].isSx == '1'){
 								$('input[name=isSx]').attr('checked', 'ckecked');
 							}
