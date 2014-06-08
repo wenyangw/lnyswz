@@ -199,6 +199,7 @@ $(function(){
 				$('#sxzq').html(data.obj.sxzq + '天');
 				$('#sxje').html(data.obj.sxje + '元');
 				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
 	    	}
 		}
 	});

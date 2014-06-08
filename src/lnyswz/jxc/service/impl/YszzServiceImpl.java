@@ -95,12 +95,16 @@ public class YszzServiceImpl implements YszzServiceI {
 		}
 	}
 	
-	public static BigDecimal getYsje(String bmbh, String khbh){
+	public static BigDecimal getYsje(String bmbh, String khbh, BaseDaoI<TYszz> yszzDao){
 		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.jzsj = :jzsj";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", bmbh);
 		params.put("khbh", khbh);
-		params.put
-		return null; 
+		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
+		TYszz tYszz = yszzDao.get(hql, params);
+		if(tYszz != null){
+			return tYszz.getQcje().add(tYszz.getYsje()).subtract(tYszz.getHkje());
+		}
+		return Constant.BD_ZERO; 
 	}
 }
