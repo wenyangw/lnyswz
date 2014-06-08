@@ -29,6 +29,8 @@ public class Kh {
 	private String mc;
 	private BigDecimal sxje;
 	private BigDecimal yfje;
+	private BigDecimal ysje;
+	
 	private String detId;
 	private String query;
 	
@@ -222,6 +224,14 @@ public class Kh {
 
 	public void setYfje(BigDecimal yfje) {
 		this.yfje = yfje;
+	}
+
+	public BigDecimal getYsje() {
+		return ysje;
+	}
+
+	public void setYsje(BigDecimal ysje) {
+		this.ysje = ysje;
 	}
 
 	public String getDetId() {

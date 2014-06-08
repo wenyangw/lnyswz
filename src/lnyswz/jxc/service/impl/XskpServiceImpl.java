@@ -146,10 +146,18 @@ public class XskpServiceImpl implements XskpServiceI {
 		//授信客户，并且未从销售提货导入，更新应收
 		//if("1".equals(xskp.getIsSx())){
 		if(xskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
-			if(xsthDetIds == null){
+			if(xsthDetIds == null || xsthDetIds.equals("")){
 				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
 				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
+			}
+			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao);
+			if(ysje.compareTo(Constant.BD_ZERO) < 0){
+				if(xskp.getHjje().add(xskp.getHjse()).compareTo(ysje.abs()) > 0){
+					tXskp.setHkje(ysje.abs());
+				}else{
+					tXskp.setHkje(xskp.getHjje().add(xskp.getHjse()));
+				}
 			}
 		}
 		
@@ -941,6 +949,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
 		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
+		
+		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao).add(kh.getYfje()));
 
 		
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
