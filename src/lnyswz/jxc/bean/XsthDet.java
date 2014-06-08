@@ -34,6 +34,7 @@ public class XsthDet{
 	private BigDecimal spje;
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
+	private BigDecimal thsl;
 	private BigDecimal zdwthsl;
 	private BigDecimal cdwthsl;
 	private BigDecimal zdwytsl;
@@ -153,6 +154,12 @@ public class XsthDet{
 	}
 	public void setKpsl(BigDecimal kpsl) {
 		this.kpsl = kpsl;
+	}
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 	public BigDecimal getZdwthsl() {
 		return zdwthsl;

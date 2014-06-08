@@ -110,7 +110,7 @@ $(function(){
 					if (value == '1') {
 						return '已冲减';
 					} else {
-						return '正常';
+						return '';
 					}
 				},
         		sorter: function(a,b){

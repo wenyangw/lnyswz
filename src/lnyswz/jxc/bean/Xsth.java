@@ -77,6 +77,7 @@ public class Xsth {
 	private BigDecimal spje;
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
+	private BigDecimal thsl;
 	private String kfcklshs;
 	
 	private String search;
@@ -523,6 +524,12 @@ public class Xsth {
 	}
 	public void setKpsl(BigDecimal kpsl) {
 		this.kpsl = kpsl;
+	}
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 	public String getKfcklshs() {
 		return kfcklshs;

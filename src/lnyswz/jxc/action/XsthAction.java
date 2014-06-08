@@ -76,6 +76,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	/**
+	 * 修改销售提货数量
+	 */
+	public void updateThsl(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setCreateName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateThsl(xsth);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("修改销售提货数量成功！");
+		}catch(Exception e){
+			j.setMsg("修改销售提货数量失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
 	 * 锁定销售提货
 	 */
 	public void updateLock(){

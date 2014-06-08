@@ -43,6 +43,7 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal spje;
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
+	private BigDecimal thsl;
 	
 	private Set<TKfck> TKfcks;
 	private Set<TXskp> TXskps;
@@ -52,7 +53,7 @@ public class TXsthDet implements java.io.Serializable {
 
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
-			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal kpsl, Set<TKfck> TKfcks, Set<TXskp> TXskps) {
+			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal kpsl, BigDecimal thsl, Set<TKfck> TKfcks, Set<TXskp> TXskps) {
 		this.id = id;
 		this.TXsth = TXsth;
 		this.spbh = spbh;
@@ -72,6 +73,7 @@ public class TXsthDet implements java.io.Serializable {
 		this.spje = spje;
 		this.cksl = cksl;
 		this.kpsl = kpsl;
+		this.thsl = thsl;
 		this.TKfcks = TKfcks;
 		this.TXskps = TXskps;
 	}
@@ -248,6 +250,15 @@ public class TXsthDet implements java.io.Serializable {
 
 	public void setKpsl(BigDecimal kpsl) {
 		this.kpsl = kpsl;
+	}
+	
+	@Column(name = "thsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TXsths")

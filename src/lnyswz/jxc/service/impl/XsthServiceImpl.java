@@ -195,6 +195,7 @@ public class XsthServiceImpl implements XsthServiceI {
 					tDet.setCdwsl(Constant.BD_ZERO);
 				}
 			}
+			tDet.setThsl(Constant.BD_ZERO);
 			
 			tDet.setTXsth(tXsth);
 			tDets.add(tDet);
@@ -583,6 +584,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			TXsth tXsth = t.getTXsth();
 			BeanUtils.copyProperties(tXsth, c);
+			
+			if(t.getTXskps() != null && t.getTXskps().size() > 0){
+				c.setIsKp("1");
+			}
 
 //			if(t.getTKfcks() != null){
 //				//c.setKfcklshs(t.getTKfcks().getKfcklsh());
@@ -682,6 +687,32 @@ public class XsthServiceImpl implements XsthServiceI {
 		dg.setRows(nl);
 		return dg;
 		
+	}
+	
+	@Override
+	public void updateThsl(Xsth xsth) {
+		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
+		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
+		
+		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+			tXsthDet.setThsl(tXsthDet.getZdwsl());
+		}
+		tXsthDet.setZdwsl(xsth.getThsl());
+		
+		TXsth tXsth = tXsthDet.getTXsth();
+		Sp sp = new Sp();
+		BeanUtils.copyProperties(tXsthDet, sp);
+		Department dep = new Department();
+		dep.setId(tXsth.getBmbh());
+		dep.setDepName(tXsth.getBmmc());
+		Ck ck = new Ck();
+		ck.setId(tXsth.getCkId());
+		ck.setCkmc(tXsth.getCkmc());
+		
+		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, Constant.BD_ZERO, Constant.UPDATE_RK, lszzDao);
+		
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
+				"修改提货数量", operalogDao);
 	}
 	
 	@Override
