@@ -209,6 +209,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				BeanUtils.copyProperties(tDet, tXsthDet, new String[]{"id"});
 				tXsthDet.setCksl(Constant.BD_ZERO);
 				tXsthDet.setKpsl(tDet.getZdwsl());
+				tXsthDet.setThsl(Constant.BD_ZERO);
 				//发票单价不含税，提货单单价含税
 				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				//提货单只有金额字段，要将发票中金额与税额相加
@@ -609,7 +610,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tDet.setKpsl(xskpDet.getZdwsl());
 			tDet.setZdwdj(xskpDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 			tDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
-			
+			tDet.setThsl(Constant.BD_ZERO);
 			tDet.setTXsth(tXsth);
 //			tDet.setTXskps(tXskps);
 			tDets.add(tDet);

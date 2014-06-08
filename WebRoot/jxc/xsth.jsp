@@ -1409,6 +1409,8 @@ function printXsth(){
 // }
 
 
+
+
 function searchXsth(){
 	xsth_dg.datagrid('load',{
 		bmbh: did,

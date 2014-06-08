@@ -229,6 +229,13 @@ $(function(){
 				styler:function(){
 					return 'color:red;';
 				}},
+			{field:'thsl',title:'原提货数量',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:blue;';
+				}},
 			{field:'zdwdj',title:'单价1',align:'center'},
 // 			{field:'zdwytsl',title:'开票数量',align:'center',
 // 				formatter: function(value){
