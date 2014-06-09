@@ -57,7 +57,12 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-			{field:'xsthlsh',title:'流水号',align:'center'},
+			{field:'xsthlsh',title:'流水号',align:'center',
+				styler: function(value, rowData){
+					if(rowData.isCancel == '1'){
+						return 'color:red;';
+					}
+				}},
 	        {field:'createTime',title:'*时间',align:'center',sortable:true,
 				sorter: function(a,b){
 					return moment(a).diff(moment(b), 'days');
