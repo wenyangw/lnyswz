@@ -404,12 +404,12 @@ $(function(){
 	});
 	
 	$('input[name=zspje]').bind('keyup', function(event){
-		if($('input[name=jspbh]').val() != ''){
-			calDj('0');
+		if($('input[name=zspbh]').val() != ''){
+			calDj('1');
 		}else{
-			$.messager.alert('提示', '减少商品信息未填写！', 'error', function(){
-				$('input[name=jspje]').val('');
-				$('input[name=jspbh]').focus();
+			$.messager.alert('提示', '增加商品信息未填写！', 'error', function(){
+				$('input[name=zspje]').val('');
+				$('input[name=zspbh]').focus();
 			});
 		}
 	});
