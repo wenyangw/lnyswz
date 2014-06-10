@@ -584,6 +584,9 @@ public class XskpServiceImpl implements XskpServiceI {
 		return spgg;
 	}
 	
+	/**
+	 * 由销售开票全部生成提货单
+	 */
 	@Override
 	public void createXsth(Xskp xskp) {
 		TXskp tXskp = xskpDao.load(TXskp.class, xskp.getXskplsh());
@@ -656,6 +659,9 @@ public class XskpServiceImpl implements XskpServiceI {
 				"生成销售提货单", operalogDao);
 	}
 	
+	/**
+	 * 由销售开票分批生成提货单
+	 */
 	@Override
 	public DataGrid toXsth(String xskpDetIds){
 		String sql = "select spbh, isnull(zdwsl, 0) kpsl, isnull(thsl, 0) thsl from t_xskp_det where zdwsl <> thsl";
