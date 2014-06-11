@@ -40,13 +40,20 @@ public class YwzzServiceImpl implements YwzzServiceI {
 
 	@Override
 	public DataGrid listLowSps(Ywzz ywzz){
-		String sql = "select y.spbh, y.spmc, y.spcd, y.sppp, y.spbz, y.zjldwId, y.zjldwmc, s.minKc, y.qcsl + y.rksl - y.xssl " + 
-				" from t_ywzz y " +
-				" left join t_sp_det s on y.spbh = s.spbh and s.depId = y.bmbh " + 
-				" where bmbh = ? and jzsj = ? and ckId is null and qcsl + rksl - xssl < minKc";
+		String sql = "select spDet.depId, spDet.spbh, sp.spmc, sp.spcd, sp.sppp, sp.spbz, sp.zjldwId, dw.jldwmc, spDet.minKc, isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) kcsl" + 
+			" from t_sp_det spDet" +
+			" left join t_sp sp on sp.spbh = spDet.spbh" +
+			" left join t_jldw dw on dw.id = sp.zjldwId" +
+			" left join t_ywzz yw on yw.bmbh = spDet.depId and yw.spbh = spDet.spbh and yw.jzsj = CONVERT(char(6), getDate(), 112) and yw.ckId is null" +
+			" left join t_lszz ls on ls.bmbh = spDet.depId and ls.spbh = spDet.spbh and ls.jzsj = CONVERT(char(6), getDate(), 112) and ls.ckId is null" +
+			" where spDet.depId = ? and spDet.minKc > 0 and spDet.minKc > isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) ";
+//		String sql = "select y.spbh, y.spmc, y.spcd, y.sppp, y.spbz, y.zjldwId, y.zjldwmc, s.minKc, y.qcsl + y.rksl - y.xssl " + 
+//				" from t_ywzz y " +
+//				" left join t_sp_det s on y.spbh = s.spbh and s.depId = y.bmbh " + 
+//				" where bmbh = ? and jzsj = ? and ckId is null and qcsl + rksl - xssl < minKc";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywzz.getBmbh());
-		params.put("1", DateUtil.getCurrentDateString("yyyyMM"));
+//		params.put("1", DateUtil.getCurrentDateString("yyyyMM"));
 		
 		List<Object[]> l = ywzzDao.findBySQL(sql, params);
 		if(l != null && l.size() > 0){
