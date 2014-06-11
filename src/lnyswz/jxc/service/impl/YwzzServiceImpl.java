@@ -40,7 +40,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 
 	@Override
 	public DataGrid listLowSps(Ywzz ywzz){
-		String sql = "select spDet.depId, spDet.spbh, sp.spmc, sp.spcd, sp.sppp, sp.spbz, sp.zjldwId, zdw.jldwmc, sp.cjldwId, cdw.jldwmc, sp.zhxs, spDet.minKc, isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) kcsl" + 
+		String sql = "select spDet.depId, spDet.spbh, sp.spmc, sp.spcd, sp.sppp, sp.spbz, sp.zjldwId, zdw.jldwmc zjldwmc, sp.cjldwId, cdw.jldwmc cjldwmc, isnull(sp.zhxs, 0) zhxs, spDet.minKc, isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) kcsl" + 
 			" from t_sp_det spDet" +
 			" left join t_sp sp on sp.spbh = spDet.spbh" +
 			" left join t_jldw zdw on zdw.id = sp.zjldwId" +
