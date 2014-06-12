@@ -14,6 +14,7 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.service.FhzzServiceI;
@@ -33,7 +34,7 @@ public class YszzServiceImpl implements YszzServiceI {
 	 * 更新应收
 	 * 
 	 */
-	public static void updateYszzJe(Department dep, Kh kh, BigDecimal je, String type, BaseDaoI<TYszz> baseDao) {
+	public static void updateYszzJe(Department dep, Kh kh, User ywy, BigDecimal je, String type, BaseDaoI<TYszz> baseDao) {
 		String hql = "from TYszz t where t.bmbh = :bmbh and t.jzsj = :jzsj and t.khbh = :khbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("khbh", kh.getKhbh());
@@ -41,10 +42,16 @@ public class YszzServiceImpl implements YszzServiceI {
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		
 		//总账处理
-		updateYszz(dep, kh, je, type, baseDao, hql, params);
+		updateYszz(dep, kh, null, je, type, baseDao, hql + " and t.ywyId = 0", params);
+		
+		hql += " and ywyId = :ywyId";
+		params.put("ywyId", ywy.getId());
+		updateYszz(dep, kh, ywy, je, type, baseDao, hql, params);
+		
+		
 	}
 	
-	private static void updateYszz(Department dep, Kh kh, BigDecimal je, String type, BaseDaoI<TYszz> baseDao, String hql, Map<String, Object> params) {
+	private static void updateYszz(Department dep, Kh kh, User ywy, BigDecimal je, String type, BaseDaoI<TYszz> baseDao, String hql, Map<String, Object> params) {
 		TYszz tYszz = baseDao.get(hql, params);
 		if(tYszz == null){
 			tYszz = new TYszz();
@@ -53,6 +60,11 @@ public class YszzServiceImpl implements YszzServiceI {
 			tYszz.setKhbh(kh.getKhbh());
 			tYszz.setKhmc(kh.getKhmc());
 			tYszz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
+			
+			if(ywy != null){
+				tYszz.setYwyId(ywy.getId());
+				tYszz.setYwymc(ywy.getRealName());
+			}
 			
 			tYszz.setQcje(Constant.BD_ZERO);
 			tYszz.setQclsje(Constant.BD_ZERO);
