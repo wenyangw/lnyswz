@@ -24,6 +24,8 @@ public class TYszz implements java.io.Serializable {
 	private String bmmc;
 	private String khbh;
 	private String khmc;
+	private int ywyId;
+	private String ywymc;
 	private BigDecimal qcje;
 	private BigDecimal qclsje;
 	private BigDecimal ysje;
@@ -34,13 +36,15 @@ public class TYszz implements java.io.Serializable {
 	public TYszz() {
 	}
 
-	public TYszz(int id, String bmbh, String bmmc, String khbh, String khmc,
+	public TYszz(int id, String bmbh, String bmmc, String khbh, String khmc, int ywyId, String ywymc,
 			BigDecimal qcje, BigDecimal qclsje, BigDecimal ysje, BigDecimal yslsje, BigDecimal hkje, String jzsj) {
 		this.id = id;
 		this.bmbh = bmbh;
 		this.bmmc = bmmc;
 		this.khbh = khbh;
 		this.khmc = khmc;
+		this.ywyId = ywyId;
+		this.ywymc = ywymc;
 		this.qcje = qcje;
 		this.qclsje = qclsje;
 		this.ysje = ysje;
@@ -94,6 +98,24 @@ public class TYszz implements java.io.Serializable {
 	
 	public void setKhmc(String khmc) {
 		this.khmc = khmc;
+	}
+
+	@Column(name = "ywyId")
+	public int getYwyId() {
+		return ywyId;
+	}
+
+	public void setYwyId(int ywyId) {
+		this.ywyId = ywyId;
+	}
+	
+	@Column(name = "ywymc", length = 20)
+	public String getYwymc() {
+		return ywymc;
+	}
+
+	public void setYwymc(String ywymc) {
+		this.ywymc = ywymc;
 	}
 
 	@Column(name = "qcje", precision = 18, scale = 4)

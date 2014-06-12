@@ -31,6 +31,7 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xsth;
 import lnyswz.jxc.bean.XsthDet;
@@ -154,8 +155,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(xsth.getIsFhth())){
 		//if("1".equals(xsth.getIsSx()) && "0".equals(xsth.getIsFhth())){
+			User ywy = new User();
+			ywy.setId(xsth.getYwyId());
+			ywy.setRealName(xsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, xsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
 		
 		//处理商品明细
@@ -306,8 +310,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
 		//if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
+			User ywy = new User();
+			ywy.setId(tXsth.getYwyId());
+			ywy.setRealName(tXsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, tXsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
 		
 		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
