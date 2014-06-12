@@ -20,6 +20,7 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
 import lnyswz.jxc.bean.Xsth;
@@ -146,10 +147,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		//授信客户，并且未从销售提货导入，更新应收
 		//if("1".equals(xskp.getIsSx())){
 		if(xskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+			User ywy = new User();
+			ywy.setId(xskp.getYwyId());
+			ywy.setRealName(xskp.getYwymc());
 			if(xsthDetIds == null || xsthDetIds.equals("")){
-				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
 			}
 			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao);
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
@@ -435,10 +439,15 @@ public class XskpServiceImpl implements XskpServiceI {
 			Kh kh = new Kh();
 			kh.setKhbh(tXskp.getKhbh());
 			kh.setKhmc(tXskp.getKhmc());
+			
+			User ywy = new User();
+			ywy.setId(tXskp.getYwyId());
+			ywy.setRealName(tXskp.getYwymc());
+			
 			if(yTXskp.getTXsths() == null){
-				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
 			}
 		}
 
