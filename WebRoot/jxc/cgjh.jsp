@@ -1475,27 +1475,30 @@ function searchCgxqInCgjh(){
 
 function createCgjhFromSpkc(){
 	var rows = cgjh_spkcDg.datagrid('getSelections');
-	var spbhs = [];
+	//var spbhs = [];
 	if(rows.length > 0){
 		$.messager.confirm('请确认', '是否要将选中记录生成采购计划？', function(r) {
 			if (r) {
-				for ( var i = 0; i < rows.length; i++) {
-					spbhs.push(rows[i].spbh);
-				}
-				var spbhStr = spbhs.join(',');
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/ywzzAction!toCgjh.action',
-					data : {
-						spbhs : spbhStr,
-						bmbh : did
-					},
-					dataType : 'json',
-					success : function(d) {
-						cgjh_spdg.datagrid('loadData', d.rows);
-// 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
+// 				for ( var i = 0; i < rows.length; i++) {
+// 					spbhs.push(rows[i].spbh);
+// 				}
+// 				var spbhStr = spbhs.join(',');
+// 				$.ajax({
+// 					url : '${pageContext.request.contextPath}/jxc/ywzzAction!toCgjh.action',
+// 					data : {
+// 						spbhs : spbhStr,
+// 						bmbh : did
+// 					},
+// 					dataType : 'json',
+// 					success : function(d) {
+// 						cgjh_spdg.datagrid('loadData', d.rows);
+// // 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
+// 						cgjh_tabs.tabs('select', 0);
+// 					}
+// 				});
+				cgjh_spdg.datagrid('loadData', rows);
+// // 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
 						cgjh_tabs.tabs('select', 0);
-					}
-				});
 			}
 		});
 	}else{
