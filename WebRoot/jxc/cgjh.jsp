@@ -221,13 +221,13 @@ $(function(){
         			cgjhlsh: row.cgjhlsh,
         		},
                 columns:[[
-                    {field:'spbh',title:'商品编号',width:200,align:'center'},
-                    {field:'spmc',title:'名称',width:100,align:'center'},
-                    {field:'spcd',title:'产地',width:100,align:'center'},
-                    {field:'sppp',title:'品牌',width:100,align:'center'},
+                    {field:'spbh',title:'商品编号',width:80,align:'center'},
+                    {field:'spmc',title:'名称',width:250,align:'center'},
+                    {field:'spcd',title:'产地',width:80,align:'center'},
+                    {field:'sppp',title:'品牌',width:80,align:'center'},
                     {field:'spbz',title:'包装',width:100,align:'center'},
-                    {field:'spdj',title:'等级',width:100,align:'center'},
-                    {field:'zjldwmc',title:'单位1',width:100,align:'center'},
+                    {field:'spdj',title:'等级',width:50,align:'center'},
+                    {field:'zjldwmc',title:'单位1',width:60,align:'center'},
                     {field:'zdwsl',title:'数量1',width:100,align:'center',
                        	formatter: function(value){
                        		return value == 0 ? '' : value;
