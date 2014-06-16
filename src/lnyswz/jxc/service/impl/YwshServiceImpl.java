@@ -130,7 +130,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc from t_audit_set t "
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz from t_audit_set t "
 				+ " left join t_xsth th on th.bmbh = t.bmbh"
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " where t.userId = ? and th.needAudit <> '0' and th.isAudit = '0'";
@@ -151,6 +151,8 @@ public class YwshServiceImpl implements YwshServiceI {
 			String khbh = (String)o[6];
 			String khmc = (String)o[7];
 			String jsfsmc = (String)o[8];
+			BigDecimal hjje = new BigDecimal(o[9].toString());
+			String bz = (String)o[10];
 			
 			y.setBmbh(bmbh);
 			y.setBmmc(bmmc);
@@ -159,6 +161,8 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setYwymc(ywymc);
 			y.setKhmc(khmc);
 			y.setJsfsmc(jsfsmc);
+			y.setHjje(hjje);
+			y.setBz(bz);
 			
 			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, yszzDao));						
 			ywhss.add(y);

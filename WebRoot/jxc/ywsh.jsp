@@ -27,23 +27,27 @@ $(function(){
 	var cardView = $.extend({}, $.fn.datagrid.defaults.view, {
 	    renderRow: function(target, fields, frozen, rowIndex, rowData){
 	        var cc = [];
-	        cc.push('<td colspan=' + fields.length + ' style="padding:10px 5px;border:0;">');
+	        cc.push('<td colspan=' + fields.length + ' style="width:1000px;padding:10px 5px;border:0;">');
 	        if (!frozen){
-	            cc.push('<div style="float:left;margin-left:20px;">');
+// 	            cc.push('<div style="float:left;margin-left:20px;">');
+	            cc.push('<table border= "0" width = 95%>');
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
 	                if(fields[i] == 'lsh'){
 	                	xsthlsh = rowData.lsh;
 	                }
 	                if(i % 2 == 0){
-	                	cc.push('<p>');
+// 	                	cc.push('<p>');
+	                	cc.push('<tr>');
 	                }
-	                cc.push('<span class="c-label">' + copts.title + ':</span> ' + rowData[fields[i]]);
-	                if(i % 2 == 1 || (fields.length - 1  == i)){
-	                	cc.push('</p>');
+	                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
+	                if(i % 2 == 1 || (fields.length - 1  == i && i % 2 == 0)){
+// 	                	cc.push('</p>');
+	                	cc.push('</tr>');
 	                }
 	            }
-	            cc.push('</div>');
+	            cc.push('</table>');
+// 	            cc.push('</div>');
 	        }
 	        cc.push('<br><div id="cardDg"></div>');
 	        
@@ -66,6 +70,8 @@ $(function(){
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'khmc',title:'客户名称',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
+			{field:'hjje',title:'合计金额',align:'center'},
+			{field:'bz',title:'备注',align:'center'},
 			{field:'ysje',title:'应收金额',align:'center'},
 	    ]],
 	    view: cardView,
@@ -81,18 +87,18 @@ $(function(){
 	    	    remoteSort: false,
 //	     	    fitColumns: true,
 	    		columns:[[
-					{field:'spbh',title:'商品编号',width:80,align:'center'},
+					{field:'spbh',title:'商品编号',width:60,align:'center'},
 					{field:'spmc',title:'名称',width:200,align:'center'},
-					{field:'spcd',title:'产地',width:100,align:'center'},
-					{field:'sppp',title:'品牌',width:100,align:'center'},
-					{field:'spbz',title:'包装',width:100,align:'center'},
-					{field:'zjldwmc',title:'单位1',width:100,align:'center'},
-					{field:'zdwsl',title:'数量1',width:100,align:'center'},
-					{field:'zdwdj',title:'单价1',width:100,align:'center'},
-					{field:'cjldwmc',title:'单位2',width:100,align:'center'},
-					{field:'cdwsl',title:'数量2',width:100,align:'center'},
-					{field:'cdwdj',title:'单价2',width:100,align:'center'},
-					{field:'spje',title:'金额',width:100,align:'center',
+					{field:'spcd',title:'产地',width:50,align:'center'},
+					{field:'sppp',title:'品牌',width:60,align:'center'},
+					{field:'spbz',title:'包装',width:60,align:'center'},
+					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
+					{field:'zdwsl',title:'数量1',width:90,align:'center'},
+					{field:'zdwdj',title:'单价1',width:90,align:'center'},
+					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
+					{field:'cdwsl',title:'数量2',width:90,align:'center'},
+					{field:'cdwdj',title:'单价2',width:90,align:'center'},
+					{field:'spje',title:'金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
 						}},
@@ -337,7 +343,7 @@ function searchYwsh(){
 <div id="jxc_ywsh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="审核" data-options="closable:false">
         <div id='jxc_ywsh_layout' style="height:100%;width=100%">
-			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
+			<div data-options="region:'center',title:'商品信息',split:true" >		
 				<table id='jxc_ywsh_toDg'></table>
 			</div>
 		</div>

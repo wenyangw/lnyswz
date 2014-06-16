@@ -23,6 +23,7 @@ public class Ywsh {
 	private String ywymc;
 	private String khmc;
 	private String jsfsmc;
+	private BigDecimal hjje;
 	private BigDecimal ysje;
 	
 	public long getId() {
@@ -120,6 +121,12 @@ public class Ywsh {
 	}
 	public void setJsfsmc(String jsfsmc) {
 		this.jsfsmc = jsfsmc;
+	}
+	public BigDecimal getHjje() {
+		return hjje;
+	}
+	public void setHjje(BigDecimal hjje) {
+		this.hjje = hjje;
 	}
 	public BigDecimal getYsje() {
 		return ysje;
