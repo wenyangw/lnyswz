@@ -1,5 +1,6 @@
 package lnyswz.jxc.bean;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Ywsh {
@@ -18,9 +19,11 @@ public class Ywsh {
 	//数据传递时保存数据
 	private String bmbh;
 	private String bmmc;
+	private String auditName;
 	private String ywymc;
 	private String khmc;
 	private String jsfsmc;
+	private BigDecimal ysje;
 	
 	public long getId() {
 		return id;
@@ -94,6 +97,12 @@ public class Ywsh {
 	public void setBmmc(String bmmc) {
 		this.bmmc = bmmc;
 	}
+	public String getAuditName() {
+		return auditName;
+	}
+	public void setAuditName(String auditName) {
+		this.auditName = auditName;
+	}
 	public String getYwymc() {
 		return ywymc;
 	}
@@ -111,6 +120,12 @@ public class Ywsh {
 	}
 	public void setJsfsmc(String jsfsmc) {
 		this.jsfsmc = jsfsmc;
+	}
+	public BigDecimal getYsje() {
+		return ysje;
+	}
+	public void setYsje(BigDecimal ysje) {
+		this.ysje = ysje;
 	}
 	
 	

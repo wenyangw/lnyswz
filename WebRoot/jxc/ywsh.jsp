@@ -11,6 +11,7 @@ var ywsh_toDg;
 var ywsh_dg;
 var ywsh_tabs;
 
+var xsthlsh;
 
 $(function(){
 	ywsh_did = lnyw.tab_options().did;
@@ -31,10 +32,21 @@ $(function(){
 	            cc.push('<div style="float:left;margin-left:20px;">');
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
-	                cc.push('<p><span class="c-label">' + copts.title + ':</span> ' + rowData[fields[i]] + '</p>');
+	                if(fields[i] == 'lsh'){
+	                	xsthlsh = rowData.lsh;
+	                }
+	                if(i % 2 == 0){
+	                	cc.push('<p>');
+	                }
+	                cc.push('<span class="c-label">' + copts.title + ':</span> ' + rowData[fields[i]]);
+	                if(i % 2 == 1 || (fields.length - 1  == i)){
+	                	cc.push('</p>');
+	                }
 	            }
 	            cc.push('</div>');
 	        }
+	        cc.push('<br><div id="cardDg"></div>');
+	        
 	        cc.push('</td>');
 	        return cc.join('');
 	    }
@@ -42,19 +54,51 @@ $(function(){
 	
 	
 	ywsh_toDg = $('#jxc_ywsh_toDg').datagrid({
+		showHeader: false,
 		pagination : true,
 		pagePosition : 'bottom',
 		pageSize : 1,
 		pageList : [1, 2],
 		columns:[[
 			{field:'bmmc',title:'部门',align:'center'},
+			{field:'auditName',title:'业务名称',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'khmc',title:'客户名称',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
-			
+			{field:'ysje',title:'应收金额',align:'center'},
 	    ]],
 	    view: cardView,
+	    onLoadSuccess:function(){
+	    	$('#cardDg').datagrid({
+	    		url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
+	    		queryParams: {
+	        		xsthlsh: xsthlsh,
+	        	},
+	    		fit : true,
+	    	    border : false,
+	    	    singleSelect : true,
+	    	    remoteSort: false,
+//	     	    fitColumns: true,
+	    		columns:[[
+					{field:'spbh',title:'商品编号',width:80,align:'center'},
+					{field:'spmc',title:'名称',width:200,align:'center'},
+					{field:'spcd',title:'产地',width:100,align:'center'},
+					{field:'sppp',title:'品牌',width:100,align:'center'},
+					{field:'spbz',title:'包装',width:100,align:'center'},
+					{field:'zjldwmc',title:'单位1',width:100,align:'center'},
+					{field:'zdwsl',title:'数量1',width:100,align:'center'},
+					{field:'zdwdj',title:'单价1',width:100,align:'center'},
+					{field:'cjldwmc',title:'单位2',width:100,align:'center'},
+					{field:'cdwsl',title:'数量2',width:100,align:'center'},
+					{field:'cdwdj',title:'单价2',width:100,align:'center'},
+					{field:'spje',title:'金额',width:100,align:'center',
+						formatter: function(value){
+							return lnyw.formatNumberRgx(value);
+						}},
+	    	    ]],
+	    	});
+	    },
 	});
 	lnyw.toolbar(1, ywsh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywsh_did);
 	

@@ -44,6 +44,7 @@ import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TRklx;
 import lnyswz.jxc.model.TSpDet;
+import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwhs;
 import lnyswz.jxc.model.TYwhsDet;
 import lnyswz.jxc.model.TYwsh;
@@ -67,6 +68,7 @@ import lnyswz.jxc.util.Constant;
 public class YwshServiceImpl implements YwshServiceI {
 	private Logger logger = Logger.getLogger(YwshServiceImpl.class);
 	private BaseDaoI<TYwsh> ywshDao;
+	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -80,7 +82,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		tYwsh.setCreateId(ywsh.getCreateId());
 		tYwsh.setCreateName(ywsh.getCreateName());
 		
-		ywshDao.save(tYwsh);		
+		ywshDao.save(tYwsh);	
 		
 //		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getYwshlsh(), 
 //				"生成业务盘点单", operalogDao);
@@ -128,8 +130,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, th.xsthlsh, th.ywymc, th.khmc, th.jsfsmc from t_audit_set t "
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc from t_audit_set t "
 				+ " left join t_xsth th on th.bmbh = t.bmbh"
+				+ " left join t_audit a on t.auditId = a.id"
 				+ " where t.userId = ? and th.needAudit <> '0' and th.isAudit = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getCreateId());
@@ -139,13 +142,25 @@ public class YwshServiceImpl implements YwshServiceI {
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
 		for(Object[] o : lists){
 			Ywsh y = new Ywsh();
-			y.setBmbh((String)o[0]);
-			y.setBmmc((String)o[1]);
-			y.setLsh((String)o[2]);
-			y.setYwymc((String)o[3]);
-			y.setKhmc((String)o[4]);
-			y.setJsfsmc((String)o[5]);
-						
+			String bmbh = (String)o[0];
+			String bmmc = (String)o[1];
+			String auditName = (String)o[2];
+			String lsh = (String)o[3];
+			int ywyId = (Integer)o[4];
+			String ywymc = (String)o[5];
+			String khbh = (String)o[6];
+			String khmc = (String)o[7];
+			String jsfsmc = (String)o[8];
+			
+			y.setBmbh(bmbh);
+			y.setBmmc(bmmc);
+			y.setAuditName(auditName);
+			y.setLsh(lsh);
+			y.setYwymc(ywymc);
+			y.setKhmc(khmc);
+			y.setJsfsmc(jsfsmc);
+			
+			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, yszzDao));						
 			ywhss.add(y);
 		}
 		
@@ -158,6 +173,12 @@ public class YwshServiceImpl implements YwshServiceI {
 	public void setYwshDao(BaseDaoI<TYwsh> ywshDao) {
 		this.ywshDao = ywshDao;
 	}
+
+	@Autowired
+	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
+		this.yszzDao = yszzDao;
+	}
+
 
 	@Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {
