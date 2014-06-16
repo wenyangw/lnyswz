@@ -72,63 +72,20 @@ public class YwshServiceImpl implements YwshServiceI {
 
 	@Override
 	public Ywsh save(Ywsh ywsh) {
-		String lsh = LshServiceImpl.updateLsh(ywsh.getBmbh(), ywsh.getLxbh(), lshDao);
 		TYwsh tYwsh = new TYwsh();
+
 		BeanUtils.copyProperties(ywsh, tYwsh);
+		
 		tYwsh.setCreateTime(new Date());
-		tYwsh.setYwshlsh(lsh);
-		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
-
-		tYwsh.setIsCj("0");
+		tYwsh.setCreateId(ywsh.getCreateId());
+		tYwsh.setCreateName(ywsh.getCreateName());
 		
-		Department dep = new Department();
-		dep.setId(ywsh.getBmbh());
-		dep.setDepName(tYwsh.getBmmc());
-		
-		Ck ck = new Ck();
-		ck.setId(ywsh.getCkId());
-		ck.setCkmc(tYwsh.getCkmc());
-		
-		//处理商品明细
-		Set<TYwshDet> tDets = new HashSet<TYwshDet>();
-		ArrayList<YwshDet> ywshDets = JSON.parseObject(ywsh.getDatagrid(), new TypeReference<ArrayList<YwshDet>>(){});
-		for(YwshDet ywshDet : ywshDets){
-			TYwshDet tDet = new TYwshDet();
-			BeanUtils.copyProperties(ywshDet, tDet);
-			
-			if("".equals(ywshDet.getCjldwId()) || null == ywshDet.getZhxs()){
-				tDet.setCdwdj(Constant.BD_ZERO);
-				tDet.setCdwsl(Constant.BD_ZERO);
-				tDet.setZhxs(Constant.BD_ZERO);
-			}else{
-				if(ywshDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
-				}else{
-					tDet.setCdwdj(ywshDet.getZdwdj().multiply(ywshDet.getZhxs()).multiply(Constant.SHUILV));
-					tDet.setCdwsl(ywshDet.getZdwsl().divide(ywshDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				}
-			}
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(ywshDet, sp);
-
-			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywsh.getBmbh(), ywshDet.getSpbh(), ywzzDao));
-			tDet.setTYwsh(tYwsh);
-
-			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywshDet.getZdwsl(), ywshDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
-			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywsh.getBmbh(), ywshDet.getSpbh(), ywzzDao));
-			tDets.add(tDet);
-			
-		}
-		tYwsh.setTYwshDets(tDets);
 		ywshDao.save(tYwsh);		
 		
-		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getYwshlsh(), 
-				"生成业务盘点单", operalogDao);
-		
+//		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getYwshlsh(), 
+//				"生成业务盘点单", operalogDao);
+//		
 		Ywsh rYwsh = new Ywsh();
-		rYwsh.setYwshlsh(lsh);
 		return rYwsh;
 	}
 	
@@ -144,9 +101,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywsh.getFromOther() != null){
-			hql += " and t.isCj = '0' and t.TKfpd = null";
-		}
+
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
 		List<TYwsh> l = ywshDao.find(hql, params, ywsh.getPage(), ywsh.getRows());
@@ -154,9 +109,6 @@ public class YwshServiceImpl implements YwshServiceI {
 		for(TYwsh t : l){
 			Ywsh c = new Ywsh();
 			BeanUtils.copyProperties(t, c);
-			if(t.getTKfpd() != null){
-				c.setKfpdlsh(t.getTKfpd().getKfpdlsh());
-			}
 			nl.add(c);
 		}
 		datagrid.setTotal(ywshDao.count(countHql, params));
@@ -170,14 +122,6 @@ public class YwshServiceImpl implements YwshServiceI {
 		String hql = "from TYwshDet t where t.TYwsh.ywshlsh = :ywshlsh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ywshlsh", ywshlsh);
-		List<TYwshDet> l = detDao.find(hql, params);
-		List<YwshDet> nl = new ArrayList<YwshDet>();
-		for(TYwshDet t : l){
-			YwshDet c = new YwshDet();
-			BeanUtils.copyProperties(t, c);
-			nl.add(c);
-		}
-		datagrid.setRows(nl);
 		return datagrid;
 	}
 	
@@ -198,7 +142,10 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setBmbh((String)o[0]);
 			y.setBmmc((String)o[1]);
 			y.setLsh((String)o[2]);
-			
+			y.setYwymc((String)o[3]);
+			y.setKhmc((String)o[4]);
+			y.setJsfsmc((String)o[5]);
+						
 			ywhss.add(y);
 		}
 		

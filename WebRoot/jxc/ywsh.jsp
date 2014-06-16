@@ -49,6 +49,10 @@ $(function(){
 		columns:[[
 			{field:'bmmc',title:'部门',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
+			{field:'ywymc',title:'业务员',align:'center'},
+			{field:'khmc',title:'客户名称',align:'center'},
+			{field:'jsfsmc',title:'结算方式',align:'center'},
+			
 	    ]],
 	    view: cardView,
 	});

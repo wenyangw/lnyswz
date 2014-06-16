@@ -18,6 +18,9 @@ public class Ywsh {
 	//数据传递时保存数据
 	private String bmbh;
 	private String bmmc;
+	private String ywymc;
+	private String khmc;
+	private String jsfsmc;
 	
 	public long getId() {
 		return id;
@@ -90,6 +93,24 @@ public class Ywsh {
 	}
 	public void setBmmc(String bmmc) {
 		this.bmmc = bmmc;
+	}
+	public String getYwymc() {
+		return ywymc;
+	}
+	public void setYwymc(String ywymc) {
+		this.ywymc = ywymc;
+	}
+	public String getKhmc() {
+		return khmc;
+	}
+	public void setKhmc(String khmc) {
+		this.khmc = khmc;
+	}
+	public String getJsfsmc() {
+		return jsfsmc;
+	}
+	public void setJsfsmc(String jsfsmc) {
+		this.jsfsmc = jsfsmc;
 	}
 	
 	
