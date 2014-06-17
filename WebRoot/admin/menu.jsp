@@ -43,7 +43,7 @@ function appendMenu() {
 		title : '增加菜单',
 		href : '${pageContext.request.contextPath}/admin/menuAdd.jsp',
 		width : 350,
-		height : 270,
+		height : 300,
 		buttons : [ {
 			text : '确定',
 			handler : function() {
@@ -98,7 +98,7 @@ function editMenu() {
 			title : '修改菜单',
 			href : '${pageContext.request.contextPath}/admin/menuAdd.jsp',
 			width : 350,
-			height : 270,
+			height : 300,
 			buttons : [ {
 				text : '确定',
 				handler : function() {

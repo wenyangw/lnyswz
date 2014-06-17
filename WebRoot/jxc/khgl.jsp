@@ -9,6 +9,7 @@ $(function(){
 	mid = lnyw.tab_options().id;
 	kh_dg = $('#jxc_kh_dg');
 	kh_dg.datagrid({
+		width: 600,
 		url:'${pageContext.request.contextPath}/jxc/khAction!datagrid.action',
 		fit : true,
 		singleSelect:true,
@@ -74,6 +75,7 @@ $(function(){
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(0, kh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	
 });
 
 function appendKh() {
