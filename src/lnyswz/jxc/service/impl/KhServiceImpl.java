@@ -214,6 +214,37 @@ public class KhServiceImpl implements KhServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+	
+	@Override
+	public DataGrid datagridDet(Kh kh) {
+		DataGrid dg = new DataGrid();
+		String hql = "from TKhDet t where t.TDepartment.id = :depId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("depId", kh.getDepId());
+		if(kh.getKhbh() != null){
+			hql += " and t.TKh.khbh = :khbh";
+			params.put("khbh", kh.getKhbh());
+		}
+		
+		List<TKhDet> tKhDets = khdetDao.find(hql, params);
+		List<Kh> l = new ArrayList<Kh>();
+		if(tKhDets.size() > 0){
+			for(TKhDet tDet : tKhDets){
+				Kh k = new Kh();
+				BeanUtils.copyProperties(tDet, k);
+				
+				if(tDet.getYwyId() > 0){
+					k.setYwyName(userDao.load(TUser.class, tDet.getYwyId()).getRealName());
+				}
+				k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
+				
+				l.add(k);
+			}
+		}
+		
+		dg.setRows(l);
+		return dg;
+	}
 
 	//条件筛选hql语句拼写
 	private String seletWhere(Kh c, String hql, Map<String, Object> params) {

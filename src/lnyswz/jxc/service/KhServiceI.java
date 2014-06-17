@@ -16,6 +16,7 @@ public interface KhServiceI {
 	public void deleteDet(Kh kh);
 	public List<Kh> listKhs(Kh kh);
 	public DataGrid datagrid(Kh kh);
+	public DataGrid datagridDet(Kh kh);
 	
 	/**
 	 * 王文阳

@@ -30,6 +30,26 @@ $(function(){
 	        {field:'khbh',title:'客户编号'},
 	        {field:'khmc',title:'客户名称'},
 	    ]],
+	    toolbar:'#jxc_kh_tb',
+	});
+	
+	khDet_dg = $('#jxc_khdet_dg').datagrid({
+		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+		fit : true,
+	    border : false,
+	    singleSelect : true,
+	    fitColumns: true,
+	    queryParams:{
+	    	depId: kh_did
+	    },
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+	        {field:'ywyId',title:'业务员id', hidden:true},
+	        {field:'ywymc',title:'业务员'},
+	    ]],
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(0, kh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', kh_did);
@@ -294,18 +314,29 @@ function removeSpDet(){
 		$.messager.alert('提示', '请选择一条要删除的记录！', 'error');
 	}
 }
+
+function searchKh(){
+	kh_dg.datagrid('load',{
+		khcs: $('input[name=search]').val(),
+	});
+}
 </script>
 <div id='jxc_kh_layout' style="height:100%;width=100%">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:250px">
 		<div id='jxc_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width=100%">
-			<div data-options="region:'center',title:'客户列表',split:true" style="height:100px;width:150px">		
-				<div id='jxc_kh_Dg'></div>
+			请输入查询内容
+			<div data-options="region:'center',title:'客户列表',split:true" style="height:100px;width:250px">		
+				<div id='jxc_kh_dg'></div>
 			</div>
 		</div>
 	</div>
     <div data-options="region:'center',title:'详细信息',split:true, fit:true" style="height:100px;">
     	<div id='jxc_khdet_dg'></div>
     </div>
+</div>
+<div id="jxc_kh_tb" style="padding:3px;height:auto">
+	输入编号、名称：<input type="text" name="search" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKh();">查询</a>
 </div>
 <div id='jxc_kh_addDialog'></div>
 

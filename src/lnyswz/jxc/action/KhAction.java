@@ -80,6 +80,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		super.writeJson(khService.datagrid(kh));
 	}
 
+	
+	public void datagridDet() {
+		super.writeJson(khService.datagridDet(kh));
+	}
+
 	/**
 	 * 判断客户信息是否存在
 	 */
