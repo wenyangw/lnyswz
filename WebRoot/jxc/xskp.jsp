@@ -957,6 +957,12 @@ function setEditing(){
      	}
     });
     
+    cdjEditor.target.bind('focus', function(event){
+    	if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
+    		$(cdjEditor.target).val('');
+    	}
+    });
+    
   	//输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
