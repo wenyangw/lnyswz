@@ -226,17 +226,21 @@ public class KhServiceImpl implements KhServiceI {
 			params.put("khbh", kh.getKhbh());
 		}
 		
-		List<TKhDet> tKhDets = khdetDao.find(hql, params);
+		List<TKhDet> tKhDets = khdetDao.find(hql, params, kh.getPage(), kh.getRows());
 		List<Kh> l = new ArrayList<Kh>();
 		if(tKhDets.size() > 0){
 			for(TKhDet tDet : tKhDets){
 				Kh k = new Kh();
 				BeanUtils.copyProperties(tDet, k);
 				
+				k.setKhbh(tDet.getTKh().getKhbh());
+				
 				if(tDet.getYwyId() > 0){
 					k.setYwyName(userDao.load(TUser.class, tDet.getYwyId()).getRealName());
 				}
-				k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
+				if(tDet.getKhlxId() != null){
+					k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
+				}
 				
 				l.add(k);
 			}

@@ -56,7 +56,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		params.put("0", ywzz.getBmbh());
 //		params.put("1", DateUtil.getCurrentDateString("yyyyMM"));
 		
-		List<Object[]> l = ywzzDao.findBySQL(sql, params);
+		List<Object[]> l = ywzzDao.findBySQL(sql, params, ywzz.getPage(), ywzz.getRows());
 		if(l != null && l.size() > 0){
 			List<Ywzz> ywzzs = new ArrayList<Ywzz>();
 			for(Object[] o : l){
