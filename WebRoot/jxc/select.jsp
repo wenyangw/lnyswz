@@ -221,6 +221,13 @@ function selectClick(){
 						var onlyTitle=Object.create(Object.prototype);
 						onlyTitle["field"]=this;
 						onlyTitle["title"]=dataClass[this];
+						onlyTitle["formatter"]=function(value) {
+		   					if (value == 0) {
+		   						return '';
+		   					} else {
+		   						return value;
+		   					}
+		   				}
 						titles.push(onlyTitle);
 					});	
 					//遍历frozens 设置datagrid的固定项

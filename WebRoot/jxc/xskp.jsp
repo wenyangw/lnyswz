@@ -1150,6 +1150,11 @@ function loadKh(khbh){
 				if(data.obj.isSx == '1'){
 					$('input[name=isSx]').prop('checked', 'ckecked');
 				}
+				if(data.obj.isNsr == '1'){
+					$('input#isNsr').attr('checked', 'checked');
+				}else{
+					$('input#isNoNsr').attr('checked', 'checked');
+				}
 			}else{
 				$.messager.alert('提示', '供应商信息不存在！', 'error');
 			}
@@ -1424,7 +1429,7 @@ function searchXsthInXskp(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
 				<table class="tinfo">
 					<tr>
-						<td colspan="2">增值税发票<input type="radio" name="fplxId" id="isNsr" checked="checked">&nbsp;&nbsp;普通发票<input type="radio" name="fplxId"></td>
+						<td colspan="2">增值税发票<input type="radio" name="fplxId" id="isNsr" checked="checked">&nbsp;&nbsp;普通发票<input type="radio" name="fplxId" id="isNoNsr"></td>
 						<td colspan="2">
 							授信<input id="sxCheck" type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp;
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;

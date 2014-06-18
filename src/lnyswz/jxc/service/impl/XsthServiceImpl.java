@@ -433,6 +433,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("hjje", tXsth.getHjje());
 		map.put("hjsl", tXsth.getHjsl());
 		map.put("bz", tXsth.getBz() + " " + bz.trim());
+		map.put("memo", tXsth.getBz());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);

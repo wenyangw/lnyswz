@@ -234,6 +234,7 @@ public class KhServiceImpl implements KhServiceI {
 				BeanUtils.copyProperties(tDet, k);
 				
 				k.setKhbh(tDet.getTKh().getKhbh());
+				k.setKhmc(tDet.getTKh().getKhmc());
 				
 				if(tDet.getYwyId() > 0){
 					k.setYwyName(userDao.load(TUser.class, tDet.getYwyId()).getRealName());

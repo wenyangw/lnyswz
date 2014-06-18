@@ -44,7 +44,7 @@ $(function(){
 		fit : true,
 	    border : false,
 	    singleSelect : true,
-	    fitColumns: true,
+	    fitColumns: false,
 	    queryParams:{
 	    	depId: kh_did
 	    },
@@ -54,6 +54,7 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 	        {field:'khbh',title:'客户编号'},
+	        {field:'khmc',title:'客户名称'},
 	        {field:'ywyId',title:'业务员id', hidden:true},
 	        {field:'ywyName',title:'业务员'},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
@@ -183,7 +184,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 240,
+			height : 280,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -220,28 +221,42 @@ function editKhDet(){
 				});
 				var khlxId = $("input[name=khlxId]");
 				var khlxCombo = khlxId.combobox({
-				    url:'${pageContext.request.contextPath}/jxc/khlxAction!lists.action',
+				    url:'${pageContext.request.contextPath}/jxc/khlxAction!listKhlxs.action',
 				    valueField:'id',
 				    textField:'khlxmc',
 				    panelHeight: 'auto',
 				});
+				if(row['khlxId'] == undefined){
+					row['khlxId'] = '01';
+				}
 				row["depId"] = kh_did;
 				row["menuId"] = kh_menuId;
 				f.form('load', row);
-// 				f.form('load', {
-// 					khbh: row.khbh,
-// 					khmc: row.khmc,
-// 					detId: row.detId,
-// 					depId: did,
-// 					menuId : menuId,
-// 				});
-// 				$('input[name=xsdj]').focus();
+				initForm(khlxId.combobox('getValue'));
+				khlxId.combobox({
+					onSelect: function(){
+						initForm(khlxId.combobox('getValue'));
+					}
+				});
 			}
 		});
 	}else{
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
+	
+	var initForm = function(value){
+		if(value != '01'){
+			$('form input[name=sxzq]').removeAttr('disabled');
+			$('form input[name=sxje]').removeAttr('disabled');
+			$('form input[name=yfje]').removeAttr('disabled');
+		}else{
+			$('form input[name=sxzq]').attr('disabled','disabled');
+			$('form input[name=sxje]').attr('disabled','disabled');
+			$('form input[name=yfje]').attr('disabled','disabled');
+		}
+	};
 }
+
 function removeSpDet(){
 	var rows = kh_dg.datagrid('getSelections');
 	if (rows.length == 1) {
