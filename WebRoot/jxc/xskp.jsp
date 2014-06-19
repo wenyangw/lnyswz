@@ -335,7 +335,7 @@ $(function(){
 				xskp_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xskpAction!datagrid.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: kh_did,
 						createTime: countXskp == 0 ? undefined : $('input[name=createTimeXskp]').val(),
 						search: countXskp == 0 ? undefined : $('input[name=searchXskp]').val(),
 					}

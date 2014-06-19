@@ -664,6 +664,7 @@ function init(){
 	//清空全部字段
 	$('input').val('');
 	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywrk_layout');
 	jxc.spInfo($('#jxc_ywrk_layout'), '');

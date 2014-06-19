@@ -85,7 +85,9 @@ public class KhServiceImpl implements KhServiceI {
 	 */
 	@Override
 	public void editDet(Kh kh) {
+		//传入日志时的关键id
 		String keyId = "";
+		
 		TKh g = khDao.get(TKh.class, kh.getKhbh());
 		if (kh.getDetId().equals("")) {
 			Set<TKhDet> gdt = g.getTKhDets();
@@ -94,9 +96,10 @@ public class KhServiceImpl implements KhServiceI {
 			khDet.setId(UUID.randomUUID().toString());
 			TDepartment dep = depDao.get(TDepartment.class, kh.getDepId());
 			khDet.setTDepartment(dep);
-			if(kh.getIsSx() == null){
-				khDet.setIsSx("0");
-			}
+			//授信字段暂时不用，2014.06.19
+			khDet.setIsSx("0");
+//			if(kh.getIsSx() == null){
+//			}
 			if(kh.getSxje() == null){
 				khDet.setSxje(Constant.BD_ZERO);
 			}
@@ -106,11 +109,19 @@ public class KhServiceImpl implements KhServiceI {
 			khDet.setTKh(g);
 			gdt.add(khDet);
 			g.setTKhDets(gdt);
+			
 			keyId = kh.getKhbh() + "/" + khDet.getId();
 		} else {
 			TKhDet v = khdetDao.get(TKhDet.class, kh.getDetId());
 			keyId=kh.getKhbh() + "/" + kh.getDetId();
 			BeanUtils.copyProperties(kh, v);
+			v.setIsSx("0");
+			if(kh.getSxje() == null){
+				v.setSxje(Constant.BD_ZERO);
+			}
+			if(kh.getYfje() == null){
+				v.setYfje(Constant.BD_ZERO);
+			}
 		}
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "修改客户专属信息", opeDao);
@@ -226,12 +237,16 @@ public class KhServiceImpl implements KhServiceI {
 			params.put("khbh", kh.getKhbh());
 		}
 		
+		hql += " order by t.TKh.khbh, t.ywyId";
+		
 		List<TKhDet> tKhDets = khdetDao.find(hql, params, kh.getPage(), kh.getRows());
 		List<Kh> l = new ArrayList<Kh>();
 		if(tKhDets.size() > 0){
 			for(TKhDet tDet : tKhDets){
 				Kh k = new Kh();
 				BeanUtils.copyProperties(tDet, k);
+				
+				k.setDetId(tDet.getId());
 				
 				k.setKhbh(tDet.getTKh().getKhbh());
 				k.setKhmc(tDet.getTKh().getKhmc());

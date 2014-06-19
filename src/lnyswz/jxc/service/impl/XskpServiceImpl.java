@@ -509,9 +509,24 @@ public class XskpServiceImpl implements XskpServiceI {
 				head += "\"" + dets.size() + "\",";
 				head += "\"" + t.getKhmc().trim() + "\",";
 				//不进行发票类型的判断
-				head += "\"" + t.getSh() == null ? "" : t.getSh().trim() + "\",";
-				head += "\"" + t.getDzdh() == null ? "" : t.getDzdh().trim() + "\",";
-				head += "\"" + t.getKhh() == null ? "" : t.getKhh().trim() + "\",";
+				if(t.getSh() != null){
+					head += "\"" + t.getSh().trim() + "\",";
+				}else{
+					head += "\"" + "\",";
+				}
+				if(t.getDzdh() != null){
+					head += "\"" + t.getDzdh().trim() + "\",";
+				}else{
+					head += "\"" + "\",";
+				}
+				if(t.getKhh() != null){
+					head += "\"" + t.getKhh().trim() + "\",";
+				}else{
+					head += "\"" + "\",";
+				}
+//				head += ("\"" + t.getSh() == null ? "\"," : t.getSh().trim() + "\",");
+//				head += ("\"" + t.getDzdh() == null ? "\"," : t.getDzdh().trim() + "\",");
+//				head += ("\"" + t.getKhh() == null ? "\"," : t.getKhh().trim() + "\",");
 //				if("1".equals(t.getFplxId())){
 //					head += "\"" + t.getSh().trim() + "\",";
 //					head += "\"" + t.getDzdh().trim() + "\",";

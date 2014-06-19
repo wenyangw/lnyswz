@@ -7,6 +7,7 @@ var kh_menuId;
 
 var kh_dg;
 var khDet_dg;
+
 $(function(){
 	kh_did = lnyw.tab_options().did;
 	kh_menuId = lnyw.tab_options().id;
@@ -90,12 +91,13 @@ $(function(){
 });
 
 function appendKhDet() {
-	var kh_row = $('#jxc_khdet_khdwDg').datagrid('getSelections');
-	if(khdw_row.length == 1){
+	var kh_row = $('#jxc_kh_dg').datagrid('getSelected');
+	if(kh_row != undefined){
+		var khlxId;
 		var addDialog = $('#jxc_kh_addDialog');
 		addDialog.dialog({
-			title : '增加商品段位',
-			href : '${pageContext.request.contextPath}/jxc/khAdd.jkh',
+			title : '增加客户授信信息',
+			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
 			height : 420,
 			modal : true,
@@ -105,7 +107,7 @@ function appendKhDet() {
 	            handler:function(){
 	            	var addForm = $('#jxc_khAdd_form');
 	            	addForm.form('submit',{
-	            		url:'${pageContext.request.contextPath}/jxc/khAction!add.action',
+	            		url:'${pageContext.request.contextPath}/jxc/khAction!editDet.action',
 	            		onSubmit:function(){
 	            			if($(this).form('validate')){
 	            				var flag = true;
@@ -146,39 +148,59 @@ function appendKhDet() {
 	        }],
 	        onLoad : function() {
 				var f = addDialog.find('form');
-				var zjldwId = f.find('input[name=zjldwId]');
-				var cjldwId = f.find('input[name=cjldwId]');
- 				var zjldwCombo = zjldwId.combobox({
-					url: '${pageContext.request.contextPath}/jxc/jldwAction!listJldw.action',
-					valueField:'id',
-				    textField:'jldwmc'
+				ywyId = $("input[name=ywyId]");
+				ywyId.combobox({
+				    url:'${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + kh_did,
+				    valueField:'id',
+				    textField:'realName',
+				    panelHeight: 'auto',
 				});
- 				var cjldwCombo = cjldwId.combobox({
-					url: '${pageContext.request.contextPath}/jxc/jldwAction!listJldw.action',
-					valueField:'id',
-				    textField:'jldwmc'
+				khlxId = $("input[name=khlxId]");
+				khlxId.combobox({
+				    url:'${pageContext.request.contextPath}/jxc/khlxAction!listKhlxs.action',
+				    valueField:'id',
+				    textField:'khlxmc',
+				    panelHeight: 'auto',
+				    onSelect: function(){
+						console.info('khlxId:' + khlxId.combobox('getValue'));
+				    	
+						initForm(khlxId.combobox('getValue'));
+					}
 				});
+				khlxId.combobox('selectedIndex', 0);
+				initForm(khlxId.combobox('getValue'));
+				
 				f.form('load', {
-					khdwId : khdw_row[0].id,
-					khdwmc : khdw_row[0].khdwmc,
-					khmc : khdw_row[0].khdwmc,
-					khbh : khdw_row[0].id,
-					zhxs : 0.00,
-					yxq : 0,
-					depId : did,
-					menuId : menuId,
+					khbh: kh_row.khbh,
+					khmc: kh_row.khmc,
+					depId: kh_did,
+					menuId: kh_menuId
 				});
-				$('input[name=khbh]').focus();
+				$('input[name=lxr]').focus();
 			}
-		});	
+		});
+		
+		var initForm = function(value){
+			if(value != '01'){
+				$('form input[name=sxzq]').removeAttr('disabled');
+				$('form input[name=sxje]').removeAttr('disabled');
+				$('form input[name=yfje]').removeAttr('disabled');
+			}else{
+				$('form input[name=sxzq]').attr('disabled','disabled');
+				$('form input[name=sxje]').attr('disabled','disabled');
+				$('form input[name=yfje]').attr('disabled','disabled');
+			}
+		};
 	}else{
-		$.messager.alert('提示', '增加商品前请选择商品段位！', 'error');
+		$.messager.alert('提示', '请选择客户！', 'error');
 	}
 }
 
 function editKhDet(){
 	var row = khDet_dg.datagrid('getSelected');
 	if (row != undefined) {
+		var ywyId;
+		var khlxId;
 		var detDialog = $('#jxc_kh_addDialog');
 		detDialog.dialog({
 			title : '修改客户授信信息',
@@ -190,15 +212,19 @@ function editKhDet(){
 				handler : function() {
 					var f = detDialog.find('form');
 					f.form('submit', {
-						url : '${pageContext.request.contextPath}/jxc/khAction!editKhDet.action',
+						url : '${pageContext.request.contextPath}/jxc/khAction!editDet.action',
 						onSubmit:function(){
+							if(khlxId.combobox('getValue') != '01' && ywyId.combobox('getValue') == 0){
+								$.messager.alert('提示', '请选择业务员！', 'error');
+								return false;
+							}
 						},
 						success : function(d) {
 							var json = $.parseJSON(d);
 							if (json.success) {
 								khDet_dg.datagrid('reload', {
-									depId: did,
-									khbh: kh_dg.datagrid('getSelected').khbh 
+									depId: kh_did,
+									khbh: kh_dg.datagrid('getSelected') == undefined ? undefined : kh_dg.datagrid('getSelected').khbh 
 									});
 								detDialog.dialog('close');
 							}
@@ -212,19 +238,22 @@ function editKhDet(){
 			} ],
 			onLoad : function() {
 				var f = detDialog.find('form');
-				var ywyId = $("input[name=ywyId]");
-				var ywyCombo = ywyId.combobox({
+				ywyId = $("input[name=ywyId]");
+				ywyId.combobox({
 				    url:'${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + kh_did,
 				    valueField:'id',
 				    textField:'realName',
 				    panelHeight: 'auto',
 				});
-				var khlxId = $("input[name=khlxId]");
-				var khlxCombo = khlxId.combobox({
+				khlxId = $("input[name=khlxId]");
+				khlxId.combobox({
 				    url:'${pageContext.request.contextPath}/jxc/khlxAction!listKhlxs.action',
 				    valueField:'id',
 				    textField:'khlxmc',
 				    panelHeight: 'auto',
+				    onSelect: function(){
+						initForm(khlxId.combobox('getValue'));
+					}
 				});
 				if(row['khlxId'] == undefined){
 					row['khlxId'] = '01';
@@ -233,29 +262,39 @@ function editKhDet(){
 				row["menuId"] = kh_menuId;
 				f.form('load', row);
 				initForm(khlxId.combobox('getValue'));
-				khlxId.combobox({
-					onSelect: function(){
-						initForm(khlxId.combobox('getValue'));
-					}
-				});
+				
 			}
 		});
+		
+		var initForm = function(value){
+			if(value != '01'){
+				$('form input[name=sxzq]').removeAttr('disabled');
+				$('form input[name=sxje]').removeAttr('disabled');
+				$('form input[name=yfje]').removeAttr('disabled');
+			}else{
+				$('form input[name=sxzq]').attr('disabled','disabled');
+				$('form input[name=sxje]').attr('disabled','disabled');
+				$('form input[name=yfje]').attr('disabled','disabled');
+			}
+		};
 	}else{
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
 	
-	var initForm = function(value){
-		if(value != '01'){
-			$('form input[name=sxzq]').removeAttr('disabled');
-			$('form input[name=sxje]').removeAttr('disabled');
-			$('form input[name=yfje]').removeAttr('disabled');
-		}else{
-			$('form input[name=sxzq]').attr('disabled','disabled');
-			$('form input[name=sxje]').attr('disabled','disabled');
-			$('form input[name=yfje]').attr('disabled','disabled');
-		}
-	};
+	
 }
+
+function initForm(value){
+	if(value != '01'){
+		$('form input[name=sxzq]').removeAttr('disabled');
+		$('form input[name=sxje]').removeAttr('disabled');
+		$('form input[name=yfje]').removeAttr('disabled');
+	}else{
+		$('form input[name=sxzq]').attr('disabled','disabled');
+		$('form input[name=sxje]').attr('disabled','disabled');
+		$('form input[name=yfje]').attr('disabled','disabled');
+	}
+};
 
 function removeSpDet(){
 	var rows = kh_dg.datagrid('getSelections');
