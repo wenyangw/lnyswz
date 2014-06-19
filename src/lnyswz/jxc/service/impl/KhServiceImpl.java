@@ -80,6 +80,38 @@ public class KhServiceImpl implements KhServiceI {
 		return isOK;
 	}
 
+	
+	/**
+	 * 增加客户专属信息
+	 */
+	@Override
+	public void addDet(Kh kh) {
+		//传入日志时的关键id
+		String keyId = "";
+		
+		TKh g = khDao.get(TKh.class, kh.getKhbh());
+		Set<TKhDet> gdt = g.getTKhDets();
+		TKhDet khDet = new TKhDet();
+		BeanUtils.copyProperties(kh, khDet, new String[]{"id"});
+		khDet.setId(UUID.randomUUID().toString());
+		TDepartment dep = depDao.get(TDepartment.class, kh.getDepId());
+		khDet.setTDepartment(dep);
+		//授信字段暂时不用，2014.06.19
+		khDet.setIsSx("0");
+		if(kh.getSxje() == null){
+			khDet.setSxje(Constant.BD_ZERO);
+		}
+		if(kh.getYfje() == null){
+			khDet.setYfje(Constant.BD_ZERO);
+		}
+		khDet.setTKh(g);
+		gdt.add(khDet);
+		g.setTKhDets(gdt);
+		
+		keyId = kh.getKhbh() + "/" + khDet.getId();
+		
+		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "增加客户专属信息", opeDao);
+	}
 	/**
 	 * 编辑客户专属信息
 	 */
@@ -87,41 +119,16 @@ public class KhServiceImpl implements KhServiceI {
 	public void editDet(Kh kh) {
 		//传入日志时的关键id
 		String keyId = "";
-		
-		TKh g = khDao.get(TKh.class, kh.getKhbh());
-		if (kh.getDetId().equals("")) {
-			Set<TKhDet> gdt = g.getTKhDets();
-			TKhDet khDet = new TKhDet();
-			BeanUtils.copyProperties(kh, khDet, new String[]{"id"});
-			khDet.setId(UUID.randomUUID().toString());
-			TDepartment dep = depDao.get(TDepartment.class, kh.getDepId());
-			khDet.setTDepartment(dep);
-			//授信字段暂时不用，2014.06.19
-			khDet.setIsSx("0");
-//			if(kh.getIsSx() == null){
-//			}
-			if(kh.getSxje() == null){
-				khDet.setSxje(Constant.BD_ZERO);
-			}
-			if(kh.getYfje() == null){
-				khDet.setYfje(Constant.BD_ZERO);
-			}
-			khDet.setTKh(g);
-			gdt.add(khDet);
-			g.setTKhDets(gdt);
-			
-			keyId = kh.getKhbh() + "/" + khDet.getId();
-		} else {
-			TKhDet v = khdetDao.get(TKhDet.class, kh.getDetId());
-			keyId=kh.getKhbh() + "/" + kh.getDetId();
-			BeanUtils.copyProperties(kh, v);
-			v.setIsSx("0");
-			if(kh.getSxje() == null){
-				v.setSxje(Constant.BD_ZERO);
-			}
-			if(kh.getYfje() == null){
-				v.setYfje(Constant.BD_ZERO);
-			}
+		TKhDet v = khdetDao.get(TKhDet.class, kh.getDetId());
+		keyId=kh.getKhbh() + "/" + kh.getDetId();
+		BeanUtils.copyProperties(kh, v);
+
+		v.setIsSx("0");
+		if(kh.getSxje() == null){
+			v.setSxje(Constant.BD_ZERO);
+		}
+		if(kh.getYfje() == null){
+			v.setYfje(Constant.BD_ZERO);
 		}
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "修改客户专属信息", opeDao);
@@ -156,6 +163,24 @@ public class KhServiceImpl implements KhServiceI {
 		return isOK;
 	}
 
+	/**
+	 * 判断客户编号是否重复
+	 */
+	@Override
+	public boolean existKhDet(Kh kh) {
+		boolean isOK = false;
+		String hql = "from TKhDet t where t.TKh.khbh = :khbh and t.ywyId = :ywyId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("khbh", kh.getKhbh());
+		params.put("ywyId", kh.getYwyId());
+		
+		TKhDet tDet = khdetDao.get(hql, params);
+		if (tDet != null) {
+			isOK = true;
+		}
+		return isOK;
+	}
+	
 	@Override
 	public boolean isSxkh(Kh kh) {
 		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";

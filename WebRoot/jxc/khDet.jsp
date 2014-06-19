@@ -30,7 +30,7 @@
 <!-- 		</tr> -->
 		<tr>
 			<th><label for="sxzq">授信账期</label></th>
-			<td><input name="sxzq" class="easyui-validatebox"
+			<td><input name="sxzq" id="sxzq" class="easyui-validatebox"
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>

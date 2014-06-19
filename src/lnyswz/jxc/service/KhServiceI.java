@@ -12,6 +12,8 @@ public interface KhServiceI {
 	public void edit(Kh kh);
 	public boolean delete(Kh kh);
 	public boolean existKh (Kh kh);
+	public boolean existKhDet (Kh kh);
+	public void addDet(Kh kh);
 	public void editDet(Kh kh);
 	public void deleteDet(Kh kh);
 	public List<Kh> listKhs(Kh kh);

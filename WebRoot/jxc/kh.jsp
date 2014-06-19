@@ -95,6 +95,7 @@ function appendKhDet() {
 	if(kh_row != undefined){
 		var khlxId;
 		var addDialog = $('#jxc_kh_addDialog');
+		
 		addDialog.dialog({
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
@@ -107,15 +108,16 @@ function appendKhDet() {
 	            handler:function(){
 	            	var addForm = $('#jxc_khAdd_form');
 	            	addForm.form('submit',{
-	            		url:'${pageContext.request.contextPath}/jxc/khAction!editDet.action',
+	            		url:'${pageContext.request.contextPath}/jxc/khAction!addDet.action',
 	            		onSubmit:function(){
 	            			if($(this).form('validate')){
 	            				var flag = true;
 	            				$.ajax({
-	            					url: '${pageContext.request.contextPath}/jxc/khAction!existSp.action',
+	            					url: '${pageContext.request.contextPath}/jxc/khAction!existKhDet.action',
 	            					async: false,
 	            					data : {
 	            						khbh : $('#khbh').val(),
+	            						ywyId: ywyId.combobox('getValue'),
 	            					},
 	            					dataType : 'json',
 	    							success : function(d) {
@@ -125,7 +127,7 @@ function appendKhDet() {
 	    							},
 	            				});
 	            				if(!flag){
-	            					$.messager.alert('提示', '商品编号已存在！', 'error');
+	            					$.messager.alert('提示', '客户-业务员信息已存在！', 'error');
 	            				}
 	            				return flag;
 	            			}else{
@@ -162,13 +164,10 @@ function appendKhDet() {
 				    textField:'khlxmc',
 				    panelHeight: 'auto',
 				    onSelect: function(){
-						console.info('khlxId:' + khlxId.combobox('getValue'));
-				    	
-						initForm(khlxId.combobox('getValue'));
-					}
+				    	initForm(khlxId);
+					},
 				});
 				khlxId.combobox('selectedIndex', 0);
-				initForm(khlxId.combobox('getValue'));
 				
 				f.form('load', {
 					khbh: kh_row.khbh,
@@ -180,17 +179,7 @@ function appendKhDet() {
 			}
 		});
 		
-		var initForm = function(value){
-			if(value != '01'){
-				$('form input[name=sxzq]').removeAttr('disabled');
-				$('form input[name=sxje]').removeAttr('disabled');
-				$('form input[name=yfje]').removeAttr('disabled');
-			}else{
-				$('form input[name=sxzq]').attr('disabled','disabled');
-				$('form input[name=sxje]').attr('disabled','disabled');
-				$('form input[name=yfje]').attr('disabled','disabled');
-			}
-		};
+		
 	}else{
 		$.messager.alert('提示', '请选择客户！', 'error');
 	}
@@ -252,7 +241,7 @@ function editKhDet(){
 				    textField:'khlxmc',
 				    panelHeight: 'auto',
 				    onSelect: function(){
-						initForm(khlxId.combobox('getValue'));
+						initForm(khlxId);
 					}
 				});
 				if(row['khlxId'] == undefined){
@@ -261,22 +250,12 @@ function editKhDet(){
 				row["depId"] = kh_did;
 				row["menuId"] = kh_menuId;
 				f.form('load', row);
-				initForm(khlxId.combobox('getValue'));
+				initForm(khlxId);
 				
 			}
 		});
 		
-		var initForm = function(value){
-			if(value != '01'){
-				$('form input[name=sxzq]').removeAttr('disabled');
-				$('form input[name=sxje]').removeAttr('disabled');
-				$('form input[name=yfje]').removeAttr('disabled');
-			}else{
-				$('form input[name=sxzq]').attr('disabled','disabled');
-				$('form input[name=sxje]').attr('disabled','disabled');
-				$('form input[name=yfje]').attr('disabled','disabled');
-			}
-		};
+		
 	}else{
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
@@ -284,15 +263,16 @@ function editKhDet(){
 	
 }
 
-function initForm(value){
+function initForm(target){
+	var value = $(target).combobox('getValue');
 	if(value != '01'){
-		$('form input[name=sxzq]').removeAttr('disabled');
-		$('form input[name=sxje]').removeAttr('disabled');
-		$('form input[name=yfje]').removeAttr('disabled');
+		$('input[name=sxzq]').removeAttr('disabled');
+		$('input[name=sxje]').removeAttr('disabled');
+		$('input[name=yfje]').removeAttr('disabled');
 	}else{
-		$('form input[name=sxzq]').attr('disabled','disabled');
-		$('form input[name=sxje]').attr('disabled','disabled');
-		$('form input[name=yfje]').attr('disabled','disabled');
+		$('input#sxzq').attr('disabled','disabled');
+		$('input[name=sxje]').attr('disabled','disabled');
+		$('input[name=yfje]').attr('disabled','disabled');
 	}
 };
 
