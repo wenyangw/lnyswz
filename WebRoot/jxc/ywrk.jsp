@@ -1397,6 +1397,7 @@ function toYwrk(){
 					dataType : 'json',
 					success : function(d) {
 						$('input[name=isDep]').prop('checked', 'checked');
+						$('input[name=isDep]').attr('checked', 'checked');
 						depChange(row.bmbh);
 						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
 						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);

@@ -968,7 +968,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		for(TXskpDet tDet : tDets){
 			XskpDet det = new XskpDet();
-			BeanUtils.copyProperties(tDet, det);
+			BeanUtils.copyProperties(tDet, det, new String[]{"id"});
 			
 			nl.add(det);
 		}
