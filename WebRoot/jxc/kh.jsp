@@ -93,6 +93,7 @@ $(function(){
 function appendKhDet() {
 	var kh_row = $('#jxc_kh_dg').datagrid('getSelected');
 	if(kh_row != undefined){
+		var ywyId;
 		var khlxId;
 		var addDialog = $('#jxc_kh_addDialog');
 		
@@ -100,13 +101,13 @@ function appendKhDet() {
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 420,
+			height : 360,
 			modal : true,
 			buttons: [{
 	            text:'确定',
 	            iconCls:'icon-ok',
 	            handler:function(){
-	            	var addForm = $('#jxc_khAdd_form');
+	            	var addForm = addDialog.find('form');
 	            	addForm.form('submit',{
 	            		url:'${pageContext.request.contextPath}/jxc/khAction!addDet.action',
 	            		onSubmit:function(){
@@ -137,7 +138,7 @@ function appendKhDet() {
 	            		success:function(d){
 	            			var json = $.parseJSON(d);
 	            			if(json.success){
-	            				kh_dg.datagrid('appendRow', json.obj);
+	            				khDet_dg.datagrid('appendRow', json.obj);
 	            				addDialog.dialog('close');
 	            			}
 	            			$.messager.show({
@@ -263,6 +264,36 @@ function editKhDet(){
 	
 }
 
+function removeKhDet(){
+	var row = khDet_dg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '您要删除当前所选客户授信信息？', function(r) {
+			if (r) {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/khAction!deleteDet.action',
+					data : {
+						//khbh : row.khbh,
+						detId: row.detId,
+						menuId: kh_menuId,
+						depId: kh_did,
+					},
+					dataType : 'json',
+					success : function(d) {
+						khDet_dg.datagrid('load');
+						khDet_dg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	} else {
+		$.messager.alert('提示', '请选择一条要删除的记录！', 'error');
+	}
+}
+
 function initForm(target){
 	var value = $(target).combobox('getValue');
 	if(value != '01'){
@@ -276,37 +307,7 @@ function initForm(target){
 	}
 };
 
-function removeSpDet(){
-	var rows = kh_dg.datagrid('getSelections');
-	if (rows.length == 1) {
-		$.messager.confirm('请确认', '您要删除当前所选商品的专属信息？', function(r) {
-			if (r) {
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/khAction!deleteSpDet.action',
-					data : {
-						khbh : rows[0].khbh,
-						detId: rows[0].detId,
-						menuId: menuId,
-						depId: did,
-					},
-					dataType : 'json',
-					success : function(d) {
-						kh_dg.datagrid('load');
-						kh_dg.datagrid('unselectAll');
-						$.messager.show({
-							title : '提示',
-							msg : d.msg
-						});
-					}
-				});
-			}
-		});
-	} else if (rows.length > 1) {
-		$.messager.alert('提示', '同一时间只能删除一条记录！', 'error');
-	} else {
-		$.messager.alert('提示', '请选择一条要删除的记录！', 'error');
-	}
-}
+
 
 function searchKh(){
 	kh_dg.datagrid('load',{

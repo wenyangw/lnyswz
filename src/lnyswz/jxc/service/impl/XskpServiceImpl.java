@@ -155,7 +155,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			}else{
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
 			}
-			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao);
+			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
 				if(xskp.getHjje().add(xskp.getHjse()).compareTo(ysje.abs()) > 0){
 					tXskp.setHkje(ysje.abs());
@@ -986,13 +987,14 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
 		
-		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao).add(kh.getYfje()));
+		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
 
 		
-		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
 		params.put("khbh", xskp.getKhbh());
+		params.put("ywyId", xskp.getYwyId());
 		params.put("jsfsId", Constant.XSKP_JSFS_QK);
 		List<TXskp> tXskps = xskpDao.find(hql, params);
 		

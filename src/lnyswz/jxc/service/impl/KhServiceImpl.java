@@ -62,6 +62,9 @@ public class KhServiceImpl implements KhServiceI {
 	public void edit(Kh kh) {
 		TKh g = khDao.load(TKh.class, kh.getKhbh());
 		BeanUtils.copyProperties(kh, g);
+		if(kh.getIsNsr() == null){
+			g.setIsNsr("0");
+		}
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),kh.getKhbh(), "编辑客户通用信息", opeDao);
 	}
 
@@ -85,7 +88,7 @@ public class KhServiceImpl implements KhServiceI {
 	 * 增加客户专属信息
 	 */
 	@Override
-	public void addDet(Kh kh) {
+	public Kh addDet(Kh kh) {
 		//传入日志时的关键id
 		String keyId = "";
 		
@@ -94,7 +97,7 @@ public class KhServiceImpl implements KhServiceI {
 		TKhDet khDet = new TKhDet();
 		BeanUtils.copyProperties(kh, khDet, new String[]{"id"});
 		khDet.setId(UUID.randomUUID().toString());
-		TDepartment dep = depDao.get(TDepartment.class, kh.getDepId());
+		TDepartment dep = depDao.load(TDepartment.class, kh.getDepId());
 		khDet.setTDepartment(dep);
 		//授信字段暂时不用，2014.06.19
 		khDet.setIsSx("0");
@@ -111,6 +114,12 @@ public class KhServiceImpl implements KhServiceI {
 		keyId = kh.getKhbh() + "/" + khDet.getId();
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "增加客户专属信息", opeDao);
+		Kh k = new Kh();
+		BeanUtils.copyProperties(kh, k);
+		k.setDetId(khDet.getId());
+		k.setYwyName(userDao.load(TUser.class, khDet.getYwyId()).getRealName());
+		k.setKhlxmc(khlxDao.load(TKhlx.class, khDet.getKhlxId()).getKhlxmc());
+		return k;
 	}
 	/**
 	 * 编辑客户专属信息
@@ -119,7 +128,7 @@ public class KhServiceImpl implements KhServiceI {
 	public void editDet(Kh kh) {
 		//传入日志时的关键id
 		String keyId = "";
-		TKhDet v = khdetDao.get(TKhDet.class, kh.getDetId());
+		TKhDet v = khdetDao.load(TKhDet.class, kh.getDetId());
 		keyId=kh.getKhbh() + "/" + kh.getDetId();
 		BeanUtils.copyProperties(kh, v);
 
@@ -138,15 +147,11 @@ public class KhServiceImpl implements KhServiceI {
 	 * 删除客户专属信息
 	 */
 	public void deleteDet(Kh kh) {
-		TKh t = khDao.load(TKh.class, kh.getKhbh());
-		Set<TKhDet> dets = t.getTKhDets();
-		t.setTKhDets(null);
-		TKhDet det = khdetDao.load(TKhDet.class, kh.getDetId());
-		dets.remove(det);
-		khdetDao.delete(det);
-		t.setTKhDets(dets);
-		String keyId=kh.getKhbh() + "/" + det.getId();
-		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "删除客户专属信息", opeDao);
+		TKhDet t = khdetDao.load(TKhDet.class, kh.getDetId());
+		
+		khdetDao.delete(t);
+		String keyId=kh.getKhbh() + "/" + t.getId();
+		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "删除客户授信信息", opeDao);
 	}
 
 	/**
@@ -338,8 +343,9 @@ public class KhServiceImpl implements KhServiceI {
 		params.put("khbh", khbh);
 		TKhDet tKhDet = khdetDao.get(hql, params);
 		if(tKhDet != null){
-			BeanUtils.copyProperties(tKhDet, k);
+			BeanUtils.copyProperties(tKhDet, k);			
 		}
+
 		return k;
 	}
 	
@@ -351,44 +357,45 @@ public class KhServiceImpl implements KhServiceI {
 	 */
 	@Override
 	public DataGrid khDg(Kh kh) {
-		String hql;
+		String hql = "from TKh t";
 		Map<String, Object> params = new HashMap<String, Object>();
-		if("0".equals(kh.getIsSx()) || null == kh.getIsSx()){
-			hql = "from TKh t";
-			if(kh.getIsNsr() != null){
-				hql += " where t.isNsr = :isNsr";
-				params.put("isNsr", kh.getIsNsr());
-			}
-		}else{
-			hql = "from TKh t join t.TKhDets det where det.isSx = :isSx and det.TDepartment.id = :depId";
-			params.put("isSx", kh.getIsSx());
-			params.put("depId", kh.getDepId());
-			if(kh.getIsNsr() != null){
-				hql += " and t.isNsr = :isNsr";
-				params.put("isNsr", kh.getIsNsr());
-			}
-		}
+//		if("0".equals(kh.getIsSx()) || null == kh.getIsSx()){
+//			hql = "from TKh t";
+//			if(kh.getIsNsr() != null){
+//				hql += " where t.isNsr = :isNsr";
+//				params.put("isNsr", kh.getIsNsr());
+//			}
+//		}else{
+//			hql = "from TKh t join t.TKhDets det where det.isSx = :isSx and det.TDepartment.id = :depId";
+//			params.put("isSx", kh.getIsSx());
+//			params.put("depId", kh.getDepId());
+//			if(kh.getIsNsr() != null){
+//				hql += " and t.isNsr = :isNsr";
+//				params.put("isNsr", kh.getIsNsr());
+//			}
+//		}
 		
-		String countHql = "select count(*) " + hql;
 
 		if(kh.getQuery() != null && kh.getQuery().trim().length() > 0){
-			String where;
-			if(("0".equals(kh.getIsSx()) || kh.getIsSx() == null) && kh.getIsNsr() == null){
-				where = " where";
-			}else{
-				where = " and";
-			}
-			where += " t.khbh like :khbh or t.khmc like :khmc";
-			hql += where;
-			countHql += where;
+			hql += " where t.khbh like :khbh or t.khmc like :khmc";
+//			String where;
+//			if(("0".equals(kh.getIsSx()) || kh.getIsSx() == null) && kh.getIsNsr() == null){
+//				where = " where";
+//			}else{
+//				where = " and";
+//			}
+//			where += " t.khbh like :khbh or t.khmc like :khmc";
+//			hql += where;
+//			countHql += where;
 			params.put("khbh", kh.getQuery() + "%");
 			params.put("khmc", "%" + kh.getQuery() + "%");
 		}
+		String countHql = "select count(*) " + hql;
 		
 		DataGrid dg = new DataGrid();
-		if(kh.getIsSx() != null){
-			hql = "select t " + hql;
-		}
+//		if(kh.getIsSx() != null){
+//			hql = "select t " + hql;
+//		}
 		dg.setTotal(khDao.count(countHql, params));
 		dg.setRows(changeKhs(khDao.find(hql, params, kh.getPage(), kh.getRows())));
 		return dg;

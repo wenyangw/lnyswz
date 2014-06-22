@@ -6,9 +6,9 @@ var xsth_spdg;
 var xsth_kfckDg;
 var xsth_xskpDg;
 var editIndex = undefined;
-var did;
-var lx;
-var menuId;
+var xsth_did;
+var xsth_lx;
+var xsth_menuId;
 var countXsth = 0;
 var countXskpInXsth = 0;
 
@@ -37,9 +37,9 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 
 $(function(){
-	did = lnyw.tab_options().did;
-	lx = lnyw.tab_options().lx;
-	menuId = lnyw.tab_options().id;
+	xsth_did = lnyw.tab_options().did;
+	xsth_lx = lnyw.tab_options().lx;
+	xsth_menuId = lnyw.tab_options().id;
 
 	$('#jxc_xsth_layout').layout({
 		fit : true,
@@ -193,7 +193,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
-	lnyw.toolbar(1, xsth_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(1, xsth_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	//$("#dg").datagrid({....}).datagrid('tooltip'); 所有列
 	//$("#dg").datagrid({....}).datagrid('tooltip',['productid','listprice']); 指定列
 	
@@ -314,7 +314,7 @@ $(function(){
 // 	    ]],
 // 	    toolbar:'#jxc_xsth_kfckTb',
 // 	});
-// 	lnyw.toolbar(2, xsth_kfckDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+// 	lnyw.toolbar(2, xsth_kfckDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
 	
 // 	xsth_kfckDg.datagrid({
@@ -449,7 +449,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_xsth_xskpTb',
 	});
-	lnyw.toolbar(2, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(2, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
 	
 // 	xsth_xskpDg.datagrid({
@@ -504,7 +504,7 @@ $(function(){
 				xsth_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagrid.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: xsth_did,
 						createTime: countXsth == 0 ? undefined : $('input[name=createTimeXsth]').val(),
 						search: countXsth == 0 ? undefined : $('input[name=searchXsth]').val(),
 					}
@@ -515,7 +515,7 @@ $(function(){
 // 				xsth_kfckDg.datagrid({
 // 					url: '${pageContext.request.contextPath}/jxc/kfckAction!datagrid.action',
 // 					queryParams: {
-// 						bmbh: did,
+// 						bmbh: xsth_did,
 // 						fromOther: 'fromXsth'
 // 						},
 // 				});
@@ -524,7 +524,7 @@ $(function(){
 				xsth_xskpDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xskpAction!datagridDet.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: xsth_did,
 						fromOther: 'fromXsth',
 						createTime: countXskpInXsth == 0 ? undefined : $('input[name=createTimeXskpInXsth]').val(),
 						search: countXskpInXsth == 0 ? undefined : $('input[name=searchXskpInXsth]').val(),
@@ -604,10 +604,10 @@ $(function(){
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
 	
 	//初始化仓库列表
-	jxc_xsth_ckCombo = lnyw.initCombo($("#jxc_xsth_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + did);
+	jxc_xsth_ckCombo = lnyw.initCombo($("#jxc_xsth_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + xsth_did);
 	
 	//初始化业务员列表
-	jxc_xsth_ywyCombo = lnyw.initCombo($("#jxc_xsth_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + did);
+	jxc_xsth_ywyCombo = lnyw.initCombo($("#jxc_xsth_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xsth_did);
 	
 	//初始化付款方式列表
 	jxc_xsth_jsfsCombo = lnyw.initCombo($("#jxc_xsth_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
@@ -619,7 +619,7 @@ $(function(){
 			$('.isFhth').css('display','inline');
 			//初始化分户列表
 			if(jxc_xsth_fhCombo == undefined){
-				jxc_xsth_fhCombo = lnyw.initCombo($("#jxc_xsth_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
+				jxc_xsth_fhCombo = lnyw.initCombo($("#jxc_xsth_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xsth_did);
 			}
 			jxc_xsth_fhCombo.combobox('selectedIndex', 0);
 		}else{
@@ -638,12 +638,12 @@ $(function(){
 		}
 	});
 	
-	$('input[name=khmc]').change(function(){
-		if($('input[name=isSx]').is(':checked')){
-			checkKh();
-		}
-		loadKh($('input[name=khbh]').val().trim());
-	});
+// 	$('input[name=khmc]').change(function(){
+// 		if($('input[name=isSx]').is(':checked')){
+// 			checkKh();
+// 		}
+// 		loadKh($('input[name=khbh]').val().trim());
+// 	});
 	
 	//初始化信息
 	init();
@@ -659,6 +659,7 @@ function init(){
 	//清空全部字段
 	$('input').val('');
 	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
 	$('input#thfs_zt').attr('ckecked', 'checked');
@@ -666,13 +667,13 @@ function init(){
 	$('.isFh').css('display','none');
 	$('.isFhth').css('display','none');
 	
-	if(jxc.showFh(did)){
+	if(jxc.showFh(xsth_did)){
 		$('.fh').css('display', 'inline');
 	}else{
 		$('.fh').css('display', 'none');
 	}
 	
-	if(jxc.showBookmc(did)){
+	if(jxc.showBookmc(xsth_did)){
 		$('.bookmc').css('display', 'table-row');
 	}else{
 		$('.bookmc').css('display', 'none');
@@ -691,8 +692,8 @@ function init(){
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/lshAction!getLsh.action',
 		data: {
-			bmbh: did,
-			lxbh: lx,
+			bmbh: xsth_did,
+			lxbh: xsth_lx,
 		},
 		dataType: 'json',
 		success: function(d){
@@ -703,7 +704,7 @@ function init(){
 	});
 	
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, xsth_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, xsth_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
 	//清空合计内容
 	xsth_spdg.datagrid('reloadFooter',[{}]);
@@ -715,7 +716,8 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if($('input[name=isSx]').is(':checked')){
+// 		if($('input[name=isSx]').is(':checked')){
+		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
 				return true;
 			}
@@ -846,7 +848,8 @@ function saveAll(){
 		}
 	}
 	//将表头内容传入后台
-	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
+// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
+	effectRow['isSx'] = '0';
 	effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
 	effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
 	if($('input[name=isFh]').is(':checked')){
@@ -888,9 +891,9 @@ function saveAll(){
 	effectRow['bz'] = $('input[name=bz]').val();
 	effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
 	
-	effectRow['bmbh'] = did;
-	effectRow['lxbh'] = lx;
-	effectRow['menuId'] = menuId;
+	effectRow['bmbh'] = xsth_did;
+	effectRow['lxbh'] = xsth_lx;
+	effectRow['menuId'] = xsth_menuId;
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
@@ -909,7 +912,7 @@ function saveAll(){
 		    	init();
 		    	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 					if (r) {
-						var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + did;
+						var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
 						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 					}
 				});
@@ -953,7 +956,7 @@ function setEditing(){
     	jxc.showKc('#jxc_xsth_layout', 
     			'${pageContext.request.contextPath}/jxc/xsthAction!getSpkc.action', 
     			{
-    				bmbh : did, 
+    				bmbh : xsth_did, 
     				ckId : jxc_xsth_ckCombo.combobox('getValue'),
     				fhId : fhValue,
     				spbh : $(spbhEditor.target).val(),
@@ -992,7 +995,7 @@ function setEditing(){
     					context:this,
     					data:{
     						spbh: $(this).val(),
-    						depId: did
+    						depId: xsth_did
     					},
     					dataType:'json',
     					success:function(data){
@@ -1016,7 +1019,7 @@ function setEditing(){
     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
-    				did,
+    				xsth_did,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor);
@@ -1241,7 +1244,7 @@ function setValueBySpbh(rowData){
    	jxc.showKc('#jxc_xsth_layout', 
    			'${pageContext.request.contextPath}/jxc/xsthAction!getSpkc.action', 
    			{
-   				bmbh : did, 
+   				bmbh : xsth_did, 
    				ckId : jxc_xsth_ckCombo.combobox('getValue'),
    				fhId : fhValue,
    				spbh : $(spbhEditor.target).val(),
@@ -1254,7 +1257,7 @@ function checkKh(){
 		async: false,
 		data:{
 			khbh: $('input[name=khbh]').val(),
-			depId: did,
+			depId: xsth_did,
 		},
 		dataType:'json',
 		success:function(data){
@@ -1268,6 +1271,7 @@ function checkKh(){
 	});
 }
 
+//根据客户编码获取客户详细信息
 function loadKh(khbh){
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
@@ -1275,7 +1279,7 @@ function loadKh(khbh){
 		context:this,
 		data:{
 			khbh: khbh,
-			depId: did,
+			depId: xsth_did,
 		},
 		dataType:'json',
 		success:function(data){
@@ -1286,9 +1290,9 @@ function loadKh(khbh){
 // 				$('input[name=khh]').val(data.obj.khh);
 // 				$('input[name=dzdh]').val(data.obj.dzdh);
 				jxc_xsth_ywyCombo.combobox('setValue', data.obj.ywyId);
-				if(data.obj.isSx == '1'){
-					$('input[name=isSx]').prop('checked', 'ckecked');
-				}
+// 				if(data.obj.isSx == '1'){
+// 					$('input[name=isSx]').prop('checked', 'ckecked');
+// 				}
 			}else{
 				$.messager.alert('提示', '供应商信息不存在！', 'error');
 			}
@@ -1296,18 +1300,19 @@ function loadKh(khbh){
 	});
 }
 
+//在前台页面响应输入事件，按ESC键弹出客户列表或直接输入客户编码
 function khLoad(){
-	
 	switch(event.keyCode){
 	case 27:
-		//是否授信客户
-		var isSx = '0';
-		if($('input[name=isSx]').is(':checked')){
-			isSx='1';
-		}
+		//是否授信客户，不再进行判断处理，2014-06-22
+// 		var isSx = '0';
+// 		if($('input[name=isSx]').is(':checked')){
+// 			isSx='1';
+// 		}
 		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + did);
+				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
+// 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
 		break;
 	case 9:
 		break;
@@ -1363,9 +1368,9 @@ function cancelXsth(){
 										url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
 										data : {
 											xsthlsh : row.xsthlsh,
-											bmbh : did,
-											menuId : menuId,
-											lxbh: lx,
+											bmbh : xsth_did,
+											menuId : xsth_menuId,
+											lxbh: xsth_lx,
 										},
 										dataType : 'json',
 										success : function(d) {
@@ -1404,7 +1409,7 @@ function printXsth(){
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + did;
+				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
@@ -1458,7 +1463,7 @@ function printXsth(){
 
 function searchXsth(){
 	xsth_dg.datagrid('load',{
-		bmbh: did,
+		bmbh: xsth_did,
 		createTime: $('input[name=createTimeXsth]').val(),
 		search: $('input[name=searchXsth]').val(),
 	});
@@ -1472,7 +1477,7 @@ function searchXsth(){
 
 // function searchKfckInXsth(){
 // 	xsth_kfckDg.datagrid('load',{
-// 		bmbh: did,
+// 		bmbh: xsth_did,
 // 		createTime: $('input[name=createTimeKfckInXsth]').val(),
 // 		fromOther: 'fromXsth'
 // 	});
@@ -1533,7 +1538,7 @@ function toXsth(){
 
 function searchXskpInXsth(){
 	xsth_xskpDg.datagrid('load',{
-		bmbh: did,
+		bmbh: xsth_did,
 		createTime: $('input[name=createTimeXskpInXsth]').val(),
 		fromOther: 'fromXsth'
 	});
@@ -1551,7 +1556,7 @@ function searchXskpInXsth(){
 				<table class="tinfo">
 					<tr>
 						<td colspan="5">
-							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp;
+<!-- 							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp; -->
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
 							<span class="fh" style="display:none">

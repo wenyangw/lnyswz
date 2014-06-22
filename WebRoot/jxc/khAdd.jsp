@@ -35,12 +35,11 @@
 			<th><label for="sh">税号</label></th>
 			<td><input name="sh" class="easyui-validatebox"
 				data-options="validType:['length[15, 20]','startWith[\'khbh\',4,\'税号前4位必须与客户编号前4位一致！\']']"
-				style="width: 220px;"
-				disabled="disabled"></td>
+				style="width: 220px;"></td>
 		</tr>
 		<tr>
 			<th><label for="khh">开户行</label></th>
-			<td><input name="khh" style="width: 220px;" disabled="disabled"></td>
+			<td><input name="khh" style="width: 220px;"></td>
 		</tr>
 		
 	</table>

@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <script type="text/javascript">
-var kh_dg;
+var khgl_dg;
 var did;
 var mid;
+
 $(function(){
 	did = lnyw.tab_options().did;
 	mid = lnyw.tab_options().id;
-	kh_dg = $('#jxc_kh_dg');
-	kh_dg.datagrid({
+	khgl_dg = $('#jxc_khgl_dg');
+	khgl_dg.datagrid({
 		width: 600,
 		url:'${pageContext.request.contextPath}/jxc/khAction!datagrid.action',
 		fit : true,
@@ -22,59 +23,67 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 	    columns:[[
-	    	{title:'通用信息',colspan:7},
-			{title:'专属信息',colspan:7},
-			],[
+// 	    	{title:'通用信息',colspan:7},
+// 			{title:'专属信息',colspan:7},
+// 			],[
 	        {field:'khbh',title:'客户编号'},
-	        {field:'khmc',title:'客户名称',width:100},
-	        {field:'dzdh',title:'地址/电话',width:100},
+	        {field:'khmc',title:'客户名称',width:200},
+	        {field:'dzdh',title:'地址/电话',width:200},
 	        {field:'khh',title:'开户行',width:100},
 	        {field:'sh',title:'税号',	width:100},
 	        {field:'fr',title:'法人代表',width:100},
 	        {field:'address',title:'送货地址',width:100},
+	        {field:'isNsr',title:'一般纳税人',
+	        	formatter : function(value) {
+		        	if(value == '1'){
+		        		return '是';
+		        	}else{
+		        		return '';
+		        	}				
+				}},
 // 	        {field:'detId',title:'detId',width:100,hidden:true},
-	        {field:'ywyId',title:'业务员id',width:100,hidden:true},
-	        {field:'ywyName',title:'业务员',width:100},
-	        {field:'lxr',title:'联系人'},
-	        {field:'did',title:'部门id',width:100, hidden:true},
-	        {field:'khlxId',title:'客户类型id',width:100,hidden:true},
-	        {field:'khlxmc',title:'客户类型',width:100},
-	        {field:'isSx',title:'授信客户',
-	        	formatter : function(value, rowData, rowIndex) {
-	        	if(value == '1'){
-	        		return '是';
-	        	}else{
-	        		return '否';
-	        	}				
-				}},
-	        {field:'sxzq',title:'授信账期(天)',
-	        	formatter : function(value, rowData, rowIndex) {
-	        	if(value==0){
-	        		return '';
-	        	}else{
-	        		return value;
-	        	}				
-				}},
-	        {field:'sxje',title:'授信金额(元)',width:100,align:'right',
-					formatter : function(value, rowData, rowIndex) {
-	        	if(value==0){
-	        		return '';
-	        	}else{
-	        		return value;
-	        	}				
-				}},
-	        {field:'yfje',title:'历史金额',width:100,align:'right',
-					formatter : function(value, rowData, rowIndex) {
-	        	if(value==0){
-	        		return '';
-	        	}else{
-	        		return value;
-	        	}				
-				}},
+// 	        {field:'ywyId',title:'业务员id',width:100,hidden:true},
+// 	        {field:'ywyName',title:'业务员',width:100},
+// 	        {field:'lxr',title:'联系人'},
+// 	        {field:'did',title:'部门id',width:100, hidden:true},
+// 	        {field:'khlxId',title:'客户类型id',width:100,hidden:true},
+// 	        {field:'khlxmc',title:'客户类型',width:100},
+// 	        {field:'isSx',title:'授信客户',
+// 	        	formatter : function(value, rowData, rowIndex) {
+// 		        	if(value == '1'){
+// 		        		return '是';
+// 		        	}else{
+// 		        		return '';
+// 		        	}				
+// 				}},
+// 	        {field:'sxzq',title:'授信账期(天)',
+// 	        	formatter : function(value, rowData, rowIndex) {
+// 	        	if(value==0){
+// 	        		return '';
+// 	        	}else{
+// 	        		return value;
+// 	        	}				
+// 				}},
+// 	        {field:'sxje',title:'授信金额(元)',width:100,align:'right',
+// 					formatter : function(value, rowData, rowIndex) {
+// 	        	if(value==0){
+// 	        		return '';
+// 	        	}else{
+// 	        		return value;
+// 	        	}				
+// 				}},
+// 	        {field:'yfje',title:'历史金额',width:100,align:'right',
+// 					formatter : function(value, rowData, rowIndex) {
+// 	        	if(value==0){
+// 	        		return '';
+// 	        	}else{
+// 	        		return value;
+// 	        	}				
+// 				}},
 	        ]],
 	});
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, kh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, khgl_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
 	
 });
 
@@ -120,7 +129,7 @@ function appendKh() {
 					success : function(d) {
 						var json = $.parseJSON(d);
 						if (json.success) {
-							kh_dg.datagrid('appendRow', json.obj);
+							khgl_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
 						}
 						$.messager.show({
@@ -141,16 +150,16 @@ function appendKh() {
 			});			
 			f.find('input[name=khbh]').focus();
 
-			initNsr($('form input[name=isNsr]'));
-			$('form input[name=isNsr]').click(function(){
-				initNsr(this);
-			});
+// 			initNsr($('form input[name=isNsr]'));
+// 			$('form input[name=isNsr]').click(function(){
+// 				initNsr(this);
+// 			});
 		}
 	});
 }
 
 function editKh(){
-	var row = kh_dg.datagrid('getSelected');
+	var row = khgl_dg.datagrid('getSelected');
 	if(row != undefined){	
 		var p = $('#jxc_kh_addDialog');
 		p.dialog({
@@ -174,7 +183,7 @@ function editKh(){
 						success : function(d) {
 							var json = $.parseJSON(d);
 							if (json.success) {
-								kh_dg.datagrid('reload');
+								khgl_dg.datagrid('reload');
 								p.dialog('close');
 							}
 							$.messager.show({
@@ -201,12 +210,12 @@ function editKh(){
 // 					depId:did,
 // 					menuId:mid,		
 // 				});
-				initNsr($('form input[name=isNsr]'));
+// 				initNsr($('form input[name=isNsr]'));
 								
 				f.find('input[name=khbh]').focus();
-				$('form input[name=isNsr]').click(function(){
-					initNsr(this);
-				});
+// 				$('form input[name=isNsr]').click(function(){
+// 					initNsr(this);
+// 				});
 			}
 		});
 	}else{
@@ -224,7 +233,7 @@ function initNsr(target){
 	}
 };
 function removeKh(){
-	var row = kh_dg.datagrid('getSelected');
+	var row = khgl_dg.datagrid('getSelected');
 	if (row != undefined) {
 		$.messager.confirm('请确认', '您要删除当前所选项目？', function(r) {
 			if (r) {
@@ -241,8 +250,8 @@ function removeKh(){
 						if(!d.success){
 							$.messager.alert('警告', '对不起！此客户被其他部门占用！',  'warning');
 						}
-						kh_dg.datagrid('load');
-						kh_dg.datagrid('unselectAll');
+						khgl_dg.datagrid('load');
+						khgl_dg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg
@@ -258,7 +267,7 @@ function removeKh(){
 
 
 function editKhDet(){
-	var row = kh_dg.datagrid('getSelected');
+	var row = khgl_dg.datagrid('getSelected');
 	if(row != undefined){	
 		var p = $('#jxc_kh_addDialog');
 		p.dialog({
@@ -282,7 +291,7 @@ function editKhDet(){
 						success : function(d) {
 							var json = $.parseJSON(d);
 							if (json.success) {
-								kh_dg.datagrid('reload');
+								khgl_dg.datagrid('reload');
 								p.dialog('close');
 							}
 							$.messager.show({
@@ -349,7 +358,7 @@ function editKhDet(){
 
 
 function removeKhDet(){
-	var row = kh_dg.datagrid('getSelected');
+	var row = khgl_dg.datagrid('getSelected');
 	if (row != undefined) {
 		$.messager.confirm('请确认', '您要删除当前所选项目？', function(r) {
 			if (r) {
@@ -363,8 +372,8 @@ function removeKhDet(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						kh_dg.datagrid('load');
-						kh_dg.datagrid('unselectAll');
+						khgl_dg.datagrid('load');
+						khgl_dg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg
@@ -379,7 +388,7 @@ function removeKhDet(){
 }
 
 function searchFunKh(){
-	$('#jxc_kh_dg').datagrid('load',{
+	$('#jxc_khgl_dg').datagrid('load',{
 		khcs:$('#jxc_kh_selet input[name=khcs]').val(),
 		depId:did,
 	});	
@@ -387,7 +396,7 @@ function searchFunKh(){
 
 function clearFunKh(){
 	$('#jxc_kh_selet input[name=khcs]').val("");
-	$('#jxc_kh_dg').datagrid('load',{depId:did,});
+	$('#jxc_khgl_dg').datagrid('load',{depId:did,});
 }
 </script>
 <div id="jxc_kh_selet" class="easyui-layout" data-options="fit:true">
@@ -403,7 +412,7 @@ function clearFunKh(){
 			onclick="clearFunKh();">清空</a>
 	</div>
 	<div data-options="region:'center'">
-		<div id="jxc_kh_dg"></div>
+		<div id="jxc_khgl_dg"></div>
 	</div>
 </div>
 

@@ -127,9 +127,10 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		try {
 			User u = (User)session.get("user");
 			kh.setUserId(u.getId());
-			khService.addDet(kh);
+			Kh k = khService.addDet(kh);
 			j.setSuccess(true);
 			j.setMsg("客户授信维护成功!");
+			j.setObj(k);
 		} catch (Exception e) {
 			j.setMsg("客户授信维护失败!");
 			e.printStackTrace();

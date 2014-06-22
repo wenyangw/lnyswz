@@ -34,6 +34,8 @@ public class TXshk implements java.io.Serializable {
 	private String bmmc;
 	private String khbh;
 	private String khmc;
+	private int ywyId;
+	private String ywymc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
 	private Date payTime;
@@ -142,6 +144,24 @@ public class TXshk implements java.io.Serializable {
 
 	public void setKhmc(String khmc) {
 		this.khmc = khmc;
+	}
+
+	@Column(name = "ywyId")
+	public int getYwyId() {
+		return ywyId;
+	}
+
+	public void setYwyId(int ywyId) {
+		this.ywyId = ywyId;
+	}
+
+	@Column(name = "ywymc", nullable = false, length = 20)
+	public String getYwymc() {
+		return ywymc;
+	}
+
+	public void setYwymc(String ywymc) {
+		this.ywymc = ywymc;
 	}
 
 	@Column(name = "hkje", nullable = false, precision = 18, scale = 4)
