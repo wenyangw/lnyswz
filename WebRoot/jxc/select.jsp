@@ -364,6 +364,7 @@ function getData(page, rows,hql,allFields) {
 		dataType : 'json',
    		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
    		async: false,
+   		cache: false,
    		data : {
 			hqls :hql,
 			query:query,
