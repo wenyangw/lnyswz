@@ -550,7 +550,7 @@ $.extend($.fn.validatebox.defaults.rules, {
 	},
 	floatOrInt : {// 验证是否为小数或整数
 		validator : function(value) {
-			return /^(\d{1,3}(,\d\d\d)*(\.\d{1,3}(,\d\d\d)*)?|\d+(\.\d+))?$/i.test(value);
+			return /^(\d{1,3}(,\d\d\d)*(\.\d{1,3}(,\d\d\d)*)?|\d+(\.?\d+))?$/i.test(value);
 		},
 		message : '请输入数字，并保证格式正确'
 	},

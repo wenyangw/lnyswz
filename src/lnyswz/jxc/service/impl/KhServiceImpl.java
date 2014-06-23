@@ -284,7 +284,7 @@ public class KhServiceImpl implements KhServiceI {
 				if(tDet.getYwyId() > 0){
 					k.setYwyName(userDao.load(TUser.class, tDet.getYwyId()).getRealName());
 				}
-				if(tDet.getKhlxId() != null){
+				if(tDet.getKhlxId() != null && tDet.getKhlxId().trim().length() > 0){
 					k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
 				}
 				

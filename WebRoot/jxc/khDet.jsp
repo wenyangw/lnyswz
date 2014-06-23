@@ -38,14 +38,14 @@
 		<tr>
 			<th><label for="sxje">授信金额</label></th>
 			<td><input name="sxje" class="easyui-validatebox"
-				data-options="validType:'integer'"
+				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="yfje">历史金额</label></th>
 			<td><input name="yfje" class="easyui-validatebox"
-				data-options="validType:'integer'"
+				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>

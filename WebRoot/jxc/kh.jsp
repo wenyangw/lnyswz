@@ -196,7 +196,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 280,
+			height : 320,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
