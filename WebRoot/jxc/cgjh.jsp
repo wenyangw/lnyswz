@@ -640,6 +640,7 @@ function init(){
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/lshAction!getLsh.action',
+		cache: false,
 		data: {
 			bmbh: did,
 			lxbh: lx,

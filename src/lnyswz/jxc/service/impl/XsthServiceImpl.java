@@ -424,6 +424,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("title", "销   售   提   货   单");
 		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
 		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
 			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
 		}else{
