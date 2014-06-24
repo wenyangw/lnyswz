@@ -990,7 +990,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
 
 		
-		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0' order by createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
 		params.put("khbh", xskp.getKhbh());
@@ -1011,6 +1011,39 @@ public class XskpServiceImpl implements XskpServiceI {
 		dg.setRows(xskps);
 		return dg;
 	}
+
+	@Override
+	public DataGrid getXskpNoHkFirst(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		List<Xskp> xskps = new ArrayList<Xskp>();
+		
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
+		
+		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
+
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0' order by t.createTime";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xskp.getBmbh());
+		params.put("khbh", xskp.getKhbh());
+		params.put("ywyId", xskp.getYwyId());
+		params.put("jsfsId", Constant.XSKP_JSFS_QK);
+		List<TXskp> tXskps = xskpDao.find(hql, params);
+		
+		for(TXskp tXskp : tXskps){
+			Xskp x = new Xskp();
+			x.setXskplsh(tXskp.getXskplsh());
+			x.setCreateTime(tXskp.getCreateTime());
+			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
+			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+			x.setHkedje(tXskp.getHkje());
+			xskps.add(x);
+		}
+		dg.setObj(kh);
+		dg.setRows(xskps);
+		return dg;
+	}
+
+	
 	
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {

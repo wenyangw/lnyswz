@@ -33,9 +33,14 @@ $(function(){
 	            cc.push('<table border= "0" width = 95%>');
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
+	                //赋值，供显示单据明细调用
 	                if(fields[i] == 'lsh'){
 	                	xsthlsh = rowData.lsh;
 	                }
+	                if( i == 0){
+	                	cc.push('<tr><td colspan="4">单据信息</td></tr>');
+	                }
+	                
 	                if(i % 2 == 0){
 // 	                	cc.push('<p>');
 	                	cc.push('<tr>');
@@ -72,7 +77,7 @@ $(function(){
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'合计金额',align:'center'},
 			{field:'bz',title:'备注',align:'center'},
-			{field:'ysje',title:'应收金额',align:'center'},
+			{field:'ysje',title:'应收余额',align:'center'},
 	    ]],
 	    view: cardView,
 	    onLoadSuccess:function(){
@@ -215,7 +220,7 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
 					queryParams: {
 						bmbh: ywsh_did,
-						},
+					},
 				});
 			}
 			if(index == 1){
