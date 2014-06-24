@@ -66,7 +66,7 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	}
 
 	public void detDatagrid() {
-		writeJson(ywshService.detDatagrid(ywsh.getYwshlsh()));
+		writeJson(ywshService.detDatagrid(ywsh.getLsh()));
 	}
 	
 	public void listAudits(){

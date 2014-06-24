@@ -27,29 +27,46 @@ $(function(){
 	var cardView = $.extend({}, $.fn.datagrid.defaults.view, {
 	    renderRow: function(target, fields, frozen, rowIndex, rowData){
 	        var cc = [];
-	        cc.push('<td colspan=' + fields.length + ' style="width:1000px;padding:10px 5px;border:0;">');
+	        cc.push('<td colspan=' + fields.length + ' style="width:1000px; padding:10px 5px; border:0;">');
 	        if (!frozen){
 // 	            cc.push('<div style="float:left;margin-left:20px;">');
 	            cc.push('<table border= "0" width = 95%>');
+	            var j = 0;
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
 	                //赋值，供显示单据明细调用
 	                if(fields[i] == 'lsh'){
 	                	xsthlsh = rowData.lsh;
 	                }
-	                if( i == 0){
-	                	cc.push('<tr><td colspan="4">单据信息</td></tr>');
+	                if( j == 0){
+	                	cc.push('<tr><th class="read">单据信息:</th><td colspan="3"></td></tr>');
+	                }
+	                if( fields[i] == 'khmc'){
+	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
+	                	cc.push('<tr><th class="read">客户授信信息:</th><td colspan="3"></td></tr>');
+	                	
 	                }
 	                
-	                if(i % 2 == 0){
+	                
+	                if(j % 2 == 0){
 // 	                	cc.push('<p>');
 	                	cc.push('<tr>');
 	                }
-	                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
-	                if(i % 2 == 1 || (fields.length - 1  == i && i % 2 == 0)){
+	                if(!copts.hidden){
+		                if(fields[i] == 'bz'){
+		                	cc.push('<th width=20%>' + copts.title + ':</th><td colspan="3">' + rowData[fields[i]] + '</td>');
+		                	j++;
+		                }else{
+			                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
+		                }
+	                }else{
+	                	j--;
+	                }
+	                if(j % 2 == 1 || (fields.length - 1  == i && j % 2 == 0)){
 // 	                	cc.push('</p>');
 	                	cc.push('</tr>');
 	                }
+	                j++;
 	            }
 	            cc.push('</table>');
 // 	            cc.push('</div>');
@@ -70,13 +87,15 @@ $(function(){
 		pageList : [1, 2],
 		columns:[[
 			{field:'bmmc',title:'部门',align:'center'},
+			{field:'bmbh',title:'部门编号',align:'center', hidden:true},
 			{field:'auditName',title:'业务名称',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
-			{field:'khmc',title:'客户名称',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'合计金额',align:'center'},
 			{field:'bz',title:'备注',align:'center'},
+			{field:'khbh',title:'客户编号',align:'center', hidden:true},
+			{field:'khmc',title:'客户名称',align:'center'},
 			{field:'ysje',title:'应收余额',align:'center'},
 	    ]],
 	    view: cardView,
@@ -111,7 +130,7 @@ $(function(){
 	    	});
 	    },
 	});
-	lnyw.toolbar(1, ywsh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywsh_did);
+	lnyw.toolbar(0, ywsh_toDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywsh_did);
 	
 	ywsh_dg = $('#jxc_ywsh_dg').datagrid({
 		fit : true,
@@ -280,7 +299,22 @@ function init(){
 
 //////////////////////////////////////////////以下为业务审核处理代码
 function audit(){
-	
+	var rows = ywsh_toDg.datagrid('getRows');
+	if(rows.length > 0){
+		$.messager.confirm('请确认', '是否将该笔业务审核通过？', function(r) {
+			if (r) {
+				console.info('auditLevel:' + rows[0].auditLevel);
+				
+				var effectRow = new Object();
+				effectRow['lsh'] = rows[0].lsh;
+				effectRow['auditLevel'] = rows[0].auditLevel;
+				
+				
+			}
+		});
+	}else{
+		$.messager.alert('警告', '没有需要进行审批的业务！',  'warning');
+	}
 }
 //////////////////////////////////////////////以上为业务审核处理代码
 
