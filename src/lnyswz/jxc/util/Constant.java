@@ -65,7 +65,7 @@ public interface Constant {
 		put("04","xsth_report_b_ns");
 		put("05","xsth_report_b_ns");
 		put("07","xsth_report_s");
-		put("08","xsth_report_s_c");
+		put("08","xsth_report_dl");
 	}};
 	
 	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
