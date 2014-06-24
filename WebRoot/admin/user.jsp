@@ -28,7 +28,7 @@ $(function(){
 		pageList : pageList,
 		idField : 'id',
 	    columns:[[
-	        {field:'id',title:'编号',width:100, checkbox:true},
+	        {field:'id',title:'编号',width:30},
 	        {field:'userName',title:'登录名',width:100},
 // 	        {field:'password',title:'密码',width:100,hidden:true,
 // 	        	formatter : function(value, rowData, rowIndex) {

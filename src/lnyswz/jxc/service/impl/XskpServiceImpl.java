@@ -155,7 +155,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			}else{
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
 			}
-			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao);
+			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
 				if(xskp.getHjje().add(xskp.getHjse()).compareTo(ysje.abs()) > 0){
 					tXskp.setHkje(ysje.abs());
@@ -389,7 +390,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 
-			if(yTXskp.getFhId() != null && yTXskp.getTXsths() == null){
+			if(yTXskp.getFhId() != null && yTXskp.getFromTh() == "0"){
 				Fh fh = new Fh();
 				fh.setId(yTXskp.getFhId());
 				fh.setFhmc(yTXskp.getFhmc());
@@ -508,15 +509,36 @@ public class XskpServiceImpl implements XskpServiceI {
 				head += "\"" + t.getXskplsh() + "\",";
 				head += "\"" + dets.size() + "\",";
 				head += "\"" + t.getKhmc().trim() + "\",";
-				if("1".equals(t.getFplxId())){
+				//不进行发票类型的判断
+				if(t.getSh() != null){
 					head += "\"" + t.getSh().trim() + "\",";
+				}else{
+					head += "\"" + "\",";
+				}
+				if(t.getDzdh() != null){
 					head += "\"" + t.getDzdh().trim() + "\",";
+				}else{
+					head += "\"" + "\",";
+				}
+				if(t.getKhh() != null){
 					head += "\"" + t.getKhh().trim() + "\",";
 				}else{
 					head += "\"" + "\",";
-					head += "\"" + "\",";
-					head += "\"" + "\",";
 				}
+//				head += ("\"" + t.getSh() == null ? "\"," : t.getSh().trim() + "\",");
+//				head += ("\"" + t.getDzdh() == null ? "\"," : t.getDzdh().trim() + "\",");
+//				head += ("\"" + t.getKhh() == null ? "\"," : t.getKhh().trim() + "\",");
+//				if("1".equals(t.getFplxId())){
+//					head += "\"" + t.getSh().trim() + "\",";
+//					head += "\"" + t.getDzdh().trim() + "\",";
+//					head += "\"" + t.getKhh().trim() + "\",";
+//				}else{
+//					head += "\"" + "\",";
+//					head += "\"" + "\",";
+//					head += "\"" + "\",";
+//				}
+				
+				
 				head += "\"" + bz + "\",";
 				head += "\"" + "\",";
 				head += "\"" + "\"";
@@ -947,7 +969,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		for(TXskpDet tDet : tDets){
 			XskpDet det = new XskpDet();
-			BeanUtils.copyProperties(tDet, det);
+			BeanUtils.copyProperties(tDet, det, new String[]{"id"});
 			
 			nl.add(det);
 		}
@@ -965,13 +987,14 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
 		
-		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), yszzDao).add(kh.getYfje()));
+		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
 
 		
-		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.jsfsId = :jsfsId and t.hjje + t.hjse <> t.hkje";
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
 		params.put("khbh", xskp.getKhbh());
+		params.put("ywyId", xskp.getYwyId());
 		params.put("jsfsId", Constant.XSKP_JSFS_QK);
 		List<TXskp> tXskps = xskpDao.find(hql, params);
 		

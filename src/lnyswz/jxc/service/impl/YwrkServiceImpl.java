@@ -150,7 +150,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
 			tDets.add(tDet);
 			tDet.setTYwrk(tYwrk);
-			//DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 			
 		}
 		tYwrk.setTYwrkDets(tDets);

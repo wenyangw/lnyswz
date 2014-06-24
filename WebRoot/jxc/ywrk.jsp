@@ -664,6 +664,7 @@ function init(){
 	//清空全部字段
 	$('input').val('');
 	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywrk_layout');
 	jxc.spInfo($('#jxc_ywrk_layout'), '');
@@ -1396,6 +1397,7 @@ function toYwrk(){
 					dataType : 'json',
 					success : function(d) {
 						$('input[name=isDep]').prop('checked', 'checked');
+						$('input[name=isDep]').attr('checked', 'checked');
 						depChange(row.bmbh);
 						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
 						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
