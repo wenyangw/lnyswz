@@ -12,10 +12,13 @@ public interface KhServiceI {
 	public void edit(Kh kh);
 	public boolean delete(Kh kh);
 	public boolean existKh (Kh kh);
+	public boolean existKhDet (Kh kh);
+	public Kh addDet(Kh kh);
 	public void editDet(Kh kh);
 	public void deleteDet(Kh kh);
 	public List<Kh> listKhs(Kh kh);
 	public DataGrid datagrid(Kh kh);
+	public DataGrid datagridDet(Kh kh);
 	
 	/**
 	 * 王文阳

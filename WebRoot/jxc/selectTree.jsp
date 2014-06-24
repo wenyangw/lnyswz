@@ -213,6 +213,7 @@ function selectClick(){
 		$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
+			cache: false,
 			data : {
 					selectType :query,
 					},
@@ -248,6 +249,7 @@ function selectClick(){
 		$.ajax({
 			url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonTree.action',
 			async: false,
+			cache: false,
 			data : {
 					hqls :hql,
 					query:query,
@@ -364,6 +366,7 @@ function showDatagrid(hql,allFields,allTitle){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		async: false,
+		cache: false,
 		data : {
 				hqls :hql,
 				query:query,
@@ -442,7 +445,7 @@ function showDatagrid(hql,allFields,allTitle){
 	                    cmenu.menu('setIcon', {
 	                    	target: item.target,
 	                    	iconCls: 'icon-ok'
-	                    });
+	  	               });
 	                 }
 		        }
 		    });
@@ -453,7 +456,7 @@ function showDatagrid(hql,allFields,allTitle){
 		        cmenu.menu('appendItem', {
 		        	text: col.title,
 		            name: field,
-		         	iconCls: 'icon-ok'
+		         	iconCls: 'icon-ok',
 		         });
 		   }
 	}
@@ -528,6 +531,7 @@ function exportExcel(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
+		cache: false,
 		context:this,	
 		data : {
 			query:query,
@@ -578,7 +582,6 @@ function exportExcel(){
 			</div>
 		</div>	   
     </div>
-</div>
 </div>
 <div id='jxc_select_addDialog'>
 <div id='select2'></div>

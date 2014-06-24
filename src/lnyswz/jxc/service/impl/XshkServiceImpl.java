@@ -23,6 +23,7 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xshk;
 import lnyswz.jxc.model.TDepartment;
@@ -91,7 +92,10 @@ public class XshkServiceImpl implements XshkServiceI {
 		kh.setKhbh(xshk.getKhbh());
 		kh.setKhmc(xshk.getKhmc());
 		
-		YszzServiceImpl.updateYszzJe(dep, kh, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		User ywy = new User();
+		ywy.setId(xshk.getYwyId());
+		ywy.setRealName(xshk.getYwymc());
+		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
@@ -139,8 +143,12 @@ public class XshkServiceImpl implements XshkServiceI {
 		kh.setKhbh(tXshk.getKhbh());
 		kh.setKhmc(tXshk.getKhmc());
 		
+		User ywy = new User();
+		ywy.setId(yTXshk.getYwyId());
+		ywy.setRealName(yTXshk.getYwymc());
+		
 		//更新授信客户应付金额
-		YszzServiceImpl.updateYszzJe(dep, kh, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 		
 		
 		Set<THkKp> tHkKps = yTXshk.getTHkKps();

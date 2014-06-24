@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +62,7 @@ import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XsthServiceI;
+import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 
 /**
@@ -415,6 +416,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			bz += " " + tXsth.getCh();
 		}
 		bz += xskplsh;
+		
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "销   售   提   货   单");
 		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
@@ -430,9 +435,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("khbh", tXsth.getKhbh());
 		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
 		map.put("ckmc", tXsth.getCkmc());
-		map.put("hjje", tXsth.getHjje());
+		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjsl", tXsth.getHjsl());
+		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("bz", tXsth.getBz() + " " + bz.trim());
+		map.put("memo", tXsth.getBz());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);

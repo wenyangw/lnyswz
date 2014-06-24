@@ -3,9 +3,9 @@
 
 
 <script type="text/javascript">
-var did;
-var lx;
-var menuId;
+var xskp_did;
+var xskp_lx;
+var xskp_menuId;
 var xskp_spdg;
 var xskp_dg;
 var xskp_xsthDg;
@@ -43,9 +43,9 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 
 $(function(){
-	did = lnyw.tab_options().did;
-	lx = lnyw.tab_options().lx;
-	menuId = lnyw.tab_options().id;
+	xskp_did = lnyw.tab_options().did;
+	xskp_lx = lnyw.tab_options().lx;
+	xskp_menuId = lnyw.tab_options().id;
 	
 	$('#jxc_xskp_layout').layout({
 		fit : true,
@@ -127,7 +127,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_xskp_tb',
 	});
-	lnyw.toolbar(1, xskp_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(1, xskp_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xskp_did);
 	
 	xskp_dg.datagrid({
         view: detailview,
@@ -286,7 +286,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_xskp_xsthTb',
 	});
-	lnyw.toolbar(2, xskp_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(2, xskp_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xskp_did);
 	
 // 	xskp_xsthDg.datagrid({
 //         view: detailview,
@@ -335,7 +335,7 @@ $(function(){
 				xskp_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xskpAction!datagrid.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: xskp_did,
 						createTime: countXskp == 0 ? undefined : $('input[name=createTimeXskp]').val(),
 						search: countXskp == 0 ? undefined : $('input[name=searchXskp]').val(),
 					}
@@ -346,7 +346,7 @@ $(function(){
 				xskp_xsthDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: xskp_did,
 						fromOther: 'fromXskp',
 						createTime: countXsthInXskp == 0 ? undefined : $('input[name=createTimeXsthInXskp]').val(),
 						search: countXsthInXskp == 0 ? undefined : $('input[name=searchXsthInXskp]').val(),
@@ -398,7 +398,7 @@ $(function(){
         					//精度
         					precision:LENGTH_SL,
         			}}},
-   			{field:'cdwdj',title:'单价2',width:25,align:'center',
+   			{field:'cdwdj',title:'单价2(含税)',width:25,align:'center',
     	        editor:{
     	        	type:'numberbox',
     	        	options:{
@@ -444,13 +444,14 @@ $(function(){
 	
 	
 	$('input[name=khmc]').change(function(){
-		var isCheck = true;
-		if($('input#sxCheck').is(':checked')){
-			isCheck = checkKh();
-		}
-		if(isCheck){
-			loadKh($('input[name=khbh]').val().trim());
-		}
+// 		var isCheck = true;
+// 		if($('input#sxCheck').is(':checked')){
+// 			isCheck = checkKh();
+// 		}
+// 		if(isCheck){
+// 			loadKh($('input[name=khbh]').val().trim());
+// 		}
+		loadKh($('input[name=khbh]').val().trim());
 	});
 	
 
@@ -459,7 +460,7 @@ $(function(){
 			$('.fh').css('display','table-cell');
 			//初始化分户列表
 			if(jxc_xskp_fhCombo == undefined){
-				jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
+				jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
 			}else{
 				jxc_xskp_fhCombo.combobox('selectedIndex', 0);
 			}
@@ -469,10 +470,10 @@ $(function(){
 	});
 	
 	//初始化仓库列表
-	jxc_xskp_ckCombo = lnyw.initCombo($("#jxc_xskp_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + did);
+	jxc_xskp_ckCombo = lnyw.initCombo($("#jxc_xskp_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + xskp_did);
 	
 	//初始化业务员列表
-	jxc_xskp_ywyCombo = lnyw.initCombo($("#jxc_xskp_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + did);
+	jxc_xskp_ywyCombo = lnyw.initCombo($("#jxc_xskp_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xskp_did);
 	
 	//初始化付款方式列表
 	jxc_xskp_jsfsCombo = lnyw.initCombo($("#jxc_xskp_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');	
@@ -510,6 +511,7 @@ function init(){
 	$('.isSh').css('display','none');
 	$('input').val('');
 	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	$('.fh').css('display','none');
 	
 	jxc_xskp_ckCombo.combobox('selectedIndex', 0);
@@ -527,8 +529,8 @@ function init(){
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/lshAction!getLsh.action',
 		data: {
-			bmbh: did,
-			lxbh: lx,
+			bmbh: xskp_did,
+			lxbh: xskp_lx,
 		},
 		dataType: 'json',
 		success: function(d){
@@ -539,7 +541,7 @@ function init(){
 	});
 	
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, xskp_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, xskp_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xskp_did);
 	
 	//清空合计内容
 	xskp_spdg.datagrid('reloadFooter',[{}]);
@@ -702,7 +704,8 @@ function saveAll(){
 			effectRow['fplxmc'] = '普通';
 		}
 		
-		effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
+// 		effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
+		effectRow['isSx'] = '0';
 		effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
 		if($('input[name=isFh]').is(':checked')){
 			effectRow['isFh'] =  '1';
@@ -735,9 +738,9 @@ function saveAll(){
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
-		effectRow['bmbh'] = did;
-		effectRow['lxbh'] = lx;
-		effectRow['menuId'] = menuId;
+		effectRow['bmbh'] = xskp_did;
+		effectRow['lxbh'] = xskp_lx;
+		effectRow['menuId'] = xskp_menuId;
 		
 		//将表格中的数据去掉最后一个空行后，转换为json格式
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
@@ -806,7 +809,7 @@ function setEditing(){
     	jxc.showKc('#jxc_xskp_layout', 
     			'${pageContext.request.contextPath}/jxc/xskpAction!getSpkc.action', 
     			{
-    				bmbh : did, 
+    				bmbh : xskp_did, 
     				ckId : jxc_xskp_ckCombo.combobox('getValue'),
 //     				fhId : fhValue,
     				spbh : $(spbhEditor.target).val(),
@@ -846,7 +849,7 @@ function setEditing(){
     					context:this,
     					data:{
     						spbh: $(this).val(),
-    						depId: did
+    						depId: xskp_did
     					},
     					dataType:'json',
     					success:function(data){
@@ -872,7 +875,7 @@ function setEditing(){
     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
     	if(event.which == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
-    				did,
+    				xskp_did,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor);
@@ -955,6 +958,12 @@ function setEditing(){
      		cdjEditor.target.focus();
      		return false;
      	}
+    });
+    
+    cdjEditor.target.bind('focus', function(event){
+    	if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
+    		$(cdjEditor.target).val('');
+    	}
     });
     
   	//输入次单位单价后，计算金额
@@ -1089,7 +1098,7 @@ function setValueBySpbh(rowData){
 	jxc.showKc('#jxc_xskp_layout', 
 			'${pageContext.request.contextPath}/jxc/xskpAction!getSpkc.action', 
 			{
-				bmbh : did, 
+				bmbh : xskp_did, 
 				ckId : jxc_xskp_ckCombo.combobox('getValue'),
 // 				fhId : fhValue,
 				spbh : $(spbhEditor.target).val(),
@@ -1103,7 +1112,7 @@ function checkKh(){
 		async: false,
 		data:{
 			khbh: $('input[name=khbh]').val(),
-			depId: did,
+			depId: xskp_did,
 		},
 		dataType:'json',
 		success:function(data){
@@ -1130,7 +1139,7 @@ function loadKh(khbh){
 		context:this,
 		data:{
 			khbh: khbh,
-			depId: did,
+			depId: xskp_did,
 		},
 		dataType:'json',
 		success:function(data){
@@ -1141,8 +1150,15 @@ function loadKh(khbh){
 				$('input[name=khh]').val(data.obj.khh);
 				$('input[name=dzdh]').val(data.obj.dzdh);
 				jxc_xskp_ywyCombo.combobox('setValue', data.obj.ywyId);
-				if(data.obj.isSx == '1'){
-					$('input[name=isSx]').prop('checked', 'ckecked');
+// 				if(data.obj.isSx == '1'){
+// 					$('input[name=isSx]').prop('checked', 'ckecked');
+// 				}
+				if(data.obj.isNsr == '1'){
+					$('input#isNsr').attr('checked', 'checked');
+					$('input#isNsr').prop('checked', 'checked');
+				}else{
+					$('input#isNoNsr').attr('checked', 'checked');
+					$('input#isNoNsr').prop('checked', 'checked');
 				}
 			}else{
 				$.messager.alert('提示', '供应商信息不存在！', 'error');
@@ -1154,21 +1170,23 @@ function loadKh(khbh){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
+		//不再进行判断，2014-06-22
 		//是否授信客户
-		var params = '';
-		if($('input#sxCheck').is(':checked') ){
-			params += '?isSx=1&depId=' + did;
-			if($('input#isNsr').is(':checked')){
-				params += '&isNsr=1';
-			}
-		}else{
-			if($('input#isNsr').is(':checked')){
-				params += '?isNsr=1';
-			}
-		}
+// 		var params = '';
+// 		if($('input#sxCheck').is(':checked') ){
+// 			params += '?isSx=1&depId=' + xskp_did;
+// 			if($('input#isNsr').is(':checked')){
+// 				params += '&isNsr=1';
+// 			}
+// 		}else{
+// 			if($('input#isNsr').is(':checked')){
+// 				params += '?isNsr=1';
+// 			}
+// 		}
 		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/khAction!khDg.action' + params);
+				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
+// 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action' + params);
 		break;
 	case 9:
 		break;
@@ -1200,8 +1218,8 @@ function cjXskp(){
 							url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
 							data : {
 								xskplsh : row.xskplsh,
-								bmbh: did,
-								lxbh: lx,
+								bmbh: xskp_did,
+								lxbh: xskp_lx,
 								bz: bz,
 							},
 							method: 'post',
@@ -1293,9 +1311,9 @@ function createXsth(){
 								url : '${pageContext.request.contextPath}/jxc/xskpAction!createXsth.action',
 								data : {
 									xskplsh : row.xskplsh,
-									bmbh: did,
-									lxbh: lx,
-									menuId: menuId,
+									bmbh: xskp_did,
+									lxbh: xskp_lx,
+									menuId: xskp_menuId,
 									//bz: bz,
 								},
 								method: 'post',
@@ -1327,7 +1345,7 @@ function createXsth(){
 
 function searchXskp(){
 	xskp_dg.datagrid('load',{
-		bmbh: did,
+		bmbh: xskp_did,
 		createTime: $('input[name=createTimeXskp]').val(),
 		search: $('input[name=searchXskp]').val(),
 	});
@@ -1378,9 +1396,9 @@ function generateXskp(){
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							
-							if(rows[0].isSx == '1'){
-								$('input[name=isSx]').attr('checked', 'ckecked');
-							}
+// 							if(rows[0].isSx == '1'){
+// 								$('input[name=isSx]').attr('checked', 'ckecked');
+// 							}
 							
 							xskp_spdg.datagrid('loadData', d.rows);
 	// 						updateFooter();
@@ -1398,7 +1416,7 @@ function generateXskp(){
 
 function searchXsthInXskp(){
 	xskp_xsthDg.datagrid('load',{
-		bmbh: did,
+		bmbh: xskp_did,
 		createTime: $('input[name=createTimeXsthInXskp]').val(),
 		search: $('input[name=searchXsthInXskp]').val(),
 		fromOther: 'fromXskp',
@@ -1418,9 +1436,12 @@ function searchXsthInXskp(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
 				<table class="tinfo">
 					<tr>
-						<td colspan="2">增值税发票<input type="radio" name="fplxId" id="isNsr" checked="checked">&nbsp;&nbsp;普通发票<input type="radio" name="fplxId"></td>
 						<td colspan="2">
-							授信<input id="sxCheck" type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp;
+							增值税发票<input type="radio" name="fplxId" value="1" id="isNsr" checked="checked">
+							&nbsp;&nbsp;
+							普通发票<input type="radio" name="fplxId" value="0" id="isNoNsr"></td>
+						<td colspan="2">
+<!-- 							授信<input id="sxCheck" type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp; -->
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							分户<input id="fhCheck" type="checkbox" name="isFh">
 						</td>

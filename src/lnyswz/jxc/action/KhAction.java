@@ -80,6 +80,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		super.writeJson(khService.datagrid(kh));
 	}
 
+	
+	public void datagridDet() {
+		super.writeJson(khService.datagridDet(kh));
+	}
+
 	/**
 	 * 判断客户信息是否存在
 	 */
@@ -87,6 +92,19 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		Json j = new Json();
 		if (khService.existKh(kh)) {
 			j.setMsg("对不起！此客户编号已存在！");
+		} else {
+			j.setSuccess(true);
+		}
+		writeJson(j);
+	}
+	
+	/**
+	 * 判断客户信息是否存在
+	 */
+	public void existKhDet() {
+		Json j = new Json();
+		if (khService.existKhDet(kh)) {
+			j.setMsg("对不起！此客户业务员授信已存在！");
 		} else {
 			j.setSuccess(true);
 		}
@@ -102,7 +120,26 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	}
 	
 	/**
-	 * 维护专属信息
+	 * 增加专属信息
+	 */
+	public void addDet() {
+		Json j = new Json();
+		try {
+			User u = (User)session.get("user");
+			kh.setUserId(u.getId());
+			Kh k = khService.addDet(kh);
+			j.setSuccess(true);
+			j.setMsg("客户授信维护成功!");
+			j.setObj(k);
+		} catch (Exception e) {
+			j.setMsg("客户授信维护失败!");
+			e.printStackTrace();
+		}
+		super.writeJson(j);
+	}
+	
+	/**
+	 * 修改专属信息
 	 */
 	public void editDet() {
 		Json j = new Json();
@@ -111,9 +148,9 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 			kh.setUserId(u.getId());
 			khService.editDet(kh);
 			j.setSuccess(true);
-			j.setMsg("商品专属信息维护成功!");
+			j.setMsg("客户授信维护成功!");
 		} catch (Exception e) {
-			j.setMsg("商品专属信息维护失败!");
+			j.setMsg("客户授信维护失败!");
 			e.printStackTrace();
 		}
 		super.writeJson(j);

@@ -76,8 +76,8 @@ public class KhlxAction extends BaseAction implements ModelDriven<Khlx> {
 		writeJson(j);
 	}
 
-	public void listKhlx() {
-		super.writeJson(khlxService.listKhlx(khlx));
+	public void listKhlxs() {
+		super.writeJson(khlxService.listKhlxs(khlx));
 	}
 
 	public void datagrid() {

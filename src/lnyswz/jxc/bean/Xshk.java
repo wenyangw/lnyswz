@@ -16,6 +16,8 @@ public class Xshk {
 	private String bmmc;
 	private String khbh;
 	private String khmc;
+	private int ywyId;
+	private String ywymc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
 	private Date payTime;
@@ -84,6 +86,18 @@ public class Xshk {
 	}
 	public void setKhmc(String khmc) {
 		this.khmc = khmc;
+	}
+	public int getYwyId() {
+		return ywyId;
+	}
+	public void setYwyId(int ywyId) {
+		this.ywyId = ywyId;
+	}
+	public String getYwymc() {
+		return ywymc;
+	}
+	public void setYwymc(String ywymc) {
+		this.ywymc = ywymc;
 	}
 	public BigDecimal getHkje() {
 		return hkje;

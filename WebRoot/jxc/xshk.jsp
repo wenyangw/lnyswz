@@ -28,6 +28,14 @@ $(function(){
 		border : false,
 	});
 	
+	$('#jxc_xshk_khLayout').layout({
+		fit : true,
+		border : false,
+	});
+	
+	//初始化业务员列表
+	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
+	
 	xshk_khDg = $('#jxc_xshk_khDg').datagrid({
 		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
 		queryParams :{
@@ -36,10 +44,6 @@ $(function(){
 		fit : true,
 	    border : false,
 	    singleSelect : true,
-// 	    pagination : true,
-// 		pagePosition : 'bottom',
-// 		pageSize : pageSize,
-// 		pageList : pageList,
 		columns:[[
 	        {field:'khbh',title:'客户编号',width:60},
 	        {field:'khmc',title:'客户名称',width:200},
@@ -55,6 +59,7 @@ $(function(){
 			xshk_xskpDg.datagrid('load', {
     			bmbh:xshk_did,
     			khbh:rowData.khbh,
+    			ywyId: jxc_xshk_ywyCombo.combobox('getValue'),
 	    	});
 	    }
 	});
@@ -80,6 +85,8 @@ $(function(){
 	        	
 	        {field:'khbh',title:'客户编号',width:100,align:'center',hidden:true},
 	        {field:'khmc',title:'客户名称',width:300,align:'center'},
+	        {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},
+	        {field:'ywymc',title:'业务员',width:100,align:'center'},
 	        {field:'hkje',title:'还款金额',width:100,align:'center'},
 	        {field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
@@ -193,7 +200,6 @@ $(function(){
 	        	}},
 	    ]],
 	    onLoadSuccess:function(data){
-	    	console.info('|' + $('#khbh').html() + '|');
 	    	if($('#khbh').html() != ''){
 				$('#khlx').html(data.obj.khlxmc);
 				$('#sxzq').html(data.obj.sxzq + '天');
@@ -211,9 +217,10 @@ $(function(){
 		onSelect: function(title, index){
 			if(index == 0){
 				xshk_xskpDg.datagrid('load', {
-	    			bmbh:xshk_did,
-	    			khbh:$('#khbh').html(),
-		    	});
+    				bmbh:xshk_did,
+    				khbh:$('#khbh').html(),
+    				ywyId: jxc_xshk_ywyCombo.combobox('getValue'),
+	    		});
 			}
 			if(index == 1){
 				xshk_dg.datagrid({
@@ -230,8 +237,6 @@ $(function(){
 	});
 	
 	
-	//初始化业务员列表
-	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
 	
 	jxc_xshk_ywyCombo.combobox({
 		onSelect: function(){
@@ -269,8 +274,6 @@ $(function(){
 				});
 				countHk++;
 				if(je == 0){
-					console.info('countHk:' + countHk);
-					console.info('lastHkje:' + lastHkje);
 					return false;
 				}
 			});
@@ -288,7 +291,7 @@ $(function(){
 //以下为商品列表处理代码
 function init(){
 	//清空全部字段
-	$('input').val('');
+	$('input[name=hkje]').val('');
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	
@@ -354,6 +357,9 @@ function saveAll(){
 	//将表头内容传入后台
 	effectRow['khbh'] = khbh;
 	effectRow['khmc'] = $('#khmc').html();
+	effectRow['ywyId'] = jxc_xshk_ywyCombo.combobox('getValue');
+	effectRow['ywymc'] = jxc_xshk_ywyCombo.combobox('getText');
+	
 	effectRow['hkje'] = hkje;
 	effectRow['payTime'] = $('input[name=payTime]').val();
 	effectRow['lastHkje'] = xshk_xskpDg.datagrid('getRows')[countHk - 1].hkje;
@@ -380,8 +386,9 @@ function saveAll(){
 				});
 		    	init();
 		    	xshk_xskpDg.datagrid('load', {
-	    			bmbh:xshk_did,
-	    			khbh:$('#khbh').html(),
+	    			bmbh: xshk_did,
+	    			khbh: $('#khbh').html(),
+	    			ywyId: jxc_xshk_ywyCombo.combobox('getValue'),
 		    	});
 			}  
 		},
@@ -443,10 +450,10 @@ function searchXshk(){
 		<div id='jxc_xshk_layout' style="height:100%;width=100%">
 			<div data-options="region:'west',title:'业务员-客户',split:true" style="height:100%;width:300px">
 				<div id='jxc_xshk_khLayout' style="height:100%;width=100%">
-					<div data-options="region:'north',title:'商品分类',split:true" style="height:50px;width:100%">
+					<div data-options="region:'north',title:'业务员',split:true" style="height:80px;width:100%">
 						请选择业务员：<input id="jxc_xshk_ywyId" name="ywyId" size="16">
 					</div>
-					<div data-options="region:'center',title:'商品分类',split:true" style="height:100%;width:100%">
+					<div data-options="region:'center',title:'客户',split:true" style="height:100%;width:100%">
 						<div id="jxc_xshk_khDg"></div>
 					</div>
 				</div>

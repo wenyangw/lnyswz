@@ -14,5 +14,5 @@ public interface KhlxServiceI {
 
 	public void delete(Khlx khlx);
 
-	public List<Khlx> listKhlx(Khlx khlx);
+	public List<Khlx> listKhlxs(Khlx khlx);
 }

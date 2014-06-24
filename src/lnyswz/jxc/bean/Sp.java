@@ -28,6 +28,8 @@ public class Sp {
 	private BigDecimal maxKc;
 	private BigDecimal minKc;
 	private BigDecimal xsdj;
+	//含税单价
+	private BigDecimal xsdjs;
 	private BigDecimal limitXsdj;
 	private BigDecimal lastRkdj;
 	private String query;
@@ -169,6 +171,12 @@ public class Sp {
 	}
 	public void setXsdj(BigDecimal xsdj) {
 		this.xsdj = xsdj;
+	}
+	public BigDecimal getXsdjs() {
+		return xsdjs;
+	}
+	public void setXsdjs(BigDecimal xsdjs) {
+		this.xsdjs = xsdjs;
 	}
 	public BigDecimal getLimitXsdj() {
 		return limitXsdj;

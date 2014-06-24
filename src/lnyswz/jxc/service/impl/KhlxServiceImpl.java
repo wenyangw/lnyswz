@@ -64,7 +64,7 @@ public class KhlxServiceImpl implements KhlxServiceI {
 	 * 不带分页的
 	 */
 	@Override
-	public List<Khlx> listKhlx(Khlx khlx) {
+	public List<Khlx> listKhlxs(Khlx khlx) {
 		String hql = "from TKhlx t ";
 		List<TKhlx> list = khlxDao.find(hql);
 		return changeKhlx(list);

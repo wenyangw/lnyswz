@@ -55,5 +55,6 @@ public interface BaseDaoI<T> {
 	public List<T> findBySQL(String sql, Map<String, Object> returns, T o);
 	public List<T> findBySQL(String sql, Map<String, Object> returns, T o, int page, int rows);
 	public Long countSQL(String sql);
+	public Long countSQL(String sql, Map<String, Object> params);
 
 }
