@@ -717,15 +717,15 @@ function rowOk(){
 	}
 	if(keyOk()){
 // 		if($('input[name=isSx]').is(':checked')){
-		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
-				return true;
-			}
-		}else{
+// 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+// 			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
+// 				return true;
+// 			}
+// 		}else{
 			if(zslEditor.target.val() != 0){
 				return true;
 			}
-		}
+// 		}
 	}
 	return false;
 }
