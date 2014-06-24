@@ -985,10 +985,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
 		
-		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
-
+		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		BigDecimal lsje = YszzServiceImpl.getLsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		
+		kh.setYsje(ysje);
+		kh.setYszje(ysje.add(lsje));
 		
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();

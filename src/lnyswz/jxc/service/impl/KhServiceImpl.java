@@ -24,6 +24,7 @@ import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TUser;
+import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.service.KhServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -35,6 +36,7 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
+	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
@@ -104,8 +106,8 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			khDet.setSxje(Constant.BD_ZERO);
 		}
-		if(kh.getYfje() == null){
-			khDet.setYfje(Constant.BD_ZERO);
+		if(kh.getLsje() == null){
+			khDet.setLsje(Constant.BD_ZERO);
 		}
 		khDet.setTKh(g);
 		gdt.add(khDet);
@@ -136,8 +138,8 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			v.setSxje(Constant.BD_ZERO);
 		}
-		if(kh.getYfje() == null){
-			v.setYfje(Constant.BD_ZERO);
+		if(kh.getLsje() == null){
+			v.setLsje(Constant.BD_ZERO);
 		}
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "修改客户专属信息", opeDao);
@@ -287,6 +289,8 @@ public class KhServiceImpl implements KhServiceI {
 				if(tDet.getKhlxId() != null && tDet.getKhlxId().trim().length() > 0){
 					k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
 				}
+				
+				k.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), yszzDao));
 				
 				l.add(k);
 			}
@@ -479,23 +483,26 @@ public class KhServiceImpl implements KhServiceI {
 		return dg;
 	}
 	
-	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
+	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
 		Kh kh = new Kh();
 
-		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
+		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("depId", depId);
 		params.put("khbh", khbh);
+		params.put("ywyId", ywyId);
+		
 		TKhDet tKhDet = khDetDao.get(hql, params);
 		if(tKhDet != null){
 			BeanUtils.copyProperties(tKhDet, kh);
 			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
+			//kh.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), yszzDao));
 		}else{
 			kh.setKhlxId(Constant.KHLX_XK);
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);
 			kh.setSxje(Constant.BD_ZERO);
 			kh.setSxzq(0);
-			kh.setYfje(Constant.BD_ZERO);
+			kh.setLsje(Constant.BD_ZERO);
 		}
 		return kh;
 	}
@@ -523,6 +530,11 @@ public class KhServiceImpl implements KhServiceI {
 	@Autowired
 	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
 		this.khlxDao = khlxDao;
+	}
+
+	@Autowired
+	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
+		this.yszzDao = yszzDao;
 	}
 
 	@Autowired

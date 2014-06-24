@@ -76,7 +76,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'yfje',title:'历史金额',width:100,align:'right',
+	        {field:'lsje',title:'历史金额',width:100,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -299,11 +299,11 @@ function initForm(target){
 	if(value != '01'){
 		$('input[name=sxzq]').removeAttr('disabled');
 		$('input[name=sxje]').removeAttr('disabled');
-		$('input[name=yfje]').removeAttr('disabled');
+		$('input[name=lsje]').removeAttr('disabled');
 	}else{
 		$('input#sxzq').attr('disabled','disabled');
 		$('input[name=sxje]').attr('disabled','disabled');
-		$('input[name=yfje]').attr('disabled','disabled');
+		$('input[name=lsje]').attr('disabled','disabled');
 	}
 };
 

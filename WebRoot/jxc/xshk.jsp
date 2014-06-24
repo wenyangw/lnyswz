@@ -204,8 +204,9 @@ $(function(){
 				$('#khlx').html(data.obj.khlxmc);
 				$('#sxzq').html(data.obj.sxzq + '天');
 				$('#sxje').html(data.obj.sxje + '元');
-				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+				$('#yszje').html(data.obj.yszje == 0 ? '' : data.obj.yszje + '元');
 				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
+				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
 	    	}
 		}
 	});
@@ -282,6 +283,7 @@ $(function(){
 		}
 	});
 	
+	jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	//初始化信息
 	init();
 	
@@ -460,7 +462,7 @@ function searchXshk(){
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
 		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
-					<div data-options="region:'north',title:'商品分类',split:true" style="height:120px;width:100%">
+					<div data-options="region:'north',title:'商品分类',split:true" style="height:140px;width:100%">
 						<table class="tinfo">
 							<tr>
 								<td></td>
@@ -472,15 +474,18 @@ function searchXshk(){
 							<td colspan="10"><hr/></td>
 							</tr>
 							<tr class="read">
-								<th>客户编号</th><td><div id="khbh"></div></td>
-								<th>客户名称</th><td colspan="3"><div id="khmc"></div></td>
-								<th>客户类型</th><td><div id="khlx"></div></td>
+								<th>客户编号:</th><td><div id="khbh"></div></td>
+								<th>客户名称:</th><td colspan="3"><div id="khmc"></div></td>
 							</tr>
 							<tr class="read">
-								<th>授信期</th><td><div id="sxzq"></div></td>
-								<th>授信金额</th><td style="width:100px"><div id="sxje"></div></td>
-								<th>历史陈欠</th><td style="width:100px"><div id="yfje">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
-								<th>目前欠款</th><td><div id="ysje"></div></td>
+								<th>客户类型:</th><td style="width:150px"><div id="khlx"></div></td>
+								<th>授信期:</th><td style="width:150px"><div id="sxzq"></div></td>
+								<th>授信金额:</th><td style="width:150px"><div id="sxje"></div></td>
+							</tr>
+							<tr class="read">
+								<th>应收总额:</th><td><div id="yszje"></div></td>
+								<th>销售应收:</th><td><div id="ysje"></div></td>
+								<th>历史应收:</th><td style="width:100px"><div id="yfje"></div></td>
 							</tr>
 							<tr>
 								<th>还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>

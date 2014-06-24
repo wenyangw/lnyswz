@@ -66,40 +66,41 @@ public class YszzServiceImpl implements YszzServiceI {
 				tYszz.setYwymc(ywy.getRealName());
 			}
 			
+			tYszz.setLsje(Constant.BD_ZERO);
 			tYszz.setQcje(Constant.BD_ZERO);
-			tYszz.setQclsje(Constant.BD_ZERO);
+			tYszz.setQcthje(Constant.BD_ZERO);
 			
 			if(type.equals(Constant.UPDATE_YS_LS)){
-				tYszz.setYsje(Constant.BD_ZERO);
-				tYszz.setYslsje(je);
+				tYszz.setKpje(Constant.BD_ZERO);
+				tYszz.setThje(je);
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_YS_KP)){
-				tYszz.setYsje(je);
-				tYszz.setYslsje(Constant.BD_ZERO);
+				tYszz.setKpje(je);
+				tYszz.setThje(Constant.BD_ZERO);
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_YS_KP_LS)){
-				tYszz.setYsje(je);
-				tYszz.setYslsje(je.negate());
+				tYszz.setKpje(je);
+				tYszz.setThje(je.negate());
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_HK)){
-				tYszz.setYsje(Constant.BD_ZERO);
-				tYszz.setYslsje(Constant.BD_ZERO);
+				tYszz.setKpje(Constant.BD_ZERO);
+				tYszz.setThje(Constant.BD_ZERO);
 				tYszz.setHkje(je);
 			}
 			baseDao.save(tYszz);
 		}else{
 			if(type.equals(Constant.UPDATE_YS_LS)){
-				tYszz.setYslsje(tYszz.getYslsje().add(je));
+				tYszz.setThje(tYszz.getThje().add(je));
 			}
 			if(type.equals(Constant.UPDATE_YS_KP)){
-				tYszz.setYsje(tYszz.getYsje().add(je));
+				tYszz.setKpje(tYszz.getKpje().add(je));
 			}
 			if(type.equals(Constant.UPDATE_YS_KP_LS)){
-				tYszz.setYsje(tYszz.getYsje().add(je));
-				tYszz.setYslsje(tYszz.getYslsje().subtract(je));
+				tYszz.setKpje(tYszz.getKpje().add(je));
+				tYszz.setThje(tYszz.getThje().subtract(je));
 			}
 			if(type.equals(Constant.UPDATE_HK)){
 				tYszz.setHkje(tYszz.getHkje().add(je));
@@ -116,7 +117,21 @@ public class YszzServiceImpl implements YszzServiceI {
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		TYszz tYszz = yszzDao.get(hql, params);
 		if(tYszz != null){
-			return tYszz.getQcje().add(tYszz.getYsje()).subtract(tYszz.getHkje());
+			return tYszz.getQcje().add(tYszz.getKpje()).subtract(tYszz.getHkje());
+		}
+		return Constant.BD_ZERO; 
+	}
+	
+	public static BigDecimal getLsje(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
+		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", bmbh);
+		params.put("khbh", khbh);
+		params.put("ywyId", ywyId);
+		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
+		TYszz tYszz = yszzDao.get(hql, params);
+		if(tYszz != null){
+			return tYszz.getLsje();
 		}
 		return Constant.BD_ZERO; 
 	}
