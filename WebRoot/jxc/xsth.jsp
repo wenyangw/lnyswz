@@ -558,7 +558,7 @@ $(function(){
 	        			//精度
 	        			precision: LENGTH_SL,
 	        		}}},
-	        {field:'zdwdj',title:'单价1',width:25,align:'center',
+	        {field:'zdwdj',title:'单价1(含税)',width:25,align:'center',
 	    	        editor:{
 	    	        	type:'numberbox',
 	    	        	options:{
@@ -572,7 +572,7 @@ $(function(){
         					//精度
         					precision:LENGTH_SL,
         			}}},
-	        {field:'cdwdj',title:'单价2',width:25,align:'center',
+	        {field:'cdwdj',title:'单价2(含税)',width:25,align:'center',
 	        	editor:{
 	        		type:'numberbox',
 	        		options:{
@@ -1022,7 +1022,8 @@ function setEditing(){
     				xsth_did,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
-    				zslEditor);
+    				zslEditor,
+    				true);
     		return false;
     	}
     });

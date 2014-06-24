@@ -398,7 +398,7 @@ $(function(){
         					//精度
         					precision:LENGTH_SL,
         			}}},
-   			{field:'cdwdj',title:'单价2',width:25,align:'center',
+   			{field:'cdwdj',title:'单价2(含税)',width:25,align:'center',
     	        editor:{
     	        	type:'numberbox',
     	        	options:{

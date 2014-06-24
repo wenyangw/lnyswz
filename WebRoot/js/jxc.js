@@ -169,11 +169,11 @@ jxc.spInfo = function(target, type, sppp, spbz){
 };
 
 //商品信息快速查询
-jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget){
+jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
-		width:480,
+		width:600,
 		height:420,
 		modal : true,
 		onLoad: function(){
@@ -200,7 +200,12 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget){
 			        {field:'spbz',title:'包装'},
 			        {field:'zjldwId',title:'主计量单位id',hidden:true},
 			        {field:'zjldwmc',title:'主计量单位'},
-			        {field:'xsdj',title:'销售单价(无税)'},
+			        {field:'xsdj',title:'销售单价(无税)', hidden: xsdjWithS ? true : false},
+			        {field:'xsdjs',title:'销售单价(含税)', hidden: xsdjWithS ? false : true,
+		        		formatter: function(value){
+		        			return value == undefined ? '' : value.toFixed(LENGTH_JE) ;
+		        		}	
+			        },
 			        {field:'limitXsdj',title:'最低销价',hidden:true},
 			        
 			    ]],
