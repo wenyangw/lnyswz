@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
@@ -112,6 +114,18 @@ public class KhServiceImpl implements KhServiceI {
 		khDet.setTKh(g);
 		gdt.add(khDet);
 		g.setTKhDets(gdt);
+		
+		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+			Department bm = new Department();
+			bm.setId(dep.getId());
+			bm.setDepName(dep.getDepName());
+			
+			User ywy = new User();
+			ywy.setId(xsth.getYwyId());
+			ywy.setRealName(xsth.getYwymc());
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(bm, kh, ywy, kh.getLsje(), Constant.UPDATE_YS_LS, yszzDao);
+		}
 		
 		keyId = kh.getKhbh() + "/" + khDet.getId();
 		

@@ -209,8 +209,8 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	public void checkKh(){
 		Json j = new Json();
 		Kh k = khService.checkKh(kh);
-		if(k.getYfje().compareTo(k.getSxje()) >= 0){
-			j.setMsg("该客户授信额度为" + k.getSxje() + ",目前应付金额为" + k.getYfje() + ",已不能继续销售！");
+		if(k.getLsje().compareTo(k.getSxje()) >= 0){
+			j.setMsg("该客户授信额度为" + k.getSxje() + ",目前应付金额为" + k.getLsje() + ",已不能继续销售！");
 		}else{
 			j.setSuccess(true);
 		}

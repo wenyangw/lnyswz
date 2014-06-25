@@ -70,7 +70,7 @@ public class YszzServiceImpl implements YszzServiceI {
 			tYszz.setQcje(Constant.BD_ZERO);
 			tYszz.setQcthje(Constant.BD_ZERO);
 			
-			if(type.equals(Constant.UPDATE_YS_LS)){
+			if(type.equals(Constant.UPDATE_YS_TH)){
 				tYszz.setKpje(Constant.BD_ZERO);
 				tYszz.setThje(je);
 				tYszz.setHkje(Constant.BD_ZERO);
@@ -80,7 +80,7 @@ public class YszzServiceImpl implements YszzServiceI {
 				tYszz.setThje(Constant.BD_ZERO);
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
-			if(type.equals(Constant.UPDATE_YS_KP_LS)){
+			if(type.equals(Constant.UPDATE_YS_KP_TH)){
 				tYszz.setKpje(je);
 				tYszz.setThje(je.negate());
 				tYszz.setHkje(Constant.BD_ZERO);
@@ -92,13 +92,13 @@ public class YszzServiceImpl implements YszzServiceI {
 			}
 			baseDao.save(tYszz);
 		}else{
-			if(type.equals(Constant.UPDATE_YS_LS)){
+			if(type.equals(Constant.UPDATE_YS_TH)){
 				tYszz.setThje(tYszz.getThje().add(je));
 			}
 			if(type.equals(Constant.UPDATE_YS_KP)){
 				tYszz.setKpje(tYszz.getKpje().add(je));
 			}
-			if(type.equals(Constant.UPDATE_YS_KP_LS)){
+			if(type.equals(Constant.UPDATE_YS_KP_TH)){
 				tYszz.setKpje(tYszz.getKpje().add(je));
 				tYszz.setThje(tYszz.getThje().subtract(je));
 			}
