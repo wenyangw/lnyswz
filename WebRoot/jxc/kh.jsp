@@ -33,22 +33,30 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_kh_tb',
 	    onClickRow:function(rowIndex, rowData){
-	    	khDet_dg.datagrid('load', {
-	    		depId: kh_did,
-	    		khbh: rowData.khbh
+	    	khDet_dg.datagrid({
+	    		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+	 	    	queryParams:{
+	 	    		depId: kh_did,
+	 	    		khbh: rowData.khbh
+	 	    	},
 	    	});
+	    	
+// 	    	khDet_dg.datagrid('load', {
+// 	    		depId: kh_did,
+// 	    		khbh: rowData.khbh
+// 	    	});
 	    },
 	});
 	
 	khDet_dg = $('#jxc_khdet_dg').datagrid({
-		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+// 		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+// 	    queryParams:{
+// 	    	depId: kh_did
+// 	    },
 		fit : true,
 	    border : false,
 	    singleSelect : true,
 	    fitColumns: false,
-	    queryParams:{
-	    	depId: kh_did
-	    },
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,

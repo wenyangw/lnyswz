@@ -95,6 +95,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		User ywy = new User();
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
+		
 		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 		xshkDao.save(tXshk);
 				

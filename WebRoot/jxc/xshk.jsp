@@ -37,10 +37,10 @@ $(function(){
 	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
 	
 	xshk_khDg = $('#jxc_xshk_khDg').datagrid({
-		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
-		queryParams :{
-			depId : xshk_did,
-		},
+// 		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
+// 		queryParams :{
+// 			depId : xshk_did,
+// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -241,9 +241,16 @@ $(function(){
 	
 	jxc_xshk_ywyCombo.combobox({
 		onSelect: function(){
-			xshk_khDg.datagrid('load', {
-				depId: xshk_did,
-				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
+			xshk_khDg.datagrid({
+				url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
+		 		queryParams :{
+		 			depId : xshk_did,
+		 			ywyId: jxc_xshk_ywyCombo.combobox('getValue')
+		 		},
+
+// 				'load', {
+// 				depId: xshk_did,
+// 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
 		}
 	});
@@ -483,9 +490,9 @@ function searchXshk(){
 								<th>授信金额:</th><td style="width:150px"><div id="sxje"></div></td>
 							</tr>
 							<tr class="read">
-								<th>应收总额:</th><td><div id="yszje"></div></td>
-								<th>销售应收:</th><td><div id="ysje"></div></td>
-								<th>历史应收:</th><td style="width:100px"><div id="yfje"></div></td>
+								<th>应收总额:</th><td><div id="ysje"></div></td>
+<!-- 								<th>销售应收:</th><td><div id="ysje"></div></td> -->
+								<th>历史应收:</th><td style="width:100px"><div id="lsje"></div></td>
 							</tr>
 							<tr>
 								<th>还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>

@@ -121,8 +121,10 @@ public class KhServiceImpl implements KhServiceI {
 			bm.setDepName(dep.getDepName());
 			
 			User ywy = new User();
-			ywy.setId(xsth.getYwyId());
-			ywy.setRealName(xsth.getYwymc());
+			TUser tYwy = userDao.load(TUser.class, kh.getYwyId());
+			ywy.setId(tYwy.getId());
+			ywy.setRealName(tYwy.getRealName());
+			
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(bm, kh, ywy, kh.getLsje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
@@ -152,8 +154,23 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			v.setSxje(Constant.BD_ZERO);
 		}
+		
 		if(kh.getLsje() == null){
 			v.setLsje(Constant.BD_ZERO);
+		}
+		
+		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+			Department bm = new Department();
+			TDepartment tDep = depDao.load(TDepartment.class, kh.getDepId());
+			bm.setId(tDep.getId());
+			bm.setDepName(tDep.getDepName());
+			
+			User ywy = new User();
+			ywy.setId(kh.getYwyId());
+			ywy.setRealName(kh.getYwyName());
+			
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(bm, kh, ywy, kh.getLsje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "修改客户专属信息", opeDao);
@@ -304,7 +321,7 @@ public class KhServiceImpl implements KhServiceI {
 					k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
 				}
 				
-				k.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), yszzDao));
+				k.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), tDet.getYwyId(), yszzDao));
 				
 				l.add(k);
 			}
@@ -473,27 +490,37 @@ public class KhServiceImpl implements KhServiceI {
 	
 	@Override
 	public DataGrid listKhByYwy(Kh kh) {
-		String hql = "from TKhDet t where t.TDepartment.id = :depId";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("depId", kh.getDepId());
-		if(kh.getYwyId() > 0){
-			hql += " and t.ywyId = :ywyId";
-			params.put("ywyId", kh.getYwyId());
-		}
-		hql += " order by t.TKh.khbh";
-		List<TKhDet> tDets = khdetDao.find(hql, params);
-		List<Kh> khs = new ArrayList<Kh>();
-		for(TKhDet tDet : tDets){
-			Kh k = new Kh();
-			BeanUtils.copyProperties(tDet, k);
+		List<Kh> khs = YszzServiceImpl.getKhsByYwy(kh.getDepId(), kh.getYwyId(), yszzDao);
+		
+//		String hql = "from TKhDet t where t.TDepartment.id = :depId";
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("depId", kh.getDepId());
+//		if(kh.getYwyId() > 0){
+//			hql += " and t.ywyId = :ywyId";
+//			params.put("ywyId", kh.getYwyId());
+//		}
+//		hql += " order by t.TKh.khbh";
+//		List<TKhDet> tDets = khdetDao.find(hql, params);
+		List<Kh> ks = new ArrayList<Kh>();
+//		for(TKhDet tDet : tDets){
+//			Kh k = new Kh();
+//			BeanUtils.copyProperties(tDet, k);
+//			
+//			k.setKhbh(tDet.getTKh().getKhbh());
+//			k.setKhmc(tDet.getTKh().getKhmc());
+//			
+//			khs.add(k);
+//		}
+		for(Kh k : khs){
+			Kh kk = new Kh();
+			kk.setKhbh(k.getKhbh());
+			kk.setKhmc(k.getKhmc());
 			
-			k.setKhbh(tDet.getTKh().getKhbh());
-			k.setKhmc(tDet.getTKh().getKhmc());
-			
-			khs.add(k);
+			ks.add(kk);
 		}
+		
 		DataGrid dg = new DataGrid();
-		dg.setRows(khs);
+		dg.setRows(ks);
 		return dg;
 	}
 	

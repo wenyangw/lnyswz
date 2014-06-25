@@ -1,13 +1,16 @@
 package lnyswz.jxc.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Department;
@@ -59,6 +62,7 @@ public class YszzServiceImpl implements YszzServiceI {
 			tYszz.setBmmc(dep.getDepName());
 			tYszz.setKhbh(kh.getKhbh());
 			tYszz.setKhmc(kh.getKhmc());
+			
 			tYszz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
 			
 			if(ywy != null){
@@ -66,32 +70,45 @@ public class YszzServiceImpl implements YszzServiceI {
 				tYszz.setYwymc(ywy.getRealName());
 			}
 			
-			tYszz.setLsje(Constant.BD_ZERO);
 			tYszz.setQcje(Constant.BD_ZERO);
 			tYszz.setQcthje(Constant.BD_ZERO);
 			
+			if(type.equals(Constant.UPDATE_YS_LS)){
+				tYszz.setLsje(je);
+				tYszz.setKpje(Constant.BD_ZERO);
+				tYszz.setThje(Constant.BD_ZERO);
+				tYszz.setHkje(Constant.BD_ZERO);
+			}
+			
 			if(type.equals(Constant.UPDATE_YS_TH)){
+				tYszz.setLsje(Constant.BD_ZERO);
 				tYszz.setKpje(Constant.BD_ZERO);
 				tYszz.setThje(je);
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_YS_KP)){
+				tYszz.setLsje(Constant.BD_ZERO);
 				tYszz.setKpje(je);
 				tYszz.setThje(Constant.BD_ZERO);
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_YS_KP_TH)){
+				tYszz.setLsje(Constant.BD_ZERO);
 				tYszz.setKpje(je);
 				tYszz.setThje(je.negate());
 				tYszz.setHkje(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_HK)){
+				tYszz.setLsje(Constant.BD_ZERO);
 				tYszz.setKpje(Constant.BD_ZERO);
 				tYszz.setThje(Constant.BD_ZERO);
 				tYszz.setHkje(je);
 			}
 			baseDao.save(tYszz);
 		}else{
+			if(type.equals(Constant.UPDATE_YS_LS)){
+				tYszz.setLsje(je);
+			}
 			if(type.equals(Constant.UPDATE_YS_TH)){
 				tYszz.setThje(tYszz.getThje().add(je));
 			}
@@ -134,5 +151,25 @@ public class YszzServiceImpl implements YszzServiceI {
 			return tYszz.getLsje();
 		}
 		return Constant.BD_ZERO; 
+	}
+	
+	public static List<Kh> getKhsByYwy(String bmbh, int ywyId, BaseDaoI<TYszz> yszzDao){
+		String hql = "from TYszz t where t.bmbh = :bmbh and t.ywyId = :ywyId and t.jzsj = :jzsj and t.ywyId > 0";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", bmbh);
+		params.put("ywyId", ywyId);
+		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
+		List<TYszz> tYszzs = yszzDao.find(hql, params);
+		List<Kh> khs = new ArrayList<Kh>();
+		
+		for(TYszz t : tYszzs){
+			Kh kh = new Kh();
+			kh.setKhbh(t.getKhbh());
+			kh.setKhmc(t.getKhmc());
+			
+			khs.add(kh);
+		}
+		
+		return khs;
 	}
 }
