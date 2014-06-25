@@ -68,22 +68,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
 		
-		
-		//处理商品明细
-		Set<THkKp> tHkKps = new HashSet<THkKp>();
-		ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
-		for(Xskp x : xskps){
-			THkKp tHkKp = new THkKp();
-			tHkKp.setXskplsh(x.getXskplsh());
-			tHkKp.setHkje(x.getHkje());
-			tHkKp.setTXshk(tXshk);
-			tHkKps.add(tHkKp);
-			
-			TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
-			tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
-		}
-		tXshk.setTHkKps(tHkKps);
-
 		Department dep = new Department();
 		dep.setId(xshk.getBmbh());
 		dep.setDepName(depName);
@@ -96,7 +80,26 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
 		
-		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		if(xshk.getIsLs().equals("0")){
+			//处理商品明细
+			Set<THkKp> tHkKps = new HashSet<THkKp>();
+			ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
+			for(Xskp x : xskps){
+				THkKp tHkKp = new THkKp();
+				tHkKp.setXskplsh(x.getXskplsh());
+				tHkKp.setHkje(x.getHkje());
+				tHkKp.setTXshk(tXshk);
+				tHkKps.add(tHkKp);
+				
+				TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
+				tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
+			}
+			tXshk.setTHkKps(tHkKps);
+			
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		}else{
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
+		}
 		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 

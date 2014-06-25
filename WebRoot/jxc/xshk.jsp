@@ -54,7 +54,8 @@ $(function(){
 			$('#khlx').html('');
 			$('#sxzq').html('');
 			$('#sxje').html('');
-			$('#yfje').html('');
+			$('#ysje').html('');
+			$('#lsje').html('');
 
 			xshk_xskpDg.datagrid('load', {
     			bmbh:xshk_did,
@@ -206,7 +207,7 @@ $(function(){
 				$('#sxje').html(data.obj.sxje + '元');
 				$('#yszje').html(data.obj.yszje == 0 ? '' : data.obj.yszje + '元');
 				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
-				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+				$('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
 	    	}
 		}
 	});
@@ -294,6 +295,17 @@ $(function(){
 	//初始化信息
 	init();
 	
+	$('input[name=isLs]').click(function(){
+ 		if($('input[name=isLs]').is(':checked')){
+			if($('#lsje').html() == ''){
+				$.messager.alert('警告', '该客户无历史陈欠！',  'warning');
+				$('input[name=isLs]').removeAttr('checked');
+				$('input[name=isLs]').removeProp('checked');
+				return false;
+			}
+		}
+	});
+	
 	
 });
 
@@ -301,6 +313,9 @@ $(function(){
 function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
+	
+	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	
@@ -342,7 +357,8 @@ function selectKh(rowData){
 			$('#khlx').html(data.obj.khlxmc);
 			$('#sxzq').html(data.obj.sxzq + '天');
 			$('#sxje').html(data.obj.sxje + '元');
-			$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+			$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
+			$('#lsje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
 		}
 	});
 }
@@ -351,6 +367,7 @@ function selectKh(rowData){
 function saveAll(){
 	var khbh = $('#khbh').html();
 	var hkje = $('#hkje').val();
+	var lsje = $('#lsje').val();
 	
 	if(khbh == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
@@ -360,6 +377,15 @@ function saveAll(){
 		$.messager.alert('提示', '没有输入回款金额,请重新操作！', 'error');
 		return false;
 	}
+	if($('input[name=isLs]').is(':checked')){
+		if(Number(lsje) < Number(hkje)){
+			console.info('==');
+			$.messager.alert('警告', '回款金额不能小于历史陈欠！',  'warning');
+			$('#hkje').html('');
+			$('#hkje').focus();
+		}
+	}
+	
 	
 	var effectRow = new Object();
 	
@@ -497,6 +523,7 @@ function searchXshk(){
 							<tr>
 								<th>还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
 								<th>还款日期</th><td><input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px"></td>
+								<th>历史回款</th><td><input name="isLs" type="checkbox"></td>
 							</tr>
 						</table>
 					</div>

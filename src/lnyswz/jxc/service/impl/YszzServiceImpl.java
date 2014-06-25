@@ -51,7 +51,6 @@ public class YszzServiceImpl implements YszzServiceI {
 		params.put("ywyId", ywy.getId());
 		updateYszz(dep, kh, ywy, je, type, baseDao, hql, params);
 		
-		
 	}
 	
 	private static void updateYszz(Department dep, Kh kh, User ywy, BigDecimal je, String type, BaseDaoI<TYszz> baseDao, String hql, Map<String, Object> params) {
@@ -121,6 +120,10 @@ public class YszzServiceImpl implements YszzServiceI {
 			}
 			if(type.equals(Constant.UPDATE_HK)){
 				tYszz.setHkje(tYszz.getHkje().add(je));
+			}
+			if(type.equals(Constant.UPDATE_HK_LS)){
+				tYszz.setHkje(tYszz.getHkje().add(je));
+				tYszz.setLsje(tYszz.getLsje().subtract(je));
 			}
 		}
 	}
