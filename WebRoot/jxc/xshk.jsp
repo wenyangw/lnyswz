@@ -89,6 +89,22 @@ $(function(){
 	        {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},
 	        {field:'ywymc',title:'业务员',width:100,align:'center'},
 	        {field:'hkje',title:'还款金额',width:100,align:'center'},
+	        {field:'isYf',title:'预付',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
+	        {field:'isLs',title:'历史',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
 	        {field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -257,6 +273,9 @@ $(function(){
 	});
 	
 	$('#hkje').keyup(function() {
+		if($('input[name=isLs]').is(':checked')){
+			return false;
+		}
 		countHk = 0;
 		var rows = xshk_xskpDg.datagrid('getRows');
 		//本次回款金额
@@ -264,6 +283,7 @@ $(function(){
 		if(rows != undefined){
 			$.each(rows, function(index){
 				if(je != 0){
+					countHk++;
 				}
 				//每行回款金额
 				lastHkje = 0;
@@ -281,10 +301,10 @@ $(function(){
 						hkje: lastHkje.toFixed(4),
 					}
 				});
-				countHk++;
-				if(je == 0){
-					return false;
-				}
+				
+// 				if(je == 0){
+// 					return false;
+// 				}
 			});
 		}else{
 			$.messager.alert('提示', '回款的客户没有销售记录！', 'error');
@@ -302,6 +322,17 @@ $(function(){
 				$('input[name=isLs]').removeAttr('checked');
 				$('input[name=isLs]').removeProp('checked');
 				return false;
+			}
+			var rows = xshk_xskpDg.datagrid('getRows');
+			if(rows != undefined){
+				$.each(rows, function(index){
+					xshk_xskpDg.datagrid('updateRow', {
+						index:index,
+						row: {
+							hkje: 0,
+						}
+					});
+				});
 			}
 		}
 	});
@@ -367,7 +398,7 @@ function selectKh(rowData){
 function saveAll(){
 	var khbh = $('#khbh').html();
 	var hkje = $('#hkje').val();
-	var lsje = $('#lsje').val();
+	var lsje = $('#lsje').html();
 	
 	if(khbh == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
@@ -379,16 +410,16 @@ function saveAll(){
 	}
 	if($('input[name=isLs]').is(':checked')){
 		if(Number(lsje) < Number(hkje)){
-			console.info('==');
-			$.messager.alert('警告', '回款金额不能小于历史陈欠！',  'warning');
+			$.messager.alert('警告', '回款金额不能大于历史陈欠！',  'warning');
 			$('#hkje').html('');
 			$('#hkje').focus();
+			return false;
 		}
 	}
 	
 	
 	var effectRow = new Object();
-	
+	var rows = xshk_xskpDg.datagrid('getRows');
 	//将表头内容传入后台
 	effectRow['khbh'] = khbh;
 	effectRow['khmc'] = $('#khmc').html();
@@ -397,16 +428,18 @@ function saveAll(){
 	
 	effectRow['hkje'] = hkje;
 	effectRow['payTime'] = $('input[name=payTime]').val();
-	effectRow['lastHkje'] = xshk_xskpDg.datagrid('getRows')[countHk - 1].hkje;
+	effectRow['lastHkje'] = rows.size > 0 ? rows[countHk - 1].hkje : 0;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
+	effectRow['isLs'] = $('input[name=isLs]').is(':checked') ? '1' : '0';
 	
 	effectRow['bmbh'] = xshk_did;
 	effectRow['lxbh'] = xshk_lx;
 	effectRow['menuId'] = xshk_menuId;
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
-	
-	effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
+	if(rows.size > 0){
+		effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
+	}
 	//提交到action
 	$.ajax({
 		type: "POST",
