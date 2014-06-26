@@ -638,12 +638,12 @@ $(function(){
 		}
 	});
 	
-// 	$('input[name=khmc]').change(function(){
+ 	$('input[name=khmc]').change(function(){
 // 		if($('input[name=isSx]').is(':checked')){
 // 			checkKh();
 // 		}
-// 		loadKh($('input[name=khbh]').val().trim());
-// 	});
+ 		loadKh($('input[name=khbh]').val().trim());
+ 	});
 	
 	//初始化信息
 	init();
@@ -1277,6 +1277,7 @@ function loadKh(khbh){
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
 		async: false,
+		cache: false,
 		context:this,
 		data:{
 			khbh: khbh,

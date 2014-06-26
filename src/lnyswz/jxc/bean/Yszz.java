@@ -17,10 +17,11 @@ public class Yszz {
 	private String khmc;
 	private int ywyId;
 	private String ywymc;
+	private BigDecimal lsje;
 	private BigDecimal qcje;
-	private BigDecimal qclsje;
-	private BigDecimal ysje;
-	private BigDecimal yslsje;
+	private BigDecimal qcthje;
+	private BigDecimal kpje;
+	private BigDecimal thje;
 	private BigDecimal hkje;
 	private String jzsj;
 	
@@ -69,29 +70,35 @@ public class Yszz {
 	public void setYwymc(String ywymc) {
 		this.ywymc = ywymc;
 	}
+	public BigDecimal getLsje() {
+		return lsje;
+	}
+	public void setLsje(BigDecimal lsje) {
+		this.lsje = lsje;
+	}
 	public BigDecimal getQcje() {
 		return qcje;
 	}
 	public void setQcje(BigDecimal qcje) {
 		this.qcje = qcje;
 	}
-	public BigDecimal getQclsje() {
-		return qclsje;
+	public BigDecimal getQcthje() {
+		return qcthje;
 	}
-	public void setQclsje(BigDecimal qclsje) {
-		this.qclsje = qclsje;
+	public void setQcthje(BigDecimal qcthje) {
+		this.qcthje = qcthje;
 	}
-	public BigDecimal getYsje() {
-		return ysje;
+	public BigDecimal getKpje() {
+		return kpje;
 	}
-	public void setYsje(BigDecimal ysje) {
-		this.ysje = ysje;
+	public void setKpje(BigDecimal kpje) {
+		this.kpje = kpje;
 	}
-	public BigDecimal getYslsje() {
-		return yslsje;
+	public BigDecimal getThje() {
+		return thje;
 	}
-	public void setYslsje(BigDecimal yslsje) {
-		this.yslsje = yslsje;
+	public void setThje(BigDecimal thje) {
+		this.thje = thje;
 	}
 	public BigDecimal getHkje() {
 		return hkje;
@@ -117,5 +124,4 @@ public class Yszz {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-	
 }

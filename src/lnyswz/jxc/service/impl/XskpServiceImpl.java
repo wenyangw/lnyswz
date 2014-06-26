@@ -23,17 +23,13 @@ import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
-import lnyswz.jxc.bean.Xsth;
-import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -153,7 +149,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(xsthDetIds == null || xsthDetIds.equals("")){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
 			}
 			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
 			//有预付金额
@@ -448,7 +444,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(yTXskp.getTXsths() == null){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_LS, yszzDao);
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
 			}
 		}
 
@@ -479,7 +475,7 @@ public class XskpServiceImpl implements XskpServiceI {
 						t.setZdwsl(t.getZdwsl().add(tDet.getZdwsl()));
 						t.setSpje(t.getSpje().add(tDet.getSpje()));
 						t.setSpse(t.getSpse().add(tDet.getSpse()));
-						break loop;
+						continue loop;
 					}
 				}
 				XskpDet det = new XskpDet();
@@ -985,10 +981,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
 		
-		kh.setYsje(YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao).add(kh.getYfje()));
-
+		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		BigDecimal lsje = YszzServiceImpl.getLsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		
+		kh.setYsje(ysje);
+		kh.setLsje(lsje);
 		
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();

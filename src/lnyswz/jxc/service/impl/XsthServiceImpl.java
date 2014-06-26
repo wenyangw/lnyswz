@@ -160,7 +160,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setId(xsth.getYwyId());
 			ywy.setRealName(xsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		//处理商品明细
@@ -315,7 +315,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setId(tXsth.getYwyId());
 			ywy.setRealName(tXsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
@@ -424,6 +424,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("title", "销   售   提   货   单");
 		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
 		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
 			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
 		}else{

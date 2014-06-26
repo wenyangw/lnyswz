@@ -1136,6 +1136,7 @@ function loadKh(khbh){
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
 		async: false,
+		cache: false,
 		context:this,
 		data:{
 			khbh: khbh,

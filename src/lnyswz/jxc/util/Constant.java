@@ -65,7 +65,7 @@ public interface Constant {
 		put("04","xsth_report_b_ns");
 		put("05","xsth_report_b_ns");
 		put("07","xsth_report_s");
-		put("08","xsth_report_s_c");
+		put("08","xsth_report_s");
 	}};
 	
 	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
@@ -91,7 +91,7 @@ public interface Constant {
 		put("04","辽宁印刷物资有限责任公司");
 		put("05","辽宁文达纸业有限公司");
 		put("07","辽宁印刷物资有限责任公司");
-		put("08","辽宁印刷物资有限责任公司");
+		put("08","辽宁印刷物资有限责任公司大连分公司");
 		
 	}};
 	
@@ -125,9 +125,11 @@ public interface Constant {
 	public static final String UPDATE_BT = "2";
 
 	public static final String UPDATE_YS_LS = "0";
-	public static final String UPDATE_YS_KP = "1";
-	public static final String UPDATE_YS_KP_LS = "2";
-	public static final String UPDATE_HK = "3";
+	public static final String UPDATE_YS_TH = "1";
+	public static final String UPDATE_YS_KP = "2";
+	public static final String UPDATE_YS_KP_TH = "3";
+	public static final String UPDATE_HK = "4";
+	public static final String UPDATE_HK_LS = "5";
 	
 	
 	

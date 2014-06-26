@@ -39,6 +39,7 @@ public class TXshk implements java.io.Serializable {
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
 	private Date payTime;
+	private String isLs;
 	private String isYf;
 	private String isCancel;
 	private Integer cancelId;
@@ -193,6 +194,15 @@ public class TXshk implements java.io.Serializable {
 		this.payTime = payTime;
 	}
 	
+	@Column(name = "isLs", nullable = false, length = 1)
+	public String getIsLs() {
+		return isLs;
+	}
+
+	public void setIsLs(String isLs) {
+		this.isLs = isLs;
+	}
+
 	@Column(name = "isYf", nullable = false, length = 1)
 	public String getIsYf() {
 		return this.isYf;
