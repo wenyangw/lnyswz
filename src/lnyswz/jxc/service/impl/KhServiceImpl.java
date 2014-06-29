@@ -1,6 +1,7 @@
 package lnyswz.jxc.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
@@ -477,6 +480,23 @@ public class KhServiceImpl implements KhServiceI {
 		DataGrid dg = new DataGrid();
 		dg.setRows(khs);
 		return dg;
+	}
+	
+	public static Date getPayTime(Xskp xskp, BaseDaoI<TKhDet> baseDao){
+		
+		String sql = "select khlxId, sxzq from t_kh_det where depId = ? and khbh = ? and ywyId = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xskp.getBmbh());
+		params.put("1", xskp.getKhbh());
+		params.put("2", xskp.getYwyId());
+		TKhDet tKhDet = (TKhDet)baseDao.getBySQL(sql, params);
+		if(tKhDet == null || tKhDet.getKhlxId().equals(Constant.KHLX_XK)){
+			return xskp.getCreateTime();
+		}else if(tKhDet != null && tKhDet.getKhlxId().equals(Constant.KHLX_YJ)){
+			return DateUtil.getLastDayInMonth(xskp.getCreateTime());
+		}else{
+			return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), tKhDet.getSxzq());
+		}
 	}
 	
 	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {

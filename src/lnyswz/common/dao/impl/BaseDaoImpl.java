@@ -248,23 +248,6 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	}
 	
 	@Override
-	public List<Object[]> findBySQL(String sql, Map<String, Object> params, int page, int rows) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				query.setParameter(Integer.valueOf(key), params.get(key));
-			}
-		}
-		List<Object[]> q = query.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
-		if(q != null){
-			return q;
-		}
-		return null;
-		
-		
-	}
-	
-	@Override
 	public List<Object[]> findBySQL(String sql, int page, int rows) {
 		return this.getCurrentSession().createSQLQuery(sql)
 				.setFirstResult((page - 1) * rows)

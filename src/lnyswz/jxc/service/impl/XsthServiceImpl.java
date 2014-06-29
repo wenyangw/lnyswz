@@ -79,6 +79,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
+	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TYwzz> ywzzDao;
@@ -102,6 +103,14 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
 
+		//最后一笔未还款销售
+		Xskp xskp = new Xskp();
+		xskp.setBmbh(xsth.getBmbh());
+		xskp.setKhbh(xsth.getKhbh());
+		xskp.setYwyId(xsth.getYwyId());
+		
+		Date payTime = KhServiceImpl.getPayTime(XskpServiceImpl.get, khDetDao);
+		
 		String depName = depDao.load(TDepartment.class, xsth.getBmbh()).getDepName();
 		tXsth.setBmmc(depName);
 		
@@ -867,6 +876,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		this.khDao = khDao;
 	}
 	
+	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
 	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
 		this.spDao = spDao;
