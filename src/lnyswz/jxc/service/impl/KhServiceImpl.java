@@ -115,7 +115,7 @@ public class KhServiceImpl implements KhServiceI {
 		gdt.add(khDet);
 		g.setTKhDets(gdt);
 		
-		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+		if(kh.getLsje() != null && kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
 			Department bm = new Department();
 			bm.setId(dep.getId());
 			bm.setDepName(dep.getDepName());
