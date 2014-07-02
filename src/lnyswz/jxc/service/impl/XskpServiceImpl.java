@@ -842,7 +842,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search)"; 
+			hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khbh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search)"; 
 			params.put("search", "%" + xskp.getSearch() + "%");
 		}
 		

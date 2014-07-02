@@ -53,7 +53,9 @@ function appendMenu() {
 					success : function(d) {
 						var json = $.parseJSON(d);
 						if (json.success) {
-							treegrid.treegrid('reload');
+							if(d.obj.genre == '03'){
+								treegrid.treegrid('reload');
+							}
 							menuAdd.dialog('close');
 							//parent.ctrlTree.tree('reload');/*刷新左侧菜单树*/
 						}
@@ -108,7 +110,9 @@ function editMenu() {
 						success : function(d) {
 							var json = $.parseJSON(d);
 							if (json.success) {
-								treegrid.treegrid('reload');
+								if(d.obj.genre == '03'){
+									treegrid.treegrid('reload');
+								}
 								p.dialog('close');
 								//parent.ctrlTree.tree('reload');/*刷新左侧菜单树*/
 							}
