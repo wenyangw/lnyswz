@@ -25,6 +25,7 @@ $(function(){
 		url : '${pageContext.request.contextPath}/admin/dictAction!datagrid.action',
 		fit : true,
 	    border : false,
+	    singleSelect: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
@@ -100,6 +101,9 @@ function appendDict() {
 						var json = $.parseJSON(d);
 						if (json.success) {
 							dict_dg.datagrid('appendRow', json.obj);
+							if(json.obj.genre == '03'){
+								$('#admin_dict_tree').tree('reload');
+							}
 							p.dialog('close');
 						}
 						$.messager.show({
@@ -145,6 +149,9 @@ function editDict(){
 							var json = $.parseJSON(d);
 							if (json.success) {
 								dict_dg.datagrid('reload');
+								if(rows[0].genre == '03'){
+									$('#admin_dict_tree').tree('reload');
+								}
 								p.dialog('close');
 							}
 							$.messager.show({
@@ -207,6 +214,9 @@ function removeDict(){
 					success : function(d) {
 						dict_dg.datagrid('reload');
 						dict_dg.datagrid('unselectAll');
+						if(rows[0].genre == '03'){
+							$('#admin_dict_tree').tree('reload');
+						}
 						$.messager.show({
 							title : '提示',
 							msg : d.msg

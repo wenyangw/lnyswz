@@ -551,7 +551,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(xsth.getSearch() != null){
-			hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
+			hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 			params.put("search", "%" + xsth.getSearch() + "%");
 			
 		}
