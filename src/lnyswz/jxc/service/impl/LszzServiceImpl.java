@@ -51,7 +51,7 @@ public class LszzServiceImpl implements LszzServiceI {
 		params.put("bmbh", dep.getId());
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
-		updateLszz(sp, dep, null, sl, je, type, baseDao, hql, params);
+		updateLszz(sp, dep, null, sl, je, type, baseDao, hql + " and t.ckId = null", params);
 		//总账中仓库入库更新
 		hql += " and t.ckId = :ckId";
 		params.put("ckId", ck.getId());
