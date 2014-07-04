@@ -1464,13 +1464,13 @@ function refuseCgxq(){
 	}
 }
 
-function searchCgxqInCgjh(){
-	cgjh_cgxqDg.datagrid('load',{
-		bmbh: did,
-		createTime: $('input[name=createTimeCgxqInCgjh]').val(),
-		fromOther: 'fromCgjh'
-	});
-}
+// function searchCgxqInCgjh(){
+// 	cgjh_cgxqDg.datagrid('load',{
+// 		bmbh: did,
+// 		createTime: $('input[name=createTimeCgxqInCgjh]').val(),
+// 		fromOther: 'fromCgjh'
+// 	});
+// }
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
 
@@ -1567,9 +1567,9 @@ function createCgjhFromSpkc(){
 	请输入查询起始日期:<input type="text" name="createTimeCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjh();">查询</a>
 </div>
-<div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInCgjh();">查询</a>
-</div>
+<!-- <div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto"> -->
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+<!-- 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInCgjh();">查询</a> -->
+<!-- </div> -->
 <div id="jxc_cgjh_spkcTb" style="padding:3px;height:auto">
 </div>

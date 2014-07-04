@@ -135,14 +135,14 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	@Override
 	public DataGrid datagrid(Cgxq cgxq) {
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh and t.TCgxq.createTime > :createTime";
+		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh"; // and t.TCgxq.createTime > :createTime"
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgxq.getBmbh());
-		if(cgxq.getCreateTime() != null){
-			params.put("createTime", cgxq.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-		}
+//		if(cgxq.getCreateTime() != null){
+//			params.put("createTime", cgxq.getCreateTime()); 
+//		}else{
+//			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+//		}
 		if(cgxq.getSearch() != null){
 			hql += " and (t.TCgxq.cgxqlsh like :search or t.TCgxq.gysmc like :search or t.bz like :search)"; 
 			params.put("search", "%" + cgxq.getSearch() + "%");
