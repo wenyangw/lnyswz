@@ -289,6 +289,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setCancelName(xsth.getCancelName());
 		tXsth.setCancelTime(now);
 		tXsth.setHjje(yTXsth.getHjje().negate());
+		if(yTXsth.getHjsl() != null){
+			tXsth.setHjsl(yTXsth.getHjsl().negate());
+		}
 		
 		Department dep = new Department();
 		dep.setId(tXsth.getBmbh());

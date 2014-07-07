@@ -435,9 +435,9 @@ function saveAll(){
 	effectRow['bmbh'] = xshk_did;
 	effectRow['lxbh'] = xshk_lx;
 	effectRow['menuId'] = xshk_menuId;
-	
+		
 	//将表格中的数据去掉最后一个空行后，转换为json格式
-	if(rows.size > 0){
+	if(countHk > 0){
 		effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
 	}
 	//提交到action
