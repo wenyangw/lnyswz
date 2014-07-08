@@ -1438,8 +1438,8 @@ function searchXsthInXskp(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_xskp_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
-				<table class="tinfo" id="info">
+			<div  class="tinfo" id="info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
+				<table>
 					<tr>
 						<td colspan="2">
 							增值税发票<input type="radio" name="fplxId" value="1" id="isNsr" checked="checked">

@@ -262,7 +262,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				hql += " and isZs = '1' and ywrklsh = null";
 			}
 		}else{
-			hql += " and createId = :createId or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+			hql += " and t.createId = :createId and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 			params.put("createId", cgjh.getCreateId());
 		}
 		
