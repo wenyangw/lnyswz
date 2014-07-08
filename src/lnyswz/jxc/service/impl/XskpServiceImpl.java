@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -23,6 +24,8 @@ import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
+import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TKhDet;
@@ -37,6 +40,7 @@ import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.XskpServiceI;
+import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 
 import org.apache.log4j.Logger;
@@ -565,6 +569,88 @@ public class XskpServiceImpl implements XskpServiceI {
 			lists.add(detail);
 		}
 		return lists;
+	}
+	
+	@Override
+	public DataGrid printXsqk(Xskp xskp) {
+		DataGrid datagrid = new DataGrid();
+		TXskp tXskp = xskpDao.load(TXskp.class, xskp.getXskplsh());
+		
+		List<XskpDet> nl = new ArrayList<XskpDet>();
+		
+//		int j = 0;
+//		Set<TXskp> xskps = null;
+//		for (TXsthDet yd : tXsth.getTXsthDets()) {
+//			XsthDet xsthDet = new XsthDet();
+//			BeanUtils.copyProperties(yd, xsthDet);
+//			nl.add(xsthDet);
+//			if(j == 0){
+//				xskps = yd.getTXskps();
+//			}
+//			j++;
+//		}
+		
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new XskpDet());
+			}
+		}
+				
+//		String xskplsh = "";
+//		if(xskps != null && xskps.size() > 0){
+//			xskplsh += xskps.iterator().next().getXskplsh();
+//		}
+		
+		String bz = "";
+		if(tXskp.getYwymc() != null){
+			bz = " " + tXskp.getYwymc().trim();
+		}
+		if("0".equals(tXskp.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXskp.getShdz() != null){
+			bz += " " + tXskp.getShdz();
+		}
+		if(tXskp.getThr() != null){
+			bz += " " + tXskp.getThr();
+		}
+		if(tXskp.getCh() != null){
+			bz += " " + tXskp.getCh();
+		}
+		//bz += xskplsh;
+		
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXskp.getHjje().add(tXskp.getHjse()))); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		//map.put("title", "销   售   提   货   单");
+		map.put("head", Constant.XSTH_HEAD.get(tXskp.getBmbh()));
+		map.put("footer", Constant.XSTH_FOOT.get(tXskp.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tXskp.getBmbh()));
+//		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
+//			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
+//		}else{
+//			map.put("bmmc", tXsth.getBmmc());
+//		}
+		map.put("createTime", DateUtil.dateToString(tXskp.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("xskplsh", tXskp.getXskplsh());
+		map.put("khmc", tXskp.getKhmc());
+		map.put("khbh", tXskp.getKhbh());
+		map.put("fhmc", tXskp.getFhmc() != null ? "分户：" + tXskp.getFhmc() : "");
+		map.put("ckmc", tXskp.getCkmc());
+		map.put("hjje", df.format(tXskp.getHjje()));
+		//map.put("hjsl", tXskp.getHjsl());
+		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		map.put("bz", tXskp.getBz() + " " + bz.trim());
+		map.put("memo", tXskp.getBz());
+		map.put("printName", xskp.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
 	}
 	
 	private String getSpmcWithCd(String spbh, String spmc, String spcd){

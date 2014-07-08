@@ -1304,6 +1304,20 @@ function toJs(){
 // 	}
 }
 
+function printXsqk(){
+	var row = xskp_dg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否打印销售欠款单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + row.xskplsh + "&bmbh=" + xskp_did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 function createXsth(){
 	var row = xskp_dg.datagrid('getSelected');
 	if (row != undefined) {

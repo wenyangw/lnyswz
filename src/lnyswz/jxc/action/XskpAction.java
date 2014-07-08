@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 
+
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
@@ -16,6 +17,7 @@ import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XskpServiceI;
+import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
 /**
  * 销售开票Action
@@ -91,7 +93,13 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 	
 	public void toJs(){
 		Export.toJs(xskpService.toJs(xskp.getXskplsh()));
-		
+	}
+	
+	public void printXsqk() {
+		User user = (User)session.get("user");
+		xskp.setCreateName(user.getRealName());
+		DataGrid dg = xskpService.printXsqk(xskp);
+		Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));
 	}
 	
 	public void datagrid(){
