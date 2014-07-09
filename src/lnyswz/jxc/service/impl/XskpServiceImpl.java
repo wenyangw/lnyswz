@@ -580,15 +580,16 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 //		int j = 0;
 //		Set<TXskp> xskps = null;
-//		for (TXsthDet yd : tXsth.getTXsthDets()) {
-//			XsthDet xsthDet = new XsthDet();
-//			BeanUtils.copyProperties(yd, xsthDet);
-//			nl.add(xsthDet);
+		for (TXskpDet yd : tXskp.getTXskpDets()) {
+			XskpDet xskpDet = new XskpDet();
+			BeanUtils.copyProperties(yd, xskpDet);
+			xskpDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
+			nl.add(xskpDet);
 //			if(j == 0){
 //				xskps = yd.getTXskps();
 //			}
 //			j++;
-//		}
+		}
 		
 		int num = nl.size();
 		if (num < Constant.REPORT_NUMBER) {
@@ -602,6 +603,7 @@ public class XskpServiceImpl implements XskpServiceI {
 //			xskplsh += xskps.iterator().next().getXskplsh();
 //		}
 		
+		BigDecimal hjje = tXskp.getHjje().add(tXskp.getHjse());
 		String bz = "";
 		if(tXskp.getYwymc() != null){
 			bz = " " + tXskp.getYwymc().trim();
@@ -623,10 +625,10 @@ public class XskpServiceImpl implements XskpServiceI {
 		//bz += xskplsh;
 		
 		DecimalFormat df=new DecimalFormat("#,##0.00");
-		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXskp.getHjje().add(tXskp.getHjse()))); 
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", hjje)); 
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		//map.put("title", "销   售   提   货   单");
+		map.put("title", "销   售   提   货   单");
 		map.put("head", Constant.XSTH_HEAD.get(tXskp.getBmbh()));
 		map.put("footer", Constant.XSTH_FOOT.get(tXskp.getBmbh()));
 		map.put("gsmc", Constant.BMMCS.get(tXskp.getBmbh()));
@@ -635,13 +637,14 @@ public class XskpServiceImpl implements XskpServiceI {
 //		}else{
 //			map.put("bmmc", tXsth.getBmmc());
 //		}
+		map.put("bmmc", tXskp.getBmmc());
 		map.put("createTime", DateUtil.dateToString(tXskp.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
 		map.put("xskplsh", tXskp.getXskplsh());
 		map.put("khmc", tXskp.getKhmc());
 		map.put("khbh", tXskp.getKhbh());
 		map.put("fhmc", tXskp.getFhmc() != null ? "分户：" + tXskp.getFhmc() : "");
 		map.put("ckmc", tXskp.getCkmc());
-		map.put("hjje", df.format(tXskp.getHjje()));
+		map.put("hjje", df.format(hjje));
 		//map.put("hjsl", tXskp.getHjsl());
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("bz", tXskp.getBz() + " " + bz.trim());
