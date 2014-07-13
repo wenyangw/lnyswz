@@ -30,14 +30,14 @@ public class SpBgyAction extends BaseAction implements ModelDriven<SpBgy>{
 	/**
 	 * 设置商品保管员信息
 	 */
-	public void saveSpBgy(){
+	public void updateSpBgy(){
 		Json j = new Json();
 		User u = (User)session.get("user");
 		if(Constant.IS_BGY.equals(u.getIsBgy())){
 			spBgy.setBgyId(u.getId());
 			spBgy.setBgyName(u.getRealName());
 			try{
-				spBgyService.saveSpBgy(spBgy);
+				spBgyService.updateSpBgy(spBgy);
 				j.setSuccess(true);
 				j.setMsg("设置商品关联成功！");
 			}catch(Exception e){

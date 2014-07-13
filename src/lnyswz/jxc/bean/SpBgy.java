@@ -17,8 +17,13 @@ public class SpBgy{
 	private String spbh;
 	private String spmc;
 	private String spcd;
+	private String sppp;
+	private String spbz;
+	
+	private String search;
 	
 	private String spbhs;
+	private String spbhsSel;
 	private int page;
 	private int rows;
 	
@@ -82,11 +87,35 @@ public class SpBgy{
 	public void setSpcd(String spcd) {
 		this.spcd = spcd;
 	}
+	public String getSppp() {
+		return sppp;
+	}
+	public void setSppp(String sppp) {
+		this.sppp = sppp;
+	}
+	public String getSpbz() {
+		return spbz;
+	}
+	public void setSpbz(String spbz) {
+		this.spbz = spbz;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
 	public String getSpbhs() {
 		return spbhs;
 	}
 	public void setSpbhs(String spbhs) {
 		this.spbhs = spbhs;
+	}
+	public String getSpbhsSel() {
+		return spbhsSel;
+	}
+	public void setSpbhsSel(String spbhsSel) {
+		this.spbhsSel = spbhsSel;
 	}
 	public int getPage() {
 		return page;
