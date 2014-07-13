@@ -638,12 +638,12 @@ $(function(){
 		}
 	});
 	
-// 	$('input[name=khmc]').change(function(){
+ 	$('input[name=khmc]').change(function(){
 // 		if($('input[name=isSx]').is(':checked')){
 // 			checkKh();
 // 		}
-// 		loadKh($('input[name=khbh]').val().trim());
-// 	});
+ 		loadKh($('input[name=khbh]').val().trim());
+ 	});
 	
 	//初始化信息
 	init();
@@ -844,7 +844,13 @@ function saveAll(){
 	var effectRow = new Object();
 	if(NEED_AUDIT == "1"){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-			effectRow['needAudit'] = "1";
+			if(true){
+				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
+			}else{
+				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['first'];
+			}
+		}else{
+			effectRow['needAudit'] = "0";
 		}
 	}
 	//将表头内容传入后台

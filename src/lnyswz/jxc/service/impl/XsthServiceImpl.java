@@ -169,7 +169,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setId(xsth.getYwyId());
 			ywy.setRealName(xsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		//处理商品明细
@@ -298,6 +298,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setCancelName(xsth.getCancelName());
 		tXsth.setCancelTime(now);
 		tXsth.setHjje(yTXsth.getHjje().negate());
+		if(yTXsth.getHjsl() != null){
+			tXsth.setHjsl(yTXsth.getHjsl().negate());
+		}
 		
 		Department dep = new Department();
 		dep.setId(tXsth.getBmbh());
@@ -324,7 +327,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setId(tXsth.getYwyId());
 			ywy.setRealName(tXsth.getYwymc());
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_LS, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
@@ -560,7 +563,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(xsth.getSearch() != null){
-			hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
+			hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 			params.put("search", "%" + xsth.getSearch() + "%");
 			
 		}

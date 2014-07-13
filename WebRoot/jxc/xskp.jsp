@@ -11,6 +11,7 @@ var xskp_dg;
 var xskp_xsthDg;
 var editIndex = undefined;
 var xskp_tabs;
+
 var countXskp = 0;
 var countXsthInXskp = 0;
 
@@ -348,8 +349,10 @@ $(function(){
 					queryParams: {
 						bmbh: xskp_did,
 						fromOther: 'fromXskp',
-						createTime: countXsthInXskp == 0 ? undefined : $('input[name=createTimeXsthInXskp]').val(),
-						search: countXsthInXskp == 0 ? undefined : $('input[name=searchXsthInXskp]').val(),
+// 						createTime: countXsthInXskp == 0 ? undefined : $('input[name=createTimeXsthInXskp]').val(),
+						createTime: $('input[name=createTimeXsthInXskp]').val(),
+// 						search: countXsthInXskp == 0 ? undefined : $('input[name=searchXsthInXskp]').val(),
+						search: $('input[name=searchXsthInXskp]').val(),
 						isKp : '1'
 						},
 				});
@@ -509,7 +512,8 @@ function init(){
 	//清空全部字段
 	$('input#thfs_zt').attr('ckecked', 'checked');
 	$('.isSh').css('display','none');
-	$('input').val('');
+	$('#info input').val('');
+// 	$('input').val('');
 	$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').removeProp('checked');
 	$('.fh').css('display','none');
@@ -1300,6 +1304,25 @@ function toJs(){
 // 	}
 }
 
+function printXsqk(){
+	var rows = xskp_dg.datagrid('getSelections');
+	console.info('rows:' + rows);
+	if (rows != '') {
+		if(rows.length == 1){
+			$.messager.confirm('请确认', '是否打印销售欠款单？', function(r) {
+				if (r) {
+					var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + rows[0].xskplsh + "&bmbh=" + xskp_did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '只能选择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 function createXsth(){
 	var row = xskp_dg.datagrid('getSelected');
 	if (row != undefined) {
@@ -1434,8 +1457,8 @@ function searchXsthInXskp(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_xskp_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
-				<table class="tinfo">
+			<div  class="tinfo" id="info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
+				<table>
 					<tr>
 						<td colspan="2">
 							增值税发票<input type="radio" name="fplxId" value="1" id="isNsr" checked="checked">
@@ -1496,11 +1519,11 @@ function searchXsthInXskp(){
 
 <div id="jxc_xskp_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户、业务员、备注：<input type="text" name="searchXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXskp();">查询</a>
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户、业务员、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInXskp();">查询</a>
 </div>

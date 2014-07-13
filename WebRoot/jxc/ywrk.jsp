@@ -64,7 +64,12 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-			{field:'ywrklsh',title:'流水号',align:'center'},
+			{field:'ywrklsh',title:'流水号',align:'center',
+				styler: function(value, rowData){
+					if(rowData.isCj == '1'){
+						return 'color:red;';
+					}
+				}},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
@@ -117,6 +122,11 @@ $(function(){
         			a = a == undefined ? 0 : a;
         			b = b == undefined ? 0 : b;
 					return (a-b);  
+				},
+				styler: function(value){
+					if(value == '1'){
+						return 'color:red;';
+					}
 				}},
 			{field:'cjTime',title:'冲减时间',align:'center'},
         	{field:'cjYwrklsh',title:'原业务入库流水号',align:'center'},

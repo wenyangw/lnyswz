@@ -157,8 +157,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		DataGrid datagrid = new DataGrid();
 		TCgjh tCgjh = cgjhDao.load(TCgjh.class, cgjh.getCgjhlsh());
 		BigDecimal hjsl = Constant.BD_ZERO;
+		
+		String hql = "from TCgjhDet t where t.TCgjh.cgjhlsh = :cgjhlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgjhlsh", cgjh.getCgjhlsh());
+		List<TCgjhDet> tCgjhDets = detDao.find(hql, params);
+		
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
-		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
+//		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
+		for (TCgjhDet yd : tCgjhDets) {
 			CgjhDet cgjhDet = new CgjhDet();
 			BeanUtils.copyProperties(yd, cgjhDet);
 			hjsl = hjsl.add(yd.getCdwsl());
@@ -255,7 +262,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				hql += " and isZs = '1' and ywrklsh = null";
 			}
 		}else{
-			hql += " and createId = :createId or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+			hql += " and t.createId = :createId and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 			params.put("createId", cgjh.getCreateId());
 		}
 		

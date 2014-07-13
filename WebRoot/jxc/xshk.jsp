@@ -37,10 +37,10 @@ $(function(){
 	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
 	
 	xshk_khDg = $('#jxc_xshk_khDg').datagrid({
-		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
-		queryParams :{
-			depId : xshk_did,
-		},
+// 		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
+// 		queryParams :{
+// 			depId : xshk_did,
+// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -54,7 +54,8 @@ $(function(){
 			$('#khlx').html('');
 			$('#sxzq').html('');
 			$('#sxje').html('');
-			$('#yfje').html('');
+			$('#ysje').html('');
+			$('#lsje').html('');
 
 			xshk_xskpDg.datagrid('load', {
     			bmbh:xshk_did,
@@ -88,6 +89,22 @@ $(function(){
 	        {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},
 	        {field:'ywymc',title:'业务员',width:100,align:'center'},
 	        {field:'hkje',title:'还款金额',width:100,align:'center'},
+	        {field:'isYf',title:'预付',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
+	        {field:'isLs',title:'历史',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
 	        {field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -204,8 +221,9 @@ $(function(){
 				$('#khlx').html(data.obj.khlxmc);
 				$('#sxzq').html(data.obj.sxzq + '天');
 				$('#sxje').html(data.obj.sxje + '元');
-				$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+				$('#yszje').html(data.obj.yszje == 0 ? '' : data.obj.yszje + '元');
 				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
+				$('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
 	    	}
 		}
 	});
@@ -240,14 +258,24 @@ $(function(){
 	
 	jxc_xshk_ywyCombo.combobox({
 		onSelect: function(){
-			xshk_khDg.datagrid('load', {
-				depId: xshk_did,
-				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
+			xshk_khDg.datagrid({
+				url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
+		 		queryParams :{
+		 			depId : xshk_did,
+		 			ywyId: jxc_xshk_ywyCombo.combobox('getValue')
+		 		},
+
+// 				'load', {
+// 				depId: xshk_did,
+// 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
 		}
 	});
 	
 	$('#hkje').keyup(function() {
+		if($('input[name=isLs]').is(':checked')){
+			return false;
+		}
 		countHk = 0;
 		var rows = xshk_xskpDg.datagrid('getRows');
 		//本次回款金额
@@ -255,6 +283,7 @@ $(function(){
 		if(rows != undefined){
 			$.each(rows, function(index){
 				if(je != 0){
+					countHk++;
 				}
 				//每行回款金额
 				lastHkje = 0;
@@ -272,18 +301,41 @@ $(function(){
 						hkje: lastHkje.toFixed(4),
 					}
 				});
-				countHk++;
-				if(je == 0){
-					return false;
-				}
+				
+// 				if(je == 0){
+// 					return false;
+// 				}
 			});
 		}else{
 			$.messager.alert('提示', '回款的客户没有销售记录！', 'error');
 		}
 	});
 	
+	jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	//初始化信息
 	init();
+	
+	$('input[name=isLs]').click(function(){
+ 		if($('input[name=isLs]').is(':checked')){
+			if($('#lsje').html() == ''){
+				$.messager.alert('警告', '该客户无历史陈欠！',  'warning');
+				$('input[name=isLs]').removeAttr('checked');
+				$('input[name=isLs]').removeProp('checked');
+				return false;
+			}
+			var rows = xshk_xskpDg.datagrid('getRows');
+			if(rows != undefined){
+				$.each(rows, function(index){
+					xshk_xskpDg.datagrid('updateRow', {
+						index:index,
+						row: {
+							hkje: 0,
+						}
+					});
+				});
+			}
+		}
+	});
 	
 	
 });
@@ -292,6 +344,9 @@ $(function(){
 function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
+	
+	$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').removeProp('checked');
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	
@@ -333,7 +388,8 @@ function selectKh(rowData){
 			$('#khlx').html(data.obj.khlxmc);
 			$('#sxzq').html(data.obj.sxzq + '天');
 			$('#sxje').html(data.obj.sxje + '元');
-			$('#yfje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
+			$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
+			$('#lsje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
 		}
 	});
 }
@@ -342,6 +398,7 @@ function selectKh(rowData){
 function saveAll(){
 	var khbh = $('#khbh').html();
 	var hkje = $('#hkje').val();
+	var lsje = $('#lsje').html();
 	
 	if(khbh == ''){
 		$.messager.alert('提示', '没有选中客户进行回款,请重新操作！', 'error');
@@ -351,9 +408,18 @@ function saveAll(){
 		$.messager.alert('提示', '没有输入回款金额,请重新操作！', 'error');
 		return false;
 	}
+	if($('input[name=isLs]').is(':checked')){
+		if(Number(lsje) < Number(hkje)){
+			$.messager.alert('警告', '回款金额不能大于历史陈欠！',  'warning');
+			$('#hkje').html('');
+			$('#hkje').focus();
+			return false;
+		}
+	}
+	
 	
 	var effectRow = new Object();
-	
+	var rows = xshk_xskpDg.datagrid('getRows');
 	//将表头内容传入后台
 	effectRow['khbh'] = khbh;
 	effectRow['khmc'] = $('#khmc').html();
@@ -362,16 +428,18 @@ function saveAll(){
 	
 	effectRow['hkje'] = hkje;
 	effectRow['payTime'] = $('input[name=payTime]').val();
-	effectRow['lastHkje'] = xshk_xskpDg.datagrid('getRows')[countHk - 1].hkje;
+	effectRow['lastHkje'] = rows.size > 0 ? rows[countHk - 1].hkje : 0;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
+	effectRow['isLs'] = $('input[name=isLs]').is(':checked') ? '1' : '0';
 	
 	effectRow['bmbh'] = xshk_did;
 	effectRow['lxbh'] = xshk_lx;
 	effectRow['menuId'] = xshk_menuId;
-	
+		
 	//将表格中的数据去掉最后一个空行后，转换为json格式
-	
-	effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
+	if(countHk > 0){
+		effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
+	}
 	//提交到action
 	$.ajax({
 		type: "POST",
@@ -460,7 +528,7 @@ function searchXshk(){
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
 		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
-					<div data-options="region:'north',title:'商品分类',split:true" style="height:120px;width:100%">
+					<div data-options="region:'north',title:'商品分类',split:true" style="height:140px;width:100%">
 						<table class="tinfo">
 							<tr>
 								<td></td>
@@ -472,19 +540,23 @@ function searchXshk(){
 							<td colspan="10"><hr/></td>
 							</tr>
 							<tr class="read">
-								<th>客户编号</th><td><div id="khbh"></div></td>
-								<th>客户名称</th><td colspan="3"><div id="khmc"></div></td>
-								<th>客户类型</th><td><div id="khlx"></div></td>
+								<th>客户编号:</th><td><div id="khbh"></div></td>
+								<th>客户名称:</th><td colspan="3"><div id="khmc"></div></td>
 							</tr>
 							<tr class="read">
-								<th>授信期</th><td><div id="sxzq"></div></td>
-								<th>授信金额</th><td style="width:100px"><div id="sxje"></div></td>
-								<th>历史陈欠</th><td style="width:100px"><div id="yfje">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
-								<th>目前欠款</th><td><div id="ysje"></div></td>
+								<th>客户类型:</th><td style="width:150px"><div id="khlx"></div></td>
+								<th>授信期:</th><td style="width:150px"><div id="sxzq"></div></td>
+								<th>授信金额:</th><td style="width:150px"><div id="sxje"></div></td>
+							</tr>
+							<tr class="read">
+								<th>应收总额:</th><td><div id="ysje"></div></td>
+<!-- 								<th>销售应收:</th><td><div id="ysje"></div></td> -->
+								<th>历史应收:</th><td style="width:100px"><div id="lsje"></div></td>
 							</tr>
 							<tr>
 								<th>还款金额</th><td><input id="hkje" name="hkje" type="text" size="8">元</td>
 								<th>还款日期</th><td><input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px"></td>
+								<th>历史回款</th><td><input name="isLs" type="checkbox"></td>
 							</tr>
 						</table>
 					</div>

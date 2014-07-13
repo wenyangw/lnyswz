@@ -26,10 +26,11 @@ public class TYszz implements java.io.Serializable {
 	private String khmc;
 	private int ywyId;
 	private String ywymc;
+	private BigDecimal lsje;
 	private BigDecimal qcje;
-	private BigDecimal qclsje;
-	private BigDecimal ysje;
-	private BigDecimal yslsje;
+	private BigDecimal qcthje;
+	private BigDecimal kpje;
+	private BigDecimal thje;
 	private BigDecimal hkje;
 	private String jzsj;
 
@@ -37,7 +38,7 @@ public class TYszz implements java.io.Serializable {
 	}
 
 	public TYszz(int id, String bmbh, String bmmc, String khbh, String khmc, int ywyId, String ywymc,
-			BigDecimal qcje, BigDecimal qclsje, BigDecimal ysje, BigDecimal yslsje, BigDecimal hkje, String jzsj) {
+			BigDecimal qcje, BigDecimal qcthje, BigDecimal kpje, BigDecimal thje, BigDecimal hkje, String jzsj) {
 		this.id = id;
 		this.bmbh = bmbh;
 		this.bmmc = bmmc;
@@ -46,9 +47,9 @@ public class TYszz implements java.io.Serializable {
 		this.ywyId = ywyId;
 		this.ywymc = ywymc;
 		this.qcje = qcje;
-		this.qclsje = qclsje;
-		this.ysje = ysje;
-		this.yslsje = yslsje;
+		this.qcthje = qcthje;
+		this.kpje = kpje;
+		this.thje = thje;
 		this.hkje = hkje;
 		this.jzsj = jzsj;
 	}
@@ -118,6 +119,15 @@ public class TYszz implements java.io.Serializable {
 		this.ywymc = ywymc;
 	}
 
+	@Column(name = "lsje", precision = 18, scale = 4)
+	public BigDecimal getLsje() {
+		return lsje;
+	}
+
+	public void setLsje(BigDecimal lsje) {
+		this.lsje = lsje;
+	}
+
 	@Column(name = "qcje", precision = 18, scale = 4)
 	public BigDecimal getQcje() {
 		return qcje;
@@ -127,31 +137,31 @@ public class TYszz implements java.io.Serializable {
 		this.qcje = qcje;
 	}
 	
-	@Column(name = "qclsje", precision = 18, scale = 4)
-	public BigDecimal getQclsje() {
-		return qclsje;
+	@Column(name = "qcthje", precision = 18, scale = 4)
+	public BigDecimal getQcthje() {
+		return qcthje;
 	}
 	
-	public void setQclsje(BigDecimal qclsje) {
-		this.qclsje = qclsje;
+	public void setQcthje(BigDecimal qcthje) {
+		this.qcthje = qcthje;
 	}
 
-	@Column(name = "ysje", precision = 18, scale = 4)
-	public BigDecimal getYsje() {
-		return ysje;
+	@Column(name = "kpje", precision = 18, scale = 4)
+	public BigDecimal getKpje() {
+		return kpje;
 	}
 
-	public void setYsje(BigDecimal ysje) {
-		this.ysje = ysje;
+	public void setKpje(BigDecimal kpje) {
+		this.kpje = kpje;
 	}
 	
-	@Column(name = "yslsje", precision = 18, scale = 4)
-	public BigDecimal getYslsje() {
-		return yslsje;
+	@Column(name = "thje", precision = 18, scale = 4)
+	public BigDecimal getThje() {
+		return thje;
 	}
 	
-	public void setYslsje(BigDecimal yslsje) {
-		this.yslsje = yslsje;
+	public void setThje(BigDecimal thje) {
+		this.thje = thje;
 	}
 
 	@Column(name = "hkje", precision = 18, scale = 4)

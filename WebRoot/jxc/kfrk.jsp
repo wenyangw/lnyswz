@@ -936,9 +936,9 @@ function gysLoad(){
 function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
 	if (row != undefined) {
-		if(!row.cjKfrklsh){
-			if(row.ywrklsh == null){
-				if(row.isCj != '1'){
+		if(!row.cjKfrklsh || row.isCj != '1'){
+// 			if(row.ywrklsh == null){
+// 				if(row.isCj != '1'){
 					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
 						if (bz != undefined){
 							$.ajax({
@@ -963,14 +963,14 @@ function cjKfrk(){
 							});
 						}
 						});
-				}else{
-					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
-				}
-			}else{
-				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
-			}
+// 				}else{
+// 					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
+// 				}
+// 			}else{
+// 				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+// 			}
 		}else{
-			$.messager.alert('警告', '选中的库房入库单为冲减单据，请重新选择！',  'warning');
+			$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
 		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');

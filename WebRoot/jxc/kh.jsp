@@ -33,33 +33,43 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_kh_tb',
 	    onClickRow:function(rowIndex, rowData){
-	    	khDet_dg.datagrid('load', {
-	    		depId: kh_did,
-	    		khbh: rowData.khbh
+	    	khDet_dg.datagrid({
+	    		url: '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+	 	    	queryParams:{
+	 	    		depId: kh_did,
+	 	    		khbh: rowData.khbh
+	 	    	},
 	    	});
+	    	//根据权限，动态加载功能按钮
+	    	lnyw.toolbar(0, khDet_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', kh_did);
+	    	
+// 	    	khDet_dg.datagrid('load', {
+// 	    		depId: kh_did,
+// 	    		khbh: rowData.khbh
+// 	    	});
 	    },
 	});
 	
 	khDet_dg = $('#jxc_khdet_dg').datagrid({
-		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+// 		url : '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
+// 	    queryParams:{
+// 	    	depId: kh_did
+// 	    },
 		fit : true,
 	    border : false,
 	    singleSelect : true,
 	    fitColumns: false,
-	    queryParams:{
-	    	depId: kh_did
-	    },
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-	        {field:'khbh',title:'客户编号'},
-	        {field:'khmc',title:'客户名称'},
+	        {field:'khbh',width:100,title:'客户编号'},
+	        {field:'khmc',width:250,title:'客户名称'},
 	        {field:'ywyId',title:'业务员id', hidden:true},
-	        {field:'ywyName',title:'业务员'},
+	        {field:'ywyName',width:100,title:'业务员'},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
-	        {field:'khlxmc',title:'客户类型'},
+	        {field:'khlxmc',width:100,title:'客户类型'},
 	        {field:'sxzq',title:'授信账期(天)',
 	        	formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
@@ -76,7 +86,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'yfje',title:'历史金额',width:100,align:'right',
+	        {field:'lsje',title:'历史金额',width:100,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -86,8 +96,7 @@ $(function(){
 				}},
 	    ]],
 	});
-	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, khDet_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', kh_did);
+	
 });
 
 function appendKhDet() {
@@ -299,11 +308,11 @@ function initForm(target){
 	if(value != '01'){
 		$('input[name=sxzq]').removeAttr('disabled');
 		$('input[name=sxje]').removeAttr('disabled');
-		$('input[name=yfje]').removeAttr('disabled');
+		$('input[name=lsje]').removeAttr('disabled');
 	}else{
 		$('input#sxzq').attr('disabled','disabled');
 		$('input[name=sxje]').attr('disabled','disabled');
-		$('input[name=yfje]').attr('disabled','disabled');
+		$('input[name=lsje]').attr('disabled','disabled');
 	}
 };
 

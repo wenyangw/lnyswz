@@ -9,7 +9,40 @@
 var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包的作用 */
 
 //系统设定，是否需要进行审核(Constant.java同步)
-var NEED_AUDIT = '0';
+var NEED_AUDIT = '1';
+jxc.auditLevel = function(bmbh){
+	var level = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '04':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '07':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '08':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	default:
+		break;
+	}
+}; 
+
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;
@@ -40,6 +73,28 @@ jxc.otherBm = function(bmbh){
 		break;
 	}
 };
+
+jxc.earliestXskp = function(area, url, params){
+	$(area).layout('expand', 'east');
+	
+	$.ajax({
+		url: url,
+		data: params,
+		cache: false,
+		dataType: 'json',
+		success: function(data){
+			$('#show_spkc').propertygrid({
+				fit : true,
+				data: data.rows,
+				showGroup: true,
+				scrollbarSize: 0,
+				showHeader:false,
+				groupFormatter: groupFormatter,
+			});
+		}
+	});
+};
+
 
 jxc.showFh = function(bmbh){
 	switch(bmbh){

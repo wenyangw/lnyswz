@@ -68,22 +68,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		String depName = depDao.load(TDepartment.class, xshk.getBmbh()).getDepName();
 		tXshk.setBmmc(depName);
 		
-		
-		//处理商品明细
-		Set<THkKp> tHkKps = new HashSet<THkKp>();
-		ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
-		for(Xskp x : xskps){
-			THkKp tHkKp = new THkKp();
-			tHkKp.setXskplsh(x.getXskplsh());
-			tHkKp.setHkje(x.getHkje());
-			tHkKp.setTXshk(tXshk);
-			tHkKps.add(tHkKp);
-			
-			TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
-			tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
-		}
-		tXshk.setTHkKps(tHkKps);
-
 		Department dep = new Department();
 		dep.setId(xshk.getBmbh());
 		dep.setDepName(depName);
@@ -95,7 +79,29 @@ public class XshkServiceImpl implements XshkServiceI {
 		User ywy = new User();
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
-		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		
+		if(xshk.getIsLs().equals("0")){
+			//处理商品明细
+			ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
+			//预付没有销售记录的
+			if(xskps != null && xskps.size() > 0){
+				Set<THkKp> tHkKps = new HashSet<THkKp>();
+				for(Xskp x : xskps){
+					THkKp tHkKp = new THkKp();
+					tHkKp.setXskplsh(x.getXskplsh());
+					tHkKp.setHkje(x.getHkje());
+					tHkKp.setTXshk(tXshk);
+					tHkKps.add(tHkKp);
+					
+					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
+					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
+				}
+				tXshk.setTHkKps(tHkKps);
+			}
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+		}else{
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
+		}
 		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
@@ -116,7 +122,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		TXshk yTXshk = xshkDao.load(TXshk.class, xshk.getXshklsh());
 		//新增冲减单据信息
 		TXshk tXshk = new TXshk();
-		BeanUtils.copyProperties(yTXshk, tXshk, new String[]{"TXskps"});
+		BeanUtils.copyProperties(yTXshk, tXshk, new String[]{"THkKps"});
 
 		//更新原单据信息
 		yTXshk.setIsCancel("1");
@@ -147,16 +153,20 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setId(yTXshk.getYwyId());
 		ywy.setRealName(yTXshk.getYwymc());
 		
-		//更新授信客户应付金额
-		YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
-		
-		
-		Set<THkKp> tHkKps = yTXshk.getTHkKps();
-		for(THkKp tHkKp : tHkKps){
-			TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
-			tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+		if(yTXshk.getIsLs().equals("0")){
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
+			
+			
+			Set<THkKp> tHkKps = yTXshk.getTHkKps();
+			for(THkKp tHkKp : tHkKps){
+				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
+				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+			}
+			yTXshk.setTHkKps(null);
+		}else{
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
-		yTXshk.setTHkKps(null);
 		xshkDao.save(tXshk);
 		
 		OperalogServiceImpl.addOperalog(xshk.getCancelId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getCancelXshklsh() + "/" + tXshk.getXshklsh(), 

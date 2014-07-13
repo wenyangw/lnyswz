@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
+import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Xskp;
+import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
@@ -27,6 +29,7 @@ import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TUser;
+import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.service.KhServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -38,6 +41,7 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
+	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
@@ -107,12 +111,26 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			khDet.setSxje(Constant.BD_ZERO);
 		}
-		if(kh.getYfje() == null){
-			khDet.setYfje(Constant.BD_ZERO);
+		if(kh.getLsje() == null){
+			khDet.setLsje(Constant.BD_ZERO);
 		}
 		khDet.setTKh(g);
 		gdt.add(khDet);
 		g.setTKhDets(gdt);
+		
+		if(kh.getLsje() != null && kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+			Department bm = new Department();
+			bm.setId(dep.getId());
+			bm.setDepName(dep.getDepName());
+			
+			User ywy = new User();
+			TUser tYwy = userDao.load(TUser.class, kh.getYwyId());
+			ywy.setId(tYwy.getId());
+			ywy.setRealName(tYwy.getRealName());
+			
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(bm, kh, ywy, kh.getLsje(), Constant.UPDATE_YS_LS, yszzDao);
+		}
 		
 		keyId = kh.getKhbh() + "/" + khDet.getId();
 		
@@ -139,8 +157,23 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			v.setSxje(Constant.BD_ZERO);
 		}
-		if(kh.getYfje() == null){
-			v.setYfje(Constant.BD_ZERO);
+		
+		if(kh.getLsje() == null){
+			v.setLsje(Constant.BD_ZERO);
+		}
+		
+		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+			Department bm = new Department();
+			TDepartment tDep = depDao.load(TDepartment.class, kh.getDepId());
+			bm.setId(tDep.getId());
+			bm.setDepName(tDep.getDepName());
+			
+			User ywy = new User();
+			ywy.setId(kh.getYwyId());
+			ywy.setRealName(kh.getYwyName());
+			
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(bm, kh, ywy, kh.getLsje(), Constant.UPDATE_YS_LS, yszzDao);
 		}
 		
 		OperalogServiceImpl.addOperalog(kh.getUserId(), kh.getDepId(), kh.getMenuId(),keyId, "修改客户专属信息", opeDao);
@@ -290,6 +323,8 @@ public class KhServiceImpl implements KhServiceI {
 				if(tDet.getKhlxId() != null && tDet.getKhlxId().trim().length() > 0){
 					k.setKhlxmc(khlxDao.load(TKhlx.class, tDet.getKhlxId()).getKhlxmc());
 				}
+				
+				k.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), tDet.getYwyId(), yszzDao));
 				
 				l.add(k);
 			}
@@ -458,27 +493,37 @@ public class KhServiceImpl implements KhServiceI {
 	
 	@Override
 	public DataGrid listKhByYwy(Kh kh) {
-		String hql = "from TKhDet t where t.TDepartment.id = :depId";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("depId", kh.getDepId());
-		if(kh.getYwyId() > 0){
-			hql += " and t.ywyId = :ywyId";
-			params.put("ywyId", kh.getYwyId());
-		}
-		hql += " order by t.TKh.khbh";
-		List<TKhDet> tDets = khdetDao.find(hql, params);
-		List<Kh> khs = new ArrayList<Kh>();
-		for(TKhDet tDet : tDets){
-			Kh k = new Kh();
-			BeanUtils.copyProperties(tDet, k);
+		List<Kh> khs = YszzServiceImpl.getKhsByYwy(kh.getDepId(), kh.getYwyId(), yszzDao);
+		
+//		String hql = "from TKhDet t where t.TDepartment.id = :depId";
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("depId", kh.getDepId());
+//		if(kh.getYwyId() > 0){
+//			hql += " and t.ywyId = :ywyId";
+//			params.put("ywyId", kh.getYwyId());
+//		}
+//		hql += " order by t.TKh.khbh";
+//		List<TKhDet> tDets = khdetDao.find(hql, params);
+		List<Kh> ks = new ArrayList<Kh>();
+//		for(TKhDet tDet : tDets){
+//			Kh k = new Kh();
+//			BeanUtils.copyProperties(tDet, k);
+//			
+//			k.setKhbh(tDet.getTKh().getKhbh());
+//			k.setKhmc(tDet.getTKh().getKhmc());
+//			
+//			khs.add(k);
+//		}
+		for(Kh k : khs){
+			Kh kk = new Kh();
+			kk.setKhbh(k.getKhbh());
+			kk.setKhmc(k.getKhmc());
 			
-			k.setKhbh(tDet.getTKh().getKhbh());
-			k.setKhmc(tDet.getTKh().getKhmc());
-			
-			khs.add(k);
+			ks.add(kk);
 		}
+		
 		DataGrid dg = new DataGrid();
-		dg.setRows(khs);
+		dg.setRows(ks);
 		return dg;
 	}
 	
@@ -499,23 +544,26 @@ public class KhServiceImpl implements KhServiceI {
 		}
 	}
 	
-	public static Kh getKhsx(String khbh, String depId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
+	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
 		Kh kh = new Kh();
 
-		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
+		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("depId", depId);
 		params.put("khbh", khbh);
+		params.put("ywyId", ywyId);
+		
 		TKhDet tKhDet = khDetDao.get(hql, params);
 		if(tKhDet != null){
 			BeanUtils.copyProperties(tKhDet, kh);
 			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
+			//kh.setLsje(YszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), yszzDao));
 		}else{
 			kh.setKhlxId(Constant.KHLX_XK);
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);
 			kh.setSxje(Constant.BD_ZERO);
 			kh.setSxzq(0);
-			kh.setYfje(Constant.BD_ZERO);
+			kh.setLsje(Constant.BD_ZERO);
 		}
 		return kh;
 	}
@@ -543,6 +591,11 @@ public class KhServiceImpl implements KhServiceI {
 	@Autowired
 	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
 		this.khlxDao = khlxDao;
+	}
+
+	@Autowired
+	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
+		this.yszzDao = yszzDao;
 	}
 
 	@Autowired

@@ -145,7 +145,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		TKfrk yTKfrk = kfrkDao.get(TKfrk.class, kfrk.getKfrklsh());
 		//新增冲减单据信息
 		TKfrk tKfrk = new TKfrk();
-		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs"});
+		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
 		//更新原单据冲减信息
 		yTKfrk.setCjId(kfrk.getCjId());
 		yTKfrk.setCjTime(now);
@@ -161,6 +161,10 @@ public class KfrkServiceImpl implements KfrkServiceI {
 //			}
 //			tKfrk.setTCgjhs(tcs);
 			yTKfrk.setTCgjhs(null);
+		}
+		
+		if(yTKfrk.getTYwrk() != null){
+			yTKfrk.setTYwrk(null);
 		}
 		
 		//更新新单据信息
