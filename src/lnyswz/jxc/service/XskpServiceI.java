@@ -21,5 +21,6 @@ public interface XskpServiceI {
 	public DataGrid datagridDet(Xskp xskp);
 	public Object toXsth(String xskpDetIds);
 	public DataGrid getXskpNoHk(Xskp xskp);
+	public DataGrid getXskpNoHkFirst(Xskp xskp);
 	public DataGrid printXsqk(Xskp xskp);
 }

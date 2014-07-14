@@ -1100,14 +1100,25 @@ public class XskpServiceImpl implements XskpServiceI {
 		return dg;
 	}
 
-	public Xskp getXskpNoHkFirst(Xskp xskp) {
-		DataGrid dg = getXskpNoHk(xskp);
-		if(dg.getRows() != null){
-			return ((List<Xskp>)dg.getRows()).get(0);
+	@Override
+	public DataGrid getXskpNoHkFirst(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		DataGrid d = getXskpNoHk(xskp);
+		if(d.getRows() != null){
+			
+			Xskp x = ((List<Xskp>)d.getRows()).get(0);
+			if(x != null){
+				x.setPayTime(KhServiceImpl.getPayTime(x, khDetDao));
+				dg.setObj(x);
+			}
+			
+			return dg;
 		}
 		
 		return null;
 	}
+	
+	
 
 	
 	

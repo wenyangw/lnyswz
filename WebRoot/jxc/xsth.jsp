@@ -844,6 +844,23 @@ function saveAll(){
 	var effectRow = new Object();
 	if(NEED_AUDIT == "1"){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+			$.ajax({
+				url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
+				data: {
+					bmbh: xsth_did,
+					khbh: $('input[name=khbh]').val(),
+					ywyId: jxc_xsth_ywyCombo.combobox('getValue'),
+					jsfsId: JSFS_QK,
+				},
+				cache: false,
+				dataType: 'json',
+				success: function(data){
+					console.info(data.obj.xskplsh);
+					console.info(data.obj.createTime);
+					console.info(data.obj.payTime);
+				}
+			});
+			
 			if(true){
 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
 			}else{

@@ -91,7 +91,9 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public Xsth save(Xsth xsth) {
 		TXsth tXsth = new TXsth();
+		//接收前台传入的数据
 		BeanUtils.copyProperties(xsth, tXsth);
+		//创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
 		tXsth.setCreateTime(new Date());
@@ -104,12 +106,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setFromFp("0");
 
 		//最后一笔未还款销售
-		Xskp xskp = new Xskp();
-		xskp.setBmbh(xsth.getBmbh());
-		xskp.setKhbh(xsth.getKhbh());
-		xskp.setYwyId(xsth.getYwyId());
-		
-		Date payTime = KhServiceImpl.getPayTime(XskpServiceImpl.get, khDetDao);
+//		Xskp xskp = new Xskp();
+//		xskp.setBmbh(xsth.getBmbh());
+//		xskp.setKhbh(xsth.getKhbh());
+//		xskp.setYwyId(xsth.getYwyId());
+//		
+//		Date payTime = KhServiceImpl.getPayTime(xskp, khDetDao);
 		
 		String depName = depDao.load(TDepartment.class, xsth.getBmbh()).getDepName();
 		tXsth.setBmmc(depName);

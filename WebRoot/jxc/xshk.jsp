@@ -10,6 +10,9 @@ var xshk_dg;
 var xshk_xskpDg;
 var jxc_xshk_ywyCombo;
 
+//销售列表所有行
+var rows;
+
 //本次回款对应发票笔数
 var countHk;
 var countXshk;
@@ -225,6 +228,7 @@ $(function(){
 				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
 				$('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
 	    	}
+	    	rows = xshk_xskpDg.datagrid('getRows');
 		}
 	});
 	//根据权限，动态加载功能按钮
@@ -276,8 +280,11 @@ $(function(){
 		if($('input[name=isLs]').is(':checked')){
 			return false;
 		}
+		
 		countHk = 0;
-		var rows = xshk_xskpDg.datagrid('getRows');
+// 		if(rows == undefined){
+// 			rows = xshk_xskpDg.datagrid('getRows');
+// 		}
 		//本次回款金额
 		je = Number($('#hkje').val());
 		if(rows != undefined){
@@ -349,6 +356,8 @@ function init(){
 	$('input:checkbox').removeProp('checked');
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
+	
+	rows = undefined;
 	
 	//初始化创建时间
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
