@@ -844,6 +844,7 @@ function saveAll(){
 	var effectRow = new Object();
 	if(NEED_AUDIT == "1"){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+			var payTime = undefined;
 			$.ajax({
 				url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
 				data: {
@@ -858,10 +859,13 @@ function saveAll(){
 					console.info(data.obj.xskplsh);
 					console.info(data.obj.createTime);
 					console.info(data.obj.payTime);
+					payTime = data.obj.payTime;
 				}
 			});
 			
-			if(true){
+			console.info('payTime:' + payTime);
+			
+			if(moment().diff(payTime) > 0){
 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
 			}else{
 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['first'];

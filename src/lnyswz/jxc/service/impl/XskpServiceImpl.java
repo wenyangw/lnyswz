@@ -1106,7 +1106,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid d = getXskpNoHk(xskp);
 		if(d.getRows() != null){
 			
-			Xskp x = ((List<Xskp>)d.getRows()).get(0);
+			Xskp x = (Xskp)d.getRows().get(0);
 			if(x != null){
 				x.setPayTime(KhServiceImpl.getPayTime(x, khDetDao));
 				dg.setObj(x);
