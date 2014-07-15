@@ -535,6 +535,7 @@ public class KhServiceImpl implements KhServiceI {
 		params.put("1", xskp.getKhbh());
 		params.put("2", xskp.getYwyId());
 		TKhDet tKhDet = (TKhDet)baseDao.getBySQL(sql, params);
+		
 		if(tKhDet == null || tKhDet.getKhlxId().equals(Constant.KHLX_XK)){
 			return xskp.getCreateTime();
 		}else if(tKhDet != null && tKhDet.getKhlxId().equals(Constant.KHLX_YJ)){

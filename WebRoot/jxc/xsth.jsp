@@ -842,8 +842,7 @@ function saveAll(){
 	}
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
-	if(NEED_AUDIT == "1"){
-		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 			var payTime = undefined;
 			$.ajax({
 				url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
@@ -854,25 +853,24 @@ function saveAll(){
 					jsfsId: JSFS_QK,
 				},
 				cache: false,
+				async: false,
 				dataType: 'json',
 				success: function(data){
-					console.info(data.obj.xskplsh);
-					console.info(data.obj.createTime);
-					console.info(data.obj.payTime);
 					payTime = data.obj.payTime;
 				}
 			});
 			
 			console.info('payTime:' + payTime);
+			console.info('curTime:' + moment());
+			console.info('timeDiff:' + moment().diff(payTime));
 			
 			if(moment().diff(payTime) > 0){
 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
 			}else{
 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['first'];
 			}
-		}else{
-			effectRow['needAudit'] = "0";
-		}
+	}else{
+		effectRow['needAudit'] = "0";
 	}
 	//将表头内容传入后台
 // 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';

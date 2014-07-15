@@ -1088,8 +1088,9 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		for(TXskp tXskp : tXskps){
 			Xskp x = new Xskp();
-			x.setXskplsh(tXskp.getXskplsh());
-			x.setCreateTime(tXskp.getCreateTime());
+			BeanUtils.copyProperties(tXskp, x);
+//			x.setXskplsh(tXskp.getXskplsh());
+//			x.setCreateTime(tXskp.getCreateTime());
 			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
 			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 			x.setHkedje(tXskp.getHkje());

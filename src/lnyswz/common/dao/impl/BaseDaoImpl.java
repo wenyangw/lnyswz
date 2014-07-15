@@ -167,7 +167,11 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 				query.setParameter(Integer.valueOf(key), params.get(key));
 			}
 		}
-		return query.list().get(0);
+		List l = query.list();
+		if(l != null && l.size() > 0){
+			return l.get(0);
+		}
+		return null;
 
 	}
 	
