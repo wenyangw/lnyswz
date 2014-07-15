@@ -10,6 +10,7 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 
 //系统设定，是否需要进行审核(Constant.java同步)
 var NEED_AUDIT = '1';
+
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
@@ -41,7 +42,32 @@ jxc.auditLevel = function(bmbh){
 	default:
 		break;
 	}
-}; 
+};
+
+jxc.getAuditLevel = function(bmbh, khbh, ywyId, jsfsId){
+	var payTime = undefined;
+	$.ajax({
+		url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
+		data: {
+			bmbh: bmbh,
+			khbh: khbh,
+			ywyId: ywyId,
+			jsfsId: jsfsId,
+		},
+		cache: false,
+		async: false,
+		dataType: 'json',
+		success: function(data){
+			payTime = data.obj.payTime;
+		}
+	});
+	
+	if(moment().diff(payTime) > 0){
+		return jxc.auditLevel(xsth_did)['second'];
+	}else{
+		return jxc.auditLevel(xsth_did)['first'];
+	}
+};
 
 //销售欠款值
 var JSFS_QK = '06';

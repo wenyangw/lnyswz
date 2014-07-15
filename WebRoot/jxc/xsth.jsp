@@ -843,32 +843,33 @@ function saveAll(){
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-			var payTime = undefined;
-			$.ajax({
-				url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
-				data: {
-					bmbh: xsth_did,
-					khbh: $('input[name=khbh]').val(),
-					ywyId: jxc_xsth_ywyCombo.combobox('getValue'),
-					jsfsId: JSFS_QK,
-				},
-				cache: false,
-				async: false,
-				dataType: 'json',
-				success: function(data){
-					payTime = data.obj.payTime;
-				}
-			});
+// 			var payTime = undefined;
+// 			$.ajax({
+// 				url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
+// 				data: {
+// 					bmbh: xsth_did,
+// 					khbh: $('input[name=khbh]').val(),
+// 					ywyId: jxc_xsth_ywyCombo.combobox('getValue'),
+// 					jsfsId: JSFS_QK,
+// 				},
+// 				cache: false,
+// 				async: false,
+// 				dataType: 'json',
+// 				success: function(data){
+// 					payTime = data.obj.payTime;
+// 				}
+// 			});
 			
-			console.info('payTime:' + payTime);
-			console.info('curTime:' + moment());
-			console.info('timeDiff:' + moment().diff(payTime));
-			
-			if(moment().diff(payTime) > 0){
-				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
-			}else{
-				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['first'];
-			}
+// 			if(moment().diff(payTime) > 0){
+// 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['second'];
+// 			}else{
+// 				effectRow['needAudit'] = jxc.auditLevel(xsth_did)['first'];
+// 			}
+		effectRow['needAudit'] = jxc.getAuditLevel(
+				xsth_did, 
+				$('input[name=khbh]').val(),
+				jxc_xsth_ywyCombo.combobox('getValue'),
+				JSFS_QK);
 	}else{
 		effectRow['needAudit'] = "0";
 	}

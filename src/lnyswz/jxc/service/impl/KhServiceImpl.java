@@ -534,14 +534,22 @@ public class KhServiceImpl implements KhServiceI {
 		params.put("0", xskp.getBmbh());
 		params.put("1", xskp.getKhbh());
 		params.put("2", xskp.getYwyId());
-		TKhDet tKhDet = (TKhDet)baseDao.getBySQL(sql, params);
+		Object[] o = baseDao.getBySQL(sql, params);
+		//Kh kh = new Kh();
+		String khlxId = Constant.KHLX_XK;
+		int sxzq = 0;
+		if( o != null){
+			khlxId = o[0].toString();
+			sxzq = Integer.valueOf(o[0].toString());
+		}
 		
-		if(tKhDet == null || tKhDet.getKhlxId().equals(Constant.KHLX_XK)){
+		//if(tKhDet == null || tKhDet.getKhlxId().equals(Constant.KHLX_XK)){
+		if(khlxId.equals(Constant.KHLX_XK)){
 			return xskp.getCreateTime();
-		}else if(tKhDet != null && tKhDet.getKhlxId().equals(Constant.KHLX_YJ)){
+		}else if(khlxId.equals(Constant.KHLX_YJ)){
 			return DateUtil.getLastDayInMonth(xskp.getCreateTime());
 		}else{
-			return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), tKhDet.getSxzq());
+			return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), sxzq);
 		}
 	}
 	

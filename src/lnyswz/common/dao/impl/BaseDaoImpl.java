@@ -159,7 +159,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	}
 	
 	@Override
-	public Object getBySQL(String sql, Map<String, Object> params) {
+	public Object[] getBySQL(String sql, Map<String, Object> params) {
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		if (params != null && !params.isEmpty()) {
 			//int i = 0;
@@ -167,7 +167,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 				query.setParameter(Integer.valueOf(key), params.get(key));
 			}
 		}
-		List l = query.list();
+		List<Object[]> l = query.list();
 		if(l != null && l.size() > 0){
 			return l.get(0);
 		}
