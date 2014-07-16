@@ -31,6 +31,7 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.SpBgy;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xsth;
@@ -50,6 +51,7 @@ import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
+import lnyswz.jxc.model.TSpBgy;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -80,6 +82,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TSp> spDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
@@ -449,6 +452,122 @@ public class XsthServiceImpl implements XsthServiceI {
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
+	}
+	
+	@Override
+	public DataGrid printXsthByBgy(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		int j = 0;
+		Set<TXskp> xskps = null;
+		for (TXsthDet yd : tXsth.getTXsthDets()) {
+			String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("bmbh", tXsth.getBmbh());
+			params.put("ckId", tXsth.getCkId());
+			params.put("spbh", yd.getSpbh());
+			params.put("bgyId", xsth.getBgyId());
+			
+			TSpBgy tSpBgy = spBgyDao.get(hql, params);
+			
+			if(tSpBgy != null){
+				XsthDet xsthDet = new XsthDet();
+				BeanUtils.copyProperties(yd, xsthDet);
+				nl.add(xsthDet);
+				if(j == 0){
+					xskps = yd.getTXskps();
+				}
+				j++;
+			}
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+				
+		String xskplsh = "";
+		if(xskps != null && xskps.size() > 0){
+			xskplsh += xskps.iterator().next().getXskplsh();
+		}
+		
+		String bz = "";
+		if(tXsth.getYwymc() != null){
+			bz = " " + tXsth.getYwymc().trim();
+		}
+		if("0".equals(tXsth.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXsth.getShdz() != null){
+			bz += " " + tXsth.getShdz();
+		}
+		if(tXsth.getThr() != null){
+			bz += " " + tXsth.getThr();
+		}
+		if(tXsth.getCh() != null){
+			bz += " " + tXsth.getCh();
+		}
+		bz += xskplsh;
+		
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "销   售   提   货   单");
+		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
+		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
+			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
+		}else{
+			map.put("bmmc", tXsth.getBmmc());
+		}
+		map.put("createTime", DateUtil.dateToString(tXsth.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("khmc", tXsth.getKhmc());
+		map.put("khbh", tXsth.getKhbh());
+		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
+		map.put("ckmc", tXsth.getCkmc());
+		map.put("hjje", df.format(tXsth.getHjje()));
+		map.put("hjsl", tXsth.getHjsl());
+		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		map.put("bz", tXsth.getBz() + " " + bz.trim());
+		map.put("memo", tXsth.getBz());
+		map.put("printName", xsth.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid getSpBgys(Xsth xsth) {
+		String sql = "select distinct bgy.bgyId, bgy.bgyName from t_xsth th "
+				+ "left join t_xsth_det det on th.xsthlsh = det.xsthlsh "
+				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and th.ckId = bgy.ckId and det.spbh = bgy.spbh "
+				+ "where th.xsthlsh = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xsth.getXsthlsh());
+		
+		List<Object[]> l = xsthDao.findBySQL(sql, params);
+		if(l != null && l.size() > 0){
+			DataGrid dg = new DataGrid();
+			List<SpBgy> bgys = new ArrayList<SpBgy>();
+			for(Object[] o : l){
+				SpBgy spBgy = new SpBgy();
+				spBgy.setBgyId(Integer.valueOf(o[0].toString()));
+				spBgy.setBgyName(o[1].toString());
+				bgys.add(spBgy);
+			}
+			dg.setRows(bgys);
+			return dg;
+		}
+		return null;
 	}
 	
 	@Override
@@ -873,6 +992,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
 		this.spDao = spDao;
+	}
+
+	@Autowired
+	public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+		this.spBgyDao = spBgyDao;
 	}
 
 	@Autowired
