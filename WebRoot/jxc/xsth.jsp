@@ -1447,6 +1447,7 @@ function printXsthByBgy(){
 				});
 			
 				$.each(bgyIds, function(index){
+					console.info('bgyId:' + this.bgyId);
 					var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did + "&bgyId=" + this.bgyId;
 					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 				});

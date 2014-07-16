@@ -472,7 +472,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			
 			TSpBgy tSpBgy = spBgyDao.get(hql, params);
 			
+			
 			if(tSpBgy != null){
+				System.out.println("bgyName:" + tSpBgy.getBgyName());
+				System.out.println("spbh:" + tSpBgy.getSpbh());
 				XsthDet xsthDet = new XsthDet();
 				BeanUtils.copyProperties(yd, xsthDet);
 				nl.add(xsthDet);
