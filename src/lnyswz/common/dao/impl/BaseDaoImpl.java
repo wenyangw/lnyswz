@@ -226,7 +226,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 			}
 		}
 		List<Object[]> q = query.list();
-		if(q != null){
+		if(q != null && q.size() > 0){
 			return q;
 		}
 		return null;

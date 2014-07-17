@@ -52,6 +52,7 @@ import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpBgy;
+import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -87,6 +88,8 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
+	private BaseDaoI<TUser> userDao;
+	
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -460,6 +463,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
+		BigDecimal hjsl = Constant.BD_ZERO;
 		int j = 0;
 		Set<TXskp> xskps = null;
 		for (TXsthDet yd : tXsth.getTXsthDets()) {
@@ -474,10 +478,9 @@ public class XsthServiceImpl implements XsthServiceI {
 			
 			
 			if(tSpBgy != null){
-				System.out.println("bgyName:" + tSpBgy.getBgyName());
-				System.out.println("spbh:" + tSpBgy.getSpbh());
 				XsthDet xsthDet = new XsthDet();
 				BeanUtils.copyProperties(yd, xsthDet);
+				hjsl = hjsl.add(yd.getCdwsl());
 				nl.add(xsthDet);
 				if(j == 0){
 					xskps = yd.getTXskps();
@@ -537,12 +540,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
 		map.put("ckmc", tXsth.getCkmc());
 		map.put("hjje", df.format(tXsth.getHjje()));
-		map.put("hjsl", tXsth.getHjsl());
+		map.put("hjsl", hjsl);
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("bz", tXsth.getBz() + " " + bz.trim());
 		map.put("memo", tXsth.getBz());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("bgyName", userDao.load(TUser.class, xsth.getBgyId()).getRealName());
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
@@ -562,10 +566,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			DataGrid dg = new DataGrid();
 			List<SpBgy> bgys = new ArrayList<SpBgy>();
 			for(Object[] o : l){
-				SpBgy spBgy = new SpBgy();
-				spBgy.setBgyId(Integer.valueOf(o[0].toString()));
-				spBgy.setBgyName(o[1].toString());
-				bgys.add(spBgy);
+				if(o[0] != null){
+					SpBgy spBgy = new SpBgy();
+					spBgy.setBgyId(Integer.valueOf(o[0].toString()));
+					spBgy.setBgyName(o[1].toString());
+					bgys.add(spBgy);
+				}
 			}
 			dg.setRows(bgys);
 			return dg;
@@ -1025,6 +1031,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
+	}
+	
+	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
 	}
 
 	@Autowired

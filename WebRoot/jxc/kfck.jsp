@@ -1072,6 +1072,45 @@ function printXsth(){
 	}
 }
 
+function printXsthByBgy(){
+	var row = kfck_xsthDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否按不同保管员打印销售提货单？', function(r) {
+			if (r) {
+				var bgyIds = undefined;
+				$.ajax({
+					url:'${pageContext.request.contextPath}/jxc/xsthAction!getSpBgys.action',
+					async: false,
+					data:{
+						xsthlsh: row.xsthlsh,
+					},
+					dataType:'json',
+					success:function(data){
+						if(data.rows.length != 0){
+							//设置信息字段值
+							bgyIds = data.rows;
+						}else{
+							$.messager.alert('提示', '该单据商品未按保管员分类！', 'error');
+						}
+					}
+				});
+			
+				$.each(bgyIds, function(index){
+					$.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ this.bgyName + '</font>)？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+
 function updateThsl(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if(row != undefined){
