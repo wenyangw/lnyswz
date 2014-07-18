@@ -1100,6 +1100,20 @@ public class XskpServiceImpl implements XskpServiceI {
 		return dg;
 	}
 	
+	@Override
+	public DataGrid listFyrs(Xskp xskp){
+		DataGrid dg = new DataGrid();
+		String sql = "select fyr where bmbh = ? and khbh = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xskp.getBmbh());
+		params.put("1", xskp.getKhbh());
+		List<Object[]> fyrs = xskpDao.findBySQL(sql, params);
+		if(fyrs != null && fyrs.size() > 0){
+			
+		}
+		return null;
+	}
+	
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;

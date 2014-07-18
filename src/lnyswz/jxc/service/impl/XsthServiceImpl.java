@@ -464,8 +464,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		BigDecimal hjsl = Constant.BD_ZERO;
-		int j = 0;
-		Set<TXskp> xskps = null;
+//		int j = 0;
+//		Set<TXskp> xskps = null;
 		for (TXsthDet yd : tXsth.getTXsthDets()) {
 			String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -482,10 +482,10 @@ public class XsthServiceImpl implements XsthServiceI {
 				BeanUtils.copyProperties(yd, xsthDet);
 				hjsl = hjsl.add(yd.getCdwsl());
 				nl.add(xsthDet);
-				if(j == 0){
-					xskps = yd.getTXskps();
-				}
-				j++;
+//				if(j == 0){
+//					xskps = yd.getTXskps();
+//				}
+//				j++;
 			}
 		}
 		int num = nl.size();
@@ -495,10 +495,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 				
-		String xskplsh = "";
-		if(xskps != null && xskps.size() > 0){
-			xskplsh += xskps.iterator().next().getXskplsh();
-		}
+//		String xskplsh = "";
+//		if(xskps != null && xskps.size() > 0){
+//			xskplsh += xskps.iterator().next().getXskplsh();
+//		}
 		
 		String bz = "";
 		if(tXsth.getYwymc() != null){
@@ -518,30 +518,32 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(tXsth.getCh() != null){
 			bz += " " + tXsth.getCh();
 		}
-		bz += xskplsh;
+//		bz += xskplsh;
 		
-		DecimalFormat df=new DecimalFormat("#,##0.00");
-		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+//		DecimalFormat df=new DecimalFormat("#,##0.00");
+//		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "销   售   提   货   单");
-		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
-		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
-		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
-		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
-			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
-		}else{
-			map.put("bmmc", tXsth.getBmmc());
-		}
+		map.put("title", "商  品  出  库  分  票  单");
+		//map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
+		//map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		//map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+//		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
+//			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
+//		}else{
+//			map.put("bmmc", tXsth.getBmmc());
+//		}
+		
+		map.put("bmmc", tXsth.getBmmc());
 		map.put("createTime", DateUtil.dateToString(tXsth.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
 		map.put("khbh", tXsth.getKhbh());
 		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
 		map.put("ckmc", tXsth.getCkmc());
-		map.put("hjje", df.format(tXsth.getHjje()));
+		//map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjsl", hjsl);
-		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		//map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("bz", tXsth.getBz() + " " + bz.trim());
 		map.put("memo", tXsth.getBz());
 		map.put("printName", xsth.getCreateName());
