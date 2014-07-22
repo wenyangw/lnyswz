@@ -73,7 +73,6 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
-	
 
 	@Override
 	public Xskp save(Xskp xskp) {
@@ -1101,15 +1100,20 @@ public class XskpServiceImpl implements XskpServiceI {
 	}
 	
 	@Override
-	public DataGrid listFyrs(Xskp xskp){
-		DataGrid dg = new DataGrid();
-		String sql = "select fyr where bmbh = ? and khbh = ?";
+	public List<Xskp> listFyrs(Xskp xskp){
+		String sql = "select fyr from v_fyr where bmbh = ? and khbh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", xskp.getBmbh());
 		params.put("1", xskp.getKhbh());
 		List<Object[]> fyrs = xskpDao.findBySQL(sql, params);
 		if(fyrs != null && fyrs.size() > 0){
-			
+			List<Xskp> xskps = new ArrayList<Xskp>();
+			for(Object o : fyrs){
+				Xskp x = new Xskp();
+				x.setFyr(o.toString());
+				xskps.add(x);
+			}
+			return xskps;
 		}
 		return null;
 	}
