@@ -125,11 +125,12 @@ public class ExportExcel<T> {
 			row = sheet.createRow(i);
 			for (int n = 0; n < d.length; n++) {
 				HSSFCell cell = row.createCell(n);
-				String textValue = null;
+				
+				String textValue = null;	//用于 时间 字符串 		
 				if (d[n] instanceof Integer) {
 					int intValue = (Integer) d[n];
-					cell.setCellValue(intValue);
-				} else if (d[n] instanceof BigDecimal) {
+					cell.setCellValue(intValue);//用于 数值类型
+				}else if (d[n] instanceof BigDecimal) {
 					BigDecimal BigDecimal = (BigDecimal) d[n];	
 					Double dou = BigDecimal.doubleValue();					
 					cell.setCellValue(dou);
@@ -139,38 +140,40 @@ public class ExportExcel<T> {
 					textValue = sdf.format(date);
 				} else if (d[n] instanceof Character) {
 					textValue = d[n].toString();
-				} else if (textValue == null) {
-					textValue = (String) d[n];
-				}  
-				if (d[n] instanceof Float) {
+				} else if (d[n] instanceof Float) {
 					float fValue = (Float) d[n];
-					textValue = new HSSFRichTextString(String.valueOf(fValue))
-							.toString();
-					//cell.setCellValue(textValue);
+//					textValue = new HSSFRichTextString(String.valueOf(fValue))
+//							.toString();
+					cell.setCellValue(fValue);
 				} else if (d[n] instanceof Double) {
 					double dValue = (Double) d[n];
-					textValue = new HSSFRichTextString(String.valueOf(dValue))
-							.toString();
-					//cell.setCellValue(textValue);
+//					textValue = new HSSFRichTextString(String.valueOf(dValue))
+//							.toString();
+
+					cell.setCellValue(dValue);
 				} else if (d[n] instanceof Long) {
 					long longValue = (Long) d[n];
-					//cell.setCellValue(longValue);
+
+					cell.setCellValue(longValue);
+				}else if (textValue == null) {
+					textValue = (String) d[n];
 				}
-				if (textValue != null) {
-					Pattern p = Pattern.compile("^//d+(//.//d+)?$");
-					Matcher matcher = p.matcher(textValue);
-					if (matcher.matches()) {
-						// 是数字当作double处理
-						cell.setCellValue(Double.parseDouble(textValue));
-					} else {
-						HSSFRichTextString richString = new HSSFRichTextString(
-								textValue);
-						HSSFFont font3 = workbook.createFont();
-						font3.setColor(HSSFColor.BLACK.index);						
-						richString.applyFont(font3);
-						cell.setCellValue(richString);
-					}
-				}
+				writeExcel(textValue, cell, workbook);
+//				if (textValue != null) {
+//					Pattern p = Pattern.compile("^//d+(//.//d+)?$");
+//					Matcher matcher = p.matcher(textValue);
+//					if (matcher.matches()) {
+//						// 是数字当作double处理
+//						cell.setCellValue(Double.parseDouble(textValue));
+//					} else {
+//						HSSFRichTextString richString = new HSSFRichTextString(
+//								textValue);
+//						HSSFFont font3 = workbook.createFont();
+//						font3.setColor(HSSFColor.BLACK.index);						
+//						richString.applyFont(font3);
+//						cell.setCellValue(richString);
+//					}
+//				}
 			}
 		}
 
@@ -180,6 +183,24 @@ public class ExportExcel<T> {
 			e.printStackTrace();
 		}
 
+	}
+	private void writeExcel(String textValue,HSSFCell cell,HSSFWorkbook workbook){
+		if (textValue != null) {
+			Pattern p = Pattern.compile("^//d+(//.//d+)?$");
+			Matcher matcher = p.matcher(textValue);
+			if (matcher.matches()) {
+				// 是数字当作double处理
+				cell.setCellValue(Double.parseDouble(textValue));
+			} else {
+				HSSFRichTextString richString = new HSSFRichTextString(
+						textValue);
+				//HSSFFont font3 = workbook.createFont();
+				//font3.setColor(HSSFColor.BLACK.index);						
+				//richString.applyFont(font3);
+				cell.setCellValue(richString);
+			}
+		}
+		
 	}
 
 }

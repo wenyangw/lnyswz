@@ -76,7 +76,6 @@ public class SelectCommomAction extends BaseAction implements
 					+ u.getUserName()
 					+ DateUtil.dateToStringWithTime(new Date(),
 							"yyyyMMddHHmmss") + ".xls";
-			System.out.println("Time:"  + location);
 			String address = Export.getRootPath() + location;
 			out = new FileOutputStream(address);
 			ex.exportExcel(headers, dataset, out);
