@@ -203,11 +203,14 @@ function selectClick(){
 	      				var s=$('input:checkbox[name='+this.ename+']');
 	      			//判断是否被选中 将选中值放入数组中  
 	      				if(s.is(':checked')){ 
-	      					allFields.push(s.val());
+	          			
+	          				var value=s.val().replace('abc','(').replace('xyz',')');
+	          		
+	      					allFields.push(value);
 	      					if(this.frozen=="1"){      				
-	      						frozens.push(s.val());
+	      						frozens.push(value);
 	      					}else{
-	      						fields.push(s.val());
+	      						fields.push(value);
 	      					}
 	      				}else{
 	      					checkeds[this.name]="";
@@ -218,9 +221,11 @@ function selectClick(){
 					var frozenTitles=[];
 					//遍历feilds 设置datagrid将显示的title
 					$.each(fields,function(){
+						var values=this.replace('(','abc').replace(')','xyz');
 						var onlyTitle=Object.create(Object.prototype);
-						onlyTitle["field"]=this;
-						onlyTitle["title"]=dataClass[this];
+						onlyTitle["field"]=values;
+						
+						onlyTitle["title"]=dataClass[values];
 						onlyTitle["formatter"]=function(value) {
 		   					if (value == 0) {
 		   						return '';
@@ -385,8 +390,10 @@ function getData(page, rows,hql,allFields) {
 					$.each(data.obj.rows,function(){
 					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 						var onlyData=Object.create(Object.prototype);
-						for( var i=0;i<this.length;i++){									
-							onlyData[allFields[i]]=this[i];						
+						for( var i=0;i<this.length;i++){	
+							
+							var allF=allFields[i].replace('(','abc').replace(')','xyz');
+							onlyData[allF]=this[i];						
 						}	
 						dgDatas.push(onlyData);						
 					});	
