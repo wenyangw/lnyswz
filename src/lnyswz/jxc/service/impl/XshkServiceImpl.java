@@ -162,9 +162,12 @@ public class XshkServiceImpl implements XshkServiceI {
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
-				//hkKpDao.delete(hkKpDao.get(THkKp.class, tHkKp.getId()));
+				
+				tHkKp.getTXshk().getTHkKps().remove(tHkKp);
+				tHkKp.setTXshk(null);
+				hkKpDao.delete(tHkKp);
 			}
-			yTXshk.getTHkKps().clear();
+			//yTXshk.getTHkKps().clear();
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}

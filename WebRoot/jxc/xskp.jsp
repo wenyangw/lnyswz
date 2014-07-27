@@ -1341,7 +1341,7 @@ function createXsth(){
 	if (row != undefined) {
 		if(row.isCj != '1'){
 			if(row.xsthlshs == undefined){
-				if(row.fhId == undefined){
+				//if(row.fhId == undefined){
 					$.messager.prompt('请确认', '是否要生成销售提货单？', function(){
 		 				//if (bz != undefined) {
 							$.ajax({
@@ -1366,9 +1366,9 @@ function createXsth(){
 							});
 						//}
 					});
-				}else{
-					$.messager.alert('警告', '选中的销售开票记录为分户销售，不能生成销售提货单,请重新选择！',  'warning');
-				}
+// 				}else{
+// 					$.messager.alert('警告', '选中的销售开票记录为分户销售，不能生成销售提货单,请重新选择！',  'warning');
+// 				}
 			}else{
 				$.messager.alert('警告', '选中的销售开票记录已关联销售提货,请重新选择！',  'warning');
 			}

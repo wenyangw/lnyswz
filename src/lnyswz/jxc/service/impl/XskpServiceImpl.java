@@ -717,7 +717,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setIsKp("1");
 		tXsth.setLocked("0");
 		tXsth.setIsCancel("0");
-		tXsth.setIsFh("0");
+		tXsth.setIsFh(tXskp.getFhId() != null ? "1" : "0");
 		tXsth.setIsFhth("0");
 		tXsth.setIsLs("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));

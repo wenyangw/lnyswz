@@ -385,7 +385,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		int j = 0;
 		Set<TXskp> xskps = null;
-		for (TXsthDet yd : tXsth.getTXsthDets()) {
+		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("xsthlsh", xsth.getXsthlsh());
+		List<TXsthDet> dets = detDao.find(hql, params);
+		//for (TXsthDet yd : tXsth.getTXsthDets()) {
+		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
 			nl.add(xsthDet);
