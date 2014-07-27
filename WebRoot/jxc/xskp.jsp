@@ -519,9 +519,10 @@ function init(){
 	$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').removeProp('checked');
 	$('.fh').css('display','none');
-	jxc_xskp_ckCombo.combobox('clear');
 	
+	jxc_xskp_ckCombo.combobox('clear');
 	jxc_xskp_ckCombo.combobox('selectedIndex', 0);
+	
 	//jxc_xskp_ywyCombo.combobox('selectedIndex', 0);
 	//jxc_xskp_jsfsCombo.combobox('selectedIndex', 0);
 	jxc_xskp_jsfsCombo.combobox('setValue', JSFS_QK);
@@ -687,7 +688,8 @@ function saveAll(){
 	});
 	
 	var effectRow = new Object();
-	if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+	//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+	if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
 		$.messager.defaults.ok = '是';
 		$.messager.defaults.cancel = '否';
 		$.messager.confirm('确认', '是否同步生成提货单?', function(r){
@@ -1173,7 +1175,7 @@ function loadKh(khbh){
 					$('input#isNoNsr').prop('checked', 'checked');
 				}
 				if(xskp_did == '04'){
-					//初始化仓库列表
+					//初始化发印人列表
 					jxc_xskp_fyrCombo = lnyw.initCombo($("#jxc_xskp_fyr"), 'fyr', 'fyr', '${pageContext.request.contextPath}/jxc/xskpAction!listFyrs.action?bmbh=' + xskp_did + '&khbh=' + khbh);
 				}
 			}else{
