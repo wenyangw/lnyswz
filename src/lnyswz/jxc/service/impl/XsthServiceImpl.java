@@ -160,8 +160,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			fh.setFhmc(xsth.getFhmc());
 		}
 		
-		//if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(xsth.getIsFhth())){
-		if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+		if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(xsth.getIsFhth())){
+		//if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 		//if("1".equals(xsth.getIsSx()) && "0".equals(xsth.getIsFhth())){
 			User ywy = new User();
 			ywy.setId(xsth.getYwyId());
@@ -218,8 +218,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			if("1".equals(xsth.getIsLs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, xsthDet.getZdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
-			//if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
-			if("1".equals(xsth.getIsFh())){
+			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
+			//if("1".equals(xsth.getIsFh())){
 				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
 			
@@ -318,8 +318,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			fh.setFhmc(tXsth.getFhmc());
 		}
 		
-		//if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
-		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
+		//if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 		//if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
 			User ywy = new User();
 			ywy.setId(tXsth.getYwyId());
@@ -362,10 +362,11 @@ public class XsthServiceImpl implements XsthServiceI {
 
 			if("1".equals(yTXsth.getIsLs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
-				//if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
-				if("1".equals(yTXsth.getIsFh())){
-					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-				}
+				
+			}
+			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
+			//if("1".equals(yTXsth.getIsFh())){
+				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
 		}
 
@@ -717,7 +718,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and t.zdwsl <> t.kpsl";
 		}else{
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
-			hql += " and t.TXsth.isZs = '0'";
+			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1')";
+			//hql += " and t.TXsth.isZs = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.cksl";
 		}

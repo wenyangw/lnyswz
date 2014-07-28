@@ -162,7 +162,7 @@ public class XshkServiceImpl implements XshkServiceI {
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
-				
+				//删除与销售开票的关联
 				tHkKp.getTXshk().getTHkKps().remove(tHkKp);
 				tHkKp.setTXshk(null);
 				hkKpDao.delete(tHkKp);
