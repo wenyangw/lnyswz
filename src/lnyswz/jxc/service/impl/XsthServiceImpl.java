@@ -718,7 +718,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and t.zdwsl <> t.kpsl";
 		}else{
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
-			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1')";
+			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			//hql += " and t.TXsth.isZs = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.cksl";

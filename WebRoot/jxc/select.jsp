@@ -38,6 +38,7 @@ $(function(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		cache: false,
 		data : {
 			selectType :query,
 			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
@@ -362,14 +363,15 @@ function step1Ok(hql,allFields) {
     		    pageSize:pageSize
 	 });
 };
+
 function getData(page, rows,hql,allFields) { 
 	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
 	$.ajax({ 
-		dataType : 'json',
-   		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
    		async: false,
    		cache: false,
+   		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
+		dataType : 'json',
    		data : {
 			hqls :hql,
 			query:query,
@@ -378,7 +380,7 @@ function getData(page, rows,hql,allFields) {
 			did  :did,	
 			page :page,
 			rows :rows,
-			},
+		},
         error: function (XMLHttpRequest, textStatus, errorThrown) { 
             alert(textStatus); 
             $.messager.progress('close'); 

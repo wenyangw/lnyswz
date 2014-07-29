@@ -273,6 +273,7 @@ $(function(){
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'rklxmc',title:'入库类型',align:'center'},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -1063,6 +1064,7 @@ function createKfrkFromYwrk(){
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=ywrklsh]').val(row.ywrklsh);
+						$('input[name=bz]').val(row.bz);
 						kfrk_tabs.tabs('select', 0);
 					}
 				});
