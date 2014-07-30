@@ -516,8 +516,9 @@ function init(){
 	$('.isSh').css('display','none');
 	$('#info input').val('');
 // 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	$('.fh').css('display','none');
 	
 	jxc_xskp_ckCombo.combobox('clear');
