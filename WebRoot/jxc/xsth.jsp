@@ -658,7 +658,8 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
 	$('input:checkbox').removeProp('checked');
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
