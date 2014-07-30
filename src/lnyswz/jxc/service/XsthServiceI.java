@@ -13,7 +13,9 @@ public interface XsthServiceI {
 	public DataGrid datagridDet(Xsth xsth);
 	public DataGrid getSpkc(Xsth xsth);
 	public DataGrid printXsth(Xsth xsth);
+	public DataGrid printXsthByBgy(Xsth xsth);
 	public void updateThsl(Xsth xsth);
 	public void updateLock(Xsth xsth);
 	public void updateUnlock(Xsth xsth);
+	public DataGrid getSpBgys(Xsth xsth);
 }

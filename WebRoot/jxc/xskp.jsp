@@ -19,6 +19,8 @@ var jxc_xskp_ckCombo;
 var jxc_xskp_ywyCombo;
 var jxc_xskp_jsfsCombo;
 var jxc_xskp_fhCombo;
+var jxc_xskp_fyrCombo;
+
 
 //编辑行字段
 var spbhEditor;   
@@ -514,11 +516,14 @@ function init(){
 	$('.isSh').css('display','none');
 	$('#info input').val('');
 // 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	$('.fh').css('display','none');
 	
+	jxc_xskp_ckCombo.combobox('clear');
 	jxc_xskp_ckCombo.combobox('selectedIndex', 0);
+	
 	//jxc_xskp_ywyCombo.combobox('selectedIndex', 0);
 	//jxc_xskp_jsfsCombo.combobox('selectedIndex', 0);
 	jxc_xskp_jsfsCombo.combobox('setValue', JSFS_QK);
@@ -684,7 +689,8 @@ function saveAll(){
 	});
 	
 	var effectRow = new Object();
-	if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+	//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+	if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
 		$.messager.defaults.ok = '是';
 		$.messager.defaults.cancel = '否';
 		$.messager.confirm('确认', '是否同步生成提货单?', function(r){
@@ -725,7 +731,11 @@ function saveAll(){
 			effectRow['thr'] = $('input[name=thr]').val();
 		}
 		
-		effectRow['fyr'] = $('input[name=fyr]').val();
+		if(jxc_xskp_fyrCombo == undefined || jxc_xskp_fyrCombo.combobox('getText') == ''){
+			effectRow['fyr'] = $('input[name=fyr]').val();
+		}else{
+			effectRow['fyr'] = jxc_xskp_fyrCombo.combobox('getText');
+		}
 		effectRow['bookmc'] = $('input[name=bookmc]').val();
 		effectRow['khbh'] = $('input[name=khbh]').val();
 		effectRow['khmc'] = $('input[name=khmc]').val();
@@ -1165,6 +1175,10 @@ function loadKh(khbh){
 					$('input#isNoNsr').attr('checked', 'checked');
 					$('input#isNoNsr').prop('checked', 'checked');
 				}
+				if(xskp_did == '04'){
+					//初始化发印人列表
+					jxc_xskp_fyrCombo = lnyw.initCombo($("#jxc_xskp_fyr"), 'fyr', 'fyr', '${pageContext.request.contextPath}/jxc/xskpAction!listFyrs.action?bmbh=' + xskp_did + '&khbh=' + khbh);
+				}
 			}else{
 				$.messager.alert('提示', '供应商信息不存在！', 'error');
 			}
@@ -1328,7 +1342,7 @@ function createXsth(){
 	if (row != undefined) {
 		if(row.isCj != '1'){
 			if(row.xsthlshs == undefined){
-				if(row.fhId == undefined){
+				//if(row.fhId == undefined){
 					$.messager.prompt('请确认', '是否要生成销售提货单？', function(){
 		 				//if (bz != undefined) {
 							$.ajax({
@@ -1353,9 +1367,9 @@ function createXsth(){
 							});
 						//}
 					});
-				}else{
-					$.messager.alert('警告', '选中的销售开票记录为分户销售，不能生成销售提货单,请重新选择！',  'warning');
-				}
+// 				}else{
+// 					$.messager.alert('警告', '选中的销售开票记录为分户销售，不能生成销售提货单,请重新选择！',  'warning');
+// 				}
 			}else{
 				$.messager.alert('警告', '选中的销售开票记录已关联销售提货,请重新选择！',  'warning');
 			}
@@ -1489,7 +1503,7 @@ function searchXsthInXskp(){
 						<th class="fh" style="display:none">分户</th><td class="fh" style="display:none"><input id="jxc_xskp_fhId" name="fhId"></td>
 					</tr>
 					<tr>
-						<th>发印人</th><td><input name="fyr" type="text"></td>
+						<th>发印人</th><td><input id="jxc_xskp_fyr" name="fyr" type="text"></td>
 						<th>书名</th><td colspan="3"><input name="bookmc" type="text" style="width:71%"></td>
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>

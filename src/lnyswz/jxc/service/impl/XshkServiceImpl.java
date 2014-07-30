@@ -48,6 +48,7 @@ public class XshkServiceImpl implements XshkServiceI {
 	private Logger logger = Logger.getLogger(XshkServiceImpl.class);
 	private BaseDaoI<TXshk> xshkDao;
 	private BaseDaoI<TXskp> xskpDao;
+	private BaseDaoI<THkKp> hkKpDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TYszz> yszzDao;
@@ -156,14 +157,17 @@ public class XshkServiceImpl implements XshkServiceI {
 		if(yTXshk.getIsLs().equals("0")){
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
-			
-			
+						
 			Set<THkKp> tHkKps = yTXshk.getTHkKps();
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+				//删除与销售开票的关联
+				tHkKp.getTXshk().getTHkKps().remove(tHkKp);
+				tHkKp.setTXshk(null);
+				hkKpDao.delete(tHkKp);
 			}
-			yTXshk.setTHkKps(null);
+			//yTXshk.getTHkKps().clear();
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
@@ -237,6 +241,11 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;
+	}
+
+	@Autowired
+	public void setHkKpDao(BaseDaoI<THkKp> hkKpDao) {
+		this.hkKpDao = hkKpDao;
 	}
 
 	@Autowired

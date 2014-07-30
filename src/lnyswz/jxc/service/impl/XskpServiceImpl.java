@@ -71,7 +71,6 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
-	
 
 	@Override
 	public Xskp save(Xskp xskp) {
@@ -181,7 +180,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setLocked("0");
 			tXsth.setIsCancel("0");
 			tXsth.setIsFh("1".equals(xskp.getIsFh()) ? "1" : "0");
-			tXsth.setIsFhth("0");
+			tXsth.setIsFhth("1");
 			//tXsth.setThfs("1");
 			tXsth.setIsLs("0");
 			tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
@@ -716,8 +715,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setIsKp("1");
 		tXsth.setLocked("0");
 		tXsth.setIsCancel("0");
-		tXsth.setIsFh("0");
-		tXsth.setIsFhth("0");
+		tXsth.setIsFh(tXskp.getFhId() != null ? "1" : "0");
+		tXsth.setIsFhth("1");
 		tXsth.setIsLs("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
@@ -1056,6 +1055,25 @@ public class XskpServiceImpl implements XskpServiceI {
 		if(d.getRows() != null && d.getRows().size() > 0){
 			dg.setObj(d.getRows().get(0));
 			return dg;
+		}
+		return null;
+	}
+	
+	@Override
+	public List<Xskp> listFyrs(Xskp xskp){
+		String sql = "select fyr from v_fyr where bmbh = ? and khbh = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xskp.getBmbh());
+		params.put("1", xskp.getKhbh());
+		List<Object[]> fyrs = xskpDao.findBySQL(sql, params);
+		if(fyrs != null && fyrs.size() > 0){
+			List<Xskp> xskps = new ArrayList<Xskp>();
+			for(Object o : fyrs){
+				Xskp x = new Xskp();
+				x.setFyr(o.toString());
+				xskps.add(x);
+			}
+			return xskps;
 		}
 		return null;
 	}

@@ -616,7 +616,7 @@ $(function(){
 	$('input[name=isFh]').click(function(){
 		if($(this).is(':checked')){
 			$('.isFh').css('display','table-cell');
-			$('.isFhth').css('display','inline');
+ 			$('.isFhth').css('display','inline');
 			//初始化分户列表
 			if(jxc_xsth_fhCombo == undefined){
 				jxc_xsth_fhCombo = lnyw.initCombo($("#jxc_xsth_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xsth_did);
@@ -624,7 +624,7 @@ $(function(){
 			jxc_xsth_fhCombo.combobox('selectedIndex', 0);
 		}else{
 			$('.isFh').css('display','none');
-			$('.isFhth').css('display','none');
+ 			$('.isFhth').css('display','none');
 		}
 	});
 	
@@ -658,14 +658,15 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
 	$('input:checkbox').removeProp('checked');
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
 	$('input#thfs_zt').attr('ckecked', 'checked');
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
-	$('.isFhth').css('display','none');
+ 	$('.isFhth').css('display','none');
 	
 	if(jxc.showFh(xsth_did)){
 		$('.fh').css('display', 'inline');
@@ -886,6 +887,7 @@ function saveAll(){
 		effectRow['isFh'] = '0';
 	}
 	effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
+	//effectRow['isFhth'] = '0';
 	
 	if($('input[name=xskpDetIds]').val().trim().length > 0){
 		effectRow['isLs'] = '0';
@@ -1588,8 +1590,8 @@ function searchXskpInXsth(){
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
 							<span class="fh" style="display:none">
-							分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
-							<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
+								分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
+ 								<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
 							</span>
 						</td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>

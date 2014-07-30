@@ -273,6 +273,7 @@ $(function(){
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'rklxmc',title:'入库类型',align:'center'},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -937,7 +938,7 @@ function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
 	if (row != undefined) {
 		if(!row.cjKfrklsh || row.isCj != '1'){
-// 			if(row.ywrklsh == null){
+			if(row.ywrklsh == null){
 // 				if(row.isCj != '1'){
 					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
 						if (bz != undefined){
@@ -966,9 +967,9 @@ function cjKfrk(){
 // 				}else{
 // 					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
 // 				}
-// 			}else{
-// 				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
-// 			}
+			}else{
+				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+			}
 		}else{
 			$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
 		}
@@ -1063,6 +1064,7 @@ function createKfrkFromYwrk(){
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=ywrklsh]').val(row.ywrklsh);
+						$('input[name=bz]').val(row.bz);
 						kfrk_tabs.tabs('select', 0);
 					}
 				});
