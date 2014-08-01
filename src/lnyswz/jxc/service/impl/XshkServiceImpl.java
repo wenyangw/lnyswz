@@ -82,6 +82,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
 		
+		xshkDao.save(tXshk);
 		if(xshk.getIsLs().equals("0")){
 			//处理商品明细
 			ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
@@ -93,19 +94,19 @@ public class XshkServiceImpl implements XshkServiceI {
 					tHkKp.setXskplsh(x.getXskplsh());
 					tHkKp.setHkje(x.getHkje());
 					tHkKp.setTXshk(tXshk);
-					//tHkKps.add(tHkKp);
-					tXshk.getTHkKps().add(tHkKp);
+					tHkKps.add(tHkKp);
+					//tXshk.getTHkKps().add(tHkKp);
+					hkKpDao.save(tHkKp);
 					
 					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
 					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
 				}
-				//tXshk.setTHkKps(tHkKps);
+				tXshk.setTHkKps(tHkKps);
 			}
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
-		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 //				"生成销售提货单", operalogDao);
