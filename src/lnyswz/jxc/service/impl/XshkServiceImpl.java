@@ -100,6 +100,8 @@ public class XshkServiceImpl implements XshkServiceI {
 					
 					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
 					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
+					//更新销售开票回款标志
+					tXskp.setIsHk("1");
 				}
 				tXshk.setTHkKps(tHkKps);
 			}

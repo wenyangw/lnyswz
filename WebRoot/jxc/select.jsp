@@ -447,6 +447,7 @@ function exportExcel(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
+		cache: false,
 		context:this,	
 		data : {
 			query:query,
