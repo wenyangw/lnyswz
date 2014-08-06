@@ -816,5 +816,3 @@ $.extend($.fn.datagrid.methods, {
     $.parser.plugins.push('my97');
 })(jQuery);
 
-
-

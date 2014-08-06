@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +82,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
 		
+		xshkDao.save(tXshk);
 		if(xshk.getIsLs().equals("0")){
 			//处理商品明细
 			ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
@@ -93,9 +95,13 @@ public class XshkServiceImpl implements XshkServiceI {
 					tHkKp.setHkje(x.getHkje());
 					tHkKp.setTXshk(tXshk);
 					tHkKps.add(tHkKp);
+					//tXshk.getTHkKps().add(tHkKp);
+					hkKpDao.save(tHkKp);
 					
 					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
 					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
+					//更新销售开票回款标志
+					tXskp.setIsHk("1");
 				}
 				tXshk.setTHkKps(tHkKps);
 			}
@@ -103,7 +109,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
-		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 //				"生成销售提货单", operalogDao);
@@ -157,17 +162,32 @@ public class XshkServiceImpl implements XshkServiceI {
 		if(yTXshk.getIsLs().equals("0")){
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
-						
+			
+			//String hql = "from THkKp t where t.xshklsh = :xshklsh order by t.xskplsh desc";
+			//Map<String, Object> params = new HashMap<String, Object>();
+			//params.put("xshklsh", yTXshk.getXshklsh());
+			//List<THkKp> tHkKps = hkKpDao.find(hql, params);
 			Set<THkKp> tHkKps = yTXshk.getTHkKps();
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
 				//删除与销售开票的关联
-				tHkKp.getTXshk().getTHkKps().remove(tHkKp);
-				tHkKp.setTXshk(null);
-				hkKpDao.delete(tHkKp);
+				//tHkKp.getTXshk().getTHkKps().remove(tHkKp);
+				//tHkKp.setTXshk(null);
+				//hkKpDao.delete(tHkKp);
 			}
-			//yTXshk.getTHkKps().clear();
+			
+			Iterator<THkKp> it = tHkKps.iterator();  
+	        while(it.hasNext()){
+	            //CheckWork checkWork = it.next();  
+	            THkKp t = it.next();
+	            //t.getTXshk().getTHkKps().remove(t);
+				//t.setTXshk(null);
+				hkKpDao.delete(t);
+				//it.remove();
+	        }  
+			
+			//yTXshk.setHkje(null);
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
