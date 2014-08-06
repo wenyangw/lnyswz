@@ -96,7 +96,10 @@ $(function(){
 			{field:'bz',title:'备注',align:'center'},
 			{field:'khbh',title:'客户编号',align:'center', hidden:true},
 			{field:'khmc',title:'客户名称',align:'center'},
-			{field:'ysje',title:'应收余额',align:'center'},
+			{field:'khlxmc',title:'客户类型',align:'center'},
+			{field:'sxzq',title:'授信期',align:'center'},
+			{field:'sxje',title:'授信额(元)',align:'center'},
+			{field:'ysje',title:'本期应收(元)',align:'center'},
 	    ]],
 	    view: cardView,
 	    onLoadSuccess:function(){

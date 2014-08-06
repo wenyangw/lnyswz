@@ -132,14 +132,17 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel from t_audit_set t "
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje";
+		String fromWhere = " from t_audit_set t "
 				+ " left join t_xsth th on th.bmbh = t.bmbh"
 				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_khlx lx on kh.khlxId = lx.id"
 				+ " where t.userId = ? and th.needAudit <> '0' and th.isAudit = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getCreateId());
 		
-		List<Object[]> lists = ywshDao.findBySQL(sql, params, ywsh.getPage(), ywsh.getRows());
+		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere, params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
 		for(Object[] o : lists){
@@ -156,6 +159,10 @@ public class YwshServiceImpl implements YwshServiceI {
 			BigDecimal hjje = new BigDecimal(o[9].toString());
 			String bz = (String)o[10];
 			String auditLevel = o[11].toString();
+			String khlxmc = o[12].toString();
+			int sxzq = o[13] == null ? 0 : Integer.valueOf(o[13].toString());
+			BigDecimal sxje = o[14] == null ? Constant.BD_ZERO : new BigDecimal(o[14].toString());
+			
 			
 			y.setBmbh(bmbh);
 			y.setBmmc(bmmc);
@@ -167,13 +174,19 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setHjje(hjje);
 			y.setBz(bz);
 			y.setAuditLevel(auditLevel);
+			y.setKhlxmc(khlxmc);
+			y.setSxzq(sxzq);
+			y.setSxje(sxje);
 			
 			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, yszzDao));
+			
+			
 			ywhss.add(y);
 		}
 		
 		
 		dg.setRows(ywhss);
+		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
 		return dg;
 	}
 	

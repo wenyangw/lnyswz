@@ -25,6 +25,9 @@ public class Ywsh {
 	private String jsfsmc;
 	private BigDecimal hjje;
 	private BigDecimal ysje;
+	private String khlxmc;
+	private int sxzq;
+	private BigDecimal sxje;
 	
 	public long getId() {
 		return id;
@@ -133,6 +136,24 @@ public class Ywsh {
 	}
 	public void setYsje(BigDecimal ysje) {
 		this.ysje = ysje;
+	}
+	public String getKhlxmc() {
+		return khlxmc;
+	}
+	public void setKhlxmc(String khlxmc) {
+		this.khlxmc = khlxmc;
+	}
+	public int getSxzq() {
+		return sxzq;
+	}
+	public void setSxzq(int sxzq) {
+		this.sxzq = sxzq;
+	}
+	public BigDecimal getSxje() {
+		return sxje;
+	}
+	public void setSxje(BigDecimal sxje) {
+		this.sxje = sxje;
 	}
 	
 	

@@ -183,6 +183,7 @@ function auth(){
 					$('#admin_roleAuth_form').form('submit', {
 						url : '${pageContext.request.contextPath}/admin/roleAction!auth.action',
 						success : function(d) {
+							console.info('hi');
 							var json = $.parseJSON(d);
 							if (json.success) {
 								role_dg.datagrid('reload');
