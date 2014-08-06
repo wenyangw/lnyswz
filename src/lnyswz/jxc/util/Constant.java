@@ -74,6 +74,7 @@ public interface Constant {
 	}};
 	
 	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
+		put("05","qkdj_report_dl");
 		put("08","qkdj_report_dl");
 	}};
 	
