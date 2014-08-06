@@ -110,9 +110,9 @@ function editMenu() {
 						success : function(d) {
 							var json = $.parseJSON(d);
 							if (json.success) {
-								if(d.obj.genre == '03'){
+								//if(d.obj.genre == '03'){
 									treegrid.treegrid('reload');
-								}
+								//}
 								p.dialog('close');
 								//parent.ctrlTree.tree('reload');/*刷新左侧菜单树*/
 							}
