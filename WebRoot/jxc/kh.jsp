@@ -94,6 +94,8 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
+			{field:'isUp',title:'二级审核', width:100,},
+			{field:'postponeDay',title:'限制期', width:100},
 	    ]],
 	});
 	

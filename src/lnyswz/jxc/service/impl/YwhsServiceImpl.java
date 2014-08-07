@@ -339,8 +339,8 @@ public class YwhsServiceImpl implements YwhsServiceI {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		String lsh = "";
-		if (ywhs.getCjYwhslsh() != null) {
-			lsh += ywhs.getCjYwhslsh() + " - ";
+		if (tYwhs.getCjYwhslsh() != null) {
+			lsh += tYwhs.getCjYwhslsh() + " - ";
 		}
 		lsh += tYwhs.getYwhslsh();
 		map.put("title", "商   品   调   号   单");
