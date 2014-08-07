@@ -31,6 +31,8 @@ public class Kh {
 	private BigDecimal lsje;
 	private BigDecimal ysje;
 	private BigDecimal yszje;
+	private String isUp;
+	private int postponeDay;
 	
 	private String detId;
 	private String query;
@@ -241,6 +243,22 @@ public class Kh {
 
 	public void setYszje(BigDecimal yszje) {
 		this.yszje = yszje;
+	}
+
+	public String getIsUp() {
+		return isUp;
+	}
+
+	public void setIsUp(String isUp) {
+		this.isUp = isUp;
+	}
+
+	public int getPostponeDay() {
+		return postponeDay;
+	}
+
+	public void setPostponeDay(int postponeDay) {
+		this.postponeDay = postponeDay;
 	}
 
 	public String getDetId() {

@@ -49,6 +49,17 @@
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
+		<tr>
+			<th><label for="isUp">二级审批</label></th>
+			<td><input name="isUp" type="checkbox" value="1" disabled="disabled"></td>
+ 		</tr>
+		<tr>
+			<th><label for="postponeDay">限制期</label></th>
+			<td><input name="sxzq" id="postponeDay" class="easyui-validatebox"
+				data-options="validType:'integer'" 
+				style="width:156px;"
+				disabled="disabled"></td>
+		</tr>
 	</table>
 <!-- 	<input type="hidden" name="id"> -->
 	<input type="hidden" name="detId">
