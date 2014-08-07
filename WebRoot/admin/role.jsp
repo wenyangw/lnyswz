@@ -220,13 +220,13 @@ function auth(){
 							return isValid;
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
+							var j = jQuery.parseJSON(d);
+							if (j.success) {
 								role_dg.datagrid('reload');
 								p.dialog('close');
 							}
 							$.messager.show({
-								msg : json.msg,
+								msg : j.msg,
 								title : '提示'
 							});
 						}
