@@ -64,7 +64,7 @@ public interface Constant {
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
 		put("05","xsth_report_b_ns");
-		put("07","xsth_report_ys");
+		put("07","xsth_report_jy");
 		put("08","xsth_report_s");
 	}};
 	
