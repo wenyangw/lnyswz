@@ -55,7 +55,7 @@
  		</tr>
 		<tr>
 			<th><label for="postponeDay">限制期</label></th>
-			<td><input name="sxzq" id="postponeDay" class="easyui-validatebox"
+			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox"
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>

@@ -94,8 +94,8 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-			{field:'isUp',title:'二级审核', width:100,},
-			{field:'postponeDay',title:'限制期', width:100},
+			{field:'isUp',title:'二级审核', width:50,},
+			{field:'postponeDay',title:'限制期', width:50},
 	    ]],
 	});
 	
@@ -207,7 +207,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 320,
+			height : 360,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -311,10 +311,15 @@ function initForm(target){
 		$('input[name=sxzq]').removeAttr('disabled');
 		$('input[name=sxje]').removeAttr('disabled');
 		$('input[name=lsje]').removeAttr('disabled');
+		$('input[name=isUp]').removeAttr('disabled');
+		$('input[name=postponeDay]').removeAttr('disabled');
+		console.info('hh:' + $('input[name=postponeDay]').val());
 	}else{
 		$('input#sxzq').attr('disabled','disabled');
 		$('input[name=sxje]').attr('disabled','disabled');
 		$('input[name=lsje]').attr('disabled','disabled');
+		$('input[name=isUp]').attr('disabled','disabled');
+		$('input[name=postponeDay]').attr('disabled','disabled');
 	}
 };
 
