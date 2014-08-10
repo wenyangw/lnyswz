@@ -51,11 +51,12 @@
 		</tr>
 		<tr>
 			<th><label for="isUp">二级审批</label></th>
-			<td><input name="isUp" type="checkbox" value="1" disabled="disabled"></td>
+			<td><input name="isUp" type="checkbox" value="1" checked="checked" disabled="disabled"></td>
  		</tr>
 		<tr>
 			<th><label for="postponeDay">限制期</label></th>
 			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox"
+				value=60
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>

@@ -313,9 +313,9 @@ function initForm(target){
 		$('input[name=lsje]').removeAttr('disabled');
 		$('input[name=isUp]').removeAttr('disabled');
 		$('input[name=postponeDay]').removeAttr('disabled');
-		if($('input[name=postponeDay]').val() == ''){
-			$('input[name=postponeDay]').val('60');
-		}
+// 		if($('input[name=postponeDay]').val() == ''){
+// 			$('input[name=postponeDay]').val('60');
+// 		}
 	}else{
 		$('input#sxzq').attr('disabled','disabled');
 		$('input[name=sxje]').attr('disabled','disabled');
