@@ -46,6 +46,8 @@ jxc.auditLevel = function(bmbh){
 
 jxc.getAuditLevel = function(bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;
+	var isUp = undefined;
+	var postponeDay = undefined;
 	$.ajax({
 		url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
 		data: {
@@ -62,7 +64,23 @@ jxc.getAuditLevel = function(bmbh, khbh, ywyId, jsfsId){
 		}
 	});
 	
-	if(moment().diff(payTime) > 0){
+	$.ajax({
+		url: '${pageContext.request.contextPath}/jxc/khAction!getKhsx.action',
+		data: {
+			bmbh: bmbh,
+			khbh: khbh,
+			ywyId: ywyId,
+		},
+		cache: false,
+		async: false,
+		dataType: 'json',
+		success: function(data){
+			isUp = data.obj.isUp;
+			postponeDay = data.obj.postponeDay;
+		}
+	});
+	
+	if(moment().diff(payTime) > 0 && isUp == '1'){
 		return jxc.auditLevel(xsth_did)['second'];
 	}else{
 		return jxc.auditLevel(xsth_did)['first'];

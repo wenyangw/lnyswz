@@ -111,9 +111,15 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			khDet.setSxje(Constant.BD_ZERO);
 		}
+		
 		if(kh.getLsje() == null){
 			khDet.setLsje(Constant.BD_ZERO);
 		}
+		
+		if(kh.getIsUp() == null){
+			khDet.setIsUp("0");
+		}
+		
 		khDet.setTKh(g);
 		gdt.add(khDet);
 		g.setTKhDets(gdt);
@@ -162,7 +168,11 @@ public class KhServiceImpl implements KhServiceI {
 			v.setLsje(Constant.BD_ZERO);
 		}
 		
-		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+		if(kh.getIsUp() == null){
+			v.setIsUp("0");
+		}
+		
+		if(kh.getLsje() != null && kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
 			Department bm = new Department();
 			TDepartment tDep = depDao.load(TDepartment.class, kh.getDepId());
 			bm.setId(tDep.getId());
@@ -281,6 +291,7 @@ public class KhServiceImpl implements KhServiceI {
 						if(m.getKhlxId() != null){
 							nc.setKhlxmc(khlxDao.load(TKhlx.class, m.getKhlxId()).getKhlxmc());
 						}
+						
 					}
 				}
 			}
