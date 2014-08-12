@@ -49,41 +49,30 @@ jxc.getAuditLevel = function(bmbh, khbh, ywyId, jsfsId){
 	var isUp = undefined;
 	var postponeDay = undefined;
 	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHkFirst.action',
+		url: '${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
 		data: {
 			bmbh: bmbh,
 			khbh: khbh,
 			ywyId: ywyId,
-			jsfsId: jsfsId,
 		},
 		cache: false,
 		async: false,
 		dataType: 'json',
 		success: function(data){
 			payTime = data.obj.payTime;
-		}
-	});
-	
-	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/khAction!getKhsx.action',
-		data: {
-			bmbh: bmbh,
-			khbh: khbh,
-			ywyId: ywyId,
-		},
-		cache: false,
-		async: false,
-		dataType: 'json',
-		success: function(data){
 			isUp = data.obj.isUp;
 			postponeDay = data.obj.postponeDay;
 		}
 	});
 	
-	if(moment().diff(payTime) > 0 && isUp == '1'){
-		return jxc.auditLevel(xsth_did)['second'];
+	if(moment().diff(payTime) > postponeDay){
+		return undefined;
 	}else{
-		return jxc.auditLevel(xsth_did)['first'];
+		if(moment().diff(payTime) > 0 && isUp == '1'){
+			return jxc.auditLevel(xsth_did)['second'];
+		}else{
+			return jxc.auditLevel(xsth_did)['first'];
+		}
 	}
 };
 

@@ -1060,6 +1060,28 @@ public class XskpServiceImpl implements XskpServiceI {
 	}
 	
 	@Override
+	public DataGrid getLatestXs(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		
+		Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		
+		if(o != null){
+			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+			Date createTime = DateUtil.stringToDate(o[3].toString());
+		
+			Xskp x = new Xskp();
+			x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+			x.setIsUp(kh.getIsUp());
+			x.setPostponeDay(kh.getPostponeDay());
+		
+			dg.setObj(x);
+			return dg;
+		}
+		
+		return null;
+	}
+	
+	@Override
 	public List<Xskp> listFyrs(Xskp xskp){
 		String sql = "select fyr from v_fyr where bmbh = ? and khbh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();

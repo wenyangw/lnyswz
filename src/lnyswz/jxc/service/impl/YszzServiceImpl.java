@@ -177,4 +177,16 @@ public class YszzServiceImpl implements YszzServiceI {
 		
 		return khs;
 	}
+	
+	public static Object[] getLatestXs(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
+		String sql = "select * from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", khbh);
+		params.put("2", ywyId);
+		
+		return yszzDao.getBySQL(sql, params);
+		
+	}
+	
 }

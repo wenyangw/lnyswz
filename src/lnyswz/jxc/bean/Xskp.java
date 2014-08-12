@@ -86,6 +86,8 @@ public class Xskp {
 	private String search;
 	private Date payTime;
 	private BigDecimal hkedje;
+	private String isUp;
+	private int postponeDay;
 	
 	private String ywrklsh;
 	private String xsthlshs;
@@ -660,6 +662,22 @@ public class Xskp {
 
 	public void setHkedje(BigDecimal hkedje) {
 		this.hkedje = hkedje;
+	}
+
+	public String getIsUp() {
+		return isUp;
+	}
+
+	public void setIsUp(String isUp) {
+		this.isUp = isUp;
+	}
+
+	public int getPostponeDay() {
+		return postponeDay;
+	}
+
+	public void setPostponeDay(int postponeDay) {
+		this.postponeDay = postponeDay;
 	}
 
 	public int getPage() {

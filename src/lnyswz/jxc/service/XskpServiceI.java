@@ -24,4 +24,5 @@ public interface XskpServiceI {
 	public DataGrid getXskpNoHkFirst(Xskp xskp);
 	public DataGrid printXsqk(Xskp xskp);
 	public List<Xskp> listFyrs(Xskp xskp);
+	public DataGrid getLatestXs(Xskp xskp);
 }
