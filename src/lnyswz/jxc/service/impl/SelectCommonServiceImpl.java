@@ -125,8 +125,8 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		if (dicts.getOrderBy().trim().length() > 0) {
 			sql += " " + dicts.getOrderBy();
 		}
-			
-		List<Object[]> list = selectCommonDao.findBySQL(sql);
+			String sq=sql.replace("abc","(").replace("xyz",")");
+			List<Object[]> list = selectCommonDao.findBySQL(sq);
 		return list;
 	}
 
