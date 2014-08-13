@@ -710,7 +710,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(xsth.getFromOther() != null){
 			hql += " and t.TXsth.isCancel = '0'";
 			if(Constant.NEED_AUDIT.equals("1")){
-				hql += " and t.TXsth.isAudit = '1'";
+				hql += " and t.TXsth.isAudit = t.TXsth.needAudit";
 			}
 		}
 		

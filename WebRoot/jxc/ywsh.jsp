@@ -306,12 +306,67 @@ function audit(){
 	if(rows.length > 0){
 		$.messager.confirm('请确认', '是否将该笔业务审核通过？', function(r) {
 			if (r) {
-				console.info('auditLevel:' + rows[0].auditLevel);
+				//var effectRow = new Object();
+				//effectRow['lsh'] = rows[0].lsh;
+				//effectRow['auditLevel'] = rows[0].auditLevel;
 				
-				var effectRow = new Object();
-				effectRow['lsh'] = rows[0].lsh;
-				effectRow['auditLevel'] = rows[0].auditLevel;
+				$.ajax({
+					type: "POST",
+					url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
+					data: {
+						lsh: rows[0].lsh,
+						auditLevel: rows[0].auditLevel,
+						bmbh: ywsh_did,
+						menuId: ywsh_menuId,
+					},
+					dataType: 'json',
+					success: function(d){
+						if(d.success){
+							ywsh_toDg.datagrid('reload');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						}  
+					},
+				});
 				
+			}
+		});
+	}else{
+		$.messager.alert('警告', '没有需要进行审批的业务！',  'warning');
+	}
+}
+
+function refuse(){
+	var rows = ywsh_toDg.datagrid('getRows');
+	if(rows.length > 0){
+		$.messager.confirm('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(r) {
+			if (r) {
+				//var effectRow = new Object();
+				//effectRow['lsh'] = rows[0].lsh;
+				//effectRow['auditLevel'] = AUDIT_REFUSE;
+				
+				$.ajax({
+					type: "POST",
+					url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
+					data: {
+						lsh: rows[0].lsh,
+						auditLevel: AUDIT_REFUSE,
+						bmbh: ywsh_did,
+						menuId: ywsh_menuId,
+					},
+					dataType: 'json',
+					success: function(d){
+						if(d.success){
+							ywsh_toDg.datagrid('reload');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						}  
+					},
+				});
 				
 			}
 		});

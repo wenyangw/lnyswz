@@ -16,6 +16,8 @@ public class Ywsh {
 	private int page;
 	private int rows;
 	
+	private String menuId;
+	
 	//数据传递时保存数据
 	private String bmbh;
 	private String bmmc;
@@ -88,6 +90,12 @@ public class Ywsh {
 	}
 	public void setRows(int rows) {
 		this.rows = rows;
+	}
+	public String getMenuId() {
+		return menuId;
+	}
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 	public String getBmbh() {
 		return bmbh;

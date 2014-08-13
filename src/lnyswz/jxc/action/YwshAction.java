@@ -44,18 +44,35 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	/**
 	 * 保存数据
 	 */
-	public void save() {
+	public void audit() {
 		User user = (User) session.get("user");
 		ywsh.setCreateId(user.getId());
 		ywsh.setCreateName(user.getRealName());
 		Json j = new Json();
 		try {
-			j.setObj(ywshService.save(ywsh));
+			ywshService.updateAudit(ywsh);
 			// 添加成功
 			j.setSuccess(true);
-			j.setMsg("保存业务盘点成功！");
+			j.setMsg("业务审批通过成功！");
 		} catch (Exception e) {
-			j.setMsg("保存业务盘点失败！");
+			j.setMsg("业务审批通过失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	public void refuse() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		ywsh.setCreateName(user.getRealName());
+		Json j = new Json();
+		try {
+			ywshService.updateRefuse(ywsh);
+			// 添加成功
+			j.setSuccess(true);
+			j.setMsg("业务审批拒绝成功！");
+		} catch (Exception e) {
+			j.setMsg("业务审批拒绝失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);

@@ -44,6 +44,7 @@ import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TRklx;
 import lnyswz.jxc.model.TSpDet;
+import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwhs;
 import lnyswz.jxc.model.TYwhsDet;
@@ -69,28 +70,48 @@ public class YwshServiceImpl implements YwshServiceI {
 	private Logger logger = Logger.getLogger(YwshServiceImpl.class);
 	private BaseDaoI<TYwsh> ywshDao;
 	private BaseDaoI<TYszz> yszzDao;
+	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
 	@Override
-	public Ywsh save(Ywsh ywsh) {
+	public void updateAudit(Ywsh ywsh) {
 		TYwsh tYwsh = new TYwsh();
-
 		BeanUtils.copyProperties(ywsh, tYwsh);
 		
 		tYwsh.setCreateTime(new Date());
 		tYwsh.setCreateId(ywsh.getCreateId());
 		tYwsh.setCreateName(ywsh.getCreateName());
+		tYwsh.setIsAudit("1");
 		
-		
+		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
+		tXsth.setIsAudit(ywsh.getAuditLevel());
 		
 		ywshDao.save(tYwsh);	
 		
-//		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getYwshlsh(), 
-//				"生成业务盘点单", operalogDao);
-//		
-		Ywsh rYwsh = new Ywsh();
-		return rYwsh;
+		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getLsh(), 
+				"业务审批通过", operalogDao);
+		
+	}
+	
+	@Override
+	public void updateRefuse(Ywsh ywsh) {
+		TYwsh tYwsh = new TYwsh();
+		BeanUtils.copyProperties(ywsh, tYwsh);
+		
+		tYwsh.setCreateTime(new Date());
+		tYwsh.setCreateId(ywsh.getCreateId());
+		tYwsh.setCreateName(ywsh.getCreateName());
+		tYwsh.setIsAudit("0");
+		
+		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
+		tXsth.setIsAudit(ywsh.getAuditLevel());
+		
+		ywshDao.save(tYwsh);	
+		
+		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getLsh(), 
+				"业务审批拒绝", operalogDao);
+		
 	}
 	
 	
@@ -198,6 +219,11 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
+	}
+
+	@Autowired
+	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
+		this.xsthDao = xsthDao;
 	}
 
 

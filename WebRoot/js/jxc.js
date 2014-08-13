@@ -10,6 +10,7 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 
 //系统设定，是否需要进行审核(Constant.java同步)
 var NEED_AUDIT = '1';
+var AUDIT_REFUSE = '9';
 
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
