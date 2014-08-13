@@ -845,6 +845,7 @@ function saveAll(){
 	var effectRow = new Object();
 	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		var needA = jxc.getAuditLevel(
+				'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
 				xsth_did, 
 				$('input[name=khbh]').val(),
 				jxc_xsth_ywyCombo.combobox('getValue'),
@@ -853,7 +854,7 @@ function saveAll(){
 			effectRow['needAudit'] = needA;
 			$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
 		}else{
-			$.messager.alert('提示', '该客户授信已超过' + postponeDay + '天,禁止继续销售！', 'error');
+			$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');
 			return false;
 		}
 	}else{
