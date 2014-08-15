@@ -105,7 +105,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		tYwsh.setIsAudit("0");
 		
 		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
-		tXsth.setIsAudit(ywsh.getAuditLevel());
+		tXsth.setIsAudit(Constant.AUDIT_REFUSE);
 		
 		ywshDao.save(tYwsh);	
 		
@@ -118,9 +118,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid datagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TYwsh t where t.createId = :createId and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", ywsh.getBmbh());
+		params.put("createId", ywsh.getCreateId());
 		if(ywsh.getCreateTime() != null){
 			params.put("createTime", ywsh.getCreateTime()); 
 		}else{
@@ -153,13 +153,13 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje";
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_xsth th on th.bmbh = t.bmbh"
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.userId = ? and th.needAudit <> '0' and th.isAudit = '0'";
+				+ " where t.userId = ? and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getCreateId());
 		
@@ -183,6 +183,7 @@ public class YwshServiceImpl implements YwshServiceI {
 			String khlxmc = o[12].toString();
 			int sxzq = o[13] == null ? 0 : Integer.valueOf(o[13].toString());
 			BigDecimal sxje = o[14] == null ? Constant.BD_ZERO : new BigDecimal(o[14].toString());
+			String ywlxId = o[15].toString();
 			
 			
 			y.setBmbh(bmbh);
@@ -200,7 +201,39 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setSxje(sxje);
 			
 			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, yszzDao));
+		
+			String sql_levels = "select a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
+					+ " from t_audit a"
+					+ " left join t_ywsh sh on a.auditLevel = sh.auditLevel and SUBSTRING(sh.lsh, 5, 4) = a.bmbh + a.ywlxId and sh.lsh = ?"
+					+ " left join t_xsth th on th.xsthlsh = ?"
+					+ " where a.bmbh = ? and a.ywlxId = ? and a.auditLevel <= th.needAudit";
+			Map<String, Object> params_levels = new HashMap<String, Object>();
+			params_levels.put("0", lsh);
+			params_levels.put("1", lsh);
+			params_levels.put("2", ywsh.getBmbh());
+			params_levels.put("3", ywlxId);
 			
+			List<Object[]> ols = yszzDao.findBySQL(sql_levels, params_levels);
+			if(ols != null){
+				String levels = "";
+				String names = "";
+				String times = "";
+				int i = 0;
+				for(Object[] ol : ols){
+					levels += ol[0].toString();
+					names += ol[1].toString();
+					times += ol[2].toString();
+					if(i < ols.size() - 1){
+						levels += ",";
+						names += ",";
+						times += ",";
+					}
+					i++;
+				}
+				y.setLevels(levels);
+				y.setNames(names);
+				y.setTimes(times);
+			}
 			
 			ywhss.add(y);
 		}

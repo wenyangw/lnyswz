@@ -29,7 +29,6 @@ $(function(){
 	        var cc = [];
 	        cc.push('<td colspan=' + fields.length + ' style="width:1000px; padding:10px 5px; border:0;">');
 	        if (!frozen){
-// 	            cc.push('<div style="float:left;margin-left:20px;">');
 	            cc.push('<table border= "0" width = 95%>');
 	            var j = 0;
 	            for(var i=0; i<fields.length; i++){
@@ -44,12 +43,25 @@ $(function(){
 	                if( fields[i] == 'khmc'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">客户授信信息:</th><td colspan="3"></td></tr>');
-	                	
+	                }
+	                if( fields[i] == 'levels'){
+	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
+	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
+	                	var levels = rowData[fields[i]].split(',');
+	                	var names = rowData[fields[i + 1]].split(',');
+	                	var times = rowData[fields[i + 2]].split(',');
+	                	for(var m = 0; m < levels.length; m++){
+	                		cc.push('<tr style="color:blue;">');
+	                		cc.push('<td align="right">' + levels[m] + '</td>');
+	                		cc.push('<td align="right">' + names[m] + '</td>');
+	                		cc.push('<td colspan="2" align="right">' + times[m] + '</td>');
+	                		cc.push('</tr>');
+	                	}
+	                	break;
 	                }
 	                
 	                
 	                if(j % 2 == 0){
-// 	                	cc.push('<p>');
 	                	cc.push('<tr>');
 	                }
 	                if(!copts.hidden){
@@ -63,7 +75,6 @@ $(function(){
 	                	j--;
 	                }
 	                if(j % 2 == 1 || (fields.length - 1  == i && j % 2 == 0)){
-// 	                	cc.push('</p>');
 	                	cc.push('</tr>');
 	                }
 	                j++;
@@ -92,7 +103,7 @@ $(function(){
 			{field:'lsh',title:'流水号',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
-			{field:'hjje',title:'合计金额',align:'center'},
+			{field:'hjje',title:'销售金额(元)',align:'center'},
 			{field:'bz',title:'备注',align:'center'},
 			{field:'khbh',title:'客户编号',align:'center', hidden:true},
 			{field:'khmc',title:'客户名称',align:'center'},
@@ -100,6 +111,10 @@ $(function(){
 			{field:'sxzq',title:'授信期',align:'center'},
 			{field:'sxje',title:'授信额(元)',align:'center'},
 			{field:'ysje',title:'本期应收(元)',align:'center'},
+			{field:'levels',title:'进度',align:'center'},
+			{field:'names',title:'审批人',align:'center'},
+			{field:'times',title:'审批时间',align:'center'},
+			
 	    ]],
 	    view: cardView,
 	    onLoadSuccess:function(){
@@ -146,40 +161,26 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-			{field:'ywshlsh',title:'流水号',align:'center'},
+			{field:'lsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-	        {field:'ckmc',title:'仓库名称',align:'center'},
-	        {field:'pdlxId',title:'类型id',align:'center',hidden:true},
-	        {field:'pdlxmc',title:'方式',align:'center'},
-	        {field:'mc',title:'名称',align:'center'},
-	        {field:'hjje',title:'金额',align:'center',
+	        {field:'auditLevel',title:'等级',align:'center'},
+	        {field:'isAudit',title:'结果',align:'center',
 	        	formatter: function(value){
-	        		return lnyw.formatNumberRgx(value);
-	        	}},
+        			if(value == '0'){
+        				return '拒绝';
+        			}else{
+        				return '通过';
+        			}
+        		},
+	        	styler: function(value){
+					if(value == '0'){
+						return 'color:red;';
+					}
+				}},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
-        	{field:'kfpdlsh',title:'库房盘点',align:'center',
-           		formatter: function(value){
-           			return lnyw.memo(value, 15);
-           		}},
-        	{field:'isCj',title:'*状态',align:'center',sortable:true,
-        		formatter : function(value) {
-					if (value == '1') {
-						return '已冲减';
-					} else {
-						return '正常';
-					}
-				},
-        		sorter: function(a,b){
-        			a = a == undefined ? 0 : a;
-        			b = b == undefined ? 0 : b;
-					return (a-b);  
-				}},
-			{field:'cjTime',title:'冲减时间',align:'center'},
-        	{field:'cjYwshlsh',title:'原业务入库流水号',align:'center'},
 	    ]],
 	    toolbar:'#jxc_ywsh_tb',
 	});
@@ -304,12 +305,8 @@ function init(){
 function audit(){
 	var rows = ywsh_toDg.datagrid('getRows');
 	if(rows.length > 0){
-		$.messager.confirm('请确认', '是否将该笔业务审核通过？', function(r) {
-			if (r) {
-				//var effectRow = new Object();
-				//effectRow['lsh'] = rows[0].lsh;
-				//effectRow['auditLevel'] = rows[0].auditLevel;
-				
+		$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
+			if (bz != undefined){
 				$.ajax({
 					type: "POST",
 					url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
@@ -318,6 +315,7 @@ function audit(){
 						auditLevel: rows[0].auditLevel,
 						bmbh: ywsh_did,
 						menuId: ywsh_menuId,
+						bz: bz,
 					},
 					dataType: 'json',
 					success: function(d){
@@ -341,20 +339,17 @@ function audit(){
 function refuse(){
 	var rows = ywsh_toDg.datagrid('getRows');
 	if(rows.length > 0){
-		$.messager.confirm('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(r) {
-			if (r) {
-				//var effectRow = new Object();
-				//effectRow['lsh'] = rows[0].lsh;
-				//effectRow['auditLevel'] = AUDIT_REFUSE;
-				
+		$.messager.prompt('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(bz){
+			if (bz != undefined){
 				$.ajax({
 					type: "POST",
 					url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
 					data: {
 						lsh: rows[0].lsh,
-						auditLevel: AUDIT_REFUSE,
+						auditLevel: rows[0].auditLevel,
 						bmbh: ywsh_did,
 						menuId: ywsh_menuId,
+						bz: bz,
 					},
 					dataType: 'json',
 					success: function(d){

@@ -30,6 +30,9 @@ public class Ywsh {
 	private String khlxmc;
 	private int sxzq;
 	private BigDecimal sxje;
+	private String levels;
+	private String names;
+	private String times;
 	
 	public long getId() {
 		return id;
@@ -162,6 +165,24 @@ public class Ywsh {
 	}
 	public void setSxje(BigDecimal sxje) {
 		this.sxje = sxje;
+	}
+	public String getLevels() {
+		return levels;
+	}
+	public void setLevels(String levels) {
+		this.levels = levels;
+	}
+	public String getNames() {
+		return names;
+	}
+	public void setNames(String names) {
+		this.names = names;
+	}
+	public String getTimes() {
+		return times;
+	}
+	public void setTimes(String times) {
+		this.times = times;
 	}
 	
 	

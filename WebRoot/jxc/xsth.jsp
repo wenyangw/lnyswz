@@ -57,6 +57,24 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'xsthlsh',title:'流水号',align:'center',
 				styler: function(value, rowData){
 					if(rowData.isCancel == '1'){
@@ -924,12 +942,13 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
-		    	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
-					if (r) {
-						var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-					}
-				});
+		    	//保存后不再直接打印，审批通过后在列表内打印
+		    	//$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+				//	if (r) {
+				//		var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
+				//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				//	}
+				//});
 			}  
 		},
 		error: function(){
@@ -1423,12 +1442,16 @@ function cancelXsth(){
 function printXsth(){
 	var row = xsth_dg.datagrid('getSelected');
 	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
+		}else{
+			$.messager.alert('警告', '选择打印的销售提货未经过审批！',  'warning');
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
