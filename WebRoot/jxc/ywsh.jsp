@@ -44,6 +44,10 @@ $(function(){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">客户授信信息:</th><td colspan="3"></td></tr>');
 	                }
+	                if( fields[i] == 'timeLatest'){
+	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
+	                	cc.push('<tr><th class="read">最早一笔未付款提货:</th><td colspan="3"></td></tr>');
+	                }
 	                if( fields[i] == 'levels'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
@@ -54,20 +58,24 @@ $(function(){
 	                		cc.push('<tr style="color:blue;">');
 	                		cc.push('<td align="right">' + levels[m] + '</td>');
 	                		cc.push('<td align="right">' + names[m] + '</td>');
-	                		cc.push('<td colspan="2" align="right">' + times[m] + '</td>');
+	                		cc.push('<td colspan="2" align="right">' + (times[m] == '1900-01-01 00:00:00.0' ? '' : times[m]) + '</td>');
 	                		cc.push('</tr>');
 	                	}
 	                	break;
 	                }
-	                
 	                
 	                if(j % 2 == 0){
 	                	cc.push('<tr>');
 	                }
 	                if(!copts.hidden){
 		                if(fields[i] == 'bz'){
+		                	if(j % 2 == 1){
+		                		cc.push('</tr><tr>');
+		                	}
 		                	cc.push('<th width=20%>' + copts.title + ':</th><td colspan="3">' + rowData[fields[i]] + '</td>');
-		                	j++;
+		                	if(j % 2 == 1){
+		                		j++;
+		                	}
 		                }else{
 			                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
 		                }
@@ -110,7 +118,9 @@ $(function(){
 			{field:'khlxmc',title:'客户类型',align:'center'},
 			{field:'sxzq',title:'授信期',align:'center'},
 			{field:'sxje',title:'授信额(元)',align:'center'},
-			{field:'ysje',title:'本期应收(元)',align:'center'},
+			{field:'ysje',title:'当前应收(元)',align:'center'},
+			{field:'timeLatest',title:'提货时间',align:'center'},
+			{field:'hjjeLatest',title:'金额(元)',align:'center'},
 			{field:'levels',title:'进度',align:'center'},
 			{field:'names',title:'审批人',align:'center'},
 			{field:'times',title:'审批时间',align:'center'},

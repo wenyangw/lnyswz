@@ -33,6 +33,8 @@ public class Ywsh {
 	private String levels;
 	private String names;
 	private String times;
+	private String timeLatest;
+	private BigDecimal hjjeLatest;
 	
 	public long getId() {
 		return id;
@@ -183,6 +185,18 @@ public class Ywsh {
 	}
 	public void setTimes(String times) {
 		this.times = times;
+	}
+	public String getTimeLatest() {
+		return timeLatest;
+	}
+	public void setTimeLatest(String timeLatest) {
+		this.timeLatest = timeLatest;
+	}
+	public BigDecimal getHjjeLatest() {
+		return hjjeLatest;
+	}
+	public void setHjjeLatest(BigDecimal hjjeLatest) {
+		this.hjjeLatest = hjjeLatest;
 	}
 	
 	

@@ -235,6 +235,22 @@ public class YwshServiceImpl implements YwshServiceI {
 				y.setTimes(times);
 			}
 			
+			String sql_latest = "select xs.createTime, th.hjje"
+					+ " from v_xs_latest xs"
+					+ "	left join t_xsth th on xs.xsthlsh = th.xsthlsh"
+					+ " where xs.bmbh = ? and xs.khbh = ? and xs.ywyId = ?";
+			Map<String, Object> params_latest = new HashMap<String, Object>();
+			params_latest.put("0", ywsh.getBmbh());
+			params_latest.put("1", khbh);
+			params_latest.put("2", ywyId);
+			
+			Object[] ola = yszzDao.getBySQL(sql_latest, params_latest);
+			if(ola != null){
+				y.setTimeLatest(ola[0].toString());
+				y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
+			}
+			
+			
 			ywhss.add(y);
 		}
 		
