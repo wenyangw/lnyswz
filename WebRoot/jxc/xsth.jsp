@@ -208,6 +208,7 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+        	{field:'shbz',title:'审批说明',align:'center'},
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
