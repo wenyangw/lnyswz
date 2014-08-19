@@ -275,7 +275,7 @@ function selectClick(){
 // 		                        top :809,
 		                        
 		                    });
-		                }
+		                },
 	      			});	
 					var m = step1Ok(hql,allFields);	
 	      			p.dialog('close');	      			
@@ -309,8 +309,8 @@ function selectClick(){
 	      					         	iconCls: 'icon-ok'
 	      					         });
 	      					   }
-	      			}	
-	            }
+	      			};	
+	            },
 			
 	        }],  
 	        onBeforeOpen : function() {
@@ -414,8 +414,9 @@ function cleanClick(){
 	$('input[id^="b_"]').val(moment().format('YYYY-MM-DD'));
 	$('input[id^="a_"]').val(moment().date(1).format('YYYY-MM-DD'));
 }
+
 function exportExcel(){
-	var titles=[];
+    var titles=[];
 	var fields=[];
 	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
@@ -423,7 +424,6 @@ function exportExcel(){
 	var ss =resultDg.datagrid('options').frozenColumns[0];
 	
 	$.each(ss,function(){			
-		
 		var s="";
 		for(var i=0;i<this.field.length;i++){
 			s +=this.field[i];
@@ -433,7 +433,7 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});
-	$.each(hh,function(){			
+	$.each(hh,function(){
 		var s="";
 		for(var i=0;i<this.field.length;i++){
 			s +=this.field[i];
@@ -443,7 +443,6 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
-	
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -456,7 +455,7 @@ function exportExcel(){
 			con :fields.join(','),
 			titles:titles.join(','),
 		},
-		success:function(data){	
+		success:function(data){
 			var json = $.parseJSON(data);
 			if (json.success) {
 				var dd="${pageContext.request.contextPath}/"+json.obj;
@@ -470,7 +469,6 @@ function exportExcel(){
 			});
 		}
 	});
-		
 }
 
 
