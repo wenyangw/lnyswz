@@ -77,6 +77,23 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	}
 };
 
+jxc.notInExcludeKhs = function(bmbh, khbh){
+	switch (bmbh) {
+	case '04':
+		var kh04 = ['21010017', '21010798'];
+		if(kh04.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	default:
+		return true;
+		break;
+	}
+};
+
+
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;

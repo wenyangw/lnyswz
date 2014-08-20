@@ -738,13 +738,13 @@ function rowOk(){
 	if(keyOk()){
 // 		if($('input[name=isSx]').is(':checked')){
 // 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-// 			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
-// 				return true;
-// 			}
+ 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
+ 			return true;
+ 		}
 // 		}else{
-			if(zslEditor.target.val() != 0){
-				return true;
-			}
+			//if(zslEditor.target.val() != 0){
+			//	return true;
+			//}
 // 		}
 	}
 	return false;
@@ -862,7 +862,7 @@ function saveAll(){
 	}
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
-	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
 		var needA = jxc.getAuditLevel(
 				'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
 				xsth_did, 
