@@ -36,6 +36,9 @@ public class KfrkDet{
 	private BigDecimal cdwsl;
 	private BigDecimal bzsl;
 	
+	private BigDecimal zdwdj;
+	private BigDecimal cdwdj;
+	
 	public int getId() {
 		return id;
 	}
@@ -143,6 +146,18 @@ public class KfrkDet{
 	}
 	public void setBzsl(BigDecimal bzsl) {
 		this.bzsl = bzsl;
+	}
+	public BigDecimal getZdwdj() {
+		return zdwdj;
+	}
+	public void setZdwdj(BigDecimal zdwdj) {
+		this.zdwdj = zdwdj;
+	}
+	public BigDecimal getCdwdj() {
+		return cdwdj;
+	}
+	public void setCdwdj(BigDecimal cdwdj) {
+		this.cdwdj = cdwdj;
 	}
 
 }

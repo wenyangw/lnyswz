@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-filter.js"></script>
 <script type="text/javascript">
 var xshk_did;
 var xshk_lx;
@@ -48,9 +49,12 @@ $(function(){
 	    border : false,
 	    singleSelect : true,
 		columns:[[
-	        {field:'khbh',title:'客户编号',width:60},
+	        {field:'khbh',title:'客户编号',width:60,
+	        	hfilter:{type:'textbox',},
+	        },
 	        {field:'khmc',title:'客户名称',width:200},
 	    ]],
+	    toolbar:'#jxc_xshk_khTb',
 	    onSelect: function(rowIndex, rowData){
 	    	$('#khbh').html(rowData.khbh);
 	 		$('#khmc').html(rowData.khmc);
@@ -258,8 +262,6 @@ $(function(){
 		},
 	});
 	
-	
-	
 	jxc_xshk_ywyCombo.combobox({
 		onSelect: function(){
 			xshk_khDg.datagrid({
@@ -273,6 +275,7 @@ $(function(){
 // 				depId: xshk_did,
 // 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
+			xshk_khDg.datagrid('enableFilter');
 		}
 	});
 	
@@ -426,7 +429,6 @@ function saveAll(){
 		}
 	}
 	
-	
 	var effectRow = new Object();
 	var rows = xshk_xskpDg.datagrid('getRows');
 	//将表头内容传入后台
@@ -473,6 +475,36 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		}
 	});
+}
+
+function printXshk(){
+	var khbh = $('#khbh').html();
+	if(khbh != ''){
+		var ywyId = jxc_xshk_ywyCombo.combobox('getValue');
+		
+		var dialog = $('#jxc_xshk_dateDialog');
+		dialog.dialog({
+			title : '请选择统计时间',
+			//href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
+			width : 340,
+			height : 320,
+			buttons : [{
+				text : '确定',
+				handler : function() {
+					var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?khbh=' + khbh + "&ywyId=" + ywyId + "&bmbh=" + xsth_did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				},
+			},{
+				text : '取消',
+				handler : function() {
+					this.dialog('close');
+				},
+			}],
+		});
+	}else{
+		$.messager.alert('提示', '没有选中客户进行打印,请重新操作！', 'error');
+		return false;
+	}
 }
 
 //////////////////////////////////////////////以下为销售回款列表处理代码
@@ -585,6 +617,7 @@ function searchXshk(){
 	输入流水号、客户：<input type="text" name="searchXshk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXshk();">查询</a>
 </div>
+<div id='jxc_xshk_dateDialog'></div>
 
 
 	

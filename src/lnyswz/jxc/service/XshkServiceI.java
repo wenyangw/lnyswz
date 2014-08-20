@@ -8,4 +8,5 @@ public interface XshkServiceI {
 	public void cancelXshk(Xshk xshk);
 	public DataGrid datagrid(Xshk xshk);
 	public DataGrid detDatagrid(Xshk xshk);
+	public DataGrid printXshk(Xshk xshk);
 }

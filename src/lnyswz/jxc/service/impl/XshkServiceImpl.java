@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,16 +28,23 @@ import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xshk;
+import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.THkKp;
 import lnyswz.jxc.model.TKh;
+import lnyswz.jxc.model.TKhDet;
+import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXshk;
+import lnyswz.jxc.model.TXsth;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XshkServiceI;
+import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 
 /**
@@ -53,6 +61,8 @@ public class XshkServiceImpl implements XshkServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TYszz> yszzDao;
+	private BaseDaoI<TKhDet> khDetDao;
+	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -198,6 +208,53 @@ public class XshkServiceImpl implements XshkServiceI {
 		
 	}
 	
+	@Override
+	public DataGrid printXshk(Xshk xshk) {
+		DataGrid dg = new DataGrid();
+		
+		
+		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
+		
+		BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		BigDecimal lsje = YszzServiceImpl.getLsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		
+		kh.setYsje(ysje);
+		kh.setLsje(lsje);
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "未 收 货 款 明  细 单");
+		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
+		map.put("khbh", xshk.getKhbh());
+		map.put("khmc", kh.getKhmc());
+		map.put("sxzq", kh.getSxzq());
+		map.put("sxje", kh.getSxje());
+		
+		map.put("printName", xshk.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xshk.getBmbh());
+		params.put("khbh", xshk.getKhbh());
+		params.put("ywyId", xshk.getYwyId());
+		params.put("jsfsId", Constant.XSKP_JSFS_QK);
+		List<TXskp> tXskps = xskpDao.find(hql, params);
+		
+		List<Xskp> xskps = new ArrayList<Xskp>();
+		for(TXskp tXskp : tXskps){
+			Xskp x = new Xskp();
+			x.setXskplsh(tXskp.getXskplsh());
+			x.setCreateTime(tXskp.getCreateTime());
+			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
+			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+			x.setHkedje(tXskp.getHkje());
+			xskps.add(x);
+		}
+		
+		dg.setObj(map);
+		dg.setRows(xskps);
+		return dg;
+	}
 	
 	@Override
 	public DataGrid datagrid(Xshk xshk) {
@@ -281,6 +338,16 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
+	}
+
+	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
+	@Autowired
+	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
+		this.khlxDao = khlxDao;
 	}
 
 	@Autowired

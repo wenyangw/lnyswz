@@ -238,7 +238,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setSpje(tDet.getSpje().add(tDet.getSpse()));
 				tXsthDets.add(tXsthDet);
 				tXsthDet.setTXsth(tXsth);
-				hjsl.add(tDet.getCdwsl());
+				hjsl = hjsl.add(tDet.getCdwsl());
 			}
 			
 			//更新业务总账
