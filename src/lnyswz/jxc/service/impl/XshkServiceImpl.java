@@ -210,12 +210,13 @@ public class XshkServiceImpl implements XshkServiceI {
 	
 	@Override
 	public DataGrid printXshk(Xshk xshk) {
+		System.out.println("selectTime:" + xshk.getSelectTime());
 		DataGrid dg = new DataGrid();
 		
 		
 		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
 		
-		BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"), yszzDao);
 		BigDecimal lsje = YszzServiceImpl.getLsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
 		
 		kh.setYsje(ysje);
@@ -232,12 +233,13 @@ public class XshkServiceImpl implements XshkServiceI {
 		map.put("printName", xshk.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		
-		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and createTime < :createTime and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xshk.getBmbh());
 		params.put("khbh", xshk.getKhbh());
 		params.put("ywyId", xshk.getYwyId());
 		params.put("jsfsId", Constant.XSKP_JSFS_QK);
+		params.put("createTime", DateUtil.dateIncreaseByMonth(xshk.getSelectTime(), 1));
 		List<TXskp> tXskps = xskpDao.find(hql, params);
 		
 		List<Xskp> xskps = new ArrayList<Xskp>();

@@ -486,20 +486,31 @@ function printXshk(){
 		dialog.dialog({
 			title : '请选择统计时间',
 			//href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
-			width : 340,
-			height : 320,
+			width : 240,
+			height : 120,
 			buttons : [{
 				text : '确定',
 				handler : function() {
-					var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?khbh=' + khbh + "&ywyId=" + ywyId + "&bmbh=" + xsth_did;
-					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					var selectTime = $('input#selectTime').val();
+					console.info('selectTime:' + selectTime);
+					if(selectTime != ''){
+						var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						dialog.dialog('close');
+					}else{
+						$.messager.alert('提示', '请选择打印时间！', 'error');
+						return false;
+					}
 				},
 			},{
 				text : '取消',
 				handler : function() {
-					this.dialog('close');
+					dialog.dialog('close');
 				},
 			}],
+			onLoad : function() {
+				
+			}
 		});
 	}else{
 		$.messager.alert('提示', '没有选中客户进行打印,请重新操作！', 'error');
@@ -617,7 +628,12 @@ function searchXshk(){
 	输入流水号、客户：<input type="text" name="searchXshk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXshk();">查询</a>
 </div>
-<div id='jxc_xshk_dateDialog'></div>
+<div id='jxc_xshk_dateDialog'>
+<center>
+<input type="text" name="selectTime" class="easyui-my97" data-options="dateFmt:'yyyy年MM月',minDate:'{%y-1}-%M-%d',maxDate:'%y-%M-%d',vel:'selectTime'" style="width:100px">
+</center>
+<input id="selectTime" type="hidden"/>
+</div>
 
 
 	
