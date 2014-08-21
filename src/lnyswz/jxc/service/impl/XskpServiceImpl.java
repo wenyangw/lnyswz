@@ -152,7 +152,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			}else{
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
 			}
-			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
 				if(xskp.getHjje().add(xskp.getHjse()).compareTo(ysje.abs()) > 0){
@@ -236,7 +236,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setSpje(tDet.getSpje().add(tDet.getSpse()));
 				tXsthDets.add(tXsthDet);
 				tXsthDet.setTXsth(tXsth);
-				hjsl.add(tDet.getCdwsl());
+				hjsl = hjsl.add(tDet.getCdwsl());
 			}
 			
 			//更新业务总账
@@ -1021,7 +1021,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
 		
-		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 		BigDecimal lsje = YszzServiceImpl.getLsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
 		
 		kh.setYsje(ysje);

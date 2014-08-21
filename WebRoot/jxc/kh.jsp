@@ -325,8 +325,6 @@ function initForm(target){
 	}
 };
 
-
-
 function searchKh(){
 	kh_dg.datagrid('load',{
 		khcs: $('input[name=search]').val(),

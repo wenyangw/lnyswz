@@ -8,6 +8,11 @@ public interface Constant {
 	
 	public static final String NEED_AUDIT = "1";
 	public static final String AUDIT_REFUSE = "9";
+	//月结客户时间分隔点，20日前后
+	public static final String KHLX_YJ_SEP = "21";
+	//月结客户时间分隔点，20日后销售加30天
+	public static final int KHLX_YJ_INC = 30;
+	
 	//发票税率
 	public static final BigDecimal SHUILV = new BigDecimal("0.17");
 	

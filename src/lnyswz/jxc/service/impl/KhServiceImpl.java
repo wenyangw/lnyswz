@@ -558,7 +558,11 @@ public class KhServiceImpl implements KhServiceI {
 		if(khlxId.equals(Constant.KHLX_XK)){
 			return xskp.getCreateTime();
 		}else if(khlxId.equals(Constant.KHLX_YJ)){
-			return DateUtil.getLastDayInMonth(xskp.getCreateTime());
+			if(DateUtil.getDay(xskp.getCreateTime()).compareTo(Constant.KHLX_YJ_SEP) < 0){
+				return DateUtil.getLastDayInMonth(xskp.getCreateTime());
+			}else{
+				return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), Constant.KHLX_YJ_INC);
+			}
 		}else{
 			return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), sxzq);
 		}

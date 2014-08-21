@@ -200,7 +200,7 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setSxzq(sxzq);
 			y.setSxje(sxje);
 			
-			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, yszzDao));
+			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
 		
 			String sql_levels = "select a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
 					+ " from t_audit a"

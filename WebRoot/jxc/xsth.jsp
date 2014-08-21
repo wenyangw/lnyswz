@@ -862,19 +862,23 @@ function saveAll(){
 	}
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
-	if(NEED_AUDIT == "1" && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
-		var needA = jxc.getAuditLevel(
-				'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
-				xsth_did, 
-				$('input[name=khbh]').val(),
-				jxc_xsth_ywyCombo.combobox('getValue'),
-				JSFS_QK);
-		if(needA != undefined){
-			effectRow['needAudit'] = needA;
-			$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
+	if(NEED_AUDIT == "1" && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
+		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+			var needA = jxc.getAuditLevel(
+					'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
+					xsth_did, 
+					$('input[name=khbh]').val(),
+					jxc_xsth_ywyCombo.combobox('getValue'),
+					JSFS_QK);
+			if(needA != undefined){
+				effectRow['needAudit'] = needA;
+				$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
+			}else{
+				$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');
+				return false;
+			}
 		}else{
-			$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');
-			return false;
+			effectRow['needAudit'] = "1";
 		}
 	}else{
 		effectRow['needAudit'] = "0";

@@ -34,6 +34,7 @@ public class Xshk {
 	private int rows;
 	
 	private String search;
+	private Date selectTime;
 
 	private String datagrid;
 	private String lxbh; 
@@ -189,6 +190,12 @@ public class Xshk {
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public Date getSelectTime() {
+		return selectTime;
+	}
+	public void setSelectTime(Date selectTime) {
+		this.selectTime = selectTime;
 	}
 	public String getLxbh() {
 		return lxbh;

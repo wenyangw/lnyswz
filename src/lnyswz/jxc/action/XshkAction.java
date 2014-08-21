@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Xshk;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XshkServiceI;
+import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 /**
  * 销售回款Action
  * @author 王文阳
@@ -65,6 +68,13 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 			e.printStackTrace();
 		}
 		writeJson(j);
+	}
+	
+	public void printXshk() {
+		User user = (User)session.get("user");
+		xshk.setCreateName(user.getRealName());
+		DataGrid dg = xshkService.printXshk(xshk);
+		Export.print(dg, Constant.REPORT_XSTH.get(xshk.getBmbh()));
 	}
 	
 	/**
