@@ -76,8 +76,6 @@ public class TXsth implements java.io.Serializable {
 	private String needAudit;
 	private String isAudit;
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
-//	private Set<TKfck> TKfcks = new HashSet<TKfck>(0);
-	//private TXskp TXskp;
 	
 	public TXsth() {
 	}
