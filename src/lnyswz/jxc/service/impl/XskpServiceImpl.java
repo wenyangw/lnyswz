@@ -77,6 +77,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
 		//获取前台传递的销售提货记录号
 		String xsthDetIds = xskp.getXsthDetIds();
+		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
+		
 
 		//是否需要生成销售提货
 		boolean needXsth = "1".equals(xskp.getNeedXsth());
@@ -87,10 +89,12 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setCreateName(xskp.getCreateName());
 		tXskp.setXskplsh(lsh);
 		tXskp.setIsCj("0");
+		tXskp.setYfje(Constant.BD_ZERO);
+		
 		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 			tXskp.setHkje(Constant.BD_ZERO);
 		}else{
-			tXskp.setHkje(tXskp.getHjje().add(tXskp.getHjse()));
+			tXskp.setHkje(hjje);
 		}
 		
 		String bmmc = depDao.load(TDepartment.class, xskp.getBmbh()).getDepName();
@@ -147,19 +151,24 @@ public class XskpServiceImpl implements XskpServiceI {
 			User ywy = new User();
 			ywy.setId(xskp.getYwyId());
 			ywy.setRealName(xskp.getYwymc());
-			if(xsthDetIds == null || xsthDetIds.equals("")){
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
-			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
-			}
+			
+
 			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
-				if(xskp.getHjje().add(xskp.getHjse()).compareTo(ysje.abs()) > 0){
-					tXskp.setHkje(ysje.abs());
+				BigDecimal hkje = Constant.BD_ZERO;
+				if(hjje.compareTo(ysje.abs()) > 0){
+					hkje = ysje.abs();
 				}else{
-					tXskp.setHkje(xskp.getHjje().add(xskp.getHjse()));
+					hkje = hjje;
 				}
+				tXskp.setHkje(hkje);
+				tXskp.setYfje(hkje);
+			}
+			if(xsthDetIds == null || xsthDetIds.equals("")){
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+			}else{
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
 			}
 		}
 		
@@ -183,7 +192,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setIsFhth("1");
 			//tXsth.setThfs("1");
 			tXsth.setIsLs("0");
-			tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+			tXsth.setHjje(hjje);
 			
 			tXsthDets = new HashSet<TXsthDet>();
 		}else{
@@ -307,10 +316,6 @@ public class XskpServiceImpl implements XskpServiceI {
 	
 	@Override
 	public void cjXskp(Xskp xskp) {
-		//??
-		//是否需要生成销售提货
-		//boolean needXsth = true;
-		
 		Date now = new Date();
 		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
 		//更新原单据信息
@@ -352,10 +357,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		ck.setId(tXskp.getCkId());
 		ck.setCkmc(tXskp.getCkmc());
 		
-		//??
-		//TODO 同步生成的如何处理，已提货如何处理
-		//先处理通过销售提货生成的销售开票单
-		//原单据关联的销售提货清除,
 		int[] intXsthDetIds = null;
 		if(yTXskp.getTXsths() != null){
 			intXsthDetIds = new int[yTXskp.getTXsths().size()];
@@ -1067,7 +1068,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		if(o != null){
 			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
-			Date createTime = DateUtil.stringToDate(o[3].toString());
+			Date createTime = DateUtil.stringToDate(o[4].toString());
 		
 			Xskp x = new Xskp();
 			x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));

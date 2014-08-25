@@ -44,6 +44,7 @@ public class Xskp {
 	private BigDecimal hjje;
 	private BigDecimal hjse;
 	private BigDecimal hkje;
+	private BigDecimal yfje;
 	private String bz;
 	private String fromTh;
 	private String isCj;
@@ -342,6 +343,14 @@ public class Xskp {
 
 	public void setHkje(BigDecimal hkje) {
 		this.hkje = hkje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	public String getBz() {

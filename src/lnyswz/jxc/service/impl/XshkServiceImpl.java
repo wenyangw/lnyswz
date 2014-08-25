@@ -181,6 +181,9 @@ public class XshkServiceImpl implements XshkServiceI {
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+				if(tXskp.getHkje().compareTo(tXskp.getYfje()) == 0){
+					tXskp.setIsHk("0");
+				}
 				//删除与销售开票的关联
 				//tHkKp.getTXshk().getTHkKps().remove(tHkKp);
 				//tHkKp.setTXshk(null);
@@ -227,11 +230,12 @@ public class XshkServiceImpl implements XshkServiceI {
 		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
 		map.put("khbh", xshk.getKhbh());
 		map.put("khmc", kh.getKhmc());
+		
 		map.put("sxzq", kh.getSxzq());
 		map.put("sxje", kh.getSxje());
 		
-		map.put("printName", xshk.getCreateName());
-		map.put("printTime", DateUtil.dateToString(new Date()));
+		//map.put("printName", xshk.getCreateName());
+		//map.put("printTime", DateUtil.dateToString(new Date()));
 		
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and createTime < :createTime and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();

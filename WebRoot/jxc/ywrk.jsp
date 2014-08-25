@@ -1318,8 +1318,15 @@ function generateYwrk(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$.each(d.rows, function(index){
+							if(index != d.rows.length - 1){
+								d.rows[index].spje = d.rows[index].zdwsl * d.rows[index].zdwdj;
+							}
+						});
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
 						$('input[name=kfrklshs]').val(kfrklshsStr);
 						ywrk_tabs.tabs('select', 0);
 					}
@@ -1415,6 +1422,7 @@ function toYwrk(){
 						$('input[name=bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
 						ywrk_tabs.tabs('select', 0);
+						
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 					}
