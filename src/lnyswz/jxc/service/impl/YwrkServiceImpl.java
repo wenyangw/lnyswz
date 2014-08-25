@@ -407,7 +407,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		params.put("spbh", ywrk.getSpbh());
 		
 		TSpDet tSpDet = spDetDao.get(hql, params);
-		if(tSpDet != null && tSpDet.getLastRkdj().compareTo(Constant.BD_ZERO) != 0){
+		if(tSpDet != null && tSpDet.getLastRkdj() != null && tSpDet.getLastRkdj().compareTo(Constant.BD_ZERO) != 0){
 			ProBean rkdj = new ProBean();
 			rkdj.setGroup("入库信息");
 			rkdj.setName("最后入库价");

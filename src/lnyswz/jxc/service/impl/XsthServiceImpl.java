@@ -679,7 +679,6 @@ public class XsthServiceImpl implements XsthServiceI {
 	
 	@Override
 	public DataGrid datagridDet(Xsth xsth) {
-		System.out.println("test:______________________");
 		//库房出库流程查询，保管员只可查看本人负责商品记录，其他(总账员)可以查看全部
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TXsthDet t where t.TXsth.bmbh = :bmbh and t.TXsth.createTime > :createTime";

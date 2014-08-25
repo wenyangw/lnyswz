@@ -181,6 +181,9 @@ public class XshkServiceImpl implements XshkServiceI {
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+				if(tXskp.getHkje().compareTo(tXskp.getYfje()) == 0){
+					tXskp.setIsHk("0");
+				}
 				//删除与销售开票的关联
 				//tHkKp.getTXshk().getTHkKps().remove(tHkKp);
 				//tHkKp.setTXshk(null);
@@ -227,7 +230,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
 		map.put("khbh", xshk.getKhbh());
 		map.put("khmc", kh.getKhmc());
-		map.put("ywymc", kh.getYwymc());
+		
 		map.put("sxzq", kh.getSxzq());
 		map.put("sxje", kh.getSxje());
 		

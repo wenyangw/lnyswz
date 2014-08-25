@@ -80,6 +80,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		//获取前台传递的销售提货记录号
 		String xsthDetIds = xskp.getXsthDetIds();
 		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
+		
 
 		//是否需要生成销售提货
 		boolean needXsth = "1".equals(xskp.getNeedXsth());
@@ -165,12 +166,11 @@ public class XskpServiceImpl implements XskpServiceI {
 				}
 				tXskp.setHkje(hkje);
 				tXskp.setYfje(hkje);
+			}
+			if(xsthDetIds == null || xsthDetIds.equals("")){
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				if(xsthDetIds == null || xsthDetIds.equals("")){
-					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
-				}else{
-					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
-				}
+				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
 			}
 		}
 		
