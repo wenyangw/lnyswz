@@ -1059,12 +1059,12 @@ function generateKfck(){
 	}
 }
 
-function printXsth(){
+function printThd(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
+				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});

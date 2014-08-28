@@ -171,6 +171,13 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
 	}
 	
+	public void printThd() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsth(xsth);
+		Export.print(dg, Constant.REPORT_XSTH_KF.get(xsth.getBmbh()));
+	}
+	
 	public void printXsthByBgy() {
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
