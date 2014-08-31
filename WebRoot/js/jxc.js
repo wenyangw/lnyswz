@@ -10,6 +10,90 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 
 //系统设定，是否需要进行审核(Constant.java同步)
 var NEED_AUDIT = '0';
+var AUDIT_REFUSE = '9';
+
+jxc.auditLevel = function(bmbh){
+	var level = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '04':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '07':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	case '08':
+		level['first'] = '2';
+		level['second'] = '3';
+		return level;
+		break;
+	default:
+		break;
+	}
+};
+
+jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
+	var payTime = undefined;
+	var isUp = undefined;
+	var postponeDay = undefined;
+	$.ajax({
+		url: url,
+		data: {
+			bmbh: bmbh,
+			khbh: khbh,
+			ywyId: ywyId,
+		},
+		cache: false,
+		async: false,
+		dataType: 'json',
+		success: function(data){
+			payTime = data.obj.payTime;
+			isUp = data.obj.isUp;
+			postponeDay = data.obj.postponeDay;
+		}
+	});
+	
+	if(moment().diff(payTime, 'days') > postponeDay){
+		return undefined;
+	}else{
+		if(moment().diff(payTime) > 0 && isUp == '1'){
+			return jxc.auditLevel(xsth_did)['second'];
+		}else{
+			return jxc.auditLevel(xsth_did)['first'];
+		}
+	}
+};
+
+jxc.notInExcludeKhs = function(bmbh, khbh){
+	switch (bmbh) {
+	case '04':
+		var kh04 = ['21010017', '21010798'];
+		if(kh04.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	default:
+		return true;
+		break;
+	}
+};
+
+
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;
@@ -40,6 +124,28 @@ jxc.otherBm = function(bmbh){
 		break;
 	}
 };
+
+jxc.earliestXskp = function(area, url, params){
+	$(area).layout('expand', 'east');
+	
+	$.ajax({
+		url: url,
+		data: params,
+		cache: false,
+		dataType: 'json',
+		success: function(data){
+			$('#show_spkc').propertygrid({
+				fit : true,
+				data: data.rows,
+				showGroup: true,
+				scrollbarSize: 0,
+				showHeader:false,
+				groupFormatter: groupFormatter,
+			});
+		}
+	});
+};
+
 
 jxc.showFh = function(bmbh){
 	switch(bmbh){

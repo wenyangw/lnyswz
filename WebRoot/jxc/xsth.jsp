@@ -57,6 +57,24 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'xsthlsh',title:'流水号',align:'center',
 				styler: function(value, rowData){
 					if(rowData.isCancel == '1'){
@@ -190,6 +208,7 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+        	{field:'shbz',title:'审批说明',align:'center'},
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
@@ -719,13 +738,13 @@ function rowOk(){
 	if(keyOk()){
 // 		if($('input[name=isSx]').is(':checked')){
 // 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-// 			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
-// 				return true;
-// 			}
+ 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
+ 			return true;
+ 		}
 // 		}else{
-			if(zslEditor.target.val() != 0){
-				return true;
-			}
+			//if(zslEditor.target.val() != 0){
+			//	return true;
+			//}
 // 		}
 	}
 	return false;
@@ -843,10 +862,26 @@ function saveAll(){
 	}
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
-	if(NEED_AUDIT == "1"){
+	if(NEED_AUDIT == "1" && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+			var needA = jxc.getAuditLevel(
+					'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
+					xsth_did, 
+					$('input[name=khbh]').val(),
+					jxc_xsth_ywyCombo.combobox('getValue'),
+					JSFS_QK);
+			if(needA != undefined){
+				effectRow['needAudit'] = needA;
+				$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
+			}else{
+				$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');
+				return false;
+			}
+		}else{
 			effectRow['needAudit'] = "1";
 		}
+	}else{
+		effectRow['needAudit'] = "0";
 	}
 	//将表头内容传入后台
 // 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
@@ -912,12 +947,13 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
-		    	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
-					if (r) {
-						var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-					}
-				});
+		    	//保存后不再直接打印，审批通过后在列表内打印
+		    	//$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+				//	if (r) {
+				//		var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
+				//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				//	}
+				//});
 			}  
 		},
 		error: function(){
@@ -1411,12 +1447,16 @@ function cancelXsth(){
 function printXsth(){
 	var row = xsth_dg.datagrid('getSelected');
 	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
+		}else{
+			$.messager.alert('警告', '选择打印的销售提货未经过审批！',  'warning');
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

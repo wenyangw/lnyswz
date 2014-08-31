@@ -40,7 +40,7 @@ public interface BaseDaoI<T> {
 
 	public int executeHql(String hql, Map<String, Object> params);
 
-	public Object getBySQL(String sql, Map<String, Object> params);
+	public Object[] getBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params, Map<String, Object> returns);
 	
 	public List<Object[]> findBySQL(String sql);

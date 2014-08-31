@@ -24,8 +24,6 @@ import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
-import lnyswz.jxc.bean.Xsth;
-import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TKhDet;
@@ -995,54 +993,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		return dg;
 	}
 	
-//	@Override
-//	public DataGrid toKfrk(String xskplsh){
-//		//单据表头处理
-//		TXskp tXskp = xskpDao.load(TXskp.class, xskplsh);
-//		Xskp xskp = new Xskp();
-//		BeanUtils.copyProperties(tXskp, xskp);
-//		xskp.setKhbh(tXskp.getTKh().getKhbh());
-//		xskp.setKhmc(tXskp.getTKh().getKhmc());
-//		//商品明细处理
-//		String sql = "select spbh, sum(zdwsl) zdwsl from t_xskp_det t ";
-//		
-//		if(xskplsh != null && xskplsh.trim().length() > 0){
-//			sql += "where xskplsh = " + xskplsh;
-//		}
-//		sql += " group by spbh";
-//		
-//		List<Object[]> l = detDao.findBySQL(sql);
-//		List<XskpDet> nl = new ArrayList<XskpDet>();
-//		
-//		for(Object[] os : l){
-//			String spbh = (String)os[0];
-//			BigDecimal zdwsl = new BigDecimal(os[1].toString());
-//			
-//			TSp sp = spDao.get(TSp.class, spbh);
-//			XskpDet yd = new XskpDet();
-//			yd.setSpbh(spbh);
-//			yd.setSpmc(sp.getTSpdw().getSpdwmc());
-//			yd.setSpcd(sp.getSpcd());
-//			yd.setSppp(sp.getSppp());
-//			yd.setSpbz(sp.getSpbz());
-//			yd.setZdwsl(zdwsl);
-//			yd.setZjldwmc(sp.getZjldw().getJldwmc());
-//			if(sp.getCjldw() != null){
-//				yd.setCjldwmc(sp.getCjldw().getJldwmc());
-//				yd.setZhxs(sp.getZhxs());
-//				yd.setCdwsl(zdwsl.divide(sp.getZhxs()));
-//			}
-//			nl.add(yd);
-//		}
-//		nl.add(new XskpDet());
-//		
-//		DataGrid dg = new DataGrid();
-//		dg.setObj(xskp);
-//		dg.setRows(nl);
-//		return dg;
-//	}
-	
-	
 	@Override
 	public DataGrid toYwrk(Xskp xskp){
 		String hql = "from TXskpDet t where t.TXskp.xskplsh = :xskplsh";
@@ -1078,7 +1028,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		kh.setYsje(ysje);
 		kh.setLsje(lsje);
 		
-		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0' order by createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xskp.getBmbh());
 		params.put("khbh", xskp.getKhbh());
@@ -1088,8 +1038,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		for(TXskp tXskp : tXskps){
 			Xskp x = new Xskp();
-			x.setXskplsh(tXskp.getXskplsh());
-			x.setCreateTime(tXskp.getCreateTime());
+			BeanUtils.copyProperties(tXskp, x);
 			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
 			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 			x.setHkedje(tXskp.getHkje());
@@ -1098,6 +1047,39 @@ public class XskpServiceImpl implements XskpServiceI {
 		dg.setObj(kh);
 		dg.setRows(xskps);
 		return dg;
+	}
+
+	@Override
+	public DataGrid getXskpNoHkFirst(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		DataGrid d = getXskpNoHk(xskp);
+		if(d.getRows() != null && d.getRows().size() > 0){
+			dg.setObj(d.getRows().get(0));
+			return dg;
+		}
+		return null;
+	}
+	
+	@Override
+	public DataGrid getLatestXs(Xskp xskp) {
+		DataGrid dg = new DataGrid();
+		
+		Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		
+		if(o != null){
+			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+			Date createTime = DateUtil.stringToDate(o[4].toString());
+		
+			Xskp x = new Xskp();
+			x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+			x.setIsUp(kh.getIsUp());
+			x.setPostponeDay(kh.getPostponeDay());
+		
+			dg.setObj(x);
+			return dg;
+		}
+		
+		return null;
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package lnyswz.jxc.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
@@ -108,9 +111,15 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getSxje() == null){
 			khDet.setSxje(Constant.BD_ZERO);
 		}
+		
 		if(kh.getLsje() == null){
 			khDet.setLsje(Constant.BD_ZERO);
 		}
+		
+		if(kh.getIsUp() == null){
+			khDet.setIsUp("0");
+		}
+		
 		khDet.setTKh(g);
 		gdt.add(khDet);
 		g.setTKhDets(gdt);
@@ -159,7 +168,11 @@ public class KhServiceImpl implements KhServiceI {
 			v.setLsje(Constant.BD_ZERO);
 		}
 		
-		if(kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
+		if(kh.getIsUp() == null){
+			v.setIsUp("0");
+		}
+		
+		if(kh.getLsje() != null && kh.getLsje().compareTo(Constant.BD_ZERO) > 0){
 			Department bm = new Department();
 			TDepartment tDep = depDao.load(TDepartment.class, kh.getDepId());
 			bm.setId(tDep.getId());
@@ -278,6 +291,7 @@ public class KhServiceImpl implements KhServiceI {
 						if(m.getKhlxId() != null){
 							nc.setKhlxmc(khlxDao.load(TKhlx.class, m.getKhlxId()).getKhlxmc());
 						}
+						
 					}
 				}
 			}
@@ -522,6 +536,36 @@ public class KhServiceImpl implements KhServiceI {
 		DataGrid dg = new DataGrid();
 		dg.setRows(ks);
 		return dg;
+	}
+	
+	public static Date getPayTime(Xskp xskp, BaseDaoI<TKhDet> baseDao){
+		
+		String sql = "select khlxId, sxzq from t_kh_det where depId = ? and khbh = ? and ywyId = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xskp.getBmbh());
+		params.put("1", xskp.getKhbh());
+		params.put("2", xskp.getYwyId());
+		Object[] o = baseDao.getBySQL(sql, params);
+		//Kh kh = new Kh();
+		String khlxId = Constant.KHLX_XK;
+		int sxzq = 0;
+		if( o != null){
+			khlxId = o[0].toString();
+			sxzq = Integer.valueOf(o[0].toString());
+		}
+		
+		//if(tKhDet == null || tKhDet.getKhlxId().equals(Constant.KHLX_XK)){
+		if(khlxId.equals(Constant.KHLX_XK)){
+			return xskp.getCreateTime();
+		}else if(khlxId.equals(Constant.KHLX_YJ)){
+			if(DateUtil.getDay(xskp.getCreateTime()).compareTo(Constant.KHLX_YJ_SEP) < 0){
+				return DateUtil.getLastDayInMonth(xskp.getCreateTime());
+			}else{
+				return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), Constant.KHLX_YJ_INC);
+			}
+		}else{
+			return DateUtil.dateIncreaseByDay(xskp.getCreateTime(), sxzq);
+		}
 	}
 	
 	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {

@@ -165,9 +165,9 @@ $(function(){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
                     {field:'spse',title:'税额',width:100,align:'center',
-        		        	formatter: function(value){
-        		        		return lnyw.formatNumberRgx(value);
-        		        	}},
+       		        	formatter: function(value){
+       		        		return lnyw.formatNumberRgx(value);
+       		        	}},
                 ]],
                 onResize:function(){
                 	xskp_dg.datagrid('fixDetailRowHeight',index);

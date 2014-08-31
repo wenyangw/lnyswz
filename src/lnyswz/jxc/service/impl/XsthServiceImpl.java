@@ -82,6 +82,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
+	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TYszz> yszzDao;
@@ -96,7 +97,9 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public Xsth save(Xsth xsth) {
 		TXsth tXsth = new TXsth();
+		//接收前台传入的数据
 		BeanUtils.copyProperties(xsth, tXsth);
+		//创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
 		tXsth.setCreateTime(new Date());
@@ -108,6 +111,14 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
 
+		//最后一笔未还款销售
+//		Xskp xskp = new Xskp();
+//		xskp.setBmbh(xsth.getBmbh());
+//		xskp.setKhbh(xsth.getKhbh());
+//		xskp.setYwyId(xsth.getYwyId());
+//		
+//		Date payTime = KhServiceImpl.getPayTime(xskp, khDetDao);
+		
 		String depName = depDao.load(TDepartment.class, xsth.getBmbh()).getDepName();
 		tXsth.setBmmc(depName);
 		
@@ -646,6 +657,23 @@ public class XsthServiceImpl implements XsthServiceI {
 						xskplshs.add(tXskp.getXskplsh());
 					}
 				}
+				
+				String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
+				Map<String, Object> params_sh = new HashMap<String, Object>();
+				params_sh.put("0", t.getXsthlsh());
+				
+				List<Object[]> os = xsthDao.findBySQL(sql_sh, params_sh);
+				if(os != null && os.size() > 0){
+					String bzs = "";
+					for(Object o : os){
+						String sbz = o.toString().trim();
+						if(!sbz.equals("")){
+							bzs += sbz + ",";
+						}
+					}
+					c.setShbz(bzs);
+				}
+				
 			}
 			
 			String r = xskplshs.toString();
@@ -699,7 +727,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(xsth.getFromOther() != null){
 			hql += " and t.TXsth.isCancel = '0'";
 			if(Constant.NEED_AUDIT.equals("1")){
-				hql += " and t.TXsth.isAudit = '1'";
+				hql += " and t.TXsth.isAudit = t.TXsth.needAudit";
 			}
 		}
 		
@@ -1008,6 +1036,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		this.khDao = khDao;
 	}
 	
+	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
 	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
 		this.spDao = spDao;
