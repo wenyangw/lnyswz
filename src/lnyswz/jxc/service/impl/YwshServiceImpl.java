@@ -244,7 +244,7 @@ public class YwshServiceImpl implements YwshServiceI {
 			params_latest.put("1", khbh);
 			params_latest.put("2", ywyId);
 			
-			Object[] ola = yszzDao.getBySQL(sql_latest, params_latest);
+			Object[] ola = yszzDao.getMBySQL(sql_latest, params_latest);
 			if(ola != null){
 				y.setTimeLatest(ola[0].toString());
 				y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));

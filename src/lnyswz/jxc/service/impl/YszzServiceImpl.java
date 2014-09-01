@@ -187,7 +187,7 @@ public class YszzServiceImpl implements YszzServiceI {
 		params.put("1", khbh);
 		params.put("2", ywyId);
 		
-		return yszzDao.getBySQL(sql, params);
+		return yszzDao.getMBySQL(sql, params);
 		
 	}
 	

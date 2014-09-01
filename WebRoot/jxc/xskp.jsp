@@ -1181,7 +1181,7 @@ function loadKh(khbh){
 					jxc_xskp_fyrCombo = lnyw.initCombo($("#jxc_xskp_fyr"), 'fyr', 'fyr', '${pageContext.request.contextPath}/jxc/xskpAction!listFyrs.action?bmbh=' + xskp_did + '&khbh=' + khbh);
 				}
 			}else{
-				$.messager.alert('提示', '供应商信息不存在！', 'error');
+				$.messager.alert('提示', '客户信息不存在！', 'error');
 			}
 		}
 	});
