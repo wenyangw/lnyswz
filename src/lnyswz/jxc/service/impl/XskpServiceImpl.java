@@ -153,7 +153,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			ywy.setRealName(xskp.getYwymc());
 			
 
-			BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
+			BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){
 				BigDecimal hkje = Constant.BD_ZERO;

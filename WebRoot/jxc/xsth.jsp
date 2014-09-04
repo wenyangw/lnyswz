@@ -1185,25 +1185,25 @@ function setEditing(){
       	
     //计算金额
     function calForZ(){
-    	var spje = 0.0000;
+    	var spje = 0.00;
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
 //     		spje = cslEditor.target.val() * cdjEditor.target.val();
 //     	}else{
-        	spje = zslEditor.target.val() * zdjEditor.target.val();
+        	spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
 //     	}
-        $(spjeEditor.target).numberbox('setValue',spje);
+        $(spjeEditor.target).numberbox('setValue',spje.toFixed(2));
         //更新汇总列
         updateFooter();
     }
     
     function calForC(){
-    	var spje = 0.0000;
+    	var spje = 0.00;
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
-    		spje = cslEditor.target.val() * cdjEditor.target.val();
+    		spje = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
 //     	}else{
 //         	spje = zslEditor.target.val() * zdjEditor.target.val();
 //     	}
-        $(spjeEditor.target).numberbox('setValue',spje);
+        $(spjeEditor.target).numberbox('setValue',spje.toFixed(2));
         //更新汇总列
         updateFooter();
     }
@@ -1215,7 +1215,7 @@ function setEditing(){
 function updateFooter(){
  	var rows = xsth_spdg.datagrid('getRows');
 	var spmc_footer = '合计';
-	var hjje = 0.000000;
+	var hjje = 0.00;
 	var hjsl = 0.000;
 	$.each(rows, function(){
 		var index = xsth_spdg.datagrid('getRowIndex', this);
@@ -1232,7 +1232,7 @@ function updateFooter(){
  	});
 	xsth_spdg.datagrid('reloadFooter', [{
 		spmc : spmc_footer,
-		spje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE)),
+		spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
 		cdwsl : hjsl.toFixed(LENGTH_SL),
 		}]
 	);

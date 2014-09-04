@@ -129,6 +129,23 @@ public class YszzServiceImpl implements YszzServiceI {
 	}
 	
 	public static BigDecimal getYsje(String bmbh, String khbh, int ywyId, String jzsj, BaseDaoI<TYszz> yszzDao){
+		TYszz tYszz = getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);
+		if(tYszz != null){
+			return tYszz.getQcje().add(tYszz.getKpje()).subtract(tYszz.getHkje());
+		}
+		return Constant.BD_ZERO; 
+	}
+	
+	public static BigDecimal getYsjeNoLs(String bmbh, String khbh, int ywyId, String jzsj, BaseDaoI<TYszz> yszzDao){
+		TYszz tYszz = getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);
+		if(tYszz != null){
+			return tYszz.getQcje().add(tYszz.getKpje()).subtract(tYszz.getHkje()).subtract(tYszz.getLsje());
+		}
+		return Constant.BD_ZERO; 
+	}
+
+	private static TYszz getYszz(String bmbh, String khbh, int ywyId,
+			String jzsj, BaseDaoI<TYszz> yszzDao) {
 		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -140,20 +157,18 @@ public class YszzServiceImpl implements YszzServiceI {
 		}
 		params.put("jzsj", jzsj);
 		TYszz tYszz = yszzDao.get(hql, params);
-		if(tYszz != null){
-			return tYszz.getQcje().add(tYszz.getKpje()).subtract(tYszz.getHkje());
-		}
-		return Constant.BD_ZERO; 
+		return tYszz;
 	}
 	
 	public static BigDecimal getLsje(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", bmbh);
-		params.put("khbh", khbh);
-		params.put("ywyId", ywyId);
-		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
-		TYszz tYszz = yszzDao.get(hql, params);
+//		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("bmbh", bmbh);
+//		params.put("khbh", khbh);
+//		params.put("ywyId", ywyId);
+//		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
+//		TYszz tYszz = yszzDao.get(hql, params);
+		TYszz tYszz = getYszz(bmbh, khbh, ywyId, null, yszzDao);
 		if(tYszz != null){
 			return tYszz.getLsje();
 		}
