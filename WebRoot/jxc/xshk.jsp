@@ -86,11 +86,14 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 	        {field:'xshklsh',title:'流水号',width:100,align:'center'},
-	        {field:'createTime',title:'回款时间',width:100,align:'center',
+	        {field:'createTime',title:'创建时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},
-	        	
+        	{field:'payTime',title:'回款时间',width:100,align:'center',
+	        	formatter:function(value){
+	        		return moment(value).format('YYYY-MM-DD');
+	        	}},	
 	        {field:'khbh',title:'客户编号',width:100,align:'center',hidden:true},
 	        {field:'khmc',title:'客户名称',width:300,align:'center'},
 	        {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},

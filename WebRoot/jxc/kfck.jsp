@@ -612,7 +612,7 @@ function saveAll(){
 		effectRow['thfs'] = '0';
 		effectRow['shdz'] = $('input[name=shdz]').val();
 	}
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfck_bz]').val();
 	effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 	effectRow['xsthlsh'] = $('input[name=xsthlsh]').val();
 // 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
@@ -1254,7 +1254,7 @@ function searchXsthInKfck(){
 						<th class="read thfs_sh" style="display:none">送货地址</th><td class="read thfs_sh" style="display:none"><input name="shdz" type="text" disabled="disabled" size="20"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_kfck_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">

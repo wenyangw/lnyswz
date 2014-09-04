@@ -624,7 +624,7 @@ function saveAll(){
 	effectRow['ch'] = $('input[name=ch]').val();
 	effectRow['zjh'] = $('input[name=zjh]').val();
 	effectRow['shry'] = $('input[name=shry]').val();
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfrk_bz]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
 	effectRow['ywrklsh'] = $('input[name=ywrklsh]').val();
 	effectRow['bmbh'] = did;
@@ -1064,7 +1064,7 @@ function createKfrkFromYwrk(){
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=ywrklsh]').val(row.ywrklsh);
-						$('input[name=bz]').val(row.bz);
+						$('input[name=jxc_kfrk_bz]').val(row.bz);
 						kfrk_tabs.tabs('select', 0);
 					}
 				});
@@ -1113,7 +1113,7 @@ function searchYwrkInKfrk(){
 						<th>车号</th><td><input name="ch" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_kfrk_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="cgjhDetIds" type="hidden">

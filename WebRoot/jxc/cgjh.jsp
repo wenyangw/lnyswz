@@ -813,7 +813,7 @@ function saveAll(){
 // 	effectRow['lxr'] = $('input[name=lxr]').val();
 // 	effectRow['dhsj'] = $('input[name=dhsj]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_cgjh_bz]').val();
 	effectRow['cgxqDetIds'] = $('input[name=cgxqDetIds]').val();
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -1538,7 +1538,7 @@ function createCgjhFromSpkc(){
 <!-- 						----<th>需求时间</th><td><input name="xqsj"></td> -->
 <!-- 					</tr> -->
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_cgjh_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="cgxqDetIds" type="hidden">

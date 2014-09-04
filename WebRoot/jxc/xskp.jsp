@@ -749,7 +749,7 @@ function saveAll(){
 		effectRow['ywymc'] = jxc_xskp_ywyCombo.combobox('getText');
 		effectRow['jsfsId'] = jxc_xskp_jsfsCombo.combobox('getValue');
 		effectRow['jsfsmc'] = jxc_xskp_jsfsCombo.combobox('getText');
-		effectRow['bz'] = $('input[name=bz]').val();
+		effectRow['bz'] = $('input[name=jxc_xskp_bz]').val();
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
@@ -1436,7 +1436,7 @@ function generateXskp(){
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
 							$('input[name=bookmc]').val(rows[0].bookmc);
-							$('input[name=bz]').val(rows[0].bz);
+							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							
@@ -1516,7 +1516,7 @@ function searchXsthInXskp(){
 						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_xskp_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">

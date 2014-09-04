@@ -423,7 +423,7 @@ function saveAll(){
 	effectRow['ckmc'] = jxc_kfpd_ckCombo.combobox('getText');
 	effectRow['pdlxId'] = jxc_kfpd_pdlxCombo.combobox('getValue');
 	effectRow['pdlxmc'] = jxc_kfpd_pdlxCombo.combobox('getText');
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfpd_bz]').val();
 
 	effectRow['ywpdlsh'] = $('input[name=ywpdlsh]').val();
 	
@@ -557,7 +557,7 @@ function searchYwpdInKfpd(){
 						<th>仓库</th><td><input id="jxc_kfpd_ckId" name="ckId" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="5"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="5"><input name="jxc_kfpd_bz" style="width:90%"></td>
 					</tr>
 			  </table>
 			  <input name="ywpdlsh" type="text" hidden="hidden">

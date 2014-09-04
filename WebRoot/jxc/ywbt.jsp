@@ -369,7 +369,7 @@ function saveAll(){
 	//将表头内容传入后台
 	
 	effectRow['ywrklsh'] = $('input[name=ywrklsh]').val();
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_ywbt_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['btje']);
 
 	effectRow['bmbh'] = did;
@@ -548,7 +548,7 @@ function searchYwrkInYwbt(){
 						<th>业务入库流水号</th><td><input name="ywrklsh" disabled="disabled" size="12"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td><input name="bz" size="100" ></td>
+						<th>备注</th><td><input name="jxc_ywbt_bz" size="100" ></td>
 					</tr>
 				</table>
 			</div>

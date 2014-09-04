@@ -333,7 +333,7 @@ function saveAll(){
 	}
 // 	effectRow['xqsj'] = $('input[name=xqsj]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_cgxq_bz]').val();
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
 	effectRow['menuId'] = menuId;
@@ -839,7 +839,7 @@ function addressLoad(){
 <!-- 						<th>需求时间</th><td><input name="xqsj"></td> -->
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="10"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>
 					</tr>
 				</table>
 			</div>

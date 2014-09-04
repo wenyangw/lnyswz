@@ -875,7 +875,7 @@ function saveAll(){
 	effectRow['ckmc'] = jxc_ywrk_ckCombo.combobox('getText');
 	effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
 	effectRow['rklxmc'] = jxc_ywrk_rklxCombo.combobox('getText');
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_ywrk_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
@@ -1419,7 +1419,7 @@ function toYwrk(){
 						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
 						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
 						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
-						$('input[name=bz]').val(row.xskplsh + bz);
+						$('input[name=jxc_ywrk_bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
 						ywrk_tabs.tabs('select', 0);
 						
@@ -1472,7 +1472,7 @@ function searchXskpInYwrk(){
 						<th class="isDep" style="display:none">部门</th><td class="isDep" style="display:none"><input id="jxc_ywrk_depId" name="depId" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_ywrk_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xskplsh" type="hidden">

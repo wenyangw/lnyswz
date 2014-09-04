@@ -738,9 +738,15 @@ function rowOk(){
 	if(keyOk()){
 // 		if($('input[name=isSx]').is(':checked')){
 // 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
- 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
- 			return true;
- 		}
+		if(!$('input[name=isFhth]').is(':checked')){
+	 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
+	 			return true;
+	 		}
+		}else{
+			if(zslEditor.target.val() != 0){
+				return true;
+			}
+		}
 // 		}else{
 			//if(zslEditor.target.val() != 0){
 			//	return true;
@@ -925,7 +931,7 @@ function saveAll(){
 	effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
 	
 	effectRow['bookmc'] = $('input[name=bookmc]').val();
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
 	effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
 	
 	effectRow['bmbh'] = xsth_did;
@@ -1629,7 +1635,7 @@ function searchXskpInXsth(){
 						<th>书名</th><td colspan="10"><input name="bookmc" type="text" style="width:71%"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="10"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xskpDetIds" type="hidden">
