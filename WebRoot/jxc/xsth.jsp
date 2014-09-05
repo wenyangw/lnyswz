@@ -601,7 +601,7 @@ $(function(){
 	        	editor:{
         			type:'numberbox',
         			options:{
-        				precision: LENGTH_JE
+        				precision: 2
         			}}},
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
@@ -1189,7 +1189,7 @@ function setEditing(){
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
 //     		spje = cslEditor.target.val() * cdjEditor.target.val();
 //     	}else{
-        	spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+        	spje = zslEditor.target.val() * zdjEditor.target.val();
 //     	}
         $(spjeEditor.target).numberbox('setValue',spje.toFixed(2));
         //更新汇总列
@@ -1199,7 +1199,7 @@ function setEditing(){
     function calForC(){
     	var spje = 0.00;
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
-    		spje = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
+    		spje = cslEditor.target.val() * cdjEditor.target.val();
 //     	}else{
 //         	spje = zslEditor.target.val() * zdjEditor.target.val();
 //     	}

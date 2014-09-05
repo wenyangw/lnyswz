@@ -414,19 +414,19 @@ $(function(){
    	        	editor:{
            			type:'numberbox',
            			options:{
-           				precision: LENGTH_JE
+           				precision: 2
            			}}},
    			{field:'spse',title:'税额',width:25,align:'center',
    	        	editor:{
            			type:'numberbox',
            			options:{
-           				precision: LENGTH_JE
+           				precision: 2
            			}}},
    			{field:'sphj',title:'合计',width:25,align:'center',
    	        	editor:{
            			type:'numberbox',
            			options:{
-           				precision: LENGTH_JE
+           				precision: 2
            			}}},
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
@@ -1018,10 +1018,11 @@ function setEditing(){
     
     //计算金额
     function calculate(){
-    	var spje = zslEditor.target.val() * zdjEditor.target.val();   
-        $(spjeEditor.target).numberbox('setValue',spje);
-        $(spseEditor.target).numberbox('setValue',spje * SL);
-        $(sphjEditor.target).numberbox('setValue', Number(spje) + Number($(spseEditor.target).val()));
+    	var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+    	var spse = (spje * SL).toFixed(2);
+        $(spjeEditor.target).numberbox('setValue', spje);
+        $(spseEditor.target).numberbox('setValue', spse);
+        $(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
         //更新汇总列
         updateFooter();
     }
@@ -1050,9 +1051,9 @@ function updateFooter(){
 	xskp_spdg.datagrid('reloadFooter',
 			[{
 				spmc : '合计',
-				spje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE)),
-				spse : lnyw.formatNumberRgx(hjse.toFixed(LENGTH_JE)),
-				sphj : lnyw.formatNumberRgx((hjje + hjse).toFixed(LENGTH_JE))
+				spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
+				spse : lnyw.formatNumberRgx(hjse.toFixed(2)),
+				sphj : lnyw.formatNumberRgx((hjje + hjse).toFixed(2))
 			}
 // 			,{
 // 				spmc: '总计',
