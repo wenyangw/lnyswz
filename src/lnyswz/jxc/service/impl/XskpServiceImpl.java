@@ -1042,6 +1042,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
 			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 			x.setHkedje(tXskp.getHkje());
+			x.setHkje(Constant.BD_ZERO);
 			xskps.add(x);
 		}
 		dg.setObj(kh);
@@ -1068,7 +1069,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		if(o != null){
 			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
-			Date createTime = DateUtil.stringToDate(o[4].toString());
+			Date createTime = DateUtil.stringToDate(o[3].toString());
 		
 			Xskp x = new Xskp();
 			x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));

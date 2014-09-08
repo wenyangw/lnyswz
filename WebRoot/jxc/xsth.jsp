@@ -876,6 +876,7 @@ function saveAll(){
 					$('input[name=khbh]').val(),
 					jxc_xsth_ywyCombo.combobox('getValue'),
 					JSFS_QK);
+			console.info('needA:' + needA);
 			if(needA != undefined){
 				effectRow['needAudit'] = needA;
 				$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
