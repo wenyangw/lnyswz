@@ -36,6 +36,7 @@ import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
+import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXshk;
 import lnyswz.jxc.model.TXsth;
@@ -60,6 +61,7 @@ public class XshkServiceImpl implements XshkServiceI {
 	private BaseDaoI<THkKp> hkKpDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
+	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TKhlx> khlxDao;
@@ -213,30 +215,24 @@ public class XshkServiceImpl implements XshkServiceI {
 	
 	@Override
 	public DataGrid printXshk(Xshk xshk) {
-		System.out.println("selectTime:" + xshk.getSelectTime());
 		DataGrid dg = new DataGrid();
-		
 		
 		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
 		
-		BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"), yszzDao);
-		BigDecimal lsje = YszzServiceImpl.getLsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		TUser u = userDao.load(TUser.class, xshk.getYwyId());
 		
-		kh.setYsje(ysje);
-		kh.setLsje(lsje);
-			
+		//BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"), yszzDao);
+		//BigDecimal lsje = YszzServiceImpl.getLsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "未 收 货 款 明  细 单");
 		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
-		map.put("khbh", xshk.getKhbh());
 		map.put("khmc", kh.getKhmc());
-		
-		map.put("sxzq", kh.getSxzq());
+		map.put("khbh", xshk.getKhbh());
 		map.put("sxje", kh.getSxje());
-		
-		//map.put("printName", xshk.getCreateName());
-		//map.put("printTime", DateUtil.dateToString(new Date()));
-		
+		map.put("sxzq", kh.getSxzq());
+		map.put("ywymc", u.getRealName());
+		map.put("selectTime", xshk.getSelectTime());
+				
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and createTime < :createTime and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xshk.getBmbh());
@@ -245,7 +241,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		params.put("jsfsId", Constant.XSKP_JSFS_QK);
 		params.put("createTime", DateUtil.dateIncreaseByMonth(xshk.getSelectTime(), 1));
 		List<TXskp> tXskps = xskpDao.find(hql, params);
-		
+				
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		for(TXskp tXskp : tXskps){
 			Xskp x = new Xskp();
@@ -256,6 +252,26 @@ public class XshkServiceImpl implements XshkServiceI {
 			x.setHkedje(tXskp.getHkje());
 			xskps.add(x);
 		}
+		
+		String sql = "SELECT qmje, lsje, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 0, 0) AS ysje_0, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 1, 30) AS ysje_1,"
+				+ " dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 31, 90) AS ysje_2, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 91, 180) AS ysje_3,"
+				+ " dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 181, 7300) AS ysje_4"
+				+ " FROM dbo.v_yszz_sxfxb"
+				+ " where bmbh = ? and khbh = ? and ywyId = ? and jzsj = ?";
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", xshk.getBmbh());
+		sqlParams.put("1", xshk.getKhbh());
+		sqlParams.put("2", xshk.getYwyId());
+		sqlParams.put("3", DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"));
+		Object[] ys = xskpDao.getMBySQL(sql, sqlParams);
+		
+		map.put("ysje", new BigDecimal(ys[0].toString()));
+		map.put("lsje", new BigDecimal(ys[1].toString()));
+		map.put("ysje00", new BigDecimal(ys[2].toString()));
+		map.put("ysje01", new BigDecimal(ys[3].toString()));
+		map.put("ysje02", new BigDecimal(ys[4].toString()));
+		map.put("ysje03", new BigDecimal(ys[5].toString()));
+		map.put("ysje04", new BigDecimal(ys[6].toString()));
 		
 		dg.setObj(map);
 		dg.setRows(xskps);
@@ -339,6 +355,11 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
+	}
+
+	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
 	}
 
 	@Autowired

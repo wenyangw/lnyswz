@@ -101,11 +101,12 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setBmmc(bmmc);
 		
 		tXskp.setNeedAudit("0");
-		if(tXskp.getNeedAudit().equals("1")){
-			tXskp.setIsAudit("0");
-		}else{
-			tXskp.setIsAudit("1");
-		}
+		tXskp.setIsAudit("0");
+		//if(tXskp.getNeedAudit().equals("1")){
+		//	tXskp.setIsAudit("0");
+		//}else{
+		//	tXskp.setIsAudit("1");
+		//}
 		
 		Set<TXsthDet> xsthDets = null;
 		Set<String> thdlshs = null;
@@ -152,7 +153,6 @@ public class XskpServiceImpl implements XskpServiceI {
 			ywy.setId(xskp.getYwyId());
 			ywy.setRealName(xskp.getYwymc());
 			
-
 			BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
 			if(ysje.compareTo(Constant.BD_ZERO) < 0){

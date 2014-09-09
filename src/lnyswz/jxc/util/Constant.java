@@ -32,7 +32,7 @@ public interface Constant {
 	public static final String KHLX_HT = "04";
 	
 
-
+	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
 		put("01","kfrk_report_b");
 		put("04","kfrk_report_b");
@@ -41,7 +41,7 @@ public interface Constant {
 		put("08","kfrk_report_s");
 	}};
 
-	
+	//业务盘点单
 	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
 		put("01","ywpd_report_b");
 		put("04","ywpd_report_b");
@@ -50,6 +50,7 @@ public interface Constant {
 		put("08","ywpd_report_s");
 	}};
 	
+	//业务调号单
 	public static final Map<String, String> REPORT_YWHS = new HashMap<String, String>(){{
 		put("01","ywhs_report_b");
 		put("04","ywhs_report_b");
@@ -58,6 +59,7 @@ public interface Constant {
 		put("08","ywhs_report_s");
 	}};
 	
+	//业务补调单
 	public static final Map<String, String> REPORT_YWBT = new HashMap<String, String>(){{
 		put("01","ywbt_report_b");
 		put("04","ywbt_report_b");
@@ -66,6 +68,7 @@ public interface Constant {
 		put("08","ywbt_report_s");
 	}};
 	
+	//销售提货单
 	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
@@ -74,6 +77,7 @@ public interface Constant {
 		put("08","xsth_report_s_dl");
 	}};
 	
+	//提货单-库房
 	public static final Map<String, String> REPORT_XSTH_KF = new HashMap<String, String>(){{
 		//put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
@@ -82,16 +86,19 @@ public interface Constant {
 		put("08","xsth_report_s_ns_dl");
 	}};
 	
+	//提货单-库房按保管员打印
 	public static final Map<String, String> REPORT_XSTH_BGY = new HashMap<String, String>(){{
 		put("04","xsth_report_b_ns_bgy");
 		put("05","xsth_report_b_ns_bgy");
 	}};
 	
+	//销售欠款单
 	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
 		put("05","qkdj_report_zy");
 		put("08","qkdj_report_dl");
 	}};
 	
+	//业务入库单
 	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
 		put("01","ywrk_report_b_c");
 		put("04","ywrk_report_b");
@@ -101,6 +108,7 @@ public interface Constant {
 		
 	}};
 	
+	//采购计划单
 	public static final Map<String, String> REPORT_CGJH = new HashMap<String, String>(){{
 		put("01","cgjh_report_c");
 		put("04","cgjh_report");
@@ -109,6 +117,17 @@ public interface Constant {
 		put("08","cgjh_report");
 		
 	}};
+	
+	//销售未回款
+	public static final Map<String, String> REPORT_XSHK = new HashMap<String, String>(){{
+		put("01","xshk_report");
+		put("04","xshk_report");
+		put("05","xshk_report");
+		put("07","xshk_report");
+		put("08","xshk_report");
+		
+	}};
+		
 	
 	public static final Map<String, String> BMMCS = new HashMap<String, String>(){{
 		put("01","辽宁文达印刷物资有限公司");

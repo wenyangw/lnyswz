@@ -235,10 +235,11 @@ public class YwshServiceImpl implements YwshServiceI {
 				y.setTimes(times);
 			}
 			
-			String sql_latest = "select xs.createTime, th.hjje"
-					+ " from v_xs_latest xs"
-					+ "	left join t_xsth th on xs.xsthlsh = th.xsthlsh"
-					+ " where xs.bmbh = ? and xs.khbh = ? and xs.ywyId = ?";
+			String sql_latest = "select top 1 createTime, hjje, lsh"
+					+ " from v_xs_latest AS mx"
+					+ " where bmbh = ? and khbh = ? and ywyId = ?"
+					+ " order by bmbh, khbh, ywyId, createTime";
+			
 			Map<String, Object> params_latest = new HashMap<String, Object>();
 			params_latest.put("0", ywsh.getBmbh());
 			params_latest.put("1", khbh);
@@ -249,8 +250,7 @@ public class YwshServiceImpl implements YwshServiceI {
 				y.setTimeLatest(ola[0].toString());
 				y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
 			}
-			
-			
+						
 			ywhss.add(y);
 		}
 		
