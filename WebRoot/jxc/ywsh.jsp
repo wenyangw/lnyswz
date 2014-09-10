@@ -99,6 +99,7 @@ $(function(){
 	
 	
 	ywsh_toDg = $('#jxc_ywsh_toDg').datagrid({
+		
 		showHeader: false,
 		pagination : true,
 		pagePosition : 'bottom',
