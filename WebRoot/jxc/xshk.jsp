@@ -495,7 +495,6 @@ function printXshk(){
 				text : '确定',
 				handler : function() {
 					var selectTime = $('input#selectTime').val();
-					console.info('selectTime:' + selectTime);
 					if(selectTime != ''){
 						var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
 						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
@@ -632,6 +631,7 @@ function searchXshk(){
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXshk();">查询</a>
 </div>
 <div id='jxc_xshk_dateDialog'>
+<br>
 <center>
 <input type="text" name="selectTime" class="easyui-my97" data-options="dateFmt:'yyyy年MM月',minDate:'{%y-1}-%M-%d',maxDate:'%y-%M-%d',vel:'selectTime'" style="width:100px">
 </center>

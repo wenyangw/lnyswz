@@ -1327,17 +1327,23 @@ function toJs(){
 function printXsqk(){
 	var rows = xskp_dg.datagrid('getSelections');
 	console.info('rows:' + rows);
+	var xskplshs = [];
 	if (rows != '') {
-		if(rows.length == 1){
-			$.messager.confirm('请确认', '是否打印销售欠款单？', function(r) {
+		//if(rows.length == 1){
+			$.messager.confirm('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？', function(r) {
 				if (r) {
-					var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + rows[0].xskplsh + "&bmbh=" + xskp_did;
+					for ( var i = 0; i < rows.length; i++) {
+						xskplshs.push(rows[i].xskplsh);
+					}
+					var xskplsh = xskplshs.join(',');
+				
+					var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did;
 					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 				}
 			});
-		}else{
-			$.messager.alert('警告', '只能选择一条记录进行操作！',  'warning');
-		}
+		//}else{
+		//	$.messager.alert('警告', '只能选择一条记录进行操作！',  'warning');
+		//}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

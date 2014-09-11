@@ -228,10 +228,10 @@ public class XshkServiceImpl implements XshkServiceI {
 		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
 		map.put("khmc", kh.getKhmc());
 		map.put("khbh", xshk.getKhbh());
-		map.put("sxje", kh.getSxje());
+		map.put("sxje", new DecimalFormat("##0").format(kh.getSxje()));
 		map.put("sxzq", kh.getSxzq());
 		map.put("ywymc", u.getRealName());
-		map.put("selectTime", xshk.getSelectTime());
+		map.put("selectTime", DateUtil.getLastDayInMonth(xshk.getSelectTime()));
 				
 		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and createTime < :createTime and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
