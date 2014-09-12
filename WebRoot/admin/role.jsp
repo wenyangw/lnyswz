@@ -54,7 +54,7 @@ function appendRole() {
             	$('#admin_roleAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/roleAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							role_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
@@ -101,7 +101,7 @@ function editRole(){
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/roleAction!edit.action',
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								role_dg.datagrid('reload');
 								p.dialog('close');

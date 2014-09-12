@@ -174,6 +174,10 @@ jxc.checkKh = function(needAudit, khbh, depId){
 };
 
 
+jxc.toJson = function(str) {
+	 return str.substr(0, str.indexOf('<') > 0 ? str.indexOf('<') : str.length);
+};
+
 //var dictType = [ {
 //	value : '00',
 //	text : '变量'

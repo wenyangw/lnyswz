@@ -1326,10 +1326,27 @@ function toJs(){
 
 function printXsqk(){
 	var rows = xskp_dg.datagrid('getSelections');
-	console.info('rows:' + rows);
 	var xskplshs = [];
 	if (rows != '') {
-		//if(rows.length == 1){
+		var preRow = undefined;
+		var flag = true;
+	    $.each(rows, function(index){
+	    	if(rows[index].isCj == '1'){
+	    		$.messager.alert('提示', '选择的销售发票已冲减！', 'error');
+	    		flag = false;
+	    		return false;
+	    	}
+	    	if(index != 0){
+	    		if(this.khbh != preRow.khbh){
+	    			$.messager.alert('提示', '请选择同一客户的销售发票进行操作！', 'error');
+					flag = false;
+					return false;
+	    		}
+	    	}
+	    	preRow = this;
+	    });
+	
+		if(flag){
 			$.messager.confirm('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？', function(r) {
 				if (r) {
 					for ( var i = 0; i < rows.length; i++) {
@@ -1341,9 +1358,7 @@ function printXsqk(){
 					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 				}
 			});
-		//}else{
-		//	$.messager.alert('警告', '只能选择一条记录进行操作！',  'warning');
-		//}
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

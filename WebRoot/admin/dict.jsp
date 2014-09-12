@@ -98,7 +98,7 @@ function appendDict() {
             	$('#admin_dictAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/dictAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							dict_dg.datagrid('appendRow', json.obj);
 							if(json.obj.genre == '03'){
@@ -146,7 +146,7 @@ function editDict(){
 						onSubmit:function(){						
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								dict_dg.datagrid('reload');
 								if(rows[0].genre == '03'){

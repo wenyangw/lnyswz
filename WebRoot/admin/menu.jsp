@@ -51,7 +51,7 @@ function appendMenu() {
 				f.form('submit', {
 					url : '${pageContext.request.contextPath}/admin/menuAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							//if(d.obj.genre == '03'){
 								treegrid.treegrid('reload');
@@ -108,7 +108,7 @@ function editMenu() {
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/menuAction!edit.action',
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								//if(d.obj.genre == '03'){
 									treegrid.treegrid('reload');

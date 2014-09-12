@@ -88,7 +88,7 @@ function appendUser() {
 					onSubmit:function(){
 					},
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							user_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
@@ -144,7 +144,7 @@ function editUser(){
 						url : '${pageContext.request.contextPath}/admin/userAction!edit.action',
 						onSubmit:function(){},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								user_dg.datagrid('unselectAll');
 								user_dg.datagrid('reload');
@@ -210,6 +210,7 @@ function editUser(){
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
 }
+
 function removeUser(){
 	var rows = user_dg.datagrid('getChecked');
 	//var ids = [];
