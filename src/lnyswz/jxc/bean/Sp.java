@@ -33,6 +33,9 @@ public class Sp {
 	private BigDecimal limitXsdj;
 	private BigDecimal lastRkdj;
 	private String query;
+	private BigDecimal kcsl;
+	private BigDecimal dwcb;
+	private String ckId;
 	
 	private int bgyId;
 	private String spbhs;
@@ -195,6 +198,24 @@ public class Sp {
 	}
 	public void setQuery(String query) {
 		this.query = query;
+	}
+	public BigDecimal getKcsl() {
+		return kcsl;
+	}
+	public void setKcsl(BigDecimal kcsl) {
+		this.kcsl = kcsl;
+	}
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
+	}
+	public String getCkId() {
+		return ckId;
+	}
+	public void setCkId(String ckId) {
+		this.ckId = ckId;
 	}
 	public int getBgyId() {
 		return bgyId;

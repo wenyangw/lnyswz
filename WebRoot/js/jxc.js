@@ -279,7 +279,7 @@ jxc.spInfo = function(target, type, sppp, spbz){
 };
 
 //商品信息快速查询
-jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
+jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjWithS){
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -301,6 +301,7 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 				queryParams:{
 					query : value,
 					depId : depId,
+					ckId : ckId,
 				},
 				columns:[[
 			        {field:'spbh',title:'编号'},
@@ -317,6 +318,11 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 		        		}	
 			        },
 			        {field:'limitXsdj',title:'最低销价',hidden:true},
+			        {field:'kcsl',title:'库存数量',
+			        	formatter: function(value){
+		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
+		        		}},
+		        	{field:'dwcb',title:'成本',hidden:true},
 			        
 			    ]],
 			    toolbar:'#jxc_spQuery_tb',
@@ -336,7 +342,9 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 	    		$('#jxc_spQuery_dg').datagrid('load', 
 	    				{
 	    					query: query.val(),
-	    					depId: depId});
+	    					depId: depId,
+	    					ckId: ckId
+	    				});
 	    	});
 		},
 	});

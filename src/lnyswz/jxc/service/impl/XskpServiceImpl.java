@@ -1040,28 +1040,19 @@ public class XskpServiceImpl implements XskpServiceI {
 			lists.addAll(yw);
 		}
 		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(xskp.getBmbh(), xskp.getSpbh(), xskp.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
 		ProBean slBean = new ProBean();
 		slBean.setGroup("可销售数量");
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
-		
-		
-//		List<ProBean> kf = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, null, kfzzDao);
-//		if(kf != null){
-//			lists.addAll(kf);
-//		}
-//		List<ProBean> pc = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, "", kfzzDao);
-//		if(pc != null){
-//			lists.addAll(pc);
-//		}
-//		if(kfck.getFhId() != null){
-//			List<ProBean> fh = FhzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getFhId(), fhzzDao);
-//			if(fh != null){
-//				lists.addAll(fh);
-//			}
-//		}
-		
 		lists.add(0, slBean);
+		
+		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());
 		return dg;

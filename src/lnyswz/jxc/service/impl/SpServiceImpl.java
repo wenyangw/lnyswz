@@ -18,10 +18,12 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TJldw;
+import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TSpdw;
+import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.SpServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -38,6 +40,8 @@ public class SpServiceImpl implements SpServiceI {
 	private BaseDaoI<TSpdw> spdwDao;
 	private BaseDaoI<TJldw> jldwDao;
 	private BaseDaoI<TDepartment> depDao;
+	private BaseDaoI<TYwzz> ywzzDao;
+	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 	/**
@@ -58,7 +62,7 @@ public class SpServiceImpl implements SpServiceI {
 		setJldw(t, sp);
 		spDao.save(t);
 		OperalogServiceImpl.addOperalog(sp.getUserId(), sp.getDepId(), sp.getMenuId(), t.getSpbh(), "增加商品记录", operalogDao);
-		return changeSp(t, null);
+		return changeSp(t, null, null);
 	}
 
 	/**
@@ -129,7 +133,7 @@ public class SpServiceImpl implements SpServiceI {
 		params.put("depId", sp.getDepId());
 		String countHql = "select count(spbh) " + hql;
 		if(sp.getQuery() != null && sp.getQuery().trim().length() > 0){
-			String where = " and (t.spbh like :spbh or t.spmc like :spmc)"; 
+			String where = " and (t.spbh like :spbh or t.spmc like :spmc)";
 			hql += where;
 			countHql += where;
 			params.put("spbh", sp.getQuery() + "%");
@@ -137,7 +141,7 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
-		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId()));
+		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), sp.getCkId()));
 		return dg;
 	}
 
@@ -158,7 +162,7 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
-		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId()));
+		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
 		return dg;
 	}
 	
@@ -175,7 +179,7 @@ public class SpServiceImpl implements SpServiceI {
 			String countHql = "select count(t.spbh) " + hql;
 			DataGrid dg = new DataGrid();
 			dg.setTotal(spDao.count(countHql, params));
-			dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId()));
+			dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
 			return dg;
 		}
 		return null;
@@ -203,7 +207,7 @@ public class SpServiceImpl implements SpServiceI {
 		params.put("spbh", spbh);
 		TSp sp = spDao.get("select t " + hql, params);
 		if(sp != null){
-			return changeSp(sp, depId);
+			return changeSp(sp, depId, null);
 		}
 		return null;
 	}
@@ -249,10 +253,10 @@ public class SpServiceImpl implements SpServiceI {
 	 * @param did
 	 * @return
 	 */
-	private List<Sp> changeSps(List<TSp> l, String did){
+	private List<Sp> changeSps(List<TSp> l, String did, String ckId){
 		List<Sp> nl = new ArrayList<Sp>();
 		for(TSp t : l){
-			nl.add(changeSp(t, did));
+			nl.add(changeSp(t, did, ckId));
 		}
 		return nl;
 	}
@@ -263,7 +267,7 @@ public class SpServiceImpl implements SpServiceI {
 	 * @param depId
 	 * @return
 	 */
-	private Sp changeSp(TSp t, String depId){
+	private Sp changeSp(TSp t, String depId, String ckId){
 		Sp s = new Sp();
 		BeanUtils.copyProperties(t, s);
 		s.setSpdwId(t.getTSpdw().getId());
@@ -274,6 +278,21 @@ public class SpServiceImpl implements SpServiceI {
 			s.setCjldwId(t.getCjldw().getId());
 			s.setCjldwmc(t.getCjldw().getJldwmc());
 		}
+		
+		s.setKcsl(Constant.BD_ZERO);
+		Object[] yw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, ywzzDao);
+		Object[] ls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, lszzDao);
+		
+		if(yw != null){
+			s.setKcsl(new BigDecimal(yw[1].toString()));
+		}
+		if(ls != null){
+			s.setKcsl(s.getKcsl().subtract(new BigDecimal(ls[1].toString())));
+		}
+		
+		BigDecimal dwcb = YwzzServiceImpl.getDwcb(depId, t.getSpbh(), ywzzDao);
+		s.setDwcb(dwcb);
+			
 		Set<TSpDet> spDets = t.getTSpDets();
 		if(spDets != null && spDets.size() > 0){
 			for(TSpDet det : spDets){
@@ -352,6 +371,16 @@ public class SpServiceImpl implements SpServiceI {
 	@Autowired
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
+	}
+
+	@Autowired
+	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {
+		this.ywzzDao = ywzzDao;
+	}
+
+	@Autowired
+	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
+		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

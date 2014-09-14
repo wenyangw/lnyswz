@@ -44,6 +44,7 @@ var sphjEditor;
 var zhxsEditor;
 var zjldwIdEditor;
 var cjldwIdEditor;
+var dwcbEditor;
 
 $(function(){
 	xskp_did = lnyw.tab_options().did;
@@ -431,6 +432,7 @@ $(function(){
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
+        	{field:'dwcb',title:'成本',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -678,18 +680,36 @@ function saveAll(){
 	}
 	
 	var rows = xskp_spdg.datagrid('getRows');
+	var effectRow = new Object();
 	if(rows.length == 1){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	var spbhs = undefined;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
+		if(this.zdwdj <= this.dwcb){
+			if(spbhs == undefined){
+				spbhs = '' + this.spbh;
+			}else{
+				spbhs += ',' + this.spbh;
+			}
+		}
 	});
 	
-	var effectRow = new Object();
+	if(spbhs != undefined){
+		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+			if(data){
+				save();	
+			}else{
+				return false;
+			}
+		});
+	}
+	function save(){
 	//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
 	if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
 		$.messager.defaults.ok = '是';
@@ -702,6 +722,7 @@ function saveAll(){
 		});
 	}else{
 		doSave();
+	}
 	}
 	
 	function doSave(){
@@ -814,6 +835,7 @@ function setEditing(){
     zhxsEditor = editors[18];
     zjldwIdEditor = editors[19];
     cjldwIdEditor = editors[20];
+    dwcbEditor = editors[21];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_xskp_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -864,7 +886,7 @@ function setEditing(){
     					context:this,
     					data:{
     						spbh: $(this).val(),
-    						depId: xskp_did
+    						depId: xskp_did,
     					},
     					dataType:'json',
     					success:function(data){
@@ -891,6 +913,7 @@ function setEditing(){
     	if(event.which == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				xskp_did,
+    				jxc_xskp_ckCombo.combobox('getValue'),
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor);
@@ -905,19 +928,24 @@ function setEditing(){
     zslEditor.target.bind('keyup', function(event){
 	    var kcRow = $('#show_spkc').propertygrid("getRows");
 	    
-    	var kxssl = undefined;
-    	if(kcRow == undefined){
-    		kxssl = Number(0);
-    	}else{
-    		kxssl = Number(kcRow[0].value);
+	    //判断输入数量是否小于可销售数量
+	    //如果开票从提货单生成，不进行判断
+	    if($('input[name=xsthDetIds]').val() == ''){
+	    	var kxssl = undefined;
+	    	if(kcRow == undefined){
+	    		kxssl = Number(0);
+	    	}else{
+	    		kxssl = Number(kcRow[0].value);
+	    	}
+	    	var zsl = Number($(zslEditor.target).val());
+	    	if(zsl > kxssl){
+	    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
+	    		$(zslEditor.target).numberbox('setValue', 0);
+	    		zslEditor.target.focus();
+	    		return false;
+	    	}
     	}
-    	var zsl = Number($(zslEditor.target).val());
-    	if(zsl > kxssl){
-    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
-    		$(zslEditor.target).numberbox('setValue', 0);
-    		zslEditor.target.focus();
-    		return false;
-    	}
+	    
     	var wksl = (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val())).toFixed(LENGTH_SL);
     	if(Number($(zslEditor.target).val()) > wksl && wksl > 0){
     		$.messager.alert("提示", "开票数量不能大于未开票数量，请重新输入！");
@@ -1101,6 +1129,7 @@ function setValueBySpbh(rowData){
 	zhxsEditor.target.val(rowData.zhxs);
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
+	dwcbEditor.target.val(rowData.dwcb);
 	zdjEditor.target.val(rowData.xsdj);
 	if(rowData.zhxs != 0){
 		cdjEditor.target.val(rowData.xsdj * rowData.zhxs * (1 + SL));

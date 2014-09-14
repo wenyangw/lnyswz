@@ -35,6 +35,7 @@ var spjeEditor;
 var zhxsEditor;
 var zjldwIdEditor;
 var cjldwIdEditor;
+var dwcbEditor;
 
 $(function(){
 	xsth_did = lnyw.tab_options().did;
@@ -606,6 +607,7 @@ $(function(){
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
+        	{field:'dwcb',title:'成本',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -680,6 +682,7 @@ function init(){
 	//$('input:checkbox').removeAttr('checked');
 	//$('input:checkbox').removeProp('checked');
 	$('input:checkbox').removeProp('checked');
+	$('input:checkbox').removeAttr('checked');
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
 	$('input#thfs_zt').attr('ckecked', 'checked');
@@ -866,8 +869,35 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
+	
+	if(!$('input[name=isFh]').is(':checked')){
+	var spbhs = undefined;
+	$.each(rows.slice(0, rows.length - 1), function(){
+		if(this.zdwdj <= this.dwcb){
+			if(spbhs == undefined){
+				spbhs = '' + this.spbh;
+			}else{
+				spbhs += ',' + this.spbh;
+			}
+		}
+	});
+	
+	if(spbhs != undefined){
+		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+			if(data){
+				save();	
+			}else{
+				return false;
+			}
+		});
+	}
+	}else{
+		save();
+	}
+	function save(){
 	if(NEED_AUDIT == "1" && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 			var needA = jxc.getAuditLevel(
@@ -876,7 +906,6 @@ function saveAll(){
 					$('input[name=khbh]').val(),
 					jxc_xsth_ywyCombo.combobox('getValue'),
 					JSFS_QK);
-			console.info('needA:' + needA);
 			if(needA != undefined){
 				effectRow['needAudit'] = needA;
 				$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
@@ -967,6 +996,7 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		}
 	});
+	}
 }
 
 //处理编辑行
@@ -991,6 +1021,7 @@ function setEditing(){
     zhxsEditor = editors[14];
     zjldwIdEditor = editors[15];
     cjldwIdEditor = editors[16];
+    dwcbEditor = editors[17];
     
     if($(spbhEditor.target).val() != ''){
     	var fhValue = '';
@@ -1065,6 +1096,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				xsth_did,
+    				jxc_xsth_ckCombo.combobox('getValue'),
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor,
@@ -1078,6 +1110,28 @@ function setEditing(){
     	if(event.keyCode == 9){
      		return false;
      	}
+    	
+    	//判断提货数量是否大于业务数量-临时数量
+    	//从已开票生成提货单不做判断
+    	if($('input[name=xskpDetIds]').val().trim().length = 0){
+    	
+			var kcRow = $('#show_spkc').propertygrid("getRows");
+		    
+	    	var kxssl = undefined;
+	    	if(kcRow == undefined){
+	    		kxssl = Number(0);
+	    	}else{
+	    		kxssl = Number(kcRow[0].value);
+	    	}
+	    	var zsl = Number($(zslEditor.target).val());
+	    	if(zsl > kxssl){
+	    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
+	    		$(zslEditor.target).numberbox('setValue', 0);
+	    		zslEditor.target.focus();
+	    		return false;
+	    	}
+    	}
+    	
     	var wtsl = 0;
     	if(Number($(kpslEditor.target).val()) > 0){
     		wtsl = (Number($(kpslEditor.target).val()) - Number($(thslEditor.target).val())).toFixed(LENGTH_SL);
@@ -1280,6 +1334,7 @@ function setValueBySpbh(rowData){
 	zhxsEditor.target.val(rowData.zhxs);
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
+	dwcbEditor.target.val(rowData.dwcb);
 	
 	
    	var fhValue = '';

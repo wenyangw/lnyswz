@@ -264,8 +264,22 @@ public class YwzzServiceImpl implements YwzzServiceI {
 
 	public static List<ProBean> getZzsl(String bmbh, String spbh, String ckId, BaseDaoI<TYwzz> baseDao) {
 		List<ProBean> resultList = new ArrayList<ProBean>();
-		Map<String, Object> params = new HashMap<String, Object>();
+		Object[] o = getYwzzSl(bmbh, spbh, ckId, baseDao);
+		if(o != null){
+			ProBean yw = new ProBean();
+			yw.setGroup("业务库存");
+			yw.setName(ckId == null ? "库存数量" : (String)o[0]);
+			yw.setValue("" + o[1]);
+			resultList.add(yw);
+			return resultList;
+		}
+		return null;
+	}
+
+	public static Object[] getYwzzSl(String bmbh, String spbh,
+			String ckId, BaseDaoI<TYwzz> baseDao) {
 		String sql = "select ckmc, qcsl + rksl - xssl from t_ywzz where bmbh = ? and spbh = ? and jzsj = ? ";
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", spbh);
 		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
@@ -276,19 +290,11 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			sql += " and ckId is null ";
 		}
 		
-		List<Object[]> l = baseDao.findBySQL(sql, params);
-		if(l != null && l.size() > 0){
-			for(Object[] o : l){
-				ProBean yw = new ProBean();
-				yw.setGroup("业务库存");
-				yw.setName(ckId == null ? "库存数量" : (String)o[0]);
-				yw.setValue("" + o[1]);
-				resultList.add(yw);
-			}
-			return resultList;
-		}
-		return null;
+		Object[] o = baseDao.getMBySQL(sql, params);
+		return o;
 	}
+	
+	
 
 	@Autowired
 	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {

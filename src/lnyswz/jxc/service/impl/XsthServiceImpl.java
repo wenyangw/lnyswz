@@ -984,26 +984,32 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid getSpkc(Xsth xsth) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = Constant.BD_ZERO;
 		
 		List<ProBean> yw = YwzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), ywzzDao);
 		if(yw != null){
+			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
 			lists.addAll(yw);
 		}
 		
-//		List<ProBean> kf = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, null, kfzzDao);
-//		if(kf != null){
-//			lists.addAll(kf);
-//		}
-//		List<ProBean> pc = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, "", kfzzDao);
-//		if(pc != null){
-//			lists.addAll(pc);
-//		}
+		List<ProBean> ls = LszzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
 		if(xsth.getFhId() != null && xsth.getFhId().trim().length() > 0){
 			List<ProBean> fh = FhzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getFhId(), fhzzDao);
 			if(fh != null){
 				lists.addAll(fh);
 			}
 		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("可销售数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+		lists.add(0, slBean);
 		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());
