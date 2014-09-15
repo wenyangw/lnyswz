@@ -32,6 +32,8 @@ public class XsthDet{
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal spse;
+	private BigDecimal sphj;
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
 	private BigDecimal thsl;
@@ -142,6 +144,18 @@ public class XsthDet{
 	}
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+	public BigDecimal getSpse() {
+		return spse;
+	}
+	public void setSpse(BigDecimal spse) {
+		this.spse = spse;
+	}
+	public BigDecimal getSphj() {
+		return sphj;
+	}
+	public void setSphj(BigDecimal sphj) {
+		this.sphj = sphj;
 	}
 	public BigDecimal getCksl() {
 		return cksl;

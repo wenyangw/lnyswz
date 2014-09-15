@@ -679,10 +679,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	//$('input:checkbox').removeAttr('checked');
 	//$('input:checkbox').removeProp('checked');
-	$('input:checkbox').removeProp('checked');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
 	$('input#thfs_zt').attr('ckecked', 'checked');
@@ -873,30 +872,34 @@ function saveAll(){
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	
-	if(!$('input[name=isFh]').is(':checked')){
-	var spbhs = undefined;
-	$.each(rows.slice(0, rows.length - 1), function(){
-		if(this.zdwdj <= this.dwcb){
-			if(spbhs == undefined){
-				spbhs = '' + this.spbh;
-			}else{
-				spbhs += ',' + this.spbh;
-			}
-		}
-	});
-	
-	if(spbhs != undefined){
-		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
-			if(data){
-				save();	
-			}else{
-				return false;
-			}
-		});
-	}
-	}else{
+	if($('input[name=isFh]').is(':checked')){
 		save();
-	}
+	}else{
+ 		var spbhs = undefined;
+ 		$.each(rows.slice(0, rows.length - 1), function(){
+ 			if(this.zdwdj - this.dwcb * (1 + SL) <= 0){
+ 				if(spbhs == undefined){
+ 					spbhs = '' + this.spbh;
+				}else{
+ 					spbhs += ',' + this.spbh;
+ 				}
+ 			}
+ 		});
+		
+ 		if(spbhs != undefined){
+ 			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+ 				if(data){
+ 					save();	
+ 				}else{
+ 					return false;
+ 				}
+ 			});
+ 		}else{
+ 			save();
+ 		}
+	
+ 	}
+	
 	function save(){
 	if(NEED_AUDIT == "1" && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
 		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
@@ -1053,7 +1056,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -1313,12 +1316,13 @@ function existKey(value, rowIndex){
 
 function formValid(){
 	var message = '';
+	
 // 	if($('input[name=khmc]').val() == ''){
 // 		message += '客户信息<br>';
 // 	}
-// 	if($('input[name=ywyId]').val() == ''){
-// 		message += '业务员信息<br>';
-// 	}
+ 	if(jxc_xsth_ywyCombo.combobox('getValue') == 0){
+ 		message += '未选择业务员<br>';
+ 	}
 	return message;
 }
 

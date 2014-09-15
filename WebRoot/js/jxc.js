@@ -27,7 +27,7 @@ jxc.auditLevel = function(bmbh){
 		break;
 	case '05':
 		level['first'] = '1';
-		level['second'] = '2';
+		level['second'] = '3';
 		return level;
 		break;
 	case '07':

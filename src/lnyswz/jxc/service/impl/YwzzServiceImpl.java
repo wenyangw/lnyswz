@@ -48,14 +48,14 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			" left join t_jldw cdw on cdw.id = sp.cjldwId" +
 			" left join t_ywzz yw on yw.bmbh = spDet.depId and yw.spbh = spDet.spbh and yw.jzsj = CONVERT(char(6), getDate(), 112) and yw.ckId is null" +
 			" left join t_lszz ls on ls.bmbh = spDet.depId and ls.spbh = spDet.spbh and ls.jzsj = CONVERT(char(6), getDate(), 112) and ls.ckId is null" +
-			" where spDet.depId = ? and spDet.minKc > 0 and spDet.minKc > isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) ";
+			" where spDet.depId = ? and spDet.minKc > 0 and spDet.minKc > isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0)";
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywzz.getBmbh());
 		
 		String totalHql = "select count(*)" + sql;
 		
-		List<Object[]> l = ywzzDao.findBySQL(select + sql, params, ywzz.getPage(), ywzz.getRows());
+		List<Object[]> l = ywzzDao.findBySQL(select + sql + " order by spDet.spbh", params, ywzz.getPage(), ywzz.getRows());
 		if(l != null && l.size() > 0){
 			List<Ywzz> ywzzs = new ArrayList<Ywzz>();
 			for(Object[] o : l){

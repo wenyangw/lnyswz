@@ -358,8 +358,9 @@ function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
 	
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
 	

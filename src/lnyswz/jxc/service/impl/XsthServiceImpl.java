@@ -926,7 +926,7 @@ public class XsthServiceImpl implements XsthServiceI {
 //		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +
 //				"left join t_xsth_xskp xk on xd.id = xk.xsthdetId " +
 //				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl from t_xsth_det ";
+		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
@@ -950,6 +950,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwthsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
+			BigDecimal shui = new BigDecimal("1").add(Constant.SHUILV);
+			BigDecimal zdwdj = new BigDecimal(os[3].toString()).divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal cdwdj = new BigDecimal(os[4].toString());
+			BigDecimal sphj = new BigDecimal(os[5].toString());
+			
+			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_DOWN); 
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -970,9 +976,20 @@ public class XsthServiceImpl implements XsthServiceI {
 					xd.setCdwytsl(Constant.BD_ZERO);
 				}
 			}
+			xd.setZdwsl(zdwthsl.subtract(zdwytsl));
+			if(sp.getCjldw() != null){
+				xd.setCdwsl(xd.getCdwthsl().subtract(xd.getCdwytsl()));
+			}
+			xd.setZdwdj(zdwdj);
+			xd.setCdwdj(cdwdj);
+			xd.setSpje(spje);
+			xd.setSpse(sphj.subtract(spje));
+			xd.setSphj(sphj);
+			
 			nl.add(xd);
 		}
-		//nl.add(new XsthDet());
+		
+		nl.add(new XsthDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
 		return dg;

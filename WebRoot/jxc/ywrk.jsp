@@ -673,8 +673,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywrk_layout');
 	jxc.spInfo($('#jxc_ywrk_layout'), '');
@@ -968,7 +969,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}

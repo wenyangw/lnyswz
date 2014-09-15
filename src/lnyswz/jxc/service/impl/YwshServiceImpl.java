@@ -163,7 +163,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getCreateId());
 		
-		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere, params, ywsh.getPage(), ywsh.getRows());
+		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
 		for(Object[] o : lists){

@@ -618,7 +618,7 @@ function clickRow(rowIndex, rowData){
 					if(rowIndex > editIndex){
 						rowIndex = rowIndex - 1;
 					}
-					removeit();
+					removeRow();
 					enterEdit(rowIndex, true);
 				}
 			}
@@ -691,6 +691,7 @@ function saveAll(){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
+		
 		if(this.zdwdj <= this.dwcb){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
@@ -700,29 +701,32 @@ function saveAll(){
 		}
 	});
 	
-	if(spbhs != undefined){
-		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
-			if(data){
-				save();	
-			}else{
-				return false;
-			}
-		});
-	}
+ 	if(spbhs != undefined){
+ 		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+ 			if(data){
+ 				save();	
+ 			}else{
+ 				return false;
+ 			}
+ 		});
+ 	}else{
+ 		save();
+ 	}
+
 	function save(){
-	//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
-	if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
-		$.messager.defaults.ok = '是';
-		$.messager.defaults.cancel = '否';
-		$.messager.confirm('确认', '是否同步生成提货单?', function(r){
-			if (r){
-				effectRow['needXsth'] = '1';
-			}
+		//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+		if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+			$.messager.defaults.ok = '是';
+			$.messager.defaults.cancel = '否';
+			$.messager.confirm('确认', '是否同步生成提货单?', function(r){
+				if (r){
+					effectRow['needXsth'] = '1';
+				}
+				doSave();
+			});
+		}else{
 			doSave();
-		});
-	}else{
-		doSave();
-	}
+		}
 	}
 	
 	function doSave(){
@@ -868,7 +872,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -1066,7 +1070,7 @@ function updateFooter(){
 	var hjse = 0;
 	$.each(rows, function(){
 		var index = xskp_spdg.datagrid('getRowIndex', this);
-		if(index < rows.length - 1){
+		if(index <= rows.length - 1){
 			if(editIndex == index){
 				hjje += Number(spjeEditor.target.val());
 				hjse += Number(spseEditor.target.val());
@@ -1076,6 +1080,7 @@ function updateFooter(){
 			}
 		}
  	});
+	
 	xskp_spdg.datagrid('reloadFooter',
 			[{
 				spmc : '合计',
@@ -1113,7 +1118,9 @@ function formValid(){
 	if($('input[name=khmc]').val() == ''){
 		message += '客户信息<br>';
 	}
-	
+	if(jxc_xskp_ywyCombo.combobox('getValue') == 0){
+ 		message += '未选择业务员<br>';
+ 	}
 	return message;
 }
 
@@ -1496,7 +1503,7 @@ function generateXskp(){
 // 							}
 							
 							xskp_spdg.datagrid('loadData', d.rows);
-	// 						updateFooter();
+	 						updateFooter();
 							$('input[name=xsthDetIds]').val(xsthDetStr);
 							xskp_tabs.tabs('select', 0);
 						}

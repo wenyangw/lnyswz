@@ -210,7 +210,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);
 			}else{
-				if(xskpDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
+				if(xskpDet.getZhxs() != null && xskpDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
 					tDet.setCdwdj(Constant.BD_ZERO);
 					tDet.setCdwsl(Constant.BD_ZERO);
 				}
@@ -598,12 +598,12 @@ public class XskpServiceImpl implements XskpServiceI {
 			j++;
 		}
 			
-		if(nl.size() > Constant.REPORT_NUMBER){
-			nl.clear();
-			XskpDet xd = new XskpDet();
-			xd.setSpmc("(商品明细见清单)");
-			nl.add(xd);
-		}
+//		if(nl.size() > Constant.REPORT_NUMBER){
+//			nl.clear();
+//			XskpDet xd = new XskpDet();
+//			xd.setSpmc("(商品明细见清单)");
+//			nl.add(xd);
+//		}
 		int num = nl.size();
 		if(num < Constant.REPORT_NUMBER) {
 			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
