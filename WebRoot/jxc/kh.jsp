@@ -221,7 +221,7 @@ function editKhDet(){
 							}
 						},
 						success : function(d) {
-							var json = jQuery.parseJSON(d);
+							var json = jQuery.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								khDet_dg.datagrid('reload', {
 									depId: kh_did,

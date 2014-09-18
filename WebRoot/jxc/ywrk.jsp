@@ -1376,6 +1376,8 @@ function createYwrkFromCgjh(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=isZs]').attr('checked', 'checked');

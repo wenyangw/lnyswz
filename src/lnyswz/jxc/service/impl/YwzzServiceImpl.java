@@ -148,7 +148,9 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		params.put("bmbh", dep.getId());
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
-		updateYwzz(sp, dep, null, sl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
+		if(!type.equals(Constant.UPDATE_DB)){
+			updateYwzz(sp, dep, null, sl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
+		}
 		if(!type.equals(Constant.UPDATE_BT)){
 			//总账中仓库更新
 			hql += " and t.ckId = :ckId";
@@ -222,6 +224,14 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXsse(Constant.BD_ZERO);
 					tYwzz.setXscb(Constant.BD_ZERO);
 				}
+			}else if(type.equals(Constant.UPDATE_DB)){
+				tYwzz.setRksl(sl);
+				tYwzz.setDwcb(Constant.BD_ZERO);
+				tYwzz.setRkje(Constant.BD_ZERO);
+				tYwzz.setXssl(Constant.BD_ZERO);
+				tYwzz.setXsje(Constant.BD_ZERO);
+				tYwzz.setXsse(Constant.BD_ZERO);
+				tYwzz.setXscb(Constant.BD_ZERO);
 			}
 			baseDao.save(tYwzz);
 		}else{
@@ -255,6 +265,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}
 				}
+			}else if(type.equals(Constant.UPDATE_DB)){
+				tYwzz.setRksl(tYwzz.getRksl().add(sl));
 			}
 			
 			

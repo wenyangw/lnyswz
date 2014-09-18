@@ -73,7 +73,7 @@ function appendButt() {
             	$('#admin_buttonAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/buttonAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							btns_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
@@ -133,7 +133,7 @@ function editButt(){
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/buttonAction!edit.action',
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								btns_dg.datagrid('reload');
 								p.dialog('close');

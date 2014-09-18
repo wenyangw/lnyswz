@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface Constant {
 	
-	public static final String NEED_AUDIT = "0";
+	public static final String NEED_AUDIT = "1";
 	public static final String AUDIT_REFUSE = "9";
 	//月结客户时间分隔点，20日前后
 	public static final String KHLX_YJ_SEP = "21";
@@ -94,6 +94,7 @@ public interface Constant {
 	
 	//销售欠款单
 	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
+		put("04","qkdj_report_jc");
 		put("05","qkdj_report_zy");
 		put("08","qkdj_report_dl");
 	}};
@@ -163,9 +164,11 @@ public interface Constant {
 		put("05","此单据为辽宁文达纸业有限公司送货收条，具有法律效力双方签字生效。");
 	}};
 	
-	public static final String UPDATE_RK = "1";
 	public static final String UPDATE_CK = "0";
+	public static final String UPDATE_RK = "1";
 	public static final String UPDATE_BT = "2";
+	public static final String UPDATE_DB = "3";
+	
 
 	public static final String UPDATE_YS_LS = "0";
 	public static final String UPDATE_YS_TH = "1";

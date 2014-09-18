@@ -155,11 +155,11 @@ public class YwshServiceImpl implements YwshServiceI {
 		DataGrid dg = new DataGrid();
 		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId";
 		String fromWhere = " from t_audit_set t "
-				+ " left join t_xsth th on th.bmbh = t.bmbh"
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.userId = ? and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getCreateId());
 		

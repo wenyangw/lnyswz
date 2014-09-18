@@ -9,35 +9,35 @@
 var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包的作用 */
 
 //系统设定，是否需要进行审核(Constant.java同步)
-var NEED_AUDIT = '0';
+var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':
-		level['first'] = '2';
-		level['second'] = '3';
-		return level;
-		break;
-	case '04':
-		level['first'] = '2';
-		level['second'] = '3';
-		return level;
-		break;
-	case '05':
 		level['first'] = '1';
 		level['second'] = '3';
 		return level;
 		break;
+	case '04':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
 	case '07':
-		level['first'] = '2';
+		level['first'] = '1';
 		level['second'] = '3';
 		return level;
 		break;
 	case '08':
-		level['first'] = '2';
-		level['second'] = '3';
+		level['first'] = '1';
+		level['second'] = '2';
 		return level;
 		break;
 	default:

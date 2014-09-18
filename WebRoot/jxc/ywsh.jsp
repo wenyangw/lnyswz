@@ -99,7 +99,10 @@ $(function(){
 	
 	
 	ywsh_toDg = $('#jxc_ywsh_toDg').datagrid({
-		
+		url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
+		queryParams: {
+			bmbh: ywsh_did,
+		},
 		showHeader: false,
 		pagination : true,
 		pagePosition : 'bottom',
