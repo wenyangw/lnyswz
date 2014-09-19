@@ -9,7 +9,7 @@
 var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包的作用 */
 
 //系统设定，是否需要进行审核(Constant.java同步)
-var NEED_AUDIT = '1';
+var NEED_AUDIT = '0';
 var AUDIT_REFUSE = '9';
 
 jxc.auditLevel = function(bmbh){
@@ -66,10 +66,10 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 		}
 	});
 	
-	if(moment().diff(payTime, 'days') > postponeDay){
+	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
 	}else{
-		if(moment().diff(payTime) > 0 && isUp == '1'){
+		if(postponeDay == 0 || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
 			return jxc.auditLevel(xsth_did)['second'];
 		}else{
 			return jxc.auditLevel(xsth_did)['first'];

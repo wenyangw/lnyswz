@@ -3,6 +3,7 @@ package lnyswz.jxc.service;
 import java.util.List;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Kfck;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xsth;
@@ -25,4 +26,5 @@ public interface XskpServiceI {
 	public DataGrid printXsqk(Xskp xskp);
 	public List<Xskp> listFyrs(Xskp xskp);
 	public DataGrid getLatestXs(Xskp xskp);
+	public Chart getChartXsje();
 }

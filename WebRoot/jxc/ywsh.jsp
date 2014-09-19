@@ -51,6 +51,9 @@ $(function(){
 	                if( fields[i] == 'levels'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
+	                	console.info('test:' + fields[i]);
+	                	console.info('test1:' + rowData.levels);
+	                	
 	                	var levels = rowData[fields[i]].split(',');
 	                	var names = rowData[fields[i + 1]].split(',');
 	                	var times = rowData[fields[i + 2]].split(',');

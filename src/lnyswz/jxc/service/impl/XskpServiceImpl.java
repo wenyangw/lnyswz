@@ -16,6 +16,7 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
+import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
@@ -1137,9 +1138,15 @@ public class XskpServiceImpl implements XskpServiceI {
 			Date createTime = DateUtil.stringToDate(o[3].toString());
 		
 			Xskp x = new Xskp();
-			x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
-			x.setIsUp(kh.getIsUp());
-			x.setPostponeDay(kh.getPostponeDay());
+			if(kh.getKhlxId().equals(Constant.KHLX_XK)){
+				x.setPayTime(new Date());
+				x.setPostponeDay(0);
+				x.setIsUp("1");
+			}else{
+				x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+				x.setPostponeDay(kh.getPostponeDay());
+				x.setIsUp(kh.getIsUp());
+			}
 		
 			dg.setObj(x);
 			return dg;
@@ -1165,6 +1172,13 @@ public class XskpServiceImpl implements XskpServiceI {
 			return xskps;
 		}
 		return null;
+	}
+	
+	@Override
+	public Chart getChartXsje() {
+		Chart chart = new Chart();
+		chart.setTitle("销售分析");
+		return chart;
 	}
 	
 	@Autowired

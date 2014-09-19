@@ -159,9 +159,10 @@ public class YwshServiceImpl implements YwshServiceI {
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", ywsh.getCreateId());
+		params.put("0", ywsh.getBmbh());
+		params.put("1", ywsh.getCreateId());
 		
 		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
@@ -202,16 +203,21 @@ public class YwshServiceImpl implements YwshServiceI {
 			
 			y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
 		
-			String sql_levels = "select a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
-					+ " from t_audit a"
-					+ " left join t_ywsh sh on a.auditLevel = sh.auditLevel and SUBSTRING(sh.lsh, 5, 4) = a.bmbh + a.ywlxId and sh.lsh = ?"
+//			String sql_levels = "select a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
+//					+ " from t_audit a"
+//					+ " left join t_ywsh sh on a.auditLevel = sh.auditLevel and SUBSTRING(sh.lsh, 5, 4) = a.bmbh + a.ywlxId and sh.lsh = ?"
+//					+ " left join t_xsth th on th.xsthlsh = ?"
+//					+ " where a.bmbh = ? and a.ywlxId = ? and a.auditLevel <= th.needAudit";
+			String sql_levels = "select distinct a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
+					+ " from t_audit_set a"
+					+ " left join t_ywsh sh on a.auditLevel = sh.auditLevel and SUBSTRING(sh.lsh, 5, 2) = a.bmbh and sh.lsh = ?"
 					+ " left join t_xsth th on th.xsthlsh = ?"
-					+ " where a.bmbh = ? and a.ywlxId = ? and a.auditLevel <= th.needAudit";
+					+ " where a.bmbh = ? and a.auditLevel <= th.needAudit";
 			Map<String, Object> params_levels = new HashMap<String, Object>();
 			params_levels.put("0", lsh);
 			params_levels.put("1", lsh);
 			params_levels.put("2", ywsh.getBmbh());
-			params_levels.put("3", ywlxId);
+			//params_levels.put("3", ywlxId);
 			
 			List<Object[]> ols = yszzDao.findBySQL(sql_levels, params_levels);
 			if(ols != null){
