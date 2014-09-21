@@ -28,20 +28,14 @@ function createChart(data){
             text: data.title      //指定图表标题
         },
         xAxis: {
-            categories: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']   //指定x轴分组
+        	categories: data.categories   //指定x轴分组
         },
         yAxis: {
             title: {
-                text: '元'                  //指定y轴的标题
+                text: '金额(元)',                  //指定y轴的标题
             }
         },
-        series: [{                                 //指定数据列
-            name: '2014年',                          //数据列名
-            data: [1, 0, 4, 3, 4, 1, 3, 6, 2, 0, 3, 1]                        //数据
-        }, {
-            name: '2013年',
-            data: [3, 1, 4, 2, 5, 1, 2, 4, 1, 4, 2, 4]
-        }]
+        series: data.series,
     });
 }
 </script>

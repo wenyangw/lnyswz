@@ -21,6 +21,7 @@ import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.Serie;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
@@ -1091,6 +1092,61 @@ public class XskpServiceImpl implements XskpServiceI {
 	public Chart getChartXsje() {
 		Chart chart = new Chart();
 		chart.setTitle("销售分析");
+		
+		List<String> categories = new ArrayList<String>();
+		categories.add("一月");
+		categories.add("二月");
+		categories.add("三月");
+		categories.add("四月");
+		categories.add("五月");
+		categories.add("六月");
+		categories.add("七月");
+		categories.add("八月");
+		categories.add("九月");
+		categories.add("十月");
+		categories.add("十一月");
+		categories.add("十二月");
+		chart.setCategories(categories);
+		
+		List<Serie> series = new ArrayList<Serie>();
+		Serie serie1 = new Serie();
+		serie1.setName("2014年");
+		List<Integer> data1 = new ArrayList<Integer>();
+		data1.add(3);
+		data1.add(2);
+		data1.add(4);
+		data1.add(3);
+		data1.add(2);
+		data1.add(1);
+		data1.add(4);
+		data1.add(0);
+		data1.add(5);
+		data1.add(2);
+		data1.add(4);
+		data1.add(2);
+		serie1.setData(data1);
+		series.add(serie1);
+		
+		Serie serie2 = new Serie();
+		serie2.setName("2013年");
+		List<Integer> data2 = new ArrayList<Integer>();
+		data2.add(2);
+		data2.add(1);
+		data2.add(0);
+		data2.add(5);
+		data2.add(2);
+		data2.add(5);
+		data2.add(2);
+		data2.add(4);
+		data2.add(3);
+		data2.add(1);
+		data2.add(4);
+		data2.add(2);
+		serie2.setData(data2);
+		//series.add(serie2);
+		
+		chart.setSeries(series);
+		
 		return chart;
 	}
 	
