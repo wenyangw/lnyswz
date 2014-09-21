@@ -781,6 +781,13 @@ public class DateUtil
         int month = calendar.get(calendar.MONTH);
         return month;
     }
+    
+    
+    public static String getMonthPattern(){
+    	java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat("MM");
+        String cur_month = formater.format(new java.util.Date());
+        return cur_month;
+    }
 
     /**
      * ��ȡ��ǰ ��

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface Constant {
 	
-	public static final String NEED_AUDIT = "0";
+	public static final String NEED_AUDIT = "1";
 	public static final String AUDIT_REFUSE = "9";
 	//月结客户时间分隔点，20日前后
 	public static final String KHLX_YJ_SEP = "21";
