@@ -648,7 +648,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					cd.setZhxs(sp.getZhxs());
-					cd.setCdwdj(zdwdj.multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_DOWN));
+					cd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(4, BigDecimal.ROUND_HALF_DOWN));
 					cd.setCdwjhsl(zdwjhsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 					cd.setCdwyrsl(zdwyrsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 					cd.setCdwsl(cd.getCdwjhsl().subtract(cd.getCdwyrsl()));

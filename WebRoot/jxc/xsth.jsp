@@ -901,7 +901,10 @@ function saveXsth(){
  	}
 	
 	function save(){
-		if(NEED_AUDIT == "1" && jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) && $('input[name=xskpDetIds]').val().trim().length == 0){
+		if(NEED_AUDIT == "1" 
+				&& jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) 
+				&& $('input[name=xskpDetIds]').val().trim().length == 0
+				&& !$('input[name=isFhth]').is(':checked')){
 			if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 				var needA = jxc.getAuditLevel(
 						'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
@@ -1029,7 +1032,8 @@ function setEditing(){
     
     if($(spbhEditor.target).val() != ''){
     	var fhValue = '';
-    	if($('input[name=isFh]').is(':checked')){
+    	if($('input[name=isFhth]').is(':checked')){
+    	//if($('input[name=isFh]').is(':checked')){
     		fhValue = jxc_xsth_fhCombo.combobox('getValue');
     	}
     	jxc.spInfo($('#jxc_xsth_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -1117,7 +1121,7 @@ function setEditing(){
     	
     	//判断提货数量是否大于业务数量-临时数量
     	//从已开票生成提货单不做判断
-    	if($('input[name=xskpDetIds]').val().trim().length == 0){
+    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
 			var kcRow = $('#show_spkc').propertygrid("getRows");
 		    
 	    	var kxssl = undefined;
@@ -1128,7 +1132,7 @@ function setEditing(){
 	    	}
 	    	var zsl = Number($(zslEditor.target).val());
 	    	if(zsl > kxssl){
-	    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
+	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
 	    		$(zslEditor.target).numberbox('setValue', 0);
 	    		zslEditor.target.focus();
 	    		return false;
