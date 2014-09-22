@@ -35,6 +35,7 @@ public class Ywsh {
 	private String times;
 	private String timeLatest;
 	private BigDecimal hjjeLatest;
+	private int delayDays;
 	
 	public long getId() {
 		return id;
@@ -197,6 +198,12 @@ public class Ywsh {
 	}
 	public void setHjjeLatest(BigDecimal hjjeLatest) {
 		this.hjjeLatest = hjjeLatest;
+	}
+	public int getDelayDays() {
+		return delayDays;
+	}
+	public void setDelayDays(int delayDays) {
+		this.delayDays = delayDays;
 	}
 	
 	

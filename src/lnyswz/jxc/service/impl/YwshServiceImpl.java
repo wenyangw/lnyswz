@@ -241,7 +241,7 @@ public class YwshServiceImpl implements YwshServiceI {
 				y.setTimes(times);
 			}
 			
-			String sql_latest = "select top 1 createTime, hjje, lsh"
+			String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime('05', '21010074', 72,createTime), GETDATE())"
 					+ " from v_xs_latest AS mx"
 					+ " where bmbh = ? and khbh = ? and ywyId = ?"
 					+ " order by bmbh, khbh, ywyId, createTime";
@@ -255,6 +255,7 @@ public class YwshServiceImpl implements YwshServiceI {
 			if(ola != null){
 				y.setTimeLatest(ola[0].toString());
 				y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
+				y.setDelayDays(Integer.parseInt(ola[3].toString()));
 			}
 						
 			ywhss.add(y);

@@ -581,6 +581,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Xskp x = new Xskp();
 		BigDecimal hjje = Constant.BD_ZERO;
+		String xskplsh = "";
 		int j = 0;
 		for(String l : lshs){
 			TXskp tXskp = xskpDao.load(TXskp.class, l);
@@ -597,11 +598,16 @@ public class XskpServiceImpl implements XskpServiceI {
 				nl.add(xskpDet);
 			}
 			
+			xskplsh += l.substring(8, 12);
+			if(j != lshs.length - 1){
+				 xskplsh += ",";
+			}
+			
 			j++;
 		}
 			
 		boolean flag_size = false;
-		if(xskp.getBmbh().equals("04")){
+		if(xskp.getBmbh().equals("04") && nl.size() > 5){
 			flag_size = true;
 		}else{
 			if(nl.size() > Constant.REPORT_NUMBER){
@@ -634,7 +640,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		map.put("khbh", x.getKhbh());
 		map.put("hjje", df.format(hjje));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
-		map.put("memo", xskp.getXskplsh());
+		map.put("memo", xskplsh);
 		map.put("printName", xskp.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		map.put("createTime", DateUtil.dateToString(new Date()));
