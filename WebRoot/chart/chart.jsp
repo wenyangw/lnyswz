@@ -6,8 +6,9 @@
 $(function(){
 	
 	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/chartAction!chartXsje.action',
+		url: '${pageContext.request.contextPath}/jxc/xskpAction!chartXsje.action',
 		data: {
+			bmbh: '05'
 		},
 		cache: false,
 		async: false,

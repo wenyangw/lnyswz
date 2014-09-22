@@ -26,5 +26,5 @@ public interface XskpServiceI {
 	public DataGrid printXsqk(Xskp xskp);
 	public List<Xskp> listFyrs(Xskp xskp);
 	public DataGrid getLatestXs(Xskp xskp);
-	public Chart getChartXsje();
+	public Chart getChartXsje(Xskp xskp);
 }

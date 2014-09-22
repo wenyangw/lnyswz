@@ -142,6 +142,10 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		writeJson(xskpService.listFyrs(xskp));
 	}
 	
+	public void chartXsje(){
+		writeJson(xskpService.getChartXsje(xskp));
+	}
+	
 	@Override
 	public Xskp getModel() {
 		return xskp;
