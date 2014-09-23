@@ -24,6 +24,7 @@ public class Cgxq {
 	private String khbh;
 	private String khmc;
 	private String dhfs;
+	private String lxr;
 	private String shdz;
 	private Date dhsj;
 	private Integer xqsj;
@@ -142,6 +143,14 @@ public class Cgxq {
 
 	public void setDhfs(String dhfs) {
 		this.dhfs = dhfs;
+	}
+
+	public String getLxr() {
+		return lxr;
+	}
+
+	public void setLxr(String lxr) {
+		this.lxr = lxr;
 	}
 
 	public String getShdz() {

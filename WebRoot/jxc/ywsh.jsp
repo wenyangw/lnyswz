@@ -106,6 +106,7 @@ $(function(){
 		queryParams: {
 			bmbh: ywsh_did,
 		},
+		fit: true,
 		showHeader: false,
 		pagination : true,
 		pagePosition : 'bottom',
@@ -181,6 +182,7 @@ $(function(){
 		columns:[[
 			{field:'lsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
+	        {field:'createName',title:'审批人',align:'center'},
 	        {field:'auditLevel',title:'等级',align:'center'},
 	        {field:'isAudit',title:'结果',align:'center',
 	        	formatter: function(value){
@@ -257,12 +259,13 @@ $(function(){
 	ywsh_tabs = $('#jxc_ywsh_tabs').tabs({
 		onSelect: function(title, index){
 			if(index == 0){
-				ywsh_toDg.datagrid({
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
-					queryParams: {
-						bmbh: ywsh_did,
-					},
-				});
+ 				ywsh_toDg.datagrid('reload');
+// 				ywsh_toDg.datagrid({
+// 					url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
+// 					queryParams: {
+// 						bmbh: ywsh_did,
+// 					},
+// 				});
 			}
 			if(index == 1){
 				ywsh_dg.datagrid({
@@ -312,10 +315,10 @@ function init(){
 	});
 	
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, ywsh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	//lnyw.toolbar(0, ywsh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
 	
 	//清空合计内容
-	ywsh_spdg.datagrid('reloadFooter',[{}]);
+	//ywsh_spdg.datagrid('reloadFooter',[{}]);
 }
 
 
@@ -452,11 +455,11 @@ function searchYwsh(){
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_ywsh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="审核" data-options="closable:false">
-        <div id='jxc_ywsh_layout' style="height:100%;width=100%">
-			<div data-options="region:'center',title:'商品信息',split:true" >		
+<!--         <div id='jxc_ywsh_layout' style="height:100%;width=100%;"> -->
+<!-- 			<div data-options="region:'center',title:'商品信息',split:true" >		 -->
 				<table id='jxc_ywsh_toDg'></table>
-			</div>
-		</div>
+<!-- 			</div> -->
+<!-- 		</div> -->
     </div>
     <div title="业务审核列表" data-options="closable:false" >
     	<table id='jxc_ywsh_dg'></table>

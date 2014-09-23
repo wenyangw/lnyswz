@@ -958,7 +958,7 @@ function saveXsth(){
 		
 		if($('input#thfs_sh').is(':checked')){
 			effectRow['thfs'] = '0';
-			effectRow['shdz'] = $('input[name=shdz]').val();
+			effectRow['shdz'] = $('input[name=jxc_xsth_shdz]').val();
 		}else{
 			effectRow['thfs'] = '1';
 			effectRow['ch'] = $('input[name=ch]').val();
@@ -1693,7 +1693,7 @@ function searchXskpInXsth(){
 						<th>结算方式</th><td><input id="jxc_xsth_jsfsId" name="jsfsId" size="8"></td>
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
-						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
+						<td class="isSh" style="display:none" colspan="2">送货地址<input name="jxc_xsth_shdz" size="20"></td>
 					</tr>
 					<tr class='bookmc'>
 						<th>书名</th><td colspan="10"><input name="bookmc" type="text" style="width:71%"></td>

@@ -147,7 +147,7 @@ function appendKhDet() {
 	            			}
 	            		},
 	            		success:function(d){
-	            			var json = $.parseJSON(d);
+	            			var json = $.parseJSON(jxc.toJson(d));
 	            			if(json.success){
 	            				khDet_dg.datagrid('appendRow', json.obj);
 	            				addDialog.dialog('close');

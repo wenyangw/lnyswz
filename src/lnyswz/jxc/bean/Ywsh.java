@@ -6,6 +6,8 @@ import java.util.Date;
 public class Ywsh {
 	private long id;
 	private String lsh;
+	private String bmbh;
+	private String bmmc;
 	private Date createTime;
 	private int createId;
 	private String createName;
@@ -19,8 +21,6 @@ public class Ywsh {
 	private String menuId;
 	
 	//数据传递时保存数据
-	private String bmbh;
-	private String bmmc;
 	private String auditName;
 	private String ywymc;
 	private String khmc;

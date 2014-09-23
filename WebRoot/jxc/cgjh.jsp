@@ -349,6 +349,7 @@ $(function(){
 	        {field:'createId',title:'创建人id',align:'center',hidden:true},
 	        {field:'createName',title:'业务员',align:'center'},
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
+	        {field:'lxr',title:'联系人',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
 	        {field:'dhsj',title:'到货时间',align:'center'},
@@ -1421,6 +1422,7 @@ function createCgjh(){
 							if(index == d.rows.length - 1){
 								return false;
 							}
+							d.rows[index].lxr = rows[0].lxr;
 							d.rows[index].shdz = rows[0].shdz;
 							d.rows[index].dhsj = rows[0].dhsj;
 						});

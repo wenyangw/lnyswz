@@ -72,7 +72,7 @@ public interface Constant {
 	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
-		put("05","xsth_report_b_ns");
+		put("05","xsth_report_b_zy");
 		put("07","xsth_report_jy");
 		put("08","xsth_report_s_dl");
 	}};

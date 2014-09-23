@@ -38,6 +38,7 @@ public class TCgxq implements java.io.Serializable {
 	private String khbh;
 	private String khmc;
 	private String dhfs;
+	private String lxr;
 	private String shdz;
 	private Date dhsj;
 	private Integer xqsj;
@@ -53,7 +54,7 @@ public class TCgxq implements java.io.Serializable {
 	}
 	
 	public TCgxq(String cgxqlsh, int createId, Date createTime, String createName, String bmbh,
-			String bmmc, int ywyId, String ywymc, String gysbh, String gysmc, String khbh, String khmc, String dhfs, 
+			String bmmc, int ywyId, String ywymc, String gysbh, String gysmc, String khbh, String khmc, String dhfs, String lxr,
 			String shdz, Date dhsj, Integer xqsj, String jsfsId, String jsfsmc, BigDecimal hjje,
 			String bz, String isLs, Set<TCgxqDet> TCgxqDets) {
 		this.cgxqlsh = cgxqlsh;
@@ -69,6 +70,7 @@ public class TCgxq implements java.io.Serializable {
 		this.khbh = khbh;
 		this.khmc = khmc;
 		this.dhfs = dhfs;
+		this.lxr = lxr;
 		this.shdz = shdz;
 		this.dhsj = dhsj;
 		this.xqsj = xqsj;
@@ -198,6 +200,15 @@ public class TCgxq implements java.io.Serializable {
 
 	public void setDhfs(String dhfs) {
 		this.dhfs = dhfs;
+	}
+
+	@Column(name = "lxr", length = 50)
+	public String getLxr() {
+		return lxr;
+	}
+
+	public void setLxr(String lxr) {
+		this.lxr = lxr;
 	}
 
 	@Column(name = "shdz", length = 50)
