@@ -1003,27 +1003,28 @@ public class XsthServiceImpl implements XsthServiceI {
 		List<ProBean> lists = new ArrayList<ProBean>();
 		BigDecimal sl = Constant.BD_ZERO;
 		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), ywzzDao);
-		if(yw != null){
-			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
-			lists.addAll(yw);
-		}
-		
-		List<ProBean> ls = LszzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), lszzDao);
-		if(ls != null){
-			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
-			lists.addAll(ls);
-		}
-		
 		if(xsth.getFhId() != null && xsth.getFhId().trim().length() > 0){
 			List<ProBean> fh = FhzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getFhId(), fhzzDao);
 			if(fh != null){
+				sl = sl.add(new BigDecimal(fh.get(0).getValue()));
 				lists.addAll(fh);
+			}
+		}else{
+			List<ProBean> yw = YwzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), ywzzDao);
+			if(yw != null){
+				sl = sl.add(new BigDecimal(yw.get(0).getValue()));
+				lists.addAll(yw);
+			}
+			
+			List<ProBean> ls = LszzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), lszzDao);
+			if(ls != null){
+				sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+				lists.addAll(ls);
 			}
 		}
 		
 		ProBean slBean = new ProBean();
-		slBean.setGroup("可销售数量");
+		slBean.setGroup("可提货数量");
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
 		lists.add(0, slBean);

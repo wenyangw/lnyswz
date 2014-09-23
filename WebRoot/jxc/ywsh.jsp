@@ -128,6 +128,7 @@ $(function(){
 			{field:'ysje',title:'当前应收(元)',align:'center'},
 			{field:'timeLatest',title:'提货时间',align:'center'},
 			{field:'hjjeLatest',title:'金额(元)',align:'center'},
+			{field:'delayDays',title:'超期天数',align:'center'},
 			{field:'levels',title:'进度',align:'center'},
 			{field:'names',title:'审批人',align:'center'},
 			{field:'times',title:'审批时间',align:'center'},

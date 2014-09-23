@@ -581,6 +581,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Xskp x = new Xskp();
 		BigDecimal hjje = Constant.BD_ZERO;
+		String xskplsh = "";
 		int j = 0;
 		for(String l : lshs){
 			TXskp tXskp = xskpDao.load(TXskp.class, l);
@@ -597,11 +598,16 @@ public class XskpServiceImpl implements XskpServiceI {
 				nl.add(xskpDet);
 			}
 			
+			xskplsh += l.substring(8, 12);
+			if(j != lshs.length - 1){
+				 xskplsh += ",";
+			}
+			
 			j++;
 		}
 			
 		boolean flag_size = false;
-		if(xskp.getBmbh().equals("04")){
+		if(xskp.getBmbh().equals("04") && nl.size() > 5){
 			flag_size = true;
 		}else{
 			if(nl.size() > Constant.REPORT_NUMBER){
@@ -634,7 +640,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		map.put("khbh", x.getKhbh());
 		map.put("hjje", df.format(hjje));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
-		map.put("memo", xskp.getXskplsh());
+		map.put("memo", xskplsh);
 		map.put("printName", xskp.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		map.put("createTime", DateUtil.dateToString(new Date()));
@@ -1089,9 +1095,29 @@ public class XskpServiceImpl implements XskpServiceI {
 	}
 	
 	@Override
-	public Chart getChartXsje() {
+	public Chart getChartXsje(Xskp xskp) {
 		Chart chart = new Chart();
 		chart.setTitle("销售分析");
+		
+		String sql = "select jzsj, xsje from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xskp.getBmbh());
+		params.put("1", "2014");
+		List<Object[]> lists = xskpDao.findBySQL(sql, params);
+		
+		List<Serie> series = new ArrayList<Serie>();
+		Serie serie1 = new Serie();
+		serie1.setName("2014年");
+
+		List<BigDecimal> data1 = new ArrayList<BigDecimal>();
+		
+		if(lists != null && lists.size() > 0){
+			for(Object[] o : lists){
+				data1.add(new BigDecimal(o[1].toString()));
+			}
+			serie1.setData(data1);
+			series.add(serie1);
+		}
 		
 		List<String> categories = new ArrayList<String>();
 		categories.add("一月");
@@ -1107,43 +1133,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		categories.add("十一月");
 		categories.add("十二月");
 		chart.setCategories(categories);
-		
-		List<Serie> series = new ArrayList<Serie>();
-		Serie serie1 = new Serie();
-		serie1.setName("2014年");
-		List<Integer> data1 = new ArrayList<Integer>();
-		data1.add(3);
-		data1.add(2);
-		data1.add(4);
-		data1.add(3);
-		data1.add(2);
-		data1.add(1);
-		data1.add(4);
-		data1.add(0);
-		data1.add(5);
-		data1.add(2);
-		data1.add(4);
-		data1.add(2);
-		serie1.setData(data1);
-		series.add(serie1);
-		
-		Serie serie2 = new Serie();
-		serie2.setName("2013年");
-		List<Integer> data2 = new ArrayList<Integer>();
-		data2.add(2);
-		data2.add(1);
-		data2.add(0);
-		data2.add(5);
-		data2.add(2);
-		data2.add(5);
-		data2.add(2);
-		data2.add(4);
-		data2.add(3);
-		data2.add(1);
-		data2.add(4);
-		data2.add(2);
-		serie2.setData(data2);
-		//series.add(serie2);
 		
 		chart.setSeries(series);
 		

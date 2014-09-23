@@ -1,20 +1,21 @@
 package lnyswz.jxc.bean;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Serie {
 	private String name;
-	private List<Integer> data;
+	private List<BigDecimal> data;
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Integer> getData() {
+	public List<BigDecimal> getData() {
 		return data;
 	}
-	public void setData(List<Integer> data) {
+	public void setData(List<BigDecimal> data) {
 		this.data = data;
 	}
 	
