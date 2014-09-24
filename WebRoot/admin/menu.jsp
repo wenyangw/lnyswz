@@ -10,6 +10,7 @@ $(function(){
 		url:'${pageContext.request.contextPath}/admin/menuAction!treegrid.action',
 	    idField:'id',
 	    treeField:'text',
+	    fit: true,
 	    columns:[[
 	        {field:'id',title:'编号',width:180, hidden: true},
 	        {field:'text',title:'名称',width:180},

@@ -11,4 +11,5 @@ public interface YwdbServiceI {
 	public void cjYwdb(Ywdb ywdb);
 	public DataGrid datagrid(Ywdb ywdb);
 	public DataGrid detDatagrid(String ywdblsh);
+	public DataGrid getSpkc(Ywdb ywdb);
 }

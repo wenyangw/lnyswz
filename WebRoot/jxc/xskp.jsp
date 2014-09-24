@@ -1383,15 +1383,22 @@ function printXsqk(){
 	    });
 	
 		if(flag){
-			$.messager.confirm('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？', function(r) {
-				if (r) {
-					for ( var i = 0; i < rows.length; i++) {
-						xskplshs.push(rows[i].xskplsh);
-					}
-					var xskplsh = xskplshs.join(',');
+			//$.messager.prom('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？', function(r) {
+			$.messager.prompt('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？\n请填写发票号', function(bz){
+				if (bz != undefined) {
+					if(bz.length > 0){
 				
-					var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did;
-					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				//if (r) {
+						for (var i = 0; i < rows.length; i++) {
+							xskplshs.push(rows[i].xskplsh);
+						}
+						var xskplsh = xskplshs.join(',');
+					
+						var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					}else{
+						$.messager.alert('提示', '必须填写发票号！', 'error');
+					}
 				}
 			});
 		}

@@ -616,7 +616,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		if(flag_size){
 			nl.clear();
 			XskpDet xd = new XskpDet();
-			xd.setSpmc("(商品明细见清单)");
+			xd.setSpmc("(商品明细见发票)");
 			nl.add(xd);
 		}
 		
@@ -639,6 +639,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		map.put("khbh", x.getKhbh());
 		map.put("hjje", df.format(hjje));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		map.put("fpNO", xskp.getBz());
 		map.put("memo", xskplsh);
 		map.put("printName", xskp.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));

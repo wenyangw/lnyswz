@@ -19,11 +19,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Hw;
+import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Ywdb;
 import lnyswz.jxc.bean.YwdbDet;
 import lnyswz.jxc.bean.Sp;
@@ -229,6 +231,29 @@ public class YwdbServiceImpl implements YwdbServiceI {
 		}
 		datagrid.setRows(nl);
 		return datagrid;
+	}
+	
+	@Override
+	public DataGrid getSpkc(Ywdb ywdb) {
+		DataGrid dg = new DataGrid();
+		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = Constant.BD_ZERO;
+		
+		List<ProBean> yw = YwzzServiceImpl.getZzsl(ywdb.getBmbh(), ywdb.getSpbh(), ywdb.getCkId(), ywzzDao);
+		if(yw != null){
+			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
+			lists.addAll(yw);
+		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("可调数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+		lists.add(0, slBean);
+		
+		dg.setRows(lists);
+		dg.setTotal((long)lists.size());
+		return dg;
 	}
 		
 	@Autowired
