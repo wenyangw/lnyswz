@@ -24,6 +24,9 @@ public class Ywdb{
 	
 	private String search;
 	
+	private String spbh;
+	private String ckId;
+	
 	private String datagrid;
 	private String lxbh;
 	private String menuId;
@@ -168,6 +171,22 @@ public class Ywdb{
 
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public String getSpbh() {
+		return spbh;
+	}
+
+	public void setSpbh(String spbh) {
+		this.spbh = spbh;
+	}
+
+	public String getCkId() {
+		return ckId;
+	}
+
+	public void setCkId(String ckId) {
+		this.ckId = ckId;
 	}
 
 	public String getDatagrid() {

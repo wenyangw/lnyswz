@@ -20,6 +20,8 @@ public class TYwsh implements java.io.Serializable {
 
 	private long id;
 	private String lsh;
+	private String bmbh;
+	private String bmmc;
 	private Date createTime;
 	private int createId;
 	private String createName;
@@ -30,11 +32,13 @@ public class TYwsh implements java.io.Serializable {
 	public TYwsh() {
 	}
 	
-	public TYwsh(long id, String lsh, Date createTime, int createId,
+	public TYwsh(long id, String bmbh, String bmmc, String lsh, Date createTime, int createId,
 			String createName, String auditLevel, String isAudit, String bz) {
 		super();
 		this.id = id;
 		this.lsh = lsh;
+		this.bmbh = bmbh;
+		this.bmmc = bmmc;
 		this.createTime = createTime;
 		this.createId = createId;
 		this.createName = createName;
@@ -61,6 +65,24 @@ public class TYwsh implements java.io.Serializable {
 
 	public void setLsh(String lsh) {
 		this.lsh = lsh;
+	}
+
+	@Column(name = "bmbh", nullable = false, length = 2)
+	public String getBmbh() {
+		return bmbh;
+	}
+
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
+	}
+
+	@Column(name = "bmmc", nullable = false, length = 20)
+	public String getBmmc() {
+		return bmmc;
+	}
+
+	public void setBmmc(String bmmc) {
+		this.bmmc = bmmc;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

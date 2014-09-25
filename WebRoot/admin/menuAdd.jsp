@@ -13,7 +13,7 @@
 		<tr>
 			<th><label for="orderNum">显示顺序</label></th>
 			<td><input name="orderNum" class="easyui-numberspinner" style="width:160px;"
-        		required="required" data-options="value:1,min:1,max:200,editable:false"></td>
+        		required="required" data-options="value:1,min:1,max:200,editable:true"></td>
 		</tr>
 		<tr>
 			<th><label for="iconCls">图标</label></th>

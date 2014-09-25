@@ -20,7 +20,7 @@ import lnyswz.jxc.service.YwdbServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
 /**
- * 采购需求Action
+ * 业务调拨Action
  * @author 王文阳
  *
  */
@@ -77,6 +77,10 @@ public class YwdbAction extends BaseAction implements ModelDriven<Ywdb>{
 	
 	public void detDatagrid(){
 		writeJson(ywdbService.detDatagrid(ywdb.getYwdblsh()));
+	}
+	
+	public void getSpkc(){
+		writeJson(ywdbService.getSpkc(ywdb));
 	}
 	
 	@Override

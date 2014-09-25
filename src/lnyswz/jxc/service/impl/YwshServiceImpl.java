@@ -71,6 +71,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	private BaseDaoI<TYwsh> ywshDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TXsth> xsthDao;
+	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -83,6 +84,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		tYwsh.setCreateId(ywsh.getCreateId());
 		tYwsh.setCreateName(ywsh.getCreateName());
 		tYwsh.setIsAudit("1");
+		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
 		
 		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
 		tXsth.setIsAudit(ywsh.getAuditLevel());
@@ -103,6 +105,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		tYwsh.setCreateId(ywsh.getCreateId());
 		tYwsh.setCreateName(ywsh.getCreateName());
 		tYwsh.setIsAudit("0");
+		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
 		
 		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
 		tXsth.setIsAudit(Constant.AUDIT_REFUSE);
@@ -118,9 +121,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid datagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.createId = :createId and t.createTime > :createTime";
+		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("createId", ywsh.getCreateId());
+		params.put("bmbh", ywsh.getBmbh());
 		if(ywsh.getCreateTime() != null){
 			params.put("createTime", ywsh.getCreateTime()); 
 		}else{
@@ -241,7 +244,7 @@ public class YwshServiceImpl implements YwshServiceI {
 				y.setTimes(times);
 			}
 			
-			String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime('05', '21010074', 72,createTime), GETDATE())"
+			String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
 					+ " from v_xs_latest AS mx"
 					+ " where bmbh = ? and khbh = ? and ywyId = ?"
 					+ " order by bmbh, khbh, ywyId, createTime";
@@ -282,6 +285,10 @@ public class YwshServiceImpl implements YwshServiceI {
 		this.xsthDao = xsthDao;
 	}
 
+	@Autowired
+	public void setDepDao(BaseDaoI<TDepartment> depDao) {
+		this.depDao = depDao;
+	}
 
 	@Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {

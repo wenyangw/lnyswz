@@ -1,4 +1,4 @@
-o<%@ page language="java" contentType="text/html; charset=utf-8"
+<%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
 
@@ -336,7 +336,7 @@ function cancelAll(){
 }
 
 //提交数据到后台
-function saveAll(){
+function saveYwdb(){
 	var msg = formValid();
 	if(msg == ''){
 		//编辑行是否完成
@@ -424,7 +424,15 @@ function setEditing(){
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_ywdb_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
-    	jxc.showKc('#jxc_ywdb_layout', '${pageContext.request.contextPath}', ywdb_did, $(spbhEditor.target).val());
+    	
+    	jxc.showKc('#jxc_ywdb_layout', 
+    			'${pageContext.request.contextPath}/jxc/ywdbAction!getSpkc.action', 
+    			{
+    				bmbh : ywdb_did, 
+    				ckId : jxc_ywdb_ckComboF.combobox('getValue'),
+//     				fhId : fhValue,
+    				spbh : $(spbhEditor.target).val(),
+    			});
     }else{
     	jxc.spInfo($('#jxc_ywdb_layout'), '');
     	jxc.hideKc('#jxc_ywdb_layout');
@@ -485,7 +493,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		spRow = jxc.spQuery($(spbhEditor.target).val(),
    				ywdb_did,
-   				undefined,
+   				jxc_ywdb_ckComboF.combobox('getValue'),
    				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
    				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
    				zslEditor  				
@@ -496,6 +504,23 @@ function setEditing(){
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
+		var kcRow = $('#show_spkc').propertygrid("getRows");
+	    
+	    //判断输入数量是否小于可调拨数量
+    	var kxssl = undefined;
+    	if(kcRow == undefined){
+    		kxssl = Number(0);
+    	}else{
+    		kxssl = Number(kcRow[0].value);
+    	}
+    	var zsl = Number($(zslEditor.target).val());
+    	if(zsl > kxssl){
+    		$.messager.alert("提示", "调拨数量不能大于可调拨数量，请重新输入！");
+    		$(zslEditor.target).numberbox('setValue', 0);
+    		zslEditor.target.focus();
+    		return false;
+    	}
+    	
     	if($(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
@@ -576,8 +601,15 @@ function setValueBySpbh(rowData){
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
 	jxc.spInfo($('#jxc_ywdb_layout'), '1', rowData.sppp, rowData.spbz);
-	jxc.showKc('#jxc_ywdb_layout', '${pageContext.request.contextPath}', ywdb_did, $(spbhEditor.target).val());
-	
+	//jxc.showKc('#jxc_ywdb_layout', '${pageContext.request.contextPath}', ywdb_did, $(spbhEditor.target).val());
+	jxc.showKc('#jxc_ywdb_layout', 
+			'${pageContext.request.contextPath}/jxc/ywdbAction!getSpkc.action', 
+			{
+				bmbh : ywdb_did, 
+				ckId : jxc_ywdb_ckComboF.combobox('getValue'),
+// 				fhId : fhValue,
+				spbh : $(spbhEditor.target).val(),
+			});
 }
 
 //////////////////////////////////////////////以上为商品列表处理代码
