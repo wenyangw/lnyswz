@@ -934,21 +934,39 @@ function setEditing(){
 	    
 	    //判断输入数量是否小于可销售数量
 	    //如果开票从提货单生成，不进行判断
-	    if($('input[name=xsthDetIds]').val() == ''){
-	    	var kxssl = undefined;
-	    	if(kcRow == undefined){
-	    		kxssl = Number(0);
-	    	}else{
-	    		kxssl = Number(kcRow[0].value);
-	    	}
-	    	var zsl = Number($(zslEditor.target).val());
-	    	if(zsl > kxssl){
-	    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
-	    		$(zslEditor.target).numberbox('setValue', 0);
-	    		zslEditor.target.focus();
-	    		return false;
-	    	}
+    	var kxssl = undefined;
+    	if(kcRow == undefined){
+    		kxssl = Number(0);
+    	}else{
+    		if($('input[name=xsthDetIds]').val() == ''){
+    			kxssl = Number(kcRow[0].value);
+    		}else{
+    			kxssl = Number(kcRow[1].value);
+    		}
     	}
+    	var zsl = Number($(zslEditor.target).val());
+    	if(zsl > kxssl){
+	   		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
+    		$(zslEditor.target).numberbox('setValue', 0);
+    		zslEditor.target.focus();
+    		return false;
+    	}
+	    
+// 	    if($('input[name=xsthDetIds]').val() == ''){
+// 	    	var kxssl = undefined;
+// 	    	if(kcRow == undefined){
+// 	    		kxssl = Number(0);
+// 	    	}else{
+// 	    		kxssl = Number(kcRow[0].value);
+// 	    	}
+// 	    	var zsl = Number($(zslEditor.target).val());
+// 	    	if(zsl > kxssl){
+// 	    		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
+// 	    		$(zslEditor.target).numberbox('setValue', 0);
+// 	    		zslEditor.target.focus();
+// 	    		return false;
+// 	    	}
+//     	}
 	    
     	var wksl = (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val())).toFixed(LENGTH_SL);
     	if(Number($(zslEditor.target).val()) > wksl && wksl > 0){
