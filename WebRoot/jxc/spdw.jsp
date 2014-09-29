@@ -65,7 +65,7 @@ function appendSpdw() {
             		onSubmit:function(){
             		},
             		success:function(d){
-            			var json = $.parseJSON(d);
+            			var json = $.parseJSON(jxc.toJson(d));
             			if(json.success){
             				spdw_dg.datagrid('appendRow', json.obj);
             				p.dialog('close');
@@ -119,7 +119,7 @@ function editSpdw(){
 						onSubmit:function(){
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								spdw_dg.datagrid('reload');
 								p.dialog('close');

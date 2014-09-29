@@ -172,6 +172,20 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			if(t.getTCgjh() != null){
 				c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
 			}
+			
+			String sql = "select dbo.getKfrkOfCgxq(?, ?) rksl";
+			Map<String, Object> params_sql = new HashMap<String, Object>();
+			params_sql.put("0", t.getTCgxq().getCgxqlsh());
+			params_sql.put("1", t.getSpbh());
+			
+			Object o = cgxqDao.getBySQL(sql, params_sql);
+			BigDecimal rksl = Constant.BD_ZERO;
+			if(o != null){
+				rksl = new BigDecimal(o.toString());
+			}
+			
+			c.setRksl(rksl);
+			
 			nl.add(c);
 		}
 		datagrid.setTotal(detDao.count(countHql, params));

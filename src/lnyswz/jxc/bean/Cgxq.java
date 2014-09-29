@@ -61,6 +61,7 @@ public class Cgxq {
 	private String isLs;
 	
 	private String search;
+	private BigDecimal rksl;
 	
 	private String menuId;
 	private String lxbh;
@@ -455,6 +456,14 @@ public class Cgxq {
 
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public BigDecimal getRksl() {
+		return rksl;
+	}
+
+	public void setRksl(BigDecimal rksl) {
+		this.rksl = rksl;
 	}
 
 	public String getMenuId() {
