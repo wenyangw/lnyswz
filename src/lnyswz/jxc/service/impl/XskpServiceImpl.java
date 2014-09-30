@@ -1095,50 +1095,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		return null;
 	}
 	
-	@Override
-	public Chart getChartXsje(Xskp xskp) {
-		Chart chart = new Chart();
-		chart.setTitle("销售分析");
-		
-		String sql = "select jzsj, xsje from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ?";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", xskp.getBmbh());
-		params.put("1", "2014");
-		List<Object[]> lists = xskpDao.findBySQL(sql, params);
-		
-		List<Serie> series = new ArrayList<Serie>();
-		Serie serie1 = new Serie();
-		serie1.setName("2014年");
-
-		List<BigDecimal> data1 = new ArrayList<BigDecimal>();
-		
-		if(lists != null && lists.size() > 0){
-			for(Object[] o : lists){
-				data1.add(new BigDecimal(o[1].toString()));
-			}
-			serie1.setData(data1);
-			series.add(serie1);
-		}
-		
-		List<String> categories = new ArrayList<String>();
-		categories.add("一月");
-		categories.add("二月");
-		categories.add("三月");
-		categories.add("四月");
-		categories.add("五月");
-		categories.add("六月");
-		categories.add("七月");
-		categories.add("八月");
-		categories.add("九月");
-		categories.add("十月");
-		categories.add("十一月");
-		categories.add("十二月");
-		chart.setCategories(categories);
-		
-		chart.setSeries(series);
-		
-		return chart;
-	}
+	
 	
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {

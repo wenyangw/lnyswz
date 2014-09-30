@@ -13,6 +13,8 @@ public class Chart{
 	private List<String> categories;
 	private List<Serie> series;
 	
+	private String bmbh;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -35,6 +37,14 @@ public class Chart{
 
 	public void setSeries(List<Serie> series) {
 		this.series = series;
+	}
+
+	public String getBmbh() {
+		return bmbh;
+	}
+
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
 	}
 
 }

@@ -14,6 +14,7 @@ import lnyswz.jxc.bean.Button;
 import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.ButtonServiceI;
+import lnyswz.jxc.service.ChartServiceI;
 import lnyswz.jxc.service.XskpServiceI;
 /**
  * 功能按钮Action
@@ -25,13 +26,13 @@ import lnyswz.jxc.service.XskpServiceI;
 public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 	private Logger logger = Logger.getLogger(ChartAction.class);
 	private Chart chart = new Chart();
-	private XskpServiceI xskpService;
+	private ChartServiceI chartService;
 	
 	/**
 	 * 返回所有功能按钮，供管理用，有分页
 	 */
 	public void chartXsje(){
-		writeJson(xskpService.getChartXsje());
+		writeJson(chartService.getXstj(chart));
 	}
 	
 	@Override
@@ -40,8 +41,8 @@ public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 	}
 
 	@Autowired
-	public void setXskpService(XskpServiceI xskpService) {
-		this.xskpService = xskpService;
+	public void setChartService(ChartServiceI chartService) {
+		this.chartService = chartService;
 	}
 	
 	
