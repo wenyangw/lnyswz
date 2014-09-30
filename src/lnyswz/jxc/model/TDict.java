@@ -25,6 +25,10 @@ public class TDict implements java.io.Serializable {
 	private String show;
 	private String tree;
 	private String orderBy;
+	private String isHj;
+	private String sqlWhere;
+	private String outGroupBy;
+	private String inGroupBy;
 	public TDict() {
 	}
 
@@ -33,7 +37,8 @@ public class TDict implements java.io.Serializable {
 		this.ename = ename;
 		this.cname = cname;
 	}
-	public TDict(String id,String ename,String cname,String tname,String genre,String display,String description,int orderNum,String frozen,String specialValues,String show,String tree,String orderBy){
+	public TDict(String id,String ename,String cname,String tname,String genre,String display,String description,int orderNum,String frozen,String specialValues,String show,String tree,String orderBy,
+				String isHj,String sqlWhere,String outGroupBy,String inGroupBy){
 		this.id=id;
 		this.ename=ename;
 		this.cname=cname;
@@ -47,6 +52,10 @@ public class TDict implements java.io.Serializable {
 		this.show=show;
 		this.tree=tree;
 		this.orderBy=orderBy;
+		this.isHj=isHj;
+		this.sqlWhere=sqlWhere;
+		this.outGroupBy=outGroupBy;
+		this.inGroupBy=inGroupBy;
 	}
 	@Id
 	@Column(name = "id", unique = true, nullable = false, length = 36) 
@@ -156,5 +165,37 @@ public class TDict implements java.io.Serializable {
 
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
+	}
+	@Column(name = "isHj", nullable = true, length = 500)
+	public String getIsHj() {
+		return this.isHj;
+	}
+
+	public void setIsHj(String isHj) {
+		this.isHj = isHj;
+	}
+	@Column(name = "sqlWhere", nullable = true, length = 500)
+	public String getSqlWhere() {
+		return this.sqlWhere;
+	}
+
+	public void setSqlWhere(String sqlWhere) {
+		this.sqlWhere = sqlWhere;
+	}
+	@Column(name = "outGroupBy", nullable = true, length = 500)
+	public String getOutGroupBy() {
+		return this.outGroupBy;
+	}
+
+	public void setOutGroupBy(String outGroupBy) {
+		this.outGroupBy = outGroupBy;
+	}
+	@Column(name = "inGroupBy", nullable = true, length = 500)
+	public String getInGroupBy() {
+		return this.inGroupBy;
+	}
+
+	public void setInGroupBy(String inGroupBy) {
+		this.inGroupBy = inGroupBy;
 	}
 }
