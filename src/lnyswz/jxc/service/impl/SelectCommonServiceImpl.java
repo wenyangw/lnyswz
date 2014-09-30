@@ -26,8 +26,10 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
+
 		String dictSql = "from TDict t where t.genre = '03' and ename= '"
 				+ d.getQuery() + "'";
+
 		TDict dicts = dictDao.get(dictSql);
 
 		String sql = "select " + d.getCon() + " from " + dicts.getTname() + "";
@@ -39,48 +41,32 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 
 		String hql = "from TDict t where ename='" + d.getQuery() + "'";
 		TDict dict = dictDao.get(hql);
-//		String n = dict.getOrderBy();
+		// String n = dict.getOrderBy();
 		if (dict.getOrderBy().trim().length() > 0) {
 			sql += " " + dicts.getOrderBy();
+		}
+		if (dict.getInGroupBy() != null) {
+			sql += " " + dict.getInGroupBy();
+
+		}
+
+		if (dict.getIsHj() != null) {
+			if (dict.getOutGroupBy() != null
+					&& dict.getOutGroupBy().trim().length() > 0) {
+				sql = "select * from (" + sql;
+				sql += " " + dict.getOutGroupBy() + " )as ab";
+				if (dict.getSqlWhere() != null
+						&& dict.getSqlWhere().trim().length() > 0) {
+					sql += " " + dict.getSqlWhere();
+				}
+
+			}
 		}
 		String totalHql = "select count(*) from " + dicts.getTname()
 				+ condition;
 		List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
 				d.getRows());
-		if (dict.getSpecials().trim().length() > 0) {
-			String hq = "select * from " + dict.getSpecials();
-			String sq = "('" + d.getDid() + "',";
-			if (d.getSpbh() == null) {
-				sq += d.getSpbh() + ",";
-			} else {
-				sq += "'" + d.getSpbh() + "',";
-			}
 
-			if (d.getSpmc() == null) {
-				sq += d.getSpmc() + ",";
-			} else {
-				sq += "'" + d.getSpmc() + "',";
-			}
-			if (d.getA_time() == null) {
-				sq += d.getA_time() + ",";
-			} else {
-				sq += "'" + d.getA_time() + "',";
-			}
-			if (d.getB_time() == null) {
-				sq += d.getB_time() + ")";
-			} else {
-				sq += "'" + d.getB_time() + "')";
-			}
-			hq += sq;
-			List<Object[]> l = selectCommonDao.findBySQL(hq, d.getPage(),
-					d.getRows());
-			String dhq = "select * from kfmx" + sq;
-			
-			List<Object[]> h = selectCommonDao.findBySQL(dhq, d.getPage(),
-					d.getRows());
-			list.addAll(h);
-			list.addAll(l);
-		}
 		dg.setRows(list);
 		dg.setTotal(selectCommonDao.countSQL(totalHql));
 		dg.setObj(d.getHqls());
@@ -113,20 +99,40 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		String dictSql = "from TDict t where t.genre = '03' and ename= '"
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
-		String sql = "select  " + d.getCon() + " from "
-				+ dicts.getTname() + "";
+		String sql = "select  " + d.getCon() + " from " + dicts.getTname() + "";
 		condition += " where bmbh = '" + d.getDid() + "'";
 
-			
 		if (d.getSqls().trim().length() > 0) {
 			condition += " " + d.getSqls();
 		}
 		sql += condition;
-		if (dicts.getOrderBy().trim().length() > 0) {
+
+		String hql = "from TDict t where ename='" + d.getQuery() + "'";
+		TDict dict = dictDao.get(hql);
+		// String n = dict.getOrderBy();
+		if (dict.getOrderBy().trim().length() > 0) {
 			sql += " " + dicts.getOrderBy();
 		}
-			String sq=sql.replace("abc","(").replace("xyz",")");
-			List<Object[]> list = selectCommonDao.findBySQL(sq);
+		if (dict.getInGroupBy() != null) {
+			sql += " " + dict.getInGroupBy();
+
+		}
+
+		if (dict.getIsHj() != null) {
+			if (dict.getOutGroupBy() != null
+					&& dict.getOutGroupBy().trim().length() > 0) {
+				sql = "select * from (" + sql;
+				sql += " " + dict.getOutGroupBy() + " )as ab";
+				if (dict.getSqlWhere() != null
+						&& dict.getSqlWhere().trim().length() > 0) {
+					sql += " " + dict.getSqlWhere();
+				}
+
+			}
+		}
+		String sq = sql.replace("abc", "(").replace("xyz", ")")
+				.replace("fgh", ",").replace("mno", "'").replace("mno", "'");
+		List<Object[]> list = selectCommonDao.findBySQL(sq);
 		return list;
 	}
 

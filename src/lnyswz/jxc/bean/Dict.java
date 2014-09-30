@@ -30,6 +30,10 @@ public class Dict {
 	private String ids;
 	private String tree;
 	private String orderBy;
+	private String isHj;
+	private String sqlWhere;
+	private String outGroupBy;
+	private String inGroupBy;
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -233,5 +237,37 @@ public class Dict {
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
 	}
-	
+
+	public String getIsHj() {
+		return isHj;
+	}
+
+	public void setIsHj(String isHj) {
+		this.isHj = isHj;
+	}
+
+	public String getSqlWhere() {
+		return sqlWhere;
+	}
+
+	public void setSqlWhere(String sqlWhere) {
+		this.sqlWhere = sqlWhere;
+	}
+
+	public String getOutGroupBy() {
+		return outGroupBy;
+	}
+
+	public void setOutGroupBy(String outGroupBy) {
+		this.outGroupBy = outGroupBy;
+	}
+
+	public String getInGroupBy() {
+		return inGroupBy;
+	}
+
+	public void setInGroupBy(String inGroupBy) {
+		this.inGroupBy = inGroupBy;
+	}
+
 }
