@@ -70,7 +70,7 @@ $(function(){
 					star += 'name='+this.ename+'></td>';
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
-					star += '<td class="tdTitle'+query+'">&#12288;&#12288;&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:100px;" ></td>';
+					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:145px;" ></td>';
 					
 				}else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
