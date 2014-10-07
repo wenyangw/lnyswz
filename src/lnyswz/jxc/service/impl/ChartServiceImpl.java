@@ -3,6 +3,7 @@ package lnyswz.jxc.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Serie;
@@ -38,27 +40,44 @@ public class ChartServiceImpl implements ChartServiceI {
 	@Override
 	public Chart getXstj(Chart chart) {
 		Chart c = new Chart();
-		c.setTitle("销售分析");
 		
-		String sql = "select jzsj, xsje from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ?";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", chart.getBmbh());
-		params.put("1", "2014");
-		List<Object[]> lists = xskpDao.findBySQL(sql, params);
+		String sql = "";
+		if(chart.getField().equals("xsje")){
+			sql = "select jzsj, round(xsje / 10000, 2) from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		}else if(chart.getField().equals("xsml")){
+			sql = "select jzsj, round((xsje - xscb) / 10000, 2) from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		}
+		
+		int year = 3;
+		String[] years = new String[year];
+		for(int y = 0; y < year; y++){
+			years[y] = String.valueOf(DateUtil.getYear() - y);
+		}
 		
 		List<Serie> series = new ArrayList<Serie>();
-		Serie serie1 = new Serie();
-		serie1.setName("2014年");
-
-		List<BigDecimal> data1 = new ArrayList<BigDecimal>();
-		
-		if(lists != null && lists.size() > 0){
-			for(Object[] o : lists){
-				data1.add(new BigDecimal(o[1].toString()));
+		for(String yy : years){
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("0", chart.getBmbh());
+			params.put("1", yy);
+			List<Object[]> lists = xskpDao.findBySQL(sql, params);
+			
+			Serie serie = new Serie();
+			serie.setName(yy + "年");
+			
+			List<BigDecimal> data1 = new ArrayList<BigDecimal>();
+			
+			if(lists != null && lists.size() > 0){
+				for(Object[] o : lists){
+					data1.add(new BigDecimal(o[1].toString()));
+				}
+				serie.setData(data1);
+				series.add(serie);
 			}
-			serie1.setData(data1);
-			series.add(serie1);
+			
 		}
+		c.setSeries(series);
+		
 		
 		List<String> categories = new ArrayList<String>();
 		categories.add("一月");
@@ -74,8 +93,6 @@ public class ChartServiceImpl implements ChartServiceI {
 		categories.add("十一月");
 		categories.add("十二月");
 		c.setCategories(categories);
-		
-		c.setSeries(series);
 		
 		return c;
 	}
