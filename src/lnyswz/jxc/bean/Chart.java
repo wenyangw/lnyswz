@@ -14,6 +14,7 @@ public class Chart{
 	private List<Serie> series;
 	
 	private String bmbh;
+	private String field;
 	
 	public String getTitle() {
 		return title;
@@ -45,6 +46,14 @@ public class Chart{
 
 	public void setBmbh(String bmbh) {
 		this.bmbh = bmbh;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
 	}
 
 }

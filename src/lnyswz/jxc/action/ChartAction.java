@@ -31,7 +31,7 @@ public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 	/**
 	 * 返回所有功能按钮，供管理用，有分页
 	 */
-	public void chartXsje(){
+	public void getXstj(){
 		writeJson(chartService.getXstj(chart));
 	}
 	
