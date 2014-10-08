@@ -2,9 +2,11 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
+var xstj_did;
+var chart;
 
 $(function(){
-	var chart;
+	xstj_did = lnyw.tab_options().did;
 	
 	var types = [{
 	    "id": 'line',
@@ -73,7 +75,7 @@ $(function(){
 	    	$.ajax({
 	    		url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
 	    		data: {
-	    			bmbh: '05',
+	    			bmbh: $('#jxc_xstj_dep').combobox('getValue'),
 	    			field: $(this).combobox('getValue')
 	    		},
 	    		cache: false,
@@ -86,36 +88,66 @@ $(function(){
 	    }
 	}).combobox('selectedIndex', 0);
 	
-	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
-		data: {
-			bmbh: '05',
-			field: $('#cField').combobox('getValue')
-		},
-		cache: false,
-		async: false,
-		dataType: 'json',
-		success: function(data){
-			drawChart(data);
-		}
-	});
+	$('#jxc_xstj_dep').combobox({
+	    url: '${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + xstj_did,
+	    width:100,
+	    valueField: 'id',
+	    textField: 'depName',
+	    panelHeight: 'auto',
+	    onSelect: function(rec){
+	    	options.chart.type = $(this).combobox('getValue');
+	    	chart = new Highcharts.Chart(options);
+	    }
+	}).combobox('selectedIndex', 0);
+
+	
+	console.info('|' + $('#jxc_xstj_dep').combobox('getValue') + '|');
+ 	while(true){
+ 		if($('#jxc_xstj_dep').combobox('getValue') != ''){
+ 			console.info('hi');
+ 			break;
+ 			}
+ 	}
+// 			$.ajax({
+// 				url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
+// 				data: {
+// 					bmbh: $('#jxc_xstj_dep').combobox('getValue'),
+// 					field: $('#cField').combobox('getValue')
+// 				},
+// 				cache: false,
+// 				async: false,
+// 				dataType: 'json',
+// 				success: function(data){
+// 					drawChart(data);
+// 				}
+// 			});
+// 			break;
+// 		}
+// 	}
+	
+	
 	
 	$('#export').click(function() {
 	    chart.exportChart();
 	});
 	
-	function drawChart(data){
-		options.chart.type = $('#cType').combobox('getValue');
-		options.xAxis.categories = data.categories;
-		options.series = data.series;
-		chart = new Highcharts.Chart(options);
-	};
-	 
+	
 });
 
+$(window).load(function (){ 
+	// 编写代码
+	
+});
 
+function drawChart(data){
+	options.chart.type = $('#cType').combobox('getValue');
+	options.xAxis.categories = data.categories;
+	options.series = data.series;
+	chart = new Highcharts.Chart(options);
+};
 </script>
 <table width=100%><tr>
+<td>部门：<input id="jxc_xstj_dep" name="jxc_xstj_dep"></td>
 <td>统计类型：<input id="cField" name="cField"></td>
 <td>图表类型：<input id="cType" name="cType"></td>
 <td align="right"><button id="export">导出</button></td>

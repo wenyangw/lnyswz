@@ -93,7 +93,6 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	}
 };
 
-
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;
