@@ -93,6 +93,24 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	}
 };
 
+
+var ywbms = [{
+    "id": '01',
+    "depName": "文达印刷 "
+},{
+    "id": '04',
+    "depName": "教材公司"
+},{
+    "id": '05',
+    "depName": "文达纸业"
+},{
+    "id": '07',
+    "depName": "经营拓展部"
+},{
+    "id": '08',
+    "depName": "大连分公司"
+},];
+
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;
