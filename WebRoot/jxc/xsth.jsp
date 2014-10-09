@@ -1466,18 +1466,12 @@ function khLoad(){
 
 //////////////////////////////////////////////以下为销售提货列表处理代码
 function cancelXsth(){
-	var row = xsth_dg.datagrid('getSelected');
+ 	var row = xsth_dg.datagrid('getSelected');
 	console.info(row);
-	var rowIndex = xsth_dg.datagrid('getRowIndex', row.xsthlsh);
-	console.info(rowIndex);
-	//xsth_dg.datagrid('unselectAll');
-	xsth_dg.datagrid('reload');
-	console.info(xsth_dg.datagrid('getSelections'));
-	xsth_dg.datagrid('selectRow', row.xsthlsh);
-	var row1 = xsth_dg.datagrid('getSelected');
-	console.info(row1);
-	var rowIndex1 = xsth_dg.datagrid('getRowIndex', row1.xsthlsh);
-	console.info(rowIndex1);
+	xsth_dg.datagrid('load').datagrid('selectRecord', row.xsthlsh);
+	row = xsth_dg.datagrid('getSelected');
+	console.info(row);
+	
 	if (row != undefined) {
 		if(row.isCancel != '1'){
 			if(row.locked == '0'){
