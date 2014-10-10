@@ -40,6 +40,12 @@ public class Ywrk {
 	private String search;
 	
 	private String spbh;
+	private String spmc;
+	private String spcd;
+	private String sppp;
+	private String spbz;
+	private String zdwsl;
+	
 	//前台传入明细json
 	private String datagrid;
 	private int page;
@@ -281,6 +287,46 @@ public class Ywrk {
 
 	public void setSpbh(String spbh) {
 		this.spbh = spbh;
+	}
+
+	public String getSpmc() {
+		return spmc;
+	}
+
+	public void setSpmc(String spmc) {
+		this.spmc = spmc;
+	}
+
+	public String getSpcd() {
+		return spcd;
+	}
+
+	public void setSpcd(String spcd) {
+		this.spcd = spcd;
+	}
+
+	public String getSppp() {
+		return sppp;
+	}
+
+	public void setSppp(String sppp) {
+		this.sppp = sppp;
+	}
+
+	public String getSpbz() {
+		return spbz;
+	}
+
+	public void setSpbz(String spbz) {
+		this.spbz = spbz;
+	}
+
+	public String getZdwsl() {
+		return zdwsl;
+	}
+
+	public void setZdwsl(String zdwsl) {
+		this.zdwsl = zdwsl;
 	}
 
 	public String getDatagrid() {

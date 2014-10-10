@@ -12,6 +12,7 @@ var xsth_lx;
 var xsth_menuId;
 var countXsth = 0;
 var countXskpInXsth = 0;
+var countYwrkInXsth = 0;
 
 var jxc_xsth_ckCombo;
 var jxc_xsth_fhCombo;
@@ -216,9 +217,6 @@ $(function(){
 	    toolbar:'#jxc_xsth_tb',
 	});
 	lnyw.toolbar(1, xsth_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
-	//$("#dg").datagrid({....}).datagrid('tooltip'); 所有列
-	//$("#dg").datagrid({....}).datagrid('tooltip',['productid','listprice']); 指定列
-	
 	
 	xsth_dg.datagrid({
         view: detailview,
@@ -285,102 +283,6 @@ $(function(){
         }
     });
 	
-// 	xsth_kfckDg = $('#jxc_xsth_kfckDg').datagrid({
-// 		fit : true,
-// 	    border : false,
-// 	    singleSelect : true,
-// 	    remoteSort: false,
-// 	    fitColumns: true,
-// 	    pagination : true,
-// 		pagePosition : 'bottom',
-// 		pageSize : 10,
-// 		pageList : [ 10, 15, 20, 25, 30 ],
-// 		frozenColumns:[[
-// 		]],
-// 		columns:[[
-// 			{field:'kfcklsh',title:'流水号',align:'center'},
-// 	        {field:'createTime',title:'*时间',align:'center',sortable:true,
-// 				sorter: function(a,b){
-// 					return moment(a).diff(moment(b), 'days');
-// 				}},
-// 	        {field:'gysbh',title:'供应商编号',align:'center'},
-// 	        {field:'gysmc',title:'供应商名称',align:'center'},
-// 	        {field:'rklxId',title:'入库类型id',align:'center',hidden:true},
-// 	        {field:'rklxmc',title:'入库类型',align:'center'},
-// 	        {field:'fkId',title:'分库 id',align:'center',hidden:true},
-// 	        {field:'fkmc',title:'分库名称',align:'center'},
-// 	        {field:'hjje',title:'金额',align:'center'},
-// 	        {field:'bz',title:'备注',align:'center',
-//         		formatter: function(value){
-//         			return lnyw.memo(value, 15);
-//         		}},
-//         	{field:'xsthlsh',title:'库房入库流水号',align:'center',
-//            		formatter: function(value){
-//            			return lnyw.memo(value, 15);
-//            		}},
-//         	{field:'isCancel',title:'*状态',align:'center',sortable:true,
-//         		formatter : function(value) {
-// 					if (value == '1') {
-// 						return '已冲减';
-// 					} else {
-// 						return '正常';
-// 					}
-// 				},
-//         		sorter: function(a,b){
-//         			a = a == undefined ? 0 : a;
-//         			b = b == undefined ? 0 : b;
-// 					return (a-b);  
-// 				}},
-// 			{field:'cancelTime',title:'冲减时间',align:'center'},
-//         	{field:'cancelkfcklsh',title:'原业务入库流水号',align:'center'},
-// 	    ]],
-// 	    toolbar:'#jxc_xsth_kfckTb',
-// 	});
-// 	lnyw.toolbar(2, xsth_kfckDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
-	
-	
-// 	xsth_kfckDg.datagrid({
-//         view: detailview,
-//         detailFormatter:function(index,row){
-//             return '<div style="padding:2px"><table id="xsth-kfck-ddv-' + index + '"></table></div>';
-//         },
-//         onExpandRow: function(index,row){
-//             $('#xsth-kfck-ddv-'+index).datagrid({
-//                 url:'${pageContext.request.contextPath}/jxc/kfckAction!detDatagrid.action',
-//                 fitColumns:true,
-//                 singleSelect:true,
-//                 rownumbers:true,
-//                 loadMsg:'',
-//                 height:'auto',
-//                 queryParams: {
-//         			kfcklsh: row.kfcklsh,
-//         		},
-//                 columns:[[
-//                     {field:'spbh',title:'商品编号',width:200,align:'center'},
-//                     {field:'spmc',title:'名称',width:100,align:'center'},
-//                     {field:'spcd',title:'产地',width:100,align:'center'},
-//                     {field:'sppp',title:'品牌',width:100,align:'center'},
-//                     {field:'spbz',title:'包装',width:100,align:'center'},
-//                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-//                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
-//                     {field:'zdwdj',title:'销售单价1',width:100,align:'center'},
-//                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-//                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
-//                     {field:'cdwdj',title:'销售单价2',width:100,align:'center'},
-//                     {field:'spje',title:'金额',width:100,align:'center'},
-//                 ]],
-//                 onResize:function(){
-//                 	xsth_kfckDg.datagrid('fixDetailRowHeight',index);
-//                 },
-//                 onLoadSuccess:function(){
-//                     setTimeout(function(){
-//                     	xsth_kfckDg.datagrid('fixDetailRowHeight',index);
-//                     },0);
-//                 }
-//             });
-//             xsth_kfckDg.datagrid('fixDetailRowHeight',index);
-//         }
-//     });
 	
 	xsth_xskpDg = $('#jxc_xsth_xskpDg').datagrid({
 		fit : true,
@@ -399,8 +301,8 @@ $(function(){
 			{field:'xskplsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
 			{field:'createName',title:'创建人',align:'center'},
-			{field:'khbh',title:'供应商编号',align:'center',hidden:true},
-			{field:'khmc',title:'供应商名称',align:'center'},
+			{field:'khbh',title:'客户编号',align:'center',hidden:true},
+			{field:'khmc',title:'客户名称',align:'center'},
 			{field:'ywyId',title:'业务员id',align:'center',hidden:true},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
@@ -472,7 +374,6 @@ $(function(){
 	    toolbar:'#jxc_xsth_xskpTb',
 	});
 	lnyw.toolbar(2, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
-
 	
 	xsth_ywrkDg = $('#jxc_xsth_ywrkDg').datagrid({
 		fit : true,
@@ -484,31 +385,14 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-			{field:'id',title:'销售开票DetId',align:'center',checkbox:true},
-			{field:'xskplsh',title:'流水号',align:'center'},
+			{field:'id',title:'业务入库DetId',align:'center',checkbox:true},
+			{field:'ywrklsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
 			{field:'createName',title:'创建人',align:'center'},
-			{field:'khbh',title:'供应商编号',align:'center',hidden:true},
-			{field:'khmc',title:'供应商名称',align:'center'},
-			{field:'ywyId',title:'业务员id',align:'center',hidden:true},
-			{field:'ywymc',title:'业务员',align:'center'},
+			{field:'gysbh',title:'供应商编号',align:'center',hidden:true},
+			{field:'gysmc',title:'供应商名称',align:'center'},
 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
 			{field:'ckmc',title:'仓库',align:'center'},
-// 			{field:'fhId',title:'分户id',align:'center',hidden:true},
-// 			{field:'fhmc',title:'分户',align:'center'},
-			{field:'toFp',title:'*开票',align:'center',sortable:true,
-					formatter : function(value) {
-						if (value == '1') {
-							return '是';
-						} else {
-							return '';
-						}
-					},
-					sorter: function(a,b){
-						a = a == undefined ? 0 : a;
-						b = b == undefined ? 0 : b;
-						return (a-b);  
-					}},
 			{field:'spbh',title:'商品编号',align:'center'},
 			{field:'spmc',title:'名称',align:'center'},
 			{field:'spcd',title:'产地',align:'center'},
@@ -525,42 +409,14 @@ $(function(){
 				}},
 			{field:'cjldwmc',title:'单位2',align:'center'},
 			{field:'cdwsl',title:'数量2',align:'center'},
-			{field:'bookmc',title:'书名',align:'center',
-				formatter: function(value){
-					return lnyw.memo(value, 15);
-				}},
 			{field:'bz',title:'备注',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
 				}},
-			{field:'thfs',title:'到货方式',align:'center',
-				formatter : function(value) {
-					if (value == '1') {
-						return '自提';
-					} else {
-						return '送货';
-					}
-				}},
-			{field:'thr',title:'提货人',align:'center'},
-			{field:'ch',title:'车号',align:'center'},
-			{field:'shdz',title:'送货地址',align:'center'},
-			{field:'isZs',title:'*直送',align:'center',sortable:true,
-					formatter : function(value) {
-						if (value == '1') {
-							return '是';
-						} else {
-							return '';
-						}
-					},
-					sorter: function(a,b){
-						a = a == undefined ? 0 : a;
-						b = b == undefined ? 0 : b;
-						return (a-b);  
-					}},
 	    ]],
-	    toolbar:'#jxc_xsth_xskpTb',
+	    toolbar:'#jxc_xsth_ywrkTb',
 	});
-	lnyw.toolbar(3, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
+	lnyw.toolbar(3, xsth_ywrkDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
 	
 

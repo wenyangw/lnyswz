@@ -338,6 +338,45 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		datagrid.setRows(nl);
 		return datagrid;
 	}
+	
+	@Override
+	public DataGrid datagridDet(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TYwrkDet t where t.TYwrk.bmbh = :bmbh and t.TYwrk.createTime > :createTime";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", ywrk.getBmbh());
+		if(ywrk.getCreateTime() != null){
+			params.put("createTime", ywrk.getCreateTime()); 
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+		if(ywrk.getSearch() != null){
+			hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)"; 
+			params.put("search", "%" + ywrk.getSearch() + "%");
+			
+		}
+		
+		//在销售提货中查看
+		if(ywrk.getFromOther() != null){
+			hql += " and t.TYwrk.isZs = '1' and t.TYwrk.isCj = '0'";
+		}
+		
+		String countHql = "select count(*) " + hql;
+		hql += " order by t.TYwrk.createTime desc ";
+		
+		List<TYwrkDet> l = detDao.find(hql, params);
+		List<Ywrk> nl = new ArrayList<Ywrk>();
+		for(TYwrkDet t : l){
+			Ywrk c = new Ywrk();
+			
+			BeanUtils.copyProperties(t, c);
+			nl.add(c);
+		}
+		
+		datagrid.setRows(nl);
+		datagrid.setTotal(ywrkDao.count(countHql, params));
+		return datagrid;
+	}
 
 	@Override
 	public DataGrid printYwrk(Ywrk ywrk) {

@@ -108,6 +108,10 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 	public void detDatagrid() {
 		writeJson(ywrkService.detDatagrid(ywrk.getYwrklsh()));
 	}
+	
+	public void datagridDet() {
+		writeJson(ywrkService.datagridDet(ywrk));
+	}
 
 	public void printYwrk() {
 		User user = (User) session.get("user");
