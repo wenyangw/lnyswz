@@ -19,3 +19,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/datepicker/WdatePicker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/moment.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-detailview.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/exporting.js"></script>

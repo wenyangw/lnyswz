@@ -161,7 +161,8 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	$('.ls').css('display','none');
 	
 	//收回商品库存信息
@@ -326,14 +327,15 @@ function saveAll(){
 		effectRow['khmc'] = $('input[name=khmc]').val();
 		effectRow['jsfsId'] = jxc_cgxq_jsfsCombo.combobox('getValue');
 		effectRow['jsfsmc'] = jxc_cgxq_jsfsCombo.combobox('getText');
-		effectRow['shdz'] = $('input[name=shdz]').val();
+		effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
+		effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
 		effectRow['dhsj'] = $('input[name=dhsj]').val();
 	}else{
 		effectRow['isLs'] =  '0';
 	}
 // 	effectRow['xqsj'] = $('input[name=xqsj]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_cgxq_bz]').val();
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
 	effectRow['menuId'] = menuId;
@@ -412,7 +414,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -455,6 +457,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				did,
+    				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor);
@@ -716,7 +719,7 @@ function khLoad(){
 function addressLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', "", $('input[name=shdz]'), 
+		jxc.query('客户检索', "", $('input[name=jxc_cgxq_shdz]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 		break;
@@ -815,7 +818,7 @@ function addressLoad(){
 <div id="jxc_cgxq_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_cgxq_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:140px">		
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">		
 				<table class="tinfo">
 					<tr>
 						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" />
@@ -833,13 +836,16 @@ function addressLoad(){
 							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="8"></td>
 						<th>客户名称</th><td><input name="khmc" readonly="readonly" size="30"></td>
 <!-- 						<th>到货方式</th><td><input name="dhfs"></td> -->
+					</tr>
+					<tr class="ls" style="display:none">
 						<th>结算方式</th><td><input id="jxc_cgxq_jsfsId" name="jsfsId"  size="6"></td>
 						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
-						<th>送货地址</th><td><input name="shdz" onkeyup="addressLoad()" size="40"></td>
+						<th>联系人</th><td><input name="jxc_cgxq_lxr" size="20"></td>
+						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
 <!-- 						<th>需求时间</th><td><input name="xqsj"></td> -->
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="10"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>
 					</tr>
 				</table>
 			</div>

@@ -258,7 +258,7 @@ public class TXshk implements java.io.Serializable {
 		this.cancelXshklsh = cancelXshklsh;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "TXshk")
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "TXshk")
 	public Set<THkKp> getTHkKps() {
 		return this.THkKps;
 	}

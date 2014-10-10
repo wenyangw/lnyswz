@@ -135,14 +135,14 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	@Override
 	public DataGrid datagrid(Cgxq cgxq) {
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh and t.TCgxq.createTime > :createTime";
+		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh"; // and t.TCgxq.createTime > :createTime"
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgxq.getBmbh());
-		if(cgxq.getCreateTime() != null){
-			params.put("createTime", cgxq.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-		}
+//		if(cgxq.getCreateTime() != null){
+//			params.put("createTime", cgxq.getCreateTime()); 
+//		}else{
+//			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+//		}
 		if(cgxq.getSearch() != null){
 			hql += " and (t.TCgxq.cgxqlsh like :search or t.TCgxq.gysmc like :search or t.bz like :search)"; 
 			params.put("search", "%" + cgxq.getSearch() + "%");
@@ -172,6 +172,20 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			if(t.getTCgjh() != null){
 				c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
 			}
+			
+			String sql = "select dbo.getKfrkOfCgxq(?, ?) rksl";
+			Map<String, Object> params_sql = new HashMap<String, Object>();
+			params_sql.put("0", t.getTCgxq().getCgxqlsh());
+			params_sql.put("1", t.getSpbh());
+			
+			Object o = cgxqDao.getBySQL(sql, params_sql);
+			BigDecimal rksl = Constant.BD_ZERO;
+			if(o != null){
+				rksl = new BigDecimal(o.toString());
+			}
+			
+			c.setRksl(rksl);
+			
 			nl.add(c);
 		}
 		datagrid.setTotal(detDao.count(countHql, params));

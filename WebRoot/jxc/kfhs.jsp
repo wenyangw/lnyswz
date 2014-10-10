@@ -432,7 +432,8 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	
 	//收回商品库存信息
 	$('#jxc_kfhs_layout').layout('collapse', 'east');
@@ -597,7 +598,7 @@ function saveAll(){
 		effectRow['fhmc'] = jxc_kfhs_fhCombo.combobox('getText');
 	}
 	//effectRow['hjje'] = footerRows[0]['spje']; 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfhs_bz]').val();
 	effectRow['ywhslsh'] = $('input[name=ywhslsh]').val();
 	
 	effectRow['bmbh'] = did;
@@ -733,7 +734,7 @@ function searchYwhsInKfhs(){
 				  		<th class="read">单据号</th><td><div id="kfhsLsh" class="read"></div></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="15"><input type="text" name="bz" size="150"></td>
+						<th>备注</th><td colspan="15"><input type="text" name="jxc_kfhs_bz" size="150"></td>
 					</tr>
 			  </table>
 			  <input name="ywhslsh" type="text" hidden="hidden">

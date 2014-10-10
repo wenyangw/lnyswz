@@ -60,6 +60,7 @@ public class TXskp implements java.io.Serializable {
 	private BigDecimal hjje;
 	private BigDecimal hjse;
 	private BigDecimal hkje;
+	private BigDecimal yfje;
 	private String bz;
 	private String fromTh;
 	private String isZs;
@@ -88,7 +89,7 @@ public class TXskp implements java.io.Serializable {
 	public TXskp(String xskplsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
 			String khmc, String dzdh, String khh, String sh, String ckId, String ckmc, String fhId, String fhmc, String jsfsId,
 			String jsfsmc, String fplxId, String fplxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
-			BigDecimal hjse, BigDecimal hkje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
+			BigDecimal hjse, BigDecimal hkje, BigDecimal yfje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
 			String isTh, Date thTime, String xsthlsh, String isHk, Date hkTime, String needAudit, String isAudit, 
 			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk) {
 		this.xskplsh = xskplsh;
@@ -121,6 +122,7 @@ public class TXskp implements java.io.Serializable {
 		this.hjje = hjje;
 		this.hjse = hjse;
 		this.hkje = hkje;
+		this.yfje = yfje;
 		this.bz = bz;
 		this.fromTh = fromTh;
 		this.isZs = isZs;
@@ -413,6 +415,15 @@ public class TXskp implements java.io.Serializable {
 
 	public void setHkje(BigDecimal hkje) {
 		this.hkje = hkje;
+	}
+
+	@Column(name = "yfje", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	@Column(name = "bz", length = 100)

@@ -113,6 +113,34 @@ public class ButtonServiceImpl implements ButtonServiceI {
 	 */
 	@Override
 	public List<Object> authBtns(User user, String mid, int tabId, String did){
+		
+//		String sql = "select btn.text, btn.iconCls, btn.handler from t_button btn"
+//				+ " left join t_role_button rBtn on btn.id = rBtn.btnId"
+//				+ " left join t_role r on rBtn.roleId = r.id"
+//				+ " left join t_user_role ur on r.id = ur.roleId"
+//				+ " where r.depId = ? and ur.userId = ? and btn.menuId = ? and btn.tabId = ?"
+//				+ " order by btn.orderNum";
+//		
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("0", did);
+//		params.put("1", user.getId());
+//		params.put("2", mid);
+//		params.put("3", tabId);
+//		
+//		List<Object[]> lists = buttonDao.findBySQL(sql, params);
+//		
+//		if(lists != null && lists.size() > 0){
+//			List<Object> bs = new ArrayList<Object>();
+//			for(Object[] o : lists){
+//				Button button = new Button();
+//				button.setText(o[0].toString());
+//				button.setIconCls(o[1].toString());
+//				button.setHandler(o[2].toString());
+//				bs.add(button);
+//			}
+//			return bs;
+//		}
+		
 		TUser t = userDao.get(TUser.class, user.getId());
 		//根据登录用户获取所拥有的角色
 		Set<TRole> roles = t.getTRoles();

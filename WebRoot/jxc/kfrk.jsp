@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
+o<%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
 
@@ -273,6 +273,7 @@ $(function(){
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'rklxmc',title:'入库类型',align:'center'},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -623,7 +624,7 @@ function saveAll(){
 	effectRow['ch'] = $('input[name=ch]').val();
 	effectRow['zjh'] = $('input[name=zjh]').val();
 	effectRow['shry'] = $('input[name=shry]').val();
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfrk_bz]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
 	effectRow['ywrklsh'] = $('input[name=ywrklsh]').val();
 	effectRow['bmbh'] = did;
@@ -725,7 +726,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -769,6 +770,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		spRow = jxc.spQuery($(spbhEditor.target).val(),
    				did,
+   				undefined,
    				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
    				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
    				hwIdEditor    				
@@ -936,9 +938,9 @@ function gysLoad(){
 function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
 	if (row != undefined) {
-		if(!row.cjKfrklsh){
+		if(!row.cjKfrklsh || row.isCj != '1'){
 			if(row.ywrklsh == null){
-				if(row.isCj != '1'){
+// 				if(row.isCj != '1'){
 					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
 						if (bz != undefined){
 							$.ajax({
@@ -963,14 +965,14 @@ function cjKfrk(){
 							});
 						}
 						});
-				}else{
-					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
-				}
+// 				}else{
+// 					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
+// 				}
 			}else{
 				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
 			}
 		}else{
-			$.messager.alert('警告', '选中的库房入库单为冲减单据，请重新选择！',  'warning');
+			$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
 		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
@@ -1063,6 +1065,7 @@ function createKfrkFromYwrk(){
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=ywrklsh]').val(row.ywrklsh);
+						$('input[name=jxc_kfrk_bz]').val(row.bz);
 						kfrk_tabs.tabs('select', 0);
 					}
 				});
@@ -1111,7 +1114,7 @@ function searchYwrkInKfrk(){
 						<th>车号</th><td><input name="ch" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_kfrk_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="cgjhDetIds" type="hidden">

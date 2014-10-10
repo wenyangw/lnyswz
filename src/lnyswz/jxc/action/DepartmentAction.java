@@ -86,6 +86,15 @@ public class DepartmentAction extends BaseAction implements
 	public void listDeps() {
 		writeJson(departmentService.listDeps());
 	}
+	
+	/**
+	 * 获得经营部门列表，供选择使用，无分页
+	 */
+	public void listYws() {
+		writeJson(departmentService.listYws(department));
+	}
+	
+	
 
 	@Override
 	public Department getModel() {

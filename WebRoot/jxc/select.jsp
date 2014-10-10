@@ -38,6 +38,7 @@ $(function(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		cache: false,
 		data : {
 			selectType :query,
 			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
@@ -203,11 +204,14 @@ function selectClick(){
 	      				var s=$('input:checkbox[name='+this.ename+']');
 	      			//判断是否被选中 将选中值放入数组中  
 	      				if(s.is(':checked')){ 
-	      					allFields.push(s.val());
+	          			
+	          				var value=s.val().replace('abc','(').replace('xyz',')');
+	          		
+	      					allFields.push(value);
 	      					if(this.frozen=="1"){      				
-	      						frozens.push(s.val());
+	      						frozens.push(value);
 	      					}else{
-	      						fields.push(s.val());
+	      						fields.push(value);
 	      					}
 	      				}else{
 	      					checkeds[this.name]="";
@@ -218,9 +222,11 @@ function selectClick(){
 					var frozenTitles=[];
 					//遍历feilds 设置datagrid将显示的title
 					$.each(fields,function(){
+						var values=this.replace('(','abc').replace(')','xyz');
 						var onlyTitle=Object.create(Object.prototype);
-						onlyTitle["field"]=this;
-						onlyTitle["title"]=dataClass[this];
+						onlyTitle["field"]=values;
+						
+						onlyTitle["title"]=dataClass[values];
 						onlyTitle["formatter"]=function(value) {
 		   					if (value == 0) {
 		   						return '';
@@ -269,7 +275,7 @@ function selectClick(){
 // 		                        top :809,
 		                        
 		                    });
-		                }
+		                },
 	      			});	
 					var m = step1Ok(hql,allFields);	
 	      			p.dialog('close');	      			
@@ -303,8 +309,8 @@ function selectClick(){
 	      					         	iconCls: 'icon-ok'
 	      					         });
 	      					   }
-	      			}	
-	            }
+	      			};	
+	            },
 			
 	        }],  
 	        onBeforeOpen : function() {
@@ -357,14 +363,15 @@ function step1Ok(hql,allFields) {
     		    pageSize:pageSize
 	 });
 };
+
 function getData(page, rows,hql,allFields) { 
 	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
 	$.ajax({ 
-		dataType : 'json',
-   		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
    		async: false,
    		cache: false,
+   		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
+		dataType : 'json',
    		data : {
 			hqls :hql,
 			query:query,
@@ -373,7 +380,7 @@ function getData(page, rows,hql,allFields) {
 			did  :did,	
 			page :page,
 			rows :rows,
-			},
+		},
         error: function (XMLHttpRequest, textStatus, errorThrown) { 
             alert(textStatus); 
             $.messager.progress('close'); 
@@ -385,8 +392,10 @@ function getData(page, rows,hql,allFields) {
 					$.each(data.obj.rows,function(){
 					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 						var onlyData=Object.create(Object.prototype);
-						for( var i=0;i<this.length;i++){									
-							onlyData[allFields[i]]=this[i];						
+						for( var i=0;i<this.length;i++){	
+							
+							var allF=allFields[i].replace('(','abc').replace(')','xyz');
+							onlyData[allF]=this[i];						
 						}	
 						dgDatas.push(onlyData);						
 					});	
@@ -405,8 +414,9 @@ function cleanClick(){
 	$('input[id^="b_"]').val(moment().format('YYYY-MM-DD'));
 	$('input[id^="a_"]').val(moment().date(1).format('YYYY-MM-DD'));
 }
+
 function exportExcel(){
-	var titles=[];
+    var titles=[];
 	var fields=[];
 	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
@@ -414,7 +424,6 @@ function exportExcel(){
 	var ss =resultDg.datagrid('options').frozenColumns[0];
 	
 	$.each(ss,function(){			
-		
 		var s="";
 		for(var i=0;i<this.field.length;i++){
 			s +=this.field[i];
@@ -424,7 +433,7 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});
-	$.each(hh,function(){			
+	$.each(hh,function(){
 		var s="";
 		for(var i=0;i<this.field.length;i++){
 			s +=this.field[i];
@@ -434,10 +443,10 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
-	
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
+		cache: false,
 		context:this,	
 		data : {
 			query:query,
@@ -446,7 +455,7 @@ function exportExcel(){
 			con :fields.join(','),
 			titles:titles.join(','),
 		},
-		success:function(data){	
+		success:function(data){
 			var json = $.parseJSON(data);
 			if (json.success) {
 				var dd="${pageContext.request.contextPath}/"+json.obj;
@@ -460,7 +469,6 @@ function exportExcel(){
 			});
 		}
 	});
-		
 }
 
 

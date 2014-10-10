@@ -23,6 +23,7 @@ var spmc;
 var a_time;
 var b_time;
 var treeHql="";
+var jxc_select_fhCombo;
 //页面数据加载
 $(function(){
 
@@ -68,6 +69,9 @@ $(function(){
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += 'name='+this.ename+'></td>';
 					//checkeds[this.ename]="";
+				}else if(this.specials=="selectBox"){
+					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:145px;" ></td>';
+					
 				}else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+'></td>';
@@ -104,9 +108,9 @@ $(function(){
 			data:dictOpe,
 			panelHeight: 'auto',
 	});
-	
-	
-	
+	did = lnyw.tab_options().did;
+	jxc_select_fhCombo = lnyw.initCombo($('input[name^="select_"]'), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
+	jxc_select_fhCombo.combobox('selectedIndex', 0);
 	
 });
 //查询按钮事件
@@ -128,7 +132,7 @@ function selectClick(){
 	//查询试图全部字段并设置dataClass，为选择显示字段用
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
-		async: false,
+		async: false,	
 		data : {
 			selectType :query,
 		},
@@ -192,6 +196,15 @@ function selectClick(){
 						break;
 			}		
 		 }
+		if($(this).attr('id')!=undefined){
+			if($(this).attr('id').indexOf('select_')==0){
+	 			hql +=' and '+$(this).attr('id').replace('select_','') +' = ';
+	 			hql +=('\''+jxc_select_fhCombo.combobox('getValue')+'\'').trim();
+					 		}
+		}
+// 		if($(this).attr('id').indexOf('select_')==0){
+
+// 		}
 		
 	});
 
@@ -220,7 +233,7 @@ function selectClick(){
 			dataType : 'json',
 			success : function(data) {	
 						$.each(data,function(){
-							allFields.push(this.ename);
+							allFields.push(this.ename.replace('abc','(').replace('xyz',')').replace('fgh',',').replace("mno","'").replace("mno","'"));
 							var treeTitle=Object.create(Object.prototype);
 							var elseTitle=Object.create(Object.prototype);
 							var frozen=Object.create(Object.prototype);
@@ -314,7 +327,7 @@ function selectClick(){
 // 										 var treeHql="";
 										 treeHql +=hqlTree;
 									}else{										
-										hqlTree = 'and '+title[0].field+' = '+rows[0][title[0].field];
+										hqlTree = 'and '+title[0].field+' = \''+rows[0][title[0].field]+'\'';
 // 										var treeHql="";
 										treeHql +=hqlTree;
 									}
@@ -330,14 +343,14 @@ function selectClick(){
 									if(datas[0][treeFields[0]]==null){
 										hqlNews += " is "+datas[0][treeFields[0]];
 									}else{
-										hqlNews += "= "+datas[0][treeFields[0]];
+										hqlNews += "= '"+datas[0][treeFields[0]]+"'";
 									}
 										
 									
 									treeHql="";
 									treeHql +=hqlNews;
 									eval("hqlNews += hql_"+query);
-									console.info(hqlNews);
+								
 									spbh= datas[0][treeFields[0]];
 					                showDatagrid(hqlNews,allFields,allTitle);
 					             
@@ -370,10 +383,7 @@ function showDatagrid(hql,allFields,allTitle){
 		data : {
 				hqls :hql,
 				query:query,
-				spbh:spbh,
-				spmc:spmc,
-				a_time:a_time,
-				b_time:b_time,
+
 				//拼写显示名称
 				con  :allFields.join(','),
 				did  :did,	
@@ -389,8 +399,9 @@ function showDatagrid(hql,allFields,allTitle){
 					$.each(data.obj.rows,function(){
 					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 						var onlyData=Object.create(Object.prototype);
-						for( var i=0;i<this.length;i++){									
-							onlyData[allFields[i]]=this[i];	
+						for( var i=0;i<this.length;i++){
+						var allF=allFields[i].replace('(','abc').replace(')','xyz').replace(',','fgh').replace("'","mno").replace("'","mno");									
+						onlyData[allF]=this[i];	
 						}	
 						datas.push(onlyData);						
 					});	
@@ -516,18 +527,29 @@ function cleanClick(){
 function exportExcel(){
 	var titles=[];
 	var fields=[];
-// 	eval("hqlNews += hql_"+query);
-	var hh =$('#jsd_' + query).datagrid('options').columns[0];
-	$.each(hh,function(){			
-		var s="";
-		for(var i=0;i<this.field.length;i++){
-			s +=this.field[i];
-		}
-		if(!this.hidden==true){
-			titles.push(this.title);
-			fields.push(s);		
-		}	
-	});	
+// 
+
+$.ajax({
+			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
+			async: false,
+			cache: false,
+			data : {
+					selectType :query,
+					},
+			dataType : 'json',
+			success : function(data) {	
+						$.each(data,function(){
+							fields.push(this.ename.replace('abc','(').replace('xyz',')').replace('fgh',',').replace("mno","'").replace("mno","'"));
+							titles.push(this.cname);
+						
+						});
+			}											
+		});	
+
+
+
+
+
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,

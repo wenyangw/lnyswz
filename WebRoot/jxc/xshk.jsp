@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-filter.js"></script>
 <script type="text/javascript">
 var xshk_did;
 var xshk_lx;
@@ -9,6 +10,9 @@ var xshk_khDg;
 var xshk_dg;
 var xshk_xskpDg;
 var jxc_xshk_ywyCombo;
+
+//销售列表所有行
+var rows;
 
 //本次回款对应发票笔数
 var countHk;
@@ -45,9 +49,12 @@ $(function(){
 	    border : false,
 	    singleSelect : true,
 		columns:[[
-	        {field:'khbh',title:'客户编号',width:60},
+	        {field:'khbh',title:'客户编号',width:60,
+	        	hfilter:{type:'textbox',},
+	        },
 	        {field:'khmc',title:'客户名称',width:200},
 	    ]],
+	    toolbar:'#jxc_xshk_khTb',
 	    onSelect: function(rowIndex, rowData){
 	    	$('#khbh').html(rowData.khbh);
 	 		$('#khmc').html(rowData.khmc);
@@ -79,11 +86,14 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 	        {field:'xshklsh',title:'流水号',width:100,align:'center'},
-	        {field:'createTime',title:'回款时间',width:100,align:'center',
+	        {field:'createTime',title:'创建时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},
-	        	
+        	{field:'payTime',title:'回款时间',width:100,align:'center',
+	        	formatter:function(value){
+	        		return moment(value).format('YYYY-MM-DD');
+	        	}},	
 	        {field:'khbh',title:'客户编号',width:100,align:'center',hidden:true},
 	        {field:'khmc',title:'客户名称',width:300,align:'center'},
 	        {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},
@@ -225,6 +235,7 @@ $(function(){
 				$('#ysje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
 				$('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
 	    	}
+	    	rows = xshk_xskpDg.datagrid('getRows');
 		}
 	});
 	//根据权限，动态加载功能按钮
@@ -254,8 +265,6 @@ $(function(){
 		},
 	});
 	
-	
-	
 	jxc_xshk_ywyCombo.combobox({
 		onSelect: function(){
 			xshk_khDg.datagrid({
@@ -269,6 +278,7 @@ $(function(){
 // 				depId: xshk_did,
 // 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
+			xshk_khDg.datagrid('enableFilter');
 		}
 	});
 	
@@ -276,8 +286,11 @@ $(function(){
 		if($('input[name=isLs]').is(':checked')){
 			return false;
 		}
+		
 		countHk = 0;
-		var rows = xshk_xskpDg.datagrid('getRows');
+// 		if(rows == undefined){
+// 			rows = xshk_xskpDg.datagrid('getRows');
+// 		}
 		//本次回款金额
 		je = Number($('#hkje').val());
 		if(rows != undefined){
@@ -345,10 +358,13 @@ function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
 	
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	
 	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
+	
+	rows = undefined;
 	
 	//初始化创建时间
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
@@ -417,7 +433,6 @@ function saveAll(){
 		}
 	}
 	
-	
 	var effectRow = new Object();
 	var rows = xshk_xskpDg.datagrid('getRows');
 	//将表头内容传入后台
@@ -435,9 +450,9 @@ function saveAll(){
 	effectRow['bmbh'] = xshk_did;
 	effectRow['lxbh'] = xshk_lx;
 	effectRow['menuId'] = xshk_menuId;
-	
+		
 	//将表格中的数据去掉最后一个空行后，转换为json格式
-	if(rows.size > 0){
+	if(countHk > 0){
 		effectRow['datagrid'] = JSON.stringify(xshk_xskpDg.datagrid('getRows').slice(0, countHk));
 	}
 	//提交到action
@@ -464,6 +479,46 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		}
 	});
+}
+
+function printXshk(){
+	var khbh = $('#khbh').html();
+	if(khbh != ''){
+		var ywyId = jxc_xshk_ywyCombo.combobox('getValue');
+		
+		var dialog = $('#jxc_xshk_dateDialog');
+		dialog.dialog({
+			title : '请选择统计时间',
+			//href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
+			width : 240,
+			height : 120,
+			buttons : [{
+				text : '确定',
+				handler : function() {
+					var selectTime = $('input#selectTime').val();
+					if(selectTime != ''){
+						var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						dialog.dialog('close');
+					}else{
+						$.messager.alert('提示', '请选择打印时间！', 'error');
+						return false;
+					}
+				},
+			},{
+				text : '取消',
+				handler : function() {
+					dialog.dialog('close');
+				},
+			}],
+			onLoad : function() {
+				
+			}
+		});
+	}else{
+		$.messager.alert('提示', '没有选中客户进行打印,请重新操作！', 'error');
+		return false;
+	}
 }
 
 //////////////////////////////////////////////以下为销售回款列表处理代码
@@ -575,6 +630,13 @@ function searchXshk(){
 	请输入查询起始日期:<input type="text" name="createTimeXshk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、客户：<input type="text" name="searchXshk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXshk();">查询</a>
+</div>
+<div id='jxc_xshk_dateDialog'>
+<br>
+<center>
+<input type="text" name="selectTime" class="easyui-my97" data-options="dateFmt:'yyyy年MM月',minDate:'{%y-1}-%M-%d',maxDate:'%y-%M-%d',vel:'selectTime'" style="width:100px">
+</center>
+<input id="selectTime" type="hidden"/>
 </div>
 
 

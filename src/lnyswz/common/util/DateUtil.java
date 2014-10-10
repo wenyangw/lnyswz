@@ -781,6 +781,13 @@ public class DateUtil
         int month = calendar.get(calendar.MONTH);
         return month;
     }
+    
+    
+    public static String getMonthPattern(){
+    	java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat("MM");
+        String cur_month = formater.format(new java.util.Date());
+        return cur_month;
+    }
 
     /**
      * ��ȡ��ǰ ��
@@ -906,6 +913,7 @@ public static String getStringDateShort() {
     String first_day = year + "-" + month + "-01 00:00:00";
     return first_day;
   }
+  
   public static String getFirstDateInMonth(Date date) {
 
     String month = getMonth(date);
@@ -914,5 +922,17 @@ public static String getStringDateShort() {
     return first_day;
   }
 
+  /** 
+   * 当月最后一天 
+   *  
+   * @return 
+   */  
+  public static Date getLastDayInMonth(Date date) {  
+	  Calendar cal = Calendar.getInstance();
+      cal.setTime(date);
+      int value = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+      cal.set(Calendar.DAY_OF_MONTH, value);
+      return cal.getTime();
+  }  
 
 }

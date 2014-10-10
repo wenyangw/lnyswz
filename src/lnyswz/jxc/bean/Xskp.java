@@ -44,6 +44,7 @@ public class Xskp {
 	private BigDecimal hjje;
 	private BigDecimal hjse;
 	private BigDecimal hkje;
+	private BigDecimal yfje;
 	private String bz;
 	private String fromTh;
 	private String isCj;
@@ -86,6 +87,8 @@ public class Xskp {
 	private String search;
 	private Date payTime;
 	private BigDecimal hkedje;
+	private String isUp;
+	private int postponeDay;
 	
 	private String ywrklsh;
 	private String xsthlshs;
@@ -340,6 +343,14 @@ public class Xskp {
 
 	public void setHkje(BigDecimal hkje) {
 		this.hkje = hkje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	public String getBz() {
@@ -660,6 +671,22 @@ public class Xskp {
 
 	public void setHkedje(BigDecimal hkedje) {
 		this.hkedje = hkedje;
+	}
+
+	public String getIsUp() {
+		return isUp;
+	}
+
+	public void setIsUp(String isUp) {
+		this.isUp = isUp;
+	}
+
+	public int getPostponeDay() {
+		return postponeDay;
+	}
+
+	public void setPostponeDay(int postponeDay) {
+		this.postponeDay = postponeDay;
 	}
 
 	public int getPage() {

@@ -145,7 +145,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		TKfrk yTKfrk = kfrkDao.get(TKfrk.class, kfrk.getKfrklsh());
 		//新增冲减单据信息
 		TKfrk tKfrk = new TKfrk();
-		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs"});
+		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
 		//更新原单据冲减信息
 		yTKfrk.setCjId(kfrk.getCjId());
 		yTKfrk.setCjTime(now);
@@ -161,6 +161,10 @@ public class KfrkServiceImpl implements KfrkServiceI {
 //			}
 //			tKfrk.setTCgjhs(tcs);
 			yTKfrk.setTCgjhs(null);
+		}
+		
+		if(yTKfrk.getTYwrk() != null){
+			yTKfrk.setTYwrk(null);
 		}
 		
 		//更新新单据信息
@@ -317,23 +321,23 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	
 	@Override
 	public DataGrid toYwrk(String kfrklshs){
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_kfrk_det t ";
+		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj from t_kfrk_det t"
+				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(kfrklshs != null && kfrklshs.trim().length() > 0){
 			String[] ks = kfrklshs.split(",");
-			sql += "where ";
+			sql += " where ";
 			for(int i = 0; i < ks.length; i++){
 				sql += "t.kfrklsh = ? ";
 				params.put(String.valueOf(i), ks[i]);
-				//sql += "t.kfrklsh = '" + ks[i] + "'";
 				if(i != ks.length - 1){
 					sql += " or ";
 				}
  			}
 			
 		}
-		sql += " group by spbh";
+		sql += " group by t.spbh";
 		
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		List<KfrkDet> nl = new ArrayList<KfrkDet>();
@@ -341,6 +345,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal zdwdj = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			KfrkDet kd = new KfrkDet();
@@ -348,14 +353,17 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			kd.setZjldwId(sp.getZjldw().getId());
 			kd.setZjldwmc(sp.getZjldw().getJldwmc());
 			kd.setZdwsl(zdwsl);
+			kd.setZdwdj(zdwdj);
 			if(sp.getCjldw() != null){
 				kd.setCjldwId(sp.getCjldw().getId());
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
 				}else{
 					kd.setCdwsl(Constant.BD_ZERO);
+					kd.setCdwdj(Constant.BD_ZERO);
 				}
 			}
 			nl.add(kd);

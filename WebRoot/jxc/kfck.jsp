@@ -414,8 +414,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeProp('checked');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	//收回商品库存信息
 	$('#jxc_kfck_layout').layout('collapse', 'east');
 	jxc.spInfo($('#jxc_kfck_layout'), '');
@@ -611,7 +612,7 @@ function saveAll(){
 		effectRow['thfs'] = '0';
 		effectRow['shdz'] = $('input[name=shdz]').val();
 	}
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_kfck_bz]').val();
 	effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 	effectRow['xsthlsh'] = $('input[name=xsthlsh]').val();
 // 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
@@ -717,7 +718,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -1058,12 +1059,12 @@ function generateKfck(){
 	}
 }
 
-function printXsth(){
+function printThd(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
+				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
@@ -1071,6 +1072,45 @@ function printXsth(){
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
 }
+
+function printXsthByBgy(){
+	var row = kfck_xsthDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否按不同保管员打印销售提货单？', function(r) {
+			if (r) {
+				var bgyIds = undefined;
+				$.ajax({
+					url:'${pageContext.request.contextPath}/jxc/xsthAction!getSpBgys.action',
+					async: false,
+					data:{
+						xsthlsh: row.xsthlsh,
+					},
+					dataType:'json',
+					success:function(data){
+						if(data.rows.length != 0){
+							//设置信息字段值
+							bgyIds = data.rows;
+						}else{
+							$.messager.alert('提示', '该单据商品未按保管员分类！', 'error');
+						}
+					}
+				});
+			
+				$.each(bgyIds, function(index){
+					$.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ this.bgyName + '</font>)？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 function updateThsl(){
 	var row = kfck_xsthDg.datagrid('getSelected');
@@ -1214,7 +1254,7 @@ function searchXsthInKfck(){
 						<th class="read thfs_sh" style="display:none">送货地址</th><td class="read thfs_sh" style="display:none"><input name="shdz" type="text" disabled="disabled" size="20"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_kfck_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">

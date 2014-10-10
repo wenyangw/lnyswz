@@ -482,7 +482,7 @@ function saveAll(){
 	effectRow['ckmc'] = jxc_ywpd_ckCombo.combobox('getText');
 	effectRow['pdlxId'] = jxc_ywpd_pdlxCombo.combobox('getValue');
 	effectRow['pdlxmc'] = jxc_ywpd_pdlxCombo.combobox('getText');
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_ywpd_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 
 	effectRow['bmbh'] = did;
@@ -565,7 +565,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -609,6 +609,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				did,
+    				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor
@@ -939,7 +940,7 @@ function searchYwpd(){
 						<th>仓库</th><td><input id="jxc_ywpd_ckId" name="ckId" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="5"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="5"><input name="jxc_ywpd_bz" style="width:90%"></td>
 					</tr>
 				</table>
 <!-- 				<input name="kfpdlsh" type="hidden"> -->

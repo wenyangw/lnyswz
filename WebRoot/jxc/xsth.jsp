@@ -35,6 +35,7 @@ var spjeEditor;
 var zhxsEditor;
 var zjldwIdEditor;
 var cjldwIdEditor;
+var dwcbEditor;
 
 $(function(){
 	xsth_did = lnyw.tab_options().did;
@@ -49,6 +50,7 @@ $(function(){
 	xsth_dg = $('#jxc_xsth_dg').datagrid({
 		fit : true,
 	    border : false,
+	    idField: 'xsthlsh',
 	    singleSelect : true,
 // 	    fitColumns : true, 
 	    remoteSort: false,
@@ -57,6 +59,24 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'xsthlsh',title:'流水号',align:'center',
 				styler: function(value, rowData){
 					if(rowData.isCancel == '1'){
@@ -190,6 +210,7 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+        	{field:'shbz',title:'审批说明',align:'center'},
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
@@ -582,11 +603,12 @@ $(function(){
 	        	editor:{
         			type:'numberbox',
         			options:{
-        				precision: LENGTH_JE
+        				precision: 2
         			}}},
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
+        	{field:'dwcb',title:'成本',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -616,7 +638,7 @@ $(function(){
 	$('input[name=isFh]').click(function(){
 		if($(this).is(':checked')){
 			$('.isFh').css('display','table-cell');
-			$('.isFhth').css('display','inline');
+ 			$('.isFhth').css('display','inline');
 			//初始化分户列表
 			if(jxc_xsth_fhCombo == undefined){
 				jxc_xsth_fhCombo = lnyw.initCombo($("#jxc_xsth_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xsth_did);
@@ -624,7 +646,7 @@ $(function(){
 			jxc_xsth_fhCombo.combobox('selectedIndex', 0);
 		}else{
 			$('.isFh').css('display','none');
-			$('.isFhth').css('display','none');
+ 			$('.isFhth').css('display','none');
 		}
 	});
 	
@@ -658,14 +680,15 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
 	$('input#thfs_zt').attr('ckecked', 'checked');
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
-	$('.isFhth').css('display','none');
+ 	$('.isFhth').css('display','none');
 	
 	if(jxc.showFh(xsth_did)){
 		$('.fh').css('display', 'inline');
@@ -718,13 +741,19 @@ function rowOk(){
 	if(keyOk()){
 // 		if($('input[name=isSx]').is(':checked')){
 // 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-// 			if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
-// 				return true;
-// 			}
-// 		}else{
+		if(!$('input[name=isFhth]').is(':checked')){
+	 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
+	 			return true;
+	 		}
+		}else{
 			if(zslEditor.target.val() != 0){
 				return true;
 			}
+		}
+// 		}else{
+			//if(zslEditor.target.val() != 0){
+			//	return true;
+			//}
 // 		}
 	}
 	return false;
@@ -815,7 +844,7 @@ function cancelAll(){
 }
 
 //提交数据到后台
-function saveAll(){
+function saveXsth(){
 	
 	var msg = formValid();
 	if(msg == ''){
@@ -840,88 +869,142 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
-	if(NEED_AUDIT == "1"){
-		if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
-			effectRow['needAudit'] = "1";
-		}
-	}
-	//将表头内容传入后台
-// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
-	effectRow['isSx'] = '0';
-	effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
-	effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
+	
 	if($('input[name=isFh]').is(':checked')){
-		effectRow['isFh'] = '1';
-		effectRow['fhId'] = jxc_xsth_fhCombo.combobox('getValue');
-		effectRow['fhmc'] = jxc_xsth_fhCombo.combobox('getText');
+		save();
 	}else{
-		effectRow['isFh'] = '0';
-	}
-	effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
+ 		var spbhs = undefined;
+ 		$.each(rows.slice(0, rows.length - 1), function(){
+ 			if(this.zdwdj - this.dwcb * (1 + SL) <= 0){
+ 				if(spbhs == undefined){
+ 					spbhs = '' + this.spbh;
+				}else{
+ 					spbhs += ',' + this.spbh;
+ 				}
+ 			}
+ 		});
+		
+ 		if(spbhs != undefined){
+ 			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+ 				if(data){
+ 					save();	
+ 				}else{
+ 					return false;
+ 				}
+ 			});
+ 		}else{
+ 			save();
+ 		}
 	
-	if($('input[name=xskpDetIds]').val().trim().length > 0){
-		effectRow['isLs'] = '0';
-	}else{
-		effectRow['isLs'] = $('input[name=isFhth]').is(':checked') ? '0' : '1';
-	}
+ 	}
 	
-	effectRow['khbh'] = $('input[name=khbh]').val();
-	effectRow['khmc'] = $('input[name=khmc]').val();
-	effectRow['ckId'] = jxc_xsth_ckCombo.combobox('getValue');
-	effectRow['ckmc'] = jxc_xsth_ckCombo.combobox('getText');
-	effectRow['ywyId'] = jxc_xsth_ywyCombo.combobox('getValue');
-	effectRow['ywymc'] = jxc_xsth_ywyCombo.combobox('getText');
-	effectRow['jsfsId'] = jxc_xsth_jsfsCombo.combobox('getValue');
-	effectRow['jsfsmc'] = jxc_xsth_jsfsCombo.combobox('getText');
-	
-	if($('input#thfs_sh').is(':checked')){
-		effectRow['thfs'] = '0';
-		effectRow['shdz'] = $('input[name=shdz]').val();
-	}else{
-		effectRow['thfs'] = '1';
-		effectRow['ch'] = $('input[name=ch]').val();
-		effectRow['thr'] = $('input[name=thr]').val();
-	}
-	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
-	effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
-	
-	effectRow['bookmc'] = $('input[name=bookmc]').val();
-	effectRow['bz'] = $('input[name=bz]').val();
-	effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
-	
-	effectRow['bmbh'] = xsth_did;
-	effectRow['lxbh'] = xsth_lx;
-	effectRow['menuId'] = xsth_menuId;
-	
-	//将表格中的数据去掉最后一个空行后，转换为json格式
-	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
-	//提交到action
-	$.ajax({
-		type: "POST",
-		url: '${pageContext.request.contextPath}/jxc/xsthAction!save.action',
-		data: effectRow,
-		dataType: 'json',
-		success: function(rsp){
-			if(rsp.success){
-		    	$.messager.show({
-					title : '提示',
-					msg : '提交成功！'
-				});
-		    	init();
-		    	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
-					if (r) {
-						var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-					}
-				});
-			}  
-		},
-		error: function(){
-			$.messager.alert("提示", "提交错误了！");
+	function save(){
+		if(NEED_AUDIT == "1" 
+				&& jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) 
+				&& $('input[name=xskpDetIds]').val().trim().length == 0
+				&& !$('input[name=isFhth]').is(':checked')){
+			if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+				var needA = jxc.getAuditLevel(
+						'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
+						xsth_did, 
+						$('input[name=khbh]').val(),
+						jxc_xsth_ywyCombo.combobox('getValue'),
+						JSFS_QK);
+				if(needA != undefined){
+					effectRow['needAudit'] = needA;
+					$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');
+				}else{
+					$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');
+					return false;
+				}
+			}else{
+				effectRow['needAudit'] = "1";
+				$.messager.alert('提示', '本次提货需进入1级审批流程！', 'warning');
+			}
+		}else{
+			effectRow['needAudit'] = "0";
 		}
-	});
+		//将表头内容传入后台
+	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
+		effectRow['isSx'] = '0';
+		effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
+		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
+		if($('input[name=isFh]').is(':checked')){
+			effectRow['isFh'] = '1';
+			effectRow['fhId'] = jxc_xsth_fhCombo.combobox('getValue');
+			effectRow['fhmc'] = jxc_xsth_fhCombo.combobox('getText');
+		}else{
+			effectRow['isFh'] = '0';
+		}
+		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
+		//effectRow['isFhth'] = '0';
+		
+		if($('input[name=xskpDetIds]').val().trim().length > 0){
+			effectRow['isLs'] = '0';
+		}else{
+			effectRow['isLs'] = $('input[name=isFhth]').is(':checked') ? '0' : '1';
+		}
+		
+		effectRow['khbh'] = $('input[name=khbh]').val();
+		effectRow['khmc'] = $('input[name=khmc]').val();
+		effectRow['ckId'] = jxc_xsth_ckCombo.combobox('getValue');
+		effectRow['ckmc'] = jxc_xsth_ckCombo.combobox('getText');
+		effectRow['ywyId'] = jxc_xsth_ywyCombo.combobox('getValue');
+		effectRow['ywymc'] = jxc_xsth_ywyCombo.combobox('getText');
+		effectRow['jsfsId'] = jxc_xsth_jsfsCombo.combobox('getValue');
+		effectRow['jsfsmc'] = jxc_xsth_jsfsCombo.combobox('getText');
+		
+		if($('input#thfs_sh').is(':checked')){
+			effectRow['thfs'] = '0';
+			effectRow['shdz'] = $('input[name=jxc_xsth_shdz]').val();
+		}else{
+			effectRow['thfs'] = '1';
+			effectRow['ch'] = $('input[name=ch]').val();
+			effectRow['thr'] = $('input[name=thr]').val();
+		}
+		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
+		effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
+		
+		effectRow['bookmc'] = $('input[name=bookmc]').val();
+		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
+		effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
+		
+		effectRow['bmbh'] = xsth_did;
+		effectRow['lxbh'] = xsth_lx;
+		effectRow['menuId'] = xsth_menuId;
+		
+		//将表格中的数据去掉最后一个空行后，转换为json格式
+		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
+		//提交到action
+		$.ajax({
+			type: "POST",
+			url: '${pageContext.request.contextPath}/jxc/xsthAction!save.action',
+			data: effectRow,
+			dataType: 'json',
+			success: function(rsp){
+				if(rsp.success){
+			    	$.messager.show({
+						title : '提示',
+						msg : '提交成功！'
+					});
+			    	init();
+			    	//保存后不再直接打印，审批通过后在列表内打印
+			    	//$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+					//	if (r) {
+					//		var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
+					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					//	}
+					//});
+				}  
+			},
+			error: function(){
+				$.messager.alert("提示", "提交错误了！");
+			}
+		});
+	}
 }
 
 //处理编辑行
@@ -946,10 +1029,12 @@ function setEditing(){
     zhxsEditor = editors[14];
     zjldwIdEditor = editors[15];
     cjldwIdEditor = editors[16];
+    dwcbEditor = editors[17];
     
     if($(spbhEditor.target).val() != ''){
     	var fhValue = '';
-    	if($('input[name=isFh]').is(':checked')){
+    	if($('input[name=isFhth]').is(':checked')){
+    	//if($('input[name=isFh]').is(':checked')){
     		fhValue = jxc_xsth_fhCombo.combobox('getValue');
     	}
     	jxc.spInfo($('#jxc_xsth_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -977,7 +1062,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -1020,6 +1105,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				xsth_did,
+    				jxc_xsth_ckCombo.combobox('getValue'),
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor,
@@ -1033,6 +1119,27 @@ function setEditing(){
     	if(event.keyCode == 9){
      		return false;
      	}
+    	
+    	//判断提货数量是否大于业务数量-临时数量
+    	//从已开票生成提货单不做判断
+    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
+			var kcRow = $('#show_spkc').propertygrid("getRows");
+		    
+	    	var kxssl = undefined;
+	    	if(kcRow == undefined){
+	    		kxssl = Number(0);
+	    	}else{
+	    		kxssl = Number(kcRow[0].value);
+	    	}
+	    	var zsl = Number($(zslEditor.target).val());
+	    	if(zsl > kxssl){
+	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
+	    		$(zslEditor.target).numberbox('setValue', 0);
+	    		zslEditor.target.focus();
+	    		return false;
+	    	}
+    	}
+    	
     	var wtsl = 0;
     	if(Number($(kpslEditor.target).val()) > 0){
     		wtsl = (Number($(kpslEditor.target).val()) - Number($(thslEditor.target).val())).toFixed(LENGTH_SL);
@@ -1141,25 +1248,25 @@ function setEditing(){
       	
     //计算金额
     function calForZ(){
-    	var spje = 0.0000;
+    	var spje = 0.00;
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
 //     		spje = cslEditor.target.val() * cdjEditor.target.val();
 //     	}else{
         	spje = zslEditor.target.val() * zdjEditor.target.val();
 //     	}
-        $(spjeEditor.target).numberbox('setValue',spje);
+        $(spjeEditor.target).numberbox('setValue',spje.toFixed(2));
         //更新汇总列
         updateFooter();
     }
     
     function calForC(){
-    	var spje = 0.0000;
+    	var spje = 0.00;
 //     	if(cslEditor.target.val() != 0 && cdjEditor.target.val() != 0){
     		spje = cslEditor.target.val() * cdjEditor.target.val();
 //     	}else{
 //         	spje = zslEditor.target.val() * zdjEditor.target.val();
 //     	}
-        $(spjeEditor.target).numberbox('setValue',spje);
+        $(spjeEditor.target).numberbox('setValue',spje.toFixed(2));
         //更新汇总列
         updateFooter();
     }
@@ -1171,7 +1278,7 @@ function setEditing(){
 function updateFooter(){
  	var rows = xsth_spdg.datagrid('getRows');
 	var spmc_footer = '合计';
-	var hjje = 0.000000;
+	var hjje = 0.00;
 	var hjsl = 0.000;
 	$.each(rows, function(){
 		var index = xsth_spdg.datagrid('getRowIndex', this);
@@ -1188,7 +1295,7 @@ function updateFooter(){
  	});
 	xsth_spdg.datagrid('reloadFooter', [{
 		spmc : spmc_footer,
-		spje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE)),
+		spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
 		cdwsl : hjsl.toFixed(LENGTH_SL),
 		}]
 	);
@@ -1214,12 +1321,13 @@ function existKey(value, rowIndex){
 
 function formValid(){
 	var message = '';
+	
 // 	if($('input[name=khmc]').val() == ''){
 // 		message += '客户信息<br>';
 // 	}
-// 	if($('input[name=ywyId]').val() == ''){
-// 		message += '业务员信息<br>';
-// 	}
+ 	if(jxc_xsth_ywyCombo.combobox('getValue') == 0){
+ 		message += '未选择业务员<br>';
+ 	}
 	return message;
 }
 
@@ -1235,6 +1343,7 @@ function setValueBySpbh(rowData){
 	zhxsEditor.target.val(rowData.zhxs);
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
+	dwcbEditor.target.val(rowData.dwcb);
 	
 	
    	var fhValue = '';
@@ -1357,7 +1466,7 @@ function khLoad(){
 
 //////////////////////////////////////////////以下为销售提货列表处理代码
 function cancelXsth(){
-	var row = xsth_dg.datagrid('getSelected');
+ 	var row = xsth_dg.datagrid('getSelected');
 	if (row != undefined) {
 		if(row.isCancel != '1'){
 			if(row.locked == '0'){
@@ -1409,12 +1518,16 @@ function cancelXsth(){
 function printXsth(){
 	var row = xsth_dg.datagrid('getSelected');
 	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
+		}else{
+			$.messager.alert('警告', '选择打印的销售提货未经过审批！',  'warning');
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
@@ -1562,8 +1675,8 @@ function searchXskpInXsth(){
 							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
 							<span class="fh" style="display:none">
-							分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
-							<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
+								分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
+ 								<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
 							</span>
 						</td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
@@ -1581,13 +1694,13 @@ function searchXskpInXsth(){
 						<th>结算方式</th><td><input id="jxc_xsth_jsfsId" name="jsfsId" size="8"></td>
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
-						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
+						<td class="isSh" style="display:none" colspan="2">送货地址<input name="jxc_xsth_shdz" size="20"></td>
 					</tr>
 					<tr class='bookmc'>
 						<th>书名</th><td colspan="10"><input name="bookmc" type="text" style="width:71%"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="10"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xskpDetIds" type="hidden">

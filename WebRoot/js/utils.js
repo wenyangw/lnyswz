@@ -335,9 +335,10 @@ lnyw.comboDefault = function(target, key){
 lnyw.initCombo = function(target, key, value, url){
 	return target.combobox({
 	    url: url,
+	    width: 100,
 	    valueField: key,
 	    textField: value,
-	    //panelHeight: 'auto',
+	    panelHeight: 'auto',
 //	    onLoadSuccess:function(){
 //	    	target.combobox('selectedIndex', 0);
 //	    }
@@ -364,8 +365,6 @@ lnyw.toolbar = function(tabId, panel, url, did) {
 	});
 	return;
 };
-
-
 
 
 /**
@@ -815,6 +814,5 @@ $.extend($.fn.datagrid.methods, {
  
     $.parser.plugins.push('my97');
 })(jQuery);
-
 
 

@@ -11,4 +11,5 @@ public interface DepartmentServiceI {
 	public void delete(String ids);
 	public DataGrid datagrid(Department department);
 	public List<Department> listDeps();
+	public List<Department> listYws(Department department);
 }

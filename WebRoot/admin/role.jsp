@@ -54,7 +54,7 @@ function appendRole() {
             	$('#admin_roleAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/roleAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							role_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
@@ -101,7 +101,7 @@ function editRole(){
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/roleAction!edit.action',
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								role_dg.datagrid('reload');
 								p.dialog('close');
@@ -182,17 +182,6 @@ function auth(){
 					//var f = p.find('form');
 					$('#admin_roleAuth_form').form('submit', {
 						url : '${pageContext.request.contextPath}/admin/roleAction!auth.action',
-						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
-								role_dg.datagrid('reload');
-								p.dialog('close');
-							}
-							$.messager.show({
-								msg : json.msg,
-								title : '提示'
-							});
-						},
 						onSubmit : function() {
 //	 						parent.$.messager.progress({
 //	 							title : '提示',
@@ -220,13 +209,13 @@ function auth(){
 							return isValid;
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
+							var j = jQuery.parseJSON(jxc.toJson(d));
+							if (j.success) {
 								role_dg.datagrid('reload');
 								p.dialog('close');
 							}
 							$.messager.show({
-								msg : json.msg,
+								msg : j.msg,
 								title : '提示'
 							});
 						}

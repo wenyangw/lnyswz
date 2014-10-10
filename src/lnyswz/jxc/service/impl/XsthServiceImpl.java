@@ -31,6 +31,7 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.SpBgy;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xsth;
@@ -50,6 +51,8 @@ import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
+import lnyswz.jxc.model.TSpBgy;
+import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -79,18 +82,24 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
+	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TSp> spDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
+	private BaseDaoI<TUser> userDao;
+	
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
 	@Override
 	public Xsth save(Xsth xsth) {
 		TXsth tXsth = new TXsth();
+		//接收前台传入的数据
 		BeanUtils.copyProperties(xsth, tXsth);
+		//创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
 		tXsth.setCreateTime(new Date());
@@ -102,6 +111,14 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
 
+		//最后一笔未还款销售
+//		Xskp xskp = new Xskp();
+//		xskp.setBmbh(xsth.getBmbh());
+//		xskp.setKhbh(xsth.getKhbh());
+//		xskp.setYwyId(xsth.getYwyId());
+//		
+//		Date payTime = KhServiceImpl.getPayTime(xskp, khDetDao);
+		
 		String depName = depDao.load(TDepartment.class, xsth.getBmbh()).getDepName();
 		tXsth.setBmmc(depName);
 		
@@ -155,6 +172,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(xsth.getIsFhth())){
+		//if(xsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 		//if("1".equals(xsth.getIsSx()) && "0".equals(xsth.getIsFhth())){
 			User ywy = new User();
 			ywy.setId(xsth.getYwyId());
@@ -212,9 +230,8 @@ public class XsthServiceImpl implements XsthServiceI {
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, xsthDet.getZdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
-//				if("1".equals(xsth.getIsFh())){
-					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-//				}
+			//if("1".equals(xsth.getIsFh())){
+				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
 			
 			if(intDetIds != null){
@@ -289,6 +306,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setCancelName(xsth.getCancelName());
 		tXsth.setCancelTime(now);
 		tXsth.setHjje(yTXsth.getHjje().negate());
+		if(yTXsth.getHjsl() != null){
+			tXsth.setHjsl(yTXsth.getHjsl().negate());
+		}
 		
 		Department dep = new Department();
 		dep.setId(tXsth.getBmbh());
@@ -310,6 +330,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
+		//if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 		//if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
 			User ywy = new User();
 			ywy.setId(tXsth.getYwyId());
@@ -352,11 +373,11 @@ public class XsthServiceImpl implements XsthServiceI {
 
 			if("1".equals(yTXsth.getIsLs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				
 			}
 			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
-//				if("1".equals(yTXsth.getIsFh())){
-					FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-//				}
+			//if("1".equals(yTXsth.getIsFh())){
+				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
 		}
 
@@ -376,7 +397,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		int j = 0;
 		Set<TXskp> xskps = null;
-		for (TXsthDet yd : tXsth.getTXsthDets()) {
+		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("xsthlsh", xsth.getXsthlsh());
+		List<TXsthDet> dets = detDao.find(hql, params);
+		//for (TXsthDet yd : tXsth.getTXsthDets()) {
+		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
 			nl.add(xsthDet);
@@ -449,6 +475,130 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 	
 	@Override
+	public DataGrid printXsthByBgy(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		BigDecimal hjsl = Constant.BD_ZERO;
+//		int j = 0;
+//		Set<TXskp> xskps = null;
+		for (TXsthDet yd : tXsth.getTXsthDets()) {
+			String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("bmbh", tXsth.getBmbh());
+			params.put("ckId", tXsth.getCkId());
+			params.put("spbh", yd.getSpbh());
+			params.put("bgyId", xsth.getBgyId());
+			
+			TSpBgy tSpBgy = spBgyDao.get(hql, params);
+			
+			
+			if(tSpBgy != null){
+				XsthDet xsthDet = new XsthDet();
+				BeanUtils.copyProperties(yd, xsthDet);
+				hjsl = hjsl.add(yd.getCdwsl());
+				nl.add(xsthDet);
+//				if(j == 0){
+//					xskps = yd.getTXskps();
+//				}
+//				j++;
+			}
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+				
+//		String xskplsh = "";
+//		if(xskps != null && xskps.size() > 0){
+//			xskplsh += xskps.iterator().next().getXskplsh();
+//		}
+		
+		String bz = "";
+		if(tXsth.getYwymc() != null){
+			bz = " " + tXsth.getYwymc().trim();
+		}
+		if("0".equals(tXsth.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXsth.getShdz() != null){
+			bz += " " + tXsth.getShdz();
+		}
+		if(tXsth.getThr() != null){
+			bz += " " + tXsth.getThr();
+		}
+		if(tXsth.getCh() != null){
+			bz += " " + tXsth.getCh();
+		}
+//		bz += xskplsh;
+		
+//		DecimalFormat df=new DecimalFormat("#,##0.00");
+//		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "商  品  出  库  分  票  单");
+		//map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
+		//map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		//map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+//		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
+//			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
+//		}else{
+//			map.put("bmmc", tXsth.getBmmc());
+//		}
+		
+		map.put("bmmc", tXsth.getBmmc());
+		map.put("createTime", DateUtil.dateToString(tXsth.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("khmc", tXsth.getKhmc());
+		map.put("khbh", tXsth.getKhbh());
+		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
+		map.put("ckmc", tXsth.getCkmc());
+		//map.put("hjje", df.format(tXsth.getHjje()));
+		map.put("hjsl", hjsl);
+		//map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		map.put("bz", tXsth.getBz() + " " + bz.trim());
+		map.put("memo", tXsth.getBz());
+		map.put("printName", xsth.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("bgyName", userDao.load(TUser.class, xsth.getBgyId()).getRealName());
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid getSpBgys(Xsth xsth) {
+		String sql = "select distinct bgy.bgyId, bgy.bgyName from t_xsth th "
+				+ "left join t_xsth_det det on th.xsthlsh = det.xsthlsh "
+				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and th.ckId = bgy.ckId and det.spbh = bgy.spbh "
+				+ "where th.xsthlsh = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xsth.getXsthlsh());
+		
+		List<Object[]> l = xsthDao.findBySQL(sql, params);
+		if(l != null && l.size() > 0){
+			DataGrid dg = new DataGrid();
+			List<SpBgy> bgys = new ArrayList<SpBgy>();
+			for(Object[] o : l){
+				if(o[0] != null){
+					SpBgy spBgy = new SpBgy();
+					spBgy.setBgyId(Integer.valueOf(o[0].toString()));
+					spBgy.setBgyName(o[1].toString());
+					bgys.add(spBgy);
+				}
+			}
+			dg.setRows(bgys);
+			return dg;
+		}
+		return null;
+	}
+	
+	@Override
 	public DataGrid datagrid(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		String hql = " from TXsth t where t.bmbh = :bmbh and t.createTime > :createTime";
@@ -507,6 +657,23 @@ public class XsthServiceImpl implements XsthServiceI {
 						xskplshs.add(tXskp.getXskplsh());
 					}
 				}
+				
+				String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
+				Map<String, Object> params_sh = new HashMap<String, Object>();
+				params_sh.put("0", t.getXsthlsh());
+				
+				List<Object[]> os = xsthDao.findBySQL(sql_sh, params_sh);
+				if(os != null && os.size() > 0){
+					String bzs = "";
+					for(Object o : os){
+						String sbz = o.toString().trim();
+						if(!sbz.equals("")){
+							bzs += sbz + ",";
+						}
+					}
+					c.setShbz(bzs);
+				}
+				
 			}
 			
 			String r = xskplshs.toString();
@@ -560,7 +727,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(xsth.getFromOther() != null){
 			hql += " and t.TXsth.isCancel = '0'";
 			if(Constant.NEED_AUDIT.equals("1")){
-				hql += " and t.TXsth.isAudit = '1'";
+				hql += " and t.TXsth.isAudit = t.TXsth.needAudit";
 			}
 		}
 		
@@ -578,7 +745,9 @@ public class XsthServiceImpl implements XsthServiceI {
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TXskpDet tkd where tkd.TXskp in elements(t.TXskps) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.kpsl";
 		}else{
-			hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
+			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
+			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
+			//hql += " and t.TXsth.isZs = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.cksl";
 		}
@@ -757,7 +926,7 @@ public class XsthServiceImpl implements XsthServiceI {
 //		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +
 //				"left join t_xsth_xskp xk on xd.id = xk.xsthdetId " +
 //				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl from t_xsth_det ";
+		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
@@ -781,6 +950,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwthsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
+			BigDecimal shui = new BigDecimal("1").add(Constant.SHUILV);
+			BigDecimal zdwdj = new BigDecimal(os[3].toString()).divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal cdwdj = new BigDecimal(os[4].toString());
+			BigDecimal sphj = new BigDecimal(os[5].toString());
+			
+			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_DOWN); 
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -801,9 +976,20 @@ public class XsthServiceImpl implements XsthServiceI {
 					xd.setCdwytsl(Constant.BD_ZERO);
 				}
 			}
+			xd.setZdwsl(zdwthsl.subtract(zdwytsl));
+			if(sp.getCjldw() != null){
+				xd.setCdwsl(xd.getCdwthsl().subtract(xd.getCdwytsl()));
+			}
+			xd.setZdwdj(zdwdj);
+			xd.setCdwdj(cdwdj);
+			xd.setSpje(spje);
+			xd.setSpse(sphj.subtract(spje));
+			xd.setSphj(sphj);
+			
 			nl.add(xd);
 		}
-		//nl.add(new XsthDet());
+		
+		nl.add(new XsthDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
 		return dg;
@@ -815,26 +1001,33 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid getSpkc(Xsth xsth) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = Constant.BD_ZERO;
 		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), ywzzDao);
-		if(yw != null){
-			lists.addAll(yw);
-		}
-		
-//		List<ProBean> kf = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, null, kfzzDao);
-//		if(kf != null){
-//			lists.addAll(kf);
-//		}
-//		List<ProBean> pc = KfzzServiceImpl.getZzsl(kfck.getBmbh(), kfck.getSpbh(), kfck.getCkId(), null, "", kfzzDao);
-//		if(pc != null){
-//			lists.addAll(pc);
-//		}
 		if(xsth.getFhId() != null && xsth.getFhId().trim().length() > 0){
 			List<ProBean> fh = FhzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getFhId(), fhzzDao);
 			if(fh != null){
+				sl = sl.add(new BigDecimal(fh.get(0).getValue()));
 				lists.addAll(fh);
 			}
+		}else{
+			List<ProBean> yw = YwzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), ywzzDao);
+			if(yw != null){
+				sl = sl.add(new BigDecimal(yw.get(0).getValue()));
+				lists.addAll(yw);
+			}
+			
+			List<ProBean> ls = LszzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getCkId(), lszzDao);
+			if(ls != null){
+				sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+				lists.addAll(ls);
+			}
 		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("可提货数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+		lists.add(0, slBean);
 		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());
@@ -868,8 +1061,18 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 	
 	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
+	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
 		this.spDao = spDao;
+	}
+
+	@Autowired
+	public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+		this.spBgyDao = spBgyDao;
 	}
 
 	@Autowired
@@ -895,6 +1098,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
+	}
+	
+	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
 	}
 
 	@Autowired

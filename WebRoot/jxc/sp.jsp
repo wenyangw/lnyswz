@@ -138,7 +138,7 @@ function appendSp() {
 	            			}
 	            		},
 	            		success:function(d){
-	            			var json = $.parseJSON(d);
+	            			var json = $.parseJSON(jxc.toJson(d));
 	            			if(json.success){
 	            				sp_dg.datagrid('appendRow', json.obj);
 	            				addDialog.dialog('close');
@@ -201,7 +201,7 @@ function editSp(){
 						onSubmit:function(){
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								sp_dg.datagrid('reload');
 								editDialog.dialog('close');
@@ -289,7 +289,7 @@ function editSpDet(){
 						onSubmit:function(){
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								sp_dg.datagrid('reload',{depId: did});
 								detDialog.dialog('close');

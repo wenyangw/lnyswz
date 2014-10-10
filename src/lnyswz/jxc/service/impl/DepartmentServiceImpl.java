@@ -2,7 +2,9 @@ package lnyswz.jxc.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -89,6 +91,27 @@ public class DepartmentServiceImpl implements DepartmentServiceI {
 	public List<Department> listDeps() {
 		String hql = "from TDepartment t";
 		List<TDepartment> l = departmentDao.find(hql);
+		if(l != null && l.size() > 0){
+			return changeDep(l);
+		}
+		return null;
+	}
+	
+	/**
+	 * 获得经营部门列表，供选择用，无分页
+	 */
+	@Override
+	public List<Department> listYws(Department department) {
+		String hql = "from TDepartment t";
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(department.getId().compareTo("10") < 0){
+			hql += " where t.id = :id";
+			params.put("id", department.getId());
+		}else{
+			hql += " where t.id < '10'";
+		}
+		
+		List<TDepartment> l = departmentDao.find(hql, params);
 		if(l != null && l.size() > 0){
 			return changeDep(l);
 		}

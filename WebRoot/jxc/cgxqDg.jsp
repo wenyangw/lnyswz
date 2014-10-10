@@ -44,6 +44,10 @@ $(function(){
                			return 'color:orange;';
                		}
     			}},
+    		{field:'rksl',title:'到货数量',align:'center',
+   				formatter: function(value, row){
+                  	return value == 0 ? '' : value;
+              	}},
             {field:'zdwdj',title:'单价1',align:'center',
                	formatter: function(value){
                		return value == 0 ? '' : value;
@@ -74,6 +78,7 @@ $(function(){
 // 	        {field:'ywyId',title:'业务员id',align:'center',hidden:true},
 // 	        {field:'ywymc',title:'业务员',align:'center'},
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
+	        {field:'lxr',title:'联系人',align:'center',},
 	        {field:'shdz',title:'送货地址',align:'center',
 				formatter: function(value){
     				return lnyw.memo(value, 15);

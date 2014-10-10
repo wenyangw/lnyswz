@@ -94,6 +94,8 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
+			{field:'isUp',title:'二级审核', width:50,},
+			{field:'postponeDay',title:'限制期', width:50},
 	    ]],
 	});
 	
@@ -145,7 +147,7 @@ function appendKhDet() {
 	            			}
 	            		},
 	            		success:function(d){
-	            			var json = $.parseJSON(d);
+	            			var json = $.parseJSON(jxc.toJson(d));
 	            			if(json.success){
 	            				khDet_dg.datagrid('appendRow', json.obj);
 	            				addDialog.dialog('close');
@@ -205,7 +207,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 320,
+			height : 360,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -219,7 +221,7 @@ function editKhDet(){
 							}
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = jQuery.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								khDet_dg.datagrid('reload', {
 									depId: kh_did,
@@ -309,14 +311,19 @@ function initForm(target){
 		$('input[name=sxzq]').removeAttr('disabled');
 		$('input[name=sxje]').removeAttr('disabled');
 		$('input[name=lsje]').removeAttr('disabled');
+		$('input[name=isUp]').removeAttr('disabled');
+		$('input[name=postponeDay]').removeAttr('disabled');
+// 		if($('input[name=postponeDay]').val() == ''){
+// 			$('input[name=postponeDay]').val('60');
+// 		}
 	}else{
 		$('input#sxzq').attr('disabled','disabled');
 		$('input[name=sxje]').attr('disabled','disabled');
 		$('input[name=lsje]').attr('disabled','disabled');
+		$('input[name=isUp]').attr('disabled','disabled');
+		$('input[name=postponeDay]').attr('disabled','disabled');
 	}
 };
-
-
 
 function searchKh(){
 	kh_dg.datagrid('load',{

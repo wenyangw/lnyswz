@@ -10,6 +10,7 @@ $(function(){
 		url:'${pageContext.request.contextPath}/admin/menuAction!treegrid.action',
 	    idField:'id',
 	    treeField:'text',
+	    fit: true,
 	    columns:[[
 	        {field:'id',title:'编号',width:180, hidden: true},
 	        {field:'text',title:'名称',width:180},
@@ -51,11 +52,11 @@ function appendMenu() {
 				f.form('submit', {
 					url : '${pageContext.request.contextPath}/admin/menuAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
-							if(d.obj.genre == '03'){
+							//if(d.obj.genre == '03'){
 								treegrid.treegrid('reload');
-							}
+							//}
 							menuAdd.dialog('close');
 							//parent.ctrlTree.tree('reload');/*刷新左侧菜单树*/
 						}
@@ -108,11 +109,11 @@ function editMenu() {
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/menuAction!edit.action',
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
-								if(d.obj.genre == '03'){
+								//if(d.obj.genre == '03'){
 									treegrid.treegrid('reload');
-								}
+								//}
 								p.dialog('close');
 								//parent.ctrlTree.tree('reload');/*刷新左侧菜单树*/
 							}

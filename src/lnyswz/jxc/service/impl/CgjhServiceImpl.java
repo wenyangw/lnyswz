@@ -157,8 +157,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		DataGrid datagrid = new DataGrid();
 		TCgjh tCgjh = cgjhDao.load(TCgjh.class, cgjh.getCgjhlsh());
 		BigDecimal hjsl = Constant.BD_ZERO;
+		
+		String hql = "from TCgjhDet t where t.TCgjh.cgjhlsh = :cgjhlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgjhlsh", cgjh.getCgjhlsh());
+		List<TCgjhDet> tCgjhDets = detDao.find(hql, params);
+		
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
-		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
+//		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
+		for (TCgjhDet yd : tCgjhDets) {
 			CgjhDet cgjhDet = new CgjhDet();
 			BeanUtils.copyProperties(yd, cgjhDet);
 			hjsl = hjsl.add(yd.getCdwsl());
@@ -255,7 +262,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				hql += " and isZs = '1' and ywrklsh = null";
 			}
 		}else{
-			hql += " and createId = :createId or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+			hql += " and t.createId = :createId and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 			params.put("createId", cgjh.getCreateId());
 		}
 		
@@ -574,7 +581,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Override
 	public DataGrid toYwrk(String cgjhDetIds){
 		//String sql = "select spbh, sum(zdwsl) zdwjhsl from t_cgjh_det t ";
-		String sql = "select cd.spbh, isnull(max(cd.zdwsl), 0) zdwjhsl, isnull(sum(yd.zdwsl), 0) zdwyrsl"
+		String sql = "select cd.spbh, isnull(max(cd.zdwsl), 0) zdwjhsl, isnull(sum(yd.zdwsl), 0) zdwyrsl, isnull(max(cd.zdwdj), 0) zdwdj"
 				+ " from t_cgjh_det cd " +
 				"left join t_cgjh_ywrk cy on cd.id = cy.cgjhdetId " +
 				"left join t_ywrk y on y.ywrklsh = cy.ywrklsh " +
@@ -620,6 +627,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwjhsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwyrsl = new BigDecimal(os[2].toString());
+			BigDecimal zdwdj = new BigDecimal(os[3].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			CgjhDet cd = new CgjhDet();
@@ -628,17 +636,22 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			cd.setSpcd(sp.getSpcd());
 			cd.setSppp(sp.getSppp());
 			cd.setSpbz(sp.getSpbz());
+			cd.setZdwdj(zdwdj);
 			cd.setZdwjhsl(zdwjhsl);
 			cd.setZdwyrsl(zdwyrsl);
+			cd.setZdwsl(zdwjhsl.subtract(zdwyrsl));
 			cd.setZjldwId(sp.getZjldw().getId());
 			cd.setZjldwmc(sp.getZjldw().getJldwmc());
+			cd.setSpje(cd.getZdwdj().multiply(cd.getZdwsl()));
 			if(sp.getCjldw() != null){
 				cd.setCjldwId(sp.getCjldw().getId());
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					cd.setZhxs(sp.getZhxs());
+					cd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(4, BigDecimal.ROUND_HALF_DOWN));
 					cd.setCdwjhsl(zdwjhsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 					cd.setCdwyrsl(zdwyrsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					cd.setCdwsl(cd.getCdwjhsl().subtract(cd.getCdwyrsl()));
 				}
 			}
 			nl.add(cd);

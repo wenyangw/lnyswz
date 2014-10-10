@@ -36,37 +36,47 @@ public class SpBgyServiceImpl implements SpBgyServiceI {
 	private BaseDaoI<TOperalog> operalogDao;
 	
 	@Override
-	public void saveSpBgy(SpBgy spBgy) {
-		String hql = "from TSpBgy t where t.depId = :depId and t.ckId = :ckId and t.bgyId = :bgyId";
-		Map<String, Object> params = new HashMap<String, Object>();
+	public void updateSpBgy(SpBgy spBgy) {
+		String[] spbhs = spBgy.getSpbhs().split(",");
+		String spbhsSel = spBgy.getSpbhsSel();
 		
-		params.put("depId", spBgy.getDepId());
-		params.put("ckId", spBgy.getCkId());
-		params.put("bgyId", spBgy.getBgyId());
-		
-		List<TSpBgy> lists = spBgyDao.find(hql, params);
-		if(lists != null && lists.size() > 0){
-			for(TSpBgy t : lists){
-				spBgyDao.delete(t);
+		for(String spbh : spbhs){
+			String hql = "from TSpBgy t where t.depId = :depId and t.ckId = :ckId and t.bgyId = :bgyId and t.spbh = :spbh";
+			Map<String, Object> params = new HashMap<String, Object>();
+			
+			params.put("depId", spBgy.getDepId());
+			params.put("ckId", spBgy.getCkId());
+			params.put("bgyId", spBgy.getBgyId());
+			params.put("spbh", spbh);
+			//获取当前页每行在t_sp_bgy中的数据
+			TSpBgy t = spBgyDao.get(hql, params);
+			
+			//选中的
+			if(spbhsSel.indexOf(spbh, 0) != -1){
+				//不存在就新增一条
+				if(t == null){
+					TSpBgy tSpBgy = new TSpBgy();
+					tSpBgy.setDepId(spBgy.getDepId());
+					tSpBgy.setDepName(depDao.load(TDepartment.class, spBgy.getDepId()).getDepName());
+					tSpBgy.setCkId(spBgy.getCkId());
+					tSpBgy.setCkmc(ckDao.load(TCk.class, spBgy.getCkId()).getCkmc());
+					tSpBgy.setBgyId(spBgy.getBgyId());
+					tSpBgy.setBgyName(spBgy.getBgyName());
+					tSpBgy.setSpbh(spbh);
+					TSp tSp = spDao.load(TSp.class, spbh);
+					tSpBgy.setSpmc(tSp.getSpmc());
+					tSpBgy.setSpcd(tSp.getSpcd());
+					spBgyDao.save(tSpBgy);
+				}
+			}else{
+				//没选中
+				
+				//存在该记录，删除
+				if(t != null){
+					spBgyDao.delete(t);
+				}
 			}
-		}
-		
-		String spbhs = spBgy.getSpbhs();
-		if(spbhs != null && spbhs.trim().length() > 1){
-			for(String spbh : spbhs.split(",")){
-				TSpBgy tSpBgy = new TSpBgy();
-				tSpBgy.setDepId(spBgy.getDepId());
-				tSpBgy.setDepName(depDao.load(TDepartment.class, spBgy.getDepId()).getDepName());
-				tSpBgy.setCkId(spBgy.getCkId());
-				tSpBgy.setCkmc(ckDao.load(TCk.class, spBgy.getCkId()).getCkmc());
-				tSpBgy.setBgyId(spBgy.getBgyId());
-				tSpBgy.setBgyName(spBgy.getBgyName());
-				tSpBgy.setSpbh(spbh);
-				TSp tSp = spDao.load(TSp.class, spbh);
-				tSpBgy.setSpmc(tSp.getSpmc());
-				tSpBgy.setSpcd(tSp.getSpcd());
-				spBgyDao.save(tSpBgy);
-			}
+			
 		}
 		
 	}
@@ -97,6 +107,11 @@ public class SpBgyServiceImpl implements SpBgyServiceI {
 			String hql = "from TSp t join t.TSpdw.TSplb.TSpdl.TDepartments deps where deps.id = :depId";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("depId", spBgy.getDepId());
+			if(spBgy.getSearch() != null){
+				hql += " and (t.spbh like :searchSp or t.spmc like :searchMc)";
+				params.put("searchSp", spBgy.getSearch() + "%");
+				params.put("searchMc", "%" + spBgy.getSearch() + "%");
+			}
 			List<TSp> spLists = spDao.find("select t " + hql, params, spBgy.getPage(), spBgy.getRows());
 			if(spLists == null){
 				return null;

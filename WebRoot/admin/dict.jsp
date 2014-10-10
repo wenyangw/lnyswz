@@ -76,6 +76,18 @@ $(function(){
 	       	 }
 	        },
 	        {field:'orderBy',title:'排序条件',width:80},
+	        {field:'isHj',title:'是否合计',width:50,
+	        	formatter : function(value) {	
+		       	 	 if(value=='01'){
+		       	 		 return "是";
+		       	 	 }else if(value=='0'){
+		       	 		 return "否";
+		       	 	 }
+	       	 	}
+	       	 },
+	       	{field:'sqlWhere',title:'合计筛选',width:80},
+	       	{field:'inGroupBy',title:'求和',width:80},
+	       	{field:'orderBy',title:'合计求和',width:80},
 	    ]],
 		 toolbar:'#admin_dict_tb',
 	});
@@ -89,7 +101,7 @@ function appendDict() {
 		title : '增加字典',
 		href : '${pageContext.request.contextPath}/admin/dictAdd.jsp',
 		width : 340,
-		height : 410,
+		height : 480,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -98,7 +110,7 @@ function appendDict() {
             	$('#admin_dictAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/dictAction!add.action',
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							dict_dg.datagrid('appendRow', json.obj);
 							if(json.obj.genre == '03'){
@@ -136,7 +148,7 @@ function editDict(){
 			title : '修改字典类别',
 			href : '${pageContext.request.contextPath}/admin/dictEdit.jsp',
 			width : 350,
-			height : 410,
+			height : 480,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -146,7 +158,7 @@ function editDict(){
 						onSubmit:function(){						
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								dict_dg.datagrid('reload');
 								if(rows[0].genre == '03'){
@@ -183,7 +195,12 @@ function editDict(){
 					tree:rows[0].tree,
 					depId:did,
 					menuId:mid,	
+					isHj:rows[0].isHj,
+					sqlWhere:rows[0].sqlWhere,
+					inGroupBy:rows[0].inGroupBy,
+					outGroupBy:rows[0].outGroupBy,
 					orderBy:rows[0].orderBy,
+					
 				});
 			
 			}

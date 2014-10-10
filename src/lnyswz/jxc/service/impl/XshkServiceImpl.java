@@ -2,10 +2,12 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,16 +28,24 @@ import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xshk;
+import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.THkKp;
 import lnyswz.jxc.model.TKh;
+import lnyswz.jxc.model.TKhDet;
+import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TOperalog;
+import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXshk;
+import lnyswz.jxc.model.TXsth;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XshkServiceI;
+import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 
 /**
@@ -48,9 +58,13 @@ public class XshkServiceImpl implements XshkServiceI {
 	private Logger logger = Logger.getLogger(XshkServiceImpl.class);
 	private BaseDaoI<TXshk> xshkDao;
 	private BaseDaoI<TXskp> xskpDao;
+	private BaseDaoI<THkKp> hkKpDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
+	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TYszz> yszzDao;
+	private BaseDaoI<TKhDet> khDetDao;
+	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -80,6 +94,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setId(xshk.getYwyId());
 		ywy.setRealName(xshk.getYwymc());
 		
+		xshkDao.save(tXshk);
 		if(xshk.getIsLs().equals("0")){
 			//处理商品明细
 			ArrayList<Xskp> xskps = JSON.parseObject(xshk.getDatagrid(), new TypeReference<ArrayList<Xskp>>(){});
@@ -92,9 +107,13 @@ public class XshkServiceImpl implements XshkServiceI {
 					tHkKp.setHkje(x.getHkje());
 					tHkKp.setTXshk(tXshk);
 					tHkKps.add(tHkKp);
+					//tXshk.getTHkKps().add(tHkKp);
+					hkKpDao.save(tHkKp);
 					
 					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
 					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
+					//更新销售开票回款标志
+					tXskp.setIsHk("1");
 				}
 				tXshk.setTHkKps(tHkKps);
 			}
@@ -102,7 +121,6 @@ public class XshkServiceImpl implements XshkServiceI {
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
-		xshkDao.save(tXshk);
 				
 //		OperalogServiceImpl.addOperalog(xshk.getCreateId(), xshk.getBmbh(), xshk.getMenuId(), tXshk.getXshklsh(), 
 //				"生成销售提货单", operalogDao);
@@ -157,13 +175,34 @@ public class XshkServiceImpl implements XshkServiceI {
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 			
-			
+			//String hql = "from THkKp t where t.xshklsh = :xshklsh order by t.xskplsh desc";
+			//Map<String, Object> params = new HashMap<String, Object>();
+			//params.put("xshklsh", yTXshk.getXshklsh());
+			//List<THkKp> tHkKps = hkKpDao.find(hql, params);
 			Set<THkKp> tHkKps = yTXshk.getTHkKps();
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+				if(tXskp.getHkje().compareTo(tXskp.getYfje()) == 0){
+					tXskp.setIsHk("0");
+				}
+				//删除与销售开票的关联
+				//tHkKp.getTXshk().getTHkKps().remove(tHkKp);
+				//tHkKp.setTXshk(null);
+				//hkKpDao.delete(tHkKp);
 			}
-			yTXshk.setTHkKps(null);
+			
+			Iterator<THkKp> it = tHkKps.iterator();  
+	        while(it.hasNext()){
+	            //CheckWork checkWork = it.next();  
+	            THkKp t = it.next();
+	            //t.getTXshk().getTHkKps().remove(t);
+				//t.setTXshk(null);
+				hkKpDao.delete(t);
+				//it.remove();
+	        }  
+			
+			//yTXshk.setHkje(null);
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
 		}
@@ -174,6 +213,74 @@ public class XshkServiceImpl implements XshkServiceI {
 		
 	}
 	
+	@Override
+	public DataGrid printXshk(Xshk xshk) {
+		DataGrid dg = new DataGrid();
+		
+		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
+		
+		TUser u = userDao.load(TUser.class, xshk.getYwyId());
+		
+		//BigDecimal ysje = YszzServiceImpl.getYsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"), yszzDao);
+		//BigDecimal lsje = YszzServiceImpl.getLsje(xshk.getBmbh(), xshk.getKhbh(), xshk.getYwyId(), yszzDao);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("gsmc", Constant.BMMCS.get(xshk.getBmbh()));
+		map.put("khmc", kh.getKhmc());
+		map.put("khbh", xshk.getKhbh());
+		map.put("sxje", new DecimalFormat("##0").format(kh.getSxje()));
+		map.put("sxzq", kh.getSxzq());
+		map.put("ywymc", u.getRealName());
+		if(DateUtil.getMonth(xshk.getSelectTime()).equals(DateUtil.getMonthPattern())){
+			map.put("selectTime", new Date());
+		}else{
+			map.put("selectTime", DateUtil.getLastDayInMonth(xshk.getSelectTime()));
+		}
+		
+		String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jsfsId = :jsfsId and createTime < :createTime and (t.hjje + t.hjse) <> t.hkje and t.isCj = '0'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xshk.getBmbh());
+		params.put("khbh", xshk.getKhbh());
+		params.put("ywyId", xshk.getYwyId());
+		params.put("jsfsId", Constant.XSKP_JSFS_QK);
+		params.put("createTime", DateUtil.dateIncreaseByMonth(xshk.getSelectTime(), 1));
+		List<TXskp> tXskps = xskpDao.find(hql, params);
+				
+		List<Xskp> xskps = new ArrayList<Xskp>();
+		for(TXskp tXskp : tXskps){
+			Xskp x = new Xskp();
+			x.setXskplsh(tXskp.getXskplsh());
+			x.setCreateTime(tXskp.getCreateTime());
+			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
+			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
+			x.setHkedje(tXskp.getHkje());
+			xskps.add(x);
+		}
+		
+		String sql = "SELECT qmje, lsje, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 0, 0) AS ysje_0, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 1, 30) AS ysje_1,"
+				+ " dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 31, 90) AS ysje_2, dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 91, 180) AS ysje_3,"
+				+ " dbo.getYsjeCircle(bmbh, khbh, ywyId, jzsj, 181, 7300) AS ysje_4"
+				+ " FROM dbo.v_yszz_sxfxb"
+				+ " where bmbh = ? and khbh = ? and ywyId = ? and jzsj = ?";
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", xshk.getBmbh());
+		sqlParams.put("1", xshk.getKhbh());
+		sqlParams.put("2", xshk.getYwyId());
+		sqlParams.put("3", DateUtil.dateToString(xshk.getSelectTime(), "yyyyMM"));
+		Object[] ys = xskpDao.getMBySQL(sql, sqlParams);
+		
+		map.put("ysje", new BigDecimal(ys[0].toString()));
+		map.put("lsje", new BigDecimal(ys[1].toString()));
+		map.put("ysje00", new BigDecimal(ys[2].toString()));
+		map.put("ysje01", new BigDecimal(ys[3].toString()));
+		map.put("ysje02", new BigDecimal(ys[4].toString()));
+		map.put("ysje03", new BigDecimal(ys[5].toString()));
+		map.put("ysje04", new BigDecimal(ys[6].toString()));
+		
+		dg.setObj(map);
+		dg.setRows(xskps);
+		return dg;
+	}
 	
 	@Override
 	public DataGrid datagrid(Xshk xshk) {
@@ -240,6 +347,11 @@ public class XshkServiceImpl implements XshkServiceI {
 	}
 
 	@Autowired
+	public void setHkKpDao(BaseDaoI<THkKp> hkKpDao) {
+		this.hkKpDao = hkKpDao;
+	}
+
+	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
 	}
@@ -250,8 +362,23 @@ public class XshkServiceImpl implements XshkServiceI {
 	}
 
 	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
+	}
+
+	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
+	}
+
+	@Autowired
+	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
+		this.khDetDao = khDetDao;
+	}
+
+	@Autowired
+	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
+		this.khlxDao = khlxDao;
 	}
 
 	@Autowired

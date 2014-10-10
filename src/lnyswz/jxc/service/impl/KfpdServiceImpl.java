@@ -124,10 +124,10 @@ public class KfpdServiceImpl implements KfpdServiceI {
 	public void cjKfpd(Kfpd kfpd) {
 		Date now = new Date(); 
 		//获取原单据信息
-		TKfpd yTKfpd = kfpdDao.get(TKfpd.class, kfpd.getKfpdlsh());
+		TKfpd yTKfpd = kfpdDao.load(TKfpd.class, kfpd.getKfpdlsh());
 		//新增冲减单据信息
 		TKfpd tKfpd = new TKfpd();
-		BeanUtils.copyProperties(yTKfpd, tKfpd, new String[]{"TCgjhs"});
+		BeanUtils.copyProperties(yTKfpd, tKfpd, new String[]{"TYwpd", "TKfpdDets"});
 		//更新原单据冲减信息
 		yTKfpd.setCjId(kfpd.getCjId());
 		yTKfpd.setCjTime(now);

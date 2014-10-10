@@ -3,20 +3,20 @@
 
 <script type="text/javascript">
 var spbgy_dg;
-var did;
-var menuId;
+var spbgy_did;
+var spbgy_menuId;
 
 $(function(){
 	
-	did = lnyw.tab_options().did;
-	menuId = lnyw.tab_options().id;
+	spbgy_did = lnyw.tab_options().did;
+	spbgy_menuId = lnyw.tab_options().id;
 	
 	$.ajax({
 		type: "POST",
 		async: false,
 		url: '${pageContext.request.contextPath}/jxc/ckAction!listCk.action',
 		data: {
-			depId: did,
+			depId: spbgy_did,
 		},
 		dataType: 'json',
 		success: function(d){
@@ -32,7 +32,7 @@ $(function(){
 	spbgy_dg = $('#jxc_spbgy_dg').datagrid({
 		url : '${pageContext.request.contextPath}/jxc/spBgyAction!datagridBgy.action',		
 		queryParams: {
-			depId : did,
+			depId : spbgy_did,
  			ckId : $('#jxc_spbgy_ckId').combobox('getValue'),
 		},
 		fit : true,
@@ -46,6 +46,8 @@ $(function(){
 	        {field:'spbh',title:'商品编号',width:100},
 	        {field:'spmc',title:'商品名称',width:100},
 	        {field:'spcd',title:'商品产地',width:100},
+	        {field:'sppp',title:'商品品牌',width:100},
+	        {field:'spbz',title:'商品包装',width:100},
 	    ]],
 		toolbar : '#jxc_spbgy_tb',
 		onBeforeLoad:function(param){
@@ -61,7 +63,7 @@ $(function(){
 		},
 	});
 	//根据权限，动态加载功能按钮
- 	lnyw.toolbar(0, spbgy_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+ 	lnyw.toolbar(0, spbgy_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', spbgy_did);
 	
 });
 
@@ -175,29 +177,37 @@ $(function(){
 // 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 // 	}
 // }
-function saveSpBgy(){
-	var rows = spbgy_dg.datagrid('getSelections');
+function updateSpBgy(){
+	
+	var rows = spbgy_dg.datagrid('getRows');
+	var rows_selected = spbgy_dg.datagrid('getSelections');
 	var spbhs = [];
-	if (rows.length > 0) {
-		$.messager.confirm('请确认', '您要关联选中的商品条目？', function(r) {
+	var spbhs_selected= [];
+	//if (rows.length > 0) {
+		$.messager.confirm('请确认', '您要更新关联选中的商品条目？', function(r) {
 			if (r) {
 				for (var i = 0; i < rows.length; i++) {
 					spbhs.push(rows[i].spbh);
 				}
+				for (var j = 0; j < rows_selected.length; j++) {
+					spbhs_selected.push(rows[j].spbh);
+				}
 				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/spBgyAction!saveSpBgy.action',
+					url : '${pageContext.request.contextPath}/jxc/spBgyAction!updateSpBgy.action',
 					data : {
-						depId : did,
+						depId : spbgy_did,
 						ckId : $('#jxc_spbgy_ckId').combobox('getValue'),
-						spbhs : spbhs.join(",")
+						spbhs : spbhs.join(","),
+						spbhsSel : spbhs_selected.join(","),
 					},
 					dataType : 'json',
 					success : function(d) {
-						spbgy_dg.datagrid('load',{
-							depId : did,
-							ckId : $('#jxc_spbgy_ckId').combobox('getValue')
+						spbgy_dg.datagrid('reload');
+// 						spbgy_dg.datagrid('load',{
+// 							depId : spbgy_did,
+// 							ckId : $('#jxc_spbgy_ckId').combobox('getValue')
 							
-						});
+// 						});
 						spbgy_dg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
@@ -207,9 +217,9 @@ function saveSpBgy(){
 				});
 			}
 		});
-	} else {
-		$.messager.alert('提示', '请选择至少一条商品！', 'error');
-	}
+// 	} else {
+// 		$.messager.alert('提示', '请选择至少一条商品！', 'error');
+// 	}
 }
 
 function deleteSpBgy(){
@@ -218,13 +228,13 @@ function deleteSpBgy(){
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/spBgyAction!deleteSpBgy.action',
 				data : {
-					depId : did,
+					depId : spbgy_did,
 					ckId : $('#jxc_spbgy_ckId').combobox('getValue'),
 				},
 				dataType : 'json',
 				success : function(d) {
 					spbgy_dg.datagrid('load',{
-						depId : did,
+						depId : spbgy_did,
 						ckId : $('#jxc_spbgy_ckId').combobox('getValue')
 					});
 					spbgy_dg.datagrid('unselectAll');
@@ -237,6 +247,14 @@ function deleteSpBgy(){
 		}
 	});
 }
+
+function searchSp(){
+	spbgy_dg.datagrid('load',{
+		depId: spbgy_did,
+		ckId : $('#jxc_spbgy_ckId').combobox('getValue'),
+		search: $('input[name=searchSp]').val(),
+	});
+}
 </script>
 <!-- <div id='jxc_spbgy_layout' style="height:100%;width=100%"> -->
 <!-- 	<div data-options="region:'west',title:'保管员',split:true" style="height:100px;width:150px"> -->
@@ -246,6 +264,9 @@ function deleteSpBgy(){
 <!--     </div> -->
 <!-- </div> -->
 <div id="jxc_spbgy_tb" style="padding:3px;height:auto">
+输入商品编号或名称：<input type="text" name="searchSp" style="width:100px">
+<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchSp();">查询</a>
+	
 请选择仓库:<input id="jxc_spbgy_ckId" name="ckId" type='text' size="8">
 </div>
 <div id='jxc_spbgy_dg'></div>

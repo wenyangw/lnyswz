@@ -139,6 +139,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.toXskp(xsth.getXsthDetIds()));
 	}
 	
+	public void getSpBgys(){
+		writeJson(xsthService.getSpBgys(xsth));
+	}
+	
 	public void datagrid(){
 		User u = (User)session.get("user");
 		if("1".equals(u.getIsYwy())){
@@ -165,6 +169,20 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
+	}
+	
+	public void printThd() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsth(xsth);
+		Export.print(dg, Constant.REPORT_XSTH_KF.get(xsth.getBmbh()));
+	}
+	
+	public void printXsthByBgy() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsthByBgy(xsth);
+		Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
 	}
 	
 	public void getSpkc(){

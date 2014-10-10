@@ -673,8 +673,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
-	$('input:checkbox').removeProp('checked');
+	//$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeProp('checked');
+	$('input:checkbox').prop('checked', false);
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywrk_layout');
 	jxc.spInfo($('#jxc_ywrk_layout'), '');
@@ -875,7 +876,7 @@ function saveAll(){
 	effectRow['ckmc'] = jxc_ywrk_ckCombo.combobox('getText');
 	effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
 	effectRow['rklxmc'] = jxc_ywrk_rklxCombo.combobox('getText');
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_ywrk_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
@@ -968,7 +969,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -1012,6 +1013,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				ywrk_did,
+    				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor
@@ -1318,8 +1320,15 @@ function generateYwrk(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$.each(d.rows, function(index){
+							if(index != d.rows.length - 1){
+								d.rows[index].spje = d.rows[index].zdwsl * d.rows[index].zdwdj;
+							}
+						});
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
 						$('input[name=kfrklshs]').val(kfrklshsStr);
 						ywrk_tabs.tabs('select', 0);
 					}
@@ -1367,6 +1376,8 @@ function createYwrkFromCgjh(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=isZs]').attr('checked', 'checked');
@@ -1412,9 +1423,10 @@ function toYwrk(){
 						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
 						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
 						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
-						$('input[name=bz]').val(row.xskplsh + bz);
+						$('input[name=jxc_ywrk_bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
 						ywrk_tabs.tabs('select', 0);
+						
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 					}
@@ -1464,7 +1476,7 @@ function searchXskpInYwrk(){
 						<th class="isDep" style="display:none">部门</th><td class="isDep" style="display:none"><input id="jxc_ywrk_depId" name="depId" type="text" size="8"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_ywrk_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="xskplsh" type="hidden">

@@ -86,6 +86,8 @@ public class Xsth {
 	private String xsthDetIds;
 	private String xskpDetIds;
 	
+	private String shbz;
+	
 	//是否已开始提货，冲减销售提货单时提示
 	private String isTh;
 	
@@ -626,6 +628,12 @@ public class Xsth {
 	}
 	public void setRows(int rows) {
 		this.rows = rows;
+	}
+	public String getShbz() {
+		return shbz;
+	}
+	public void setShbz(String shbz) {
+		this.shbz = shbz;
 	}
 	
 	

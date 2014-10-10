@@ -9,7 +9,108 @@
 var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包的作用 */
 
 //系统设定，是否需要进行审核(Constant.java同步)
-var NEED_AUDIT = '0';
+var NEED_AUDIT = '1';
+var AUDIT_REFUSE = '9';
+
+jxc.auditLevel = function(bmbh){
+	var level = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '04':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '07':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '08':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	default:
+		break;
+	}
+};
+
+jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
+	var payTime = undefined;
+	var isUp = undefined;
+	var postponeDay = undefined;
+	$.ajax({
+		url: url,
+		data: {
+			bmbh: bmbh,
+			khbh: khbh,
+			ywyId: ywyId,
+		},
+		cache: false,
+		async: false,
+		dataType: 'json',
+		success: function(data){
+			payTime = data.obj.payTime;
+			isUp = data.obj.isUp;
+			postponeDay = data.obj.postponeDay;
+		}
+	});
+	
+	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
+		return undefined;
+	}else{
+		if(postponeDay == 0 || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
+			return jxc.auditLevel(xsth_did)['second'];
+		}else{
+			return jxc.auditLevel(xsth_did)['first'];
+		}
+	}
+};
+
+jxc.notInExcludeKhs = function(bmbh, khbh){
+	switch (bmbh) {
+	case '04':
+		var kh04 = ['21010017', '21010798'];
+		if(kh04.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	default:
+		return true;
+		break;
+	}
+};
+
+
+var ywbms = [{
+    "id": '01',
+    "depName": "文达印刷 "
+},{
+    "id": '04',
+    "depName": "教材公司"
+},{
+    "id": '05',
+    "depName": "文达纸业"
+},{
+    "id": '07',
+    "depName": "经营拓展部"
+},{
+    "id": '08',
+    "depName": "大连分公司"
+},];
+
 //销售欠款值
 var JSFS_QK = '06';
 var LENGTH_JE = 4;
@@ -41,6 +142,28 @@ jxc.otherBm = function(bmbh){
 	}
 };
 
+jxc.earliestXskp = function(area, url, params){
+	$(area).layout('expand', 'east');
+	
+	$.ajax({
+		url: url,
+		data: params,
+		cache: false,
+		dataType: 'json',
+		success: function(data){
+			$('#show_spkc').propertygrid({
+				fit : true,
+				data: data.rows,
+				showGroup: true,
+				scrollbarSize: 0,
+				showHeader:false,
+				groupFormatter: groupFormatter,
+			});
+		}
+	});
+};
+
+
 jxc.showFh = function(bmbh){
 	switch(bmbh){
 	case '04':
@@ -67,6 +190,10 @@ jxc.checkKh = function(needAudit, khbh, depId){
 	}
 };
 
+
+jxc.toJson = function(str) {
+	 return str.substr(0, str.indexOf('<') > 0 ? str.indexOf('<') : str.length);
+};
 
 //var dictType = [ {
 //	value : '00',
@@ -169,7 +296,7 @@ jxc.spInfo = function(target, type, sppp, spbz){
 };
 
 //商品信息快速查询
-jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
+jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjWithS){
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -191,6 +318,7 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 				queryParams:{
 					query : value,
 					depId : depId,
+					ckId : ckId,
 				},
 				columns:[[
 			        {field:'spbh',title:'编号'},
@@ -207,6 +335,11 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 		        		}	
 			        },
 			        {field:'limitXsdj',title:'最低销价',hidden:true},
+			        {field:'kcsl',title:'库存数量',
+			        	formatter: function(value){
+		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
+		        		}},
+		        	{field:'dwcb',title:'成本',hidden:true},
 			        
 			    ]],
 			    toolbar:'#jxc_spQuery_tb',
@@ -226,7 +359,9 @@ jxc.spQuery = function(value, depId, urlJsp, urlAction, focusTarget, xsdjWithS){
 	    		$('#jxc_spQuery_dg').datagrid('load', 
 	    				{
 	    					query: query.val(),
-	    					depId: depId});
+	    					depId: depId,
+	    					ckId: ckId
+	    				});
 	    	});
 		},
 	});

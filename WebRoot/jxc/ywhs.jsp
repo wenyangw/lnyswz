@@ -467,7 +467,8 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	$('.isFh').css('display','none');
 	
 	//收回商品库存信息
@@ -803,7 +804,7 @@ function saveAll(){
 		effectRow['fhmc'] = jxc_ywhs_fhCombo.combobox('getText');
 	}
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_ywhs_bz]').val();
 	
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -879,7 +880,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -922,6 +923,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				did,
+    				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor);
@@ -1256,7 +1258,7 @@ function searchYwhs(){
 						</td>
 					</tr>
 					<tr>
-						<td colspan="12" bgcolor="#E4FAFA"><strong>备注</strong><input type="text" name="bz" size="100"></td>
+						<td colspan="12" bgcolor="#E4FAFA"><strong>备注</strong><input type="text" name="jxc_ywhs_bz" size="100"></td>
 					</tr>
 			  </table>
 			</div>

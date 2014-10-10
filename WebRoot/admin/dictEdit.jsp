@@ -61,6 +61,26 @@
 			<td><input name="orderBy" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>
+			<tr>
+			<th><label for="isHj">是否合计</label></th>
+				<td><input type="checkbox" checked=true value="01"  name="isHj"/> 
+				</td>
+		</tr>
+		<tr>
+			<th><label for="sqlWhere">合计筛选</label></th>
+			<td><input name="sqlWhere" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="inGroupBy">求和</label></th>
+			<td><input name="inGroupBy" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="outGroupBy">合计求和</label></th>
+			<td><input name="outGroupBy" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
 		<input name="id" type="hidden">
 		<input name="depId" type="hidden">
 		<input name="menuId" type="hidden">

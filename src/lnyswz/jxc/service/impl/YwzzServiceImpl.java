@@ -48,14 +48,14 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			" left join t_jldw cdw on cdw.id = sp.cjldwId" +
 			" left join t_ywzz yw on yw.bmbh = spDet.depId and yw.spbh = spDet.spbh and yw.jzsj = CONVERT(char(6), getDate(), 112) and yw.ckId is null" +
 			" left join t_lszz ls on ls.bmbh = spDet.depId and ls.spbh = spDet.spbh and ls.jzsj = CONVERT(char(6), getDate(), 112) and ls.ckId is null" +
-			" where spDet.depId = ? and spDet.minKc > 0 and spDet.minKc > isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0) ";
+			" where spDet.depId = ? and spDet.minKc > 0 and spDet.minKc > isnull((yw.qcsl + yw.rksl - yw.xssl), 0) - isnull((ls.qcsl + ls.lssl - ls.kpsl), 0)";
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywzz.getBmbh());
 		
 		String totalHql = "select count(*)" + sql;
 		
-		List<Object[]> l = ywzzDao.findBySQL(select + sql, params, ywzz.getPage(), ywzz.getRows());
+		List<Object[]> l = ywzzDao.findBySQL(select + sql + " order by spDet.spbh", params, ywzz.getPage(), ywzz.getRows());
 		if(l != null && l.size() > 0){
 			List<Ywzz> ywzzs = new ArrayList<Ywzz>();
 			for(Object[] o : l){
@@ -148,7 +148,9 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		params.put("bmbh", dep.getId());
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
-		updateYwzz(sp, dep, null, sl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
+		if(!type.equals(Constant.UPDATE_DB)){
+			updateYwzz(sp, dep, null, sl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
+		}
 		if(!type.equals(Constant.UPDATE_BT)){
 			//总账中仓库更新
 			hql += " and t.ckId = :ckId";
@@ -207,7 +209,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 				}
 				tYwzz.setRksl(Constant.BD_ZERO);
 				tYwzz.setRkje(Constant.BD_ZERO);
-				tYwzz.setDwcb(Constant.BD_ZERO);
+				//tYwzz.setDwcb(Constant.BD_ZERO);
+				tYwzz.setDwcb(je.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(je);
@@ -222,6 +225,14 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXsse(Constant.BD_ZERO);
 					tYwzz.setXscb(Constant.BD_ZERO);
 				}
+			}else if(type.equals(Constant.UPDATE_DB)){
+				tYwzz.setRksl(sl);
+				tYwzz.setDwcb(Constant.BD_ZERO);
+				tYwzz.setRkje(Constant.BD_ZERO);
+				tYwzz.setXssl(Constant.BD_ZERO);
+				tYwzz.setXsje(Constant.BD_ZERO);
+				tYwzz.setXsse(Constant.BD_ZERO);
+				tYwzz.setXscb(Constant.BD_ZERO);
 			}
 			baseDao.save(tYwzz);
 		}else{
@@ -244,6 +255,15 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXsse(tYwzz.getXsse().add(se));
 					tYwzz.setXscb(tYwzz.getXscb().add(cb));
 				}
+				if(tYwzz.getXscb().compareTo(Constant.BD_ZERO) == 0){
+					BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
+					BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
+					if(kcsl.compareTo(Constant.BD_ZERO) != 0){
+						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
+					}else{
+						tYwzz.setDwcb(Constant.BD_ZERO);
+					}
+				}
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(tYwzz.getRkje().add(je));
@@ -255,6 +275,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}
 				}
+			}else if(type.equals(Constant.UPDATE_DB)){
+				tYwzz.setRksl(tYwzz.getRksl().add(sl));
 			}
 			
 			
@@ -264,8 +286,22 @@ public class YwzzServiceImpl implements YwzzServiceI {
 
 	public static List<ProBean> getZzsl(String bmbh, String spbh, String ckId, BaseDaoI<TYwzz> baseDao) {
 		List<ProBean> resultList = new ArrayList<ProBean>();
-		Map<String, Object> params = new HashMap<String, Object>();
+		Object[] o = getYwzzSl(bmbh, spbh, ckId, baseDao);
+		if(o != null){
+			ProBean yw = new ProBean();
+			yw.setGroup("业务库存");
+			yw.setName(ckId == null ? "库存数量" : (String)o[0]);
+			yw.setValue("" + o[1]);
+			resultList.add(yw);
+			return resultList;
+		}
+		return null;
+	}
+
+	public static Object[] getYwzzSl(String bmbh, String spbh,
+			String ckId, BaseDaoI<TYwzz> baseDao) {
 		String sql = "select ckmc, qcsl + rksl - xssl from t_ywzz where bmbh = ? and spbh = ? and jzsj = ? ";
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", spbh);
 		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
@@ -276,19 +312,11 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			sql += " and ckId is null ";
 		}
 		
-		List<Object[]> l = baseDao.findBySQL(sql, params);
-		if(l != null && l.size() > 0){
-			for(Object[] o : l){
-				ProBean yw = new ProBean();
-				yw.setGroup("业务库存");
-				yw.setName(ckId == null ? "库存数量" : (String)o[0]);
-				yw.setValue("" + o[1]);
-				resultList.add(yw);
-			}
-			return resultList;
-		}
-		return null;
+		Object[] o = baseDao.getMBySQL(sql, params);
+		return o;
 	}
+	
+	
 
 	@Autowired
 	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {

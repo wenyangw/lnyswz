@@ -349,6 +349,7 @@ $(function(){
 	        {field:'createId',title:'创建人id',align:'center',hidden:true},
 	        {field:'createName',title:'业务员',align:'center'},
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
+	        {field:'lxr',title:'联系人',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
 	        {field:'dhsj',title:'到货时间',align:'center'},
@@ -627,7 +628,8 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	$('input:checkbox').removeAttr('checked');
+	//$('input:checkbox').removeAttr('checked');
+	$('input:checkbox').prop('checked', false);
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_cgjh_layout');
@@ -813,7 +815,7 @@ function saveAll(){
 // 	effectRow['lxr'] = $('input[name=lxr]').val();
 // 	effectRow['dhsj'] = $('input[name=dhsj]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
-	effectRow['bz'] = $('input[name=bz]').val();
+	effectRow['bz'] = $('input[name=jxc_cgjh_bz]').val();
 	effectRow['cgxqDetIds'] = $('input[name=cgxqDetIds]').val();
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -900,7 +902,7 @@ function setEditing(){
 				enterEdit(rowIndex + 1, false);
 			}else{
 				if(!keyOk()){
-					removeit();
+					removeRow();
 				}
 			}
 		}
@@ -944,6 +946,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				did,
+    				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor		
@@ -1419,6 +1422,7 @@ function createCgjh(){
 							if(index == d.rows.length - 1){
 								return false;
 							}
+							d.rows[index].lxr = rows[0].lxr;
 							d.rows[index].shdz = rows[0].shdz;
 							d.rows[index].dhsj = rows[0].dhsj;
 						});
@@ -1464,13 +1468,13 @@ function refuseCgxq(){
 	}
 }
 
-function searchCgxqInCgjh(){
-	cgjh_cgxqDg.datagrid('load',{
-		bmbh: did,
-		createTime: $('input[name=createTimeCgxqInCgjh]').val(),
-		fromOther: 'fromCgjh'
-	});
-}
+// function searchCgxqInCgjh(){
+// 	cgjh_cgxqDg.datagrid('load',{
+// 		bmbh: did,
+// 		createTime: $('input[name=createTimeCgxqInCgjh]').val(),
+// 		fromOther: 'fromCgjh'
+// 	});
+// }
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
 
@@ -1538,7 +1542,7 @@ function createCgjhFromSpkc(){
 <!-- 						----<th>需求时间</th><td><input name="xqsj"></td> -->
 <!-- 					</tr> -->
 					<tr>
-						<th>备注</th><td colspan="7"><input name="bz" style="width:90%"></td>
+						<th>备注</th><td colspan="7"><input name="jxc_cgjh_bz" style="width:90%"></td>
 					</tr>
 				</table>
 				<input name="cgxqDetIds" type="hidden">
@@ -1567,9 +1571,9 @@ function createCgjhFromSpkc(){
 	请输入查询起始日期:<input type="text" name="createTimeCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjh();">查询</a>
 </div>
-<div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInCgjh();">查询</a>
-</div>
+<!-- <div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto"> -->
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+<!-- 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInCgjh();">查询</a> -->
+<!-- </div> -->
 <div id="jxc_cgjh_spkcTb" style="padding:3px;height:auto">
 </div>
