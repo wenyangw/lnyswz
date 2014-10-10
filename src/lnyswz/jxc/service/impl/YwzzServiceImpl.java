@@ -210,7 +210,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 				tYwzz.setRksl(Constant.BD_ZERO);
 				tYwzz.setRkje(Constant.BD_ZERO);
 				//tYwzz.setDwcb(Constant.BD_ZERO);
-				tYwzz.setDwcb(je.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
+				//2014.10.10,冲减销售时，无结转记录，更新成本
+				tYwzz.setDwcb(cb.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(je);
@@ -254,14 +255,15 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXsje(tYwzz.getXsje().add(je));
 					tYwzz.setXsse(tYwzz.getXsse().add(se));
 					tYwzz.setXscb(tYwzz.getXscb().add(cb));
-				}
-				if(tYwzz.getXscb().compareTo(Constant.BD_ZERO) == 0){
-					BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
-					BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
-					if(kcsl.compareTo(Constant.BD_ZERO) != 0){
-						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
-					}else{
-						tYwzz.setDwcb(Constant.BD_ZERO);
+					//2014.10.10，冲减销售开票时，如无单位成本，重新计算
+					if(tYwzz.getDwcb().compareTo(Constant.BD_ZERO) == 0){
+						BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
+						BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
+						if(kcsl.compareTo(Constant.BD_ZERO) != 0){
+							tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
+						}else{
+							tYwzz.setDwcb(Constant.BD_ZERO);
+						}
 					}
 				}
 			}else if(type.equals(Constant.UPDATE_BT)){
