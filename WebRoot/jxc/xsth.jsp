@@ -5,6 +5,7 @@ var xsth_dg;
 var xsth_spdg;
 var xsth_kfckDg;
 var xsth_xskpDg;
+var xsth_ywrkDg;
 var editIndex = undefined;
 var xsth_did;
 var xsth_lx;
@@ -471,53 +472,98 @@ $(function(){
 	    toolbar:'#jxc_xsth_xskpTb',
 	});
 	lnyw.toolbar(2, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
+
+	
+	xsth_ywrkDg = $('#jxc_xsth_ywrkDg').datagrid({
+		fit : true,
+	    border : false,
+	    remoteSort: false,
+	    fitColumns: true,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+			{field:'id',title:'销售开票DetId',align:'center',checkbox:true},
+			{field:'xskplsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'时间',align:'center'},
+			{field:'createName',title:'创建人',align:'center'},
+			{field:'khbh',title:'供应商编号',align:'center',hidden:true},
+			{field:'khmc',title:'供应商名称',align:'center'},
+			{field:'ywyId',title:'业务员id',align:'center',hidden:true},
+			{field:'ywymc',title:'业务员',align:'center'},
+			{field:'ckId',title:'仓库id',align:'center',hidden:true},
+			{field:'ckmc',title:'仓库',align:'center'},
+// 			{field:'fhId',title:'分户id',align:'center',hidden:true},
+// 			{field:'fhmc',title:'分户',align:'center'},
+			{field:'toFp',title:'*开票',align:'center',sortable:true,
+					formatter : function(value) {
+						if (value == '1') {
+							return '是';
+						} else {
+							return '';
+						}
+					},
+					sorter: function(a,b){
+						a = a == undefined ? 0 : a;
+						b = b == undefined ? 0 : b;
+						return (a-b);  
+					}},
+			{field:'spbh',title:'商品编号',align:'center'},
+			{field:'spmc',title:'名称',align:'center'},
+			{field:'spcd',title:'产地',align:'center'},
+			{field:'sppp',title:'品牌',align:'center'},
+			{field:'spbz',title:'包装',align:'center'},
+			{field:'zjldwmc',title:'单位1',align:'center'},
+			{field:'zdwsl',title:'数量1',align:'center'},
+			{field:'thsl',title:'已提数量',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:red;';
+				}},
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center'},
+			{field:'bookmc',title:'书名',align:'center',
+				formatter: function(value){
+					return lnyw.memo(value, 15);
+				}},
+			{field:'bz',title:'备注',align:'center',
+				formatter: function(value){
+					return lnyw.memo(value, 15);
+				}},
+			{field:'thfs',title:'到货方式',align:'center',
+				formatter : function(value) {
+					if (value == '1') {
+						return '自提';
+					} else {
+						return '送货';
+					}
+				}},
+			{field:'thr',title:'提货人',align:'center'},
+			{field:'ch',title:'车号',align:'center'},
+			{field:'shdz',title:'送货地址',align:'center'},
+			{field:'isZs',title:'*直送',align:'center',sortable:true,
+					formatter : function(value) {
+						if (value == '1') {
+							return '是';
+						} else {
+							return '';
+						}
+					},
+					sorter: function(a,b){
+						a = a == undefined ? 0 : a;
+						b = b == undefined ? 0 : b;
+						return (a-b);  
+					}},
+	    ]],
+	    toolbar:'#jxc_xsth_xskpTb',
+	});
+	lnyw.toolbar(3, xsth_xskpDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
 	
-// 	xsth_xskpDg.datagrid({
-//         view: detailview,
-//         detailFormatter:function(index,row){
-//             return '<div style="padding:2px"><table id="xsth-xskp-ddv-' + index + '"></table></div>';
-//         },
-//         onExpandRow: function(index,row){
-//             $('#xsth-xskp-ddv-'+index).datagrid({
-//                 url:'${pageContext.request.contextPath}/jxc/xskpAction!detDatagrid.action',
-//                 fitColumns:true,
-//                 singleSelect:true,
-//                 rownumbers:true,
-//                 loadMsg:'',
-//                 height:'auto',
-//                 queryParams: {
-//         			xskplsh: row.xskplsh,
-//         		},
-//                 columns:[[
-//                     {field:'spbh',title:'商品编号',width:200,align:'center'},
-//                     {field:'spmc',title:'名称',width:100,align:'center'},
-//                     {field:'spcd',title:'产地',width:100,align:'center'},
-//                     {field:'sppp',title:'品牌',width:100,align:'center'},
-//                     {field:'spbz',title:'包装',width:100,align:'center'},
-//                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-//                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
-//                     {field:'zdwdj',title:'单价1',width:100,align:'center'},
-//                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-//                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
-//                     {field:'cdwdj',title:'单价2',width:100,align:'center'},
-//                     {field:'spje',title:'金额',width:100,align:'center',
-//         	        	formatter: function(value){
-//         	        		return lnyw.formatNumberRgx(value);
-//         	        	}},
-//                 ]],
-//                 onResize:function(){
-//                 	xsth_xskpDg.datagrid('fixDetailRowHeight',index);
-//                 },
-//                 onLoadSuccess:function(){
-//                     setTimeout(function(){
-//                     	xsth_xskpDg.datagrid('fixDetailRowHeight',index);
-//                     },0);
-//                 }
-//             });
-//             xsth_xskpDg.datagrid('fixDetailRowHeight',index);
-//         }
-//     });
+
 	//选中列表标签后，装载数据
 	xsth_tabs = $('#jxc_xsth_tabs').tabs({
 		onSelect: function(title, index){
@@ -532,15 +578,6 @@ $(function(){
 				});
 				countXsth++;
 			}
-// 			if(index == 2){
-// 				xsth_kfckDg.datagrid({
-// 					url: '${pageContext.request.contextPath}/jxc/kfckAction!datagrid.action',
-// 					queryParams: {
-// 						bmbh: xsth_did,
-// 						fromOther: 'fromXsth'
-// 						},
-// 				});
-// 			}
 			if(index == 2){
 				xsth_xskpDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xskpAction!datagridDet.action',
@@ -549,6 +586,17 @@ $(function(){
 						fromOther: 'fromXsth',
 						createTime: countXskpInXsth == 0 ? undefined : $('input[name=createTimeXskpInXsth]').val(),
 						search: countXskpInXsth == 0 ? undefined : $('input[name=searchXskpInXsth]').val(),
+						},
+				});
+			}
+			if(index == 3){
+				xsth_ywrkDg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/ywrkAction!datagridDet.action',
+					queryParams: {
+						bmbh: xsth_did,
+						fromOther: 'fromXsth',
+						createTime: countYwrkInXsth == 0 ? undefined : $('input[name=createTimeYwrkInXsth]').val(),
+						search: countYwrkInXsth == 0 ? undefined : $('input[name=searchYwrkInXsth]').val(),
 						},
 				});
 			}
@@ -1661,6 +1709,67 @@ function searchXskpInXsth(){
 
 ////////////////////////////////////////////以上为销售开票列表处理代码
 
+////////////////////////////////////////////以下为业务入库列表处理代码
+function createXsthFromYwrk(){
+	var rows = xsth_ywrkDg.datagrid('getSelections');
+	var ywrkDetIds = [];
+	if(rows.length > 0){
+		var preRow = undefined;
+		var flag = true;
+	    $.each(rows, function(index){
+	    	ywrkDetIds.push(rows[index].id);
+	    	if(index != 0){
+	    		if(this.khbh != preRow.khbh){
+	    			$.messager.alert('提示', '请选择同一客户的销售发票进行提货！', 'error');
+					flag = false;
+					//return false;
+	    		}else{
+	    			preRow = this;
+	    		}
+	    	}
+	    	preRow = this;
+	    });
+	    if(flag){
+			$.messager.confirm('请确认', '是否要将选中记录进行销售提货？', function(r) {
+				if (r) {
+					var xskpDetStr = xskpDetIds.join(',');
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/xskpAction!toXsth.action',
+						data : {
+							xskpDetIds: xskpDetStr 
+						},
+						dataType : 'json',
+						success : function(d) {
+							xsth_spdg.datagrid('loadData', d.rows);
+							$('input[name=khbh]').val(rows[0].khbh);
+							$('input[name=khmc]').val(rows[0].khmc);
+							jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
+							jxc_xsth_ywyCombo.combobox("setValue", rows[0].ywyId);
+							jxc_xsth_jsfsCombo.combobox("setValue", rows[0].jsfsId);
+							updateFooter();
+// 							$('input[name=xskplsh]').val(row.xskplsh);
+							$('input[name=xskpDetIds]').val(xskpDetStr);
+							xsth_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+	    }
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
+function searchYwrkInXsth(){
+	xsth_ywrkDg.datagrid('load',{
+		bmbh: xsth_did,
+		createTime: $('input[name=createTimeYwrkInXsth]').val(),
+		fromOther: 'fromXsth'
+	});
+}
+
+////////////////////////////////////////////以上为业务入库列表处理代码
+
 </script>
 
 <!-- tabPosition:'left', headerWidth:'35' -->
@@ -1716,11 +1825,11 @@ function searchXskpInXsth(){
     <div title="销售提货列表" data-options="closable:false" >
     	<div id='jxc_xsth_dg'></div>
     </div>
-<!--     <div title="库房出库列表" data-options="closable:false" > -->
-<!--     	<div id='jxc_xsth_kfckDg'></div> -->
-<!--     </div> -->
 	<div title="销售开票列表" data-options="closable:false" >
 		<div id='jxc_xsth_xskpDg'></div>
+	</div>
+	<div title="业务入库列表" data-options="closable:false" >
+		<div id='jxc_xsth_ywrkDg'></div>
 	</div>
 </div>
 
@@ -1729,14 +1838,15 @@ function searchXskpInXsth(){
 	输入流水号、客户、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsth();">查询</a>
 </div>
-<!-- <div id="jxc_xsth_kfckTb" style="padding:3px;height:auto"> -->
-<!-- 	请输入查询起始日期:<input type="text" name="createTimeKfckInXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
-<!-- 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfckInXsth();">查询</a> -->
-<!-- </div> -->
 <div id="jxc_xsth_xskpTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXskpInXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、客户、业务员、备注：<input type="text" name="searchXskpInXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXskpInXsth();">查询</a>
+</div>
+<div id="jxc_xsth_ywrkTb" style="padding:3px;height:auto">
+	请输入查询起始日期:<input type="text" name="createTimeYwrkInXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商、备注：<input type="text" name="searchYwrkInXsth" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwrkInXsth();">查询</a>
 </div>
 
 
