@@ -1467,11 +1467,6 @@ function khLoad(){
 //////////////////////////////////////////////以下为销售提货列表处理代码
 function cancelXsth(){
  	var row = xsth_dg.datagrid('getSelected');
-	console.info(row);
-	xsth_dg.datagrid('load').datagrid('selectRecord', row.xsthlsh);
-	row = xsth_dg.datagrid('getSelected');
-	console.info(row);
-	
 	if (row != undefined) {
 		if(row.isCancel != '1'){
 			if(row.locked == '0'){
