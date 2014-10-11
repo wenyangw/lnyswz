@@ -368,7 +368,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		List<Ywrk> nl = new ArrayList<Ywrk>();
 		for(TYwrkDet t : l){
 			Ywrk c = new Ywrk();
-			
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
