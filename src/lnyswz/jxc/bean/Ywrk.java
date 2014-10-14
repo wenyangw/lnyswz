@@ -39,6 +39,7 @@ public class Ywrk {
 	
 	private String search;
 	
+	private int id;
 	private String spbh;
 	private String spmc;
 	private String spcd;
@@ -279,6 +280,14 @@ public class Ywrk {
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getSpbh() {

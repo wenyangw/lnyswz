@@ -407,8 +407,8 @@ $(function(){
 				styler:function(){
 					return 'color:red;';
 				}},
-			{field:'cjldwmc',title:'单位2',align:'center'},
-			{field:'cdwsl',title:'数量2',align:'center'},
+// 			{field:'cjldwmc',title:'单位2',align:'center'},
+// 			{field:'cdwsl',title:'数量2',align:'center'},
 			{field:'bz',title:'备注',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);

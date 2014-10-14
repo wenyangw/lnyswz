@@ -354,6 +354,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(TYwrkDet t : l){
 			Ywrk c = new Ywrk();
 			BeanUtils.copyProperties(t, c);
+			c.setYwrklsh(t.getTYwrk().getYwrklsh());
+			c.setCreateTime(t.getTYwrk().getCreateTime());
+			c.setCreateName(t.getTYwrk().getCreateName());
+			c.setGysbh(t.getTYwrk().getGysbh());
+			c.setGysmc(t.getTYwrk().getGysmc());
+			c.setCkId(t.getTYwrk().getCkId());
+			c.setCkmc(t.getTYwrk().getCkmc());
+			
 			nl.add(c);
 		}
 		
