@@ -219,6 +219,8 @@ $(function(){
            			b = b == undefined ? 0 : b;
    					return (a-b);  
    				}},
+			{field:'jsfsId',title:'结算方式id',align:'center', hidden:true},
+			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'spbh',title:'商品编号',align:'center'},
 			{field:'spmc',title:'名称',align:'center'},
 			{field:'spcd',title:'产地',align:'center'},
@@ -530,6 +532,7 @@ function init(){
 	//jxc_xskp_ywyCombo.combobox('selectedIndex', 0);
 	//jxc_xskp_jsfsCombo.combobox('selectedIndex', 0);
 	jxc_xskp_jsfsCombo.combobox('setValue', JSFS_QK);
+	jxc_xskp_jsfsCombo.combobox('readonly', false);
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_xskp_layout');
@@ -932,8 +935,8 @@ function setEditing(){
     zslEditor.target.bind('keyup', function(event){
 	    var kcRow = $('#show_spkc').propertygrid("getRows");
 	    
-	    //判断输入数量是否小于可销售数量
-	    //如果开票从提货单生成，不进行判断
+	    //判断输入数量是否小于可销售数量(业务账面数-销售提货数)
+	    //如果开票从提货单生成，不进行判断(业务账面数)
     	var kxssl = undefined;
     	if(kcRow == undefined){
     		kxssl = Number(0);
@@ -1390,6 +1393,11 @@ function printXsqk(){
 	    		flag = false;
 	    		return false;
 	    	}
+	    	if(rows[index].jsfsId != '06'){
+	    		$.messager.alert('提示', '选择的销售发票不是欠款销售，不能打印欠款单！', 'error');
+	    		flag = false;
+	    		return false;
+	    	}
 	    	if(index != 0){
 	    		if(this.khbh != preRow.khbh){
 	    			$.messager.alert('提示', '请选择同一客户的销售发票进行操作！', 'error');
@@ -1487,21 +1495,26 @@ function generateXskp(){
 	var xsthDetIds = [];
 	var flag = true;
 	if(rows.length > 0){
-// 		if(rows.length > 1){
-//     		var preRow = undefined;
-// 		    $.each(rows, function(index){
-// 		    	if(index != 0){
-// 		    		if(this.khbh != preRow.khbh){
-// 		    			$.messager.alert('提示', '请选择同一客户的销售提货单的进行开票！', 'error');
-// 						flag = false;
-// 						return false;
-// 		    		}else{
-// 		    			preRow = this;
-// 		    		}
-// 		    	}
-// 		    	preRow = this;
-// 		    });
-//     	}
+ 		if(rows.length > 1){
+     		var preRow = undefined;
+ 		    $.each(rows, function(index){
+ 		    	if(index != 0){
+ 		    		if(this.jsfsId != preRow.jsfsId){
+ 		    			$.messager.alert('提示', '请选择相同结算方式的提货单进行开票！', 'error');
+ 						flag = false;
+ 						return false;
+//  		    		}
+//  		    		else if(this.khbh != preRow.khbh){
+//  		    			$.messager.alert('提示', '请选择同一客户的销售提货单的进行开票！', 'error');
+//  						flag = false;
+//  						return false;
+ 		    		}else{
+ 		    			preRow = this;
+ 		    		}
+ 		    	}
+ 		    	preRow = this;
+ 		    });
+     	}
 		if(flag){
 			$.messager.confirm('请确认', '是否要将选中记录进行销售开票？', function(r) {
 				if (r) {
@@ -1522,6 +1535,8 @@ function generateXskp(){
 							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
+							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
+							jxc_xskp_jsfsCombo.combobox('readonly', true);
 							
 // 							if(rows[0].isSx == '1'){
 // 								$('input[name=isSx]').attr('checked', 'ckecked');
