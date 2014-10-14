@@ -44,7 +44,7 @@ public class Ywrk {
 	private String spcd;
 	private String sppp;
 	private String spbz;
-	private String zdwsl;
+	private BigDecimal zdwsl;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -321,11 +321,11 @@ public class Ywrk {
 		this.spbz = spbz;
 	}
 
-	public String getZdwsl() {
+	public BigDecimal getZdwsl() {
 		return zdwsl;
 	}
 
-	public void setZdwsl(String zdwsl) {
+	public void setZdwsl(BigDecimal zdwsl) {
 		this.zdwsl = zdwsl;
 	}
 

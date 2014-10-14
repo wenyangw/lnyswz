@@ -196,7 +196,7 @@ public class YszzServiceImpl implements YszzServiceI {
 	}
 	
 	public static Object[] getLatestXs(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-		String sql = "select * from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ?";
+		String sql = "select top 1 t.bmbh, t.khbh, t.lsh, t.createTime from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", khbh);

@@ -475,7 +475,7 @@ function setEditing(){
     							//设置信息字段值
     							setValueBySpbh(data.obj);
     							//spOk = true;
-    							hwIdEditor.target.focus();
+    							zslEditor.target.focus();
     						}else{
     							$.messager.alert('提示', '商品编号不存在！', 'error');
     						}
@@ -525,11 +525,6 @@ function setEditing(){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
-    }).bind('keydown', function(event){
-     	if(event.keyCode == 9){
-     		bzslEditor.target.focus();
-     		return false;
-     	}
     });
     
     //汇总计算
