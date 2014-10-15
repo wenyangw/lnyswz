@@ -114,6 +114,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(YwrkDet ywrkDet : ywrkDets){
 			TYwrkDet tDet = new TYwrkDet();
 			BeanUtils.copyProperties(ywrkDet, tDet);
+			tDet.setThsl(Constant.BD_ZERO);
 			
 			if("".equals(ywrkDet.getCjldwId()) || null == ywrkDet.getZhxs()){
 				tDet.setCdwdj(Constant.BD_ZERO);

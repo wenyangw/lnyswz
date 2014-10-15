@@ -38,6 +38,7 @@ public class TYwrkDet implements java.io.Serializable {
 	private BigDecimal spje;
 	private BigDecimal qdwcb;
 	private BigDecimal dwcb;
+	private BigDecimal thsl;
 
 	public TYwrkDet() {
 	}
@@ -45,7 +46,7 @@ public class TYwrkDet implements java.io.Serializable {
 	public TYwrkDet(int id, TYwrk TYwrk, String spbh, String spmc, String spcd, String sppp, 
 			String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs,
 			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje,
-			BigDecimal qdwcb, BigDecimal dwcb) {
+			BigDecimal qdwcb, BigDecimal dwcb, BigDecimal thsl) {
 		this.id = id;
 		this.TYwrk = TYwrk;
 		this.spbh = spbh;
@@ -65,6 +66,7 @@ public class TYwrkDet implements java.io.Serializable {
 		this.spje = spje;
 		this.qdwcb = qdwcb;
 		this.dwcb = dwcb;
+		this.thsl = thsl;
 	}
 
 	@Id
@@ -239,6 +241,15 @@ public class TYwrkDet implements java.io.Serializable {
 	
 	public void setDwcb(BigDecimal dwcb) {
 		this.dwcb = dwcb;
+	}
+
+	@Column(name = "thsl", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 
 }
