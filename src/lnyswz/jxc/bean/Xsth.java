@@ -86,6 +86,9 @@ public class Xsth {
 	private String xsthDetIds;
 	private String xskpDetIds;
 	
+	//接收直送业务入库传递的id
+	private String ywrkDetIds;
+	
 	private String shbz;
 	
 	//是否已开始提货，冲减销售提货单时提示
@@ -568,6 +571,12 @@ public class Xsth {
 	}
 	public void setXskpDetIds(String xskpDetIds) {
 		this.xskpDetIds = xskpDetIds;
+	}
+	public String getYwrkDetIds() {
+		return ywrkDetIds;
+	}
+	public void setYwrkDetIds(String ywrkDetIds) {
+		this.ywrkDetIds = ywrkDetIds;
 	}
 	public BigDecimal getZdwthsl() {
 		return zdwthsl;

@@ -70,12 +70,15 @@ public class TXsth implements java.io.Serializable {
 	private Integer kpId;
 	private Date kpTime;
 	private String kpName;
+	private String fromRk;
 	private String isHk;
 	private Integer hkId;
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
+	
+	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
 	
 	public TXsth() {
 	}
@@ -85,8 +88,8 @@ public class TXsth implements java.io.Serializable {
 			int ywyId, String ywymc, String jsfsId, String jsfsmc, String thfs, String shdz, String thr, String ch, 
 			BigDecimal hjje, BigDecimal hjsl, String isLs, String bookmc, String bz, String isZs, String isCancel, 
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
-			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String isHk,
-			Integer hkId, Date hkTime, String needAudit, String isAudit, Set<TXsthDet> TXsthDets, Set<TKfck> TKfcks) {
+			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
+			Integer hkId, Date hkTime, String needAudit, String isAudit, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -129,15 +132,14 @@ public class TXsth implements java.io.Serializable {
 		this.kpId = kpId;
 		this.kpTime = kpTime;
 		this.kpName = kpName;
+		this.fromFp = fromRk;
 		this.isHk = isHk;
 		this.hkId = hkId;
 		this.hkTime = hkTime;
 		this.needAudit = needAudit;
 		this.isAudit = isAudit;
 		this.TXsthDets = TXsthDets;
-//		this.TKfcks = TKfcks;
-//		this.TXskp = TXskp;
-//		this.xsfplsh = xsfplsh;
+		this.TYwrks = TYwrks;
 	}
 
 	@Id
@@ -542,6 +544,15 @@ public class TXsth implements java.io.Serializable {
 		this.kpName = kpName;
 	}
 
+	@Column(name = "fromRk", nullable = false, length = 1)
+	public String getFromRk() {
+		return fromRk;
+	}
+
+	public void setFromRk(String fromRk) {
+		this.fromRk = fromRk;
+	}
+
 	@Column(name = "isHk", nullable = false, length = 1)
 	public String getIsHk() {
 		return this.isHk;
@@ -595,6 +606,16 @@ public class TXsth implements java.io.Serializable {
 
 	public void setTXsthDets(Set<TXsthDet> tXsthDets) {
 		TXsthDets = tXsthDets;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "t_ywrk_xsth", joinColumns = { @JoinColumn(name = "xsthlsh", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ywrkdetId", nullable = false, updatable = false) })
+	public Set<TYwrkDet> getTYwrks() {
+		return this.TYwrks;
+	}
+	
+	public void setTYwrks(Set<TYwrkDet> TYwrks) {
+		this.TYwrks = TYwrks;
 	}
 	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth")

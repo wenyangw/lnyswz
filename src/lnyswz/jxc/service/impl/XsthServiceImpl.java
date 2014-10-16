@@ -79,6 +79,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
+	private BaseDaoI<TYwrkDet> ywrkDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -151,6 +152,29 @@ public class XsthServiceImpl implements XsthServiceI {
 //			tXskp.setTXsths(tXsthDets);
 			Arrays.sort(intDetIds);
 		}
+		
+		String ywrkDetIds = xsth.getYwrkDetIds();
+		Set<TYwrkDet> ywrkDets = null;
+		Set<String> ywrklshs = null;
+		int[] ywrkDetIdInts = null;
+		//如果从销售提货生成的销售开票，进行关联
+		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
+			tXsth.setFromRk("1");
+			
+			String[] strDetIds = ywrkDetIds.split(",");
+			ywrkDetIdInts = new int[strDetIds.length];
+			ywrklshs = new HashSet<String>();
+			ywrkDets = new HashSet<TYwrkDet>();
+			int i = 0;
+			for(String detId : strDetIds){
+				ywrkDetIdInts[i] = Integer.valueOf(detId);
+				i++;
+			}
+			Arrays.sort(ywrkDetIdInts);
+		}else{
+			tXsth.setFromRk("0");
+		}
+		
 		
 		Department dep = new Department();
 		dep.setId(xsth.getBmbh());
@@ -253,6 +277,27 @@ public class XsthServiceImpl implements XsthServiceI {
 					}
 				}
 			}
+			//从直送
+			if(ywrkDetIdInts != null){
+				BigDecimal thsl = xsthDet.getZdwsl();
+				for(int detId : ywrkDetIdInts){
+					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, detId);
+					ywrklshs.add(ywrkDet.getTYwrk().getYwrklsh());
+					if(xsthDet.getSpbh().equals(ywrkDet.getSpbh())){
+						BigDecimal wtsl = ywrkDet.getZdwsl().subtract(ywrkDet.getThsl());
+						ywrkDets.add(ywrkDet);
+						if(thsl.compareTo(wtsl) == 1){
+							ywrkDet.setThsl(ywrkDet.getThsl().add(wtsl));
+							thsl = thsl.subtract(wtsl);
+						}else{
+							ywrkDet.setThsl(ywrkDet.getThsl().add(thsl));
+							tDet.setLastRksl(thsl);
+							break;
+						}
+					}
+				}
+			}
+			
 		}
 		tXsth.setTXsthDets(tDets);
 		xsthDao.save(tXsth);
@@ -1048,6 +1093,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setXskpDetDao(BaseDaoI<TXskpDet> xskpDetDao) {
 		this.xskpDetDao = xskpDetDao;
+	}
+
+	@Autowired
+	public void setYwrkDetDao(BaseDaoI<TYwrkDet> ywrkDetDao) {
+		this.ywrkDetDao = ywrkDetDao;
 	}
 
 	@Autowired
