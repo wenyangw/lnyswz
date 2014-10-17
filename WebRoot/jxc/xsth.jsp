@@ -875,6 +875,7 @@ function saveXsth(){
 		effectRow['bookmc'] = $('input[name=bookmc]').val();
 		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
 		effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
+		effectRow['ywrkDetIds'] = $('input[name=ywrkDetIds]').val();
 		
 		effectRow['bmbh'] = xsth_did;
 		effectRow['lxbh'] = xsth_lx;
@@ -1570,47 +1571,28 @@ function createXsthFromYwrk(){
 	var rows = xsth_ywrkDg.datagrid('getSelections');
 	var ywrkDetIds = [];
 	if(rows.length > 0){
-		var preRow = undefined;
-		var flag = true;
 	    $.each(rows, function(index){
 	    	ywrkDetIds.push(rows[index].id);
-	    	if(index != 0){
-	    		if(this.khbh != preRow.khbh){
-	    			$.messager.alert('提示', '请选择同一客户的销售发票进行提货！', 'error');
-					flag = false;
-					//return false;
-	    		}else{
-	    			preRow = this;
-	    		}
-	    	}
-	    	preRow = this;
 	    });
-	    if(flag){
-			$.messager.confirm('请确认', '是否要将选中记录进行销售提货？', function(r) {
-				if (r) {
-					var xskpDetStr = xskpDetIds.join(',');
-					$.ajax({
-						url : '${pageContext.request.contextPath}/jxc/xskpAction!toXsth.action',
-						data : {
-							xskpDetIds: xskpDetStr 
-						},
-						dataType : 'json',
-						success : function(d) {
-							xsth_spdg.datagrid('loadData', d.rows);
-							$('input[name=khbh]').val(rows[0].khbh);
-							$('input[name=khmc]').val(rows[0].khmc);
-							jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
-							jxc_xsth_ywyCombo.combobox("setValue", rows[0].ywyId);
-							jxc_xsth_jsfsCombo.combobox("setValue", rows[0].jsfsId);
-							updateFooter();
-// 							$('input[name=xskplsh]').val(row.xskplsh);
-							$('input[name=xskpDetIds]').val(xskpDetStr);
-							xsth_tabs.tabs('select', 0);
-						}
-					});
-				}
-			});
-	    }
+		$.messager.confirm('请确认', '是否要将选中记录进行销售提货？', function(r) {
+			if (r) {
+				var ywrkDetStr = ywrkDetIds.join(',');
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/ywrkAction!toXsth.action',
+					data : {
+						ywrkDetIds: ywrkDetStr
+					},
+					dataType : 'json',
+					success : function(d) {
+						xsth_spdg.datagrid('loadData', d.rows);
+						jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
+						updateFooter();
+						$('input[name=ywrkDetIds]').val(ywrkDetStr);
+						xsth_tabs.tabs('select', 0);
+					}
+				});
+			}
+		});
 	}else{
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}
@@ -1669,6 +1651,7 @@ function searchYwrkInXsth(){
 					</tr>
 				</table>
 				<input name="xskpDetIds" type="hidden">
+				<input name="ywrkDetIds" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>

@@ -15,4 +15,5 @@ public interface YwrkServiceI {
 	public DataGrid printYwrk(Ywrk ywrk);
 	public DataGrid getSpkc(Ywrk ywrk);
 	public DataGrid datagridDet(Ywrk ywrk);
+	public DataGrid toXsth(Ywrk ywrk);
 }

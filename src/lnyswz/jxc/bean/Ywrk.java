@@ -59,6 +59,8 @@ public class Ywrk {
 	private String ywbtlsh;
 	//来自采购计划直送的明细id
 	private String cgjhDetIds;
+	//由直送业务入库生成提货单时传入的参数
+	private String ywrkDetIds;
 	
 	//--采购计划直送导入流水号
 	private String cgjhlshs;
@@ -392,6 +394,14 @@ public class Ywrk {
 
 	public void setCgjhDetIds(String cgjhDetIds) {
 		this.cgjhDetIds = cgjhDetIds;
+	}
+
+	public String getYwrkDetIds() {
+		return ywrkDetIds;
+	}
+
+	public void setYwrkDetIds(String ywrkDetIds) {
+		this.ywrkDetIds = ywrkDetIds;
 	}
 
 	public String getXskplsh() {
