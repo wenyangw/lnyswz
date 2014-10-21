@@ -101,6 +101,10 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		writeJson(ywrkService.toYwbt(ywrk.getYwrklsh()));
 	}
 	
+	public void toXsth() {
+		writeJson(ywrkService.toXsth(ywrk));
+	}
+	
 	public void datagrid() {
 		writeJson(ywrkService.datagrid(ywrk));
 	}

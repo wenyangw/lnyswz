@@ -1176,8 +1176,42 @@ function setEditing(){
         updateFooter();
     }
   	
-    //初始进入编辑状态时，使用商品编号获得焦点
-    spbhEditor.target.focus();
+    //初始进入编辑状态时，使商品编号获得焦点
+    if(spbhEditor.target.val() == ''){
+	    spbhEditor.target.focus();
+    }else{
+	    zslEditor.target.focus();
+    }
+    
+    if(zslEditor.target.val() != ''){
+    	console.info('ABC');
+    	checkKc();
+    }
+    
+    function checkKc(){
+    	
+    	console.info('XYZ');
+    	//判断提货数量是否大于业务数量-临时数量
+    	//从已开票生成提货单不做判断
+    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
+			var kcRow1 = $('#show_spkc').propertygrid("getRows");
+		    
+	    	var kxssl = undefined;
+	    	if(kcRow1 == undefined){
+	    		kxssl = Number(0);
+	    	}else{
+	    		kxssl = Number(kcRow1[0].value);
+	    	}
+	    	var zsl = Number($(zslEditor.target).val());
+	    	if(zsl > kxssl){
+	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
+	    		$(zslEditor.target).numberbox('setValue', 0);
+	    		zslEditor.target.focus();
+	    		return false;
+	    	}
+    	}
+    }
+    
 }
 //求和
 function updateFooter(){

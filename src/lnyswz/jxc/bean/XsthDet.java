@@ -42,6 +42,9 @@ public class XsthDet{
 	private BigDecimal zdwytsl;
 	private BigDecimal cdwytsl;
 	private String kfcklshs;
+
+	private BigDecimal zdwrksl;
+	private BigDecimal cdwrksl;
 	
 	public int getId() {
 		return id;
@@ -204,6 +207,18 @@ public class XsthDet{
 	}
 	public void setKfcklshs(String kfcklshs) {
 		this.kfcklshs = kfcklshs;
+	}
+	public BigDecimal getZdwrksl() {
+		return zdwrksl;
+	}
+	public void setZdwrksl(BigDecimal zdwrksl) {
+		this.zdwrksl = zdwrksl;
+	}
+	public BigDecimal getCdwrksl() {
+		return cdwrksl;
+	}
+	public void setCdwrksl(BigDecimal cdwrksl) {
+		this.cdwrksl = cdwrksl;
 	}
 
 	
