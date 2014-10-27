@@ -695,7 +695,7 @@ function saveAll(){
 			return false;
 		}
 		
-		if(this.zdwdj <= this.dwcb){
+		if(Number(this.zdwdj) <= Number(this.dwcb)){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
 			}else{
