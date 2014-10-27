@@ -71,7 +71,10 @@ $(function(){
 					}
 				}},
 	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'gysbh',title:'供应商编号',align:'center'},
+	        {field:'gysbh',title:'*供应商编号',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		return  a > b;
+	        	}},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库名称',align:'center'},

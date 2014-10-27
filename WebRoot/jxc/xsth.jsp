@@ -878,7 +878,7 @@ function saveXsth(){
 	}else{
  		var spbhs = undefined;
  		$.each(rows.slice(0, rows.length - 1), function(){
- 			if(this.zdwdj - this.dwcb * (1 + SL) <= 0){
+ 			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
  				if(spbhs == undefined){
  					spbhs = '' + this.spbh;
 				}else{
