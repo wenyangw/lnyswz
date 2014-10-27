@@ -157,7 +157,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		Set<TYwrkDet> ywrkDets = null;
 		Set<String> ywrklshs = null;
 		int[] ywrkDetIdInts = null;
-		//如果从销售提货生成的销售开票，进行关联
+		//如果从业务入库生成的销售提货，进行关联
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
 			tXsth.setFromRk("1");
 			
@@ -303,6 +303,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		xsthDao.save(tXsth);
 
 		if(intDetIds != null){
+			xskp.getTXsths().addAll(tDets);
+		}
+		
+		if(ywrkDetIdInts != null){
 			xskp.getTXsths().addAll(tDets);
 		}
 		
