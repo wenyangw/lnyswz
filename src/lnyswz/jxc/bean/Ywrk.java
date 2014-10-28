@@ -46,6 +46,7 @@ public class Ywrk {
 	private String sppp;
 	private String spbz;
 	private BigDecimal zdwsl;
+	private BigDecimal thsl;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -338,6 +339,14 @@ public class Ywrk {
 
 	public void setZdwsl(BigDecimal zdwsl) {
 		this.zdwsl = zdwsl;
+	}
+
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 
 	public String getDatagrid() {
