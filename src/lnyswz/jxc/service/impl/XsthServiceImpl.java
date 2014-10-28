@@ -124,12 +124,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setBmmc(depName);
 		
 		//根据系统设定进行处理
+		tXsth.setIsAudit("0");
 		if(xsth.getNeedAudit() != null){
 			tXsth.setNeedAudit(xsth.getNeedAudit());
-			tXsth.setIsAudit("0");
 		}else{
 			tXsth.setNeedAudit("0");
-			tXsth.setIsAudit("1");
 		}
 		
 		String xskpDetIds= xsth.getXskpDetIds();
