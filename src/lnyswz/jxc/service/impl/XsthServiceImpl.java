@@ -276,7 +276,7 @@ public class XsthServiceImpl implements XsthServiceI {
 					}
 				}
 			}
-			//从直送
+			//从直送入库生成提货单
 			if(ywrkDetIdInts != null){
 				BigDecimal thsl = xsthDet.getZdwsl();
 				for(int detId : ywrkDetIdInts){
@@ -300,15 +300,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		tXsth.setTXsthDets(tDets);
 		xsthDao.save(tXsth);
+		
+		tXsth.setTYwrks(ywrkDets);
 
 		if(intDetIds != null){
 			xskp.getTXsths().addAll(tDets);
 		}
-		
-		if(ywrkDetIdInts != null){
-			xskp.getTXsths().addAll(tDets);
-		}
-		
+				
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getXsthlsh(), 
 				"生成销售提货单", operalogDao);
 		
