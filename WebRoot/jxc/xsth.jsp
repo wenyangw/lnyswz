@@ -1044,6 +1044,7 @@ function setEditing(){
     				bmbh : xsth_did, 
     				ckId : jxc_xsth_ckCombo.combobox('getValue'),
     				fhId : fhValue,
+    				isFhth: $('input[name=isFhth]').is(':checked') ? '1' : '0',
     				spbh : $(spbhEditor.target).val(),
     			});
     }else{
@@ -1121,7 +1122,8 @@ function setEditing(){
      	}
     	
     	//判断提货数量是否大于业务数量-临时数量
-    	//从已开票生成提货单不做判断
+    	//分户提货不判断，因卷的数量不固定，所以不做判断
+    	//从已开票生成提货单不做判断,
     	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
 			var kcRow = $('#show_spkc').propertygrid("getRows");
 		    
@@ -1357,6 +1359,7 @@ function setValueBySpbh(rowData){
    				bmbh : xsth_did, 
    				ckId : jxc_xsth_ckCombo.combobox('getValue'),
    				fhId : fhValue,
+   				isFhth: $('input[name=isFhth]').is(':checked') ? '1' : '0',
    				spbh : $(spbhEditor.target).val(),
    			});
 }

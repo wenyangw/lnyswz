@@ -1002,7 +1002,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		List<ProBean> lists = new ArrayList<ProBean>();
 		BigDecimal sl = Constant.BD_ZERO;
 		
-		if(xsth.getFhId() != null && xsth.getFhId().trim().length() > 0){
+		if(xsth.getIsFhth().equals("1") && xsth.getFhId().trim().length() > 0){
 			List<ProBean> fh = FhzzServiceImpl.getZzsl(xsth.getBmbh(), xsth.getSpbh(), xsth.getFhId(), fhzzDao);
 			if(fh != null){
 				sl = sl.add(new BigDecimal(fh.get(0).getValue()));
