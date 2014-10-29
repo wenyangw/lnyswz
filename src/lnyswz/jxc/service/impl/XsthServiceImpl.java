@@ -334,7 +334,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsth yTXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		//新增冲减单据信息
 		TXsth tXsth = new TXsth();
-		BeanUtils.copyProperties(yTXsth, tXsth);
+		BeanUtils.copyProperties(yTXsth, tXsth, new String[]{"TYwrks"});
 
 		//更新原单据信息
 		yTXsth.setIsCancel("1");
@@ -384,6 +384,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
+		//关联的直送业务入库
+		Set<TYwrkDet> ywrks = yTXsth.getTYwrks();
 		
 		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
 		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
@@ -398,6 +400,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			tDet.setTXsth(tXsth);
 			tDets.add(tDet);
 			
+			//关联的销售开票
 			Set<TXskp> xskps = yTDet.getTXskps();
 			if(xskps != null && xskps.size() > 0){
 				TXskp xskp = xskps.iterator().next();
@@ -413,6 +416,22 @@ public class XsthServiceImpl implements XsthServiceI {
 				tDet.setKpsl(Constant.BD_ZERO);
 				
 			}
+			
+			//关联的直送业务入库
+			if(ywrks != null && ywrks.size() > 0){
+//			if(xskps != null && xskps.size() > 0){
+//				TXskp xskp = xskps.iterator().next();
+//				xskp.getTXsths().remove(yTDet);
+//				Set<TXskpDet> xskpDets = xskp.getTXskpDets();
+				for(TYwrkDet ywrkDet : ywrks){
+					if(ywrkDet.getSpbh().equals(yTDet.getSpbh())){
+						ywrkDet.setThsl(ywrkDet.getThsl().subtract(yTDet.getZdwsl()));
+						//yTDet.setKpsl(Constant.BD_ZERO);
+						break;
+					}
+				}
+				tDet.setKpsl(Constant.BD_ZERO);
+			}
 
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
@@ -427,6 +446,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 
+		if(ywrks != null && ywrks.size() > 0){
+			yTXsth.setTYwrks(null);
+		}
+		
 		tXsth.setTXsthDets(tDets);
 		xsthDao.save(tXsth);
 		

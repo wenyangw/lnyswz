@@ -1192,13 +1192,11 @@ function setEditing(){
     }
     
     if(zslEditor.target.val() != ''){
-    	console.info('ABC');
     	checkKc();
     }
     
     function checkKc(){
     	
-    	console.info('XYZ');
     	//判断提货数量是否大于业务数量-临时数量
     	//从已开票生成提货单不做判断
     	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
