@@ -1080,6 +1080,14 @@ public class XsthServiceImpl implements XsthServiceI {
 		return dg;
 	}
 	
+	@Override
+	public DataGrid getYsje(Xsth xsth) {
+		DataGrid dg = new DataGrid();
+		BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xsth.getBmbh(), xsth.getKhbh(), xsth.getYwyId(), DateUtil.getCurrentDateString("yyyyMM"), yszzDao);
+		dg.setObj(ysje);
+		return dg;
+	}
+	
 	
 	@Autowired
 	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
