@@ -630,6 +630,11 @@ $(function(){
 	
 	//初始化业务员列表
 	jxc_xsth_ywyCombo = lnyw.initCombo($("#jxc_xsth_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xsth_did);
+	jxc_xsth_ywyCombo.combobox({
+		onSelect: function(rec){
+			updateJsfs();
+		}
+	});
 	
 	//初始化付款方式列表
 	jxc_xsth_jsfsCombo = lnyw.initCombo($("#jxc_xsth_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
@@ -665,6 +670,7 @@ $(function(){
 // 			checkKh();
 // 		}
  		loadKh($('input[name=khbh]').val().trim());
+ 		updateJsfs();
  	});
 	
 	//初始化信息
@@ -1418,11 +1424,6 @@ function loadKh(khbh){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		//是否授信客户，不再进行判断处理，2014-06-22
-// 		var isSx = '0';
-// 		if($('input[name=isSx]').is(':checked')){
-// 			isSx='1';
-// 		}
 		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
@@ -1464,6 +1465,28 @@ function khLoad(){
 		}
 		break;
 	}
+}
+
+function updateJsfs(){
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: '${pageContext.request.contextPath}/jxc/xsthAction!getYsje.action',
+		data: {
+			bmbh: xsth_did,
+			khbh: $('input[name=khbh]').val().trim(),
+			ywyId: jxc_xsth_ywyCombo.combobox('getValue'),
+		},
+		dataType: 'json',
+		success: function(d){
+			if(d.obj){
+				jxc_xsth_jsfsCombo.combobox('setValue', JSFS_QK);
+				jxc_xsth_jsfsCombo.combobox('readonly', true);
+			}else{
+				jxc_xsth_jsfsCombo.combobox('readonly', false);
+			}
+		},
+	});
 }
 //////////////////////////////////////////////以上为商品列表处理代码
 

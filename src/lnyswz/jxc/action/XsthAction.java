@@ -189,6 +189,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.getSpkc(xsth));
 	}
 	
+	public void getYsje(){
+		writeJson(xsthService.getYsje(xsth));
+	}
+	
 	@Override
 	public Xsth getModel() {
 		return xsth;
