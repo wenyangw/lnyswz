@@ -24,6 +24,8 @@ var a_time;
 var b_time;
 var treeHql="";
 var jxc_select_fhCombo;
+var jxc_select_didCombo;
+var openSelectDid='n';
 //页面数据加载
 $(function(){
 
@@ -57,35 +59,40 @@ $(function(){
 			datas=data;
 			var star='<table>';
 			//循环data数据 拼写字符串
+			if(did>'9'){
+				star += '<tr>';
+				star += '<th align="left">部门 </th>';
+				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="did" class="inputval"  name="did" style="width:104px;" ></td>';
+			}
 			$.each(data,function(){
 				star += '<tr>';
 				star += '<th align="left">'+this.cname+'</th>';
 				if(this.specials=="time"){
 					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+'"'; 
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().date(1).format('YYYY-MM-DD')+'" ';
-					star += 'name='+this.ename+'></td>';
+					star += 'name='+this.ename+' size="12"></td>';
 					star += '</tr><tr><th></th><td align="right">结束日期</td>';
 					star += '<td>&#12288;<input id="b_'+this.ename+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
-					star += 'name='+this.ename+'></td>';
+					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
-					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:145px;" ></td>';
+					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';
 					
 				}else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
-					star += 'class="inputval'+query+'" name='+this.ename+'></td>';
+					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					star += '</tr><tr><th></th><td align="right">结束范围</td>';
 					star += '<td>&#12288;<input id="c_'+this.ename+'"';
-					star += 'class="inputval'+query+'" name='+this.ename+'></td>';
+					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
 						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+'" name="ope_'+this.ename+'" style="width:70px;"value="=" ></td>';
- 						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+'></td>';
+ 						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					}else{
 					//将checked属性名设置为：字典英文名，属性值设置为：“checked”。					
 						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+'" name="ope_'+this.ename+'" style="width:70px;" ></td>';
-						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+'></td>';
+						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					}
 					if(this.show != null && this.show.trim().length > 0 ){
  						star += '<tr><td></td><td></td><td class="show">&#12288;'+this.show+'</td></tr>';
@@ -111,6 +118,11 @@ $(function(){
 	did = lnyw.tab_options().did;
 	jxc_select_fhCombo = lnyw.initCombo($('input[name^="select_"]'), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
 	jxc_select_fhCombo.combobox('selectedIndex', 0);
+	if(did>='10'){
+		jxc_select_didCombo = lnyw.initCombo($('input[name^="did"]'), 'id', 'depName', '${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did );
+		jxc_select_didCombo.combobox('selectedIndex', 0);
+		openSelectDid='y';
+		}
 	
 });
 //查询按钮事件
@@ -121,7 +133,7 @@ function selectClick(){
 	var string='';
 // 	var abc = [];
 // 	var mm=[];
-	did = lnyw.tab_options().did;
+// 	did = lnyw.tab_options().did;
 	query = lnyw.tab_options().query;
 	var flag=false;
 	var message='';
@@ -156,6 +168,12 @@ function selectClick(){
 				message +=dataClass[$(this).attr('name')]+"，";			
 			}
 		}
+		
+		if(openSelectDid=='y'){
+			console.info(openSelectDid);
+			did=jxc_select_didCombo.combobox('getValue');
+		}
+
 		if(inputVal != "" ){
 			hql +=' and ';
 			if($(this).attr('id')=="spmc"){
@@ -223,6 +241,7 @@ function selectClick(){
 		var allTitle=[];
 		var allFields=[];
 		var treeFields=[];
+		var i=0;
 		$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
@@ -238,7 +257,7 @@ function selectClick(){
 							var elseTitle=Object.create(Object.prototype);
 							var frozen=Object.create(Object.prototype);
 							if(this.tree == '1'){
-								
+								i++;
 								treeFields.push(this.ename);
 								treeTitle["field"]=this.ename;
 								treeTitle["title"]=this.cname;
@@ -282,10 +301,10 @@ function selectClick(){
 // 								for( var i=0;i<this.length;i++){									
 // 									onlyData[treeFields[i]]=this[i];	
 // 								}
-								onlyData[treeFields[0]]=this[0];
-								onlyData[treeFields[1]]=this[1];
-								onlyData[treeFields[2]]=this[2];
-								datas.push(onlyData);						
+								for(var m=0;m<i;m++){
+								onlyData[treeFields[m]]=this[m];
+								}
+								datas.push(onlyData);
 							});	
 							
 							$('#str_' + query).datagrid({
@@ -324,11 +343,9 @@ function selectClick(){
 									treeHql="";
 									if(rows[0][title[1].field] == null){							
 										 hqlTree = 'and '+title[0].field+' is '+rows[0][title[0].field];
-// 										 var treeHql="";
 										 treeHql +=hqlTree;
 									}else{										
 										hqlTree = 'and '+title[0].field+' = \''+rows[0][title[0].field]+'\'';
-// 										var treeHql="";
 										treeHql +=hqlTree;
 									}
 									eval("hqlTree += hql_"+query);			 
@@ -372,7 +389,7 @@ function selectClick(){
 //显示datagrid数据
 function showDatagrid(hql,allFields,allTitle){
 	query = lnyw.tab_options().query;
-	did = lnyw.tab_options().did;
+// 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
 	treeHql="";
 	treeHql +=hql;
@@ -582,32 +599,43 @@ $.ajax({
 
 
 </script>
-<div id='jxc_selectTree_layout' class='easyui-layout' style="height:100%;width=100%">
-	<div data-options="region:'west',title:'查询条件',split:true,"  style="width:340px;">
-	<div id='jxc_select'  class='easyui-layout' data-options="split:false,border:false,fit:true" style="height:100%;width=100%">
-		<div  align="center" data-options="region:'north',border:false"  style="height:26px;"  >
-			<a href="#" class="easyui-linkbutton"
-			data-options="iconCls:'icon-search',plain:true" onclick="selectClick();">查询</a>
-			<a href="#" class="easyui-linkbutton"
-			data-options="iconCls:'icon-reload',plain:true" onclick="cleanClick();">清除</a>		
-		</div>
-		<div id='selectcommonTree' data-options="region:'center',border:false"></div>
+<div id='jxc_selectTree_layout' class='easyui-layout'
+	style="height: 100%;">
+	<div data-options="region:'west',title:'查询条件',split:true,"
+		style="width: 340px;">
+		<div id='jxc_select' class='easyui-layout'
+			data-options="split:false,border:false,fit:true"
+			style="height: 100%;">
+			<div align="center" data-options="region:'north',border:false"
+				style="height: 26px;">
+				<a href="#" class="easyui-linkbutton"
+					data-options="iconCls:'icon-search',plain:true"
+					onclick="selectClick();">查询</a> <a href="#"
+					class="easyui-linkbutton"
+					data-options="iconCls:'icon-reload',plain:true"
+					onclick="cleanClick();">清除</a>
+			</div>
+			<div id='selectcommonTree'
+				data-options="region:'center',border:false"></div>
 		</div>
 	</div>
-    <div data-options="region:'center',title:'详细内容',split:true, fit:true" style="width:100%;height:100%">	   
+	<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+		style="width: 100%; height: 100%">
 		<div id='select_treeShow_layout' style="height: 100%;">
-			<div data-options="region:'west',title:'视图',split:true" style="height: 100px; width: 150px">
+			<div data-options="region:'west',title:'视图',split:true"
+				style="height: 100px; width: 150px">
 				<ul id="select_tree"></ul>
 			</div>
-			<div data-options="region:'center',title:'详细内容',split:true, fit:true" style="height: 100px;">
+			<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+				style="height: 100px;">
 				<div id='jxc_select_dg'></div>
 			</div>
-		</div>	   
-    </div>
+		</div>
+	</div>
 </div>
 <div id='jxc_select_addDialog'>
-<div id='select2'></div>
+	<div id='select2'></div>
 </div>
 
 
-	
+

@@ -42,9 +42,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		String hql = "from TDict t where ename='" + d.getQuery() + "'";
 		TDict dict = dictDao.get(hql);
 		// String n = dict.getOrderBy();
-		if (dict.getOrderBy().trim().length() > 0) {
-			sql += " " + dicts.getOrderBy();
-		}
+
 		if (dict.getInGroupBy() != null) {
 			sql += " " + dict.getInGroupBy();
 
@@ -62,6 +60,10 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 
 			}
 		}
+		if (dict.getOrderBy().trim().length() > 0) {
+			sql += " " + dicts.getOrderBy();
+		}
+
 		String totalHql = "select count(*) from " + dicts.getTname()
 				+ condition;
 		List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
@@ -87,7 +89,11 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			condition += " " + d.getHqls();
 		}
 		sql += condition;
+		if (dicts.getOrderBy().trim().length() > 0) {
+			sql += " " + dicts.getOrderBy();
+		}
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
+
 		dg.setRows(list);
 		dg.setObj(sql);
 		return dg;

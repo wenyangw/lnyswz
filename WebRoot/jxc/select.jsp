@@ -19,11 +19,15 @@ var sqls;
 var datas;
 var resultDg;
 var hql='';
+var jxc_select_didCombo;
 //页面数据加载
 var total;
+var openSelectDid='n';
 $(function(){	
 	did = lnyw.tab_options().did;
 	query = lnyw.tab_options().query;
+// 	eval("var did_"+query+"=did");
+// 	console.info(eval("did_"+query)+'-----=');
 	$('#selectcommon').attr('id', 'sc_' + query);
 	$('#select2').attr('id', 'pro_' + query);
 	$('#result_dg').attr('id', 'result_' + query);
@@ -50,6 +54,11 @@ $(function(){
 			datas=data;
 			var star='<table>';
 			//循环data数据 拼写字符串
+			if(did>='10'){
+				star += '<tr>';
+				star += '<th align="left">部门 </th>';
+				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="did" class="inputval"  name="did" style="width:104px;" ></td>';
+			}
 			$.each(data,function(){
 				star += '<tr>';
 				star += '<th align="left">'+this.cname+'</th>';
@@ -106,11 +115,18 @@ $(function(){
 			data:dictOpe,
 			panelHeight: 'auto',
 	});
+	
+	if(did>='10'){
+	jxc_select_didCombo = lnyw.initCombo($('input[name^="did"]'), 'id', 'depName', '${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did );
+	jxc_select_didCombo.combobox('selectedIndex', 0);
+	openSelectDid='y';
+	}
 });
 //查询按钮事件
 function selectClick(){
 	//创建对象 obj类型
 	total='';
+	console.info('dd');
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
 	query = lnyw.tab_options().query;
@@ -137,6 +153,14 @@ function selectClick(){
 	var message='';
 	//遍历input 进行hql拼写
 	hql ='';
+	if(openSelectDid=='y'){
+		console.info(openSelectDid);
+		did=jxc_select_didCombo.combobox('getValue');
+	}
+	eval("var did_"+query+"=did");
+	console.info(eval("did_"+query)+'-----=');
+// 	console.info(jxc_select_didCombo.combobox('getValue')+'---12');
+console.info(did);
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
 		if(this.id.trim().length <= 0 || this.id == null){
@@ -277,7 +301,9 @@ function selectClick(){
 		                    });
 		                },
 	      			});	
-					var m = step1Ok(hql,allFields);	
+	      			var dep=eval("did_"+query);
+	      			console.info("--++"+dep);
+					var m = step1Ok(hql,allFields,dep);	
 	      			p.dialog('close');	      			
 	      			var cmenu;
 	      			function createColumnMenu(){
@@ -341,7 +367,7 @@ function selectClick(){
 		});
 	}	
 }
-function step1Ok(hql,allFields) {
+function step1Ok(hql,allFields,dep) {
   
    	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
@@ -356,7 +382,7 @@ function step1Ok(hql,allFields) {
            		  });
          	 } 
      });
-     getData(1,pageSize,hql,allFields);
+     getData(1,pageSize,hql,allFields,dep);
      var p = resultDg.datagrid('getPager'); 
      $(p).pagination({ 
     		    total:total,
@@ -364,8 +390,9 @@ function step1Ok(hql,allFields) {
 	 });
 };
 
-function getData(page, rows,hql,allFields) { 
+function getData(page, rows,hql,allFields,dep) { 
 	query = lnyw.tab_options().query;
+
 	resultDg = $('#result_' + query);
 	$.ajax({ 
    		async: false,
@@ -377,7 +404,7 @@ function getData(page, rows,hql,allFields) {
 			query:query,
 			//拼写显示名称
 			con  :allFields.join(','),
-			did  :did,	
+			did  :dep,	
 			page :page,
 			rows :rows,
 		},
@@ -474,26 +501,32 @@ function exportExcel(){
 
 
 </script>
-<div id='jxc_select_layout' class='easyui-layout' style="height:100%;width=100%">
-	<div data-options="region:'west',title:'查询条件',split:true,"  style="width:310px;">
-		<div id='jxc_select'  class='easyui-layout' data-options="split:false,border:false,fit:true" style="height:100%;width=100%">
-			<div  align="center" data-options="region:'north',border:false"  style="height:26px;"  >
+<div id='jxc_select_layout' class='easyui-layout' style="height: 100%;">
+	<div data-options="region:'west',title:'查询条件',split:true,"
+		style="width: 310px;">
+		<div id='jxc_select' class='easyui-layout'
+			data-options="split:false,border:false,fit:true"
+			style="height: 100%;">
+			<div align="center" data-options="region:'north',border:false"
+				style="height: 26px;">
 				<a href="#" class="easyui-linkbutton"
-					data-options="iconCls:'icon-search',plain:true" onclick="selectClick();">查询</a>
-				<a href="#" class="easyui-linkbutton"
-					data-options="iconCls:'icon-reload',plain:true" onclick="cleanClick();">清除</a>		
+					data-options="iconCls:'icon-search',plain:true"
+					onclick="selectClick();">查询</a> <a href="#"
+					class="easyui-linkbutton"
+					data-options="iconCls:'icon-reload',plain:true"
+					onclick="cleanClick();">清除</a>
 			</div>
 			<div id='selectcommon' data-options="region:'center',border:false"></div>
 		</div>
 	</div>
-    <div data-options="region:'center',title:'详细内容',split:true, fit:true" style="width:100%;height:100%">	
-    	<div id='result_dg'>   	
-    	</div>
-    </div>
+	<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+		style="width: 100%; height: 100%">
+		<div id='result_dg'></div>
+	</div>
 </div>
 <div id='jxc_select_addDialog'>
-<div id='select2'></div>
+	<div id='select2'></div>
 </div>
 
 
-	
+
