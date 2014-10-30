@@ -211,7 +211,6 @@ public class XsthServiceImpl implements XsthServiceI {
 			TXsthDet tDet = new TXsthDet();
 			BeanUtils.copyProperties(xsthDet, tDet, new String[]{"id"});
 			
-			tDet.setLastRksl(Constant.BD_ZERO);
 			if(tDet.getCksl() == null){
 				tDet.setCksl(Constant.BD_ZERO);
 			}

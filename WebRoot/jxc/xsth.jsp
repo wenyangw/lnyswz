@@ -1032,27 +1032,26 @@ function setEditing(){
      		return false;
      	}
     	
-    	checkKc();
     	//判断提货数量是否大于业务数量-临时数量
     	//分户提货不判断，因卷的数量不固定，所以不做判断
     	//从已开票生成提货单不做判断,
-//     	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
-// 			var kcRow = $('#show_spkc').propertygrid("getRows");
+    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
+			var kcRow = $('#show_spkc').propertygrid("getRows");
 		    
-// 	    	var kxssl = undefined;
-// 	    	if(kcRow == undefined){
-// 	    		kxssl = Number(0);
-// 	    	}else{
-// 	    		kxssl = Number(kcRow[0].value);
-// 	    	}
-// 	    	var zsl = Number($(zslEditor.target).val());
-// 	    	if(zsl > kxssl){
-// 	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
-// 	    		$(zslEditor.target).numberbox('setValue', 0);
-// 	    		zslEditor.target.focus();
-// 	    		return false;
-// 	    	}
-//     	}
+	    	var kxssl = undefined;
+	    	if(kcRow == undefined){
+	    		kxssl = Number(0);
+	    	}else{
+	    		kxssl = Number(kcRow[0].value);
+	    	}
+	    	var zsl = Number($(zslEditor.target).val());
+	    	if(zsl > kxssl){
+	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
+	    		$(zslEditor.target).numberbox('setValue', 0);
+	    		zslEditor.target.focus();
+	    		return false;
+	    	}
+    	}
     	
     	var wtsl = 0;
     	if(Number($(kpslEditor.target).val()) > 0){
@@ -1123,6 +1122,9 @@ function setEditing(){
      	}
     });
     
+    
+    
+        
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
     	if(event.keyCode == 9){
@@ -1194,16 +1196,17 @@ function setEditing(){
     }
     
     function checkKc(){
+    	
     	//判断提货数量是否大于业务数量-临时数量
     	//从已开票生成提货单不做判断
     	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
-			var kcRow = $('#show_spkc').propertygrid("getRows");
+			var kcRow1 = $('#show_spkc').propertygrid("getRows");
 		    
 	    	var kxssl = undefined;
 	    	if(kcRow1 == undefined){
 	    		kxssl = Number(0);
 	    	}else{
-	    		kxssl = Number(kcRow[0].value);
+	    		kxssl = Number(kcRow1[0].value);
 	    	}
 	    	var zsl = Number($(zslEditor.target).val());
 	    	if(zsl > kxssl){

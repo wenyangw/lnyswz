@@ -194,7 +194,6 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setIsFhth("1");
 			//tXsth.setThfs("1");
 			tXsth.setIsLs("0");
-			tXsth.setFromRk("0");
 			tXsth.setHjje(hjje);
 			
 			tXsthDets = new HashSet<TXsthDet>();
@@ -242,7 +241,6 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setCksl(Constant.BD_ZERO);
 				tXsthDet.setKpsl(tDet.getZdwsl());
 				tXsthDet.setThsl(Constant.BD_ZERO);
-				tXsthDet.setLastRksl(Constant.BD_ZERO);
 				//发票单价不含税，提货单单价含税
 				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				//提货单只有金额字段，要将发票中金额与税额相加
@@ -717,7 +715,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setIsFh(tXskp.getFhId() != null ? "1" : "0");
 		tXsth.setIsFhth("1");
 		tXsth.setIsLs("0");
-		tXsth.setFromRk("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
 		tXsth.setNeedAudit("0");
@@ -746,7 +743,6 @@ public class XskpServiceImpl implements XskpServiceI {
 			tDet.setZdwdj(xskpDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 			tDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
 			tDet.setThsl(Constant.BD_ZERO);
-			tDet.setLastRksl(Constant.BD_ZERO);
 			tDet.setTXsth(tXsth);
 //			tDet.setTXskps(tXskps);
 			tDets.add(tDet);

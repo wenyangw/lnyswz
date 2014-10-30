@@ -62,24 +62,21 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 		success: function(data){
 			payTime = data.obj.payTime;
 			isUp = data.obj.isUp;
-			postponeDay = data.obj.postponeDay;
+			postponeDay = Number(data.obj.postponeDay);
 		}
 	});
+	console.info(moment().diff(payTime, 'days'));
+	console.info(postponeDay);
 	
-	//超期时间大于延期日期，禁止提货
+	console.info(moment().diff(payTime, 'days') > postponeDay);
+	
 	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
 	}else{
-		//延期天数为0(非授信客户)或超期天数大于0的非优质客户，进行二级审批
 		if(postponeDay == 0 || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
-			return jxc.auditLevel(bmbh)['second'];
+			return jxc.auditLevel(xsth_did)['second'];
 		}else{
-			//优质客户超期30天进行二级审批，否则进行一级审批
-			if(moment().diff(payTime, 'days') > 30){
-				return jxc.auditLevel(bmbh)['second'];
-			}else{
-				return jxc.auditLevel(bmbh)['first'];
-			}
+			return jxc.auditLevel(xsth_did)['first'];
 		}
 	}
 };
@@ -611,7 +608,6 @@ jxc.showKc = function(area, url, params){
 		url: url,
 		data: params,
 		cache: false,
-		async: false,
 		dataType: 'json',
 		success: function(data){
 			$('#show_spkc').propertygrid({
