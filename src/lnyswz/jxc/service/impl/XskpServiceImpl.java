@@ -1061,14 +1061,15 @@ public class XskpServiceImpl implements XskpServiceI {
 		if(o != null){
 			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
 			Date createTime = DateUtil.stringToDate(o[3].toString());
+			Date payTime = DateUtil.stringToDate(o[4].toString());
 		
 			Xskp x = new Xskp();
+			x.setPayTime(payTime);
 			if(kh.getKhlxId().equals(Constant.KHLX_XK)){
-				x.setPayTime(new Date());
 				x.setPostponeDay(0);
 				x.setIsUp("1");
 			}else{
-				x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+				//x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
 				x.setPostponeDay(kh.getPostponeDay());
 				x.setIsUp(kh.getIsUp());
 			}
