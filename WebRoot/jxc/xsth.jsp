@@ -1479,7 +1479,7 @@ function updateJsfs(){
 		},
 		dataType: 'json',
 		success: function(d){
-			if(d.obj){
+			if(Number(d.obj) > 0){
 				jxc_xsth_jsfsCombo.combobox('setValue', JSFS_QK);
 				jxc_xsth_jsfsCombo.combobox('readonly', true);
 			}else{
