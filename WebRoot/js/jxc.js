@@ -65,10 +65,6 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 			postponeDay = Number(data.obj.postponeDay);
 		}
 	});
-	console.info(moment().diff(payTime, 'days'));
-	console.info(postponeDay);
-	
-	console.info(moment().diff(payTime, 'days') > postponeDay);
 	
 	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
