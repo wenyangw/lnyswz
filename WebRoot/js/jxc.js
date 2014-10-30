@@ -66,13 +66,20 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 		}
 	});
 	
+	//超期时间大于延期日期，禁止提货
 	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
 	}else{
+		//延期天数为0(非授信客户)或超期天数大于0的非优质客户，进行二级审批
 		if(postponeDay == 0 || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
-			return jxc.auditLevel(xsth_did)['second'];
+			return jxc.auditLevel(bmbh)['second'];
 		}else{
-			return jxc.auditLevel(xsth_did)['first'];
+			//优质客户超期30天进行二级审批，否则进行一级审批
+			if(moment().diff(payTime, 'days') > 30){
+				return jxc.auditLevel(bmbh)['second'];
+			}else{
+				return jxc.auditLevel(bmbh)['first'];
+			}
 		}
 	}
 };
@@ -604,6 +611,7 @@ jxc.showKc = function(area, url, params){
 		url: url,
 		data: params,
 		cache: false,
+		async: false,
 		dataType: 'json',
 		success: function(data){
 			$('#show_spkc').propertygrid({
