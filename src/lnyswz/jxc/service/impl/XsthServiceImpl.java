@@ -385,7 +385,18 @@ public class XsthServiceImpl implements XsthServiceI {
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 		//关联的直送业务入库
-		Set<TYwrkDet> ywrks = yTXsth.getTYwrks();
+		Set<TYwrkDet> ywrks = null;
+		int[] intYwrkDetIds = null;
+		if(yTXsth.getTYwrks() != null){
+			ywrks = yTXsth.getTYwrks();
+			intYwrkDetIds = new int[yTXsth.getTYwrks().size()];
+			int i = 0;
+			for(TYwrkDet t : yTXsth.getTYwrks()){
+				intYwrkDetIds[i] = t.getId();
+				i++;
+			}
+			Arrays.sort(intYwrkDetIds);
+		}
 		
 		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
 		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
@@ -419,18 +430,32 @@ public class XsthServiceImpl implements XsthServiceI {
 			
 			//关联的直送业务入库
 			if(ywrks != null && ywrks.size() > 0){
-//			if(xskps != null && xskps.size() > 0){
-//				TXskp xskp = xskps.iterator().next();
-//				xskp.getTXsths().remove(yTDet);
-//				Set<TXskpDet> xskpDets = xskp.getTXskpDets();
-				for(TYwrkDet ywrkDet : ywrks){
-					if(ywrkDet.getSpbh().equals(yTDet.getSpbh())){
-						ywrkDet.setThsl(ywrkDet.getThsl().subtract(yTDet.getZdwsl()));
-						//yTDet.setKpsl(Constant.BD_ZERO);
-						break;
+				BigDecimal thsl = yTDet.getZdwsl();
+				BigDecimal lastRksl = yTDet.getLastRksl();
+				
+				int j = 0;
+				for(int i = intYwrkDetIds.length - 1; i >= 0 ; i--){
+					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, intYwrkDetIds[i]);
+					if(yTDet.getSpbh().equals(ywrkDet.getSpbh())){
+						if(j == 0){
+							ywrkDet.setThsl(ywrkDet.getThsl().subtract(lastRksl));
+							if(thsl.compareTo(lastRksl) == 0){
+								break;
+							}else{
+								thsl = thsl.subtract(lastRksl);
+							}
+						}else{
+							if(thsl.compareTo(ywrkDet.getThsl()) == 1){
+								ywrkDet.setThsl(Constant.BD_ZERO);
+								thsl = thsl.subtract(ywrkDet.getThsl());
+							}else{
+								ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
+								break;
+							}
+						}
+						j++;
 					}
 				}
-				tDet.setKpsl(Constant.BD_ZERO);
 			}
 
 			Sp sp = new Sp();
