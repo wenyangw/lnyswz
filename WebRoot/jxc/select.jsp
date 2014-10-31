@@ -153,12 +153,18 @@ function selectClick(){
 	var message='';
 	//遍历input 进行hql拼写
 	hql ='';
+	var dd;
 	if(openSelectDid=='y'){
 		console.info(openSelectDid);
-		did=jxc_select_didCombo.combobox('getValue');
+		dd=jxc_select_didCombo.combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
+		console.info(eval("did_"+query)+'-----=');
 	}
-	eval("var did_"+query+"=did");
-	console.info(eval("did_"+query)+'-----=');
+// 	eval("var did_"+query+"=dd");
+	
+
+// 	console.info(eval("did_"+query)+'-----=');
 // 	console.info(jxc_select_didCombo.combobox('getValue')+'---12');
 console.info(did);
 	$.each(s,function(){	
@@ -301,9 +307,9 @@ console.info(did);
 		                    });
 		                },
 	      			});	
-	      			var dep=eval("did_"+query);
-	      			console.info("--++"+dep);
-					var m = step1Ok(hql,allFields,dep);	
+// 	      			var dep=eval("did_"+query);
+// 	      			console.info("--++"+dep);
+					var m = step1Ok(hql,allFields);	
 	      			p.dialog('close');	      			
 	      			var cmenu;
 	      			function createColumnMenu(){
@@ -367,7 +373,7 @@ console.info(did);
 		});
 	}	
 }
-function step1Ok(hql,allFields,dep) {
+function step1Ok(hql,allFields) {
   
    	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
@@ -382,7 +388,7 @@ function step1Ok(hql,allFields,dep) {
            		  });
          	 } 
      });
-     getData(1,pageSize,hql,allFields,dep);
+     getData(1,pageSize,hql,allFields);
      var p = resultDg.datagrid('getPager'); 
      $(p).pagination({ 
     		    total:total,
@@ -390,7 +396,7 @@ function step1Ok(hql,allFields,dep) {
 	 });
 };
 
-function getData(page, rows,hql,allFields,dep) { 
+function getData(page, rows,hql,allFields) { 
 	query = lnyw.tab_options().query;
 
 	resultDg = $('#result_' + query);
@@ -404,7 +410,7 @@ function getData(page, rows,hql,allFields,dep) {
 			query:query,
 			//拼写显示名称
 			con  :allFields.join(','),
-			did  :dep,	
+			did  :did,	
 			page :page,
 			rows :rows,
 		},
