@@ -62,7 +62,7 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 		success: function(data){
 			payTime = data.obj.payTime;
 			isUp = data.obj.isUp;
-			postponeDay = data.obj.postponeDay;
+			postponeDay = Number(data.obj.postponeDay);
 		}
 	});
 	
@@ -87,6 +87,7 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 jxc.notInExcludeKhs = function(bmbh, khbh){
 	switch (bmbh) {
 	case '04':
+		//教材公司，股份公司和辽海公司不参与审批流程	
 		var kh04 = ['21010017', '21010798'];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;

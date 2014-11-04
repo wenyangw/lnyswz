@@ -205,7 +205,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
 		for(TYwrkDet yTDet : yTYwrkDets){
 			TYwrkDet tDet = new TYwrkDet();
-			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
+			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id", "TXsths"});
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
 			tDet.setZdwsl(yTDet.getZdwsl().negate());

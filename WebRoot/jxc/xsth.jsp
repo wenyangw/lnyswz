@@ -1200,7 +1200,7 @@ function setEditing(){
 			var kcRow = $('#show_spkc').propertygrid("getRows");
 		    
 	    	var kxssl = undefined;
-	    	if(kcRow1 == undefined){
+	    	if(kcRow == undefined){
 	    		kxssl = Number(0);
 	    	}else{
 	    		kxssl = Number(kcRow[0].value);
@@ -1641,6 +1641,7 @@ function createXsthFromYwrk(){
 					success : function(d) {
 						xsth_spdg.datagrid('loadData', d.rows);
 						jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
+						$('input:checkbox#zsCheck').prop('checked', true);
 						updateFooter();
 						$('input[name=ywrkDetIds]').val(ywrkDetStr);
 						xsth_tabs.tabs('select', 0);
