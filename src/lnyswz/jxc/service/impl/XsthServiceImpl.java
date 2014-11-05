@@ -1021,12 +1021,18 @@ public class XsthServiceImpl implements XsthServiceI {
 //		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +
 //				"left join t_xsth_xskp xk on xd.id = xk.xsthdetId " +
 //				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
+		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj from t_xsth_det ";
+		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
+		String sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl, max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
+				+ " sum(thDet.spje) - isnull(SUM(kpDet.spje + kpDet.spse), 0) spje from t_xsth_det thDet"
+				+ " left join t_xsth_xskp xx on xx.xsthdetId = thDet.id"
+				+ " left join t_xskp_det kpDet on xx.xskplsh = kpDet.xskplsh and thDet.spbh = kpDet.spbh";
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
 //			String[] xs = xsthDetIds.split(",");
-			sql += "where id in (" + xsthDetIds + ")";
+			sql += " where thDet.id in (" + xsthDetIds + ")";
 //			for(int i = 0; i < xs.length; i++){
 //				sql += " xd.id = ? ";
 //				params.put(String.valueOf(i), xs[i]);
@@ -1035,7 +1041,7 @@ public class XsthServiceImpl implements XsthServiceI {
 //				}
 // 			}
 		}
-		sql += " group by spbh";
+		sql += " group by thDet.spbh";
 		
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		
@@ -1046,7 +1052,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			BigDecimal zdwthsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
 			BigDecimal shui = new BigDecimal("1").add(Constant.SHUILV);
-			BigDecimal zdwdj = new BigDecimal(os[3].toString()).divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal zdwdj_ws = new BigDecimal(os[3].toString());
+			BigDecimal zdwdj = zdwdj_ws.divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
 			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			BigDecimal sphj = new BigDecimal(os[5].toString());
 			
