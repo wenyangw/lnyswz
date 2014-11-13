@@ -68,7 +68,7 @@ function appendSplb() {
 						return true;
             		},
             		success:function(d){
-            			var json = $.parseJSON(d);
+            			var json = $.parseJSON(jxc.toJson(d));
             			if(json.success){
             				splb_dg.datagrid('appendRow', json.obj);
             				p.dialog('close');
@@ -120,7 +120,7 @@ function editSplb(){
 							return true;
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								splb_dg.datagrid('reload');
 								p.dialog('close');
