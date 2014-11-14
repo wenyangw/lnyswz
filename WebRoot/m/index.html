@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>基本的页面</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../css/jquery.mobile-1.4.5.min.css" />
+<script src="../js/jquery.min.js"></script>
+<script src="../js/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="index">
+	<div data-role="header">
+		<h1>标题1</h1>
+	</div>
+	<div role="main" class="ui-content">
+		<p>内容1</p>
+		<a href="#index2" class="ui-btn">第二页</a>
+		<input type="submit" value="Press">
+	</div>
+	<div data-role="footer">
+		<h1>页脚1</h1>
+	</div>
+</div>
+<div data-role="page" id="index2">
+	<div data-role="header">
+		<h1>标题2</h1>
+	</div>
+	<div role="main" class="ui-content">
+		<p>内容2</p>
+		<a href="#index">第一页</a>
+	</div>
+	<div data-role="footer">
+		<h1>页脚2</h1>
+	</div>
+</div>
+</body>
+</html>
