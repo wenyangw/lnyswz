@@ -1426,115 +1426,92 @@ function updateJsfs(){
 
 //////////////////////////////////////////////以下为销售提货列表处理代码
 function cancelXsth(){
- 	var row = xsth_dg.datagrid('getSelected');
- 	xsth_dg.datagrid('reload');
- 	xsth_dg.datagrid('selectRecord', row.xsthlsh);
- 	
- 	
-// 	if (row != undefined) {
-// 		if(row.isCancel != '1'){
-// 			if(row.locked == '0'){
-// 				if(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == ''){
-// 					if(row.isTh != '1'){
-// 						$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
-// 							if (r) {
-// 								$.ajax({
-// 									url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
-// 									data : {
-// 										xsthlsh : row.xsthlsh,
-// 										bmbh : xsth_did,
-// 										menuId : xsth_menuId,
-// 										lxbh: xsth_lx,
-// 									},
-// 									dataType : 'json',
-// 									success : function(d) {
-// 										xsth_dg.datagrid('load');
-// 										xsth_dg.datagrid('unselectAll');
-// 										$.messager.show({
-// 											title : '提示',
-// 											msg : d.msg
-// 										});
-// 									}
-// 								});
-// 							}
-// 						});
-// 					}else{
-// 						$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
-// 					}
-// 				}else{
-// 					$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
-// 				}
-// 			}else{
-// 				$.messager.alert('警告', '选中的销售提货记录已被库房锁定，请重新选择！',  'warning');
-// 			}
-// 		}else{
-// 			$.messager.alert('警告', '选中的销售提货记录已被取消，请重新选择！',  'warning');
-// 		}
-// 	}else{
-// 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
-// 	}
+ 	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+	 	$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/xsthAction!refreshXsth.action',
+			data: {
+				xsthlsh: selected.xsthlsh,
+			},
+			dataType: 'json',
+			success: function(d){
+				var row = d.obj;
+				if(row.isCancel != '1'){
+		 			if(row.locked == '0'){
+		 				if(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == ''){
+		 					if(row.isTh != '1'){
+		 						$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
+		 							if (r) {
+		 								$.ajax({
+		 									url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
+		 									data : {
+		 										xsthlsh : row.xsthlsh,
+		 										bmbh : xsth_did,
+		 										menuId : xsth_menuId,
+		 										lxbh: xsth_lx,
+		 									},
+		 									dataType : 'json',
+		 									success : function(d) {
+		 										xsth_dg.datagrid('load');
+		 										xsth_dg.datagrid('unselectAll');
+		 										$.messager.show({
+		 											title : '提示',
+		 											msg : d.msg
+		 										});
+		 									}
+		 								});
+		 							}
+		 						});
+		 					}else{
+		 						$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
+		 					}
+		 				}else{
+		 					$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
+		 				}
+		 			}else{
+		 				$.messager.alert('警告', '选中的销售提货记录已被库房锁定，请重新选择！',  'warning');
+		 			}
+		 		}else{
+		 			$.messager.alert('警告', '选中的销售提货记录已被取消，请重新选择！',  'warning');
+		 		}
+			},
+		});
+ 	}else{
+ 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+ 	}
 }
 
 function printXsth(){
-	var row = xsth_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.needAudit == row.isAudit){
-		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
-			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+	 	$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/xsthAction!refreshXsth.action',
+			data: {
+				xsthlsh: selected.xsthlsh,
+			},
+			dataType: 'json',
+			success: function(d){
+				var row = d.obj;
+				if(row.needAudit == row.isAudit){
+					$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+				}else{
+					$.messager.alert('警告', '选择打印的销售提货未经过审批！',  'warning');
+				}
 			}
 		});
-		}else{
-			$.messager.alert('警告', '选择打印的销售提货未经过审批！',  'warning');
-		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
 }
-
-
-// function completeXsth(){
-// 	var row = xsth_dg.datagrid('getSelected');
-// 	if (row != undefined) {
-// 		if(row.cgjhlsh != undefined){
-// 			if(row.isCancel != '1'){
-// 				if(row.isCompleted != '1'){
-// 					$.messager.confirm('请确认', '您要完成选中的采购需求单？', function(r) {
-// 						if (r) {
-// 							$.ajax({
-// 								url : '${pageContext.request.contextPath}/jxc/xsthAction!complete.action',
-// 								data : {
-// 									xsthlsh : row.xsthlsh
-// 								},
-// 								dataType : 'json',
-// 								success : function(d) {
-// 									xsth_dg.datagrid('load');
-// 									xsth_dg.datagrid('unselectAll');
-// 									$.messager.show({
-// 										title : '提示',
-// 										msg : d.msg
-// 									});
-// 								}
-// 							});
-// 						}
-// 					});
-// 				}else{
-// 					$.messager.alert('警告', '选中的采购需求记录已完成，请重新选择！',  'warning');
-// 				}
-// 			}else{
-// 				$.messager.alert('警告', '选中的采购需求记录已被取消，请重新选择！',  'warning');
-// 			}
-// 		}else{
-// 			$.messager.alert('警告', '选中的采购需求未进行计划，不能进行完成操作，请重新选择！',  'warning');
-// 		}
-// 	}else{
-// 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
-// 	}
-// }
-
-
-
 
 function searchXsth(){
 	xsth_dg.datagrid('load',{

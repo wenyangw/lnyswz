@@ -370,28 +370,6 @@ $(function(){
          
 	});
 	
-	//$('#jxc_kfck_tabs a.tabs-inner').css('height','100px');
-	//$('#jxc_kfck_tabs span.tabs-title').css('white-space','normal');
-	
-// 	$.ajax({
-// 		type: "POST",
-// 		async: false,
-// 		url: '${pageContext.request.contextPath}/jxc/ckAction!listCk.action',
-// 		data: {
-// 			depId: did,
-// 		},
-// 		dataType: 'json',
-// 		success: function(d){
-// 			$('#jxc_kfck_ckId').combobox({
-// 				data : d,
-// 			    valueField: 'id',
-// 				textField: 'ckmc',
-// 				panelHeight: 'auto',
-// 			});
-// 		},
-// 	});
-	
-	
 	//初始化仓库列表
 	jxc_kfck_ckCombo = lnyw.initCombo($("#jxc_kfck_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + jxc_kfck_did);
 	//初始化分户列表

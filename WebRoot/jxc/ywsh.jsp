@@ -51,8 +51,6 @@ $(function(){
 	                if( fields[i] == 'levels'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
-	                	console.info('test:' + fields[i]);
-	                	console.info('test1:' + rowData.levels);
 	                	
 	                	var levels = rowData[fields[i]].split(',');
 	                	var names = rowData[fields[i + 1]].split(',');
@@ -324,32 +322,50 @@ function init(){
 
 //////////////////////////////////////////////以下为业务审核处理代码
 function audit(){
-	var rows = ywsh_toDg.datagrid('getRows');
-	if(rows.length > 0){
-		$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
-			if (bz != undefined){
-				$.ajax({
-					type: "POST",
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
-					data: {
-						lsh: rows[0].lsh,
-						auditLevel: rows[0].auditLevel,
-						bmbh: ywsh_did,
-						menuId: ywsh_menuId,
-						bz: bz,
-					},
-					dataType: 'json',
-					success: function(d){
-						if(d.success){
-							ywsh_toDg.datagrid('reload');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
+	var selected = ywsh_toDg.datagrid('getRows');
+	if(selected.length > 0){
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
+			data: {
+				bmbh: ywsh_did,
+				lsh: selected[0].lsh,
+			},
+			dataType: 'json',
+			success: function(d){
+				if(d.obj != undefined){
+					var row = d.obj;
+					$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
+						if (bz != undefined){
+							$.ajax({
+								type: "POST",
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
+								data: {
+									lsh: row.lsh,
+									auditLevel: row.auditLevel,
+									bmbh: ywsh_did,
+									menuId: ywsh_menuId,
+									bz: bz,
+								},
+								dataType: 'json',
+								success: function(d){
+									if(d.success){
+										ywsh_toDg.datagrid('reload');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}  
+								},
 							});
-						}  
-					},
-				});
-				
+							
+						}
+					});
+				}else{
+					$.messager.alert('警告', '该单据已审批结束！',  'warning');
+					ywsh_toDg.datagrid('reload');
+				}
 			}
 		});
 	}else{
@@ -358,37 +374,56 @@ function audit(){
 }
 
 function refuse(){
-	var rows = ywsh_toDg.datagrid('getRows');
-	if(rows.length > 0){
-		$.messager.prompt('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(bz){
-			if (bz != undefined){
-				$.ajax({
-					type: "POST",
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
-					data: {
-						lsh: rows[0].lsh,
-						auditLevel: rows[0].auditLevel,
-						bmbh: ywsh_did,
-						menuId: ywsh_menuId,
-						bz: bz,
-					},
-					dataType: 'json',
-					success: function(d){
-						if(d.success){
-							ywsh_toDg.datagrid('reload');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
+	var selected = ywsh_toDg.datagrid('getRows');
+	if(selected.length > 0){
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
+			data: {
+				bmbh: ywsh_did,
+				lsh: selected[0].lsh,
+			},
+			dataType: 'json',
+			success: function(d){
+				if(d.obj != undefined){
+					var row = d.obj;
+					$.messager.prompt('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(bz){
+						if (bz != undefined){
+							$.ajax({
+								type: "POST",
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
+								data: {
+									lsh: row.lsh,
+									auditLevel: row.auditLevel,
+									bmbh: ywsh_did,
+									menuId: ywsh_menuId,
+									bz: bz,
+								},
+								dataType: 'json',
+								success: function(d){
+									if(d.success){
+										ywsh_toDg.datagrid('reload');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}  
+								},
 							});
-						}  
-					},
-				});
-				
+							
+						}
+					});
+				}else{
+					$.messager.alert('警告', '该单据已审批结束！',  'warning');
+					ywsh_toDg.datagrid('reload');
+				}
 			}
 		});
 	}else{
 		$.messager.alert('警告', '没有需要进行审批的业务！',  'warning');
 	}
+	
 }
 //////////////////////////////////////////////以上为业务审核处理代码
 

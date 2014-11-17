@@ -84,6 +84,12 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		writeJson(ywshService.datagrid(ywsh));
 	}
 
+	public void refreshYwsh() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		writeJson(ywshService.refreshYwsh(ywsh));
+	}
+	
 	public void detDatagrid() {
 		writeJson(ywshService.detDatagrid(ywsh.getLsh()));
 	}
