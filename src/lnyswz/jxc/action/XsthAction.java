@@ -75,6 +75,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.toKfck(xsth));
 	}
 	
+	public void refreshXsth(){
+		writeJson(xsthService.refreshXsth(xsth));
+	}
+	
 	/**
 	 * 修改销售提货数量
 	 */

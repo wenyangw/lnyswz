@@ -730,56 +730,70 @@ public class XsthServiceImpl implements XsthServiceI {
 		List<TXsth> l = xsthDao.find(hql, params, xsth.getPage(), xsth.getRows());
 		List<Xsth> nl = new ArrayList<Xsth>();
 		for(TXsth t : l){
-			Xsth c = new Xsth();
-			BeanUtils.copyProperties(t, c);
-			
-			//默认置0
-			c.setIsTh("0");
-			//String xskplshs = "";
-			Set<String> xskplshs = new HashSet<String>();
-			for(TXsthDet tXsthDet : t.getTXsthDets()){
-				//如销售提货单已进行出库，显示关联出库单流水号
-				if(tXsthDet.getTKfcks() != null && tXsthDet.getTKfcks().size() > 0){
-					if("0".equals(c.getIsTh())){
-						c.setIsTh("1");
-					}
-					//break;
-				}
-				//显示关联销售开票单流水号
-				Set<TXskp> tXskps = tXsthDet.getTXskps();
-				if(tXskps != null && tXskps.size() > 0){
-					for(TXskp tXskp : tXskps){
-						xskplshs.add(tXskp.getXskplsh());
-					}
-				}
-				
-				String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
-				Map<String, Object> params_sh = new HashMap<String, Object>();
-				params_sh.put("0", t.getXsthlsh());
-				
-				List<Object[]> os = xsthDao.findBySQL(sql_sh, params_sh);
-				if(os != null && os.size() > 0){
-					String bzs = "";
-					for(Object o : os){
-						String sbz = o.toString().trim();
-						if(!sbz.equals("")){
-							bzs += sbz + ",";
-						}
-					}
-					c.setShbz(bzs);
-				}
-				
-			}
-			
-			String r = xskplshs.toString();
-			
-			c.setXskplsh(r.length() == 2 ? "" : r.substring(1, r.length() - 1));
+			Xsth c = getXsthRow(t);
 			
 			nl.add(c);
 		}
 		datagrid.setTotal(xsthDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
+	}
+
+	private Xsth getXsthRow(TXsth t) {
+		Xsth c = new Xsth();
+		BeanUtils.copyProperties(t, c);
+		
+		//默认置0
+		c.setIsTh("0");
+		//String xskplshs = "";
+		Set<String> xskplshs = new HashSet<String>();
+		for(TXsthDet tXsthDet : t.getTXsthDets()){
+			//如销售提货单已进行出库，显示关联出库单流水号
+			if(tXsthDet.getTKfcks() != null && tXsthDet.getTKfcks().size() > 0){
+				if("0".equals(c.getIsTh())){
+					c.setIsTh("1");
+				}
+				//break;
+			}
+			//显示关联销售开票单流水号
+			Set<TXskp> tXskps = tXsthDet.getTXskps();
+			if(tXskps != null && tXskps.size() > 0){
+				for(TXskp tXskp : tXskps){
+					xskplshs.add(tXskp.getXskplsh());
+				}
+			}
+			
+			String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
+			Map<String, Object> params_sh = new HashMap<String, Object>();
+			params_sh.put("0", t.getXsthlsh());
+			
+			List<Object[]> os = xsthDao.findBySQL(sql_sh, params_sh);
+			if(os != null && os.size() > 0){
+				String bzs = "";
+				for(Object o : os){
+					String sbz = o.toString().trim();
+					if(!sbz.equals("")){
+						bzs += sbz + ",";
+					}
+				}
+				c.setShbz(bzs);
+			}
+			
+		}
+		
+		String r = xskplshs.toString();
+		
+		c.setXskplsh(r.length() == 2 ? "" : r.substring(1, r.length() - 1));
+		return c;
+	}
+	
+	@Override
+	public DataGrid refreshXsth(Xsth xsth) {
+		DataGrid dg = new DataGrid();
+		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
+		dg.setObj(getXsthRow(tXsth));
+		
+		return dg;
 	}
 	
 	@Override

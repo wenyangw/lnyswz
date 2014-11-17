@@ -19,4 +19,5 @@ public interface XsthServiceI {
 	public void updateUnlock(Xsth xsth);
 	public DataGrid getSpBgys(Xsth xsth);
 	public DataGrid getYsje(Xsth xsth);
+	public DataGrid refreshXsth(Xsth xsth);
 }
