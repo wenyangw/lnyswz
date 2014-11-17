@@ -5,58 +5,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.print.DocFlavor;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.components.Bean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-
 import lnyswz.common.bean.DataGrid;
-import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Cgjh;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.KfrkDet;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywhs;
-import lnyswz.jxc.bean.YwhsDet;
 import lnyswz.jxc.bean.Ywsh;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCk;
 import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TKfpd;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TRklx;
-import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TYszz;
-import lnyswz.jxc.model.TYwhs;
-import lnyswz.jxc.model.TYwhsDet;
 import lnyswz.jxc.model.TYwsh;
-import lnyswz.jxc.model.TCgxq;
-import lnyswz.jxc.model.TGys;
-import lnyswz.jxc.model.TJsfs;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TRole;
-import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.YwshServiceI;
 import lnyswz.jxc.util.Constant;
 
