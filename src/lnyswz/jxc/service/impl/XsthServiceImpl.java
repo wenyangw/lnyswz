@@ -828,7 +828,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		if(xsth.getSearch() != null){
 			if("fh".equals(xsth.getSearch())){
-				hql += " and t.TXsth.fhId is not null";
+				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
 			}else{
 				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
@@ -860,7 +860,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
 			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			if(!"fh".equals(xsth.getSearch())){
-				hql += " and t.TXsth.fhId is null";
+				hql += " and (t.TXsth.fhId is null or t.TXsth.isFhth = '1')";
 			}
 			//hql += " and t.TXsth.isZs = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
