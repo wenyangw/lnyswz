@@ -34,6 +34,7 @@ public class Ywrk {
 	private String isDep;
 	private String depId;
 	private String depName;
+	private String beYwrklsh;
 	private String menuId;
 	private String lxbh;
 	
@@ -259,6 +260,14 @@ public class Ywrk {
 
 	public void setDepName(String depName) {
 		this.depName = depName;
+	}
+
+	public String getBeYwrklsh() {
+		return beYwrklsh;
+	}
+
+	public void setBeYwrklsh(String beYwrklsh) {
+		this.beYwrklsh = beYwrklsh;
 	}
 
 	public String getLxbh() {

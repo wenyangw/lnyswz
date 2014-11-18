@@ -454,6 +454,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	}
 	
 	@Override
+	public DataGrid changeYwrk(Ywrk ywrk) {
+		DataGrid dg = new DataGrid();
+		
+		return dg;
+	}
+	
+	@Override
 	public DataGrid toKfrk(String ywrklsh){
 		//单据表头处理
 		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrklsh);

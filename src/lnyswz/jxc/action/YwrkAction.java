@@ -93,6 +93,10 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		writeJson(ywrkService.getSpkc(ywrk));
 	}
 	
+	public void changeYwrk() {
+		writeJson(ywrkService.changeYwrk(ywrk));
+	}
+	
 	public void toKfrk() {
 		writeJson(ywrkService.toKfrk(ywrk.getYwrklsh()));
 	}

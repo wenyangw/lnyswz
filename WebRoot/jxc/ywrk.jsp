@@ -56,7 +56,7 @@ $(function(){
 	ywrk_dg = $('#jxc_ywrk_dg').datagrid({
 		fit : true,
 	    border : false,
-	    singleSelect : true,
+// 	    singleSelect : true,
 	    remoteSort: false,
 // 	    fitColumns: true,
 	    pagination : true,
@@ -1292,6 +1292,75 @@ function printYwrk(){
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
 }
+
+/*
+ * 将暂估入库转换为正式入库
+ */
+function changeYwrk(){
+	var selected = ywrk_dg.datagrid('getSelections');
+	var flag = true;
+	var lsh = [];
+	if (selected.length) {
+		var preRow = undefined;
+		$.each(selected, function(index){
+			if(this.isCj == '1'){
+	    		$.messager.alert('提示', '选中的入库单已经冲减，请重新选择！', 'error');
+				flag = false;
+				return false;
+	    	}
+			if(this.rklxId == '01'){
+	    		$.messager.alert('提示', '选中的入库单已经是正式入库，请重新选择！', 'error');
+				flag = false;
+				return false;
+	    	}
+		    if(index != 0){
+		    	if(this.gysbh != preRow.gysbh){
+		    		$.messager.alert('提示', '请选择相同供应商的入库单进行操作！', 'error');
+					flag = false;
+					return false;
+		    	}
+		    	if(this.ckId != preRow.ckId){
+		    		$.messager.alert('提示', '请选择相同仓库的入库单进行操作！', 'error');
+					flag = false;
+					return false;
+		    	}
+		    }else{
+		    	preRow = this;
+		    }
+		    lsh.push(this.ywrklsh);
+		});
+		
+		if(flag){
+			$.messager.prompt('请确认', '是否要冲减选中的业务入库单？请填写备注', function(bz){
+				if (bz != undefined){
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/ywrkAction!changeYwrk.action',
+						data : {
+							ywrklshs : lsh.join(','),
+						},
+						method: 'post',
+						dataType : 'json',
+						success : function(d) {
+							$('input[name=gysbh]').val(selected[0].gysbh);
+							$('input[name=gysmc]').val(selected[0].gysmc);
+							jxc_ywrk_ckCombo.combobox('setValue', selected[0].ckId);
+							jxc_ywrk_rklxCombo.combobox('setValue', '01');
+							
+							
+							ywrk_spdg.datagrid('loadData', d.rows);
+	 						updateFooter();
+							$('input[name=ywrklshs]').val(lsh.join(','));
+							ywrk_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 function searchYwrk(){
 	ywrk_dg.datagrid('load',{
