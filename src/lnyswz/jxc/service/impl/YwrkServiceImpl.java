@@ -456,7 +456,45 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid changeYwrk(Ywrk ywrk) {
 		DataGrid dg = new DataGrid();
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje from t_ywrk_det t"
+				+ " where t.ywrklsh in (" + ywrk.getYwrklshs() + ")"
+				+ " group by t.spbh";
+		//Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("0", "(" + ywrk.getYwrklshs() + ")");
 		
+		List<Object[]> l = detDao.findBySQL(sql);
+		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal spje = new BigDecimal(os[2].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			YwrkDet yd = new YwrkDet();
+			
+			yd.setSpbh(spbh);
+			yd.setSpmc(sp.getSpmc());
+			yd.setSpcd(sp.getSpcd());
+			yd.setSppp(sp.getSppp());
+			yd.setSpbz(sp.getSpbz());
+			
+			yd.setZdwsl(zdwsl);
+			yd.setZjldwmc(sp.getZjldw().getJldwmc());
+			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_DOWN));
+			if(sp.getCjldw() != null){
+				yd.setCjldwmc(sp.getCjldw().getJldwmc());
+				yd.setZhxs(sp.getZhxs());
+				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwdj(spje.multiply(new BigDecimal(1).add(Constant.SHUILV)).divide(yd.getCdwsl(), 2, BigDecimal.ROUND_HALF_DOWN));
+			}
+			yd.setSpje(spje);
+			
+			nl.add(yd);
+		}
+		nl.add(new YwrkDet());
+		
+		dg.setRows(nl);
 		return dg;
 	}
 	

@@ -1331,7 +1331,7 @@ function changeYwrk(){
 		});
 		
 		if(flag){
-			$.messager.prompt('请确认', '是否要冲减选中的业务入库单？请填写备注', function(bz){
+			$.messager.prompt('请确认', '是否要将选中的业务入库单进行类型转换？请填写备注', function(bz){
 				if (bz != undefined){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/ywrkAction!changeYwrk.action',
