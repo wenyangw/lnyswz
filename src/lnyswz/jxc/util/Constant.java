@@ -79,7 +79,7 @@ public interface Constant {
 	
 	//提货单-库房
 	public static final Map<String, String> REPORT_XSTH_KF = new HashMap<String, String>(){{
-		//put("01","xsth_report_ys");
+		put("01","xsth_report_ys_kf");
 		put("04","xsth_report_b_ns");
 		put("05","xsth_report_b_ns");
 		//put("07","xsth_report_jy");
@@ -94,6 +94,7 @@ public interface Constant {
 	
 	//销售欠款单
 	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
+		put("01","qkdj_report_ys");
 		put("04","qkdj_report_jc");
 		put("05","qkdj_report_zy");
 		put("08","qkdj_report_dl");
