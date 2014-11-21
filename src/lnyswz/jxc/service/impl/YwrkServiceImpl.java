@@ -109,6 +109,33 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		ck.setId(ywrk.getCkId());
 		ck.setCkmc(tYwrk.getCkmc());
 		
+		
+		//从暂估入库传入
+		if (ywrk.getYwrklshs() != null) {
+			String[] lshs = ywrk.getYwrklshs().split(",");
+			Set<TCgjhDet> zCgjhDets = new HashSet<TCgjhDet>();
+			Set<TKfrk> zKfrks = new HashSet<TKfrk>();
+			for(String lsh : lshs){
+				TYwrk zYwrk = ywrkDao.get(TYwrk.class, lsh);
+				if (zYwrk.getTCgjhs() != null && zYwrk.getTCgjhs().size() > 0){
+					zCgjhDets.addAll(zYwrk.getTCgjhs());
+				}
+				if (zYwrk.getTKfrks() != null && zYwrk.getTKfrks().size() > 0){
+					zKfrks.addAll(zYwrk.getTKfrks());
+				}
+				zYwrk.setBeYwrklsh(ywrklsh);
+				
+				Ywrk zgYwrk = new Ywrk();
+				BeanUtils.copyProperties(zYwrk, zgYwrk);
+				zgYwrk.setLxbh("01");
+				zgYwrk.setCjId(ywrk.getCreateId());
+				zgYwrk.setCjName(ywrk.getCreateName());
+				zgYwrk.setMenuId(ywrk.getMenuId());
+				cjYwrk(zgYwrk);
+			}
+		}
+		
+		
 		//处理商品明细
 		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
 		ArrayList<YwrkDet> ywrkDets = JSON.parseObject(ywrk.getDatagrid(), new TypeReference<ArrayList<YwrkDet>>(){});
@@ -486,7 +513,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
 				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				yd.setCdwdj(spje.multiply(new BigDecimal(1).add(Constant.SHUILV)).divide(yd.getCdwsl(), 2, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_DOWN));
 			}
 			yd.setSpje(spje);
 			

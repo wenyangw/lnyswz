@@ -345,49 +345,6 @@ $(function(){
 	});
 	lnyw.toolbar(3, ywrk_cgjhDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
 	
-// 	ywrk_cgjhDg.datagrid({
-//         view: detailview,
-//         detailFormatter:function(index,row){
-//             return '<div style="padding:2px"><table id="ddv-' + index + '"></table></div>';
-//         },
-//         onExpandRow: function(index,row){
-//             $('#ddv-'+index).datagrid({
-//                 url:'${pageContext.request.contextPath}/jxc/cgjhAction!detDatagrid.action',
-//                 fitColumns:true,
-//                 singleSelect:true,
-//                 rownumbers:true,
-//                 height:'auto',
-//                 queryParams: {
-//         			cgjhlsh: row.cgjhlsh,
-//         		},
-//                 columns:[[
-//                     {field:'spbh',title:'商品编号',width:200,align:'center'},
-//                     {field:'spmc',title:'名称',width:100,align:'center'},
-//                     {field:'spcd',title:'产地',width:100,align:'center'},
-//                     {field:'sppp',title:'品牌',width:100,align:'center'},
-//                     {field:'spbz',title:'包装',width:100,align:'center'},
-//                     {field:'sppc',title:'批次',width:100,align:'center'},
-//                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-//                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
-//                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-//                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
-//                     {field:'shdz',title:'送货地址',width:100,align:'center'},
-//                     {field:'lxr',title:'联系人',width:100,align:'center'},
-//                     {field:'dhsj',title:'到货时间',width:100,align:'center'},
-//                 ]],
-//                 onResize:function(){
-//                 	ywrk_cgjhDg.datagrid('fixDetailRowHeight',index);
-//                 },
-//                 onLoadSuccess:function(){
-//                     setTimeout(function(){
-//                     	ywrk_cgjhDg.datagrid('fixDetailRowHeight',index);
-//                     },0);
-//                 }
-//             });
-//             ywrk_cgjhDg.datagrid('fixDetailRowHeight',index);
-//         }
-//     });
-	
 	ywrk_xskpDg = $('#jxc_ywrk_xskpDg').datagrid({
 		fit : true,
 	    border : false,
@@ -635,10 +592,6 @@ $(function(){
          
 	});
 	
-	//$('#jxc_ywrk_tabs a.tabs-inner').css('height','100px');
-	//$('#jxc_ywrk_tabs span.tabs-title').css('white-space','normal');
-	
-	
 	//初始化创建时间
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
 	
@@ -883,6 +836,7 @@ function saveAll(){
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
+	effectRow['ywrklshs'] = $('input[name=ywrklshs]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
 	effectRow['bmbh'] = ywrk_did;
 	effectRow['lxbh'] = ywrk_lx;
@@ -1343,6 +1297,13 @@ function changeYwrk(){
 						success : function(d) {
 							$('input[name=gysbh]').val(selected[0].gysbh);
 							$('input[name=gysmc]').val(selected[0].gysmc);
+							console.info(selected[0].isZs);
+							if (selected[0].isZs == '1') {
+								$('input[name=isZs]').prop('checked', true);
+							}
+							if (selected[0].isDep == '1') {
+								$('input[name=isDep]').prop('checked', true);
+							}
 							jxc_ywrk_ckCombo.combobox('setValue', selected[0].ckId);
 							jxc_ywrk_rklxCombo.combobox('setValue', '01');
 							
@@ -1552,6 +1513,7 @@ function searchXskpInYwrk(){
 					</tr>
 				</table>
 				<input name="xskplsh" type="hidden">
+				<input name="ywrklshs" type="hidden">
 				<input name="kfrklshs" type="hidden">
 				<input name="cgjhDetIds" type="hidden">
 			</div>
