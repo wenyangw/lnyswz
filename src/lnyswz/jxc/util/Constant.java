@@ -30,6 +30,8 @@ public interface Constant {
 	public static final String KHLX_SX = "02";
 	public static final String KHLX_YJ = "03";
 	public static final String KHLX_HT = "04";
+
+	public static final String BM_DL = "08";
 	
 
 	//库房入库单
@@ -102,7 +104,7 @@ public interface Constant {
 	
 	//业务入库单
 	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
-		put("01","ywrk_report_b_c");
+		put("01","ywrk_report_ys_s_c");
 		put("04","ywrk_report_b");
 		put("05","ywrk_report_b");
 		put("07","ywrk_report_s");
