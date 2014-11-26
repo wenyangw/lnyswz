@@ -164,7 +164,6 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		List<TCgjhDet> tCgjhDets = detDao.find(hql, params);
 		
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
-//		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
 		for (TCgjhDet yd : tCgjhDets) {
 			CgjhDet cgjhDet = new CgjhDet();
 			BeanUtils.copyProperties(yd, cgjhDet);
