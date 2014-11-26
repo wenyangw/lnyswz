@@ -164,10 +164,17 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		List<TCgjhDet> tCgjhDets = detDao.find(hql, params);
 		
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
-//		for (TCgjhDet yd : tCgjh.getTCgjhDets()) {
 		for (TCgjhDet yd : tCgjhDets) {
 			CgjhDet cgjhDet = new CgjhDet();
 			BeanUtils.copyProperties(yd, cgjhDet);
+			if(tCgjh.getBmbh().equals(Constant.BM_DL)){
+				if (cgjhDet.getSpbh().substring(0, 1).equals("4")){
+					cgjhDet.setZdwdj(Constant.BD_ZERO);
+					cgjhDet.setZdwsl(Constant.BD_ZERO);
+				}else{
+					cgjhDet.setZdwdj(cgjhDet.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)));
+				}
+			}
 			hjsl = hjsl.add(yd.getCdwsl());
 			nl.add(cgjhDet);
 		}
