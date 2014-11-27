@@ -1056,28 +1056,58 @@ public class XskpServiceImpl implements XskpServiceI {
 	public DataGrid getLatestXs(Xskp xskp) {
 		DataGrid dg = new DataGrid();
 		
-		Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 		
-		if(o != null){
-			Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
-			Date createTime = DateUtil.stringToDate(o[3].toString());
-			Date payTime = DateUtil.stringToDate(o[4].toString());
-		
-			Xskp x = new Xskp();
-			x.setPayTime(payTime);
-			if(kh.getKhlxId().equals(Constant.KHLX_XK)){
-				x.setPostponeDay(0);
-				x.setIsUp("1");
-			}else{
-				//x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
-				x.setPostponeDay(kh.getPostponeDay());
-				x.setIsUp(kh.getIsUp());
+		if(ysje.compareTo(BigDecimal.ZERO) == -1){
+			List<Object[]> lxs  = YszzServiceImpl.getLatestXses(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			for(Object[] lx : lxs){
+				BigDecimal hjje = new BigDecimal(lx[5].toString());
+				ysje = ysje.add(hjje);
+				if(ysje.compareTo(BigDecimal.ZERO) == 0){
+					break;
+				}else if(ysje.compareTo(BigDecimal.ZERO) == 1){
+					Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+					//Date createTime = DateUtil.stringToDate(lx[3].toString());
+					Date payTime = DateUtil.stringToDate(lx[4].toString());
+				
+					Xskp x = new Xskp();
+					x.setPayTime(payTime);
+					if(kh.getKhlxId().equals(Constant.KHLX_XK)){
+						x.setPostponeDay(0);
+						x.setIsUp("1");
+					}else{
+						x.setPostponeDay(kh.getPostponeDay());
+						x.setIsUp(kh.getIsUp());
+					}
+				
+					dg.setObj(x);
+					return dg;
+				}
 			}
-		
-			dg.setObj(x);
-			return dg;
+		}else{
+			Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			
+			if(o != null){
+				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+				Date createTime = DateUtil.stringToDate(o[3].toString());
+				Date payTime = DateUtil.stringToDate(o[4].toString());
+			
+				Xskp x = new Xskp();
+				x.setPayTime(payTime);
+				if(kh.getKhlxId().equals(Constant.KHLX_XK)){
+					x.setPostponeDay(0);
+					x.setIsUp("1");
+				}else{
+					//x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+					x.setPostponeDay(kh.getPostponeDay());
+					x.setIsUp(kh.getIsUp());
+				}
+			
+				dg.setObj(x);
+				return dg;
+			}
 		}
-		
+				
 		return null;
 	}
 	
