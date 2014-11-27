@@ -113,6 +113,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		//从暂估入库传入
 		if (ywrk.getYwrklshs() != null) {
 			String[] lshs = ywrk.getYwrklshs().split(",");
+			Set<>
 			Set<TCgjhDet> zCgjhDets = new HashSet<TCgjhDet>();
 			Set<TKfrk> zKfrks = new HashSet<TKfrk>();
 			for(String lsh : lshs){
@@ -507,9 +508,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			yd.setSpbz(sp.getSpbz());
 			
 			yd.setZdwsl(zdwsl);
+			yd.setZjldwId(sp.getZjldw().getId());
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_DOWN));
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
 				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
