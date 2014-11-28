@@ -45,7 +45,7 @@ public interface Constant {
 
 	//业务盘点单
 	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
-		put("01","ywpd_report_b");
+		put("01","ywpd_report_s");
 		put("04","ywpd_report_b");
 		put("05","ywpd_report_b");
 		put("07","ywpd_report_s");

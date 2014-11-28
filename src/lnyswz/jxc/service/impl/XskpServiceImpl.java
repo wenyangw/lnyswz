@@ -1060,11 +1060,25 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		if(ysje.compareTo(BigDecimal.ZERO) == -1){
 			List<Object[]> lxs  = YszzServiceImpl.getLatestXses(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+			int i = 0;
 			for(Object[] lx : lxs){
 				BigDecimal hjje = new BigDecimal(lx[5].toString());
 				ysje = ysje.add(hjje);
-				if(ysje.compareTo(BigDecimal.ZERO) == 0){
+				
+				switch (ysje.compareTo(BigDecimal.ZERO)) {
+				case -1:
+					if ()
 					break;
+				case 0:
+				case 1:
+
+				default:
+					break;
+				}
+				if(ysje.compareTo(BigDecimal.ZERO) == -1){
+					if (i < lxs.size()){
+						continue;
+					}
 				}else if(ysje.compareTo(BigDecimal.ZERO) == 1){
 					Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
 					//Date createTime = DateUtil.stringToDate(lx[3].toString());
@@ -1083,6 +1097,7 @@ public class XskpServiceImpl implements XskpServiceI {
 					dg.setObj(x);
 					return dg;
 				}
+				i++;
 			}
 		}else{
 			Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
