@@ -67,11 +67,10 @@ public class YwrkServiceImpl implements YwrkServiceI {
 
 	@Override
 	public Ywrk save(Ywrk ywrk) {
-		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
 		TYwrk tYwrk = new TYwrk();
 		BeanUtils.copyProperties(ywrk, tYwrk);
-		tYwrk.setCreateTime(new Date());
-		tYwrk.setYwrklsh(ywrklsh);
+//		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
+//		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
 
 		tYwrk.setIsCj("0");
@@ -111,9 +110,10 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		
 		//从暂估入库传入
-		if (ywrk.getYwrklshs() != null) {
+		Set<TYwrk> zgYwrks = null;
+		if (ywrk.getYwrklshs() != null && ywrk.getYwrklshs().length() > 0) {
 			String[] lshs = ywrk.getYwrklshs().split(",");
-			Set<>
+			zgYwrks = new HashSet<TYwrk>();
 			Set<TCgjhDet> zCgjhDets = new HashSet<TCgjhDet>();
 			Set<TKfrk> zKfrks = new HashSet<TKfrk>();
 			for(String lsh : lshs){
@@ -124,7 +124,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				if (zYwrk.getTKfrks() != null && zYwrk.getTKfrks().size() > 0){
 					zKfrks.addAll(zYwrk.getTKfrks());
 				}
-				zYwrk.setBeYwrklsh(ywrklsh);
+				zgYwrks.add(zYwrk);
+				//zYwrk.setBeYwrklsh(ywrklsh);
 				
 				Ywrk zgYwrk = new Ywrk();
 				BeanUtils.copyProperties(zYwrk, zgYwrk);
@@ -168,8 +169,20 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			
 		}
 		tYwrk.setTYwrkDets(tDets);
+		
+		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
+		tYwrk.setYwrklsh(ywrklsh);
+		tYwrk.setCreateTime(new Date());
+
 		ywrkDao.save(tYwrk);		
-				
+		
+		
+		if(zgYwrks != null){
+			for(TYwrk zz : zgYwrks){ 
+				zz.setBeYwrklsh(ywrklsh);
+			}
+		}
+		
 		OperalogServiceImpl.addOperalog(ywrk.getCreateId(), ywrk.getBmbh(), ywrk.getMenuId(), ywrklsh, 
 				"生成业务入库单", operalogDao);
 		

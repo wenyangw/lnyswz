@@ -133,6 +133,7 @@ $(function(){
 				}},
 			{field:'cjTime',title:'冲减时间',align:'center'},
         	{field:'cjYwrklsh',title:'原业务入库流水号',align:'center'},
+        	{field:'beYwrklsh',title:'暂估入库流水号',align:'center'},
 	    ]],
 	    toolbar:'#jxc_ywrk_tb',
 	});
@@ -1285,8 +1286,8 @@ function changeYwrk(){
 		});
 		
 		if(flag){
-			$.messager.prompt('请确认', '是否要将选中的业务入库单进行类型转换？请填写备注', function(bz){
-				if (bz != undefined){
+			$.messager.confirm('请确认', '是否要将选中的业务入库单进行类型转换？', function(r){
+				if (r){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/ywrkAction!changeYwrk.action',
 						data : {
