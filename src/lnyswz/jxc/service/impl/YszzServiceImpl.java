@@ -161,13 +161,6 @@ public class YszzServiceImpl implements YszzServiceI {
 	}
 	
 	public static BigDecimal getLsje(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-//		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("bmbh", bmbh);
-//		params.put("khbh", khbh);
-//		params.put("ywyId", ywyId);
-//		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
-//		TYszz tYszz = yszzDao.get(hql, params);
 		TYszz tYszz = getYszz(bmbh, khbh, ywyId, null, yszzDao);
 		if(tYszz != null){
 			return tYszz.getLsje();
@@ -195,6 +188,14 @@ public class YszzServiceImpl implements YszzServiceI {
 		return khs;
 	}
 	
+	/**
+	 * 获取最早一笔未还款的发票(提货)或未开票的提货单
+	 * @param bmbh
+	 * @param khbh
+	 * @param ywyId
+	 * @param yszzDao
+	 * @return
+	 */
 	public static Object[] getLatestXs(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
 		String sql = "select top 1 t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -203,6 +204,25 @@ public class YszzServiceImpl implements YszzServiceI {
 		params.put("2", ywyId);
 		
 		return yszzDao.getMBySQL(sql, params);
+		
+	}
+	
+	/**
+	 * 获取未还款的发票(提货)或未开票的提货单
+	 * @param bmbh
+	 * @param khbh
+	 * @param ywyId
+	 * @param yszzDao
+	 * @return
+	 */
+	public static List<Object[]> getLatestXses(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
+		String sql = "select t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime, t.hjje from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", khbh);
+		params.put("2", ywyId);
+		
+		return yszzDao.findBySQL(sql, params);
 		
 	}
 	
