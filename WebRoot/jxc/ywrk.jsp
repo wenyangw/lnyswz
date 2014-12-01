@@ -1412,9 +1412,10 @@ function createYwrkFromCgjh(){
 					success : function(d) {
 						$('input[name=gysbh]').val(rows[0].gysbh);
 						$('input[name=gysmc]').val(rows[0].gysmc);
+						$('input[name=isZs]').prop('checked', true);
+						jxc_ywrk_ckCombo.combobox('setValue', rows[0].ckId);
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
-						$('input[name=isZs]').attr('checked', 'checked');
 						$('input[name=cgjhDetIds]').val(cgjhDetStr);
 						ywrk_tabs.tabs('select', 0);
 					}

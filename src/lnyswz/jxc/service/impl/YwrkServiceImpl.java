@@ -69,36 +69,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	public Ywrk save(Ywrk ywrk) {
 		TYwrk tYwrk = new TYwrk();
 		BeanUtils.copyProperties(ywrk, tYwrk);
+		
 //		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
 //		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
 
 		tYwrk.setIsCj("0");
 		
-		//如果从库房入库生成的入库，进行关联
-		String kfrklshs = ywrk.getKfrklshs();
-		if(kfrklshs != null && kfrklshs.trim().length() > 0){
-			for(String kfrklsh : kfrklshs.split(",")){
-				TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrklsh);
-				tKfrk.setTYwrk(tYwrk);
-			}
-		}
 		
-		if(ywrk.getXskplsh() != null && ywrk.getXskplsh().trim().length() > 0){
-			TXskp tXskp = xskpDao.load(TXskp.class, ywrk.getXskplsh());
-			tXskp.setTYwrk(tYwrk);
-		}
-		
-		//如果从采购计划直送生成的入库，进行关联
-		String cgjhDetIds = ywrk.getCgjhDetIds();
-		if(cgjhDetIds != null && cgjhDetIds.trim().length() > 0){
-			Set<TCgjhDet> tCgjhDets = new HashSet<TCgjhDet>();
-			for(String cgjhDetId : cgjhDetIds.split(",")){
-				TCgjhDet tCgjhDet = cgjhDetDao.load(TCgjhDet.class, Integer.valueOf(cgjhDetId));
-				tCgjhDets.add(tCgjhDet);
-			}
-			tYwrk.setTCgjhs(tCgjhDets);
-		}
 		
 		Department dep = new Department();
 		dep.setId(ywrk.getBmbh());
@@ -174,6 +152,31 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setCreateTime(new Date());
 
+		//如果从库房入库生成的入库，进行关联
+				String kfrklshs = ywrk.getKfrklshs();
+				if(kfrklshs != null && kfrklshs.trim().length() > 0){
+					for(String kfrklsh : kfrklshs.split(",")){
+						TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrklsh);
+						tKfrk.setTYwrk(tYwrk);
+					}
+				}
+				
+				if(ywrk.getXskplsh() != null && ywrk.getXskplsh().trim().length() > 0){
+					TXskp tXskp = xskpDao.load(TXskp.class, ywrk.getXskplsh());
+					tXskp.setTYwrk(tYwrk);
+				}
+				
+				//如果从采购计划直送生成的入库，进行关联
+				String cgjhDetIds = ywrk.getCgjhDetIds();
+				if(cgjhDetIds != null && cgjhDetIds.trim().length() > 0){
+					Set<TCgjhDet> tCgjhDets = new HashSet<TCgjhDet>();
+					for(String cgjhDetId : cgjhDetIds.split(",")){
+						TCgjhDet tCgjhDet = cgjhDetDao.load(TCgjhDet.class, Integer.valueOf(cgjhDetId));
+						tCgjhDets.add(tCgjhDet);
+					}
+					tYwrk.setTCgjhs(tCgjhDets);
+				}
+		
 		ywrkDao.save(tYwrk);		
 		
 		

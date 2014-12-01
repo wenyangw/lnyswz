@@ -187,6 +187,7 @@ public class ButtonServiceImpl implements ButtonServiceI {
 			params.put("mid", mid);
 		}
 		String countHql = "select count(id) " + hql;
+		hql = hql + " order by t.TMenu.id, t.tabId, t.orderNum";
 		List<TButton> l = buttonDao.find(hql, params);
 		DataGrid datagrid = new DataGrid();
 		datagrid.setTotal(buttonDao.count(countHql, params));
