@@ -89,11 +89,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		//从暂估入库传入
 		Set<TYwrk> zgYwrks = null;
+		Set<TCgjhDet> zCgjhDets = null;
+		Set<TKfrk> zKfrks = null;
 		if (ywrk.getYwrklshs() != null && ywrk.getYwrklshs().length() > 0) {
 			String[] lshs = ywrk.getYwrklshs().split(",");
 			zgYwrks = new HashSet<TYwrk>();
-			Set<TCgjhDet> zCgjhDets = new HashSet<TCgjhDet>();
-			Set<TKfrk> zKfrks = new HashSet<TKfrk>();
+			zCgjhDets = new HashSet<TCgjhDet>();
+			zKfrks = new HashSet<TKfrk>();
 			for(String lsh : lshs){
 				TYwrk zYwrk = ywrkDao.get(TYwrk.class, lsh);
 				if (zYwrk.getTCgjhs() != null && zYwrk.getTCgjhs().size() > 0){
@@ -153,29 +155,39 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		tYwrk.setCreateTime(new Date());
 
 		//如果从库房入库生成的入库，进行关联
-				String kfrklshs = ywrk.getKfrklshs();
-				if(kfrklshs != null && kfrklshs.trim().length() > 0){
-					for(String kfrklsh : kfrklshs.split(",")){
-						TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrklsh);
-						tKfrk.setTYwrk(tYwrk);
-					}
-				}
-				
-				if(ywrk.getXskplsh() != null && ywrk.getXskplsh().trim().length() > 0){
-					TXskp tXskp = xskpDao.load(TXskp.class, ywrk.getXskplsh());
-					tXskp.setTYwrk(tYwrk);
-				}
-				
-				//如果从采购计划直送生成的入库，进行关联
-				String cgjhDetIds = ywrk.getCgjhDetIds();
-				if(cgjhDetIds != null && cgjhDetIds.trim().length() > 0){
-					Set<TCgjhDet> tCgjhDets = new HashSet<TCgjhDet>();
-					for(String cgjhDetId : cgjhDetIds.split(",")){
-						TCgjhDet tCgjhDet = cgjhDetDao.load(TCgjhDet.class, Integer.valueOf(cgjhDetId));
-						tCgjhDets.add(tCgjhDet);
-					}
-					tYwrk.setTCgjhs(tCgjhDets);
-				}
+		String kfrklshs = ywrk.getKfrklshs();
+		if(kfrklshs != null && kfrklshs.trim().length() > 0){
+			for(String kfrklsh : kfrklshs.split(",")){
+				TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrklsh);
+				tKfrk.setTYwrk(tYwrk);
+			}
+		}
+		
+		if(ywrk.getXskplsh() != null && ywrk.getXskplsh().trim().length() > 0){
+			TXskp tXskp = xskpDao.load(TXskp.class, ywrk.getXskplsh());
+			tXskp.setTYwrk(tYwrk);
+		}
+		
+		//如果从采购计划直送生成的入库，进行关联
+		String cgjhDetIds = ywrk.getCgjhDetIds();
+		if(cgjhDetIds != null && cgjhDetIds.trim().length() > 0){
+			Set<TCgjhDet> tCgjhDets = new HashSet<TCgjhDet>();
+			for(String cgjhDetId : cgjhDetIds.split(",")){
+				TCgjhDet tCgjhDet = cgjhDetDao.load(TCgjhDet.class, Integer.valueOf(cgjhDetId));
+				tCgjhDets.add(tCgjhDet);
+			}
+			tYwrk.setTCgjhs(tCgjhDets);
+		}
+		
+		if(zCgjhDets != null && zCgjhDets.size() > 0){
+			tYwrk.setTCgjhs(zCgjhDets);
+		}
+		if(zKfrks != null && zKfrks.size() > 0){
+			for(TKfrk k : zKfrks){
+				TKfrk tK = kfrkDao.load(TKfrk.class, k.getKfrklsh());
+				tK.setTYwrk(tYwrk);
+			}
+		}
 		
 		ywrkDao.save(tYwrk);		
 		
