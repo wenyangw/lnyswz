@@ -32,7 +32,8 @@ $(function(){
 	$('#select2').attr('id', 'pro_' + query);
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
-	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);	
+	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
+	$('#select_dep').attr('id', 'select_dep_' + query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
@@ -59,6 +60,7 @@ $(function(){
 				star += '<th align="left">部门 </th>';
 				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="did" class="inputval"  name="did" style="width:104px;" ></td>';
 			}
+						
 			$.each(data,function(){
 				star += '<tr>';
 				star += '<th align="left">'+this.cname+'</th>';
@@ -108,7 +110,7 @@ $(function(){
 			});	
 			star +='</table>';		
 			//页面加载
-			$('#sc_' + query).html(star);						
+			$('#sc_' + query).html($('#sc_' + query).html() + star);						
 		}
 	});		
 	var selectbox= $('input[name^="ope_"]').combobox({
@@ -121,6 +123,17 @@ $(function(){
 	jxc_select_didCombo.combobox('selectedIndex', 0);
 	openSelectDid='y';
 	}
+	$('#select_dep_' + query).combobox({
+		data: ywbms,
+	    width:100,
+	    valueField: 'id',
+	    textField: 'depName',
+	    panelHeight: 'auto',
+	    onSelect: function(rec){
+	    	//bmbh = $(this).combobox('getValue');
+	    	
+	    }
+	}).combobox('selectedIndex', 0);
 });
 //查询按钮事件
 function selectClick(){
@@ -130,6 +143,7 @@ function selectClick(){
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
 	query = lnyw.tab_options().query;
+	console.info('888888' + $('#select_dep_' + query).combobox('getText'));
 	//查询试图全部字段并设置dataClass，为选择显示字段用
 	p = $('#dialog_' + query);
 	$.ajax({
@@ -522,7 +536,9 @@ function exportExcel(){
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a>
 			</div>
-			<div id='selectcommon' data-options="region:'center',border:false"></div>
+			<div id='selectcommon' data-options="region:'center',border:false">
+				<label for="select_dep">部门</label><input id="select_dep" name="select_dep" type="text" size="8">
+			</div>
 		</div>
 	</div>
 	<div data-options="region:'center',title:'详细内容',split:true, fit:true"
