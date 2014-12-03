@@ -413,6 +413,7 @@ $(function(){
 				formatter: function(value){
 					return lnyw.memo(value, 15);
 				}},
+			{field:'rklxmc',title:'类型',align:'center'},
 	    ]],
 	    toolbar:'#jxc_xsth_ywrkTb',
 	});

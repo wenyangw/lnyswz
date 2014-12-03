@@ -419,6 +419,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			c.setGysmc(t.getTYwrk().getGysmc());
 			c.setCkId(t.getTYwrk().getCkId());
 			c.setCkmc(t.getTYwrk().getCkmc());
+			c.setRklxId(t.getTYwrk().getRklxId());
+			c.setRklxmc(t.getTYwrk().getRklxmc());
 			
 			nl.add(c);
 		}
