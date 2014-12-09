@@ -19,21 +19,20 @@ var sqls;
 var datas;
 var resultDg;
 var hql='';
-var jxc_select_didCombo;
 //页面数据加载
 var total;
 var openSelectDid='n';
 $(function(){	
 	did = lnyw.tab_options().did;
 	query = lnyw.tab_options().query;
-// 	eval("var did_"+query+"=did");
-// 	console.info(eval("did_"+query)+'-----=');
 	$('#selectcommon').attr('id', 'sc_' + query);
 	$('#select2').attr('id', 'pro_' + query);
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
 	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
-	$('#select_dep').attr('id', 'select_dep_' + query);
+// 	$('#select_dep').attr('id','select_dep_'+query);
+// 	$('#div_select').attr('id','div_select_'+query);
+// 	$("input[name=depName]").attr('name','dep_'+query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
@@ -46,7 +45,7 @@ $(function(){
 		cache: false,
 		data : {
 			selectType :query,
-			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
+			//判断参数（根据参数进行查询条件筛选）sqlSelecte d(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
 			sqlSelected : 1,
 		},
 		dataType : 'json',
@@ -58,9 +57,9 @@ $(function(){
 			if(did>='10'){
 				star += '<tr>';
 				star += '<th align="left">部门 </th>';
-				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="did" class="inputval"  name="did" style="width:104px;" ></td>';
+				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
+				star += '</tr>';
 			}
-						
 			$.each(data,function(){
 				star += '<tr>';
 				star += '<th align="left">'+this.cname+'</th>';
@@ -110,7 +109,7 @@ $(function(){
 			});	
 			star +='</table>';		
 			//页面加载
-			$('#sc_' + query).html($('#sc_' + query).html() + star);						
+			$('#sc_' + query).html(star);						
 		}
 	});		
 	var selectbox= $('input[name^="ope_"]').combobox({
@@ -118,32 +117,24 @@ $(function(){
 			panelHeight: 'auto',
 	});
 	
-	if(did>='10'){
-	jxc_select_didCombo = lnyw.initCombo($('input[name^="did"]'), 'id', 'depName', '${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did );
-	jxc_select_didCombo.combobox('selectedIndex', 0);
-	openSelectDid='y';
+	if(did >= '10'){
+		$('#select_dep_' + query).combobox({
+				    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
+				    valueField:'id',
+				    textField:'depName',
+				    panelHeight: 'auto',
+				}).combobox('selectedIndex', 0);
+		openSelectDid='y';
 	}
-	$('#select_dep_' + query).combobox({
-		data: ywbms,
-	    width:100,
-	    valueField: 'id',
-	    textField: 'depName',
-	    panelHeight: 'auto',
-	    onSelect: function(rec){
-	    	//bmbh = $(this).combobox('getValue');
-	    	
-	    }
-	}).combobox('selectedIndex', 0);
+	
 });
 //查询按钮事件
 function selectClick(){
 	//创建对象 obj类型
 	total='';
-	console.info('dd');
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
 	query = lnyw.tab_options().query;
-	console.info('888888' + $('#select_dep_' + query).combobox('getText'));
 	//查询试图全部字段并设置dataClass，为选择显示字段用
 	p = $('#dialog_' + query);
 	$.ajax({
@@ -169,18 +160,12 @@ function selectClick(){
 	hql ='';
 	var dd;
 	if(openSelectDid=='y'){
-		console.info(openSelectDid);
-		dd=jxc_select_didCombo.combobox('getValue');
+		dd=$('#select_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
 		eval("did=did_"+query);
-		console.info(eval("did_"+query)+'-----=');
-	}
-// 	eval("var did_"+query+"=dd");
-	
 
-// 	console.info(eval("did_"+query)+'-----=');
-// 	console.info(jxc_select_didCombo.combobox('getValue')+'---12');
-console.info(did);
+	}
+
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
 		if(this.id.trim().length <= 0 || this.id == null){
@@ -321,8 +306,6 @@ console.info(did);
 		                    });
 		                },
 	      			});	
-// 	      			var dep=eval("did_"+query);
-// 	      			console.info("--++"+dep);
 					var m = step1Ok(hql,allFields);	
 	      			p.dialog('close');	      			
 	      			var cmenu;
@@ -469,7 +452,12 @@ function exportExcel(){
 	resultDg = $('#result_' + query);
 	var hh =resultDg.datagrid('options').columns[0];
 	var ss =resultDg.datagrid('options').frozenColumns[0];
-	
+	var dd;
+	if(openSelectDid=='y'){
+		dd=$('#select_dep_' + query).combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
+	}
 	$.each(ss,function(){			
 		var s="";
 		for(var i=0;i<this.field.length;i++){
@@ -528,7 +516,7 @@ function exportExcel(){
 			data-options="split:false,border:false,fit:true"
 			style="height: 100%;">
 			<div align="center" data-options="region:'north',border:false"
-				style="height: 26px;">
+				style="height: 48px;">
 				<a href="#" class="easyui-linkbutton"
 					data-options="iconCls:'icon-search',plain:true"
 					onclick="selectClick();">查询</a> <a href="#"
@@ -536,12 +524,11 @@ function exportExcel(){
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a>
 			</div>
-			<div id='selectcommon' data-options="region:'center',border:false">
-				<label for="select_dep">部门</label><input id="select_dep" name="select_dep" type="text" size="8">
-			</div>
+			<div id='selectcommon' data-options="region:'center',border:false"></div>
+
 		</div>
 	</div>
-	<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+	<div data-options="region:'center',title:'详细内容',split:true"
 		style="width: 100%; height: 100%">
 		<div id='result_dg'></div>
 	</div>

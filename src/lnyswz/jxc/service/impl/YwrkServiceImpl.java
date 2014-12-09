@@ -34,6 +34,7 @@ import lnyswz.jxc.model.TKfrk;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXskp;
+import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
@@ -104,6 +105,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				if (zYwrk.getTKfrks() != null && zYwrk.getTKfrks().size() > 0){
 					zKfrks.addAll(zYwrk.getTKfrks());
 				}
+				
 				zgYwrks.add(zYwrk);
 				//zYwrk.setBeYwrklsh(ywrklsh);
 				
@@ -136,6 +138,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 					tDet.setCdwsl(Constant.BD_ZERO);
 				}
 			}
+			
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(ywrkDet, sp);
 

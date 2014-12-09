@@ -1276,6 +1276,26 @@ function formValid(){
 
 //根据获得的行数据对各字段赋值
 function setValueBySpbh(rowData){
+	
+	var rows = xsth_spdg.datagrid('getRows');
+	var exist = false;
+	$.each(rows, function(){
+		console.info('spbh:' + this.spbh);		
+		var index = xsth_spdg.datagrid('getRowIndex', this);
+		if(index != editIndex){
+			if(this.spbh == rowData.spbh){
+				exist = true;
+				return;
+			}
+		}
+ 	});
+	
+	if(exist){
+		$.messager.alert('警告', '商品编号只能出现一次，请重新输入！',  'warning');
+		spbhEditor.target.focus();
+		return;
+	}else{
+	
 	spbhEditor.target.val(rowData.spbh);
 	spmcEditor.target.val(rowData.spmc);
 	spcdEditor.target.val(rowData.spcd);
@@ -1287,7 +1307,6 @@ function setValueBySpbh(rowData){
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
-	
 	
    	var fhValue = '';
    	if($('input[name=isFh]').is(':checked')){
@@ -1303,6 +1322,7 @@ function setValueBySpbh(rowData){
    				isFhth: $('input[name=isFhth]').is(':checked') ? '1' : '0',
    				spbh : $(spbhEditor.target).val(),
    			});
+	}
 }
 
 function checkKh(){
