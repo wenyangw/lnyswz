@@ -26,14 +26,14 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-
+		//'00' 变量 , '01' 字段，'02' 表, '03' 视图
 		String dictSql = "from TDict t where t.genre = '03' and ename= '"
 				+ d.getQuery() + "'";
 
 		TDict dicts = dictDao.get(dictSql);
 
 		String sql = "select " + d.getCon() + " from " + dicts.getTname() + "";
-		condition += " where bmbh = '" + d.getDid() + "'";
+		condition += " where bmbh like '%" + d.getDid() + "%'";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
 		}
@@ -63,7 +63,6 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		if (dict.getOrderBy().trim().length() > 0) {
 			sql += " " + dicts.getOrderBy();
 		}
-
 		String totalHql = "select count(*) from " + dicts.getTname()
 				+ condition;
 		List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
@@ -84,7 +83,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select distinct  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
-		condition += " where bmbh = '" + d.getDid() + "'";
+		condition += " where bmbh like'%" + d.getDid() + "%'";
 		if (d.getHqls().trim().length() > 0) {
 			condition += " " + d.getHqls();
 		}
@@ -93,7 +92,6 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			sql += " " + dicts.getOrderBy();
 		}
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
-
 		dg.setRows(list);
 		dg.setObj(sql);
 		return dg;
@@ -106,7 +104,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select  " + d.getCon() + " from " + dicts.getTname() + "";
-		condition += " where bmbh = '" + d.getDid() + "'";
+		condition += " where bmbh like'%" + d.getDid() + "%'";
 
 		if (d.getSqls().trim().length() > 0) {
 			condition += " " + d.getSqls();

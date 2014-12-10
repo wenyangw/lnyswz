@@ -24,7 +24,6 @@ var a_time;
 var b_time;
 var treeHql="";
 var jxc_select_fhCombo;
-var jxc_select_didCombo;
 var openSelectDid='n';
 //页面数据加载
 $(function(){
@@ -40,6 +39,8 @@ $(function(){
 	$('#select2').attr('id', 'pro_' + query);
 	$('#jxc_select_dg').attr('id', 'jsd_' + query);
 	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);
+	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
+	$('#div_select_tree').attr('id','div_tree_select_'+query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
@@ -119,9 +120,22 @@ $(function(){
 	jxc_select_fhCombo = lnyw.initCombo($('input[name^="select_"]'), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
 	jxc_select_fhCombo.combobox('selectedIndex', 0);
 	if(did>='10'){
-		jxc_select_didCombo = lnyw.initCombo($('input[name^="did"]'), 'id', 'depName', '${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did );
-		jxc_select_didCombo.combobox('selectedIndex', 0);
+		$('#select_tree_dep_' + query).combobox({
+					    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
+					    valueField:'id',
+					    textField:'depName',
+					    panelHeight: 'auto',
+//	 				    onSelect: function(){
+//	 				    	initForm(jxc_select_didCombo);
+//	 					},
+					});
+		$('#select_tree_dep_' + query).combobox('selectedIndex', 0);
 		openSelectDid='y';
+		}else{
+			var display =$('#div_tree_select_' + query).css('display');
+			      $('#div_tree_select_' + query).hide();     //如果元素为显现,则将其隐藏
+//	 		}
+			
 		}
 	
 });
@@ -131,9 +145,6 @@ function selectClick(){
 	//select where条件拼写
 	var hql='';
 	var string='';
-// 	var abc = [];
-// 	var mm=[];
-// 	did = lnyw.tab_options().did;
 	query = lnyw.tab_options().query;
 	var flag=false;
 	var message='';
@@ -157,6 +168,13 @@ function selectClick(){
 			});
 		}
 	});
+	var dd;
+	if(openSelectDid=='y'){
+		dd=$('#select_tree_dep_' + query).combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
+
+	}
 	//遍历input 进行hql拼写
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
@@ -169,22 +187,19 @@ function selectClick(){
 			}
 		}
 		
-		if(openSelectDid=='y'){
-			console.info(openSelectDid);
-			did=jxc_select_didCombo.combobox('getValue');
-		}
+		
 
 		if(inputVal != "" ){
 			hql +=' and ';
-			if($(this).attr('id')=="spmc"){
-				b_bh=$(this).val();
-			}
-			if($(this).attr('id')=="a_createTime"){
-				a_time=$(this).val();
-			}
-			if($(this).attr('id')=="b_createTime"){
-				b_time=moment($(this).val()).add('days', 1).format('YYYY-MM-DD');
-			}
+// 			if($(this).attr('id')=="spmc"){
+// 				b_bh=$(this).val();
+// 			}
+// 			if($(this).attr('id')=="a_createTime"){
+// 				a_time=$(this).val();
+// 			}
+// 			if($(this).attr('id')=="b_createTime"){
+// 				b_time=moment($(this).val()).add('days', 1).format('YYYY-MM-DD');
+// 			}
 			string +=',';
 			hql +=$(this).attr('name');
 			switch($('input[name=ope_'+$(this).attr('name')+']').val()){
@@ -219,11 +234,7 @@ function selectClick(){
 	 			hql +=' and '+$(this).attr('id').replace('select_','') +' = ';
 	 			hql +=('\''+jxc_select_fhCombo.combobox('getValue')+'\'').trim();
 					 		}
-		}
-// 		if($(this).attr('id').indexOf('select_')==0){
-
-// 		}
-		
+		}		
 	});
 
 	
@@ -545,7 +556,14 @@ function exportExcel(){
 	var titles=[];
 	var fields=[];
 // 
+	query = lnyw.tab_options().query;
+	var dd;
+	if(openSelectDid=='y'){
+		dd=$('#select_tree_dep_' + query).combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
 
+	}
 $.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
@@ -607,13 +625,21 @@ $.ajax({
 			data-options="split:false,border:false,fit:true"
 			style="height: 100%;">
 			<div align="center" data-options="region:'north',border:false"
-				style="height: 26px;">
+				style="height: 48px;">
 				<a href="#" class="easyui-linkbutton"
 					data-options="iconCls:'icon-search',plain:true"
 					onclick="selectClick();">查询</a> <a href="#"
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
-					onclick="cleanClick();">清除</a>
+					onclick="cleanClick();">清除</a> <br>
+				<div id='div_select_tree'>
+					<th align="left"><b>部门</b></th>
+					<tr>
+						<th align="left"></th>
+						<td class="tdTitle">&#12288;<input id="select_tree_dep"
+							class="inputval" name="select_tree_depName" style="width: 104px;"></td>
+					</tr>
+				</div>
 			</div>
 			<div id='selectcommonTree'
 				data-options="region:'center',border:false"></div>
