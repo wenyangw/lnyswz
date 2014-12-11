@@ -45,6 +45,15 @@
 			<td><input type="checkbox" value="1"  name="tree"></td>
 		</tr>
 		<tr>
+			<th><label for="orderByTree">分类排序条件</label></th>
+			<td><input name="orderByTree" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="isDepName">是否需要部门</label></th>
+			<td><input type="checkbox" value="1" checked=true name="isDepName"></td>
+		</tr>
+		<tr>
 			<th><label for="frozen">是否固定</label></th>
 			<td><input type="checkbox" value="1"  name="frozen"></td>
 		</tr>

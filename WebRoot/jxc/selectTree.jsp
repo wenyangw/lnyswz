@@ -175,6 +175,7 @@ function selectClick(){
 		eval("did=did_"+query);
 
 	}
+	var conditions=[];	
 	//遍历input 进行hql拼写
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
@@ -187,10 +188,10 @@ function selectClick(){
 			}
 		}
 		
-		
+	var hql='';
 
 		if(inputVal != "" ){
-			hql +=' and ';
+		
 // 			if($(this).attr('id')=="spmc"){
 // 				b_bh=$(this).val();
 // 			}
@@ -227,16 +228,20 @@ function selectClick(){
 							hql +=' \''+$(this).val()+'\'';
 						}
 						break;
-			}		
+			}
+			conditions.push(hql);	
 		 }
 		if($(this).attr('id')!=undefined){
 			if($(this).attr('id').indexOf('select_')==0){
-	 			hql +=' and '+$(this).attr('id').replace('select_','') +' = ';
+				hql='';
+	 			hql +=$(this).attr('id').replace('select_','') +' = ';
 	 			hql +=('\''+jxc_select_fhCombo.combobox('getValue')+'\'').trim();
+	 			conditions.push(hql);	
 					 		}
 		}		
 	});
 
+// 	hql=conditions.join(" and ");
 	
 	if(flag){
 		$.messager.alert('提示', message+'条件输入不完整', 'error');
@@ -246,7 +251,7 @@ function selectClick(){
 			border : false,
 		});
 
-		eval("var hql_"+query+"=' '+hql");
+// 		eval("var hql_"+query+"=' '+hql");
 		var title=[];
 		var frozenTitle=[];
 		var allTitle=[];
@@ -294,7 +299,7 @@ function selectClick(){
 			async: false,
 			cache: false,
 			data : {
-					hqls :hql,
+					hqls :conditions.join(" and "),
 					query:query,
 					//拼写显示名称
 					con  :treeFields.join(','),
@@ -354,14 +359,15 @@ function selectClick(){
 									treeHql="";
 									if(rows[0][title[1].field] == null){							
 										 hqlTree = 'and '+title[0].field+' is '+rows[0][title[0].field];
-										 treeHql +=hqlTree;
+// 										 treeHql +=hqlTree;
 									}else{										
 										hqlTree = 'and '+title[0].field+' = \''+rows[0][title[0].field]+'\'';
-										treeHql +=hqlTree;
+// 										treeHql +=hqlTree;
 									}
-									eval("hqlTree += hql_"+query);			 
+// 									eval("hqlTree += hql_"+query);
+
 									spbh= rows[0][title[0].field];
-					                showDatagrid(hqlTree,allFields,allTitle);
+					                showDatagrid(conditions.join(" and ")+ hqlTree,allFields,allTitle);
 					            
 				                }					
 							});	
@@ -375,12 +381,12 @@ function selectClick(){
 									}
 										
 									
-									treeHql="";
-									treeHql +=hqlNews;
-									eval("hqlNews += hql_"+query);
-								
+// 									treeHql="";
+// 									treeHql +=hqlNews;
+// 									eval("hqlNews += hql_"+query);
+// 									hqlNews +=conditions.join(" and ");
 									spbh= datas[0][treeFields[0]];
-					                showDatagrid(hqlNews,allFields,allTitle);
+					                showDatagrid(conditions.join(" and ")+ hqlNews,allFields,allTitle);
 					             
 					                
 							}else{
@@ -398,18 +404,18 @@ function selectClick(){
 	}	
 }
 //显示datagrid数据
-function showDatagrid(hql,allFields,allTitle){
+function showDatagrid(hqls,allFields,allTitle){
 	query = lnyw.tab_options().query;
 // 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
 	treeHql="";
-	treeHql +=hql;
+	treeHql +=hqls;
 	$.ajax({
 		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		async: false,
 		cache: false,
 		data : {
-				hqls :hql,
+				hqls :hqls,
 				query:query,
 
 				//拼写显示名称

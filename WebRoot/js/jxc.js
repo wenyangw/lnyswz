@@ -88,7 +88,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	switch (bmbh) {
 	case '04':
 		//教材公司，股份公司和辽海公司不参与审批流程	
-		var kh04 = ['21010017', '21010798'];
+		var kh04 = ['21010017', '21010798', '21010103'];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;
 		}else{
