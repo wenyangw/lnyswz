@@ -157,7 +157,7 @@ function selectClick(){
 	var flag=false;
 	var message='';
 	//遍历input 进行hql拼写
-	hql ='';
+	
 	var dd;
 	if(openSelectDid=='y'){
 		dd=$('#select_dep_' + query).combobox('getValue');
@@ -165,7 +165,7 @@ function selectClick(){
 		eval("did=did_"+query);
 
 	}
-
+	var conditions=[];
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
 		if(this.id.trim().length <= 0 || this.id == null){
@@ -176,13 +176,15 @@ function selectClick(){
 				message +=dataClass[$(this).attr('name')]+"，";			
 			}
 		}
+		
 		if(inputVal != "" ){
 			//hql +=' '+$('input:radio[name=rdo_'+$(this).attr('name')+']:checked').val()+' ';	
-			hql +=' and ';
+			hql='';
 			hql +=$(this).attr('name');
 			switch($('input[name=ope_'+$(this).attr('name')+']').val()){
 					case '1':
 						hql +=' like  \'%'+$(this).val()+'%\'';
+						
 						break;
 					case '2':
 						hql +=' like  \''+$(this).val()+'%\'';
@@ -208,9 +210,10 @@ function selectClick(){
 							hql +=' \''+$(this).val()+'\'';
 						}
 						break;
-			}
-			
+			}		
+			conditions.push(hql);			
 		}
+	
 	});
 	if(flag){
 		$.messager.alert('提示', message+'条件输入不完整', 'error');
@@ -306,7 +309,9 @@ function selectClick(){
 		                    });
 		                },
 	      			});	
-					var m = step1Ok(hql,allFields);	
+	      			
+	      		
+					var m = step1Ok(conditions.join(" and "),allFields);	
 	      			p.dialog('close');	      			
 	      			var cmenu;
 	      			function createColumnMenu(){
@@ -370,14 +375,14 @@ function selectClick(){
 		});
 	}	
 }
-function step1Ok(hql,allFields) {
+function step1Ok(cons,allFields) {
   
    	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
 	var p = resultDg.datagrid('getPager'); 
     $(p).pagination({ 
     		onSelectPage: function (pageNumber, pageSize) { 
-	              getData(pageNumber, pageSize,hql,allFields); 
+	              getData(pageNumber, pageSize,cons,allFields); 
 	              var p = resultDg.datagrid('getPager'); 
 	              $(p).pagination({ 
 	            		    total:total,
@@ -385,7 +390,7 @@ function step1Ok(hql,allFields) {
            		  });
          	 } 
      });
-     getData(1,pageSize,hql,allFields);
+     getData(1,pageSize,cons,allFields);
      var p = resultDg.datagrid('getPager'); 
      $(p).pagination({ 
     		    total:total,
@@ -393,7 +398,7 @@ function step1Ok(hql,allFields) {
 	 });
 };
 
-function getData(page, rows,hql,allFields) { 
+function getData(page, rows,cons,allFields) { 
 	query = lnyw.tab_options().query;
 
 	resultDg = $('#result_' + query);
@@ -403,7 +408,7 @@ function getData(page, rows,hql,allFields) {
    		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		dataType : 'json',
    		data : {
-			hqls :hql,
+			hqls :cons,
 			query:query,
 			//拼写显示名称
 			con  :allFields.join(','),
@@ -491,6 +496,7 @@ function exportExcel(){
 			titles:titles.join(','),
 		},
 		success:function(data){
+		
 			var json = $.parseJSON(data);
 			if (json.success) {
 				var dd="${pageContext.request.contextPath}/"+json.obj;

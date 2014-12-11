@@ -34,6 +34,8 @@ public class Dict {
 	private String sqlWhere;
 	private String outGroupBy;
 	private String inGroupBy;
+	private String isDepName;
+	private String orderByTree;
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -268,6 +270,22 @@ public class Dict {
 
 	public void setInGroupBy(String inGroupBy) {
 		this.inGroupBy = inGroupBy;
+	}
+
+	public String getIsDepName() {
+		return isDepName;
+	}
+
+	public void setIsDepName(String isDepName) {
+		this.isDepName = isDepName;
+	}
+
+	public String getOrderByTree() {
+		return orderByTree;
+	}
+
+	public void setOrderByTree(String orderByTree) {
+		this.orderByTree = orderByTree;
 	}
 
 }

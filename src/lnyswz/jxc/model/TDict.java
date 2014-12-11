@@ -29,6 +29,8 @@ public class TDict implements java.io.Serializable {
 	private String sqlWhere;
 	private String outGroupBy;
 	private String inGroupBy;
+	private String isDepName;
+	private String orderByTree;
 	public TDict() {
 	}
 
@@ -38,7 +40,7 @@ public class TDict implements java.io.Serializable {
 		this.cname = cname;
 	}
 	public TDict(String id,String ename,String cname,String tname,String genre,String display,String description,int orderNum,String frozen,String specialValues,String show,String tree,String orderBy,
-				String isHj,String sqlWhere,String outGroupBy,String inGroupBy){
+				String isHj,String sqlWhere,String outGroupBy,String inGroupBy,String isDepName,String orderByTree){
 		this.id=id;
 		this.ename=ename;
 		this.cname=cname;
@@ -56,6 +58,8 @@ public class TDict implements java.io.Serializable {
 		this.sqlWhere=sqlWhere;
 		this.outGroupBy=outGroupBy;
 		this.inGroupBy=inGroupBy;
+		this.isDepName=isDepName;
+		this.orderByTree=orderByTree;
 	}
 	@Id
 	@Column(name = "id", unique = true, nullable = false, length = 36) 
@@ -197,5 +201,21 @@ public class TDict implements java.io.Serializable {
 
 	public void setInGroupBy(String inGroupBy) {
 		this.inGroupBy = inGroupBy;
+	}
+	@Column(name = "isDepName", nullable = true, length = 500)
+	public String getIsDepName() {
+		return this.isDepName;
+	}
+
+	public void setIsDepName(String isDepName) {
+		this.isDepName = isDepName;
+	}
+	@Column(name = "orderByTree", nullable = true, length = 500)
+	public String getOrderByTree() {
+		return this.orderByTree;
+	}
+
+	public void setOrderByTree(String orderByTree) {
+		this.orderByTree = orderByTree;
 	}
 }

@@ -57,6 +57,16 @@ $(function(){
 		       	 	 }
 	       	 	}
 	       	 },
+	        {field:'orderByTree',title:'分类排序条件',width:80},
+	       	{field:'isDepName',title:'是否需要部门',width:50,
+		        	formatter : function(value) {	
+			       	 	 if(value=='1'){
+			       	 		 return "是";
+			       	 	 }else if(value=='0'){
+			       	 		 return "否";
+			       	 	 }
+		       	 	}
+		       	 },
 	        {field:'frozen',title:'是否冻结',width:50,
 	        	formatter : function(value) {	
 		       	 	 if(value=='1'){
@@ -87,7 +97,7 @@ $(function(){
 	       	 },
 	       	{field:'sqlWhere',title:'合计筛选',width:80},
 	       	{field:'inGroupBy',title:'求和',width:80},
-	       	{field:'orderBy',title:'合计求和',width:80},
+	       	{field:'outGroupBy',title:'合计求和',width:80},
 	    ]],
 		 toolbar:'#admin_dict_tb',
 	});
@@ -101,7 +111,7 @@ function appendDict() {
 		title : '增加字典',
 		href : '${pageContext.request.contextPath}/admin/dictAdd.jsp',
 		width : 340,
-		height : 480,
+		height : 510,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -109,6 +119,14 @@ function appendDict() {
             handler:function(){
             	$('#admin_dictAdd_form').form('submit', {
 					url : '${pageContext.request.contextPath}/admin/dictAction!add.action',
+					onSubmit:function(){
+						$.each($("#admin_dictAdd_form :checkbox"),function(){	
+							if(!this.checked){
+								this.value='0';
+								this.checked=true;						
+							}				
+						})
+					},
 					success : function(d) {
 						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
@@ -148,14 +166,20 @@ function editDict(){
 			title : '修改字典类别',
 			href : '${pageContext.request.contextPath}/admin/dictEdit.jsp',
 			width : 350,
-			height : 480,
+			height : 510,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
 					var f = p.find('form');
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/admin/dictAction!edit.action',
-						onSubmit:function(){						
+						onSubmit:function(){
+							$.each($("#admin_dictEdit_form :checkbox"),function(){	
+								if(!this.checked){
+									this.value='0';
+									this.checked=true;						
+								}				
+							})
 						},
 						success : function(d) {
 							var json = $.parseJSON(jxc.toJson(d));
@@ -193,6 +217,7 @@ function editDict(){
 					genre:rows[0].genre,
 					frozen:rows[0].frozen,
 					tree:rows[0].tree,
+					isDepName:rows[0].isDepName,
 					depId:did,
 					menuId:mid,	
 					isHj:rows[0].isHj,
@@ -200,7 +225,7 @@ function editDict(){
 					inGroupBy:rows[0].inGroupBy,
 					outGroupBy:rows[0].outGroupBy,
 					orderBy:rows[0].orderBy,
-					
+					orderByTree:rows[0].orderByTree,
 				});
 			
 			}
@@ -262,7 +287,7 @@ function searchDict(){
 	<div data-options="region:'west',title:'视图',split:true" style="height: 100px; width: 150px">
 		<ul id="admin_dict_tree"></ul>
 	</div>
-	<div data-options="region:'center',title:'详细内容',split:true, fit:true" style="height: 100px;">
+	<div data-options="region:'center',title:'详细内容',split:true" style="height: 100px;">
 		<div id='admin_dict_dg'></div>
 		<div id="admin_dict_tb" style="padding:3px;height:auto">
 			条件筛选：<input type="text" name="tjsx" 

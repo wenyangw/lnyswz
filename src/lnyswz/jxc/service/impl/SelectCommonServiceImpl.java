@@ -26,41 +26,49 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-		//'00' 变量 , '01' 字段，'02' 表, '03' 视图
+		// '00' 变量 , '01' 字段，'02' 表, '03' 视图
 		String dictSql = "from TDict t where t.genre = '03' and ename= '"
 				+ d.getQuery() + "'";
 
 		TDict dicts = dictDao.get(dictSql);
-
 		String sql = "select " + d.getCon() + " from " + dicts.getTname() + "";
-		condition += " where bmbh like '%" + d.getDid() + "%'";
-		if (d.getHqls().trim().length() > 0) {
-			condition += " " + d.getHqls();
+		if (dicts.getIsDepName() != null) {
+			if (dicts.getIsDepName().equals("1")) {
+				condition += " where bmbh = '" + d.getDid() + "' ";
+				if (d.getHqls().trim().length() > 0) {
+					condition += " and " + d.getHqls();
+				}
+			} else {
+				if (d.getHqls().trim().length() > 0) {
+					condition += " where " + d.getHqls();
+				}
+			}
 		}
-		sql += condition;
 
-		String hql = "from TDict t where ename='" + d.getQuery() + "'";
-		TDict dict = dictDao.get(hql);
+		sql += condition;
+		//
+		// String hql = "from TDict t where ename='" + d.getQuery() + "'";
+		// TDict dict = dictDao.get(hql);
 		// String n = dict.getOrderBy();
 
-		if (dict.getInGroupBy() != null) {
-			sql += " " + dict.getInGroupBy();
+		if (dicts.getInGroupBy() != null) {
+			sql += " " + dicts.getInGroupBy();
 
 		}
 
-		if (dict.getIsHj() != null) {
-			if (dict.getOutGroupBy() != null
-					&& dict.getOutGroupBy().trim().length() > 0) {
+		if (dicts.getIsHj() != null) {
+			if (dicts.getOutGroupBy() != null
+					&& dicts.getOutGroupBy().trim().length() > 0) {
 				sql = "select * from (" + sql;
-				sql += " " + dict.getOutGroupBy() + " )as ab";
-				if (dict.getSqlWhere() != null
-						&& dict.getSqlWhere().trim().length() > 0) {
-					sql += " " + dict.getSqlWhere();
+				sql += " " + dicts.getOutGroupBy() + " )as ab";
+				if (dicts.getSqlWhere() != null
+						&& dicts.getSqlWhere().trim().length() > 0) {
+					sql += " " + dicts.getSqlWhere();
 				}
 
 			}
 		}
-		if (dict.getOrderBy().trim().length() > 0) {
+		if (dicts.getOrderBy().trim().length() > 0) {
 			sql += " " + dicts.getOrderBy();
 		}
 		String totalHql = "select count(*) from " + dicts.getTname()
@@ -83,13 +91,21 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select distinct  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
-		condition += " where bmbh like'%" + d.getDid() + "%'";
-		if (d.getHqls().trim().length() > 0) {
-			condition += " " + d.getHqls();
+		if (dicts.getIsDepName() != null) {
+			if (dicts.getIsDepName().equals("1")) {
+				condition += " where bmbh = '" + d.getDid() + "' ";
+				if (d.getHqls().trim().length() > 0) {
+					condition += " and " + d.getHqls();
+				}
+			} else {
+				if (d.getHqls().trim().length() > 0) {
+					condition += " where " + d.getHqls();
+				}
+			}
 		}
 		sql += condition;
-		if (dicts.getOrderBy().trim().length() > 0) {
-			sql += " " + dicts.getOrderBy();
+		if (dicts.getOrderByTree().trim().length() > 0) {
+			sql += " " + dicts.getOrderByTree();
 		}
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
 		dg.setRows(list);
@@ -104,10 +120,17 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
 		String sql = "select  " + d.getCon() + " from " + dicts.getTname() + "";
-		condition += " where bmbh like'%" + d.getDid() + "%'";
-
-		if (d.getSqls().trim().length() > 0) {
-			condition += " " + d.getSqls();
+		if (dicts.getIsDepName() != null) {
+			if (dicts.getIsDepName().equals("1")) {
+				condition += " where bmbh = '" + d.getDid() + "' ";
+				if (d.getSqls().trim().length() > 0) {
+					condition += " and " + d.getSqls();
+				}
+			} else {
+				if (d.getSqls().trim().length() > 0) {
+					condition += " where " + d.getSqls();
+				}
+			}
 		}
 		sql += condition;
 
