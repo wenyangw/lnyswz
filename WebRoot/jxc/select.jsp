@@ -38,6 +38,21 @@ $(function(){
 	checkeds=Object.create(Object.prototype);
 // 	checkeds[query]=Object.create(Object.prototype);	
 	p = $('#dialog_' + query);
+	
+	var isNeedDep;
+	$.ajax({	
+		url:'${pageContext.request.contextPath}/admin/dictAction!isNeedDep.action',
+		async: false,
+		cache: false,
+		context:this,	
+		data : {
+			selectType:query,
+		},
+		success:function(data){
+			isNeedDep=data;		
+		}
+	});
+
 	//初始化页面信息
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
@@ -54,11 +69,14 @@ $(function(){
 			datas=data;
 			var star='<table>';
 			//循环data数据 拼写字符串
-			if(did>='10'){
-				star += '<tr>';
-				star += '<th align="left">部门 </th>';
-				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
-				star += '</tr>';
+			if(isNeedDep=="true"){
+				if(did>='09'){
+
+					star += '<tr>';
+					star += '<th align="left">部门 </th>';
+					star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
+					star += '</tr>';
+				}
 			}
 			$.each(data,function(){
 				star += '<tr>';
@@ -116,17 +134,17 @@ $(function(){
 			data:dictOpe,
 			panelHeight: 'auto',
 	});
-	
-	if(did >= '10'){
-		$('#select_dep_' + query).combobox({
-				    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
-				    valueField:'id',
-				    textField:'depName',
-				    panelHeight: 'auto',
-				}).combobox('selectedIndex', 0);
-		openSelectDid='y';
+	if(isNeedDep=="true"){
+		if(did >='09'){
+			$('#select_dep_' + query).combobox({
+					    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
+					    valueField:'id',
+					    textField:'depName',
+					    panelHeight: 'auto',
+					}).combobox('selectedIndex', 0);
+			openSelectDid='y';
+		}
 	}
-	
 });
 //查询按钮事件
 function selectClick(){

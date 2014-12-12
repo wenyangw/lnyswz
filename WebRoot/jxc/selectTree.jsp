@@ -24,7 +24,7 @@ var a_time;
 var b_time;
 var treeHql="";
 var jxc_select_fhCombo;
-var openSelectDid='n';
+var openTreeSelectDid='n';
 //页面数据加载
 $(function(){
 
@@ -45,6 +45,19 @@ $(function(){
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
 	p = $('#jsa_' + query);
+	var isNeedDepTree;
+	$.ajax({	
+		url:'${pageContext.request.contextPath}/admin/dictAction!isNeedDep.action',
+		async: false,
+		cache: false,
+		context:this,	
+		data : {
+			selectType:query,
+		},
+		success:function(data){
+			isNeedDepTree=data;		
+		}
+	});
 	//初始化页面信息
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
@@ -60,10 +73,13 @@ $(function(){
 			datas=data;
 			var star='<table>';
 			//循环data数据 拼写字符串
-			if(did>'9'){
-				star += '<tr>';
-				star += '<th align="left">部门 </th>';
-				star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="did" class="inputval"  name="did" style="width:104px;" ></td>';
+			if(isNeedDepTree=="true"){
+				if(did>='09'){
+					star += '<tr>';
+					star += '<th align="left">部门 </th>';
+					star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_tree_dep_' + query  + '" class="inputval"  name="select_tree_depName" style="width:104px;" ></td>';
+					star += '</tr>';
+				}
 			}
 			$.each(data,function(){
 				star += '<tr>';
@@ -78,8 +94,7 @@ $(function(){
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
-					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';
-					
+					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';				
 				}else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
@@ -101,11 +116,6 @@ $(function(){
 				}				
 				checkeds[this.ename]="checked";
 				star += '</tr>';
-// 				star += '<tr>';
-// 				star += '<td colspan="3" align="center">';
-// 				star += '<input name="rdo_'+this.ename+'" type="radio" checked="true" value="and" >并且';
-// 				star += '</td>';
-// 				star += '</tr>';
 			});	
 			star +='</table>';			
 			//页面加载
@@ -118,25 +128,26 @@ $(function(){
 	});
 	did = lnyw.tab_options().did;
 	jxc_select_fhCombo = lnyw.initCombo($('input[name^="select_"]'), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
-	jxc_select_fhCombo.combobox('selectedIndex', 0);
-	if(did>='10'){
-		$('#select_tree_dep_' + query).combobox({
+	jxc_select_fhCombo.combobox('selectedIndex', 0);		
+// 		$('#select_fhId').combobox({
+// 				    url:'${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did ,
+// 				    valueField:'id',
+// 				    textField:'fhmc',
+// 				    panelHeight: 'auto',
+// 				}).combobox('selectedIndex', 0);
+// 		openSelectDid='y';
+
+	if(isNeedDepTree=="true"){
+		if(did >= '09'){
+			$('#select_tree_dep_' + query).combobox({
 					    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
 					    valueField:'id',
 					    textField:'depName',
 					    panelHeight: 'auto',
-//	 				    onSelect: function(){
-//	 				    	initForm(jxc_select_didCombo);
-//	 					},
-					});
-		$('#select_tree_dep_' + query).combobox('selectedIndex', 0);
-		openSelectDid='y';
-		}else{
-			var display =$('#div_tree_select_' + query).css('display');
-			      $('#div_tree_select_' + query).hide();     //如果元素为显现,则将其隐藏
-//	 		}
-			
+					}).combobox('selectedIndex', 0);
+			openTreeSelectDid='y';
 		}
+	}
 	
 });
 //查询按钮事件
@@ -169,7 +180,7 @@ function selectClick(){
 		}
 	});
 	var dd;
-	if(openSelectDid=='y'){
+	if(openTreeSelectDid=='y'){
 		dd=$('#select_tree_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
 		eval("did=did_"+query);
@@ -564,7 +575,7 @@ function exportExcel(){
 // 
 	query = lnyw.tab_options().query;
 	var dd;
-	if(openSelectDid=='y'){
+	if(openTreeSelectDid=='y'){
 		dd=$('#select_tree_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
 		eval("did=did_"+query);
@@ -638,14 +649,14 @@ $.ajax({
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a> <br>
-				<div id='div_select_tree'>
-					<th align="left"><b>部门</b></th>
-					<tr>
-						<th align="left"></th>
-						<td class="tdTitle">&#12288;<input id="select_tree_dep"
-							class="inputval" name="select_tree_depName" style="width: 104px;"></td>
-					</tr>
-				</div>
+<!-- 				<div id='div_select_tree'> -->
+<!-- 					<th align="left"><b>部门</b></th> -->
+<!-- 					<tr> -->
+<!-- 						<th align="left"></th> -->
+<!-- 						<td class="tdTitle">&#12288;<input id="select_tree_dep" -->
+<!-- 							class="inputval" name="select_tree_depName" style="width: 104px;"></td> -->
+<!-- 					</tr> -->
+<!-- 				</div> -->
 			</div>
 			<div id='selectcommonTree'
 				data-options="region:'center',border:false"></div>

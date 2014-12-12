@@ -131,6 +131,20 @@ public class DictServiceImpl implements DictServiceI {
 		List<TDict> list = dictDao.find(hql);
 		return changeDict(list);
 	}
+	
+	
+	
+	@Override
+	public boolean isNeedDep(Dict dict) {
+		String hql = "from TDict t where genre = '03' and ename= '"+ dict.getSelectType() + "'";
+		TDict d = dictDao.get(hql);
+		if(d.getIsDepName().equals("1")){
+			return true;
+		}else{
+			return false;
+		}
+
+	}
 
 	/*
 	 * 查询(non-Javadoc)
