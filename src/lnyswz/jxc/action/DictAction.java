@@ -75,6 +75,7 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 		}
 		super.writeJson(j);
 	}
+	
 
 	/**
 	 * 返回所有字典，供管理用，有分页
@@ -82,7 +83,12 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 	public void datagrid() {
 		writeJson(dictService.datagrid(dict));
 	}
-
+	/**
+	 * 判断是否需要部门
+	 */
+	public void isNeedDep() {
+		writeJson(dictService.isNeedDep(dict));
+	}
 	public void listDict() {
 		writeJson(dictService.listDict(dict));
 	}

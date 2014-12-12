@@ -104,8 +104,10 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			}
 		}
 		sql += condition;
-		if (dicts.getOrderByTree().trim().length() > 0) {
-			sql += " " + dicts.getOrderByTree();
+		if(dicts.getOrderByTree()!=null){
+			if (dicts.getOrderByTree().trim().length() > 0) {
+				sql += " " + dicts.getOrderByTree();
+			}
 		}
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
 		dg.setRows(list);
