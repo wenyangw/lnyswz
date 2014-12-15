@@ -26,6 +26,7 @@ public class Cgjh {
 	private String jsfsId;
 	private String jsfsmc;
 	private BigDecimal hjje;
+	private BigDecimal hjsl;
 	private String bz;
 	private String isHt;
 	private String returnHt;
@@ -180,6 +181,14 @@ public class Cgjh {
 
 	public void setHjje(BigDecimal hjje) {
 		this.hjje = hjje;
+	}
+
+	public BigDecimal getHjsl() {
+		return hjsl;
+	}
+
+	public void setHjsl(BigDecimal hjsl) {
+		this.hjsl = hjsl;
 	}
 
 	public String getBz() {

@@ -74,6 +74,10 @@ $(function(){
 	        	formatter: function(value){
 	        		return lnyw.formatNumberRgx(value);
 	        	}},
+        	{field:'hjsl',title:'数量',align:'center',
+	        	formatter: function(value){
+	        		return lnyw.formatNumberRgx(value);
+	        	}},	
         	{field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);

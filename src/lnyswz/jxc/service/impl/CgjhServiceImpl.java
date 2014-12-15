@@ -319,6 +319,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					c.setIsKfrk("2");
 				}
 			}
+			BigDecimal hjsl = BigDecimal.ZERO;
+			for(TCgjhDet tDet : tDets){
+				hjsl = hjsl.add(tDet.getCdwsl());
+			}
+			c.setHjsl(hjsl);
 			nl.add(c);
 		}
 		datagrid.setTotal(cgjhDao.count(countHql, params));
