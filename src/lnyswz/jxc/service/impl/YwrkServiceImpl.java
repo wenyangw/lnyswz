@@ -56,6 +56,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TXskp> xskpDao;
+	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TSpDet> spDetDao;
@@ -70,7 +71,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	public Ywrk save(Ywrk ywrk) {
 		TYwrk tYwrk = new TYwrk();
 		BeanUtils.copyProperties(ywrk, tYwrk);
-		
+
 //		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
 //		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
@@ -92,11 +93,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Set<TYwrk> zgYwrks = null;
 		Set<TCgjhDet> zCgjhDets = null;
 		Set<TKfrk> zKfrks = null;
+		//Set<TXsth> zXsths = null;
+		Map<String, Set<TXsth>> zXsths = null;
 		if (ywrk.getYwrklshs() != null && ywrk.getYwrklshs().length() > 0) {
 			String[] lshs = ywrk.getYwrklshs().split(",");
 			zgYwrks = new HashSet<TYwrk>();
 			zCgjhDets = new HashSet<TCgjhDet>();
 			zKfrks = new HashSet<TKfrk>();
+			zXsths = new HashMap<String, Set<TXsth>>();
 			for(String lsh : lshs){
 				TYwrk zYwrk = ywrkDao.get(TYwrk.class, lsh);
 				if (zYwrk.getTCgjhs() != null && zYwrk.getTCgjhs().size() > 0){
@@ -105,9 +109,16 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				if (zYwrk.getTKfrks() != null && zYwrk.getTKfrks().size() > 0){
 					zKfrks.addAll(zYwrk.getTKfrks());
 				}
-				
 				zgYwrks.add(zYwrk);
 				//zYwrk.setBeYwrklsh(ywrklsh);
+				
+				for(TYwrkDet tt : zYwrk.getTYwrkDets()){
+					if(zXsths.containsKey(tt.getSpbh())){
+						zXsths.get(tt.getSpbh()).addAll(tt.getTXsths());
+					}else{
+						zXsths.put(tt.getSpbh(), tt.getTXsths());
+					}
+				}
 				
 				Ywrk zgYwrk = new Ywrk();
 				BeanUtils.copyProperties(zYwrk, zgYwrk);
@@ -126,7 +137,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(YwrkDet ywrkDet : ywrkDets){
 			TYwrkDet tDet = new TYwrkDet();
 			BeanUtils.copyProperties(ywrkDet, tDet);
-			tDet.setThsl(Constant.BD_ZERO);
+			if(tDet.getThsl() == null){
+				tDet.setThsl(Constant.BD_ZERO);
+			}
 			
 			if("".equals(ywrkDet.getCjldwId()) || null == ywrkDet.getZhxs()){
 				tDet.setCdwdj(Constant.BD_ZERO);
@@ -193,6 +206,19 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		}
 		
 		ywrkDao.save(tYwrk);		
+		
+		if(zXsths != null && zXsths.size() > 0){
+			for(TYwrkDet tD : tYwrk.getTYwrkDets()){
+				if(zXsths.containsKey(tD.getSpbh())){
+					for(TXsth tX : zXsths.get(tD.getSpbh())){
+						TXsth tXs = xsthDao.load(TXsth.class, tX.getXsthlsh());
+						Set<TYwrkDet> tts = new HashSet<TYwrkDet>();
+						tts.add(tD);
+						tXs.setTYwrks(tts);
+					}
+				}
+			}
+		}
 		
 		
 		if(zgYwrks != null){
@@ -277,6 +303,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			
 			//更新业务总账
 			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			
+			//取消由直送入库生成的提货单关联
+			if(yTDet.getTXsths() != null && yTDet.getTXsths().size() > 0){
+				for(TXsth tX : yTDet.getTXsths()){
+					TXsth ttX = xsthDao.load(TXsth.class, tX.getXsthlsh());
+					ttX.setTYwrks(null);
+				}
+			}
 			
 			//更新冲减后dwcb
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(tYwrk.getBmbh(), tDet.getSpbh(), ywzzDao));
@@ -517,7 +551,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid changeYwrk(Ywrk ywrk) {
 		DataGrid dg = new DataGrid();
-		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje from t_ywrk_det t"
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje, sum(thsl) thsl from t_ywrk_det t"
 				+ " where t.ywrklsh in (" + ywrk.getYwrklshs() + ")"
 				+ " group by t.spbh";
 		//Map<String, Object> params = new HashMap<String, Object>();
@@ -530,6 +564,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
 			BigDecimal spje = new BigDecimal(os[2].toString());
+			BigDecimal thsl = new BigDecimal(os[3].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwrkDet yd = new YwrkDet();
@@ -552,6 +587,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_DOWN));
 			}
 			yd.setSpje(spje);
+			yd.setThsl(thsl);
 			
 			nl.add(yd);
 		}
@@ -629,13 +665,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid toXsth(Ywrk ywrk){
 		String ywrkDetIds= ywrk.getYwrkDetIds();
-		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwrksl, isnull(sum(thsl), 0) zdwthsl from t_ywrk_det ";
+		String sql = "select spbh, zdwsl, thsl thsl from t_ywrk_det where zdwsl <> thsl";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
-			sql += "where id in (" + ywrkDetIds + ")";
+			sql += " and id in (" + ywrkDetIds + ")";
 		}
-		sql += " group by spbh";
+		//sql += " group by spbh";
 		
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		
@@ -696,6 +732,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;
+	}
+
+	@Autowired
+	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
+		this.xsthDao = xsthDao;
 	}
 
 	@Autowired

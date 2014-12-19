@@ -154,7 +154,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		String ywrkDetIds = xsth.getYwrkDetIds();
 		Set<TYwrkDet> ywrkDets = null;
-		Set<String> ywrklshs = null;
+		//Set<String> ywrklshs = null;
 		int[] ywrkDetIdInts = null;
 		//如果从业务入库生成的销售提货，进行关联
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
@@ -162,7 +162,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			
 			String[] strDetIds = ywrkDetIds.split(",");
 			ywrkDetIdInts = new int[strDetIds.length];
-			ywrklshs = new HashSet<String>();
+			//ywrklshs = new HashSet<String>();
 			ywrkDets = new HashSet<TYwrkDet>();
 			int i = 0;
 			for(String detId : strDetIds){
@@ -280,20 +280,22 @@ public class XsthServiceImpl implements XsthServiceI {
 			//从直送入库生成提货单
 			if(ywrkDetIdInts != null){
 				BigDecimal thsl = xsthDet.getZdwsl();
+				tDet.setKpsl(BigDecimal.ZERO);
 				for(int detId : ywrkDetIdInts){
 					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, detId);
-					ywrklshs.add(ywrkDet.getTYwrk().getYwrklsh());
+					//ywrklshs.add(ywrkDet.getTYwrk().getYwrklsh());
 					if(xsthDet.getSpbh().equals(ywrkDet.getSpbh())){
-						BigDecimal wtsl = ywrkDet.getZdwsl().subtract(ywrkDet.getThsl());
+						//BigDecimal wtsl = ywrkDet.getZdwsl().subtract(ywrkDet.getThsl());
 						ywrkDets.add(ywrkDet);
-						if(thsl.compareTo(wtsl) == 1){
-							ywrkDet.setThsl(ywrkDet.getThsl().add(wtsl));
-							thsl = thsl.subtract(wtsl);
-						}else{
-							ywrkDet.setThsl(ywrkDet.getThsl().add(thsl));
-							tDet.setLastRksl(thsl);
-							break;
-						}
+						ywrkDet.setThsl(ywrkDet.getThsl().add(thsl));	
+//						if(thsl.compareTo(wtsl) == 1){
+//							ywrkDet.setThsl(ywrkDet.getThsl().add(wtsl));
+//							thsl = thsl.subtract(wtsl);
+//						}else{
+//							ywrkDet.setThsl(ywrkDet.getThsl().add(thsl));
+//							tDet.setLastRksl(thsl);
+//							break;
+//						}
 					}
 				}
 			}
@@ -432,29 +434,30 @@ public class XsthServiceImpl implements XsthServiceI {
 			//关联的直送业务入库
 			if(ywrks != null && ywrks.size() > 0){
 				BigDecimal thsl = yTDet.getZdwsl();
-				BigDecimal lastRksl = yTDet.getLastRksl();
+				//BigDecimal lastRksl = yTDet.getLastRksl();
 				
-				int j = 0;
+				//int j = 0;
 				for(int i = intYwrkDetIds.length - 1; i >= 0 ; i--){
 					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, intYwrkDetIds[i]);
 					if(yTDet.getSpbh().equals(ywrkDet.getSpbh())){
-						if(j == 0){
-							ywrkDet.setThsl(ywrkDet.getThsl().subtract(lastRksl));
-							if(thsl.compareTo(lastRksl) == 0){
-								break;
-							}else{
-								thsl = thsl.subtract(lastRksl);
-							}
-						}else{
-							if(thsl.compareTo(ywrkDet.getThsl()) == 1){
-								ywrkDet.setThsl(Constant.BD_ZERO);
-								thsl = thsl.subtract(ywrkDet.getThsl());
-							}else{
-								ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
-								break;
-							}
-						}
-						j++;
+						ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
+//						if(j == 0){
+//							ywrkDet.setThsl(ywrkDet.getThsl().subtract(lastRksl));
+//							if(thsl.compareTo(lastRksl) == 0){
+//								break;
+//							}else{
+//								thsl = thsl.subtract(lastRksl);
+//							}
+//						}else{
+//							if(thsl.compareTo(ywrkDet.getThsl()) == 1){
+//								ywrkDet.setThsl(Constant.BD_ZERO);
+//								thsl = thsl.subtract(ywrkDet.getThsl());
+//							}else{
+//								ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
+//								break;
+//							}
+//						}
+//						j++;
 					}
 				}
 			}

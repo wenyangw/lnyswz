@@ -1624,29 +1624,43 @@ function createXsthFromYwrk(){
 	var rows = xsth_ywrkDg.datagrid('getSelections');
 	var ywrkDetIds = [];
 	if(rows.length > 0){
+		var preRow = undefined;
+		var flag = true;
 	    $.each(rows, function(index){
 	    	ywrkDetIds.push(rows[index].id);
+	    	if(index != 0){
+	    		if(this.ywrklsh != preRow.ywrklsh){
+	    			$.messager.alert('提示', '请选择同一入库单的商品进行提货！', 'error');
+					flag = false;
+					//return false;
+	    		}else{
+	    			preRow = this;
+	    		}
+	    	}
+	    	preRow = this;
 	    });
-		$.messager.confirm('请确认', '是否要将选中记录进行销售提货？', function(r) {
-			if (r) {
-				var ywrkDetStr = ywrkDetIds.join(',');
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/ywrkAction!toXsth.action',
-					data : {
-						ywrkDetIds: ywrkDetStr
-					},
-					dataType : 'json',
-					success : function(d) {
-						xsth_spdg.datagrid('loadData', d.rows);
-						jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
-						$('input:checkbox#zsCheck').prop('checked', true);
-						updateFooter();
-						$('input[name=ywrkDetIds]').val(ywrkDetStr);
-						xsth_tabs.tabs('select', 0);
-					}
-				});
-			}
-		});
+	    if(flag){
+			$.messager.confirm('请确认', '是否要将选中记录进行销售提货？', function(r) {
+				if (r) {
+					var ywrkDetStr = ywrkDetIds.join(',');
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/ywrkAction!toXsth.action',
+						data : {
+							ywrkDetIds: ywrkDetStr
+						},
+						dataType : 'json',
+						success : function(d) {
+							xsth_spdg.datagrid('loadData', d.rows);
+							jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
+							$('input:checkbox#zsCheck').prop('checked', true);
+							updateFooter();
+							$('input[name=ywrkDetIds]').val(ywrkDetStr);
+							xsth_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+	    }
 	}else{
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}

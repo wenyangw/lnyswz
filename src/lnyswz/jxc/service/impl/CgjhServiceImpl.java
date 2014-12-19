@@ -319,6 +319,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					c.setIsKfrk("2");
 				}
 			}
+
 			BigDecimal hjsl = BigDecimal.ZERO;
 			for(TCgjhDet tDet : tDets){
 				hjsl = hjsl.add(tDet.getCdwsl());

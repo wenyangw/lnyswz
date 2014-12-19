@@ -27,6 +27,7 @@ public class YwrkDet {
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal thsl;
 	
 	public int getId() {
 		return id;
@@ -129,6 +130,12 @@ public class YwrkDet {
 	}
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
 	}
 	
 
