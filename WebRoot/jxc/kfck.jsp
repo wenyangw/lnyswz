@@ -1093,7 +1093,7 @@ function printXsthByBgy(){
 function updateThsl(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if(row != undefined){
-		if(row.thsl == 0){
+		//if(row.thsl == 0){
 			if(row.isKp != '1'){
 				$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
 					if (thsl != undefined){
@@ -1120,9 +1120,9 @@ function updateThsl(){
 			}else{
 				$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
 			}
-		}else{
-			$.messager.alert('警告', '选中的销售提货已修改数量，请重新选择！',  'warning');
-		}
+		//}else{
+		//	$.messager.alert('警告', '选中的销售提货已修改数量，请重新选择！',  'warning');
+		//}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

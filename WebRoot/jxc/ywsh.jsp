@@ -115,6 +115,7 @@ $(function(){
 			{field:'bmbh',title:'部门编号',align:'center', hidden:true},
 			{field:'auditName',title:'业务名称',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'开票时间',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'销售金额(元)',align:'center'},

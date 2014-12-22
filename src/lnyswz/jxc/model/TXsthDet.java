@@ -44,7 +44,7 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
 	private BigDecimal thsl;
-	private BigDecimal lastRksl;
+	//private BigDecimal lastRksl;
 	
 	private Set<TKfck> TKfcks;
 	private Set<TXskp> TXskps;
@@ -54,7 +54,7 @@ public class TXsthDet implements java.io.Serializable {
 
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
-			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal kpsl, BigDecimal thsl, BigDecimal lastRksl,
+			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal kpsl, BigDecimal thsl,
 			Set<TKfck> TKfcks, Set<TXskp> TXskps) {
 		this.id = id;
 		this.TXsth = TXsth;
@@ -76,7 +76,7 @@ public class TXsthDet implements java.io.Serializable {
 		this.cksl = cksl;
 		this.kpsl = kpsl;
 		this.thsl = thsl;
-		this.lastRksl = lastRksl;
+		//this.lastRksl = lastRksl;
 		this.TKfcks = TKfcks;
 		this.TXskps = TXskps;
 	}
@@ -262,14 +262,6 @@ public class TXsthDet implements java.io.Serializable {
 
 	public void setThsl(BigDecimal thsl) {
 		this.thsl = thsl;
-	}
-
-	public BigDecimal getLastRksl() {
-		return lastRksl;
-	}
-
-	public void setLastRksl(BigDecimal lastRksl) {
-		this.lastRksl = lastRksl;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TXsths")

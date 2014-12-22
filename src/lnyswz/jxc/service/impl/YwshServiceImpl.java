@@ -121,7 +121,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit";
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
@@ -166,6 +166,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		BigDecimal sxje = o[14] == null ? Constant.BD_ZERO : new BigDecimal(o[14].toString());
 		String ywlxId = o[15].toString();
 		String isAudit = o[16].toString();
+		Date createTime = DateUtil.stringToDate(o[17].toString(), DateUtil.DATETIME_PATTERN);
 		
 		y.setBmbh(bmbh);
 		y.setBmmc(bmmc);
@@ -181,6 +182,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		y.setSxzq(sxzq);
 		y.setSxje(sxje);
 		y.setIsAudit(isAudit);
+		y.setCreateTime(createTime);
 		
 		y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
 
@@ -245,7 +247,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	public DataGrid refreshYwsh(Ywsh ywsh) {
 		DataGrid dg = new DataGrid();
 		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje,"
-				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit"
+				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime"
 				+ " from t_audit_set t"
 				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"

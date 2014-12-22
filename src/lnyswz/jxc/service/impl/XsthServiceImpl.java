@@ -211,7 +211,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			TXsthDet tDet = new TXsthDet();
 			BeanUtils.copyProperties(xsthDet, tDet, new String[]{"id"});
 			
-			tDet.setLastRksl(Constant.BD_ZERO);
+			//tDet.setLastRksl(Constant.BD_ZERO);
 			if(tDet.getCksl() == null){
 				tDet.setCksl(Constant.BD_ZERO);
 			}
@@ -996,6 +996,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
 		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
 		
+		//检查是否已修改过
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
 		}
