@@ -36,9 +36,9 @@ public interface Constant {
 
 	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
-		put("01","kfrk_report_b");
-		put("04","kfrk_report_b");
-		put("05","kfrk_report_b");
+		put("01","kfrk_report_s");
+		put("04","kfrk_report_s");
+		put("05","kfrk_report_s");
 		put("07","kfrk_report_s");
 		put("08","kfrk_report_s");
 	}};
@@ -82,16 +82,16 @@ public interface Constant {
 	//提货单-库房
 	public static final Map<String, String> REPORT_XSTH_KF = new HashMap<String, String>(){{
 		put("01","xsth_report_ys_kf");
-		put("04","xsth_report_b_ns");
-		put("05","xsth_report_b_ns");
+		put("04","xsth_report_s_ns");
+		put("05","xsth_report_s_ns");
 		//put("07","xsth_report_jy");
 		put("08","xsth_report_s_ns_dl");
 	}};
 	
 	//提货单-库房按保管员打印
 	public static final Map<String, String> REPORT_XSTH_BGY = new HashMap<String, String>(){{
-		put("04","xsth_report_b_ns_bgy");
-		put("05","xsth_report_b_ns_bgy");
+		put("04","xsth_report_s_ns_bgy");
+		put("05","xsth_report_s_ns_bgy");
 	}};
 	
 	//销售欠款单

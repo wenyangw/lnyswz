@@ -261,6 +261,16 @@ $(function(){
 	    						return 'color:blue;';
 	    					}
                     	}},
+                    {field:'thsl',title:'原数量',width:100,align:'center',
+                    	formatter : function(value) {
+        					return value == 0 ? '' : value;
+        				},
+
+    					styler: function(value){
+	    					if(value != 0){
+	    						return 'color:purple;';
+	    					}
+                    	}},
                     {field:'zdwdj',title:'单价1',width:100,align:'center'},
                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
