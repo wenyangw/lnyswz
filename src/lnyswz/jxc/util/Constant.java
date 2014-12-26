@@ -36,7 +36,7 @@ public interface Constant {
 
 	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
-		put("01","kfrk_report_s");
+		put("01","kfrk_report_s_ys");
 		put("04","kfrk_report_s");
 		put("05","kfrk_report_s");
 		put("07","kfrk_report_s");
