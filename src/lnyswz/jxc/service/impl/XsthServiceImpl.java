@@ -1047,10 +1047,19 @@ public class XsthServiceImpl implements XsthServiceI {
 //				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
 		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj from t_xsth_det ";
 		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
+		//String sql = "select thDet.spbh, isnull(max(thDet.zdwsl), 0) zdwthsl, isnull(max(thDet.kpsl), 0) zdwytsl, max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
+			//	+ " max(thDet.spje) - isnull(SUM(kpDet.spje + kpDet.spse), 0) spje from t_xsth_det thDet"
+			//	+ " left join t_xsth_xskp xx on xx.xsthdetId = thDet.id"
+			//	+ " left join t_xskp_det kpDet on xx.xskplsh = kpDet.xskplsh and thDet.spbh = kpDet.spbh";
+		
 		String sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl, max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
-				+ " sum(thDet.spje) - isnull(SUM(kpDet.spje + kpDet.spse), 0) spje from t_xsth_det thDet"
-				+ " left join t_xsth_xskp xx on xx.xsthdetId = thDet.id"
-				+ " left join t_xskp_det kpDet on xx.xskplsh = kpDet.xskplsh and thDet.spbh = kpDet.spbh";
+				+ " cast(round(sum(thDet.zdwsl - thDet.kpsl) * max(thDet.zdwdj), 2) as numeric(12, 2))  spje"
+				+ " from t_xsth_det thDet";
+				//+ " sum(thDet.spje) - isnull(SUM(kp.spje), 0) spje"
+				//+ " left join"
+				//+ " (select tk.xsthdetId, kpDet.spbh, SUM(zdwsl) zdwsl, SUM(kpDet.spje + kpDet.spse) spje from t_xsth_xskp tk left join t_xskp_det kpDet on tk.xskplsh = kpDet.xskplsh"
+				//+ " group by tk.xsthdetId, kpDet.spbh) kp on thDet.id = kp.xsthDetId and thDet.spbh = kp.spbh";
+
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		

@@ -1123,7 +1123,7 @@ function setEditing(){
     		if($(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     		}
-    		calForC();
+    		calForZ();
      	//}else{
     		//return false;
     	//}
@@ -1142,7 +1142,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / $(zhxsEditor.target).val());
     	}
-    	calForC();
+    	calForZ();
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
