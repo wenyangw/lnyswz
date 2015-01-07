@@ -193,11 +193,12 @@ $(function(){
 	    pagination : true,
 		pageSize : pageSize,
 		pageList : pageList,
+		frozenColumns:[[
+			]],
 		columns:[[
 			{field:'id',title:'销售提货DetId',align:'center',checkbox:true},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
-			{field:'createName',title:'创建人',align:'center'},
 			{field:'khbh',title:'供应商编号',align:'center',hidden:true},
 			{field:'khmc',title:'供应商名称',align:'center'},
 			{field:'ywyId',title:'业务员id',align:'center',hidden:true},
@@ -206,19 +207,6 @@ $(function(){
 			{field:'ckmc',title:'仓库',align:'center'},
 			{field:'fhId',title:'分户id',align:'center',hidden:true},
 			{field:'fhmc',title:'分户',align:'center'},
-			{field:'toFp',title:'*开票',align:'center',sortable:true,
-           		formatter : function(value) {
-   					if (value == '1') {
-   						return '是';
-   					} else {
-   						return '';
-   					}
-   				},
-           		sorter: function(a,b){
-           			a = a == undefined ? 0 : a;
-           			b = b == undefined ? 0 : b;
-   					return (a-b);  
-   				}},
 			{field:'jsfsId',title:'结算方式id',align:'center', hidden:true},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'spbh',title:'商品编号',align:'center'},
@@ -234,13 +222,6 @@ $(function(){
 				},
 				styler:function(){
 					return 'color:red;';
-				}},
-			{field:'thsl',title:'原提货数量',align:'center',
-				formatter: function(value){
-					return value == 0 ? '' : value;
-				},
-				styler:function(){
-					return 'color:blue;';
 				}},
 			{field:'zdwdj',title:'单价1',align:'center'},
 // 			{field:'zdwytsl',title:'开票数量',align:'center',
@@ -258,6 +239,27 @@ $(function(){
 				//	return lnyw.memo(value, 15);
 				//}
 			},
+			{field:'thsl',title:'原提货数量',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:blue;';
+				}},
+			{field:'createName',title:'创建人',align:'center'},
+			{field:'toFp',title:'*开票',align:'center',sortable:true,
+           		formatter : function(value) {
+   					if (value == '1') {
+   						return '是';
+   					} else {
+   						return '';
+   					}
+   				},
+           		sorter: function(a,b){
+           			a = a == undefined ? 0 : a;
+           			b = b == undefined ? 0 : b;
+   					return (a-b);  
+   				}},
 			{field:'bz',title:'备注',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
