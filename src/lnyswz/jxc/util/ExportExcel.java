@@ -192,6 +192,11 @@ public class ExportExcel<T> {
 				// 是数字当作double处理
 				cell.setCellValue(Double.parseDouble(textValue));
 			} else {
+				if(textValue.indexOf("<font")>=0){
+
+					textValue=textValue.substring(textValue.indexOf(">")+1,textValue.indexOf("<",(textValue.indexOf(">"))));				
+				
+				}
 				HSSFRichTextString richString = new HSSFRichTextString(
 						textValue);
 				//HSSFFont font3 = workbook.createFont();

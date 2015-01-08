@@ -583,7 +583,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Xskp x = new Xskp();
 		BigDecimal hjje = Constant.BD_ZERO;
-		String xskplsh = "";
+		String xskplsh = "共" + lshs.length +  "张/";
 		int j = 0;
 		for(String l : lshs){
 			TXskp tXskp = xskpDao.load(TXskp.class, l);
@@ -602,7 +602,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			xskplsh += l.substring(8, 12);
 			if(j != lshs.length - 1){
-				 xskplsh += ",";
+				xskplsh += ",";
 			}
 			
 			j++;
