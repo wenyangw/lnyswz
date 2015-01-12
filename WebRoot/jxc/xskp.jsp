@@ -720,7 +720,7 @@ function saveAll(){
 
 	function save(){
 		//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
-		if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+		if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == '' && !$('input[name=isFh]').is(':checked')){
 			$.messager.defaults.ok = '是';
 			$.messager.defaults.cancel = '否';
 			$.messager.confirm('确认', '是否同步生成提货单?', function(r){
