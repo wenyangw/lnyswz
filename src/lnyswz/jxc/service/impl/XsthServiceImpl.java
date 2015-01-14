@@ -539,8 +539,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(tXsth.getCh() != null){
 			bz += " " + tXsth.getCh();
 		}
-		bz += xskplsh;
 		
+		bz += xskplsh;
+				
 		DecimalFormat df=new DecimalFormat("#,##0.00");
 		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
 		
@@ -564,7 +565,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("hjsl", tXsth.getHjsl());
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("bz", tXsth.getBz() + " " + bz.trim());
-		map.put("memo", tXsth.getBz());
+		map.put("memo", tXsth.getBz() + " " + bz.trim());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);

@@ -58,7 +58,7 @@ $(function(){
 	    border : false,
 // 	    singleSelect : true,
 	    remoteSort: false,
-// 	    fitColumns: true,
+ 	    fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,

@@ -341,11 +341,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywrk.getSearch() != null){
-			hql += " and (t.ywrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + ywrk.getSearch() + "%");
-			
-		}
+		
 		
 		if(ywrk.getFromOther() != null){
 			hql += " and t.isCj = '0'";
@@ -356,8 +352,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				hql += " and t.isZs = '0' and t.TKfrks is empty";
 			}
 		}else{
-			hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
-			params.put("rklxId", Constant.RKLX_ZG);
+			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
+				hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
+				params.put("search", "%" + ywrk.getSearch() + "%");
+			}else{
+				hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
+				params.put("rklxId", Constant.RKLX_ZG);
+			}
 		}
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";

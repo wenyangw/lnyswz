@@ -256,18 +256,21 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(cgjh.getSearch() != null){
-			hql += " and (t.cgjhlsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + cgjh.getSearch() + "%");
-		}
 		if(cgjh.getFromOther() != null){
 			hql += " and t.isCancel = '0' and t.isCompleted = '0'";
 			if(cgjh.getIsZs() != null){
 				hql += " and isZs = '1' and ywrklsh = null";
 			}
 		}else{
-			hql += " and t.createId = :createId and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+			hql += " and t.createId = :createId";
 			params.put("createId", cgjh.getCreateId());
+			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
+				hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
+				params.put("search", "%" + cgjh.getSearch() + "%");
+			}else{
+				hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+				
+			}
 		}
 		
 		String countHql = "select count(*) " + hql;
