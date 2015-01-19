@@ -1536,6 +1536,18 @@ function generateXskp(){
 							$('input[name=bookmc]').val(rows[0].bookmc);
 							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
+							if(rows[0].isFh == '1'){
+ 								$('input[name=isFh]').prop('checked', true);
+ 								$('.fh').css('display','table-cell');
+ 								if(jxc_xskp_fhCombo == undefined){
+									jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
+								}
+								jxc_xskp_fhCombo.combobox('setValue', rows[0].fhId);
+ 							}else{
+ 								$('input[name=isFh]').prop('checked', false);
+ 								$('.fh').css('display','none');
+ 							}
+							
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
 							jxc_xskp_jsfsCombo.combobox('readonly', true);
