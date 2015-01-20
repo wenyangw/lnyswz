@@ -720,12 +720,14 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setFromRk("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
+		//默认均为0
 		tXsth.setNeedAudit("0");
-		if(tXsth.getNeedAudit().equals("1")){
-			tXsth.setIsAudit("0");
-		}else{
-			tXsth.setIsAudit("1");
-		}
+		tXsth.setIsAudit("0");
+//		if(tXsth.getNeedAudit().equals("1")){
+//			tXsth.setIsAudit("0");
+//		}else{
+//			tXsth.setIsAudit("1");
+//		}
 		
 //		Set<TXskp> tXskps = new HashSet<TXskp>();
 //		tXskps.add(tXskp);
