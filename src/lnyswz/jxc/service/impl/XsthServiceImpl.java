@@ -996,12 +996,22 @@ public class XsthServiceImpl implements XsthServiceI {
 	public void updateThsl(Xsth xsth) {
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
 		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
+		BigDecimal csl = BigDecimal.ZERO;
+		BigDecimal je = sl.multiply(tXsthDet.getZdwdj());
 		
 		//检查是否已修改过
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
 		}
 		tXsthDet.setZdwsl(xsth.getThsl());
+		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(xsth.getThsl()));
+		
+		if(tXsthDet.getSpbh().substring(0, 1).equals("4")){
+			if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+				tXsthDet.setCdwsl(xsth.getThsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
+			}
+		}
 		
 		TXsth tXsth = tXsthDet.getTXsth();
 		Sp sp = new Sp();
@@ -1013,7 +1023,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		ck.setId(tXsth.getCkId());
 		ck.setCkmc(tXsth.getCkmc());
 		
-		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, Constant.BD_ZERO, Constant.UPDATE_RK, lszzDao);
+		tXsth.setHjje(tXsth.getHjje().add(je));
+		tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		
+		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, je, Constant.UPDATE_RK, lszzDao);
 		
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
 				"修改提货数量", operalogDao);
