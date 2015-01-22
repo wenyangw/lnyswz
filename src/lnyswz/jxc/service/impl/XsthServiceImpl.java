@@ -992,20 +992,32 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 	}
 	
+	/**
+	 * 库房检斤后修改实际数量
+	 * 纸张要修改次数量
+	 * 并同步更新临时总账、应收总账的数据
+	 */
 	@Override
 	public void updateThsl(Xsth xsth) {
+		//获取修改的商品记录
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
+		
+		//将本次录入的数据与原数据比较，获得相差数量
 		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
 		BigDecimal csl = BigDecimal.ZERO;
+		//获取相差金额
 		BigDecimal je = sl.multiply(tXsthDet.getZdwdj());
 		
 		//检查是否已修改过
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
 		}
+		
+		//更新修改后数量、金额
 		tXsthDet.setZdwsl(xsth.getThsl());
 		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(xsth.getThsl()));
 		
+		//如为纸张品种，修改次单位数量
 		if(tXsthDet.getSpbh().substring(0, 1).equals("4")){
 			if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
 				tXsthDet.setCdwsl(xsth.getThsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
@@ -1023,10 +1035,25 @@ public class XsthServiceImpl implements XsthServiceI {
 		ck.setId(tXsth.getCkId());
 		ck.setCkmc(tXsth.getCkmc());
 		
+		//更新提货单的合计数量、金额
 		tXsth.setHjje(tXsth.getHjje().add(je));
 		tXsth.setHjsl(tXsth.getHjsl().add(csl));
 		
+		//更新临时总账数量
 		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, je, Constant.UPDATE_RK, lszzDao);
+		
+		//更新应收总账的金额
+		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
+			Kh kh = new Kh();
+			kh.setKhbh(tXsth.getKhbh());
+			kh.setKhmc(tXsth.getKhmc());
+			User ywy = new User();
+			ywy.setId(tXsth.getYwyId());
+			ywy.setRealName(tXsth.getYwymc());
+			
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, je, Constant.UPDATE_YS_TH, yszzDao);
+		}
 		
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
 				"修改提货数量", operalogDao);
