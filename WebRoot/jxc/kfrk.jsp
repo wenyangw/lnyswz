@@ -712,8 +712,7 @@ function setEditing(){
 	});
     
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
-    
+	$(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
     
 	//loadEditor();
 	//处理编辑行的换行事件
@@ -781,8 +780,10 @@ function setEditing(){
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+    	if($(spbhEditor.target).val().substring(0, 3) < '513' || $(spbhEditor.target).val().substring(0, 3) > '518'){
+    		if($(zhxsEditor.target).val() != 0){
+    			$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+    		}
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -871,7 +872,11 @@ function setValueBySpbh(rowData){
 	spbzEditor.target.val(rowData.spbz);
 	zjldwEditor.target.val(rowData.zjldwmc);
 	cjldwEditor.target.val(rowData.cjldwmc);
-	zhxsEditor.target.val(rowData.zhxs);
+	if(rowData.spbh.substring(0, 3) >= '513' && rowData.spbh.substring(0, 3) <= '518'){
+		zhxsEditor.target.val(0);
+	}else{
+		zhxsEditor.target.val(rowData.zhxs);
+	}
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
@@ -1022,6 +1027,9 @@ function generateKfrk(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
+						jxc_kfrk_ckCombo.combobox('setValue', rows[0].ckId);
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=cgjhDetIds]').val(cgjhDetStr);

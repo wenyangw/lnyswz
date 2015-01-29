@@ -126,7 +126,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			hw.setId(kfrkDet.getHwId());
 			hw.setHwmc(tDet.getHwmc());
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfrkDet.getSppc(), kfrkDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfrkDet.getSppc(), kfrkDet.getZdwsl(), kfrkDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfrk.setTKfrkDets(tDets);
 		kfrkDao.save(tKfrk);		
@@ -206,7 +206,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			hw.setHwmc(tDet.getHwmc());
 			
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfrk.setTKfrkDets(tDets);
 		kfrkDao.save(tKfrk);		

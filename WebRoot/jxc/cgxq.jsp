@@ -199,7 +199,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0){
+		if(zslEditor.target.val() > 0){
 			return true;
 		}
 	}
@@ -628,6 +628,8 @@ function setValueBySpbh(rowData){
 	zhxsEditor.target.val(rowData.zhxs);
 	zdwIdEditor.target.val(rowData.zjldwId);
 	cdwIdEditor.target.val(rowData.cjldwId);
+	
+	
 	
 	if($(spbhEditor.target).val() != ''){
 		jxc.spInfo($('#jxc_cgxq_layout'), '1', rowData.sppp, rowData.spbz);

@@ -546,7 +546,7 @@ function setEditing(){
 	});
     
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
+	$(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
     
     
 	//loadEditor();

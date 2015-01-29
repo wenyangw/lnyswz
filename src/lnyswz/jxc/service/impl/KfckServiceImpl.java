@@ -133,7 +133,7 @@ public class KfckServiceImpl implements KfckServiceI {
 			
 			tDet.setTKfck(tKfck);
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfckDet.getSppc(), kfckDet.getZdwsl(), Constant.UPDATE_CK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfckDet.getSppc(), kfckDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_CK, kfzzDao);
 			
 			//更新分户
 			if("1".equals(kfck.getIsFh())){
@@ -241,7 +241,7 @@ public class KfckServiceImpl implements KfckServiceI {
 			hw.setHwmc(tDet.getHwmc());
 			
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_CK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_CK, kfzzDao);
 			
 			//更新分户
 			if("1".equals(tKfck.getIsFh())){

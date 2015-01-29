@@ -155,9 +155,9 @@ public class KfhsServiceImpl implements KfhsServiceI {
 
 				//更新库存总账
 				if("1".equals(kfhsDet.getIsZj())){
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), kfhsDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 				}else{
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl().negate(), kfhsDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
 				}
 //			}
 			
@@ -245,9 +245,9 @@ public class KfhsServiceImpl implements KfhsServiceI {
 				
 				//更新库房总账
 				if("1".equals(yTDet.getIsZj())){
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 				}else{
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
 				}
 //			}
 			

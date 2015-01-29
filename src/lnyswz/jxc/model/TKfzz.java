@@ -38,8 +38,11 @@ public class TKfzz implements java.io.Serializable {
 	private String hwId;
 	private String hwmc;
 	private BigDecimal qcsl;
+	private BigDecimal cqcsl;
 	private BigDecimal rksl;
+	private BigDecimal crksl;
 	private BigDecimal cksl;
+	private BigDecimal ccksl;
 	private String jzsj;
 
 	public TKfzz() {
@@ -47,7 +50,7 @@ public class TKfzz implements java.io.Serializable {
 
 	public TKfzz(int id, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, String zjldwmc,
 			String cjldwId, String cjldwmc, BigDecimal zhxs, String bmbh, String bmmc, String ckId, String ckmc, String hwId,
-			String hwmc, String sppc, BigDecimal qcsl, BigDecimal rksl, BigDecimal cksl, String jzsj) {
+			String hwmc, String sppc, BigDecimal qcsl, BigDecimal cqcsl, BigDecimal rksl, BigDecimal crksl, BigDecimal cksl, BigDecimal ccksl, String jzsj) {
 		this.id = id;
 		this.spbh = spbh;
 		this.spmc = spmc;
@@ -67,8 +70,11 @@ public class TKfzz implements java.io.Serializable {
 		this.hwId = hwId;
 		this.hwmc = hwmc;
 		this.qcsl = qcsl;
+		this.qcsl = cqcsl;
 		this.rksl = rksl;
+		this.rksl = crksl;
 		this.cksl = cksl;
+		this.cksl = ccksl;
 		this.jzsj = jzsj;
 	}
 
@@ -245,6 +251,15 @@ public class TKfzz implements java.io.Serializable {
 		this.qcsl = qcsl;
 	}
 
+	@Column(name = "cqcsl", precision = 18, scale = 3)
+	public BigDecimal getCqcsl() {
+		return cqcsl;
+	}
+
+	public void setCqcsl(BigDecimal cqcsl) {
+		this.cqcsl = cqcsl;
+	}
+
 	@Column(name = "rksl", precision = 18, scale = 3)
 	public BigDecimal getRksl() {
 		return this.rksl;
@@ -254,6 +269,15 @@ public class TKfzz implements java.io.Serializable {
 		this.rksl = rksl;
 	}
 
+	@Column(name = "crksl", precision = 18, scale = 3)
+	public BigDecimal getCrksl() {
+		return crksl;
+	}
+
+	public void setCrksl(BigDecimal crksl) {
+		this.crksl = crksl;
+	}
+
 	@Column(name = "cksl", precision = 18, scale = 3)
 	public BigDecimal getCksl() {
 		return this.cksl;
@@ -261,6 +285,15 @@ public class TKfzz implements java.io.Serializable {
 
 	public void setCksl(BigDecimal cksl) {
 		this.cksl = cksl;
+	}
+
+	@Column(name = "ccksl", precision = 18, scale = 3)
+	public BigDecimal getCcksl() {
+		return ccksl;
+	}
+
+	public void setCcksl(BigDecimal ccksl) {
+		this.ccksl = ccksl;
 	}
 
 	@Column(name = "jzsj", length = 6)
