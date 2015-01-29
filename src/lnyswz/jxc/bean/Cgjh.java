@@ -64,6 +64,7 @@ public class Cgjh {
 	private BigDecimal spje;
 	//记录库房实际入库
 	private BigDecimal zdwyrsl;
+	private BigDecimal cdwyrsl;
 	//在计划列表中提示库房是否入库
 	private String isKfrk;
 	
@@ -517,6 +518,14 @@ public class Cgjh {
 
 	public void setZdwyrsl(BigDecimal zdwyrsl) {
 		this.zdwyrsl = zdwyrsl;
+	}
+
+	public BigDecimal getCdwyrsl() {
+		return cdwyrsl;
+	}
+
+	public void setCdwyrsl(BigDecimal cdwyrsl) {
+		this.cdwyrsl = cdwyrsl;
 	}
 
 	public String getLxbh() {

@@ -141,7 +141,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			
 
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, zywhsDet.getZdwsl(), zywhsDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, zywhsDet.getZdwsl(), BigDecimal.ZERO, zywhsDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setZdwcb(YwzzServiceImpl.getDwcb(ywhs.getBmbh(), zywhsDet.getSpbh(), ywzzDao));
 			
 			//更新分户账
@@ -177,7 +177,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			}
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, jywhsDet.getZdwsl().negate(), jywhsDet.getSpje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, jywhsDet.getZdwsl().negate(), BigDecimal.ZERO, jywhsDet.getSpje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setJdwcb(YwzzServiceImpl.getDwcb(ywhs.getBmbh(), jywhsDet.getSpbh(), ywzzDao));
 			
 			//更新分户账
@@ -271,7 +271,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				zsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
 			}
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, tDet.getZzdwsl(), tDet.getZspje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, tDet.getZzdwsl(), BigDecimal.ZERO, tDet.getZspje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新分户账
 			if(yTYwhs.getFhId() != null){
@@ -291,7 +291,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				jsp.setCjldwId(jTSp.getCjldw().getId());
 				jsp.setCjldwmc(jTSp.getCjldw().getJldwmc());
 			}
-			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, tDet.getJzdwsl().negate(), tDet.getJspje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, tDet.getJzdwsl().negate(), BigDecimal.ZERO, tDet.getJspje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新分户账
 			if(yTYwhs.getFhId() != null){

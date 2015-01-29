@@ -158,7 +158,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
 
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywrkDet.getZdwsl(), ywrkDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywrkDet.getZdwsl(), tDet.getCdwsl(), ywrkDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
 			tDets.add(tDet);
 			tDet.setTYwrk(tYwrk);
@@ -302,7 +302,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(tYwrk.getBmbh(), tDet.getSpbh(), ywzzDao));
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//取消由直送入库生成的提货单关联
 			if(yTDet.getTXsths() != null && yTDet.getTXsths().size() > 0){

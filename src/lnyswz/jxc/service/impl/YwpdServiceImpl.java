@@ -125,7 +125,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			tDet.setTYwpd(tYwpd);
 
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywpdDet.getZdwsl(), ywpdDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywpdDet.getZdwsl(), tDet.getCdwsl(), ywpdDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywpd.getBmbh(), ywpdDet.getSpbh(), ywzzDao));
 			tDets.add(tDet);
 			
@@ -192,7 +192,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(tYwpd.getBmbh(), tDet.getSpbh(), ywzzDao));
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新冲减后dwcb
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(tYwpd.getBmbh(), tDet.getSpbh(), ywzzDao));

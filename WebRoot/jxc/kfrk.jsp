@@ -194,6 +194,13 @@ $(function(){
                	formatter: function(value){
                		return value == 0 ? '' : value;
            		}},
+         	{field:'cdwyrsl',title:'到货数量2',align:'center',
+               	formatter: function(value){
+               		return value == 0 ? '' : value;
+            	},
+            	styler: function(value,row){
+            		return 'color:red;';
+      		}},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},

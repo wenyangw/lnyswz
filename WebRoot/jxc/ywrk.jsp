@@ -983,7 +983,10 @@ function setEditing(){
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
+    	
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513' 
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518') 
+    			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
@@ -1007,7 +1010,9 @@ function setEditing(){
     });
     
     cslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513' 
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518') 
+    			&& $(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();

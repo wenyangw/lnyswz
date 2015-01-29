@@ -253,7 +253,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			}
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 			
 			//更新分户
 			if("1".equals(xskp.getIsFh()) && (xsthDetIds == null || xsthDetIds.equals(""))){
@@ -390,7 +390,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			//更新业务总账
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 
 			if(yTXskp.getFhId() != null && yTXskp.getFromTh().equals("0")){
 				Fh fh = new Fh();

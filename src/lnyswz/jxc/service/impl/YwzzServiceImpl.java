@@ -139,7 +139,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 	/**
 	 * 更新业务总账数量
 	 */
-	public static void updateYwzzSl(Sp sp, Department dep, Ck ck, BigDecimal sl, BigDecimal je, BigDecimal se, BigDecimal cb,
+	public static void updateYwzzSl(Sp sp, Department dep, Ck ck, BigDecimal zsl, BigDecimal csl, BigDecimal je, BigDecimal se, BigDecimal cb,
 			String type, BaseDaoI<TYwzz> baseDao) {
 		
 		String hql = "from TYwzz t where t.spbh = :spbh and t.bmbh = :bmbh and t.jzsj = :jzsj";
@@ -149,17 +149,17 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
 		if(!type.equals(Constant.UPDATE_DB)){
-			updateYwzz(sp, dep, null, sl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
+			updateYwzz(sp, dep, null, zsl, csl, je, se, cb, type, baseDao, hql + " and t.ckId = null", params);
 		}
 		if(!type.equals(Constant.UPDATE_BT)){
 			//总账中仓库更新
 			hql += " and t.ckId = :ckId";
 			params.put("ckId", ck.getId());
-			updateYwzz(sp, dep, ck, sl, je, se, cb, type, baseDao, hql, params);
+			updateYwzz(sp, dep, ck, zsl, csl, je, se, cb, type, baseDao, hql, params);
 		}
 	}
 	
-	private static void updateYwzz(Sp sp, Department dep, Ck ck, BigDecimal sl, BigDecimal je, BigDecimal se, BigDecimal cb, 
+	private static void updateYwzz(Sp sp, Department dep, Ck ck, BigDecimal zsl, BigDecimal csl, BigDecimal je, BigDecimal se, BigDecimal cb, 
 			String type, BaseDaoI<TYwzz> baseDao, String hql, Map<String, Object> params) {
 		TYwzz tYwzz = baseDao.get(hql, params);
 		if(tYwzz == null){
@@ -175,29 +175,33 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			tYwzz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
 			
 			tYwzz.setQcsl(Constant.BD_ZERO);
+			tYwzz.setCqcsl(Constant.BD_ZERO);
 			tYwzz.setQcje(Constant.BD_ZERO);
 			if(null == sp.getZhxs()){
 				tYwzz.setZhxs(Constant.BD_ZERO);
 			}
 			if(type.equals(Constant.UPDATE_RK)){
-				tYwzz.setRksl(sl);
+				tYwzz.setRksl(zsl);
+				tYwzz.setCrksl(csl);
 				if(ck == null){
 					tYwzz.setRkje(je);
-					if(sl == null){
+					if(zsl == null){
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}else{
-						tYwzz.setDwcb(je.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
 					}
 				}else{
 					tYwzz.setRkje(Constant.BD_ZERO);
 					tYwzz.setDwcb(Constant.BD_ZERO);
 				}
 				tYwzz.setXssl(Constant.BD_ZERO);
+				tYwzz.setCxssl(Constant.BD_ZERO);
 				tYwzz.setXsje(Constant.BD_ZERO);
 				tYwzz.setXsse(Constant.BD_ZERO);
 				tYwzz.setXscb(Constant.BD_ZERO);
 			}else if(type.equals(Constant.UPDATE_CK)){
-				tYwzz.setXssl(sl);
+				tYwzz.setXssl(zsl);
+				tYwzz.setCxssl(csl);
 				if(ck == null){
 					tYwzz.setXsje(je);
 					tYwzz.setXsse(se);
@@ -208,29 +212,34 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXscb(Constant.BD_ZERO);
 				}
 				tYwzz.setRksl(Constant.BD_ZERO);
+				tYwzz.setCrksl(Constant.BD_ZERO);
 				tYwzz.setRkje(Constant.BD_ZERO);
 				//tYwzz.setDwcb(Constant.BD_ZERO);
 				//2014.10.10,冲减销售时，无结转记录，更新成本
-				tYwzz.setDwcb(cb.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
+				tYwzz.setDwcb(cb.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(je);
-					if(sl == null){
+					if(zsl == null){
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}else{
-						tYwzz.setDwcb(je.divide(sl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
 					}
 					tYwzz.setRksl(Constant.BD_ZERO);
+					tYwzz.setCrksl(Constant.BD_ZERO);
 					tYwzz.setXssl(Constant.BD_ZERO);
+					tYwzz.setCxssl(Constant.BD_ZERO);
 					tYwzz.setXsje(Constant.BD_ZERO);
 					tYwzz.setXsse(Constant.BD_ZERO);
 					tYwzz.setXscb(Constant.BD_ZERO);
 				}
 			}else if(type.equals(Constant.UPDATE_DB)){
-				tYwzz.setRksl(sl);
+				tYwzz.setRksl(zsl);
+				tYwzz.setCrksl(csl);
 				tYwzz.setDwcb(Constant.BD_ZERO);
 				tYwzz.setRkje(Constant.BD_ZERO);
 				tYwzz.setXssl(Constant.BD_ZERO);
+				tYwzz.setCxssl(Constant.BD_ZERO);
 				tYwzz.setXsje(Constant.BD_ZERO);
 				tYwzz.setXsse(Constant.BD_ZERO);
 				tYwzz.setXscb(Constant.BD_ZERO);
@@ -238,7 +247,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 			baseDao.save(tYwzz);
 		}else{
 			if(type.equals(Constant.UPDATE_RK)){
-				tYwzz.setRksl(tYwzz.getRksl().add(sl));
+				tYwzz.setRksl(tYwzz.getRksl().add(zsl));
+				tYwzz.setCrksl(tYwzz.getCrksl().add(csl));
 				if(ck == null){
 					tYwzz.setRkje(tYwzz.getRkje().add(je));
 					BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
@@ -250,7 +260,8 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					}
 				}
 			}else if(type.equals(Constant.UPDATE_CK)){
-				tYwzz.setXssl(tYwzz.getXssl().add(sl));
+				tYwzz.setXssl(tYwzz.getXssl().add(zsl));
+				tYwzz.setCxssl(tYwzz.getCxssl().add(csl));
 				if(ck == null){
 					tYwzz.setXsje(tYwzz.getXsje().add(je));
 					tYwzz.setXsse(tYwzz.getXsse().add(se));
@@ -278,10 +289,9 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					}
 				}
 			}else if(type.equals(Constant.UPDATE_DB)){
-				tYwzz.setRksl(tYwzz.getRksl().add(sl));
+				tYwzz.setRksl(tYwzz.getRksl().add(zsl));
+				tYwzz.setCrksl(tYwzz.getCrksl().add(csl));
 			}
-			
-			
 		}
 	}
 	

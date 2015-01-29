@@ -104,9 +104,9 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			ckT.setCkmc(tYwdb.getCkmcT());
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, ywdbDet.getZdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 				Constant.UPDATE_DB, ywzzDao);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, ywdbDet.getZdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), tDet.getCdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 					Constant.UPDATE_DB, ywzzDao);
 		}
 		tYwdb.setTYwdbDets(tDets);
@@ -174,9 +174,9 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			BeanUtils.copyProperties(tDet, sp);
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 					Constant.UPDATE_DB, ywzzDao);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), tDet.getCdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 					Constant.UPDATE_DB, ywzzDao);
 		}
 		tYwdb.setTYwdbDets(tDets);

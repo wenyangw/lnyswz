@@ -44,6 +44,9 @@ public class TYwzz implements java.io.Serializable {
 	private BigDecimal xsje;
 	private BigDecimal xsse;
 	private BigDecimal xscb;
+	private BigDecimal cqcsl;
+	private BigDecimal crksl;
+	private BigDecimal cxssl;
 
 	public TYwzz() {
 	}
@@ -52,7 +55,8 @@ public class TYwzz implements java.io.Serializable {
 			String spbh, String spmc, String spcd, String sppp,	String spbz, String zjldwId,
 			String zjldwmc, String cjldwId, String cjldwmc,	BigDecimal zhxs, BigDecimal qcsl,
 			BigDecimal qcje, BigDecimal dwcb, BigDecimal rksl, BigDecimal rkje, BigDecimal xssl,
-			BigDecimal xsje, BigDecimal xsse, BigDecimal xscb) {
+			BigDecimal xsje, BigDecimal xsse, BigDecimal xscb, BigDecimal cqcsl, BigDecimal crksl,
+			BigDecimal cxssl) {
 		this.id = id;
 		this.jzsj = jzsj;
 		this.bmbh = bmbh;
@@ -78,6 +82,9 @@ public class TYwzz implements java.io.Serializable {
 		this.xsje = xsje;
 		this.xscb = xscb;
 		this.xsse = xsse;
+		this.cqcsl = cqcsl;
+		this.crksl = crksl;
+		this.cxssl = cxssl;
 	}
 
 	@Id
@@ -306,5 +313,32 @@ public class TYwzz implements java.io.Serializable {
 
 	public void setXscb(BigDecimal xscb) {
 		this.xscb = xscb;
+	}
+
+	@Column(name = "cqcsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCqcsl() {
+		return cqcsl;
+	}
+
+	public void setCqcsl(BigDecimal cqcsl) {
+		this.cqcsl = cqcsl;
+	}
+
+	@Column(name = "crksl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCrksl() {
+		return crksl;
+	}
+
+	public void setCrksl(BigDecimal crksl) {
+		this.crksl = crksl;
+	}
+
+	@Column(name = "cxssl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCxssl() {
+		return cxssl;
+	}
+
+	public void setCxssl(BigDecimal cxssl) {
+		this.cxssl = cxssl;
 	}
 }

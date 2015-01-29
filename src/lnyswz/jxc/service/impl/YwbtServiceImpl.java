@@ -97,7 +97,7 @@ public class YwbtServiceImpl implements YwbtServiceI {
 
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywbt.getBmbh(), tDet.getSpbh(), ywzzDao));
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, null, null, tDet.getSpje(), null, null, Constant.UPDATE_BT, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, null, null, null, tDet.getSpje(), null, null, Constant.UPDATE_BT, ywzzDao);
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywbt.getBmbh(), tDet.getSpbh(), ywzzDao));
 			
 			tDet.setTYwbt(tYwbt);
