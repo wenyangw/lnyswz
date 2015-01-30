@@ -208,7 +208,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		for(XskpDet xskpDet : xskpDets){
 			TXskpDet tDet = new TXskpDet();
 			BeanUtils.copyProperties(xskpDet, tDet);
-			if("".equals(xskpDet.getCjldwId())){
+			if("".equals(xskpDet.getCjldwId()) || null == xskpDet.getZhxs()){
 				tDet.setCdwdj(Constant.BD_ZERO);
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);

@@ -155,9 +155,9 @@ public class KfhsServiceImpl implements KfhsServiceI {
 
 				//更新库存总账
 				if("1".equals(kfhsDet.getIsZj())){
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), kfhsDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 				}else{
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl().negate(), kfhsDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
 				}
 //			}
 			

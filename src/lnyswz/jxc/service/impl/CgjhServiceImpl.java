@@ -408,7 +408,6 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			params.put("search", "%" + cgjh.getSearch() + "%");
 			
 		}
-		//TODO 仓库过滤
 		
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
