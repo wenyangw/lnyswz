@@ -42,6 +42,7 @@ public class TYwrkDet implements java.io.Serializable {
 	private BigDecimal qdwcb;
 	private BigDecimal dwcb;
 	private BigDecimal thsl;
+	private BigDecimal cthsl;
 	
 	private Set<TXsth> TXsths;
 
@@ -51,7 +52,7 @@ public class TYwrkDet implements java.io.Serializable {
 	public TYwrkDet(int id, TYwrk TYwrk, String spbh, String spmc, String spcd, String sppp, 
 			String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs,
 			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje,
-			BigDecimal qdwcb, BigDecimal dwcb, BigDecimal thsl, Set<TXsth> TXsths) {
+			BigDecimal qdwcb, BigDecimal dwcb, BigDecimal thsl, BigDecimal cthsl, Set<TXsth> TXsths) {
 		this.id = id;
 		this.TYwrk = TYwrk;
 		this.spbh = spbh;
@@ -72,6 +73,7 @@ public class TYwrkDet implements java.io.Serializable {
 		this.qdwcb = qdwcb;
 		this.dwcb = dwcb;
 		this.thsl = thsl;
+		this.thsl = cthsl;
 		this.TXsths = TXsths;
 	}
 
@@ -258,6 +260,15 @@ public class TYwrkDet implements java.io.Serializable {
 		this.thsl = thsl;
 	}
 	
+	@Column(name = "cthsl", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getCthsl() {
+		return cthsl;
+	}
+
+	public void setCthsl(BigDecimal cthsl) {
+		this.cthsl = cthsl;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TYwrks")
 	public Set<TXsth> getTXsths() {
 		return this.TXsths;

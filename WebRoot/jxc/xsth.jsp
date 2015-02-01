@@ -417,8 +417,8 @@ $(function(){
 				styler:function(){
 					return 'color:red;';
 				}},
-// 			{field:'cjldwmc',title:'单位2',align:'center'},
-// 			{field:'cdwsl',title:'数量2',align:'center'},
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center'},
 			{field:'bz',title:'备注',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
@@ -1290,7 +1290,6 @@ function setValueBySpbh(rowData){
 	var rows = xsth_spdg.datagrid('getRows');
 	var exist = false;
 	$.each(rows, function(){
-		console.info('spbh:' + this.spbh);		
 		var index = xsth_spdg.datagrid('getRowIndex', this);
 		if(index != editIndex){
 			if(this.spbh == rowData.spbh){

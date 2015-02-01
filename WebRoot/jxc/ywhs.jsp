@@ -22,6 +22,8 @@ var zsEditor;
 var zjldwEditor;
 var zslEditor;
 var zdjEditor;
+var cjldwEditor;
+var cslEditor;
 var spjeEditor;
 
 $(function(){
@@ -162,6 +164,24 @@ $(function(){
    	    	        		}
    	    	        	}
                     },
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
+                    {field:'cdwsl',title:'数量2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
                     {field:'zdwdj',title:'单价1',width:100,align:'center',
                        	styler:function(value, rowData,	rowIndex){
    	    	        		if(rowData.isZj == '1'){
@@ -279,7 +299,7 @@ $(function(){
 	        		}
 				}
                 },
-	        {field:'zjldwmc',title:'单位',width:25,align:'center',editor:'textRead',
+	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead',
 	        	styler:function(value, rowData,	rowIndex){
 	        		if(rowIndex % 2 == 0){
 						return 'color:blue;';
@@ -287,7 +307,7 @@ $(function(){
 						return 'color:red;';
 	        		}
 				}},
-	        {field:'zdwsl',title:'数量',width:25,align:'center',
+	        {field:'zdwsl',title:'数量1',width:25,align:'center',
 	        	styler:function(value, rowData,	rowIndex){
 	        		if(rowIndex % 2 == 0){
 						return 'color:blue;';
@@ -300,7 +320,7 @@ $(function(){
     	        	options:{
     	        		precision: LENGTH_SL
     	        }}},
-	        {field:'zdwdj',title:'单价',width:25,align:'center',
+	        {field:'zdwdj',title:'单价1',width:25,align:'center',
 	    	   	styler:function(value, rowData,	rowIndex){
 	        		if(rowIndex % 2 == 0){
 						return 'color:blue;';
@@ -313,7 +333,28 @@ $(function(){
     	        	options:{
     	        		precision: LENGTH_JE
     	        }}},
-	        {field:'spje',title:'金额',width:25,align:'center',
+   	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead',
+   	        	styler:function(value, rowData,	rowIndex){
+   	        		if(rowIndex % 2 == 0){
+   						return 'color:blue;';
+   	        		}else{
+   						return 'color:red;';
+   	        		}
+   				}},
+   	        {field:'cdwsl',title:'数量2',width:25,align:'center',
+   	        	styler:function(value, rowData,	rowIndex){
+   	        		if(rowIndex % 2 == 0){
+   						return 'color:blue;';
+   	        		}else{
+   						return 'color:red;';
+   	        		}
+   				},
+   				editor:{
+       	        	type:'numberbox',
+       	        	options:{
+       	        		precision: LENGTH_SL
+       	        }}},
+    	     {field:'spje',title:'金额',width:25,align:'center',
    	        	styler:function(value, rowData,	rowIndex){
    	        		if(rowIndex % 2 == 0){
    						return 'color:blue;';
@@ -327,6 +368,8 @@ $(function(){
     	        		precision: LENGTH_JE
     	        }}},
    	        {field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
+   	        {field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
+   	        {field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
 	   	toolbar: '#jxc_ywhs_spTb',
 	   	onClickRow: clickRow,
@@ -470,6 +513,8 @@ function init(){
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
 	$('.isFh').css('display','none');
+	$('.isMoZ').css('display','none');
+	$('.isMoJ').css('display','none');
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywhs_layout');
@@ -527,6 +572,14 @@ function setValueByZSpbh(rowData){
 	$('input[name=zspbz]').val(rowData.spbz);
 	$('input[name=zspzdw]').val(rowData.zjldwmc);
 	$('input[name=zspzdwId]').val(rowData.zjldwId);
+	if(rowData.spbh.substring(0, 3) >= "513" && rowData.spbh.substring(0, 3) <= "518"){
+		$('.isMoZ').css('display','table-cell');
+		$('input[name=zspcdw]').val(rowData.cjldwmc);
+		$('input[name=zspcdwId]').val(rowData.cjldwId);
+		$('input[name=zzhxs]').val(rowData.zhxs);
+	}else{
+		$('.isMoZ').css('display','none');
+	}
 	$('input[name=zspdj]').val(getDwcb(rowData.spbh));
 }
 
@@ -538,6 +591,14 @@ function setValueByJSpbh(rowData){
 	$('input[name=jspbz]').val(rowData.spbz);
 	$('input[name=jspzdw]').val(rowData.zjldwmc);
 	$('input[name=jspzdwId]').val(rowData.zjldwId);
+	if(rowData.spbh.substring(0, 3) >= "513" && rowData.spbh.substring(0, 3) <= "518"){
+		$('.isMoJ').css('display','table-cell');
+		$('input[name=jspcdw]').val(rowData.cjldwmc);
+		$('input[name=jspcdwId]').val(rowData.cjldwId);
+		$('input[name=jzhxs]').val(rowData.zhxs);
+	}else{
+		$('.isMoJ').css('display','none');
+	}
 	$('input[name=jspdj]').val(getDwcb(rowData.spbh));
 }
 
@@ -605,7 +666,11 @@ function addRow(){
 			zjldwmc:$('input[name=zspzdw]').val(),
 			zdwsl:$('input[name=zspsl]').val(),
 			zdwdj:$('input[name=zspdj]').val(),
+			cjldwId:$('input[name=zspcdwId]').val(),
+			cjldwmc:$('input[name=zspcdw]').val(),
+			cdwsl:$('input[name=zspcsl]').val(),
 			spje:$('input[name=zspje]').val(),
+			zhxs:$('input[name=zzhxs]').val(), 
 		});
 		ywhs_spdg.datagrid('appendRow', {
 			spbh:$('input[name=jspbh]').val(),
@@ -618,7 +683,11 @@ function addRow(){
 			zjldwmc:$('input[name=jspzdw]').val(),
 			zdwsl:$('input[name=jspsl]').val(),
 			zdwdj:$('input[name=jspdj]').val(),
+			cjldwId:$('input[name=jspcdwId]').val(),
+			cjldwmc:$('input[name=jspcdw]').val(),
+			cdwsl:$('input[name=jspcsl]').val(),
 			spje:$('input[name=jspje]').val(),
+			zhxs:$('input[name=jzhxs]').val(),
 		});
 		$('input.inputText').val('');
 		updateFooter();
@@ -676,6 +745,10 @@ function editRow(){
 				$('input[name=zspsl]').val(zRow.zdwsl);
 				$('input[name=zspdj]').val(zRow.zdwdj);
 				$('input[name=zspje]').val(zRow.spje);
+				if(zRow.spbh.substring(0, 3) >= '513' && zRow.spbh.substring(0, 3) <= '518'){
+					$('input[name=zspcdw]').val(zRow.cjldwmc);
+					$('input[name=zspcsl]').val(zRow.cdwsl);
+				}
 
 				$('input[name=jspbh]').val(jRow.spbh);
 				$('input[name=jspmc]').val(jRow.spmc);
@@ -686,6 +759,10 @@ function editRow(){
 				$('input[name=jspsl]').val(jRow.zdwsl);
 				$('input[name=jspdj]').val(jRow.zdwdj);
 				$('input[name=jspje]').val(jRow.spje);
+				if(jRow.spbh.substring(0, 3) >= '513' && jRow.spbh.substring(0, 3) <= '518'){
+					$('input[name=jspcdw]').val(jRow.cjldwmc);
+					$('input[name=jspcsl]').val(jRow.cdwsl);
+				}
 			}
 		});
 	}else{
@@ -1209,18 +1286,28 @@ function searchYwhs(){
 									<th >包装</th><td ><input class="inputText" type="text" name="zspbz" size="8"></td>
 								</tr>
 								<tr>
-									<th>单位</th>
+									<th>单位1</th>
 									<td >
 										<input class="inputText" type="text" name="zspzdwId" hidden="true">
 										<input class="inputText" type="text" name="zspzdw" size="4">
-										</td>
+									</td>
+									<th>数量1</th>
+									<td><input class="inputText" type="text" name="zspsl" size="8"></td>
+									<th>单价1</th>
+									<td ><input class="inputText" type="text" name="zspdj" size="8"></td>
 								</tr>
 								<tr>
-									<th>数量</th>
-									<td><input class="inputText" type="text" name="zspsl" size="8"></td>
-									<th>单价</th>
-									<td ><input class="inputText" type="text" name="zspdj" size="8"></td>
-									<th >金额</th>
+									<th><div class = "isMoZ">单位2</div></th>
+									<td>
+										<div class = "isMoZ">
+										<input class="inputText" type="text" name="zspcdwId" hidden="true">
+										<input class="inputText" type="text" name="zspcdw" size="4">
+										<input class="inputText" type="text" name="zzhxs" hidden="true">
+										</div>
+									</td>
+									<th><div class = "isMoZ">数量2</div></th>
+									<td><div class = "isMoZ"><input class="inputText" type="text" name="zspcsl" size="8"></div></td>
+									<th>金额</th>
 									<td><input class="inputText" type="text" name="zspje" size="8"></td>
 								</tr>
 							</table>
@@ -1245,13 +1332,23 @@ function searchYwhs(){
 									<th>包装</th><td><input class="inputText" type="text" name="jspbz" size="10"></td>
 								</tr>
 								<tr>
-									<th>单位</th><td>
+									<th>单位1</th><td>
 									<input class="inputText" type="text" name="jspzdwId" hidden="true">
 									<input class="inputText" type="text" name="jspzdw" size="4"></td>
+									<th>数量1</th><td><input class="inputText" type="text" name="jspsl" size="8"></td>
+									<th>单价1</th><td><input class="inputText" type="text" name="jspdj" size="8"></td>
 								</tr>
 								<tr>
-									<th>数量</th><td><input class="inputText" type="text" name="jspsl" size="8"></td>
-									<th>单价</th><td><input class="inputText" type="text" name="jspdj" size="8"></td>
+									<th><div class = "isMoJ">单位2</div></th>
+									<td>
+										<div class = "isMoJ">
+										<input class="inputText" type="text" name="jspcdwId" hidden="true">
+										<input class="inputText" type="text" name="jspcdw" size="4">
+										<input class="inputText" type="text" name="jzhxs" hidden="true">
+										</div>
+									</td>
+									<th><div class = "isMoJ">数量2</div></th>
+									<td><div class = "isMoJ"><input class="inputText" type="text" name="jspcsl" size="8"></div></td>
 									<th>金额</th><td><input class="inputText" type="text" name="jspje" size="8"></td>
 								</tr>
 							</table>

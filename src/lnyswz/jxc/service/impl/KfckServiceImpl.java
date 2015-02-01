@@ -57,7 +57,6 @@ public class KfckServiceImpl implements KfckServiceI {
 	private BaseDaoI<TKfckDet> detDao;
 	private BaseDaoI<TKfzz> kfzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
-	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TXsthDet> xsthDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -140,19 +139,26 @@ public class KfckServiceImpl implements KfckServiceI {
 				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, kfckDet.getZdwsl(), Constant.UPDATE_CK, fhzzDao);
 			}
 			
+			//更新对应t_xsth_det中的cksl和ccksl
 			if(intDetIds != null){
 				BigDecimal cksl = kfckDet.getZdwsl();
+				BigDecimal ccksl = kfckDet.getCdwsl();
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
 					if(kfckDet.getSpbh().equals(xsthDet.getSpbh())){
 						BigDecimal wcsl = xsthDet.getZdwsl().subtract(xsthDet.getCksl());
+						BigDecimal cwcsl = xsthDet.getCdwsl().subtract(xsthDet.getCcksl());
 						tXsths.add(xsthDet);
 						if(cksl.compareTo(wcsl) == 1){
 							xsthDet.setCksl(xsthDet.getCksl().add(wcsl));
+							xsthDet.setCcksl(xsthDet.getCcksl().add(cwcsl));
 							cksl = cksl.subtract(wcsl);
+							ccksl = ccksl.subtract(cwcsl);
 						}else{
 							xsthDet.setCksl(xsthDet.getCksl().add(cksl));
+							xsthDet.setCcksl(xsthDet.getCcksl().add(ccksl));
 							tDet.setLastThsl(cksl);
+							tDet.setcLastThsl(ccksl);
 							break;
 						}
 					}
@@ -252,7 +258,9 @@ public class KfckServiceImpl implements KfckServiceI {
 				
 				//冲减对应销售提货单中的cksl
 				BigDecimal cksl = yTDet.getZdwsl();
+				BigDecimal ccksl = yTDet.getCdwsl();
 				BigDecimal lastThsl = yTDet.getLastThsl();
+				BigDecimal cLastThsl = yTDet.getcLastThsl();
 			
 				int j = 0;
 				for(int i = intXsthDetIds.length - 1; i >= 0 ; i--){
@@ -260,17 +268,22 @@ public class KfckServiceImpl implements KfckServiceI {
 					if(yTDet.getSpbh().equals(xsthDet.getSpbh())){
 						if(j == 0){
 							xsthDet.setCksl(xsthDet.getCksl().subtract(lastThsl));
+							xsthDet.setCcksl(xsthDet.getCcksl().subtract(cLastThsl));
 							if(cksl.compareTo(lastThsl) == 0){
 								break;
 							}else{
 								cksl = cksl.subtract(lastThsl);
+								ccksl = ccksl.subtract(cLastThsl);
 							}
 						}else{
 							if(cksl.compareTo(xsthDet.getCksl()) == 1){
-								xsthDet.setKpsl(Constant.BD_ZERO);
+								xsthDet.setCksl(Constant.BD_ZERO);
+								xsthDet.setCcksl(Constant.BD_ZERO);
 								cksl = cksl.subtract(xsthDet.getCksl());
+								ccksl = ccksl.subtract(xsthDet.getCcksl());
 							}else{
 								xsthDet.setCksl(xsthDet.getCksl().subtract(cksl));
+								xsthDet.setCcksl(xsthDet.getCcksl().subtract(ccksl));
 								break;
 							}
 						}
@@ -443,11 +456,6 @@ public class KfckServiceImpl implements KfckServiceI {
 	@Autowired
 	public void setFhzzDao(BaseDaoI<TFhzz> fhzzDao) {
 		this.fhzzDao = fhzzDao;
-	}
-	
-	@Autowired
-	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
-		this.xsthDao = xsthDao;
 	}
 	
 	@Autowired

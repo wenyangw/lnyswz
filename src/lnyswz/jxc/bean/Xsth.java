@@ -76,7 +76,9 @@ public class Xsth {
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
 	private BigDecimal cksl;
+	private BigDecimal ccksl;
 	private BigDecimal kpsl;
+	private BigDecimal ckpsl;
 	private BigDecimal thsl;
 	private String kfcklshs;
 	
@@ -524,11 +526,23 @@ public class Xsth {
 	public void setCksl(BigDecimal cksl) {
 		this.cksl = cksl;
 	}
+	public BigDecimal getCcksl() {
+		return ccksl;
+	}
+	public void setCcksl(BigDecimal ccksl) {
+		this.ccksl = ccksl;
+	}
 	public BigDecimal getKpsl() {
 		return kpsl;
 	}
 	public void setKpsl(BigDecimal kpsl) {
 		this.kpsl = kpsl;
+	}
+	public BigDecimal getCkpsl() {
+		return ckpsl;
+	}
+	public void setCkpsl(BigDecimal ckpsl) {
+		this.ckpsl = ckpsl;
 	}
 	public BigDecimal getThsl() {
 		return thsl;

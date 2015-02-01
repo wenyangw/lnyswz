@@ -219,6 +219,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				}
 			}
 			tDet.setLastThsl(Constant.BD_ZERO);
+			tDet.setcLastThsl(Constant.BD_ZERO);
 			tDet.setThsl(Constant.BD_ZERO);
 			tDet.setTXskp(tXskp);
 			
@@ -240,7 +241,9 @@ public class XskpServiceImpl implements XskpServiceI {
 				TXsthDet tXsthDet = new TXsthDet();
 				BeanUtils.copyProperties(tDet, tXsthDet, new String[]{"id"});
 				tXsthDet.setCksl(Constant.BD_ZERO);
+				tXsthDet.setCcksl(Constant.BD_ZERO);
 				tXsthDet.setKpsl(tDet.getZdwsl());
+				tXsthDet.setCkpsl(tDet.getZdwsl());
 				tXsthDet.setThsl(Constant.BD_ZERO);
 				//tXsthDet.setLastRksl(Constant.BD_ZERO);
 				//发票单价不含税，提货单单价含税
@@ -266,24 +269,30 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			//从销售提货生成销售开票，更新临时总账
 			if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
-				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
 			}
 			
 //			TXsthDet tXsthDet = xsthDetDao.load(TXsthDet.class, Integer.valueOf(detId));
 			if(intDetIds != null){
 				BigDecimal kpsl = xskpDet.getZdwsl();
+				BigDecimal ckpsl = xskpDet.getCdwsl();
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
 					thdlshs.add(xsthDet.getTXsth().getXsthlsh());
 					if(xskpDet.getSpbh().equals(xsthDet.getSpbh())){
 						BigDecimal wksl = xsthDet.getZdwsl().subtract(xsthDet.getKpsl());
+						BigDecimal cwksl = xsthDet.getCdwsl().subtract(xsthDet.getCkpsl());
 						xsthDets.add(xsthDet);
 						if(kpsl.compareTo(wksl) == 1){
 							xsthDet.setKpsl(xsthDet.getKpsl().add(wksl));
+							xsthDet.setCkpsl(xsthDet.getCkpsl().add(cwksl));
 							kpsl = kpsl.subtract(wksl);
+							ckpsl = ckpsl.subtract(cwksl);
 						}else{
 							xsthDet.setKpsl(xsthDet.getKpsl().add(kpsl));
+							xsthDet.setCkpsl(xsthDet.getCkpsl().add(ckpsl));
 							tDet.setLastThsl(kpsl);
+							tDet.setcLastThsl(ckpsl);
 							break;
 						}
 					}
@@ -403,11 +412,13 @@ public class XskpServiceImpl implements XskpServiceI {
 			//从销售提货生成销售开票，更新临时总账
 			if("1".equals(yTXskp.getFromTh())){
 //			if(yTXskp.getTXsths() != null){
-				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
 				
 				//冲减对应销售提货单中的kpsl
 				BigDecimal kpsl = yTDet.getZdwsl();
+				BigDecimal ckpsl = yTDet.getCdwsl();
 				BigDecimal lastThsl = yTDet.getLastThsl();
+				BigDecimal cLastThsl = yTDet.getcLastThsl();
 			
 				int j = 0;
 				for(int i = intXsthDetIds.length - 1; i >= 0 ; i--){
@@ -415,17 +426,22 @@ public class XskpServiceImpl implements XskpServiceI {
 					if(yTDet.getSpbh().equals(xsthDet.getSpbh())){
 						if(j == 0){
 							xsthDet.setKpsl(xsthDet.getKpsl().subtract(lastThsl));
+							xsthDet.setCkpsl(xsthDet.getCkpsl().subtract(cLastThsl));
 							if(kpsl.compareTo(lastThsl) == 0){
 								break;
 							}else{
 								kpsl = kpsl.subtract(lastThsl);
+								ckpsl = ckpsl.subtract(cLastThsl);
 							}
 						}else{
 							if(kpsl.compareTo(xsthDet.getKpsl()) == 1){
 								xsthDet.setKpsl(Constant.BD_ZERO);
+								xsthDet.setCkpsl(Constant.BD_ZERO);
 								kpsl = kpsl.subtract(xsthDet.getKpsl());
+								ckpsl = ckpsl.subtract(xsthDet.getCkpsl());
 							}else{
 								xsthDet.setKpsl(xsthDet.getKpsl().subtract(kpsl));
+								xsthDet.setCkpsl(xsthDet.getCkpsl().subtract(ckpsl));
 								break;
 							}
 						}
@@ -744,7 +760,9 @@ public class XskpServiceImpl implements XskpServiceI {
 			xskpDet.setLastThsl(tDet.getZdwsl());
 			xskpDet.setThsl(tDet.getZdwsl());
 			tDet.setCksl(Constant.BD_ZERO);
+			tDet.setCcksl(Constant.BD_ZERO);
 			tDet.setKpsl(xskpDet.getZdwsl());
+			tDet.setCkpsl(xskpDet.getZdwsl());
 			tDet.setZdwdj(xskpDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 			tDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
 			tDet.setThsl(Constant.BD_ZERO);

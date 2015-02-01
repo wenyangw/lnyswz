@@ -28,7 +28,11 @@ public class TYwhsDet implements java.io.Serializable {
 	private String zspbz;
 	private String zzjldwId;
 	private String zzjldwmc;
+	private String zcjldwId;
+	private String zcjldwmc;
+	private BigDecimal zzhxs;
 	private BigDecimal zzdwsl;
+	private BigDecimal zcdwsl;
 	private BigDecimal zzdwdj;
 	private BigDecimal zspje;
 	private BigDecimal zqdwcb;
@@ -41,7 +45,11 @@ public class TYwhsDet implements java.io.Serializable {
 	private String jspbz;
 	private String jzjldwId;
 	private String jzjldwmc;
+	private String jcjldwId;
+	private String jcjldwmc;
+	private BigDecimal jzhxs;
 	private BigDecimal jzdwsl;
+	private BigDecimal jcdwsl;
 	private BigDecimal jzdwdj;
 	private BigDecimal jspje;
 	private BigDecimal jqdwcb;
@@ -53,9 +61,11 @@ public class TYwhsDet implements java.io.Serializable {
 
 	public TYwhsDet(int id, TYwhs TYwhs, 
 			String zspbh, String zspmc, String zspcd, String zsppp, String zspbz, String zzjldwId, String zzjldwmc, 
-			BigDecimal zzdwsl, BigDecimal zzdwdj, BigDecimal zspje, BigDecimal zqdwcb, BigDecimal zdwcb, String zisZs,
-			String jspbh, String jspmc, String jspcd, String jsppp, String jspbz, String jzjldwId, String jzjldwmc, 
-			BigDecimal jzdwsl, BigDecimal jzdwdj, BigDecimal jspje, BigDecimal jqdwcb, BigDecimal jdwcb, String jisZs) {
+			String zcjldwId, String zcjldwmc, BigDecimal zzhxs, BigDecimal zzdwsl, BigDecimal zcdwsl, BigDecimal zzdwdj, 
+			BigDecimal zspje, BigDecimal zqdwcb, BigDecimal zdwcb, String zisZs, String jspbh, String jspmc, String jspcd, 
+			String jsppp, String jspbz, String jzjldwId, String jzjldwmc, String jcjldwId, String jcjldwmc, BigDecimal jzhxs,
+			BigDecimal jzdwsl, BigDecimal jcdwsl, BigDecimal jzdwdj, BigDecimal jspje, BigDecimal jqdwcb, BigDecimal jdwcb, 
+			String jisZs) {
 		this.id = id;
 		this.TYwhs = TYwhs;
 		this.zspbh = zspbh;
@@ -65,7 +75,11 @@ public class TYwhsDet implements java.io.Serializable {
 		this.zspbz = zspbz;
 		this.zzjldwId = zzjldwId;
 		this.zzjldwmc = zzjldwmc;
+		this.zcjldwId = zcjldwId;
+		this.zcjldwmc = zcjldwmc;
+		this.zzhxs = zzhxs;
 		this.zzdwsl = zzdwsl;
+		this.zcdwsl = zcdwsl;
 		this.zzdwdj = zzdwdj;
 		this.zspje = zspje;
 		this.zqdwcb = zqdwcb;
@@ -78,6 +92,9 @@ public class TYwhsDet implements java.io.Serializable {
 		this.jspbz = jspbz;
 		this.jzjldwId = jzjldwId;
 		this.jzjldwmc = jzjldwmc;
+		this.jcjldwId = jcjldwId;
+		this.jcjldwmc = jcjldwmc;
+		this.jzhxs = jzhxs;
 		this.jzdwsl = jzdwsl;
 		this.jzdwdj = jzdwdj;
 		this.jspje = jspje;
@@ -170,6 +187,33 @@ public class TYwhsDet implements java.io.Serializable {
 		this.zzjldwmc = zzjldwmc;
 	}
 
+	@Column(name = "zcjldwId", nullable = false, length = 2)
+	public String getZcjldwId() {
+		return zcjldwId;
+	}
+
+	public void setZcjldwId(String zcjldwId) {
+		this.zcjldwId = zcjldwId;
+	}
+
+	@Column(name = "zcjldwmc", nullable = false, length = 20)
+	public String getZcjldwmc() {
+		return zcjldwmc;
+	}
+
+	public void setZcjldwmc(String zcjldwmc) {
+		this.zcjldwmc = zcjldwmc;
+	}
+
+	@Column(name = "zzhxs", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getZzhxs() {
+		return zzhxs;
+	}
+
+	public void setZzhxs(BigDecimal zzhxs) {
+		this.zzhxs = zzhxs;
+	}
+
 	@Column(name = "zzdwsl", nullable = false, precision = 18, scale = 3)
 	public BigDecimal getZzdwsl() {
 		return this.zzdwsl;
@@ -177,6 +221,15 @@ public class TYwhsDet implements java.io.Serializable {
 
 	public void setZzdwsl(BigDecimal zzdwsl) {
 		this.zzdwsl = zzdwsl;
+	}
+
+	@Column(name = "zcdwsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getZcdwsl() {
+		return zcdwsl;
+	}
+
+	public void setZcdwsl(BigDecimal zcdwsl) {
+		this.zcdwsl = zcdwsl;
 	}
 
 	@Column(name = "zzdwdj", nullable = false, precision = 18, scale = 4)
@@ -287,6 +340,33 @@ public class TYwhsDet implements java.io.Serializable {
 		this.jzjldwmc = jzjldwmc;
 	}
 	
+	@Column(name = "jcjldwId", nullable = false, length = 2)
+	public String getJcjldwId() {
+		return jcjldwId;
+	}
+
+	public void setJcjldwId(String jcjldwId) {
+		this.jcjldwId = jcjldwId;
+	}
+
+	@Column(name = "jcjldwmc", nullable = false, length = 20)
+	public String getJcjldwmc() {
+		return jcjldwmc;
+	}
+
+	public void setJcjldwmc(String jcjldwmc) {
+		this.jcjldwmc = jcjldwmc;
+	}
+
+	@Column(name = "jzhxs", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getJzhxs() {
+		return jzhxs;
+	}
+
+	public void setJzhxs(BigDecimal jzhxs) {
+		this.jzhxs = jzhxs;
+	}
+
 	@Column(name = "jzdwsl", nullable = false, precision = 18, scale = 3)
 	public BigDecimal getJzdwsl() {
 		return this.jzdwsl;
@@ -296,6 +376,15 @@ public class TYwhsDet implements java.io.Serializable {
 		this.jzdwsl = jzdwsl;
 	}
 	
+	@Column(name = "jcdwsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getJcdwsl() {
+		return jcdwsl;
+	}
+
+	public void setJcdwsl(BigDecimal jcdwsl) {
+		this.jcdwsl = jcdwsl;
+	}
+
 	@Column(name = "jzdwdj", nullable = false, precision = 18, scale = 4)
 	public BigDecimal getJzdwdj() {
 		return this.jzdwdj;

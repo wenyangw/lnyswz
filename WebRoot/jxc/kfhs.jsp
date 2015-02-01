@@ -26,7 +26,11 @@ var hwIdEditor;
 var sppcEditor;
 var zjldwEditor;
 var zslEditor;
+var cjldwEditor;
+var cslEditor;
 var zjldwIdEditor;
+var cjldwIdEditor;
+var zhxsEditor;
 
 
 $(function(){
@@ -158,6 +162,24 @@ $(function(){
    	    	        		}
    	    	        	}
                     },
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
+                    {field:'cdwsl',title:'数量2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
                 ]],
                 onResize:function(){
                 	kfhs_dg.datagrid('fixDetailRowHeight',index);
@@ -281,6 +303,24 @@ $(function(){
    	    	        		}
    	    	        	}
                     },
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
+                    {field:'cdwsl',title:'数量2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
 	    	    	{field:'isZs',title:'直送',width:100,align:'center',
 	                       	styler:function(value, rowData,	rowIndex){
 	   	    	        		if(rowData.isZj == '1'){
@@ -388,7 +428,7 @@ $(function(){
 	        		}
 	        	}},
 	        {field:'sppc',title:'商品批次',width:25,align:'center',editor:'datebox'},
-	        {field:'zjldwmc',title:'单位',width:25,align:'center',editor:'textRead',
+	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead',
 	        	styler:function(value, rowData){
 	        		if(rowData.isZj == 1){
 						return 'color:blue;';
@@ -396,7 +436,23 @@ $(function(){
 						return 'color:red;';
 	        		}
 				}},
-	        {field:'zdwsl',title:'数量',width:25,align:'center',editor:'textRead',
+	        {field:'zdwsl',title:'数量1',width:25,align:'center',editor:'textRead',
+	        	styler:function(value, rowData){
+	        		if(rowData.isZj == 1){
+						return 'color:blue;';
+	        		}else{
+						return 'color:red;';
+	        		}
+				}},
+			{field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead',
+	        	styler:function(value, rowData){
+	        		if(rowData.isZj == 1){
+						return 'color:blue;';
+	        		}else{
+						return 'color:red;';
+	        		}
+				}},
+	        {field:'cdwsl',title:'数量2',width:25,align:'center',editor:'textRead',
 	        	styler:function(value, rowData){
 	        		if(rowData.isZj == 1){
 						return 'color:blue;';
@@ -405,6 +461,8 @@ $(function(){
 	        		}
 				}},
    	        {field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'textRead', hidden:true},
+   	        {field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'textRead', hidden:true},
+   	        {field:'zhxs',title:'转换系数',width:25,align:'center',editor:'textRead', hidden:true},
 	    ]],
 	   	onClickRow: clickRow,
 	   	onAfterEdit: function (rowIndex, rowData, changes) {
@@ -520,7 +578,11 @@ function setEditing(){
     sppcEditor = editors[6];
     zjldwEditor = editors[7];
     zslEditor = editors[8];
-    zjldwIdEditor = editors[9];
+    cjldwEditor = editors[9];
+    cslEditor = editors[10];
+    zjldwIdEditor = editors[11];
+    cjldwIdEditor = editors[12];
+    zhxsEditor = editors[13];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_kfhs_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());

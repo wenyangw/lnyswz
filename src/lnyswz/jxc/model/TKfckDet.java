@@ -36,6 +36,7 @@ public class TKfckDet implements java.io.Serializable {
 	private BigDecimal zdwsl;
 	private BigDecimal cdwsl;
 	private BigDecimal lastThsl;
+	private BigDecimal cLastThsl;
 	private TKfck TKfck;
 
 	public TKfckDet() {
@@ -43,7 +44,7 @@ public class TKfckDet implements java.io.Serializable {
 
 	public TKfckDet(int id, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, String hwId, String hwmc, String sppc, 
-			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal lastThsl, TKfck TKfck) {
+			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal lastThsl, BigDecimal cLastThsl, TKfck TKfck) {
 		this.id = id;
 		this.spbh = spbh;
 		this.spmc = spmc;
@@ -61,6 +62,7 @@ public class TKfckDet implements java.io.Serializable {
 		this.zdwsl = zdwsl;
 		this.cdwsl = cdwsl;
 		this.lastThsl = lastThsl;
+		this.cLastThsl = cLastThsl;
 		this.TKfck = TKfck;
 	}
 
@@ -228,6 +230,15 @@ public class TKfckDet implements java.io.Serializable {
 
 	public void setLastThsl(BigDecimal lastThsl) {
 		this.lastThsl = lastThsl;
+	}
+
+	@Column(name = "cLastThsl", precision = 18, scale = 3)
+	public BigDecimal getcLastThsl() {
+		return cLastThsl;
+	}
+
+	public void setcLastThsl(BigDecimal cLastThsl) {
+		this.cLastThsl = cLastThsl;
 	}
 
 }

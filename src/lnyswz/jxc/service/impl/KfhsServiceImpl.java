@@ -132,9 +132,10 @@ public class KfhsServiceImpl implements KfhsServiceI {
 			if(null == tDet.getZhxs() || tDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);
-			}else{
-				tDet.setCdwsl(tDet.getZdwsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
+//			else{
+//				tDet.setCdwsl(tDet.getZdwsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//			}
 			
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(tDet, sp);

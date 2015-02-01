@@ -42,7 +42,9 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
 	private BigDecimal cksl;
+	private BigDecimal ccksl;
 	private BigDecimal kpsl;
+	private BigDecimal ckpsl;
 	private BigDecimal thsl;
 	//private BigDecimal lastRksl;
 	
@@ -54,8 +56,8 @@ public class TXsthDet implements java.io.Serializable {
 
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
-			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal kpsl, BigDecimal thsl,
-			Set<TKfck> TKfcks, Set<TXskp> TXskps) {
+			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
+			BigDecimal thsl, Set<TKfck> TKfcks, Set<TXskp> TXskps) {
 		this.id = id;
 		this.TXsth = TXsth;
 		this.spbh = spbh;
@@ -74,7 +76,9 @@ public class TXsthDet implements java.io.Serializable {
 		this.cdwdj = cdwdj;
 		this.spje = spje;
 		this.cksl = cksl;
+		this.ccksl = ccksl;
 		this.kpsl = kpsl;
+		this.ckpsl = ckpsl;
 		this.thsl = thsl;
 		//this.lastRksl = lastRksl;
 		this.TKfcks = TKfcks;
@@ -246,6 +250,15 @@ public class TXsthDet implements java.io.Serializable {
 		this.cksl = cksl;
 	}
 
+	@Column(name = "ccksl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCcksl() {
+		return ccksl;
+	}
+
+	public void setCcksl(BigDecimal ccksl) {
+		this.ccksl = ccksl;
+	}
+
 	@Column(name = "kpsl", nullable = false, precision = 18, scale = 3)
 	public BigDecimal getKpsl() {
 		return kpsl;
@@ -255,6 +268,15 @@ public class TXsthDet implements java.io.Serializable {
 		this.kpsl = kpsl;
 	}
 	
+	@Column(name = "ckpsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCkpsl() {
+		return ckpsl;
+	}
+
+	public void setCkpsl(BigDecimal ckpsl) {
+		this.ckpsl = ckpsl;
+	}
+
 	@Column(name = "thsl", nullable = false, precision = 18, scale = 3)
 	public BigDecimal getThsl() {
 		return thsl;

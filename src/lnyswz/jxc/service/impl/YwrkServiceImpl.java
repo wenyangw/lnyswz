@@ -139,6 +139,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BeanUtils.copyProperties(ywrkDet, tDet);
 			if(tDet.getThsl() == null){
 				tDet.setThsl(Constant.BD_ZERO);
+				tDet.setCthsl(Constant.BD_ZERO);
 			}
 			
 			if("".equals(ywrkDet.getCjldwId()) || null == ywrkDet.getZhxs()){
@@ -552,7 +553,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid changeYwrk(Ywrk ywrk) {
 		DataGrid dg = new DataGrid();
-		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje, sum(thsl) thsl from t_ywrk_det t"
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje, sum(thsl) thsl, sum(cdwsl) cdwsl, sum(cthsl) cthsl from t_ywrk_det t"
 				+ " where t.ywrklsh in (" + ywrk.getYwrklshs() + ")"
 				+ " group by t.spbh";
 		//Map<String, Object> params = new HashMap<String, Object>();
@@ -566,6 +567,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
 			BigDecimal spje = new BigDecimal(os[2].toString());
 			BigDecimal thsl = new BigDecimal(os[3].toString());
+			BigDecimal cdwsl = new BigDecimal(os[4].toString());
+			BigDecimal cthsl = new BigDecimal(os[5].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwrkDet yd = new YwrkDet();
@@ -584,11 +587,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwsl(cdwsl);
+				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_DOWN));
 			}
 			yd.setSpje(spje);
 			yd.setThsl(thsl);
+			yd.setCthsl(cthsl);
 			
 			nl.add(yd);
 		}
@@ -666,7 +671,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid toXsth(Ywrk ywrk){
 		String ywrkDetIds= ywrk.getYwrkDetIds();
-		String sql = "select spbh, zdwsl, thsl thsl from t_ywrk_det where zdwsl <> thsl";
+		String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
@@ -682,6 +687,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwrksl = new BigDecimal(os[1].toString());
 			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
+			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
+			BigDecimal cdwthsl = new BigDecimal(os[4].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -697,7 +704,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 			xd.setZdwsl(zdwrksl.subtract(zdwthsl));
 			if(sp.getCjldw() != null){
-				xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				xd.setCdwsl(cdwrksl);
+				//xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
 			
 			nl.add(xd);

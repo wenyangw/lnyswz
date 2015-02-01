@@ -110,13 +110,15 @@ public class YwpdServiceImpl implements YwpdServiceI {
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);
 			}else{
-				if(ywpdDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
-				}else{
-					tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
-					tDet.setCdwsl(ywpdDet.getZdwsl().divide(ywpdDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				}
+				tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
+				tDet.setCdwsl(ywpdDet.getCdwsl());
+//				if(ywpdDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
+//					tDet.setCdwdj(Constant.BD_ZERO);
+//					tDet.setCdwsl(Constant.BD_ZERO);
+//				}else{
+//					tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
+//					tDet.setCdwsl(ywpdDet.getZdwsl().divide(ywpdDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//				}
 			}
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(ywpdDet, sp);
@@ -337,7 +339,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		Ywpd ywpd = new Ywpd();
 		BeanUtils.copyProperties(tYwpd, ywpd);
 		//商品明细处理
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_ywpd_det t ";
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(cdwsl) cdwsl from t_ywpd_det t ";
 		
 		if(ywpdlsh != null && ywpdlsh.trim().length() > 0){
 			sql += "where ywpdlsh = " + ywpdlsh;
@@ -350,6 +352,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwpdDet yd = new YwpdDet();
@@ -361,9 +364,11 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			yd.setZdwsl(zdwsl);
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwsl(cdwsl);
+//				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
 			nl.add(yd);
 		}

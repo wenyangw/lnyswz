@@ -233,6 +233,13 @@ $(function(){
 // 				}},
 			{field:'cjldwmc',title:'单位2',align:'center'},
 			{field:'cdwsl',title:'数量2',align:'center'},
+			{field:'ckpsl',title:'开票数量2',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:red;';
+			}},
 			{field:'cdwdj',title:'单价2',align:'center'},
 			{field:'bookmc',title:'书名',align:'center',
 				//formatter: function(value){
@@ -980,7 +987,9 @@ function setEditing(){
     		zslEditor.target.focus();
     		return false;
     	}
-    	if($(zhxsEditor.target).val() != 0){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
@@ -1016,7 +1025,9 @@ function setEditing(){
 //     });
     cslEditor.target.bind('keyup', function(event){
     	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
-    		if($(zhxsEditor.target).val() != 0){
+    		if(($(spbhEditor.target).val().substring(0, 3) < '513'
+        			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+        			&& $(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     		}
     		calculate();

@@ -95,7 +95,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			BeanUtils.copyProperties(kfpdDet, tDet);
 			tDet.setHwmc(hwDao.load(THw.class, kfpdDet.getHwId()).getHwmc());
 			
-			if("".equals(kfpdDet.getCjldwId()) || kfpdDet.getZhxs() == null ||kfpdDet.getZhxs().compareTo(ZERO) == 0){
+			if("".equals(kfpdDet.getCjldwId()) || kfpdDet.getZhxs() == null || kfpdDet.getZhxs().compareTo(ZERO) == 0){
 				tDet.setCdwsl(ZERO);
 				tDet.setZhxs(ZERO);
 				kfpdDet.setZhxs(ZERO);
@@ -112,7 +112,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			hw.setHwmc(tDet.getHwmc());
 
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfpdDet.getSppc(), kfpdDet.getZdwsl(), kfpdDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfpdDet.getSppc(), kfpdDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfpd.setTKfpdDets(tDets);
 		kfpdDao.save(tKfpd);		

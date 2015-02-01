@@ -43,7 +43,7 @@ public class LszzServiceImpl implements LszzServiceI {
 	/**
 	 * 更新总账数量
 	 */
-	public static void updateLszzSl(Sp sp, Department dep, Ck ck, BigDecimal sl, BigDecimal je, String type, BaseDaoI<TLszz> baseDao) {
+	public static void updateLszzSl(Sp sp, Department dep, Ck ck, BigDecimal zsl, BigDecimal csl, BigDecimal je, String type, BaseDaoI<TLszz> baseDao) {
 		
 		String hql = "from TLszz t where t.spbh = :spbh and t.bmbh = :bmbh and t.jzsj = :jzsj";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -51,14 +51,14 @@ public class LszzServiceImpl implements LszzServiceI {
 		params.put("bmbh", dep.getId());
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
-		updateLszz(sp, dep, null, sl, je, type, baseDao, hql + " and t.ckId = null", params);
+		updateLszz(sp, dep, null, zsl, csl, je, type, baseDao, hql + " and t.ckId = null", params);
 		//总账中仓库入库更新
 		hql += " and t.ckId = :ckId";
 		params.put("ckId", ck.getId());
-		updateLszz(sp, dep, ck, sl, je, type, baseDao, hql, params);
+		updateLszz(sp, dep, ck, zsl, csl, je, type, baseDao, hql, params);
 	}
 	
-	private static void updateLszz(Sp sp, Department dep, Ck ck, BigDecimal sl, BigDecimal je, String type,
+	private static void updateLszz(Sp sp, Department dep, Ck ck, BigDecimal zsl, BigDecimal csl, BigDecimal je, String type,
 			BaseDaoI<TLszz> baseDao, String hql, Map<String, Object> params) {
 		TLszz tLszz = baseDao.get(hql, params);
 		if(tLszz == null){
@@ -78,36 +78,43 @@ public class LszzServiceImpl implements LszzServiceI {
 			tLszz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
 			
 			tLszz.setQcsl(Constant.BD_ZERO);
+			tLszz.setCqcsl(Constant.BD_ZERO);
 			tLszz.setQcje(Constant.BD_ZERO);
 			
 			if(type.equals(Constant.UPDATE_RK)){
-				tLszz.setLssl(sl);
+				tLszz.setLssl(zsl);
+				tLszz.setClssl(csl);
 				if(ck == null){
 					tLszz.setLsje(je);
 				}else{
 					tLszz.setLsje(Constant.BD_ZERO);
 				}
 				tLszz.setKpsl(Constant.BD_ZERO);
+				tLszz.setCkpsl(Constant.BD_ZERO);
 				tLszz.setKpje(Constant.BD_ZERO);
 			}else{
-				tLszz.setKpsl(sl);
+				tLszz.setKpsl(zsl);
+				tLszz.setCkpsl(csl);
 				if(ck == null){
 					tLszz.setKpje(je);
 				}else{
 					tLszz.setKpje(Constant.BD_ZERO);
 				}
 				tLszz.setLssl(Constant.BD_ZERO);
+				tLszz.setClssl(Constant.BD_ZERO);
 				tLszz.setLsje(Constant.BD_ZERO);
 			}
 			baseDao.save(tLszz);
 		}else{
 			if(type.equals(Constant.UPDATE_RK)){
-				tLszz.setLssl(tLszz.getLssl().add(sl));
+				tLszz.setLssl(tLszz.getLssl().add(zsl));
+				tLszz.setClssl(tLszz.getClssl().add(csl));
 				if(ck == null){
 					tLszz.setLsje(tLszz.getLsje().add(je));
 				}
 			}else{
-				tLszz.setKpsl(tLszz.getKpsl().add(sl));
+				tLszz.setKpsl(tLszz.getKpsl().add(zsl));
+				tLszz.setCkpsl(tLszz.getCkpsl().add(csl));
 				if(ck == null){
 					tLszz.setKpje(tLszz.getKpje().add(je));
 				}

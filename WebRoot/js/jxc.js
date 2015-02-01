@@ -101,7 +101,6 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	}
 };
 
-
 var ywbms = [{
     "id": '01',
     "depName": "文达印刷 "
@@ -407,6 +406,9 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 			        {field:'spbz',title:'包装'},
 			        {field:'zjldwId',title:'主计量单位id',hidden:true},
 			        {field:'zjldwmc',title:'主计量单位'},
+			        {field:'cjldwId',title:'次计量单位id',hidden:true},
+			        {field:'cjldwmc',title:'次计量单位'},
+			        {field:'zhxs',title:'转换系数',hidden:true},
 //			        {field:'xsdj',title:'销售单价'},
 //			        {field:'limitXsdj',title:'最低销价',hidden:true},
 			        

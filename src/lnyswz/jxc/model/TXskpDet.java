@@ -39,6 +39,7 @@ public class TXskpDet implements java.io.Serializable {
 	private BigDecimal spse;
 	private BigDecimal xscb;
 	private BigDecimal lastThsl;
+	private BigDecimal cLastThsl;
 	private BigDecimal thsl;
 
 	public TXskpDet() {
@@ -46,7 +47,7 @@ public class TXskpDet implements java.io.Serializable {
 
 	public TXskpDet(int id, TXskp TXskp, String spbh, String spmc, String spcd, String sppp, String spbz, BigDecimal zhxs,
 			String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj,
-			BigDecimal cdwdj, BigDecimal spje, BigDecimal spse, BigDecimal xscb, BigDecimal lastThsl, BigDecimal thsl) {
+			BigDecimal cdwdj, BigDecimal spje, BigDecimal spse, BigDecimal xscb, BigDecimal lastThsl, BigDecimal cLastThsl, BigDecimal thsl) {
 		this.id = id;
 		this.TXskp = TXskp;
 		this.spbh = spbh;
@@ -67,6 +68,7 @@ public class TXskpDet implements java.io.Serializable {
 		this.spse = spse;
 		this.xscb = xscb;
 		this.lastThsl = lastThsl;
+		this.cLastThsl = cLastThsl;
 		this.thsl = thsl;
 	}
 
@@ -253,6 +255,15 @@ public class TXskpDet implements java.io.Serializable {
 		this.lastThsl = lastThsl;
 	}
 	
+	@Column(name = "cLastThsl", precision = 18, scale = 3)
+	public BigDecimal getcLastThsl() {
+		return cLastThsl;
+	}
+
+	public void setcLastThsl(BigDecimal cLastThsl) {
+		this.cLastThsl = cLastThsl;
+	}
+
 	@Column(name = "thsl", precision = 18, scale = 3)
 	public BigDecimal getThsl() {
 		return thsl;
