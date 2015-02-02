@@ -34,6 +34,7 @@ public class Sp {
 	private BigDecimal lastRkdj;
 	private String query;
 	private BigDecimal kcsl;
+	private BigDecimal ckcsl;
 	private BigDecimal dwcb;
 	private String ckId;
 	
@@ -204,6 +205,12 @@ public class Sp {
 	}
 	public void setKcsl(BigDecimal kcsl) {
 		this.kcsl = kcsl;
+	}
+	public BigDecimal getCkcsl() {
+		return ckcsl;
+	}
+	public void setCkcsl(BigDecimal ckcsl) {
+		this.ckcsl = ckcsl;
 	}
 	public BigDecimal getDwcb() {
 		return dwcb;

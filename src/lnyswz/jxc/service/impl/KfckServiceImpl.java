@@ -142,7 +142,10 @@ public class KfckServiceImpl implements KfckServiceI {
 			//更新对应t_xsth_det中的cksl和ccksl
 			if(intDetIds != null){
 				BigDecimal cksl = kfckDet.getZdwsl();
-				BigDecimal ccksl = kfckDet.getCdwsl();
+				BigDecimal ccksl = BigDecimal.ZERO;
+				if(kfckDet.getCdwsl() != null){
+					ccksl = kfckDet.getCdwsl();
+				}
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
 					if(kfckDet.getSpbh().equals(xsthDet.getSpbh())){

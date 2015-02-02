@@ -280,14 +280,23 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		
 		s.setKcsl(Constant.BD_ZERO);
-		Object[] yw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, ywzzDao);
-		Object[] ls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, lszzDao);
+		s.setCkcsl(Constant.BD_ZERO);
+		Object[] yw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, "z", ywzzDao);
+		Object[] ls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, "z", lszzDao);
+		Object[] cyw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, "c", ywzzDao);
+		Object[] cls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, "c", lszzDao);
 		
 		if(yw != null){
 			s.setKcsl(new BigDecimal(yw[1].toString()));
 		}
 		if(ls != null){
 			s.setKcsl(s.getKcsl().subtract(new BigDecimal(ls[1].toString())));
+		}
+		if(cyw != null){
+			s.setCkcsl(new BigDecimal(cyw[1].toString()));
+		}
+		if(cls != null){
+			s.setCkcsl(s.getCkcsl().subtract(new BigDecimal(cls[1].toString())));
 		}
 		
 		BigDecimal dwcb = YwzzServiceImpl.getDwcb(depId, t.getSpbh(), ywzzDao);

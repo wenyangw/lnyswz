@@ -307,7 +307,7 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
-		width:600,
+		width:700,
 		height:420,
 		modal : true,
 		onLoad: function(){
@@ -342,11 +342,17 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		        		}	
 			        },
 			        {field:'limitXsdj',title:'最低销价',hidden:true},
-			        {field:'kcsl',title:'库存数量',
+			        {field:'kcsl',title:'库存数量1',
 			        	formatter: function(value){
 		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
 		        		}},
 		        	{field:'dwcb',title:'成本',hidden:true},
+		        	{field:'cjldwId',title:'次计量单位id',hidden:true},
+			        {field:'cjldwmc',title:'次计量单位'},
+			        {field:'ckcsl',title:'库存数量2',
+			        	formatter: function(value){
+		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
+		        		}},
 			        
 			    ]],
 			    toolbar:'#jxc_spQuery_tb',

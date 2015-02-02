@@ -125,7 +125,7 @@ public class LszzServiceImpl implements LszzServiceI {
 	
 	public static List<ProBean> getZzsl(String bmbh, String spbh, String ckId, BaseDaoI<TLszz> baseDao) {
 		List<ProBean> resultList = new ArrayList<ProBean>();
-		Object[] o = getLszzSl(bmbh, spbh, ckId, baseDao);
+		Object[] o = getLszzSl(bmbh, spbh, ckId, "z", baseDao);
 		if(o != null){
 			ProBean ls = new ProBean();
 			ls.setGroup("销售提货");
@@ -138,8 +138,15 @@ public class LszzServiceImpl implements LszzServiceI {
 	}
 
 	public static Object[] getLszzSl(String bmbh, String spbh,
-			String ckId, BaseDaoI<TLszz> baseDao) {
-		String sql = "select ckmc, qcsl + lssl - kpsl from t_lszz where bmbh = ? and spbh = ? and jzsj = ? ";
+			String ckId, String type, BaseDaoI<TLszz> baseDao) {
+		String slStr = "";
+		if(type.equals("z")){
+			slStr = "qcsl + lssl - kpsl";
+		}else{
+			slStr = "cqcsl + clssl - ckpsl";
+		}
+			
+		String sql = "select ckmc, " + slStr + " from t_lszz where bmbh = ? and spbh = ? and jzsj = ? ";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", spbh);

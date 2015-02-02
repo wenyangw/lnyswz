@@ -298,7 +298,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 
 	public static List<ProBean> getZzsl(String bmbh, String spbh, String ckId, BaseDaoI<TYwzz> baseDao) {
 		List<ProBean> resultList = new ArrayList<ProBean>();
-		Object[] o = getYwzzSl(bmbh, spbh, ckId, baseDao);
+		Object[] o = getYwzzSl(bmbh, spbh, ckId, "z", baseDao);
 		if(o != null){
 			ProBean yw = new ProBean();
 			yw.setGroup("业务库存");
@@ -311,8 +311,15 @@ public class YwzzServiceImpl implements YwzzServiceI {
 	}
 
 	public static Object[] getYwzzSl(String bmbh, String spbh,
-			String ckId, BaseDaoI<TYwzz> baseDao) {
-		String sql = "select ckmc, qcsl + rksl - xssl from t_ywzz where bmbh = ? and spbh = ? and jzsj = ? ";
+			String ckId, String type, BaseDaoI<TYwzz> baseDao) {
+		String slStr = "";
+		if(type.equals("z")){
+			slStr = "qcsl + rksl - xssl";
+		}else{
+			slStr = "cqcsl + crksl - cxssl";
+		}
+		//String sql = "select ckmc, qcsl + rksl - xssl from t_ywzz where bmbh = ? and spbh = ? and jzsj = ? ";
+		String sql = "select ckmc, " + slStr + " from t_ywzz where bmbh = ? and spbh = ? and jzsj = ? ";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", spbh);

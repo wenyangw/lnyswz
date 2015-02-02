@@ -275,7 +275,10 @@ public class XskpServiceImpl implements XskpServiceI {
 //			TXsthDet tXsthDet = xsthDetDao.load(TXsthDet.class, Integer.valueOf(detId));
 			if(intDetIds != null){
 				BigDecimal kpsl = xskpDet.getZdwsl();
-				BigDecimal ckpsl = xskpDet.getCdwsl();
+				BigDecimal ckpsl = BigDecimal.ZERO;
+				if(xskpDet.getCdwsl() != null){
+					ckpsl = xskpDet.getCdwsl();
+				}
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
 					thdlshs.add(xsthDet.getTXsth().getXsthlsh());

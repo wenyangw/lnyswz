@@ -124,9 +124,17 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			tDet.setZzjldwmc(zywhsDet.getZjldwmc());
 			tDet.setZcjldwId(zywhsDet.getCjldwId());
 			tDet.setZcjldwmc(zywhsDet.getCjldwmc());
-			tDet.setZzhxs(zywhsDet.getZhxs());
+			if(zywhsDet.getZhxs() != null){
+				tDet.setZzhxs(zywhsDet.getZhxs());
+			}else{
+				tDet.setZzhxs(BigDecimal.ZERO);
+			}
 			tDet.setZzdwsl(zywhsDet.getZdwsl());
-			tDet.setZcdwsl(zywhsDet.getCdwsl());
+			if(zywhsDet.getCdwsl() != null){
+				tDet.setZcdwsl(zywhsDet.getCdwsl());
+			}else{
+				tDet.setZcdwsl(BigDecimal.ZERO);
+			}
 			tDet.setZzdwdj(zywhsDet.getZdwdj());
 			tDet.setZspje(zywhsDet.getSpje());
 			tDet.setZisZs(zywhsDet.getIsZs());
@@ -137,6 +145,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			Sp zsp = new Sp();
 			BeanUtils.copyProperties(zywhsDet, zsp);
 			TSp zTSp = spDao.load(TSp.class, zywhsDet.getSpbh());
+			
 			if(zTSp.getCjldw() != null){
 				zsp.setCjldwId(zTSp.getCjldw().getId());
 				zsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
@@ -166,9 +175,17 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			tDet.setJzjldwmc(jywhsDet.getZjldwmc());
 			tDet.setJcjldwId(jywhsDet.getCjldwId());
 			tDet.setJcjldwmc(jywhsDet.getCjldwmc());
-			tDet.setJzhxs(jywhsDet.getZhxs());
+			if(jywhsDet.getZhxs() != null){
+				tDet.setJzhxs(jywhsDet.getZhxs());
+			}else{
+				tDet.setJzhxs(BigDecimal.ZERO);
+			}
 			tDet.setJzdwsl(jywhsDet.getZdwsl());
-			tDet.setJcdwsl(jywhsDet.getCdwsl());
+			if(jywhsDet.getCdwsl() != null){
+				tDet.setJcdwsl(jywhsDet.getCdwsl());
+			}else{
+				tDet.setJcdwsl(BigDecimal.ZERO);
+			}
 			tDet.setJzdwdj(jywhsDet.getZdwdj());
 			tDet.setJspje(jywhsDet.getSpje());
 			tDet.setJisZs(jywhsDet.getIsZs());
