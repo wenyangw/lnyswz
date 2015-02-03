@@ -584,6 +584,7 @@ $(function(){
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'thsl',title:'提货数量',width:25,align:'center',editor:'text', hidden:true},
+        	
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
