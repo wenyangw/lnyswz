@@ -137,11 +137,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(YwrkDet ywrkDet : ywrkDets){
 			TYwrkDet tDet = new TYwrkDet();
 			BeanUtils.copyProperties(ywrkDet, tDet);
-			if(tDet.getThsl() == null){
+			if(tDet.getThsl() == null || tDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
 				tDet.setThsl(Constant.BD_ZERO);
 				tDet.setCthsl(Constant.BD_ZERO);
 			}else{
-				if(tDet.getCjldwId() != null){
+				if(tDet.getCjldwId().trim().length() != 0){
 					tDet.setCthsl(tDet.getThsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 				}
 			}
