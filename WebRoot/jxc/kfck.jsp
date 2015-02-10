@@ -968,6 +968,7 @@ function searchKfck(){
 	kfck_dg.datagrid('load',{
 		bmbh: jxc_kfck_did,
 		createTime: $('input[name=createTimeKfck]').val(),
+		search: $('input[name=searchKfck]').val(),
 	});
 }
 
@@ -1268,6 +1269,7 @@ function searchXsthInKfck(){
 
 <div id="jxc_kfck_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、客户编号、名称、备注：<input type="text" name="searchKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfck();">查询</a>
 </div>
 <div id="jxc_kfck_xsthTb" style="padding:3px;height:auto">

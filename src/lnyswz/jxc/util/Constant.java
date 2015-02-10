@@ -142,6 +142,24 @@ public interface Constant {
 		
 	}};
 	
+	
+	public static final Map<String, String> XSKP_FH = new HashMap<String, String>(){{
+		put("01","白燕");
+		put("04","");
+		put("05","");
+		put("07","");
+		put("08","");
+	}};
+	
+	public static final Map<String, String> XSKP_SKR = new HashMap<String, String>(){{
+		put("01","胡秀颖");
+		put("04","");
+		put("05","");
+		put("07","");
+		put("08","");
+	}};
+
+	
 	public static final String XSKP_SPMC_WITHCD = "1";
 	public static final String XSKP_SPMC_WITHPP = "0";
 	

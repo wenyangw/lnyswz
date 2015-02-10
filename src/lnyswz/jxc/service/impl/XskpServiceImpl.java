@@ -561,8 +561,8 @@ public class XskpServiceImpl implements XskpServiceI {
 				
 				
 				head += "\"" + bz + "\",";
-				head += "\"" + "\",";
-				head += "\"" + "\"";
+				head += "\"" + Constant.XSKP_FH.get(bmbh) + "\",";
+				head += "\"" + Constant.XSKP_SKR.get(bmbh) + "\"";
 				lists.add(head);
 			}
 		}

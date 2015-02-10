@@ -322,7 +322,7 @@ public class KfckServiceImpl implements KfckServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(kfck.getSearch() != null){
-			hql += " and (t.kfcklsh like :search or t.khmc like :search or t.bz like :search)"; 
+			hql += " and (t.kfcklsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search)"; 
 			params.put("search", "%" + kfck.getSearch() + "%");
 			
 		}
