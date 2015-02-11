@@ -371,6 +371,7 @@ public class KhServiceImpl implements KhServiceI {
 		BeanUtils.copyProperties(t, k);
 		k.setBh(t.getKhbh());
 		k.setMc(t.getKhmc());
+		k.setDist(t.getDist());
 		return k;
 	}
 	

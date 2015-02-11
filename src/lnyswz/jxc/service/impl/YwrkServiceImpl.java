@@ -444,7 +444,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		//在销售提货中查看
 		if(ywrk.getFromOther() != null){
-			hql += " and t.TYwrk.isZs = '1' and t.TYwrk.isCj = '0' and t.zdwsl <> t.thsl";
+			hql += " and t.TYwrk.isZs = '1' and t.TYwrk.isCj = '0' and t.zdwsl > t.thsl";
 		}
 		
 		String countHql = "select count(*) " + hql;

@@ -10,6 +10,7 @@ public class Kh {
 	private String sh;
 	private String fr;
 	private String address;
+	private String dist;
 	private String isNsr;
 	private int page;
 	private int rows;
@@ -91,6 +92,14 @@ public class Kh {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getDist() {
+		return dist;
+	}
+
+	public void setDist(String dist) {
+		this.dist = dist;
 	}
 
 	public String getIsNsr() {

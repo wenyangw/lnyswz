@@ -468,6 +468,8 @@ jxc.query = function(title, input_bh, input_mc, urlJsp, urlAction){
 				columns:[[
 			        {field:'bh',title:'编号',width:50,align:'center'},
 			        {field:'mc',title:'名称',width:150,align:'center'},
+			        {field:'dist',title:'距离',width:80,align:'center'},
+			        
 			    ]],
 			    toolbar:'#jxc_query_tb',
 			    //双击数据行，返回信息并关闭对话框

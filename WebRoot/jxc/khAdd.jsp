@@ -28,6 +28,10 @@
 			<td><input name="address" style="width: 220px;"></td>
 		</tr>
 		<tr>
+			<th><label for="dist">距离</label></th>
+			<td><input name="dist" style="width: 150px;">公里</td>
+		</tr>
+		<tr>
 			<th><label for="isNsr">一般纳税人</label></th>
 			<td><input name="isNsr" type="checkbox" value="1"></td>
 		</tr>

@@ -33,6 +33,7 @@ $(function(){
 	        {field:'sh',title:'税号',	width:100},
 	        {field:'fr',title:'法人代表',width:100},
 	        {field:'address',title:'送货地址',width:100},
+	        {field:'dist',title:'距离',width:100},
 	        {field:'isNsr',title:'一般纳税人',
 	        	formatter : function(value) {
 		        	if(value == '1'){
@@ -93,7 +94,7 @@ function appendKh() {
 		title : '增加客户',
 		href : '${pageContext.request.contextPath}/jxc/khAdd.jsp',
 		width : 340,
-		height : 290,
+		height : 310,
 		modal : true,
 		buttons: [{
             text:'增加',
@@ -112,7 +113,8 @@ function appendKh() {
 								},
 								dataType : 'json',
 								success : function(d) {
-									if(!d.success){								
+									var j = $.parseJSON(jxc.toJson(d));
+									if(!j.success){								
 										flag=false;
 									}
 									
@@ -127,7 +129,7 @@ function appendKh() {
 	            		}
 					},
 					success : function(d) {
-						var json = $.parseJSON(d);
+						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							khgl_dg.datagrid('appendRow', json.obj);
 							p.dialog('close');
@@ -166,7 +168,7 @@ function editKh(){
 			title : '编辑客户',
 			href : '${pageContext.request.contextPath}/jxc/khAdd.jsp',
 			width : 350,
-			height : 290,
+			height : 310,
 			buttons : [ {
 				text : '编辑',
 				handler : function() {
@@ -181,7 +183,7 @@ function editKh(){
 	            			}
 						},
 						success : function(d) {
-							var json = $.parseJSON(d);
+							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								khgl_dg.datagrid('reload');
 								p.dialog('close');

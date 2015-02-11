@@ -25,6 +25,7 @@ public class TKh implements java.io.Serializable {
 	private String sh;
 	private String fr;
 	private String address;
+	private String dist;
 	private String isNsr;
 	private Set<TKhDet> TKhDets = new HashSet<TKhDet>(0);
 
@@ -32,13 +33,15 @@ public class TKh implements java.io.Serializable {
 	}
 
 	public TKh(String khbh, String khmc, String dzdh, String khh,
-			String sh, String fr, String isNsr, Set<TKhDet> TKhDets) {
+			String sh, String fr, String address, String dist, String isNsr, Set<TKhDet> TKhDets) {
 		this.khbh = khbh;
 		this.khmc = khmc;
 		this.dzdh = dzdh;
 		this.khh = khh;
 		this.sh = sh;
 		this.fr = fr;
+		this.address = address;
+		this.dist = dist;
 		this.isNsr = isNsr;
 		this.TKhDets = TKhDets;
 	}
@@ -98,12 +101,22 @@ public class TKh implements java.io.Serializable {
 		this.fr = fr;
 	}
 
+	@Column(name = "address", length = 50)
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	@Column(name = "dist", length = 20)
+	public String getDist() {
+		return dist;
+	}
+
+	public void setDist(String dist) {
+		this.dist = dist;
 	}
 
 	@Column(name = "isNsr", length = 1)
