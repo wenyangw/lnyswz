@@ -477,9 +477,18 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	public DataGrid printYwrk(Ywrk ywrk) {
 		DataGrid datagrid = new DataGrid();
 		String kfrklsh = "";
+		//String cgjhlsh = "";
+		
 		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
 		for (TKfrk y : tYwrk.getTKfrks()) {
 			kfrklsh += y.getKfrklsh() + ",";
+		}
+		if(tYwrk.getTCgjhs() != null && tYwrk.getTCgjhs().size() > 0){
+			for (TCgjhDet c : tYwrk.getTCgjhs()) {
+				if(kfrklsh.indexOf(c.getTCgjh().getCgjhlsh()) < 0){
+					kfrklsh += c.getTCgjh().getCgjhlsh() + ",";
+				}
+			}
 		}
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
 		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
