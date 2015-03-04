@@ -26,6 +26,7 @@ public class User {
 	private String postId;
 	private String postName;
 	private String csex;
+	private String source;
 	
 	private int operaId;
 	private String menuId;
@@ -143,6 +144,12 @@ public class User {
 	}
 	public void setCsex(String csex) {
 		this.csex = csex;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
 	}
 	public int getOperaId() {
 		return operaId;

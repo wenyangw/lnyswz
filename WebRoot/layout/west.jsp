@@ -54,7 +54,7 @@ $(function() {
 </script>
 
 <div class="easyui-accordion" data-options="border:false,fit:true" style="width:300px;height:200px;">
-	<c:forEach var="topAcc" items="${top}">
+	<c:forEach var="topAcc" items="${menutop}">
 		<div title="${topAcc.catName}" data-options="iconCls:'${topAcc.iconCls}'" style="overflow:auto;padding:10px;">
 		<ul id="tree${topAcc.id }" class="easyui-tree" 
 			data-options="

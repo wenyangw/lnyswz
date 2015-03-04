@@ -30,24 +30,38 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 
 	@Action(value = "login", results = {
 			@Result(name = SUCCESS, location = "/layout/index.jsp"),
-			@Result(name = LOGIN, location = "/login.jsp") })
+			@Result(name = "SUCCESS_M", location = "/m/index.jsp"),
+			@Result(name = LOGIN, location = "/login.jsp"),
+			@Result(name = "LOGIN_M", location = "/m/login.jsp") })
+	
 	public String login() {
+		String source = "";
+		if(user.getSource() != null){
+			source = user.getSource();
+		}
 		// 获得登录用户信息
 		if (!user.getPassword().equals("")) {
+			
 			User u = userService.login(user);
 			// 获得模块信息
 			List<Catalog> top = catalogService.listCatas();
 			// 登录成功
 			if (u != null) {
 				session.put("user", u);
-				session.put("top", top);
+				session.put("menutop", top);
 				request.put("msg", "登录成功！");
+				if(source.equals("mobile")){
+					return "SUCCESS_M";
+				}
 				return SUCCESS;
 			}
 		}
 
 		// 登录失败
 		request.put("msg", "账号或密码错误，请重新输入！");
+		if(source.equals("mobile")){
+			return "LOGIN_M";
+		}
 		return LOGIN;
 	}
 
