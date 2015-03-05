@@ -426,6 +426,11 @@ $(function(){
 	
 	$('input[name=zspsl]').bind('keyup', function(event){
 		if($('input[name=zspbh]').val() != ''){
+			if(($('input[name=zspbh]').val().substring(0, 3) < '513' 
+	    			|| $('input[name=zspbh]').val().substring(0, 3) > '518') 
+	    			&& $('input[name=zzhxs]').val() != 0){
+				$('input[name=zspcsl]').val(($('input[name=zspsl]').val() / $('input[name=zzhxs]').val()).toFixed(LENGTH_SL));
+	    	}
 			calJe('1');
 		}else{
 			$.messager.alert('提示', '增加商品信息未填写！', 'error', function(){
@@ -459,6 +464,11 @@ $(function(){
 
 	$('input[name=jspsl]').bind('keyup', function(event){
 		if($('input[name=jspbh]').val() != ''){
+			if(($('input[name=jspbh]').val().substring(0, 3) < '513' 
+	    			|| $('input[name=jspbh]').val().substring(0, 3) > '518') 
+	    			&& $('input[name=jzhxs]').val() != 0){
+				$('input[name=jspcsl]').val($('input[name=jspsl]').val() / $('input[name=jzhxs]').val());
+	    	}
 			calJe('0');
 		}else{
 			$.messager.alert('提示', '减少商品信息未填写！', 'error', function(){
@@ -574,11 +584,13 @@ function setValueByZSpbh(rowData){
 	$('input[name=zspzdwId]').val(rowData.zjldwId);
 	if(rowData.spbh.substring(0, 3) >= "513" && rowData.spbh.substring(0, 3) <= "518"){
 		$('.isMoZ').css('display','table-cell');
+	}else{
+		$('.isMoZ').css('display','none');
+	}
+	if(rowData.cjldwId){
 		$('input[name=zspcdw]').val(rowData.cjldwmc);
 		$('input[name=zspcdwId]').val(rowData.cjldwId);
 		$('input[name=zzhxs]').val(rowData.zhxs);
-	}else{
-		$('.isMoZ').css('display','none');
 	}
 	$('input[name=zspdj]').val(getDwcb(rowData.spbh));
 }
@@ -593,11 +605,13 @@ function setValueByJSpbh(rowData){
 	$('input[name=jspzdwId]').val(rowData.zjldwId);
 	if(rowData.spbh.substring(0, 3) >= "513" && rowData.spbh.substring(0, 3) <= "518"){
 		$('.isMoJ').css('display','table-cell');
+	}else{
+		$('.isMoJ').css('display','none');
+	}
+	if(rowData.cjldwId){
 		$('input[name=jspcdw]').val(rowData.cjldwmc);
 		$('input[name=jspcdwId]').val(rowData.cjldwId);
 		$('input[name=jzhxs]').val(rowData.zhxs);
-	}else{
-		$('.isMoJ').css('display','none');
 	}
 	$('input[name=jspdj]').val(getDwcb(rowData.spbh));
 }
@@ -668,7 +682,7 @@ function addRow(){
 			zdwdj:$('input[name=zspdj]').val(),
 			cjldwId:$('input[name=zspcdwId]').val(),
 			cjldwmc:$('input[name=zspcdw]').val(),
-			cdwsl:$('input[name=zspcsl]').val(),
+			cdwsl: $('input[name=zspcsl]').val(),
 			spje:$('input[name=zspje]').val(),
 			zhxs:$('input[name=zzhxs]').val(), 
 		});
