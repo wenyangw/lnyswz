@@ -501,6 +501,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		
+		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		int j = 0;
 		Set<TXskp> xskps = null;

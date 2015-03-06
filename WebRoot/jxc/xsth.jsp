@@ -618,9 +618,9 @@ function init(){
 	}
 	
 	if(jxc.showBookmc(xsth_did)){
-		$('.bookmc').css('display', 'table-row');
+		$('.jxc_xsth_bookmc').css('display', 'table-row');
 	}else{
-		$('.bookmc').css('display', 'none');
+		$('.jxc_xsth_bookmc').css('display', 'none');
 	}
 	
 	//收回商品库存信息
@@ -889,7 +889,7 @@ function saveXsth(){
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
 		effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
 		
-		effectRow['bookmc'] = $('input[name=bookmc]').val();
+		effectRow['bookmc'] = $('input[name=jxc_xsth_bookmc]').val();
 		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
 		effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
 		effectRow['ywrkDetIds'] = $('input[name=ywrkDetIds]').val();
@@ -1720,8 +1720,8 @@ function searchYwrkInXsth(){
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
 						<td class="isSh" style="display:none" colspan="2">送货地址<input name="jxc_xsth_shdz" size="20"></td>
 					</tr>
-					<tr class='bookmc'>
-						<th>书名</th><td colspan="10"><input name="bookmc" type="text" style="width:71%"></td>
+					<tr class='jxc_xsth_bookmc'>
+						<th>书名</th><td colspan="10"><input name="jxc_xsth_bookmc" type="text" style="width:71%"></td>
 					</tr>
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>

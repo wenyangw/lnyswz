@@ -774,7 +774,7 @@ function saveAll(){
 		}else{
 			effectRow['fyr'] = jxc_xskp_fyrCombo.combobox('getText');
 		}
-		effectRow['bookmc'] = $('input[name=bookmc]').val();
+		effectRow['bookmc'] = $('input[name=jxc_xskp_bookmc]').val();
 		effectRow['khbh'] = $('input[name=khbh]').val();
 		effectRow['khmc'] = $('input[name=khmc]').val();
 		effectRow['sh'] = $('input[name=sh]').val();
@@ -1544,7 +1544,7 @@ function generateXskp(){
 						success : function(d) {
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
-							$('input[name=bookmc]').val(rows[0].bookmc);
+							$('input[name=jxc_xskp_bookmc]').val(rows[0].bookmc);
 							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							if(rows[0].isFh == '1'){
@@ -1633,7 +1633,7 @@ function searchXsthInXskp(){
 					</tr>
 					<tr>
 						<th>发印人</th><td><input id="jxc_xskp_fyr" name="fyr" type="text"></td>
-						<th>书名</th><td colspan="3"><input name="bookmc" type="text" style="width:71%"></td>
+						<th>书名</th><td colspan="3"><input name="jxc_xskp_bookmc" type="text" style="width:71%"></td>
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
 						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
