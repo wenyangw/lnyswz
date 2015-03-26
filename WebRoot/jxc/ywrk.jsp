@@ -1305,7 +1305,6 @@ function changeYwrk(){
 						success : function(d) {
 							$('input[name=gysbh]').val(selected[0].gysbh);
 							$('input[name=gysmc]').val(selected[0].gysmc);
-							console.info(selected[0].isZs);
 							if (selected[0].isZs == '1') {
 								$('input[name=isZs]').prop('checked', true);
 							}

@@ -729,6 +729,21 @@ function cjKfhs(){
 	}
 }
 
+function printKfhs(){
+	var selected = kfhs_dg.datagrid('getSelected');
+ 	//if (selected != undefined) {
+ 	if (selected) {
+	 	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/kfhsAction!printKfhs.action?kfhslsh=' + selected.kfhslsh + "&bmbh=" + did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 function searchKfhs(){
 	kfhs_dg.datagrid('load',{
 		bmbh: did,

@@ -88,6 +88,11 @@ public interface Constant {
 		put("08","xsth_report_s_ns_dl");
 	}};
 	
+	//库房调号单
+	public static final Map<String, String> REPORT_KFHS = new HashMap<String, String>(){{
+		put("01","kfhs_report_ys");
+	}};
+	
 	//提货单-库房按保管员打印
 	public static final Map<String, String> REPORT_XSTH_BGY = new HashMap<String, String>(){{
 		put("04","xsth_report_s_ns_bgy");
