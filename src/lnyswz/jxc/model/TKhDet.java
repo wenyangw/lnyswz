@@ -29,12 +29,14 @@ public class TKhDet implements java.io.Serializable {
 	private BigDecimal lsje;
 	private String isUp;
 	private int postponeDay;
+	private String isOther;
+	private BigDecimal limitJe;
 
 	public TKhDet() {
 	}
 
 	public TKhDet(String id, TKh TKh, TDepartment TDepartment, String lxr, Integer ywyId, String khlxId, 
-			String isSx, Integer sxzq, BigDecimal sxje, BigDecimal lsje, String isUp, int postponeDay) {
+			String isSx, Integer sxzq, BigDecimal sxje, BigDecimal lsje, String isUp, int postponeDay, String isOther, BigDecimal limitJe) {
 		this.id = id;
 		this.TKh = TKh;
 		this.TDepartment = TDepartment;
@@ -47,6 +49,8 @@ public class TKhDet implements java.io.Serializable {
 		this.lsje = lsje;
 		this.isUp = isUp;
 		this.postponeDay = postponeDay;
+		this.isOther = isOther;
+		this.limitJe = limitJe;
 	}
 
 	@Id
@@ -158,6 +162,24 @@ public class TKhDet implements java.io.Serializable {
 
 	public void setPostponeDay(int postponeDay) {
 		this.postponeDay = postponeDay;
+	}
+
+	@Column(name = "isOther", length = 1)
+	public String getIsOther() {
+		return isOther;
+	}
+
+	public void setIsOther(String isOther) {
+		this.isOther = isOther;
+	}
+
+	@Column(name = "limitJe")
+	public BigDecimal getLimitJe() {
+		return limitJe;
+	}
+
+	public void setLimitJe(BigDecimal limitJe) {
+		this.limitJe = limitJe;
 	}
 
 }

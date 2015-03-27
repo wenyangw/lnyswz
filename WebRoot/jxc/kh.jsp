@@ -64,12 +64,12 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-	        {field:'khbh',width:100,title:'客户编号'},
+	        {field:'khbh',width:60,title:'客户编号'},
 	        {field:'khmc',width:250,title:'客户名称'},
 	        {field:'ywyId',title:'业务员id', hidden:true},
-	        {field:'ywyName',width:100,title:'业务员'},
+	        {field:'ywyName',width:60,title:'业务员'},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
-	        {field:'khlxmc',width:100,title:'客户类型'},
+	        {field:'khlxmc',width:55,title:'客户类型'},
 	        {field:'sxzq',title:'授信账期(天)',
 	        	formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
@@ -78,7 +78,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'sxje',title:'授信金额(元)',width:100,align:'right',
+	        {field:'sxje',title:'授信金额(元)',width:80,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -86,7 +86,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'lsje',title:'历史金额',width:100,align:'right',
+	        {field:'lsje',title:'历史金额',width:80,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -94,8 +94,24 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-			{field:'isUp',title:'二级审核', width:50,},
+			{field:'isUp',title:'二级审核', width:60,},
 			{field:'postponeDay',title:'限制期', width:50},
+			{field:'isOther',title:'第三方', width:50,
+				formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
+	        {field:'limitJe',title:'销售限额',width:80,align:'right',
+				formatter : function(value, rowData, rowIndex) {
+		        	if(value==0){
+		        		return '';
+		        	}else{
+		        		return value;
+		        	}				
+				}},
 	    ]],
 	});
 	
@@ -112,7 +128,7 @@ function appendKhDet() {
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 360,
+			height : 380,
 			modal : true,
 			buttons: [{
 	            text:'确定',
@@ -207,7 +223,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 360,
+			height : 380,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -313,6 +329,8 @@ function initForm(target){
 		$('input[name=lsje]').removeAttr('disabled');
 		$('input[name=isUp]').removeAttr('disabled');
 		$('input[name=postponeDay]').removeAttr('disabled');
+		$('input[name=isOther]').removeAttr('disabled');
+		$('input[name=limitJe]').removeAttr('disabled');
 // 		if($('input[name=postponeDay]').val() == ''){
 // 			$('input[name=postponeDay]').val('60');
 // 		}
@@ -322,6 +340,8 @@ function initForm(target){
 		$('input[name=lsje]').attr('disabled','disabled');
 		$('input[name=isUp]').attr('disabled','disabled');
 		$('input[name=postponeDay]').attr('disabled','disabled');
+		$('input[name=isOther]').attr('disabled','disabled');
+		$('input[name=limitJe]').attr('disabled','disabled');
 	}
 };
 

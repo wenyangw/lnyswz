@@ -285,7 +285,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			//从直送入库生成提货单
 			if(ywrkDetIdInts != null){
 				BigDecimal thsl = xsthDet.getZdwsl();
-				BigDecimal cthsl = xsthDet.getCdwsl();
+				BigDecimal cthsl = xsthDet.getCdwsl() == null ? BigDecimal.ZERO : xsthDet.getCdwsl();
 				tDet.setKpsl(BigDecimal.ZERO);
 				for(int detId : ywrkDetIdInts){
 					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, detId);
