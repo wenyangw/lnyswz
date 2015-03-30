@@ -202,6 +202,27 @@ jxc.toJson = function(str) {
 	 return str.substr(0, str.indexOf('<') > 0 ? str.indexOf('<') : str.length);
 };
 
+jxc.isOther = function(url, depId, khbh, ywyId){
+	$.ajax({
+		url: url,
+		async: false,
+		cache: false,
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success || data.obj.isOther == '1'){
+				return 'true';					
+			}else{
+				return 'false';
+			}
+		}
+	});
+};
+
 //var dictType = [ {
 //	value : '00',
 //	text : '变量'
