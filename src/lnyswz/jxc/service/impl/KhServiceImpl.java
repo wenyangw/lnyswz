@@ -616,13 +616,15 @@ public class KhServiceImpl implements KhServiceI {
 	}
 	
 	@Override
-	public BigDecimal getQkje(String bmbh, String khbh, int ywyId, String jzsj){
+	public Kh getQkje(Kh kh){
 		BigDecimal qkje = BigDecimal.ZERO;
+		Kh k = new Kh();
 		
-		qkje = qkje.add(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, jzsj, yszzDao));
-		qkje = qkje.add(LszzServiceImpl.getLsje(bmbh, khbh, ywyId, jzsj, lszzDao));
+		qkje = qkje.add(YszzServiceImpl.getYsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null, yszzDao));
+		qkje = qkje.add(LszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null, lszzDao));
 		
-		return qkje; 
+		k.setLimitJe(qkje);
+		return k; 
 	}
 
 	@Autowired

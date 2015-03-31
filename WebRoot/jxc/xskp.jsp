@@ -691,37 +691,19 @@ function saveAll(){
 		return false;
 	}
 	
-	console.info($('input[name=xsthKhbh]').val());
-	console.info($('input[name=khbh]').val());
-	
+	var other = undefined;
 	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
-		var other = jxc.isOther(
+		other = jxc.isOther(
 				'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
 				xskp_did, 
 				$('input[name=xsthKhbh]').val(), 
 				jxc_xskp_ywyCombo.combobox('getValue'));
-		console.info(other);
+		
 		if(!other){
 			$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
 			return false;
 		}
 		
-// 		$.ajax({
-// 			url:'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action',
-// 			async: false,
-// 			data:{
-// 				depId: xskp_did,				
-// 				khbh: $('input[name=xsthKhbh]').val(),
-// 				ywyId: jxc_xskp_ywyCombo.combobox('getValue')
-// 			},
-// 			dataType:'json',
-// 			success:function(data){
-// 				if(!data.success || data.obj.isOther == '0'){		
-// 					$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
-// 					return false;					
-// 				}
-// 			}
-// 		});
 	}
 	
 	var rows = xskp_spdg.datagrid('getRows');

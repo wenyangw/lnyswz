@@ -238,7 +238,13 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	}
 	
 	public void getQkje(){
-		writeJson(khService.getQkje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null));
+		Json j = new Json();
+		Kh k = khService.getQkje(kh);
+		if(k != null){
+			j.setSuccess(true);
+			j.setObj(k);
+		}
+		writeJson(j);
 	}
 	
 	public Kh getModel() {

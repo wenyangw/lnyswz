@@ -20,7 +20,7 @@ public interface KhServiceI {
 	public List<Kh> listKhs(Kh kh);
 	public DataGrid datagrid(Kh kh);
 	public DataGrid datagridDet(Kh kh);
-	public BigDecimal getQkje(String bmbh, String khbh, int ywyId, String jzsj);
+	public Kh getQkje(Kh kh);
 	/**
 	 * 王文阳
 	 * 2013.10.08
