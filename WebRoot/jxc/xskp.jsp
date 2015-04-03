@@ -691,6 +691,25 @@ function saveAll(){
 		return false;
 	}
 	
+	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
+		$.ajax({
+			url:'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action',
+			async: false,
+			data:{
+				depId: xskp_did,				
+				khbh: $('input[name=xsthKhbh]').val(),
+				ywyId: jxc_xskp_ywyCombo.combobox('getValue')
+			},
+			dataType:'json',
+			success:function(data){
+				if(!data.success || data.obj.isOther == '0'){		
+					$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
+					return false;					
+				}
+			}
+		});
+	}
+	
 	var rows = xskp_spdg.datagrid('getRows');
 	var effectRow = new Object();
 	if(rows.length == 1){
@@ -803,6 +822,7 @@ function saveAll(){
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
 			data: effectRow,
 			dataType: 'json',
+			async: false,
 			success: function(rsp){
 				if(rsp.success){
 			    	$.messager.show({
@@ -1570,6 +1590,7 @@ function generateXskp(){
 							xskp_spdg.datagrid('loadData', d.rows);
 	 						updateFooter();
 							$('input[name=xsthDetIds]').val(xsthDetStr);
+							$('input[name=xsthKhbh]').val(rows[0].khbh);
 							xskp_tabs.tabs('select', 0);
 						}
 					});
@@ -1643,6 +1664,7 @@ function searchXsthInXskp(){
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">
+				<input name="xsthKhbh" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xskp_spdg'></table>
