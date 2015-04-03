@@ -61,17 +61,6 @@
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
-		<tr>
-			<th><label for="isOther">第三方</label></th>
-			<td><input name="isOther" type="checkbox" value="1" disabled="disabled"></td>
- 		</tr>
-		<tr>
-			<th><label for="limitJe">销售限额</label></th>
-			<td><input name="limitJe" class="easyui-validatebox"
-				data-options="validType:'floatOrInt'"
-				style="width:156px;"
-				disabled="disabled"></td>
-		</tr>
 	</table>
 <!-- 	<input type="hidden" name="id"> -->
 	<input type="hidden" name="detId">

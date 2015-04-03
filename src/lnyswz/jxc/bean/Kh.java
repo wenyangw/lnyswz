@@ -34,8 +34,6 @@ public class Kh {
 	private BigDecimal yszje;
 	private String isUp;
 	private int postponeDay;
-	private String isOther;
-	private BigDecimal limitJe;
 	
 	private String detId;
 	private String query;
@@ -270,22 +268,6 @@ public class Kh {
 
 	public void setPostponeDay(int postponeDay) {
 		this.postponeDay = postponeDay;
-	}
-
-	public String getIsOther() {
-		return isOther;
-	}
-
-	public void setIsOther(String isOther) {
-		this.isOther = isOther;
-	}
-
-	public BigDecimal getLimitJe() {
-		return limitJe;
-	}
-
-	public void setLimitJe(BigDecimal limitJe) {
-		this.limitJe = limitJe;
 	}
 
 	public String getDetId() {

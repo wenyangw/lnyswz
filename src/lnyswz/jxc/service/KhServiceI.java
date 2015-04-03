@@ -1,6 +1,5 @@
 package lnyswz.jxc.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lnyswz.common.bean.DataGrid;
@@ -20,7 +19,7 @@ public interface KhServiceI {
 	public List<Kh> listKhs(Kh kh);
 	public DataGrid datagrid(Kh kh);
 	public DataGrid datagridDet(Kh kh);
-	public Kh getQkje(Kh kh);
+	
 	/**
 	 * 王文阳
 	 * 2013.10.08
@@ -43,5 +42,4 @@ public interface KhServiceI {
 	
 	public boolean isSxkh(Kh kh);
 	public DataGrid listKhByYwy(Kh kh);
-	public Kh getKhDet(Kh kh);
 }

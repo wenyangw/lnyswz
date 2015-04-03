@@ -1,6 +1,5 @@
 package lnyswz.jxc.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
-import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TYszz;
@@ -44,7 +42,6 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TYszz> yszzDao;
-	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
@@ -121,10 +118,6 @@ public class KhServiceImpl implements KhServiceI {
 		
 		if(kh.getIsUp() == null){
 			khDet.setIsUp("0");
-		}
-		
-		if(kh.getIsOther() == null){
-			khDet.setIsOther("0");
 		}
 		
 		khDet.setTKh(g);
@@ -254,21 +247,6 @@ public class KhServiceImpl implements KhServiceI {
 			}
 		}
 		return false;
-	}
-	
-	@Override
-	public Kh getKhDet(Kh kh) {
-		String hql = "from TKhDet det where det.TKh.khbh = :khbh and det.TDepartment.id = :depId and det.ywyId = :ywyId";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("khbh", kh.getKhbh());
-		params.put("depId", kh.getDepId());
-		params.put("ywyId", kh.getYwyId());
-		TKhDet t = khdetDao.get(hql, params);
-		
-		Kh k = new Kh();
-		BeanUtils.copyProperties(t, k);
-		k.setKhbh(t.getTKh().getKhbh());
-		return k;
 	}
 	
 	/**
@@ -614,18 +592,6 @@ public class KhServiceImpl implements KhServiceI {
 		}
 		return kh;
 	}
-	
-	@Override
-	public Kh getQkje(Kh kh){
-		BigDecimal qkje = BigDecimal.ZERO;
-		Kh k = new Kh();
-		
-		qkje = qkje.add(YszzServiceImpl.getYsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null, yszzDao));
-		qkje = qkje.add(LszzServiceImpl.getLsje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null, lszzDao));
-		
-		k.setLimitJe(qkje);
-		return k; 
-	}
 
 	@Autowired
 	public void setKhDao(BaseDaoI<TKh> khDao) {
@@ -655,11 +621,6 @@ public class KhServiceImpl implements KhServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
-	}
-
-	@Autowired
-	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
-		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

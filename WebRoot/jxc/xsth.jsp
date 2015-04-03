@@ -794,12 +794,6 @@ function saveXsth(){
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	
-	jxc.isOther(
-			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
-			xskp_did, 
-			$('input[name=xsthKhbh]').val(), 
-			jxc_xskp_ywyCombo.combobox('getValue'));
-	
 	if($('input[name=isFh]').is(':checked')){
 		save();
 	}else{

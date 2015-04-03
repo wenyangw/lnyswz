@@ -110,18 +110,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		}
 		writeJson(j);
 	}
-	
-	public void getKhDet(){
-		Json j = new Json();
-		Kh k = khService.getKhDet(kh);
-		if(k != null){
-			j.setSuccess(true);
-			j.setObj(k);
-		} else {
-			j.setMsg("对不起！此客户无授信信息！");
-		}
-		writeJson(j);
-	}
 
 	public void isSxkh(){
 		Json j = new Json();
@@ -235,16 +223,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	
 	public void listKhByYwy(){
 		writeJson(khService.listKhByYwy(kh));
-	}
-	
-	public void getQkje(){
-		Json j = new Json();
-		Kh k = khService.getQkje(kh);
-		if(k != null){
-			j.setSuccess(true);
-			j.setObj(k);
-		}
-		writeJson(j);
 	}
 	
 	public Kh getModel() {
