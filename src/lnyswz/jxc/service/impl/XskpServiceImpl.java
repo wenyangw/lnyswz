@@ -28,6 +28,7 @@ import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
+import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
@@ -68,6 +69,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -1034,7 +1036,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
 		
 		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 		BigDecimal lsje = YszzServiceImpl.getLsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
@@ -1126,7 +1128,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
 			
 			if(o != null){
-				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
 				Date createTime = DateUtil.stringToDate(o[3].toString());
 				Date payTime = DateUtil.stringToDate(o[4].toString());
 			
@@ -1213,6 +1215,11 @@ public class XskpServiceImpl implements XskpServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setKhDao(BaseDaoI<TKh> khDao) {
+		this.khDao = khDao;
 	}
 
 	@Autowired

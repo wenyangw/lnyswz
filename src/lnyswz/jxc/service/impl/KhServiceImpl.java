@@ -569,7 +569,7 @@ public class KhServiceImpl implements KhServiceI {
 		}
 	}
 	
-	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
+	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKh> khDao, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
 		Kh kh = new Kh();
 
 		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
@@ -584,6 +584,7 @@ public class KhServiceImpl implements KhServiceI {
 			kh.setKhmc(tKhDet.getTKh().getKhmc());
 			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
 		}else{
+			kh.setKhmc(khDao.load(TKh.class, khbh).getKhmc());
 			kh.setKhlxId(Constant.KHLX_XK);
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);
 			kh.setSxje(Constant.BD_ZERO);
