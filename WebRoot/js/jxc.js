@@ -202,6 +202,81 @@ jxc.toJson = function(str) {
 	 return str.substr(0, str.indexOf('<') > 0 ? str.indexOf('<') : str.length);
 };
 
+jxc.isOther = function(url, depId, khbh, ywyId){
+	var other = false;
+	$.ajax({
+		url: url,
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success && data.obj.isOther == '1'){
+				other = true;					
+			}
+		}
+	});
+	return other;
+};
+	
+	
+jxc.isExcess = function(url, depId, khbh, ywyId){
+	var excess = undefined;
+	var qkje = 0;
+	var sxje = 0;
+	var limitJe = 0;
+		
+	//获取客户当前欠款额
+	$.ajax({
+		url: url + '/jxc/khAction!getQkje.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				qkje = data.obj.limitJe;					
+			}
+		}
+	});
+		
+	//获取客户的授信额及欠款限额
+	$.ajax({
+		url: url + '/jxc/khAction!getKhDet.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				sxje = data.obj.sxje;
+				limitJe = data.obj.limitJe;
+			}
+		}
+	});
+		
+	if(qkje > sxje * 1.15){
+			
+	}
+	
+	return excess;
+};
+
 //var dictType = [ {
 //	value : '00',
 //	text : '变量'
