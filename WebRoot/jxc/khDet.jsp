@@ -30,32 +30,32 @@
 <!-- 		</tr> -->
 		<tr>
 			<th><label for="sxzq">授信账期</label></th>
-			<td><input name="sxzq" id="sxzq" class="easyui-validatebox"
+			<td><input name="sxzq" id="sxzq" class="easyui-validatebox sxbj"
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="sxje">授信金额</label></th>
-			<td><input name="sxje" class="easyui-validatebox"
+			<td><input name="sxje" class="easyui-validatebox sxbj"
 				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="lsje">历史金额</label></th>
-			<td><input name="lsje" class="easyui-validatebox"
+			<td><input name="lsje" class="easyui-validatebox sxbj"
 				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="isUp">二级审批</label></th>
-			<td><input name="isUp" type="checkbox" value="1" checked="checked" disabled="disabled"></td>
+			<td><input name="isUp" class = 'sxbj' type="checkbox" value="1" checked="checked" disabled="disabled"></td>
  		</tr>
 		<tr>
 			<th><label for="postponeDay">限制期</label></th>
-			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox"
+			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox sxbj"
 				value=60
 				data-options="validType:'integer'" 
 				style="width:156px;"
@@ -63,11 +63,18 @@
 		</tr>
 		<tr>
 			<th><label for="isOther">第三方</label></th>
-			<td><input name="isOther" type="checkbox" value="1" disabled="disabled"></td>
+			<td><input name="isOther" class='sxbj' type="checkbox" value="1" disabled="disabled"></td>
  		</tr>
+ 		<tr>
+			<th><label for="limitPer">限额比例</label></th>
+			<td><input name="limitPer" class="easyui-validatebox sxbj"
+				data-options="validType:'floatOrInt'"
+				style="width:156px;"
+				disabled="disabled"></td>
+		</tr>
 		<tr>
 			<th><label for="limitJe">销售限额</label></th>
-			<td><input name="limitJe" class="easyui-validatebox"
+			<td><input name="limitJe" class="easyui-validatebox sxbj"
 				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
