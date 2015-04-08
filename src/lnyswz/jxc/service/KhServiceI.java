@@ -6,6 +6,7 @@ import java.util.List;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
+import lnyswz.jxc.bean.Yszz;
 
 public interface KhServiceI {
 
@@ -20,7 +21,7 @@ public interface KhServiceI {
 	public List<Kh> listKhs(Kh kh);
 	public DataGrid datagrid(Kh kh);
 	public DataGrid datagridDet(Kh kh);
-	public BigDecimal getQkje(String bmbh, String khbh, int ywyId, String jzsj);
+	public Yszz getYszz(String bmbh, String khbh, int ywyId, String jzsj);
 	/**
 	 * 王文阳
 	 * 2013.10.08

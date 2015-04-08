@@ -226,14 +226,11 @@ jxc.isOther = function(url, depId, khbh, ywyId){
 	
 	
 jxc.isExcess = function(url, depId, khbh, ywyId){
-	var excess = undefined;
-	var qkje = 0;
-	var sxje = 0;
-	var limitJe = 0;
-		
+	var sxkh = {};
+
 	//获取客户当前欠款额
 	$.ajax({
-		url: url + '/jxc/khAction!getQkje.action',
+		url: url + '/jxc/khAction!getYszz.action',
 		cache: false,
 		async: false,
 		type: "POST",
@@ -245,11 +242,12 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 		dataType:'json',
 		success:function(data){
 			if(data.success){
-				qkje = data.obj.limitJe;					
+				//qkje = data.obj.limitJe;
+				sxkh.qkje = data.obj.qcje + data.obj.kpje - data.obj.hkje + (data.obj.qcthje + data.obj.thje);
 			}
 		}
 	});
-		
+	
 	//获取客户的授信额及欠款限额
 	$.ajax({
 		url: url + '/jxc/khAction!getKhDet.action',
@@ -264,17 +262,15 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 		dataType:'json',
 		success:function(data){
 			if(data.success){
-				sxje = data.obj.sxje;
-				limitJe = data.obj.limitJe;
+				sxkh.sxje = data.obj.sxje;
+				sxkh.limitPer = data.obj.limitPer;
+				sxkh.limitJe = data.obj.limitJe;
+				//sxje = data.obj.sxje;
+				//limitJe = data.obj.limitJe;
 			}
 		}
 	});
-		
-	if(qkje > sxje * 1.15){
-			
-	}
-	
-	return excess;
+	return sxkh;
 };
 
 //var dictType = [ {

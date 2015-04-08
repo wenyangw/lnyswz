@@ -104,6 +104,14 @@ $(function(){
 						return '';
 					}
 				}},
+			{field:'limitPer',title:'限额比例',width:80,align:'right',
+				formatter : function(value, rowData, rowIndex) {
+		        	if(value==0){
+		        		return '';
+		        	}else{
+		        		return value;
+		        	}				
+				}},
 	        {field:'limitJe',title:'销售限额',width:80,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){

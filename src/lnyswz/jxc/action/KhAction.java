@@ -10,6 +10,7 @@ import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
+import lnyswz.jxc.bean.Yszz;
 import lnyswz.jxc.service.KhServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -237,8 +238,14 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		writeJson(khService.listKhByYwy(kh));
 	}
 	
-	public void getQkje(){
-		writeJson(khService.getQkje(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null));
+	public void getYszz(){
+		Json j = new Json();
+		Yszz yszz = khService.getYszz(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null);
+		if(yszz != null){
+			j.setSuccess(true);
+			j.setObj(yszz);
+		}
+		writeJson(j);
 	}
 	
 	public Kh getModel() {

@@ -794,6 +794,13 @@ function saveXsth(){
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	
+	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
+	if((sxkh.qkje + footerRows[0].spje) > sxkh.sxje * sxkh.limitPer){
+		$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+		return false;
+	}
+	
+		
 	if($('input[name=isFh]').is(':checked')){
 		save();
 	}else{

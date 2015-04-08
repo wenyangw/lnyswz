@@ -23,6 +23,7 @@ import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.User;
+import lnyswz.jxc.bean.Yszz;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
@@ -616,13 +617,13 @@ public class KhServiceImpl implements KhServiceI {
 		return kh;
 	}
 
-	public BigDecimal getQkje(String bmbh, String khbh, int ywyId, String jzsj){
-		BigDecimal qkje = BigDecimal.ZERO;
-			
-		qkje = qkje.add(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, jzsj, yszzDao));
-		qkje = qkje.add(LszzServiceImpl.getLsje(bmbh, khbh, ywyId, jzsj, lszzDao));
-			
-		return qkje; 
+	public Yszz getYszz(String bmbh, String khbh, int ywyId, String jzsj){
+		Yszz yszz = new Yszz();
+		
+		TYszz tYszz = YszzServiceImpl.getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);	
+		BeanUtils.copyProperties(tYszz, yszz);
+		
+		return yszz; 
 	}
 	
 	@Autowired
