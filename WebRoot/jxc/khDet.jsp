@@ -79,6 +79,10 @@
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
+		<tr>
+			<th><label for="isLocked">锁定</label></th>
+			<td><input name="isLocked" class='sxbj' type="checkbox" value="1" disabled="disabled"></td>
+ 		</tr>
 	</table>
 <!-- 	<input type="hidden" name="id"> -->
 	<input type="hidden" name="detId">

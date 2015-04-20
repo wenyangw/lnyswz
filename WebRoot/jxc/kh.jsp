@@ -136,7 +136,7 @@ function appendKhDet() {
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 400,
+			height : 420,
 			modal : true,
 			buttons: [{
 	            text:'确定',
@@ -231,7 +231,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 400,
+			height : 420,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
