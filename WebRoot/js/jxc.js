@@ -265,6 +265,7 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 				sxkh.sxje = data.obj.sxje;
 				sxkh.limitPer = data.obj.limitPer;
 				sxkh.limitJe = data.obj.limitJe;
+				sxkh.isLocked = data.obj.isLocked;
 				//sxje = data.obj.sxje;
 				//limitJe = data.obj.limitJe;
 			}

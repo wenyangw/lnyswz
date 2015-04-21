@@ -785,6 +785,8 @@ function saveXsth(){
 		return false;
 	}
 	
+	
+	
 	var rows = xsth_spdg.datagrid('getRows');
 	if(rows.length == 1){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
@@ -796,6 +798,11 @@ function saveXsth(){
 	
 	//销售是否超过限额
 	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
+	console.info(sxkh.isLocked);
+	if(sxkh.isLocked){
+		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+		return false;
+	}
 	if((sxkh.qkje + footerRows[0].spje) > sxkh.sxje * sxkh.limitPer){
 		$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
 		return false;

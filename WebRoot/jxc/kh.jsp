@@ -120,6 +120,14 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
+			{field:'isLocked',title:'锁定', width:50,
+				formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
 	    ]],
 	});
 	

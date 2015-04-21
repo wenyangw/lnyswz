@@ -613,6 +613,7 @@ public class KhServiceImpl implements KhServiceI {
 			kh.setSxje(Constant.BD_ZERO);
 			kh.setSxzq(0);
 			kh.setLsje(Constant.BD_ZERO);
+			//kh.setIsLocked("0");
 		}
 		return kh;
 	}
