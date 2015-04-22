@@ -274,6 +274,30 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 	return sxkh;
 };
 
+jxc.getKhDet = function(url, depId, khbh, ywyId){
+	var sxkh = {};
+	
+	//获取客户的授信额及欠款限额
+	$.ajax({
+		url: url + '/jxc/khAction!getKhDet.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				sxkh.isLocked = data.obj.isLocked;
+			}
+		}
+	});
+	return sxkh;
+};
+
 //var dictType = [ {
 //	value : '00',
 //	text : '变量'

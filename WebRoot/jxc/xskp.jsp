@@ -691,6 +691,12 @@ function saveAll(){
 		return false;
 	}
 	
+	var sxkh_xskp = jxc.getKhDet('${pageContext.request.contextPath}', xskp_did, $('input[name=khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
+	if(sxkh_xskp.isLocked){
+		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+		return false;
+	}
+	
 	var other = undefined;
 	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
 		other = jxc.isOther(
