@@ -243,7 +243,7 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 		success:function(data){
 			if(data.success){
 				//qkje = data.obj.limitJe;
-				sxkh.qkje = data.obj.qcje + data.obj.kpje - data.obj.hkje + (data.obj.qcthje + data.obj.thje);
+				sxkh.qkje = (data.obj.qcje + data.obj.kpje - data.obj.hkje + (data.obj.qcthje + data.obj.thje)).toFixed(2);
 			}
 		}
 	});

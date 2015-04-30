@@ -802,11 +802,12 @@ function saveXsth(){
 		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
 		return false;
 	}
-	if((sxkh.qkje + footerRows[0].spje) > sxkh.sxje * sxkh.limitPer){
+		
+	if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
 		$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
 		return false;
 	}else{
-		if((sxkh.qkje + footerRows[0].spje) > sxkh.limitJe){
+		if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.limitJe)){
 			$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
 			return false;
 		}
