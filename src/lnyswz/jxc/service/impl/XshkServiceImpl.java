@@ -63,7 +63,6 @@ public class XshkServiceImpl implements XshkServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TYszz> yszzDao;
-	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TOperalog> operalogDao;
@@ -218,7 +217,7 @@ public class XshkServiceImpl implements XshkServiceI {
 	public DataGrid printXshk(Xshk xshk) {
 		DataGrid dg = new DataGrid();
 		
-		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDao, khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
 		
 		TUser u = userDao.load(TUser.class, xshk.getYwyId());
 		
@@ -370,11 +369,6 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
-	}
-
-	@Autowired
-	public void setKhDao(BaseDaoI<TKh> khDao) {
-		this.khDao = khDao;
 	}
 
 	@Autowired

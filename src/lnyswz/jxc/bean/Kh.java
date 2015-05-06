@@ -34,10 +34,6 @@ public class Kh {
 	private BigDecimal yszje;
 	private String isUp;
 	private int postponeDay;
-	private String isOther;
-	private BigDecimal limitPer;
-	private BigDecimal limitJe;
-	private String isLocked;
 	
 	private String detId;
 	private String query;
@@ -274,30 +270,6 @@ public class Kh {
 		this.postponeDay = postponeDay;
 	}
 
-	public String getIsOther() {
-		return isOther;
-	}
-	
-	public void setIsOther(String isOther) {
-		this.isOther = isOther;
-	}
-	
-	public BigDecimal getLimitPer() {
-		return limitPer;
-	}
-
-	public void setLimitPer(BigDecimal limitPer) {
-		this.limitPer = limitPer;
-	}
-
-	public BigDecimal getLimitJe() {
-		return limitJe;
-	}
-	
-	public void setLimitJe(BigDecimal limitJe) {
-		this.limitJe = limitJe;
-	}
-		
 	public String getDetId() {
 		return detId;
 	}
@@ -328,14 +300,6 @@ public class Kh {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-
-	public String getIsLocked() {
-		return isLocked;
-	}
-
-	public void setIsLocked(String isLocked) {
-		this.isLocked = isLocked;
 	}
 
 }

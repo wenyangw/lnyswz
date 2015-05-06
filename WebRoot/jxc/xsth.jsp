@@ -785,8 +785,6 @@ function saveXsth(){
 		return false;
 	}
 	
-	
-	
 	var rows = xsth_spdg.datagrid('getRows');
 	if(rows.length == 1){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
@@ -796,24 +794,6 @@ function saveXsth(){
 	var footerRows = xsth_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	
-	//销售是否超过限额
-	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
-	if(sxkh.isLocked){
-		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
-		return false;
-	}
-		
-	if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
-		$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
-		return false;
-	}else{
-		if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.limitJe)){
-			$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
-			return false;
-		}
-	}
-	
-		
 	if($('input[name=isFh]').is(':checked')){
 		save();
 	}else{
