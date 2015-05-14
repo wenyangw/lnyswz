@@ -45,4 +45,5 @@ public interface KhServiceI {
 	public boolean isSxkh(Kh kh);
 	public DataGrid listKhByYwy(Kh kh);
 	public Kh getKhDet(Kh kh);
+
 }

@@ -661,7 +661,7 @@ public class KhServiceImpl implements KhServiceI {
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
 	}
-	
+
 	@Autowired
 	public void setOpeDao(BaseDaoI<TOperalog> opeDao) {
 		this.opeDao = opeDao;
