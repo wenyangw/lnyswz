@@ -209,6 +209,27 @@ $(function(){
 			{field:'fhmc',title:'分户',align:'center'},
 			{field:'jsfsId',title:'结算方式id',align:'center', hidden:true},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
+			{field:'isZs',title:'*直送',align:'center',sortable:true,
+           		formatter : function(value) {
+   					if (value == '1') {
+   						return '是';
+   					} else {
+   						return '';
+   					}
+   				},
+           		sorter: function(a,b){
+           			a = a == undefined ? 0 : a;
+           			b = b == undefined ? 0 : b;
+   					return (a-b);  
+   				}},
+			{field:'thfs',title:'到货方式',align:'center',
+				formatter : function(value) {
+					if (value == '1') {
+						return '自提';
+					} else {
+						return '送货';
+					}
+				}},
 			{field:'spbh',title:'商品编号',align:'center'},
 			{field:'spmc',title:'名称',align:'center'},
 			{field:'spcd',title:'产地',align:'center'},
@@ -271,30 +292,9 @@ $(function(){
 				formatter: function(value){
 					return lnyw.memo(value, 15);
 				}},
-			{field:'thfs',title:'到货方式',align:'center',
-				formatter : function(value) {
-					if (value == '1') {
-						return '自提';
-					} else {
-						return '送货';
-					}
-				}},
 			{field:'thr',title:'提货人',align:'center'},
 			{field:'ch',title:'车号',align:'center'},
 			{field:'shdz',title:'送货地址',align:'center'},
-			{field:'isZs',title:'*直送',align:'center',sortable:true,
-           		formatter : function(value) {
-   					if (value == '1') {
-   						return '是';
-   					} else {
-   						return '';
-   					}
-   				},
-           		sorter: function(a,b){
-           			a = a == undefined ? 0 : a;
-           			b = b == undefined ? 0 : b;
-   					return (a-b);  
-   				}},
 			{field:'xskplshs',title:'销售开票',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
