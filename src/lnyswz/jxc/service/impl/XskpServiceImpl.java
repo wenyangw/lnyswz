@@ -28,6 +28,7 @@ import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XskpDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFhzz;
+import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
@@ -68,6 +69,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -616,6 +618,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				XskpDet xskpDet = new XskpDet();
 				BeanUtils.copyProperties(yd, xskpDet);
 				xskpDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
+				xskpDet.setZdwdj(xskpDet.getSpje().divide(xskpDet.getZdwsl(), 4, BigDecimal.ROUND_HALF_DOWN));
 				nl.add(xskpDet);
 			}
 			
@@ -1213,6 +1216,11 @@ public class XskpServiceImpl implements XskpServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setKhDao(BaseDaoI<TKh> khDao) {
+		this.khDao = khDao;
 	}
 
 	@Autowired

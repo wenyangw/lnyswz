@@ -308,7 +308,7 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		href: urlJsp,
 		title:'商品查询',
 		width:700,
-		height:420,
+		height:520,
 		modal : true,
 		onLoad: function(){
 			$('#jxc_spQuery_dg').datagrid({
@@ -319,8 +319,8 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 			    fitColumns: true,
 			    pagination : true,
 				pagePosition : 'bottom',
-				pageSize : 10,
-				pageList : [ 10, 15, 20, 25, 30 ],
+				pageSize : 20,
+				pageList : [ 20, 40, 60, 80],
 				//将编辑行输入的商品编号传入对话框
 				queryParams:{
 					query : value,
