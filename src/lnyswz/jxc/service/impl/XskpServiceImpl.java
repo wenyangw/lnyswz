@@ -618,7 +618,6 @@ public class XskpServiceImpl implements XskpServiceI {
 				XskpDet xskpDet = new XskpDet();
 				BeanUtils.copyProperties(yd, xskpDet);
 				xskpDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
-				xskpDet.setZdwdj(xskpDet.getSpje().divide(xskpDet.getZdwsl(), 4, BigDecimal.ROUND_HALF_DOWN));
 				nl.add(xskpDet);
 			}
 			
@@ -1037,7 +1036,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		DataGrid dg = new DataGrid();
 		List<Xskp> xskps = new ArrayList<Xskp>();
 		
-		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
 		
 		BigDecimal ysje = YszzServiceImpl.getYsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 		BigDecimal lsje = YszzServiceImpl.getLsje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
@@ -1129,7 +1128,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
 			
 			if(o != null){
-				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDetDao, khlxDao);
+				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
 				Date createTime = DateUtil.stringToDate(o[3].toString());
 				Date payTime = DateUtil.stringToDate(o[4].toString());
 			

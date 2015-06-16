@@ -144,7 +144,7 @@ public class YszzServiceImpl implements YszzServiceI {
 		return Constant.BD_ZERO; 
 	}
 
-	private static TYszz getYszz(String bmbh, String khbh, int ywyId,
+	public static TYszz getYszz(String bmbh, String khbh, int ywyId,
 			String jzsj, BaseDaoI<TYszz> yszzDao) {
 		String hql = "from TYszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
 

@@ -10,6 +10,7 @@ import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
+import lnyswz.jxc.bean.Yszz;
 import lnyswz.jxc.service.KhServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -107,6 +108,18 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 			j.setMsg("对不起！此客户业务员授信已存在！");
 		} else {
 			j.setSuccess(true);
+		}
+		writeJson(j);
+	}
+	
+	public void getKhDet(){
+		Json j = new Json();
+		Kh k = khService.getKhDet(kh);
+		if(k != null){
+			j.setSuccess(true);
+			j.setObj(k);
+		} else {
+			j.setMsg("对不起！此客户无授信信息！");
 		}
 		writeJson(j);
 	}
@@ -223,6 +236,16 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	
 	public void listKhByYwy(){
 		writeJson(khService.listKhByYwy(kh));
+	}
+	
+	public void getYszz(){
+		Json j = new Json();
+		Yszz yszz = khService.getYszz(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null);
+		if(yszz != null){
+			j.setSuccess(true);
+			j.setObj(yszz);
+		}
+		writeJson(j);
 	}
 	
 	public Kh getModel() {
