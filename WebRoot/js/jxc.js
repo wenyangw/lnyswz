@@ -95,6 +95,15 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 			return true;
 		}
 		break;
+	case '01':
+		//沈阳新华印务不参与审批流程	
+		var kh01 = ['21010263'];
+		if(kh01.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
 	default:
 		return true;
 		break;
@@ -200,6 +209,102 @@ jxc.checkKh = function(needAudit, khbh, depId){
 
 jxc.toJson = function(str) {
 	 return str.substr(0, str.indexOf('<') > 0 ? str.indexOf('<') : str.length);
+};
+
+jxc.isOther = function(url, depId, khbh, ywyId){
+	var other = false;
+	$.ajax({
+		url: url,
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success && data.obj.isOther == '1'){
+				other = true;					
+			}
+		}
+	});
+	return other;
+};
+		
+		
+jxc.isExcess = function(url, depId, khbh, ywyId){
+	var sxkh = {};
+	
+	//获取客户当前欠款额
+	$.ajax({
+		url: url + '/jxc/khAction!getYszz.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				//qkje = data.obj.limitJe;
+				sxkh.qkje = (data.obj.qcje + data.obj.kpje - data.obj.hkje + (data.obj.qcthje + data.obj.thje)).toFixed(2);
+			}
+		}
+	});
+		
+	//获取客户的授信额及欠款限额
+	$.ajax({
+		url: url + '/jxc/khAction!getKhDet.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				sxkh.sxje = data.obj.sxje;
+				sxkh.limitPer = data.obj.limitPer;
+				sxkh.limitJe = data.obj.limitJe;
+				sxkh.isLocked = data.obj.isLocked;
+				//sxje = data.obj.sxje;
+				//limitJe = data.obj.limitJe;
+			}
+		}
+	});
+	return sxkh;
+};
+	
+jxc.getKhDet = function(url, depId, khbh, ywyId){
+	var sxkh = {};
+	
+	//获取客户的授信额及欠款限额
+	$.ajax({
+		url: url + '/jxc/khAction!getKhDet.action',
+		cache: false,
+		async: false,
+		type: "POST",
+		data:{
+			depId: depId,				
+			khbh: khbh,
+			ywyId: ywyId
+		},
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				sxkh.isLocked = data.obj.isLocked;
+			}
+		}
+	});
+	return sxkh;
 };
 
 //var dictType = [ {

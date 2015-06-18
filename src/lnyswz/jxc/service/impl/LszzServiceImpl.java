@@ -162,4 +162,25 @@ public class LszzServiceImpl implements LszzServiceI {
 		return o;
 	}
 	
+	public static BigDecimal getLsje(String bmbh, String khbh, int ywyId, String jzsj, BaseDaoI<TLszz> lszzDao){
+		TLszz tLszz = getLszz(bmbh, khbh, ywyId, jzsj, lszzDao);
+		if(tLszz != null){
+			return tLszz.getQcje().add(tLszz.getLsje()).subtract(tLszz.getKpje());
+		}
+		return Constant.BD_ZERO; 
+	}
+			
+	private static TLszz getLszz(String bmbh, String khbh, int ywyId, String jzsj, BaseDaoI<TLszz> lszzDao) {
+		String hql = "from TLszz t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.jzsj = :jzsj";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", bmbh);
+		params.put("khbh", khbh);
+		params.put("ywyId", ywyId);
+		if(jzsj == null){
+			jzsj = DateUtil.getCurrentDateString("yyyyMM");
+		}
+		params.put("jzsj", jzsj);
+		TLszz tLszz = lszzDao.get(hql, params);
+		return tLszz;
+	}
 }

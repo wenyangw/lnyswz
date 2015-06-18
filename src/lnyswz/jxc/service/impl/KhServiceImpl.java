@@ -124,6 +124,10 @@ public class KhServiceImpl implements KhServiceI {
 			khDet.setIsUp("0");
 		}
 		
+		if(kh.getIsOther() == null){
+			khDet.setIsOther("0");
+		}
+		
 //		if(kh.getIsOther() == null){
 //			khDet.setIsOther("0");
 //		}

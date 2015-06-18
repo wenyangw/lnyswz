@@ -691,6 +691,43 @@ function saveAll(){
 		return false;
 	}
 	
+	var footerRows_xskp = xskp_spdg.datagrid('getFooterRows');
+		
+	var sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
+	if(sxkh_xskp.isLocked == '1'){
+		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+		return false;
+	}
+		
+	//直接填开发票时考察客户限额
+	if(jxc.notInExcludeKhs(xskp_did, $('input[name=khbh]').val())){
+		if(!$('input[name=xsthDetIds]').val()){
+			if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
+				$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
+				return false;
+			}else{
+				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
+					$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+					return false;
+				}
+			}
+		}
+	}
+		
+	var other = undefined;
+	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
+		other = jxc.isOther(
+			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
+			xskp_did, 
+			$('input[name=xsthKhbh]').val(), 
+			jxc_xskp_ywyCombo.combobox('getValue'));
+		if(!other){
+			$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
+			return false;
+		}
+		
+	}
+	
 	var rows = xskp_spdg.datagrid('getRows');
 	var effectRow = new Object();
 	if(rows.length == 1){
@@ -803,6 +840,7 @@ function saveAll(){
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
 			data: effectRow,
 			dataType: 'json',
+			async: false,
 			success: function(rsp){
 				if(rsp.success){
 			    	$.messager.show({
@@ -1570,6 +1608,7 @@ function generateXskp(){
 							xskp_spdg.datagrid('loadData', d.rows);
 	 						updateFooter();
 							$('input[name=xsthDetIds]').val(xsthDetStr);
+							$('input[name=xsthKhbh]').val(rows[0].khbh);
 							xskp_tabs.tabs('select', 0);
 						}
 					});
@@ -1643,6 +1682,7 @@ function searchXsthInXskp(){
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">
+				<input name="xsthKhbh" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xskp_spdg'></table>
