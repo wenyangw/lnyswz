@@ -694,20 +694,22 @@ function saveAll(){
 	var footerRows_xskp = xskp_spdg.datagrid('getFooterRows');
 		
 	var sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
-	if(sxkh_xskp.isLocked){
+	if(sxkh_xskp.isLocked == '1'){
 		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
 		return false;
 	}
 		
 	//直接填开发票时考察客户限额
-	if(!$('input[name=xsthDetIds]').val()){
-		if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
-			$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
-			return false;
-		}else{
-			if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
-				$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+	if(jxc.notInExcludeKhs(xskp_did, $('input[name=khbh]').val())){
+		if(!$('input[name=xsthDetIds]').val()){
+			if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
+				$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
 				return false;
+			}else{
+				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
+					$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+					return false;
+				}
 			}
 		}
 	}

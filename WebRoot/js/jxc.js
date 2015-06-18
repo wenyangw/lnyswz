@@ -95,6 +95,15 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 			return true;
 		}
 		break;
+	case '01':
+		//沈阳新华印务不参与审批流程	
+		var kh01 = ['21010263'];
+		if(kh01.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
 	default:
 		return true;
 		break;
