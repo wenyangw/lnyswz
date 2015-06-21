@@ -716,6 +716,7 @@ function saveAll(){
 		
 	var other = undefined;
 	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
+		console.info('other');
 		other = jxc.isOther(
 			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
 			xskp_did, 
