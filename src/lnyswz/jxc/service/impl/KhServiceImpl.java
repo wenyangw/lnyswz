@@ -269,11 +269,13 @@ public class KhServiceImpl implements KhServiceI {
 		params.put("depId", kh.getDepId());
 		params.put("ywyId", kh.getYwyId());
 		TKhDet t = khdetDao.get(hql, params);
-		
-		Kh k = new Kh();
-		BeanUtils.copyProperties(t, k);
-		k.setKhbh(t.getTKh().getKhbh());
-		return k;
+		if(t != null){
+			Kh k = new Kh();
+			BeanUtils.copyProperties(t, k);
+			k.setKhbh(t.getTKh().getKhbh());
+			return k;
+		}
+		return null;
 	}
 	
 	/**
@@ -626,9 +628,11 @@ public class KhServiceImpl implements KhServiceI {
 		Yszz yszz = new Yszz();
 		
 		TYszz tYszz = YszzServiceImpl.getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);	
-		BeanUtils.copyProperties(tYszz, yszz);
-		
-		return yszz; 
+		if(tYszz != null){
+			BeanUtils.copyProperties(tYszz, yszz);
+			return yszz;
+		}
+		return null;
 	}
 	
 	@Autowired
