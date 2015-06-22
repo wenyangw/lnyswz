@@ -316,6 +316,7 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	
 	var footerRows = cgxq_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -330,8 +331,15 @@ function saveAll(){
 		effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
 		effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
 		effectRow['dhsj'] = $('input[name=dhsj]').val();
+		
+		var needA = jxc.getAuditLevelCgxq(did);
+		if(needA != undefined){
+			effectRow['needAudit'] = needA;
+			$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
+		}
 	}else{
 		effectRow['isLs'] =  '0';
+		effectRow['needAudit'] = '0';
 	}
 // 	effectRow['xqsj'] = $('input[name=xqsj]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 

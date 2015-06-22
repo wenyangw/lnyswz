@@ -146,6 +146,34 @@ public class YwshServiceImpl implements YwshServiceI {
 		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
 		return dg;
 	}
+	
+	public DataGrid listCgxqAudits(Ywsh ywsh){
+		DataGrid dg = new DataGrid();
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
+		String fromWhere = " from t_audit_set t "
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
+				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_khlx lx on kh.khlxId = lx.id"
+				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", ywsh.getBmbh());
+		params.put("1", ywsh.getCreateId());
+		
+		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
+		
+		List<Ywsh> ywhss = new ArrayList<Ywsh>();
+		for(Object[] o : lists){
+			Ywsh y = getYwshRow(ywsh, o);
+						
+			ywhss.add(y);
+		}
+		
+		
+		dg.setRows(ywhss);
+		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
+		return dg;
+	}
 
 	private Ywsh getYwshRow(Ywsh ywsh, Object[] o) {
 		Ywsh y = new Ywsh();

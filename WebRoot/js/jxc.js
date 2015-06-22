@@ -45,6 +45,78 @@ jxc.auditLevel = function(bmbh){
 	}
 };
 
+var NEED_AUDIT_CGXQ = '1';
+var AUDIT_REFUSE_CGXQ = '9';
+
+jxc.auditLevelCgxq = function(bmbh){
+	var level = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '04':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '07':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '08':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	default:
+		break;
+	}
+};
+
+var NEED_AUDIT_CGJH = '1';
+var AUDIT_REFUSE_CGJH = '9';
+
+jxc.auditLevelCgjh = function(bmbh){
+	var level = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '04':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '05':
+		level['first'] = '1';
+		level['second'] = '2';
+		return level;
+		break;
+	case '07':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	case '08':
+		level['first'] = '1';
+		level['second'] = '3';
+		return level;
+		break;
+	default:
+		break;
+	}
+};
+
 jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;
 	var isUp = undefined;
@@ -82,6 +154,16 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 			}
 		}
 	}
+};
+
+jxc.getAuditLevelCgxq = function(bmbh){
+	//采购需求审批目前只需一级审批
+	return jxc.auditLevelCgxq(bmbh)['first'];
+};
+
+jxc.getAuditLevelCgjh = function(bmbh){
+	//采购计划审批目前只需一级审批
+	return jxc.auditLevelCgjh(bmbh)['first'];
 };
 
 jxc.notInExcludeKhs = function(bmbh, khbh){

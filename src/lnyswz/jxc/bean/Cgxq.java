@@ -59,6 +59,8 @@ public class Cgxq {
 	private BigDecimal spje;
 	private String cgjhlsh;
 	private String isLs;
+	private String needAudit;
+	private String isAudit;
 	
 	private String search;
 	private BigDecimal rksl;
@@ -520,6 +522,22 @@ public class Cgxq {
 
 	public void setIsLs(String isLs) {
 		this.isLs = isLs;
+	}
+
+	public String getNeedAudit() {
+		return needAudit;
+	}
+
+	public void setNeedAudit(String needAudit) {
+		this.needAudit = needAudit;
+	}
+
+	public String getIsAudit() {
+		return isAudit;
+	}
+
+	public void setIsAudit(String isAudit) {
+		this.isAudit = isAudit;
 	}
 
 	public int getPage() {

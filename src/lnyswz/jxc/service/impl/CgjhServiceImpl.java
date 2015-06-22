@@ -79,12 +79,13 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		tCgjh.setBmmc(depDao.load(TDepartment.class, cgjh.getBmbh()).getDepName());
 		tCgjh.setIsCancel("0");
 		tCgjh.setIsCompleted("0");
-		tCgjh.setNeedAudit("0");
-		if(tCgjh.getNeedAudit().equals("1")){
-			tCgjh.setIsAudit("0");
-		}else{
-			tCgjh.setIsAudit("1");
-		}
+		tCgjh.setIsAudit("0");
+//		tCgjh.setNeedAudit("0");
+//		if(tCgjh.getNeedAudit().equals("1")){
+//			tCgjh.setIsAudit("0");
+//		}else{
+//			tCgjh.setIsAudit("1");
+//		}
 		
 		tCgjh.setReturnHt("0");
 		
@@ -411,7 +412,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
-			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' ";
+			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
 			//是否直送
 			if("1".equals(cgjh.getIsZs())){
 				 hql += " and t.TCgjh.isZs = '1'";

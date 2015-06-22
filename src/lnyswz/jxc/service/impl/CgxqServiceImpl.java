@@ -69,6 +69,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		tCgxq.setCreateTime(new Date());
 		tCgxq.setCgxqlsh(LshServiceImpl.updateLsh(cgxq.getBmbh(), cgxq.getLxbh(), lshDao));
 		tCgxq.setBmmc(depDao.load(TDepartment.class, cgxq.getBmbh()).getDepName());
+		tCgxq.setIsAudit("0");
 		
 //		if("1".equals(cgxq.getIsLs())){
 //			tCgxq.setJsfsmc(jsfsDao.load(TJsfs.class, cgxq.getJsfsId()).getJsmc());
@@ -150,7 +151,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){
-			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null";
+			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit";
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
 			hql += " and t.TCgxq.createId = :createId";

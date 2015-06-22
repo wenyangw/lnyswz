@@ -58,6 +58,24 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'cgjhlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
@@ -824,6 +842,15 @@ function saveAll(){
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
 	effectRow['menuId'] = menuId;
+	//获取采购计划审批权限，无设置即为不需要审批
+	var needA = jxc.getAuditLevelCgjh(did);
+	if(needA != undefined){
+		effectRow['needAudit'] = needA;
+		$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
+	}else{
+		effectRow['needAudit'] = '0';
+	}
+
 	
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
@@ -840,12 +867,15 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
-		    	$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
-					if (r) {
-						var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + rsp.obj.cgjhlsh + "&bmbh=" + did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-					}
-				});
+		    	//原流程中，保存后即打印计划单，新流程中如需审批不打印计划单
+		    	if(needA == undefined || needA == '0'){
+			    	$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + rsp.obj.cgjhlsh + "&bmbh=" + did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+		    	}
 			}  
 		},
 		error: function(){
@@ -1224,12 +1254,16 @@ function cancelCgjh(){
 function printCgjh(){
 	var row = cgjh_dg.datagrid('getSelected');
 	if (row != undefined) {
-		$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
-			if (r) {
-				var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-			}
-		});
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
+				if (r) {
+					var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的计划单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

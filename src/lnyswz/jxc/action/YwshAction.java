@@ -1,32 +1,17 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Ywsh;
 import lnyswz.jxc.service.YwshServiceI;
-import lnyswz.jxc.util.Constant;
-import lnyswz.jxc.util.Export;
 
 /**
  * 业务盘点Action
@@ -99,6 +84,13 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		ywsh.setCreateId(user.getId());
 //		ywsh.setCreateName(user.getRealName());
 		writeJson(ywshService.listAudits(ywsh));
+	}
+	
+	public void listCgxqAudits(){
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+//		ywsh.setCreateName(user.getRealName());
+		writeJson(ywshService.listCgxqAudits(ywsh));
 	}
 	
 	@Override

@@ -19,6 +19,24 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},

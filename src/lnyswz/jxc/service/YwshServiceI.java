@@ -10,5 +10,6 @@ public interface YwshServiceI {
 	public DataGrid datagrid(Ywsh ywsh);
 	public DataGrid detDatagrid(String ywshlsh);
 	public DataGrid listAudits(Ywsh ywsh);
+	public DataGrid listCgxqAudits(Ywsh ywsh);
 	public DataGrid refreshYwsh(Ywsh ywsh);
 }

@@ -47,6 +47,8 @@ public class TCgxq implements java.io.Serializable {
 	private BigDecimal hjje;
 	private String bz;
 	private String isLs;
+	private String needAudit;
+	private String isAudit;
 	
 	private Set<TCgxqDet> TCgxqDets = new HashSet<TCgxqDet>(0);
 	
@@ -56,7 +58,7 @@ public class TCgxq implements java.io.Serializable {
 	public TCgxq(String cgxqlsh, int createId, Date createTime, String createName, String bmbh,
 			String bmmc, int ywyId, String ywymc, String gysbh, String gysmc, String khbh, String khmc, String dhfs, String lxr,
 			String shdz, Date dhsj, Integer xqsj, String jsfsId, String jsfsmc, BigDecimal hjje,
-			String bz, String isLs, Set<TCgxqDet> TCgxqDets) {
+			String bz, String isLs, String needAudit, String isAudit, Set<TCgxqDet> TCgxqDets) {
 		this.cgxqlsh = cgxqlsh;
 		this.createId = createId;
 		this.createTime = createTime;
@@ -79,6 +81,8 @@ public class TCgxq implements java.io.Serializable {
 		this.hjje = hjje;
 		this.bz = bz;
 		this.isLs = isLs;
+		this.needAudit = needAudit;
+		this.isAudit = isAudit;
 		this.TCgxqDets = TCgxqDets;
 		
 	}
@@ -282,6 +286,24 @@ public class TCgxq implements java.io.Serializable {
 
 	public void setIsLs(String isLs) {
 		this.isLs = isLs;
+	}
+	
+	@Column(name = "needAudit", nullable = false, length = 1)
+	public String getNeedAudit() {
+		return this.needAudit;
+	}
+
+	public void setNeedAudit(String needAudit) {
+		this.needAudit = needAudit;
+	}
+
+	@Column(name = "isAudit", nullable = false, length = 1)
+	public String getIsAudit() {
+		return this.isAudit;
+	}
+
+	public void setIsAudit(String isAudit) {
+		this.isAudit = isAudit;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TCgxq", cascade=CascadeType.ALL)
