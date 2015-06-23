@@ -149,18 +149,18 @@ public class YwshServiceImpl implements YwshServiceI {
 	
 	public DataGrid listCgxqAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
+		String sql = "select xq.bmbh, xq.bmmc, a.auditName, xq.cgxqlsh, xq.ywyId, xq.ywymc, xq.khbh, xq.khmc, xq.jsfsmc, xq.hjje, xq.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, xq.isAudit, xq.createTime";
 		String fromWhere = " from t_audit_set t "
-				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
-				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_cgxq xq on xq.bmbh = t.bmbh and xq.isLs = '1' and a.ywlxId = SUBSTRING(xq.cgxqlsh, 7, 2)"
+				+ " left join t_kh_det kh on xq.bmbh = kh.depId and xq.khbh = kh.khbh and xq.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.bmbh = ? and t.userId = ? and xq.needAudit <> '0' and xq.needAudit <> xq.isAudit and t.auditLevel = 1 + xq.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
 		params.put("1", ywsh.getCreateId());
 		
-		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
+		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by xq.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
 		for(Object[] o : lists){
@@ -168,8 +168,7 @@ public class YwshServiceImpl implements YwshServiceI {
 						
 			ywhss.add(y);
 		}
-		
-		
+				
 		dg.setRows(ywhss);
 		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
 		return dg;

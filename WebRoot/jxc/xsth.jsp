@@ -802,7 +802,7 @@ function saveXsth(){
 		return false;
 	}
 		
-	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
+	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) ){
 		if(!$('input[name=isFhth]').is(':checked')){
 			if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
 				$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
