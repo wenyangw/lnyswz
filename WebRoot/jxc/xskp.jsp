@@ -702,13 +702,15 @@ function saveAll(){
 	//直接填开发票时考察客户限额
 	if(jxc.notInExcludeKhs(xskp_did, $('input[name=khbh]').val())){
 		if(!$('input[name=xsthDetIds]').val()){
-			if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
-				$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
-				return false;
-			}else{
-				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
-					$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+			if(sxkh.khlxId == '02'){
+				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
+					$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
 					return false;
+				}else{
+					if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
+						$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+						return false;
+					}
 				}
 			}
 		}
