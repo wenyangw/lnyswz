@@ -63,7 +63,7 @@
 		</tr>
 		<tr>
 			<th><label for="isOther">第三方</label></th>
-			<td><input name="isOther" class='sxbj' type="checkbox" value="1" disabled="disabled"></td>
+			<td><input name="isOther" type="checkbox" value="1"></td>
  		</tr>
  		<tr>
 			<th><label for="limitPer">限额比例</label></th>
@@ -81,7 +81,7 @@
 		</tr>
 		<tr>
 			<th><label for="isLocked">锁定</label></th>
-			<td><input name="isLocked" class='sxbj' type="checkbox" value="1" disabled="disabled"></td>
+			<td><input name="isLocked" type="checkbox" value="1"></td>
  		</tr>
 	</table>
 <!-- 	<input type="hidden" name="id"> -->

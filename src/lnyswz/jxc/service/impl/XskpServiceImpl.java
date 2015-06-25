@@ -618,6 +618,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				XskpDet xskpDet = new XskpDet();
 				BeanUtils.copyProperties(yd, xskpDet);
 				xskpDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
+				xskpDet.setZdwdj(xskpDet.getSpje().divide(xskpDet.getZdwsl(), 4, BigDecimal.ROUND_HALF_DOWN));
 				nl.add(xskpDet);
 			}
 			
