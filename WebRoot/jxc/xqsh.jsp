@@ -34,6 +34,7 @@ $(function(){
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
 	                //赋值，供显示单据明细调用
+	                console.info('fields:' + fields[i]);
 	                if(fields[i] == 'lsh'){
 	                	cgxqlsh = rowData.lsh;
 	                }
@@ -52,6 +53,7 @@ $(function(){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
 	                	
+	                	console.info(rowData[fields[i]]);
 	                	var levels = rowData[fields[i]].split(',');
 	                	var names = rowData[fields[i + 1]].split(',');
 	                	var times = rowData[fields[i + 2]].split(',');
