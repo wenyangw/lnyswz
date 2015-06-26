@@ -507,8 +507,8 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 			    fitColumns: true,
 			    pagination : true,
 				pagePosition : 'bottom',
-				pageSize : 10,
-				pageList : [ 10, 15, 20, 25, 30 ],
+				pageSize : 20,
+				pageList : [ 20, 30, 40, 50, 100, 150, 200 ],
 				//将编辑行输入的商品编号传入对话框
 				queryParams:{
 					query : value,
