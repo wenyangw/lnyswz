@@ -486,9 +486,10 @@ function setEditing(){
      	}
     });
     
+    
     zdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
+    		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL) );
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -522,10 +523,10 @@ function setEditing(){
      	}
     });
     
-  //输入主销售单价后，计算金额
+  	//输入主销售单价后，计算金额(含税)
     zxsdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(cxsdjEditor.target).numberbox('setValue', $(zxsdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
+    		$(cxsdjEditor.target).numberbox('setValue', $(zxsdjEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -534,10 +535,10 @@ function setEditing(){
      	}
     });
     
-  	//输入次销售单价后，计算金额
+  	//输入次销售单价后，计算金额(含税)
     cxsdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(zxsdjEditor.target).numberbox('setValue', $(cxsdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
+    		$(zxsdjEditor.target).numberbox('setValue', $(cxsdjEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -546,13 +547,13 @@ function setEditing(){
      	}
     });
   	
-  	//输入商品金额后，计算单价
+  	//输入商品金额后，计算销售单价
     spjeEditor.target.bind('keyup', function(event){
     	if($(zslEditor.target).val() != 0){
-    		$(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / (1 + SL) / $(zslEditor.target).val());
+    		$(zxsdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
     	}
    	   	if($(zhxsEditor.target).val() != 0 && $(cslEditor.target).val() != 0){
-    		$(cdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(cslEditor.target).val());
+    		$(cxsdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(cslEditor.target).val());
     	}
     	//更新汇总列
         updateFooter();
@@ -565,10 +566,10 @@ function setEditing(){
     //计算金额
     function calculate(){
     	var spje = 0.0000;
-    	if($(cslEditor.target).val() != 0 && $(cdjEditor.target).val() != 0){
-    		spje = cslEditor.target.val() * cdjEditor.target.val();
+    	if($(cslEditor.target).val() != 0 && $(cxsdjEditor.target).val() != 0){
+    		spje = cslEditor.target.val() * cxsdjEditor.target.val();
     	}else{
-        	spje = zslEditor.target.val() * zdjEditor.target.val() * (1 + SL);   
+        	spje = zslEditor.target.val() * zxsdjEditor.target.val();   
     	}
     		
         $(spjeEditor.target).numberbox('setValue',spje);

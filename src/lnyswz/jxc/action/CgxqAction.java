@@ -114,10 +114,10 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		writeJson(cgxqService.datagrid(cgxq));
 	}
 	
-//	public void detDatagrid(){
-//		writeJson(cgxqService.detDatagrid(cgxq.getCgxqlsh()));
-//	}
-//	
+	public void detDatagrid(){
+		writeJson(cgxqService.detDatagrid(cgxq.getCgxqlsh()));
+	}
+	
 	public void toCgjh(){
 		writeJson(cgxqService.toCgjh(cgxq.getCgxqDetIds()));
 	}

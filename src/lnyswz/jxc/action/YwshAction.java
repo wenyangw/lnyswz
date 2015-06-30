@@ -45,7 +45,27 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		}
 		writeJson(j);
 	}
-	
+
+	/**
+	 * 保存数据
+	 */
+	public void xqshAudit() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		ywsh.setCreateName(user.getRealName());
+		Json j = new Json();
+		try {
+			ywshService.updateXqshAudit(ywsh);
+			// 添加成功
+			j.setSuccess(true);
+			j.setMsg("采购需求审批成功！");
+		} catch (Exception e) {
+			j.setMsg("采购需求业务审批失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
 	public void refuse() {
 		User user = (User) session.get("user");
 		ywsh.setCreateId(user.getId());
@@ -62,6 +82,24 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		}
 		writeJson(j);
 	}
+	
+	public void xqshRefuse() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		ywsh.setCreateName(user.getRealName());
+		Json j = new Json();
+		try {
+			ywshService.updateXqshRefuse(ywsh);
+			// 添加成功
+			j.setSuccess(true);
+			j.setMsg("采购需求审批拒绝成功！");
+		} catch (Exception e) {
+			j.setMsg("采购需求审批拒绝失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
 
 	public void datagrid() {
 		User user = (User) session.get("user");
@@ -73,6 +111,12 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		User user = (User) session.get("user");
 		ywsh.setCreateId(user.getId());
 		writeJson(ywshService.refreshYwsh(ywsh));
+	}
+	
+	public void refreshXqsh() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		writeJson(ywshService.refreshXqsh(ywsh));
 	}
 	
 	public void detDatagrid() {

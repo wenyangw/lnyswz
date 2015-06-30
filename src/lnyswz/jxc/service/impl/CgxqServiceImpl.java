@@ -30,6 +30,7 @@ import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
 import lnyswz.jxc.bean.Xskp;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
@@ -40,6 +41,7 @@ import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TUser;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.model.VCgxq;
 import lnyswz.jxc.service.CgxqServiceI;
@@ -86,7 +88,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			if(cgxqDet.getZdwdj() == null){
 				tDet.setZdwdj(Constant.BD_ZERO);
 				tDet.setCdwdj(Constant.BD_ZERO);
-				tDet.setSpje(Constant.BD_ZERO);
+				//tDet.setSpje(Constant.BD_ZERO);
 			}
 			if(cgxqDet.getZdwxsdj() == null){
 				tDet.setZdwxsdj(Constant.BD_ZERO);
@@ -190,6 +192,24 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			nl.add(c);
 		}
 		datagrid.setTotal(detDao.count(countHql, params));
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid detDatagrid(String cgxqlsh) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgxqlsh", cgxqlsh);
+		List<TCgxqDet> l = detDao.find(hql, params);
+		List<CgxqDet> nl = new ArrayList<CgxqDet>();
+		for(TCgxqDet t : l){
+			CgxqDet c = new CgxqDet();
+			BeanUtils.copyProperties(t, c);
+			
+			nl.add(c);
+		}
 		datagrid.setRows(nl);
 		return datagrid;
 	}

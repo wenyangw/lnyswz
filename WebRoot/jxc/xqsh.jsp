@@ -117,7 +117,7 @@ $(function(){
 			{field:'bmbh',title:'部门编号',align:'center', hidden:true},
 			{field:'auditName',title:'业务名称',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
-			{field:'createTime',title:'开票时间',align:'center'},
+			{field:'createTime',title:'创建时间',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'销售金额(元)',align:'center'},
@@ -156,10 +156,10 @@ $(function(){
 					{field:'spbz',title:'包装',width:60,align:'center'},
 					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
 					{field:'zdwsl',title:'数量1',width:90,align:'center'},
-					{field:'zdwdj',title:'单价1',width:90,align:'center'},
+					{field:'zdwxsdj',title:'单价1',width:90,align:'center'},
 					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
 					{field:'cdwsl',title:'数量2',width:90,align:'center'},
-					{field:'cdwdj',title:'单价2',width:90,align:'center'},
+					{field:'cdwxsdj',title:'单价2',width:90,align:'center'},
 					{field:'spje',title:'金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
@@ -324,13 +324,13 @@ function init(){
 
 
 //////////////////////////////////////////////以下为业务审核处理代码
-function audit(){
+function xqsh_audit(){
 	var selected = xqsh_toDg.datagrid('getRows');
 	if(selected.length > 0){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/xqshAction!refreshxqsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
 			data: {
 				bmbh: xqsh_did,
 				lsh: selected[0].lsh,
@@ -339,11 +339,11 @@ function audit(){
 			success: function(d){
 				if(d.obj != undefined){
 					var row = d.obj;
-					$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
+					$.messager.prompt('请确认', '是否将该笔采购需求审核通过？', function(bz){
 						if (bz != undefined){
 							$.ajax({
 								type: "POST",
-								url: '${pageContext.request.contextPath}/jxc/xqshAction!audit.action',
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!xqshAudit.action',
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
@@ -376,13 +376,13 @@ function audit(){
 	}
 }
 
-function refuse(){
+function xqsh_refuse(){
 	var selected = xqsh_toDg.datagrid('getRows');
 	if(selected.length > 0){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/xqshAction!refreshxqsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
 			data: {
 				bmbh: xqsh_did,
 				lsh: selected[0].lsh,
@@ -395,7 +395,7 @@ function refuse(){
 						if (bz != undefined){
 							$.ajax({
 								type: "POST",
-								url: '${pageContext.request.contextPath}/jxc/xqshAction!refuse.action',
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!xqshRefuse.action',
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,

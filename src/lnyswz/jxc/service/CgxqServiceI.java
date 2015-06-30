@@ -15,4 +15,5 @@ public interface CgxqServiceI {
 //	public DataGrid detDatagrid(String cgxqlsh);
 	public DataGrid toCgjh(String cgxqDetIds);
 	public DataGrid getSpkc(Cgxq cgxq);
+	public DataGrid detDatagrid(String cgxqlsh);
 }
