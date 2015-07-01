@@ -180,10 +180,10 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'lsh',title:'流水号',align:'center'},
-	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'createName',title:'审批人',align:'center'},
-	        {field:'auditLevel',title:'等级',align:'center'},
-	        {field:'isAudit',title:'结果',align:'center',
+	        {field:'createTime',title:'时间',align:'center',width:100},
+	        {field:'createName',title:'审批人',align:'center',width:100},
+	        {field:'auditLevel',title:'等级',align:'center',width:100},
+	        {field:'isAudit',title:'结果',align:'center',width:100,
 	        	formatter: function(value){
         			if(value == '0'){
         				return '拒绝';
@@ -196,7 +196,7 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
-	        {field:'bz',title:'备注',align:'center',
+	        {field:'bz',title:'备注',align:'center',width:100,
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
@@ -213,14 +213,14 @@ $(function(){
         },
         onExpandRow: function(index,row){
             $('#ywsh-ddv-'+index).datagrid({
-                url:'${pageContext.request.contextPath}/jxc/ywshAction!detDatagrid.action',
+                url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
                 fitColumns:true,
                 singleSelect:true,
                 rownumbers:true,
                 loadMsg:'',
                 height:'auto',
                 queryParams: {
-        			ywshlsh: row.ywshlsh,
+        			xsthlsh: row.lsh,
         		},
                 columns:[[
                     {field:'spbh',title:'商品编号',width:200,align:'center'},
@@ -497,7 +497,7 @@ function searchYwsh(){
 <!-- 			</div> -->
 <!-- 		</div> -->
     </div>
-    <div title="业务审核列表" data-options="closable:false" >
+    <div title="销售审核列表" data-options="closable:false" >
     	<table id='jxc_ywsh_dg'></table>
     </div>
 </div>

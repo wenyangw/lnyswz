@@ -129,7 +129,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid datagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime and substring(t.lsh, 7, 2) = '05'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywsh.getBmbh());
 		if(ywsh.getCreateTime() != null){
@@ -151,6 +151,33 @@ public class YwshServiceImpl implements YwshServiceI {
 		datagrid.setRows(nl);
 		return datagrid;
 	}
+
+	@Override
+	public DataGrid xqshDatagrid(Ywsh ywsh) {
+		DataGrid datagrid = new DataGrid();
+		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime and substring(t.lsh, 7, 2) = '08'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", ywsh.getBmbh());
+		if(ywsh.getCreateTime() != null){
+			params.put("createTime", ywsh.getCreateTime()); 
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+
+		String countHql = " select count(*)" + hql;
+		hql += " order by t.createTime desc";
+		List<TYwsh> l = ywshDao.find(hql, params, ywsh.getPage(), ywsh.getRows());
+		List<Ywsh> nl = new ArrayList<Ywsh>();
+		for(TYwsh t : l){
+			Ywsh c = new Ywsh();
+			BeanUtils.copyProperties(t, c);
+			nl.add(c);
+		}
+		datagrid.setTotal(ywshDao.count(countHql, params));
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+
 	
 	@Override
 	public DataGrid detDatagrid(String ywshlsh) {
@@ -166,8 +193,8 @@ public class YwshServiceImpl implements YwshServiceI {
 		DataGrid dg = new DataGrid();
 		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
 		String fromWhere = " from t_audit_set t "
-				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and a.ywlxId = SUBSTRING(th.xsthlsh, 7, 2)"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
 				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
@@ -438,15 +465,24 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid refreshXqsh(Ywsh ywsh) {
 		DataGrid dg = new DataGrid();
+//		String sql = "select th.bmbh, th.bmmc, a.auditName, th.cgxqlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje,"
+//				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime"
+//				+ " from t_audit_set t"
+//				+ " left join t_cgxq th on th.bmbh = t.bmbh and th.isCancel = '0'"
+//				+ " left join t_audit a on t.auditId = a.id"
+//				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+//				+ " left join t_khlx lx on kh.khlxId = lx.id"
+//				+ " where t.bmbh = ? and t.userId = ? and th.cgxqlsh = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+
 		String sql = "select th.bmbh, th.bmmc, a.auditName, th.cgxqlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje,"
 				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime"
 				+ " from t_audit_set t"
-				+ " left join t_cgxq th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_cgxq th on th.bmbh = t.bmbh and th.isLs = '1' and a.ywlxId = SUBSTRING(th.cgxqlsh, 7, 2)"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
 				+ " where t.bmbh = ? and t.userId = ? and th.cgxqlsh = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
-
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
 		params.put("1", ywsh.getCreateId());

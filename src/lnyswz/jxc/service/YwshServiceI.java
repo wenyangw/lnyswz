@@ -15,4 +15,5 @@ public interface YwshServiceI {
 	public DataGrid listCgxqAudits(Ywsh ywsh);
 	public DataGrid refreshYwsh(Ywsh ywsh);
 	public DataGrid refreshXqsh(Ywsh ywsh);
+	public DataGrid xqshDatagrid(Ywsh ywsh);
 }
