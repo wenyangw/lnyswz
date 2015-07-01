@@ -438,14 +438,14 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid refreshXqsh(Ywsh ywsh) {
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje,"
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.cgxqlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje,"
 				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime"
 				+ " from t_audit_set t"
-				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
+				+ " left join t_cgxq th on th.bmbh = t.bmbh and th.isCancel = '0'"
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and th.xsthlsh = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.bmbh = ? and t.userId = ? and th.cgxqlsh = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
