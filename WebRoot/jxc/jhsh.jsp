@@ -3,22 +3,22 @@
 
 
 <script type="text/javascript">
-var xqsh_did;
-var xqsh_lx;
-var xqsh_menuId;
+var jhsh_did;
+var jhsh_lx;
+var jhsh_menuId;
 
-var xqsh_toDg;
-var xqsh_dg;
-var xqsh_tabs;
+var jhsh_toDg;
+var jhsh_dg;
+var jhsh_tabs;
 
-var cgxqlsh;
+var cgjhlsh;
 
 $(function(){
-	xqsh_did = lnyw.tab_options().did;
-	xqsh_lx = lnyw.tab_options().lx;
-	xqsh_menuId = lnyw.tab_options().id;
+	jhsh_did = lnyw.tab_options().did;
+	jhsh_lx = lnyw.tab_options().lx;
+	jhsh_menuId = lnyw.tab_options().id;
 	
-	$('#jxc_xqsh_layout').layout({
+	$('#jxc_jhsh_layout').layout({
 		fit : true,
 		border : false,
 	});
@@ -36,7 +36,7 @@ $(function(){
 	                //赋值，供显示单据明细调用
 	                console.info('fields:' + fields[i]);
 	                if(fields[i] == 'lsh'){
-	                	cgxqlsh = rowData.lsh;
+	                	cgjhlsh = rowData.lsh;
 	                }
 	                if( j == 0){
 	                	cc.push('<tr><th class="read">单据信息:</th><td colspan="3"></td></tr>');
@@ -101,10 +101,10 @@ $(function(){
 	});
 	
 	
-	xqsh_toDg = $('#jxc_xqsh_toDg').datagrid({
-		url: '${pageContext.request.contextPath}/jxc/ywshAction!listCgxqAudits.action',
+	jhsh_toDg = $('#jxc_jhsh_toDg').datagrid({
+		url: '${pageContext.request.contextPath}/jxc/ywshAction!listCgjhAudits.action',
 		queryParams: {
-			bmbh: xqsh_did,
+			bmbh: jhsh_did,
 		},
 		fit: true,
 		showHeader: false,
@@ -139,9 +139,9 @@ $(function(){
 	    view: cardView,
 	    onLoadSuccess:function(){
 	    	$('#cardDg').datagrid({
-	    		url:'${pageContext.request.contextPath}/jxc/cgxqAction!detDatagrid.action',
+	    		url:'${pageContext.request.contextPath}/jxc/cgjhAction!detDatagrid.action',
 	    		queryParams: {
-	        		cgxqlsh: cgxqlsh,
+	        		cgjhlsh: cgjhlsh,
 	        	},
 	    		fit : true,
 	    	    border : false,
@@ -168,9 +168,9 @@ $(function(){
 	    	});
 	    },
 	});
-	lnyw.toolbar(0, xqsh_toDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xqsh_did);
+	lnyw.toolbar(0, jhsh_toDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jhsh_did);
 	
-	xqsh_dg = $('#jxc_xqsh_dg').datagrid({
+	jhsh_dg = $('#jxc_jhsh_dg').datagrid({
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -203,26 +203,26 @@ $(function(){
         			return lnyw.memo(value, 15);
         		}},
 	    ]],
-	    toolbar:'#jxc_xqsh_tb',
+	    toolbar:'#jxc_jhsh_tb',
 	});
-	lnyw.toolbar(1, xqsh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xqsh_did);
+	lnyw.toolbar(1, jhsh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jhsh_did);
 	
 	
-	xqsh_dg.datagrid({
+	jhsh_dg.datagrid({
         view: detailview,
         detailFormatter:function(index,row){
-            return '<div style="padding:2px"><table id="xqsh-ddv-' + index + '"></table></div>';
+            return '<div style="padding:2px"><table id="jhsh-ddv-' + index + '"></table></div>';
         },
         onExpandRow: function(index,row){
-            $('#xqsh-ddv-'+index).datagrid({
-                url:'${pageContext.request.contextPath}/jxc/cgxqAction!detDatagrid.action',
+            $('#jhsh-ddv-'+index).datagrid({
+                url:'${pageContext.request.contextPath}/jxc/cgjhAction!detDatagrid.action',
                 fitColumns:true,
                 singleSelect:true,
                 rownumbers:true,
                 loadMsg:'',
                 height:'auto',
                 queryParams: {
-        			cgxqlsh: row.lsh,
+        			cgjhlsh: row.lsh,
         		},
                 columns:[[
                     {field:'spbh',title:'商品编号',width:200,align:'center'},
@@ -242,37 +242,37 @@ $(function(){
         	        	}},
                 ]],
                 onResize:function(){
-                	xqsh_dg.datagrid('fixDetailRowHeight',index);
+                	jhsh_dg.datagrid('fixDetailRowHeight',index);
                 },
                 onLoadSuccess:function(){
                     setTimeout(function(){
-                    	xqsh_dg.datagrid('fixDetailRowHeight',index);
+                    	jhsh_dg.datagrid('fixDetailRowHeight',index);
                     },0);
                 }
             });
-            xqsh_dg.datagrid('fixDetailRowHeight',index);
+            jhsh_dg.datagrid('fixDetailRowHeight',index);
         }
     });
 	
 	
 	
 	//选中列表标签后，装载数据
-	xqsh_tabs = $('#jxc_xqsh_tabs').tabs({
+	jhsh_tabs = $('#jxc_jhsh_tabs').tabs({
 		onSelect: function(title, index){
 			if(index == 0){
- 				xqsh_toDg.datagrid('reload');
-// 				xqsh_toDg.datagrid({
-// 					url: '${pageContext.request.contextPath}/jxc/xqshAction!listAudits.action',
+ 				jhsh_toDg.datagrid('reload');
+// 				jhsh_toDg.datagrid({
+// 					url: '${pageContext.request.contextPath}/jxc/jhshAction!listAudits.action',
 // 					queryParams: {
-// 						bmbh: xqsh_did,
+// 						bmbh: jhsh_did,
 // 					},
 // 				});
 			}
 			if(index == 1){
-				xqsh_dg.datagrid({
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!xqshDatagrid.action',
+				jhsh_dg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/ywshAction!jhshDatagrid.action',
 					queryParams:{
-						bmbh: xqsh_did,
+						bmbh: jhsh_did,
 					}
 				});
 			}
@@ -293,11 +293,11 @@ function init(){
 	//清空全部字段
 	$('input').val('');
 	//收回商品库存信息
-	jxc.hideKc('#jxc_xqsh_layout');
-	jxc.spInfo($('#jxc_xqsh_layout'), '');
+	jxc.hideKc('#jxc_jhsh_layout');
+	jxc.spInfo($('#jxc_jhsh_layout'), '');
 
-	jxc_xqsh_ckCombo.combobox('selectedIndex', 0);
-	jxc_xqsh_pdlxCombo.combobox('selectedIndex', 0);
+	jxc_jhsh_ckCombo.combobox('selectedIndex', 0);
+	jxc_jhsh_pdlxCombo.combobox('selectedIndex', 0);
 	
 	//初始化流水号
 	$.ajax({
@@ -310,29 +310,29 @@ function init(){
 		dataType: 'json',
 		success: function(d){
 			if(d.success){
-				$('#xqshLsh').html(d.obj);
+				$('#jhshLsh').html(d.obj);
 			}  
 		},
 	});
 	
 	//根据权限，动态加载功能按钮
-	//lnyw.toolbar(0, xqsh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	//lnyw.toolbar(0, jhsh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
 	
 	//清空合计内容
-	//xqsh_spdg.datagrid('reloadFooter',[{}]);
+	//jhsh_spdg.datagrid('reloadFooter',[{}]);
 }
 
 
 //////////////////////////////////////////////以下为业务审核处理代码
-function xqsh_audit(){
-	var selected = xqsh_toDg.datagrid('getRows');
+function jhsh_audit(){
+	var selected = jhsh_toDg.datagrid('getRows');
 	if(selected.length > 0){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshjhsh.action',
 			data: {
-				bmbh: xqsh_did,
+				bmbh: jhsh_did,
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -343,18 +343,18 @@ function xqsh_audit(){
 						if (bz != undefined){
 							$.ajax({
 								type: "POST",
-								url: '${pageContext.request.contextPath}/jxc/ywshAction!xqshAudit.action',
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!jhshAudit.action',
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: xqsh_did,
-									menuId: xqsh_menuId,
+									bmbh: jhsh_did,
+									menuId: jhsh_menuId,
 									bz: bz,
 								},
 								dataType: 'json',
 								success: function(d){
 									if(d.success){
-										xqsh_toDg.datagrid('reload');
+										jhsh_toDg.datagrid('reload');
 										$.messager.show({
 											title : '提示',
 											msg : d.msg
@@ -367,7 +367,7 @@ function xqsh_audit(){
 					});
 				}else{
 					$.messager.alert('警告', '该单据已审批结束！',  'warning');
-					xqsh_toDg.datagrid('reload');
+					jhsh_toDg.datagrid('reload');
 				}
 			}
 		});
@@ -376,15 +376,15 @@ function xqsh_audit(){
 	}
 }
 
-function xqsh_refuse(){
-	var selected = xqsh_toDg.datagrid('getRows');
+function jhsh_refuse(){
+	var selected = jhsh_toDg.datagrid('getRows');
 	if(selected.length > 0){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshjhsh.action',
 			data: {
-				bmbh: xqsh_did,
+				bmbh: jhsh_did,
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -395,18 +395,18 @@ function xqsh_refuse(){
 						if (bz != undefined){
 							$.ajax({
 								type: "POST",
-								url: '${pageContext.request.contextPath}/jxc/ywshAction!xqshRefuse.action',
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!jhshRefuse.action',
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: xqsh_did,
-									menuId: xqsh_menuId,
+									bmbh: jhsh_did,
+									menuId: jhsh_menuId,
 									bz: bz,
 								},
 								dataType: 'json',
 								success: function(d){
 									if(d.success){
-										xqsh_toDg.datagrid('reload');
+										jhsh_toDg.datagrid('reload');
 										$.messager.show({
 											title : '提示',
 											msg : d.msg
@@ -419,7 +419,7 @@ function xqsh_refuse(){
 					});
 				}else{
 					$.messager.alert('警告', '该单据已审批结束！',  'warning');
-					xqsh_toDg.datagrid('reload');
+					jhsh_toDg.datagrid('reload');
 				}
 			}
 		});
@@ -432,17 +432,17 @@ function xqsh_refuse(){
 
 //////////////////////////////////////////////以下为业务审核列表处理代码
 
-function cjxqsh(){
-	var row = xqsh_dg.datagrid('getSelected');
+function cjjhsh(){
+	var row = jhsh_dg.datagrid('getSelected');
 	if (row != undefined) {
 		if(row.isCj != '1'){
 			if(row.kfpdlsh == undefined){
 				$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
 					if (bz != undefined){
 						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/xqshAction!cjxqsh.action',
+							url : '${pageContext.request.contextPath}/jxc/jhshAction!cjjhsh.action',
 							data : {
-								xqshlsh : row.xqshlsh,
+								jhshlsh : row.jhshlsh,
 								bmbh: did,
 								lxbh: lx,
 								menuId : menuId,
@@ -451,15 +451,15 @@ function cjxqsh(){
 							method: 'post',
 							dataType : 'json',
 							success : function(d) {
-						 		xqsh_dg.datagrid('load');
-								xqsh_dg.datagrid('unselectAll');
+						 		jhsh_dg.datagrid('load');
+								jhsh_dg.datagrid('unselectAll');
 								$.messager.show({
 									title : '提示',
 									msg : d.msg
 								});
 								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 									if (r) {
-										var url = lnyw.bp() + '/jxc/xqshAction!printxqsh.action?xqshlsh=' + d.obj.xqshlsh + '&bmbh=' + did;
+										var url = lnyw.bp() + '/jxc/jhshAction!printjhsh.action?jhshlsh=' + d.obj.jhshlsh + '&bmbh=' + did;
 										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 									}
 								});
@@ -478,10 +478,10 @@ function cjxqsh(){
 	}
 }
 
-function searchxqsh(){
-	xqsh_dg.datagrid('load',{
-		bmbh: xqsh_did,
-		createTime: $('input[name=createTimexqsh]').val(),
+function searchjhsh(){
+	jhsh_dg.datagrid('load',{
+		bmbh: jhsh_did,
+		createTime: $('input[name=createTimejhsh]').val(),
 	});
 }
 
@@ -491,19 +491,19 @@ function searchxqsh(){
 </script>
 
 <!-- tabPosition:'left', headerWidth:'35' -->
-<div id="jxc_xqsh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
+<div id="jxc_jhsh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="审核" data-options="closable:false">
-<!--         <div id='jxc_xqsh_layout' style="height:100%;width=100%;"> -->
+<!--         <div id='jxc_jhsh_layout' style="height:100%;width=100%;"> -->
 <!-- 			<div data-options="region:'center',title:'商品信息',split:true" >		 -->
-				<table id='jxc_xqsh_toDg'></table>
+				<table id='jxc_jhsh_toDg'></table>
 <!-- 			</div> -->
 <!-- 		</div> -->
     </div>
     <div title="需求审核列表" data-options="closable:false" >
-    	<table id='jxc_xqsh_dg'></table>
+    	<table id='jxc_jhsh_dg'></table>
     </div>
 </div>
-<div id="jxc_xqsh_tb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimexqsh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchxqsh();">查询</a>
+<div id="jxc_jhsh_tb" style="padding:3px;height:auto">
+	请输入查询起始日期:<input type="text" name="createTimejhsh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchjhsh();">查询</a>
 </div>

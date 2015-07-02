@@ -60,7 +60,27 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 			j.setSuccess(true);
 			j.setMsg("采购需求审批成功！");
 		} catch (Exception e) {
-			j.setMsg("采购需求业务审批失败！");
+			j.setMsg("采购需求审批失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
+	 * 保存数据
+	 */
+	public void jhshAudit() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		ywsh.setCreateName(user.getRealName());
+		Json j = new Json();
+		try {
+			ywshService.updateJhshAudit(ywsh);
+			// 添加成功
+			j.setSuccess(true);
+			j.setMsg("采购计划审批成功！");
+		} catch (Exception e) {
+			j.setMsg("采购计划审批失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -99,6 +119,23 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		}
 		writeJson(j);
 	}
+	
+	public void jhshRefuse() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		ywsh.setCreateName(user.getRealName());
+		Json j = new Json();
+		try {
+			ywshService.updateJhshRefuse(ywsh);
+			// 添加成功
+			j.setSuccess(true);
+			j.setMsg("采购计划审批拒绝成功！");
+		} catch (Exception e) {
+			j.setMsg("采购计划审批拒绝失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
 
 
 	public void datagrid() {
@@ -112,6 +149,12 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		ywsh.setCreateId(user.getId());
 		writeJson(ywshService.xqshDatagrid(ywsh));
 	}
+	
+	public void jhshDatagrid() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		writeJson(ywshService.jhshDatagrid(ywsh));
+	}
 
 	public void refreshYwsh() {
 		User user = (User) session.get("user");
@@ -123,6 +166,12 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		User user = (User) session.get("user");
 		ywsh.setCreateId(user.getId());
 		writeJson(ywshService.refreshXqsh(ywsh));
+	}
+	
+	public void refreshJhsh() {
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+		writeJson(ywshService.refreshJhsh(ywsh));
 	}
 	
 	public void detDatagrid() {
@@ -141,6 +190,13 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		ywsh.setCreateId(user.getId());
 //		ywsh.setCreateName(user.getRealName());
 		writeJson(ywshService.listCgxqAudits(ywsh));
+	}
+	
+	public void listJhxqAudits(){
+		User user = (User) session.get("user");
+		ywsh.setCreateId(user.getId());
+//		ywsh.setCreateName(user.getRealName());
+		writeJson(ywshService.listCgjhAudits(ywsh));
 	}
 	
 	@Override
