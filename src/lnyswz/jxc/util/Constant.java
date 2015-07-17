@@ -46,7 +46,7 @@ public interface Constant {
 	//业务盘点单
 	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
 		put("01","ywpd_report_s");
-		put("04","ywpd_report_b");
+		put("04","ywpd_report_s");
 		put("05","ywpd_report_b");
 		put("07","ywpd_report_s");
 		put("08","ywpd_report_s");
@@ -55,7 +55,7 @@ public interface Constant {
 	//业务调号单
 	public static final Map<String, String> REPORT_YWHS = new HashMap<String, String>(){{
 		put("01","ywhs_report_b");
-		put("04","ywhs_report_b");
+		put("04","ywhs_report_s");
 		put("05","ywhs_report_b");
 		put("07","ywhs_report_s");
 		put("08","ywhs_report_s");
@@ -64,7 +64,7 @@ public interface Constant {
 	//业务补调单
 	public static final Map<String, String> REPORT_YWBT = new HashMap<String, String>(){{
 		put("01","ywbt_report_b");
-		put("04","ywbt_report_b");
+		put("04","ywbt_report_s");
 		put("05","ywbt_report_b");
 		put("07","ywbt_report_s");
 		put("08","ywbt_report_s");
@@ -110,7 +110,7 @@ public interface Constant {
 	//业务入库单
 	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
 		put("01","ywrk_report_ys_s_c");
-		put("04","ywrk_report_b");
+		put("04","ywrk_report_s_jc");
 		put("05","ywrk_report_b");
 		put("07","ywrk_report_s");
 		put("08","ywrk_report_s");
