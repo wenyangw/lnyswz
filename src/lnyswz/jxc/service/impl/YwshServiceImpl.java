@@ -314,12 +314,10 @@ public class YwshServiceImpl implements YwshServiceI {
 
 	public DataGrid listCgjhAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select jh.bmbh, jh.bmmc, a.auditName, jh.cgjhlsh, jh.createId, jh.createName, jh.khbh, jh.khmc, jh.jsfsmc, jh.hjje, jh.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, jh.isAudit, jh.createTime";
+		String sql = "select jh.bmbh, jh.bmmc, a.auditName, jh.cgjhlsh, jh.createId, jh.createName, jh.gysbh, jh.gysmc, jh.jsfsmc, jh.hjje, jh.bz, t.auditLevel, a.ywlxId, jh.isAudit, jh.createTime";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
-				+ " left join t_cgjh jh on jh.bmbh = t.bmbh and jh.isLs = '1' and a.ywlxId = SUBSTRING(jh.cgjhlsh, 7, 2)"
-				+ " left join t_kh_det kh on jh.bmbh = kh.depId and jh.khbh = kh.khbh and jh.ywyId = kh.ywyId"
-				+ " left join t_khlx lx on kh.khlxId = lx.id"
+				+ " left join t_cgjh jh on jh.bmbh = t.bmbh and a.ywlxId = SUBSTRING(jh.cgjhlsh, 7, 2)"
 				+ " where t.bmbh = ? and t.userId = ? and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
@@ -538,38 +536,31 @@ public class YwshServiceImpl implements YwshServiceI {
 		String bmmc = (String)o[1];
 		String auditName = (String)o[2];
 		String lsh = (String)o[3];
-		int ywyId = (Integer)o[4];
-		String ywymc = (String)o[5];
-		String khbh = (String)o[6];
-		String khmc = (String)o[7];
+		int createId = (Integer)o[4];
+		String createName = (String)o[5];
+		String gysbh = (String)o[6];
+		String gysmc = (String)o[7];
 		String jsfsmc = (String)o[8];
 		BigDecimal hjje = new BigDecimal(o[9].toString());
 		String bz = (String)o[10];
 		String auditLevel = o[11].toString();
-		String khlxmc = o[12].toString();
-		int sxzq = o[13] == null ? 0 : Integer.valueOf(o[13].toString());
-		BigDecimal sxje = o[14] == null ? Constant.BD_ZERO : new BigDecimal(o[14].toString());
-		String ywlxId = o[15].toString();
-		String isAudit = o[16].toString();
-		Date createTime = DateUtil.stringToDate(o[17].toString(), DateUtil.DATETIME_PATTERN);
+		String ywlxId = o[12].toString();
+		String isAudit = o[13].toString();
+		Date createTime = DateUtil.stringToDate(o[14].toString(), DateUtil.DATETIME_PATTERN);
 		
 		y.setBmbh(bmbh);
 		y.setBmmc(bmmc);
 		y.setAuditName(auditName);
 		y.setLsh(lsh);
-		y.setYwymc(ywymc);
-		y.setKhmc(khmc);
+		y.setCreateName(createName);
+		y.setGysmc(gysmc);
 		y.setJsfsmc(jsfsmc);
 		y.setHjje(hjje);
 		y.setBz(bz);
 		y.setAuditLevel(auditLevel);
-		y.setKhlxmc(khlxmc);
-		y.setSxzq(sxzq);
-		y.setSxje(sxje);
 		y.setIsAudit(isAudit);
 		y.setCreateTime(createTime);
 		
-		y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
 
 //			String sql_levels = "select a.auditLevel, isnull(sh.createName, '') createName, isnull(sh.createTime, '') createTime"
 //					+ " from t_audit a"
@@ -609,22 +600,22 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setTimes(times);
 		}
 		
-		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
-				+ " from v_xs_latest AS mx"
-				+ " where bmbh = ? and khbh = ? and ywyId = ?"
-				+ " order by bmbh, khbh, ywyId, createTime";
+//		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
+//				+ " from v_xs_latest AS mx"
+//				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+//				+ " order by bmbh, khbh, ywyId, createTime";
+//		
+//		Map<String, Object> params_latest = new HashMap<String, Object>();
+//		params_latest.put("0", ywsh.getBmbh());
+//		params_latest.put("1", khbh);
+//		params_latest.put("2", ywyId);
 		
-		Map<String, Object> params_latest = new HashMap<String, Object>();
-		params_latest.put("0", ywsh.getBmbh());
-		params_latest.put("1", khbh);
-		params_latest.put("2", ywyId);
-		
-		Object[] ola = yszzDao.getMBySQL(sql_latest, params_latest);
-		if(ola != null){
-			y.setTimeLatest(ola[0].toString());
-			y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
-			y.setDelayDays(Integer.parseInt(ola[3].toString()));
-		}
+//		Object[] ola = yszzDao.getMBySQL(sql_latest, params_latest);
+//		if(ola != null){
+//			y.setTimeLatest(ola[0].toString());
+//			y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
+//			y.setDelayDays(Integer.parseInt(ola[3].toString()));
+//		}
 		return y;
 	}
 

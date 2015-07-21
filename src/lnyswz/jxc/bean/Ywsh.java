@@ -24,6 +24,7 @@ public class Ywsh {
 	private String auditName;
 	private String ywymc;
 	private String khmc;
+	private String gysmc;
 	private String jsfsmc;
 	private BigDecimal hjje;
 	private BigDecimal ysje;
@@ -126,6 +127,12 @@ public class Ywsh {
 	}
 	public void setYwymc(String ywymc) {
 		this.ywymc = ywymc;
+	}
+	public String getGysmc() {
+		return gysmc;
+	}
+	public void setGysmc(String gysmc) {
+		this.gysmc = gysmc;
 	}
 	public String getKhmc() {
 		return khmc;

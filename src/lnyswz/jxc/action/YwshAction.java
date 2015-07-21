@@ -192,7 +192,7 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 		writeJson(ywshService.listCgxqAudits(ywsh));
 	}
 	
-	public void listJhxqAudits(){
+	public void listCgjhAudits(){
 		User user = (User) session.get("user");
 		ywsh.setCreateId(user.getId());
 //		ywsh.setCreateName(user.getRealName());
