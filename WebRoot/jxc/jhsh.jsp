@@ -147,10 +147,10 @@ $(function(){
 					{field:'spbz',title:'包装',width:60,align:'center'},
 					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
 					{field:'zdwsl',title:'数量1',width:90,align:'center'},
-					{field:'zdwxsdj',title:'单价1',width:90,align:'center'},
+					{field:'zdwdj',title:'单价1',width:90,align:'center'},
 					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
 					{field:'cdwsl',title:'数量2',width:90,align:'center'},
-					{field:'cdwxsdj',title:'单价2',width:90,align:'center'},
+					{field:'cdwdj',title:'单价2',width:90,align:'center'},
 					{field:'spje',title:'金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
@@ -321,7 +321,7 @@ function jhsh_audit(){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshjhsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshJhsh.action',
 			data: {
 				bmbh: jhsh_did,
 				lsh: selected[0].lsh,
@@ -373,7 +373,7 @@ function jhsh_refuse(){
 		$.ajax({
 			type: "POST",
 			async: false,
-			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshjhsh.action',
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshJhsh.action',
 			data: {
 				bmbh: jhsh_did,
 				lsh: selected[0].lsh,
