@@ -877,7 +877,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search)"; 
+			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
 			params.put("search", "%" + xskp.getSearch() + "%");
 		}
 		
@@ -955,7 +955,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khbh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search)"; 
+			hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khbh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search or t.TXskp.bookmc like :search)"; 
 			params.put("search", "%" + xskp.getSearch() + "%");
 		}
 		
