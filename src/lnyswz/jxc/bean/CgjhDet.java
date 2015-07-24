@@ -34,9 +34,11 @@ public class CgjhDet {
 	private BigDecimal cdwjhsl;
 	private BigDecimal zdwyrsl;
 	private BigDecimal cdwyrsl;
-	
+		
 	//记录直送计划对应的业务入库数量
 	private BigDecimal zdwrksl;
+	
+	private BigDecimal kcsl;
 	
 	private String kfrklshs;
 	private String ywrklshs;
@@ -247,6 +249,14 @@ public class CgjhDet {
 
 	public void setDhsj(Date dhsj) {
 		this.dhsj = dhsj;
+	}
+
+	public BigDecimal getKcsl() {
+		return kcsl;
+	}
+
+	public void setKcsl(BigDecimal kcsl) {
+		this.kcsl = kcsl;
 	}
 
 	public String getKfrklshs() {

@@ -39,6 +39,7 @@ import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TJsfs;
 import lnyswz.jxc.model.TKfrk;
 import lnyswz.jxc.model.TLsh;
+import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
@@ -65,6 +66,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TYwzz> ywzzDao;
+	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -367,6 +369,14 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				c.setZdwyrsl(getYrsl(cgjhlsh, t.getSpbh(), "zdwsl"));
 				c.setCdwyrsl(getYrsl(cgjhlsh, t.getSpbh(), "cdwsl"));
 			}
+			
+			
+			String bmbh = cgjhlsh.substring(4, 6);
+			
+			BigDecimal ywkcsl = new BigDecimal(YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao)[1].toString());
+			BigDecimal lskcsl = new BigDecimal(LszzServiceImpl.getLszzSl(bmbh, t.getSpbh(), null, "z", lszzDao)[1].toString());
+			
+			c.setKcsl(ywkcsl.subtract(lskcsl));
 			
 			Set<TYwrk> tYwrks = t.getTYwrks();
 			if(tYwrks != null && tYwrks.size() > 0){
@@ -714,6 +724,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Autowired
 	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {
 		this.ywzzDao = ywzzDao;
+	}
+	
+	@Autowired
+	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
+		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

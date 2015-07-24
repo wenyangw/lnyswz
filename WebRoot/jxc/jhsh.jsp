@@ -154,6 +154,7 @@ $(function(){
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
 						}},
+					{field:'kcsl',title:'当前库存数量',width:90,align:'center'},	
 	    	    ]],
 	    	});
 	    },
