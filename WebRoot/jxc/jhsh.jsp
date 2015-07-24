@@ -125,7 +125,6 @@ $(function(){
 			{field:'levels',title:'进度',align:'center'},
 			{field:'names',title:'审批人',align:'center'},
 			{field:'times',title:'审批时间',align:'center'},
-			
 	    ]],
 	    view: cardView,
 	    onLoadSuccess:function(){
