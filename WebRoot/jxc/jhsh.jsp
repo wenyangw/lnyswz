@@ -27,7 +27,7 @@ $(function(){
 	var cardView = $.extend({}, $.fn.datagrid.defaults.view, {
 	    renderRow: function(target, fields, frozen, rowIndex, rowData){
 	        var cc = [];
-	        cc.push('<td colspan=' + fields.length + ' style="width:1000px; padding:10px 5px; border:0;">');
+	        cc.push('<td colspan=' + fields.length + ' style="width:1200px; padding:10px 5px; border:0;">');
 	        if (!frozen){
 	            cc.push('<table border= "0" width = 95%>');
 	            var j = 0;
@@ -154,7 +154,8 @@ $(function(){
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
 						}},
-					{field:'kcsl',title:'当前库存数量',width:90,align:'center'},	
+					{field:'kcsl',title:'当前库存数量',width:90,align:'center'},
+					{field:'zzl',title:'周转率',width:90,align:'center'},
 	    	    ]],
 	    	});
 	    },
@@ -283,13 +284,7 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	//收回商品库存信息
-	jxc.hideKc('#jxc_jhsh_layout');
-	jxc.spInfo($('#jxc_jhsh_layout'), '');
-
-	jxc_jhsh_ckCombo.combobox('selectedIndex', 0);
-	jxc_jhsh_pdlxCombo.combobox('selectedIndex', 0);
-	
+		
 	//初始化流水号
 	$.ajax({
 		type: "POST",
@@ -330,7 +325,7 @@ function jhsh_audit(){
 			success: function(d){
 				if(d.obj != undefined){
 					var row = d.obj;
-					$.messager.prompt('请确认', '是否将该笔采购需求审核通过？', function(bz){
+					$.messager.prompt('请确认', '是否将该笔采购计划审核通过？', function(bz){
 						if (bz != undefined){
 							$.ajax({
 								type: "POST",
@@ -421,53 +416,6 @@ function jhsh_refuse(){
 }
 //////////////////////////////////////////////以上为业务审核处理代码
 
-//////////////////////////////////////////////以下为业务审核列表处理代码
-
-function cjjhsh(){
-	var row = jhsh_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCj != '1'){
-			if(row.kfpdlsh == undefined){
-				$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
-					if (bz != undefined){
-						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/jhshAction!cjjhsh.action',
-							data : {
-								jhshlsh : row.jhshlsh,
-								bmbh: did,
-								lxbh: lx,
-								menuId : menuId,
-								bz : bz
-							},
-							method: 'post',
-							dataType : 'json',
-							success : function(d) {
-						 		jhsh_dg.datagrid('load');
-								jhsh_dg.datagrid('unselectAll');
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
-								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
-									if (r) {
-										var url = lnyw.bp() + '/jxc/jhshAction!printjhsh.action?jhshlsh=' + d.obj.jhshlsh + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-									}
-								});
-							}
-						});
-					}
-				});
-			}else{
-				$.messager.alert('警告', '选中的业务盘点已由库房处理，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的业务盘点记录已被冲减，请重新选择！',  'warning');
-		}
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
-	}
-}
 
 function searchjhsh(){
 	jhsh_dg.datagrid('load',{
@@ -490,7 +438,7 @@ function searchjhsh(){
 <!-- 			</div> -->
 <!-- 		</div> -->
     </div>
-    <div title="需求审核列表" data-options="closable:false" >
+    <div title="计划审核列表" data-options="closable:false" >
     	<table id='jxc_jhsh_dg'></table>
     </div>
 </div>

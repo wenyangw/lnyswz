@@ -52,28 +52,28 @@ jxc.auditLevelCgxq = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':
-		level['first'] = '1';
-		level['second'] = '3';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '04':
-		level['first'] = '1';
-		level['second'] = '2';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '05':
-		level['first'] = '1';
-		level['second'] = '2';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '07':
-		level['first'] = '1';
-		level['second'] = '3';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '08':
 		level['first'] = '1';
-		level['second'] = '3';
+		level['second'] = '2';
 		return level;
 		break;
 	default:
@@ -88,28 +88,28 @@ jxc.auditLevelCgjh = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':
-		level['first'] = '1';
-		level['second'] = '3';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '04':
-		level['first'] = '1';
-		level['second'] = '2';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '05':
-		level['first'] = '1';
-		level['second'] = '2';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '07':
-		level['first'] = '1';
-		level['second'] = '3';
+		level['first'] = '0';
+		level['second'] = '0';
 		return level;
 		break;
 	case '08':
-		level['first'] = '1';
-		level['second'] = '3';
+		level['first'] = '2';
+		level['second'] = '0';
 		return level;
 		break;
 	default:

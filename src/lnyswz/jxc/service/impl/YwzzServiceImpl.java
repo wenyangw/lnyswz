@@ -136,6 +136,16 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		return Constant.BD_ZERO;
 	}
 	
+	public static Object getZzl(String bmbh, String spbh, BaseDaoI<TYwzz> baseDao){
+		String sql = "select slzzl from v_ywzzl where bmbh = ? and spbh = ? and jzsj = ? ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", spbh);
+		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
+				
+		return baseDao.getBySQL(sql, params);
+	}
+	
 	/**
 	 * 更新业务总账数量
 	 */

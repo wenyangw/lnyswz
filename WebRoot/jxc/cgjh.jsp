@@ -844,7 +844,7 @@ function saveAll(){
 	effectRow['menuId'] = menuId;
 	//获取采购计划审批权限，无设置即为不需要审批
 	var needA = jxc.getAuditLevelCgjh(did);
-	if(needA != undefined){
+	if(needA != '0'){
 		effectRow['needAudit'] = needA;
 		$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
 	}else{

@@ -39,6 +39,7 @@ public class CgjhDet {
 	private BigDecimal zdwrksl;
 	
 	private BigDecimal kcsl;
+	private BigDecimal zzl;
 	
 	private String kfrklshs;
 	private String ywrklshs;
@@ -257,6 +258,14 @@ public class CgjhDet {
 
 	public void setKcsl(BigDecimal kcsl) {
 		this.kcsl = kcsl;
+	}
+
+	public BigDecimal getZzl() {
+		return zzl;
+	}
+
+	public void setZzl(BigDecimal zzl) {
+		this.zzl = zzl;
 	}
 
 	public String getKfrklshs() {

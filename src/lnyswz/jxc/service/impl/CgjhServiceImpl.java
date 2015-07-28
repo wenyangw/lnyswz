@@ -378,6 +378,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			
 			c.setKcsl(ywkcsl.subtract(lskcsl));
 			
+			BigDecimal zzl = new BigDecimal(YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao).toString());
+			
+			c.setZzl(zzl);
+			
+			
 			Set<TYwrk> tYwrks = t.getTYwrks();
 			if(tYwrks != null && tYwrks.size() > 0){
 				String ywrklshs = "";

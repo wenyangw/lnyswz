@@ -156,11 +156,11 @@ $(function(){
 					{field:'spbz',title:'包装',width:60,align:'center'},
 					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
 					{field:'zdwsl',title:'数量1',width:90,align:'center'},
-					{field:'zdwxsdj',title:'单价1',width:90,align:'center'},
+					{field:'zdwxsdj',title:'销售单价1',width:90,align:'center'},
 					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
 					{field:'cdwsl',title:'数量2',width:90,align:'center'},
-					{field:'cdwxsdj',title:'单价2',width:90,align:'center'},
-					{field:'spje',title:'金额',width:90,align:'center',
+					{field:'cdwxsdj',title:'销售单价2',width:90,align:'center'},
+					{field:'spje',title:'销售金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
 						}},
