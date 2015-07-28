@@ -700,7 +700,7 @@ function saveAll(){
 	}
 		
 	//直接填开发票时考察客户限额
-	if(jxc.notInExcludeKhs(xskp_did, $('input[name=khbh]').val())){
+	if(jxc.notInExcludeKhs(xskp_did, $('input[name=khbh]').val()) && jxc_xskp_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=xsthDetIds]').val()){
 			if(sxkh_xskp.khlxId == '02'){
 				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
