@@ -802,7 +802,7 @@ function saveXsth(){
 		return false;
 	}
 	
-	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
+	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=isFhth]').is(':checked')){
 			if(sxkh.khlxId == '02'){
 				if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
