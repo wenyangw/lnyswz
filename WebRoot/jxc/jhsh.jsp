@@ -132,6 +132,7 @@ $(function(){
 	    		url:'${pageContext.request.contextPath}/jxc/cgjhAction!detDatagrid.action',
 	    		queryParams: {
 	        		cgjhlsh: cgjhlsh,
+	        		fromOther: 'jhsh'
 	        	},
 	    		fit : true,
 	    	    border : false,

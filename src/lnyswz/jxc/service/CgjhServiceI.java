@@ -12,7 +12,7 @@ public interface CgjhServiceI {
 	public void updateIsHt(Cgjh cgjh);
 	public void updateHt(Cgjh cgjh);
 	public DataGrid datagrid(Cgjh cgjh);
-	public DataGrid detDatagrid(String cgjhlsh);
+	public DataGrid detDatagrid(Cgjh cgjh);
 	public DataGrid datagridDet(Cgjh cgjh);
 	public DataGrid toKfrk(String cgjhDetIds);
 	public DataGrid getSpkc(Cgjh cgjh);

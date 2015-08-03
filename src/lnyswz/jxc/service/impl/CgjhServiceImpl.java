@@ -339,11 +339,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	}
 	
 	@Override
-	public DataGrid detDatagrid(String cgjhlsh) {
+	public DataGrid detDatagrid(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TCgjhDet t where t.TCgjh.cgjhlsh = :cgjhlsh";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("cgjhlsh", cgjhlsh);
+		params.put("cgjhlsh", cgjh.getCgjhlsh());
 		List<TCgjhDet> l = detDao.find(hql, params);
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
 		for(TCgjhDet t : l){
@@ -366,21 +366,26 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				}
 				c.setKfrklshs(kfrklshs);
 				
-				c.setZdwyrsl(getYrsl(cgjhlsh, t.getSpbh(), "zdwsl"));
-				c.setCdwyrsl(getYrsl(cgjhlsh, t.getSpbh(), "cdwsl"));
+				c.setZdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "zdwsl"));
+				c.setCdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "cdwsl"));
 			}
 			
 			
-			String bmbh = cgjhlsh.substring(4, 6);
-			
-			BigDecimal ywkcsl = new BigDecimal(YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao)[1].toString());
-			BigDecimal lskcsl = new BigDecimal(LszzServiceImpl.getLszzSl(bmbh, t.getSpbh(), null, "z", lszzDao)[1].toString());
-			
-			c.setKcsl(ywkcsl.subtract(lskcsl));
-			
-			BigDecimal zzl = new BigDecimal(YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao).toString());
-			
-			c.setZzl(zzl);
+			if(cgjh.getFromOther() != null){
+				String bmbh = cgjh.getCgjhlsh().substring(4, 6);
+				
+				Object[] ywkc = YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao);
+				BigDecimal ywkcsl = ywkc == null ? BigDecimal.ZERO : new BigDecimal(ywkc[1].toString());
+				
+				Object[] lskc = LszzServiceImpl.getLszzSl(bmbh, t.getSpbh(), null, "z", lszzDao);
+				BigDecimal lskcsl = lskc == null ? BigDecimal.ZERO : new BigDecimal(lskc[1].toString());
+				
+				c.setKcsl(ywkcsl.subtract(lskcsl));
+				
+				
+				BigDecimal zzl = new BigDecimal(YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao).toString());
+				c.setZzl(zzl);
+			}
 			
 			
 			Set<TYwrk> tYwrks = t.getTYwrks();
@@ -399,7 +404,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				}
 				c.setYwrklshs(ywrklshs);
 				
-				c.setZdwrksl(getRksl(cgjhlsh, t.getSpbh()));
+				c.setZdwrksl(getRksl(cgjh.getCgjhlsh(), t.getSpbh()));
 			}
 			
 			nl.add(c);

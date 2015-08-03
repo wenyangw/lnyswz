@@ -167,7 +167,7 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 	}
 	
 	public void detDatagrid(){
-		writeJson(cgjhService.detDatagrid(cgjh.getCgjhlsh()));
+		writeJson(cgjhService.detDatagrid(cgjh));
 	}
 	
 	public void datagridDet(){
