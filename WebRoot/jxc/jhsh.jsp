@@ -34,17 +34,16 @@ $(function(){
 	            for(var i=0; i<fields.length; i++){
 	                var copts = $(target).datagrid('getColumnOption', fields[i]);
 	                //赋值，供显示单据明细调用
-	                console.info('fields:' + fields[i]);
 	                if(fields[i] == 'lsh'){
 	                	cgjhlsh = rowData.lsh;
 	                }
 	                if( j == 0){
 	                	cc.push('<tr><th class="read">单据信息:</th><td colspan="3"></td></tr>');
 	                }
-	                if( fields[i] == 'khmc'){
-	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
-	                	cc.push('<tr><th class="read">客户授信信息:</th><td colspan="3"></td></tr>');
-	                }
+// 	                if( fields[i] == 'gysmc'){
+// 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
+// 	                	cc.push('<tr><th class="read">供应商信息:</th><td colspan="3"></td></tr>');
+// 	                }
 	                if( fields[i] == 'timeLatest'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">最早一笔未付款提货:</th><td colspan="3"></td></tr>');
@@ -53,7 +52,6 @@ $(function(){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
 	                	
-	                	console.info(rowData[fields[i]]);
 	                	var levels = rowData[fields[i]].split(',');
 	                	var names = rowData[fields[i + 1]].split(',');
 	                	var times = rowData[fields[i + 2]].split(',');
@@ -119,6 +117,8 @@ $(function(){
 			{field:'lsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'创建时间',align:'center'},
 			{field:'createName',title:'创建人',align:'center'},
+			{field:'gysbh',title:'供应商编号',align:'center', hidden:true},
+			{field:'gysmc',title:'供应商名称',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'采购金额(元)',align:'center'},
 			{field:'bz',title:'备注',align:'center'},

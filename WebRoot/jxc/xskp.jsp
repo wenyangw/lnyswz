@@ -718,7 +718,6 @@ function saveAll(){
 		
 	var other = undefined;
 	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=khbh]').val()){
-		console.info('other');
 		other = jxc.isOther(
 			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
 			xskp_did, 
@@ -744,7 +743,7 @@ function saveAll(){
 			return false;
 		}
 		
-		if(Number(this.zdwdj) <= Number(this.dwcb)){
+		if(Number(this.zdwdj) <= Number(this.dwcb) || Number(this.cdwdj) <= Number(this.dwcb) * Number(this.zhxs) * (1 + SL)){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
 			}else{
@@ -1041,6 +1040,7 @@ function setEditing(){
      	}
     });
     
+    var zdjFocus = true;
     zdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
     		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
@@ -1048,10 +1048,41 @@ function setEditing(){
     	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
-     		cslEditor.target.focus();
-     		return false;
+//         	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
+//         		$.messager.confirm('提示', '请确认销售单价小于销售成本！是-继续， 否-返回', function(data){
+//          			if(data){
+//          				zdjFocus = false;
+//          				cslEditor.target.focus();
+//          				return false;
+//          			}else{
+//          				zdjEditor.target.focus();
+//          			}
+//          			return false;
+//          		});
+//         	}
+        	cslEditor.target.focus();
+			return false;
      	}
+     	
     });
+    
+    
+// 	    zdjEditor.target.bind('blur', function(event){
+// 	    	if(zdjFocus){
+// 	    	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
+// 	    		$.messager.confirm('提示', '请确认销售单价小于销售成本！是-继续， 否-返回', function(data){
+// 	     			if(data){
+// 	     				cslEditor.target.focus();
+// 	     			}else{
+// 	     				zdjEditor.target.focus();
+// 	     			}
+// 	     			//return false;
+// 	     		});
+// 	    	}
+// 	    	}
+// 	    });
+    
+
     
 //     cslEditor.target.bind('keyup', function(event){
 //     	if($(zhxsEditor.target).val() != 0){
