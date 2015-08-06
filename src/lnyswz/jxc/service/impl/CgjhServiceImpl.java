@@ -382,8 +382,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				
 				c.setKcsl(ywkcsl.subtract(lskcsl));
 				
-				
-				BigDecimal zzl = new BigDecimal(YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao).toString());
+				Object zzlo = YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao);
+				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
 				c.setZzl(zzl);
 			}
 			
