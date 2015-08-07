@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+	
+	
 <script type="text/javascript">
 var xsth_dg;
 var xsth_spdg;
