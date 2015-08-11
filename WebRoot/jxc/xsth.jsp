@@ -31,6 +31,7 @@ var thslEditor;
 var zslEditor;
 var zdjEditor;
 var cancelldwEditor;
+var cjldwEditor;
 var cslEditor;
 var cdjEditor;   
 var spjeEditor;
