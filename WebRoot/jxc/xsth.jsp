@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 	
-	
 <script type="text/javascript">
 var xsth_dg;
 var xsth_spdg;
@@ -33,6 +32,7 @@ var thslEditor;
 var zslEditor;
 var zdjEditor;
 var cancelldwEditor;
+var cjldwEditor;
 var cslEditor;
 var cdjEditor;   
 var spjeEditor;
@@ -656,14 +656,15 @@ function init(){
 	xsth_spdg.datagrid('reloadFooter',[{}]);
 }
 
+
 //判断行是否编辑完成
 function rowOk(){
 	if(editIndex == undefined){
 		return true;
 	}
 	if(keyOk()){
-// 		if($('input[name=isSx]').is(':checked')){
-// 		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+//		if($('input[name=isSx]').is(':checked')){
+//		if(!$('input[name=isFhth]').is(':checked') && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=isFhth]').is(':checked')){
 	 		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0 && spjeEditor.target.val() >0){
 	 			return true;
@@ -673,11 +674,11 @@ function rowOk(){
 				return true;
 			}
 		}
-// 		}else{
+//		}else{
 			//if(zslEditor.target.val() != 0){
 			//	return true;
 			//}
-// 		}
+//		}
 	}
 	return false;
 }
@@ -707,6 +708,7 @@ function enterEdit(rowIndex, isClick){
 			.datagrid('beginEdit', editIndex);
 	setEditing();
 }
+
 
 //单击行操作
 function clickRow(rowIndex, rowData){
@@ -740,31 +742,33 @@ function clickRow(rowIndex, rowData){
 
 //删除行
 function removeRow(){
-    if (editIndex == undefined){
-    	return; 
-    }
-    xsth_spdg.datagrid('cancelEdit', editIndex)
-            .datagrid('deleteRow', editIndex);
-    editIndex = undefined;
-    updateFooter();
-    jxc.hideKc('#jxc_xsth_layout');
+  if (editIndex == undefined){
+  	return; 
+  }
+  xsth_spdg.datagrid('cancelEdit', editIndex)
+          .datagrid('deleteRow', editIndex);
+  editIndex = undefined;
+  updateFooter();
+  jxc.hideKc('#jxc_xsth_layout');
 }
+
 
 //保存行
 function accept(){
-    if (rowOk()){
-    	xsth_spdg.datagrid('acceptChanges');
-    	jxc.hideKc('#jxc_xsth_layout');
-    }
+  if (rowOk()){
+  	xsth_spdg.datagrid('acceptChanges');
+  	jxc.hideKc('#jxc_xsth_layout');
+  }
 }
 
 //取消编辑行
 function cancelAll(){
 	xsth_spdg.datagrid('rejectChanges');
-    editIndex = undefined;
-    updateFooter();
-    jxc.hideKc('#jxc_xsth_layout');
+  editIndex = undefined;
+  updateFooter();
+  jxc.hideKc('#jxc_xsth_layout');
 }
+
 
 //提交数据到后台
 function saveXsth(){
@@ -823,30 +827,30 @@ function saveXsth(){
 	if($('input[name=isFh]').is(':checked')){
 		save();
 	}else{
- 		var spbhs = undefined;
- 		$.each(rows.slice(0, rows.length - 1), function(){
- 			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
- 				if(spbhs == undefined){
- 					spbhs = '' + this.spbh;
+		var spbhs = undefined;
+		$.each(rows.slice(0, rows.length - 1), function(){
+			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
+				if(spbhs == undefined){
+					spbhs = '' + this.spbh;
 				}else{
- 					spbhs += ',' + this.spbh;
- 				}
- 			}
- 		});
+					spbhs += ',' + this.spbh;
+				}
+			}
+		});
 		
- 		if(spbhs != undefined){
- 			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
- 				if(data){
- 					save();	
- 				}else{
- 					return false;
- 				}
- 			});
- 		}else{
- 			save();
- 		}
+		if(spbhs != undefined){
+			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+				if(data){
+					save();	
+				}else{
+					return false;
+				}
+			});
+		}else{
+			save();
+		}
 	
- 	}
+	}
 	
 	function save(){
 		if(NEED_AUDIT == "1" 
@@ -957,10 +961,9 @@ function saveXsth(){
 
 //处理编辑行
 function setEditing(){
-	
 	//加载字段
 	var editors = xsth_spdg.datagrid('getEditors', editIndex);
-    spbhEditor = editors[0];
+	spbhEditor = editors[0];
     spmcEditor = editors[1];
     spcdEditor = editors[2];
     spppEditor = editors[3];
@@ -1251,8 +1254,11 @@ function setEditing(){
 	    	}
     	}
     }
-    
 }
+
+
+
+
 //求和
 function updateFooter(){
  	var rows = xsth_spdg.datagrid('getRows');
@@ -1360,6 +1366,7 @@ function setValueBySpbh(rowData){
 	}
 }
 
+
 function checkKh(){
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/khAction!checkKh.action',
@@ -1380,6 +1387,7 @@ function checkKh(){
 	});
 }
 
+
 //根据客户编码获取客户详细信息
 function loadKh(khbh){
 	$.ajax({
@@ -1396,13 +1404,13 @@ function loadKh(khbh){
 			if(data.success){
 				//设置信息字段值
 				$('input[name=khmc]').val(data.obj.khmc);
-// 				$('input[name=sh]').val(data.obj.sh);
-// 				$('input[name=khh]').val(data.obj.khh);
-// 				$('input[name=dzdh]').val(data.obj.dzdh);
+//				$('input[name=sh]').val(data.obj.sh);
+//				$('input[name=khh]').val(data.obj.khh);
+//				$('input[name=dzdh]').val(data.obj.dzdh);
 				jxc_xsth_ywyCombo.combobox('setValue', data.obj.ywyId);
-// 				if(data.obj.isSx == '1'){
-// 					$('input[name=isSx]').prop('checked', 'ckecked');
-// 				}
+//				if(data.obj.isSx == '1'){
+//					$('input[name=isSx]').prop('checked', 'ckecked');
+//				}
 			}else{
 				$.messager.alert('提示', '供应商信息不存在！', 'error');
 			}
@@ -1456,6 +1464,7 @@ function khLoad(){
 		break;
 	}
 }
+
 
 function updateJsfs(){
 	$.ajax({
@@ -1583,13 +1592,13 @@ function searchXsth(){
 //////////////////////////////////////////////以下为库房出库列表处理代码
 
 
-// function searchKfckInXsth(){
-// 	xsth_kfckDg.datagrid('load',{
-// 		bmbh: xsth_did,
-// 		createTime: $('input[name=createTimeKfckInXsth]').val(),
-// 		fromOther: 'fromXsth'
-// 	});
-// }
+//function searchKfckInXsth(){
+//	xsth_kfckDg.datagrid('load',{
+//		bmbh: xsth_did,
+//		createTime: $('input[name=createTimeKfckInXsth]').val(),
+//		fromOther: 'fromXsth'
+//	});
+//}
 
 //////////////////////////////////////////////以上为库房出库列表处理代码
 
@@ -1631,7 +1640,7 @@ function toXsth(){
 							jxc_xsth_ywyCombo.combobox("setValue", rows[0].ywyId);
 							jxc_xsth_jsfsCombo.combobox("setValue", rows[0].jsfsId);
 							updateFooter();
-// 							$('input[name=xskplsh]').val(row.xskplsh);
+//							$('input[name=xskplsh]').val(row.xskplsh);
 							$('input[name=xskpDetIds]').val(xskpDetStr);
 							xsth_tabs.tabs('select', 0);
 						}
@@ -1653,7 +1662,6 @@ function searchXskpInXsth(){
 }
 
 ////////////////////////////////////////////以上为销售开票列表处理代码
-
 ////////////////////////////////////////////以下为业务入库列表处理代码
 function createXsthFromYwrk(){
 	var rows = xsth_ywrkDg.datagrid('getSelections');
@@ -1701,6 +1709,7 @@ function createXsthFromYwrk(){
 	}
 }
 
+
 function searchYwrkInXsth(){
 	xsth_ywrkDg.datagrid('load',{
 		bmbh: xsth_did,
@@ -1711,7 +1720,11 @@ function searchYwrkInXsth(){
 
 ////////////////////////////////////////////以上为业务入库列表处理代码
 
+
+
 </script>
+
+
 
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_xsth_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">

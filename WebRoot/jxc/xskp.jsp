@@ -742,7 +742,7 @@ function saveAll(){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
-		
+				
 		if(Number(this.zdwdj) <= Number(this.dwcb) || Number(this.cdwdj) <= Number(this.dwcb) * Number(this.zhxs) * (1 + SL)){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
