@@ -71,7 +71,9 @@ import lnyswz.jxc.util.Constant;
 /**
  * 销售提货实现类
  * @author 王文阳
- *
+ * @edited
+ * 	2015.08.12 增加打印销售合同
+ * 	2015.08.12 直送业务不记入临时出库（各部门一致吗）
  */
 @Service("xsthService")
 public class XsthServiceImpl implements XsthServiceI {
@@ -255,7 +257,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			if("1".equals(xsth.getIsLs())){
+			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -476,6 +478,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if("1".equals(yTXsth.getIsLs())){
+				//当直送提货并未确认收货数量，冲减时不更新lszz（些处用非进行处理）
+				if( ! ("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0))
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				
 			}
@@ -499,6 +503,93 @@ public class XsthServiceImpl implements XsthServiceI {
 	
 	@Override
 	public DataGrid printXsth(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		int j = 0;
+		Set<TXskp> xskps = null;
+		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("xsthlsh", xsth.getXsthlsh());
+		List<TXsthDet> dets = detDao.find(hql, params);
+		//for (TXsthDet yd : tXsth.getTXsthDets()) {
+		for (TXsthDet yd : dets) {
+			XsthDet xsthDet = new XsthDet();
+			BeanUtils.copyProperties(yd, xsthDet);
+			nl.add(xsthDet);
+			if(j == 0){
+				xskps = yd.getTXskps();
+			}
+			j++;
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+				
+		String xskplsh = "";
+		if(xskps != null && xskps.size() > 0){
+			xskplsh += xskps.iterator().next().getXskplsh();
+		}
+		
+		String bz = "";
+		if(tXsth.getYwymc() != null){
+			bz = " " + tXsth.getYwymc().trim();
+		}
+		if("0".equals(tXsth.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXsth.getShdz() != null){
+			bz += " " + tXsth.getShdz();
+		}
+		if(tXsth.getThr() != null){
+			bz += " " + tXsth.getThr();
+		}
+		if(tXsth.getCh() != null){
+			bz += " " + tXsth.getCh();
+		}
+		
+		bz += xskplsh;
+				
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "销   售   提   货   单");
+		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
+		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
+			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
+		}else{
+			map.put("bmmc", tXsth.getBmmc());
+		}
+		map.put("createTime", DateUtil.dateToString(tXsth.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("khmc", tXsth.getKhmc());
+		map.put("khbh", tXsth.getKhbh());
+		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
+		map.put("ckmc", tXsth.getCkmc());
+		map.put("hjje", df.format(tXsth.getHjje()));
+		map.put("hjsl", tXsth.getHjsl());
+		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		map.put("bz", tXsth.getBz() + " " + bz.trim());
+		map.put("memo", tXsth.getBz() + " " + bz.trim());
+		map.put("printName", xsth.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid printXsht(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		

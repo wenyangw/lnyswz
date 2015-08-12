@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-	
+
+<!-- 
+2015.08.12
+	增加直送打印销售合同
+-->
+
 <script type="text/javascript">
 var xsth_dg;
 var xsth_spdg;
@@ -950,6 +955,17 @@ function saveXsth(){
 					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 					//	}
 					//});
+			    	
+			    	//直送提货单打印销售合同，是否有金额限定未定
+			    	if($('input[name=isZs]').is(':checked')){
+				    	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
+							if (r) {
+								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
+								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							}
+						});
+			    	}
+			    	
 				}  
 			},
 			error: function(){
@@ -1573,6 +1589,56 @@ function printXsth(){
 				}
 			}
 		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function printXsht(){
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+	 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+
+function confirmThsl(){
+	var row = xsth_dghDg.datagrid('getSelected');
+	if(row != undefined){
+		if(row.isKp != '1'){
+			$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
+				if (thsl != undefined){
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/xsthAction!updateThsl.action',
+						data : {
+							id : row.id,
+							thsl: thsl,
+							fromOther: 'xsth',
+							bmbh : jxc_kfck_did,
+							menuId : jxc_kfck_menuId,
+						},
+						dataType : 'json',
+						success : function(d) {
+							kfck_xsthDg.datagrid('reload');
+							kfck_xsthDg.datagrid('unselectAll');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						}
+					});
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
+		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

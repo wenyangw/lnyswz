@@ -3,6 +3,12 @@ package lnyswz.jxc.service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Xsth;
 
+/**
+ * 
+ * @author Wangwy
+ * @edited
+ * 	2015.08.12 增加打印销售合同
+ */
 public interface XsthServiceI {
 	public Xsth save(Xsth xsth);
 	public void cancelXsth(Xsth xsth);
@@ -13,6 +19,7 @@ public interface XsthServiceI {
 	public DataGrid datagridDet(Xsth xsth);
 	public DataGrid getSpkc(Xsth xsth);
 	public DataGrid printXsth(Xsth xsth);
+	public DataGrid printXsht(Xsth xsth);
 	public DataGrid printXsthByBgy(Xsth xsth);
 	public void updateThsl(Xsth xsth);
 	public void updateLock(Xsth xsth);

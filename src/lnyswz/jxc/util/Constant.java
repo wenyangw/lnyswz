@@ -4,6 +4,12 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Wangwy
+ * @edited
+ * 	2015.08.12 增加打印销售合同的常量
+ */
 public interface Constant {
 	
 	public static final String NEED_AUDIT = "1";
@@ -72,6 +78,15 @@ public interface Constant {
 	
 	//销售提货单
 	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
+		put("01","xsth_report_ys");
+		put("04","xsth_report_b_ns");
+		put("05","xsth_report_b_zy");
+		put("07","xsth_report_jy");
+		put("08","xsth_report_s_dl");
+	}};
+	
+	//销售合同
+	public static final Map<String, String> REPORT_XSHT = new HashMap<String, String>(){{
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
 		put("05","xsth_report_b_zy");

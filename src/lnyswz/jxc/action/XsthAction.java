@@ -22,7 +22,10 @@ import lnyswz.jxc.util.Export;
 /**
  * 销售提货Action
  * @author 王文阳
- *
+ * @edited
+ * 	2015.08.12 增加打印销售合同
+ * 
+ * 
  */
 @Namespace("/jxc")
 @Action("xsthAction")
@@ -173,6 +176,13 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
+	}
+	
+	public void printXsht() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsht(xsth);
+		Export.print(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()));
 	}
 	
 	public void printThd() {
