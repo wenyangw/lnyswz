@@ -25,6 +25,9 @@ var jxc_xsth_fhCombo;
 var jxc_xsth_ywyCombo;
 var jxc_xsth_jsfsCombo;
 
+var xsthRow;
+var detDg;
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -231,7 +234,8 @@ $(function(){
             return '<div style="padding:2px"><table id="xsth-ddv-' + index + '"></table></div>';
         },
         onExpandRow: function(index,row){
-            $('#xsth-ddv-'+index).datagrid({
+        	xsthRow = xsth_dg.datagrid('selectRow', index).datagrid('getSelected');
+            detDg = $('#xsth-ddv-'+index).datagrid({
                 url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
                 fitColumns:false,
                 singleSelect:true,
@@ -242,6 +246,7 @@ $(function(){
         			xsthlsh: row.xsthlsh,
         		},
                 columns:[[
+					{field:'id',title:'id',width:20,align:'center',hidden:true},      
                     {field:'spbh',title:'商品编号',width:200,align:'center'},
                     {field:'spmc',title:'名称',width:100,align:'center'},
                     {field:'spcd',title:'产地',width:100,align:'center'},
@@ -286,6 +291,7 @@ $(function(){
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+        	        
                 ]],
                 onResize:function(){
                 	xsth_dg.datagrid('fixDetailRowHeight',index);
@@ -1608,8 +1614,59 @@ function printXsht(){
 	}
 }
 
-
+//要判断处理的单据有效性（冲减、开票、直送）
 function confirmThsl(){
+	if(detDg != undefined){
+		var detRow = detDg.datagrid('getSelected');
+		if(detRow != null){
+			if(xsthRow.isZs == '1'){
+				if(xsthRow.isCancel == '1'){
+					if(xsthRow.isKp == '1'){
+						$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
+							if (thsl != undefined){
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/xsthAction!confirmThsl.action',
+									data : {
+										id : detRow.id,
+										thsl: thsl,
+										//fromOther: 'xsth',
+										bmbh : jxc_kfck_did,
+										menuId : jxc_kfck_menuId,
+									},
+									dataType : 'json',
+									success : function(d) {
+										detDg.datagrid('reload');
+										detDg.datagrid('unselectAll');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
+					}	
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
+			}
+			detDg = undefined;
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+	
+	
+
 	var row = xsth_dghDg.datagrid('getSelected');
 	if(row != undefined){
 		if(row.isKp != '1'){
