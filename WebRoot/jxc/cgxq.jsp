@@ -333,8 +333,8 @@ function saveAll(){
 		effectRow['dhsj'] = $('input[name=dhsj]').val();
 		
 		var needA = jxc.getAuditLevelCgxq(did);
+		effectRow['needAudit'] = needA;
 		if(needA != '0'){
-			effectRow['needAudit'] = needA;
 			$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
 		}
 	}else{
