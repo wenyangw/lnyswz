@@ -949,6 +949,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
+		if(xsth.getIsZs() != null){
+			hql += " and t.TXsth.isZs = '1'";
+		}
+		
 		//保管员筛选
 		if(xsth.getBgyId() > 0){
 			hql += " and t.spbh in (select sb.spbh from TSpBgy sb where sb.depId = :depId and sb.bgyId = :bgyId and sb.ckId = :ckId)";
