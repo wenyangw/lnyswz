@@ -653,8 +653,7 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
 					queryParams:{
 						bmbh: did,
-						fromOther: 'xsth',
-						isZs: '1',
+						fromOther: 'fromCgjh',
 					}
 				});
 			}
@@ -1675,6 +1674,84 @@ function createCgjhFromSpkc(){
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////以下为销售提货(直送)列表处理内容
+
+function createCgjhFromXsth(){
+	var rows = cgjh_xsthDg.datagrid('getSelections');
+	var xsthDetIds = [];
+	var flag = true;
+	if(rows.length > 0){
+    	if(rows.length > 1){
+    		var preRow = undefined;
+		    $.each(rows, function(index){
+		    	if(index != 0){
+		    		if(this.xsthlsh != preRow.xsthlsh){
+		    			$.messager.alert('提示', '请选择同一张销售提货单的商品进行出库！', 'error');
+						flag = false;
+						return false;
+		    		}else{
+		    			preRow = this;
+		    		}
+		    	}
+		    	preRow = this;
+		    });
+    	}
+    	if(flag){
+			$.messager.confirm('请确认', '是否要将选中记录进行采购？', function(r) {
+				if (r) {
+					for ( var i = 0; i < rows.length; i++) {
+						xsthDetIds.push(rows[i].id);
+					}
+					var xsthDetIdsStr = xsthDetIds.join(',');
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/xsthAction!toCgjh.action',
+						data : {
+							xsthDetIds : xsthDetIdsStr
+						},
+						dataType : 'json',
+						success : function(d) {
+							cgjh_spdg.datagrid('loadData', d.rows);
+							updateFooter();
+							$('input[name=xsthDetIds]').val(xsthDetIdsStr);
+//							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
+							//$('input[name=khbh]').val(rows[0].khbh);
+							//$('input[name=khmc]').val(rows[0].khmc);
+							jxc_cgjh_ckCombo.combobox('setValue', rows[0].ckId);
+							if(rows[0].isFh == '1'){
+								
+								$('#jxc_cgjh_isFh').prop('checked', 'checked');
+								$('.jxc_cgjh_isFh').css('display', 'table-cell');
+								jxc_cgjh_fhCombo.combobox('setValue', rows[0].fhId);
+							}
+							if(rows[0].thfs == '1'){
+								$('input#thfs_zt').attr('checked', 'checked');
+								$('.thfs_zt').css('display', 'table-cell');
+								$('.thfs_sh').css('display', 'none');
+								$('input[name=thr]').val(rows[0].thr);
+								$('input[name=ch]').val(rows[0].ch);
+							}else{
+								$('input#thfs_sh').attr('checked', 'checked');
+								$('input[name=shdz]').val(rows[0].shdz);
+								$('.thfs_zt').css('display', 'none');
+								$('.thfs_sh').css('display', 'table-cell');
+							}
+						
+							
+							cgjh_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+    	}
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
+///////////////////////////////////以上为销售提货(直送)列表处理内容
 
 
 </script>

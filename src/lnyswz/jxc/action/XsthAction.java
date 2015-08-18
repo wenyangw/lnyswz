@@ -78,6 +78,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.toKfck(xsth));
 	}
 	
+	public void toCgjh(){
+		writeJson(xsthService.toCgjh(xsth));
+	}
+	
 	public void refreshXsth(){
 		writeJson(xsthService.refreshXsth(xsth));
 	}

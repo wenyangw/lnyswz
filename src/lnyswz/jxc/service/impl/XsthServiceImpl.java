@@ -949,9 +949,11 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
-		if(xsth.getIsZs() != null){
+		if(xsth.getFromOther().equals("fromCgjh")){
 			hql += " and t.TXsth.isZs = '1'";
 		}
+		
+		
 		
 		//保管员筛选
 		if(xsth.getBgyId() > 0){
@@ -962,11 +964,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		//通过isKp字段来判断该查询来源，
-		if("1".equals(xsth.getIsKp())){
+		if(xsth.getFromOther().equals("fromXskp") && "1".equals(xsth.getIsKp())){
 			hql += " and t.TXsth.isLs = '1' and t.TXsth.isKp = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TXskpDet tkd where tkd.TXskp in elements(t.TXskps) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.kpsl";
-		}else{
+		}
+		
+		if(xsth.getFromOther().equals("fromKfck")){
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
 			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			if(!"fh".equals(xsth.getSearch())){
@@ -1100,6 +1104,53 @@ public class XsthServiceImpl implements XsthServiceI {
 		dg.setRows(nl);
 		return dg;
 		
+	}
+	
+	@Override
+	public DataGrid toCgjh(Xsth xsth){
+		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwsl, isnull(sum(cdwsl), 0) cdwsl from t_xsth_det ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		String xsthDetIds = xsth.getXsthDetIds();
+		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
+			sql += "where id in (" + xsthDetIds + ")";
+		}
+		sql += " group by spbh";
+		
+		List<Object[]> l = detDao.findBySQL(sql, params);
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			XsthDet xd = new XsthDet();
+			BeanUtils.copyProperties(sp, xd);
+			xd.setZjldwId(sp.getZjldw().getId());
+			xd.setZjldwmc(sp.getZjldw().getJldwmc());
+			xd.setZdwsl(zdwsl);
+			if(sp.getCjldw() != null){
+				xd.setCjldwId(sp.getCjldw().getId());
+				xd.setCjldwmc(sp.getCjldw().getJldwmc());
+				xd.setZhxs(sp.getZhxs());
+				xd.setCdwsl(cdwsl);
+//				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
+//					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//				}else{
+//					xd.setCdwthsl(Constant.BD_ZERO);
+//					xd.setCdwytsl(Constant.BD_ZERO);
+//				}
+			}
+			nl.add(xd);
+		}
+		nl.add(new XsthDet());
+		DataGrid dg = new DataGrid();
+		dg.setRows(nl);
+		return dg;
 	}
 	
 	/**
