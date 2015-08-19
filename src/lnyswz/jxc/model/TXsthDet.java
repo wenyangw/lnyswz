@@ -50,6 +50,7 @@ public class TXsthDet implements java.io.Serializable {
 	
 	private Set<TKfck> TKfcks;
 	private Set<TXskp> TXskps;
+	private TCgjh TCgjh;
 	
 	public TXsthDet() {
 	}
@@ -57,7 +58,7 @@ public class TXsthDet implements java.io.Serializable {
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
 			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
-			BigDecimal thsl, Set<TKfck> TKfcks, Set<TXskp> TXskps) {
+			BigDecimal thsl, Set<TKfck> TKfcks, Set<TXskp> TXskps, TCgjh TCgjh) {
 		this.id = id;
 		this.TXsth = TXsth;
 		this.spbh = spbh;
@@ -83,6 +84,7 @@ public class TXsthDet implements java.io.Serializable {
 		//this.lastRksl = lastRksl;
 		this.TKfcks = TKfcks;
 		this.TXskps = TXskps;
+		this.TCgjh = TCgjh;
 	}
 
 	@Id
@@ -302,5 +304,15 @@ public class TXsthDet implements java.io.Serializable {
 	
 	public void setTXskps(Set<TXskp> TXskps) {
 		this.TXskps = TXskps;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cgjhlsh")
+	public TCgjh getTCgjh() {
+		return this.TCgjh;
+	}
+
+	public void setTCgjh(TCgjh TCgjh) {
+		this.TCgjh = TCgjh;
 	}
 }

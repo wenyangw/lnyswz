@@ -56,6 +56,7 @@ public class TCgjh implements java.io.Serializable {
 	private String isZs;
 	private Set<TCgjhDet> TCgjhDets = new HashSet<TCgjhDet>(0);
 	private Set<TCgxqDet> TCgxqs = new HashSet<TCgxqDet>(0);
+	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
 //	private TYwrk TYwrk;
 	
 
@@ -68,7 +69,7 @@ public class TCgjh implements java.io.Serializable {
 			String isHt, String returnHt, Integer htId, Date htTime, String htName, String isCancel, Date cancelTime,
 			Integer cancelId, String cancelName, String isCompleted, Date completeTime, Integer completeId, 
 			String completeName, String needAudit, String isAudit, String isZs, Set<TCgjhDet> TCgjhDets, 
-			Set<TCgxqDet> TCgxqs) {
+			Set<TCgxqDet> TCgxqs, Set<TXsthDet> TXsths) {
 		this.cgjhlsh = cgjhlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -100,6 +101,7 @@ public class TCgjh implements java.io.Serializable {
 		this.isZs = isZs;
 		this.TCgjhDets = TCgjhDets;
 		this.TCgxqs = TCgxqs;
+		this.TXsths = TXsths;
 //		this.TYwrk = TYwrk;
 	}
 
@@ -394,6 +396,15 @@ public class TCgjh implements java.io.Serializable {
 
 	public void setTCgxqs(Set<TCgxqDet> TCgxqs) {
 		this.TCgxqs = TCgxqs;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TCgjh")
+	public Set<TXsthDet> getTXsths() {
+		return TXsths;
+	}
+
+	public void setTXsths(Set<TXsthDet> tXsths) {
+		TXsths = tXsths;
 	}
 	
 //	@ManyToOne(fetch = FetchType.LAZY)

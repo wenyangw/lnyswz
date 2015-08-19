@@ -950,7 +950,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getFromOther().equals("fromCgjh")){
-			hql += " and t.TXsth.isZs = '1'";
+			hql += " and t.TXsth.isZs = '1' and t.cgjhlsh is not null";
 		}
 		
 		
@@ -1129,6 +1129,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
 			BeanUtils.copyProperties(sp, xd);
+			xd.setShdz(xsth.getShdz());
 			xd.setZjldwId(sp.getZjldw().getId());
 			xd.setZjldwmc(sp.getZjldw().getJldwmc());
 			xd.setZdwsl(zdwsl);

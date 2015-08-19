@@ -527,10 +527,6 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
-        	{field:'cgjhlsh',title:'采购计划流水号',align:'center',
-           		formatter: function(value){
-           			return lnyw.memo(value, 15);
-           		}},
 //         	{field:'isLs',title:'*临时',align:'center',sortable:true,
 //         		formatter : function(value) {
 // 					if (value == '1') {
@@ -964,6 +960,7 @@ function saveAll(){
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['bz'] = $('input[name=jxc_cgjh_bz]').val();
 	effectRow['cgxqDetIds'] = $('input[name=cgxqDetIds]').val();
+	effectRow['xsthDetIds'] = $('input[name=cgjh_xsthDetIds]').val();
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
 	effectRow['menuId'] = menuId;
@@ -1709,37 +1706,19 @@ function createCgjhFromXsth(){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/xsthAction!toCgjh.action',
 						data : {
-							xsthDetIds : xsthDetIdsStr
+							xsthDetIds : xsthDetIdsStr,
+							shdz: rows[0].shdz
 						},
 						dataType : 'json',
+						type: 'post',
 						success : function(d) {
 							cgjh_spdg.datagrid('loadData', d.rows);
 							updateFooter();
-							$('input[name=xsthDetIds]').val(xsthDetIdsStr);
+							$('input[name=cgjh_xsthDetIds]').val(xsthDetIdsStr);
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
-							//$('input[name=khbh]').val(rows[0].khbh);
-							//$('input[name=khmc]').val(rows[0].khmc);
 							jxc_cgjh_ckCombo.combobox('setValue', rows[0].ckId);
-							if(rows[0].isFh == '1'){
-								
-								$('#jxc_cgjh_isFh').prop('checked', 'checked');
-								$('.jxc_cgjh_isFh').css('display', 'table-cell');
-								jxc_cgjh_fhCombo.combobox('setValue', rows[0].fhId);
-							}
-							if(rows[0].thfs == '1'){
-								$('input#thfs_zt').attr('checked', 'checked');
-								$('.thfs_zt').css('display', 'table-cell');
-								$('.thfs_sh').css('display', 'none');
-								$('input[name=thr]').val(rows[0].thr);
-								$('input[name=ch]').val(rows[0].ch);
-							}else{
-								$('input#thfs_sh').attr('checked', 'checked');
-								$('input[name=shdz]').val(rows[0].shdz);
-								$('.thfs_zt').css('display', 'none');
-								$('.thfs_sh').css('display', 'table-cell');
-							}
-						
-							
+							$('#jxc_cgjh_isZs').prop('checked', 'checked');
+
 							cgjh_tabs.tabs('select', 0);
 						}
 					});
@@ -1764,7 +1743,7 @@ function createCgjhFromXsth(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
 				<table class="tinfo">
 					<tr>
-						<td colspan="4">合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" name="isZs"></td>
+						<td colspan="4">合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs"></td>
 <!-- 						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" /> -->
 						<th class="read"></th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="cgjhLsh" class="read"></div></td>
@@ -1788,6 +1767,7 @@ function createCgjhFromXsth(){
 					</tr>
 				</table>
 				<input name="cgxqDetIds" type="hidden">
+				<input name="cgjh_xsthDetIds" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_cgjh_spdg'></table>

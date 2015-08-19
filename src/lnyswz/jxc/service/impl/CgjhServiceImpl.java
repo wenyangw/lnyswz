@@ -44,6 +44,7 @@ import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TUser;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYwhs;
 import lnyswz.jxc.model.TYwhsDet;
 import lnyswz.jxc.model.TYwrk;
@@ -62,6 +63,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TCgjhDet> detDao;
 	private BaseDaoI<TCgxqDet> cgxqDao;
+	private BaseDaoI<TXsthDet> xsthDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
@@ -103,6 +105,17 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				tCgxqDet.setTCgjh(tCgjh);
 			}
 		}
+		
+		//如果从销售提货(直送)生成的计划，进行关联，并将需求设置完成
+		String xsthDetIds = cgjh.getXsthDetIds();
+		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
+			for(String detId : xsthDetIds.split(",")){
+				TXsthDet tXsthDet = xsthDao.load(TXsthDet.class, Integer.valueOf(detId));
+				tXsthDet.setTCgjh(tCgjh);
+			}
+		}
+		
+		
 		//处理商品明细
 		Set<TCgjhDet> tDets = new HashSet<TCgjhDet>();
 		ArrayList<CgjhDet> cgjhDets = JSON.parseObject(cgjh.getDatagrid(), new TypeReference<ArrayList<CgjhDet>>(){});
@@ -714,6 +727,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Autowired
 	public void setCgxqDao(BaseDaoI<TCgxqDet> cgxqDao) {
 		this.cgxqDao = cgxqDao;
+	}
+
+	@Autowired
+	public void setXsthDao(BaseDaoI<TXsthDet> xsthDao) {
+		this.xsthDao = xsthDao;
 	}
 
 	@Autowired

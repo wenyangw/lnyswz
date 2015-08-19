@@ -223,6 +223,11 @@ $(function(){
         			return lnyw.memo(value, 15);
         		}},
         	{field:'shbz',title:'审批说明',align:'center'},
+        	{field:'cgjhlsh',title:'采购计划流水号',align:'center',
+           		formatter: function(value){
+           			return lnyw.memo(value, 15);
+           		}},
+
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
