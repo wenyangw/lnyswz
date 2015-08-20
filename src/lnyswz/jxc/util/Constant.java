@@ -89,7 +89,7 @@ public interface Constant {
 	public static final Map<String, String> REPORT_XSHT = new HashMap<String, String>(){{
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
-		put("05","xsth_report_b_zy");
+		put("05","gxht_report1");
 		put("07","xsth_report_jy");
 		put("08","xsth_report_s_dl");
 	}};
@@ -158,7 +158,7 @@ public interface Constant {
 		put("04","辽宁印刷物资有限责任公司");
 		put("05","辽宁文达纸业有限公司");
 		put("07","辽宁印刷物资有限责任公司");
-		put("08","辽宁印刷物资有限责任公司大连分公司");
+		put("08","辽宁印刷物资有限责任公司大连分公司");	
 		
 	}};
 	

@@ -593,10 +593,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		
-		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		int j = 0;
-		Set<TXskp> xskps = null;
 		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("xsthlsh", xsth.getXsthlsh());
@@ -606,70 +604,37 @@ public class XsthServiceImpl implements XsthServiceI {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
 			nl.add(xsthDet);
-			if(j == 0){
-				xskps = yd.getTXskps();
-			}
-			j++;
+//			if(j == 0){
+//				xskps = yd.getTXskps();
+//			}
+//			j++;
 		}
+		
 		int num = nl.size();
-		if (num < Constant.REPORT_NUMBER) {
-			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+		if (num < 4) {
+			for (int i = 0; i < (4 - num); i++) {
 				nl.add(new XsthDet());
 			}
 		}
-				
-		String xskplsh = "";
-		if(xskps != null && xskps.size() > 0){
-			xskplsh += xskps.iterator().next().getXskplsh();
-		}
-		
-		String bz = "";
-		if(tXsth.getYwymc() != null){
-			bz = " " + tXsth.getYwymc().trim();
-		}
-		if("0".equals(tXsth.getThfs())){
-			bz += " 送货：";
-		}else{
-			bz += " 自提：";
-		}
-		if(tXsth.getShdz() != null){
-			bz += " " + tXsth.getShdz();
-		}
-		if(tXsth.getThr() != null){
-			bz += " " + tXsth.getThr();
-		}
-		if(tXsth.getCh() != null){
-			bz += " " + tXsth.getCh();
-		}
-		
-		bz += xskplsh;
 				
 		DecimalFormat df=new DecimalFormat("#,##0.00");
 		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "销   售   提   货   单");
-		map.put("head", Constant.XSTH_HEAD.get(tXsth.getBmbh()));
-		map.put("footer", Constant.XSTH_FOOT.get(tXsth.getBmbh()));
-		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
-		if("1".equals(Constant.XSTH_PRINT_LSBZ.get(xsth.getBmbh()))){
-			map.put("bmmc", tXsth.getBmmc() + "(" + (tXsth.getToFp().equals("1") ? "是" : "否") + ")");
-		}else{
-			map.put("bmmc", tXsth.getBmmc());
-		}
-		map.put("createTime", DateUtil.dateToString(tXsth.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("bmmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
-		map.put("khbh", tXsth.getKhbh());
-		map.put("fhmc", tXsth.getFhmc() != null ? "分户：" + tXsth.getFhmc() : "");
-		map.put("ckmc", tXsth.getCkmc());
+		map.put("shdz", tXsth.getShdz());
 		map.put("hjje", df.format(tXsth.getHjje()));
-		map.put("hjsl", tXsth.getHjsl());
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
-		map.put("bz", tXsth.getBz() + " " + bz.trim());
-		map.put("memo", tXsth.getBz() + " " + bz.trim());
-		map.put("printName", xsth.getCreateName());
-		map.put("printTime", DateUtil.dateToString(new Date()));
+		
+		System.out.println("bmmc:" + Constant.BMMCS.get(tXsth.getBmbh()));
+		System.out.println("khmc:" + tXsth.getKhmc());
+		System.out.println("xsthlsh:" + tXsth.getXsthlsh());
+		System.out.println("shdz:" + tXsth.getShdz());
+		System.out.println("hjje:" + df.format(tXsth.getHjje()));
+		System.out.println("hjje_b:" + AmountToChinese.numberToChinese(hjje_b));
+		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
