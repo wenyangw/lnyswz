@@ -1608,9 +1608,36 @@ function printXsth(){
 function printXsht(){
 	var selected = xsth_dg.datagrid('getSelected');
  	if (selected != undefined) {
-	 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
+ 		if(selected.isCancel == '0'){
+ 			if(selected.isKp == '0'){
+ 				if(selected.isZs == '1'){
+				 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+ 	 			}else{
+ 	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
+ 	 	 		}
+
+ 			}else{
+ 	 			$.messager.alert('警告', '选择的记录已开票，请重新选择！',  'warning');
+ 	 		}
+ 		}else{
+ 			$.messager.alert('警告', '选择的记录已取消，请重新选择！',  'warning');
+ 		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function printShd(){
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+	 	$.messager.confirm('请确认', '是否打印收货确认单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
+				var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});

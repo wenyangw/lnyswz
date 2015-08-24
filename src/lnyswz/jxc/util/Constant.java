@@ -89,7 +89,16 @@ public interface Constant {
 	public static final Map<String, String> REPORT_XSHT = new HashMap<String, String>(){{
 		put("01","xsth_report_ys");
 		put("04","xsth_report_b_ns");
-		put("05","gxht_report1");
+		put("05","gxht_report");
+		put("07","xsth_report_jy");
+		put("08","xsth_report_s_dl");
+	}};
+
+	//收货确认单
+	public static final Map<String, String> REPORT_SHQR = new HashMap<String, String>(){{
+		put("01","xsth_report_ys");
+		put("04","xsth_report_b_ns");
+		put("05","shqrd_report");
 		put("07","xsth_report_jy");
 		put("08","xsth_report_s_dl");
 	}};

@@ -257,6 +257,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
+			//销售提货直接新生成且不是直送，计入临时总账
 			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
@@ -478,7 +479,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if("1".equals(yTXsth.getIsLs())){
-				//当直送提货并未确认收货数量，冲减时不更新lszz（些处用非进行处理）
+				//当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
 				if( ! ("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0))
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				
@@ -589,6 +590,49 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 	
 	@Override
+	public DataGrid printShd(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		int j = 0;
+		Set<TXskp> xskps = null;
+		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("xsthlsh", xsth.getXsthlsh());
+		List<TXsthDet> dets = detDao.find(hql, params);
+		//for (TXsthDet yd : tXsth.getTXsthDets()) {
+		for (TXsthDet yd : dets) {
+			XsthDet xsthDet = new XsthDet();
+			BeanUtils.copyProperties(yd, xsthDet);
+			nl.add(xsthDet);
+			if(j == 0){
+				xskps = yd.getTXskps();
+			}
+			j++;
+		}
+		int num = nl.size();
+		if (num < 4) {
+			for (int i = 0; i < (4 - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "收   货   确   认   单");
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		map.put("khmc", tXsth.getKhmc());
+		map.put("gysmc", "");
+		map.put("shdz", tXsth.getShdz());
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+
+	
+	@Override
 	public DataGrid printXsht(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
@@ -599,15 +643,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("xsthlsh", xsth.getXsthlsh());
 		List<TXsthDet> dets = detDao.find(hql, params);
-		//for (TXsthDet yd : tXsth.getTXsthDets()) {
 		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
 			nl.add(xsthDet);
-//			if(j == 0){
-//				xskps = yd.getTXskps();
-//			}
-//			j++;
 		}
 		
 		int num = nl.size();
@@ -627,13 +666,6 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("shdz", tXsth.getShdz());
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
-		
-		System.out.println("bmmc:" + Constant.BMMCS.get(tXsth.getBmbh()));
-		System.out.println("khmc:" + tXsth.getKhmc());
-		System.out.println("xsthlsh:" + tXsth.getXsthlsh());
-		System.out.println("shdz:" + tXsth.getShdz());
-		System.out.println("hjje:" + df.format(tXsth.getHjje()));
-		System.out.println("hjje_b:" + AmountToChinese.numberToChinese(hjje_b));
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);

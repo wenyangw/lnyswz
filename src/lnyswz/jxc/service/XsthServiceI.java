@@ -21,6 +21,7 @@ public interface XsthServiceI {
 	public DataGrid getSpkc(Xsth xsth);
 	public DataGrid printXsth(Xsth xsth);
 	public DataGrid printXsht(Xsth xsth);
+	public DataGrid printShd(Xsth xsth);
 	public DataGrid printXsthByBgy(Xsth xsth);
 	public void updateThsl(Xsth xsth);
 	public void updateLock(Xsth xsth);
