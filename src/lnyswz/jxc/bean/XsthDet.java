@@ -42,6 +42,7 @@ public class XsthDet{
 	private BigDecimal zdwytsl;
 	private BigDecimal cdwytsl;
 	private String kfcklshs;
+	private String cgjhlsh;
 
 	private BigDecimal zdwrksl;
 	private BigDecimal cdwrksl;
@@ -209,6 +210,12 @@ public class XsthDet{
 	}
 	public void setKfcklshs(String kfcklshs) {
 		this.kfcklshs = kfcklshs;
+	}
+	public String getCgjhlsh() {
+		return cgjhlsh;
+	}
+	public void setCgjhlsh(String cgjhlsh) {
+		this.cgjhlsh = cgjhlsh;
 	}
 	public BigDecimal getZdwrksl() {
 		return zdwrksl;

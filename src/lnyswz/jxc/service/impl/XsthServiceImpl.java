@@ -82,6 +82,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TYwrkDet> ywrkDetDao;
+	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -612,6 +613,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			j++;
 		}
+					
 		int num = nl.size();
 		if (num < 4) {
 			for (int i = 0; i < (4 - num); i++) {
@@ -619,11 +621,18 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
+		String cgjhlshSql = "select cgjhlsh from t_xsth_det where id = ?";
+		Map<String, Object> paramsCgjh = new HashMap<String, Object>();
+		paramsCgjh.put("0", dets.get(0).getId());
+			
+		Object cgjhlsh = detDao.getBySQL(cgjhlshSql, paramsCgjh);
+		TCgjh tCgjh = cgjhDao.load(TCgjh.class, (String)cgjhlsh);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "收   货   确   认   单");
 		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("khmc", tXsth.getKhmc());
-		map.put("gysmc", "");
+		map.put("gysmc", tCgjh.getGysmc());
 		map.put("shdz", tXsth.getShdz());
 		
 		datagrid.setObj(map);
@@ -910,6 +919,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		for(TXsthDet t : l){
 			XsthDet c = new XsthDet();
 			BeanUtils.copyProperties(t, c);
+			c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
 			
 			nl.add(c);
 		}
@@ -1402,6 +1412,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setYwrkDetDao(BaseDaoI<TYwrkDet> ywrkDetDao) {
 		this.ywrkDetDao = ywrkDetDao;
+	}
+
+	@Autowired
+	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
+		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired

@@ -78,7 +78,16 @@ $(function(){
 		                		j++;
 		                	}
 		                }else{
-			                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
+			                cc.push('<th width=20%>' + copts.title + ':</th>');
+			                if(fields[i] == 'isZs'){
+			                	if(rowData[fields[i]] == '1'){
+			                		cc.push('<td width=30% style="color:red;">是(需要合同)</td>');
+			                	}else{
+			                		cc.push('<td width=30%>否</td>');
+			                	}
+			                }else{
+			                	cc.push('<td width=30%>' + rowData[fields[i]] + '</td>');
+			                }
 		                }
 	                }else{
 	                	j--;
@@ -119,6 +128,19 @@ $(function(){
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'销售金额(元)',align:'center'},
+			{field:'isZs',title:'直送',align:'center',
+				formatter : function(value) {
+					if (value == '1') {
+						return '是（需要合同）';
+					} else {
+						return '否';
+					}
+				},
+				styler: function(value){
+					if(value == '1'){
+						return 'color:red;';
+					}
+				}},
 			{field:'bz',title:'备注',align:'center'},
 			{field:'khbh',title:'客户编号',align:'center', hidden:true},
 			{field:'khmc',title:'客户名称',align:'center'},

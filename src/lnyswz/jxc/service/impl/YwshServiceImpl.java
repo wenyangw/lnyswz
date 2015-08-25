@@ -259,13 +259,26 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
+		String userCondition = "select condition "
+				+ "from t_audit_set aset left join t_audit au on aset.auditId = au.id "
+				+ "where aset.bmbh = ? and aset.userId = ? and au.ywlxId = ?";
+		Map<String, Object> paramsCondition = new HashMap<String, Object>();
+		paramsCondition.put("0", ywsh.getBmbh());
+		paramsCondition.put("1", ywsh.getCreateId());
+		paramsCondition.put("2", Constant.YWLX_XSTH);
+		
+		Object userCon = ywshDao.getBySQL(userCondition, paramsCondition);
+		
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and a.ywlxId = SUBSTRING(th.xsthlsh, 7, 2)"
 				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
 				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+		if(userCon != null){
+			fromWhere += " and th." + userCon.toString();
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
 		params.put("1", ywsh.getCreateId());
@@ -350,14 +363,15 @@ public class YwshServiceImpl implements YwshServiceI {
 		String khmc = (String)o[7];
 		String jsfsmc = (String)o[8];
 		BigDecimal hjje = new BigDecimal(o[9].toString());
-		String bz = (String)o[10];
-		String auditLevel = o[11].toString();
-		String khlxmc = o[12].toString();
-		int sxzq = o[13] == null ? 0 : Integer.valueOf(o[13].toString());
-		BigDecimal sxje = o[14] == null ? Constant.BD_ZERO : new BigDecimal(o[14].toString());
-		String ywlxId = o[15].toString();
-		String isAudit = o[16].toString();
-		Date createTime = DateUtil.stringToDate(o[17].toString(), DateUtil.DATETIME_PATTERN);
+		String isZs = o[10] == null ? "0" : o[10].toString();
+		String bz = (String)o[11];
+		String auditLevel = o[12].toString();
+		String khlxmc = o[13].toString();
+		int sxzq = o[14] == null ? 0 : Integer.valueOf(o[14].toString());
+		BigDecimal sxje = o[15] == null ? Constant.BD_ZERO : new BigDecimal(o[15].toString());
+		String ywlxId = o[16].toString();
+		String isAudit = o[17].toString();
+		Date createTime = DateUtil.stringToDate(o[18].toString(), DateUtil.DATETIME_PATTERN);
 		
 		y.setBmbh(bmbh);
 		y.setBmmc(bmmc);
@@ -367,6 +381,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		y.setKhmc(khmc);
 		y.setJsfsmc(jsfsmc);
 		y.setHjje(hjje);
+		y.setIsZs(isZs);
 		y.setBz(bz);
 		y.setAuditLevel(auditLevel);
 		y.setKhlxmc(khlxmc);

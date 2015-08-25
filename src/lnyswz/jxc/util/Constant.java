@@ -39,6 +39,8 @@ public interface Constant {
 
 	public static final String BM_DL = "08";
 	
+	public static final String YWLX_XSTH = "05";
+	
 
 	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
