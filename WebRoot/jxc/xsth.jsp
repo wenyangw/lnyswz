@@ -1632,16 +1632,44 @@ function printXsht(){
 }
 
 function printShd(){
-	var selected = xsth_dg.datagrid('getSelected');
- 	if (selected != undefined) {
-	 	$.messager.confirm('请确认', '是否打印收货确认单？', function(r) {
-			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+	if(detDg != undefined){
+		var detRow = detDg.datagrid('getSelected');
+		if(detRow != null){
+			if(xsthRow.isZs == '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						if(detRow.cgjhlsh != undefined){
+							if(detRow.thsl != 0){
+								$.messager.confirm('请确认', '是否打印收货确认单？', function(r) {
+									if (r) {
+										var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+									}
+								});
+							}else{
+								$.messager.alert('警告', '选择的销售提货记录未确认数量，请重新选择！',  'warning');
+							}
+						}else{
+							$.messager.alert('警告', '选择的销售提货记录未实施计划，请重新选择！',  'warning');
+						}
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
 			}
-		});
+			detDg = undefined;
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
 	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
 	}
 }
 
@@ -1651,8 +1679,8 @@ function confirmThsl(){
 		var detRow = detDg.datagrid('getSelected');
 		if(detRow != null){
 			if(xsthRow.isZs == '1'){
-				if(xsthRow.isCancel == '1'){
-					if(xsthRow.isKp == '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.isKp == '0'){
 						$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
 							if (thsl != undefined){
 								$.ajax({
