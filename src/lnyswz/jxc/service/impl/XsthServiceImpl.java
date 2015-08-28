@@ -1174,13 +1174,24 @@ public class XsthServiceImpl implements XsthServiceI {
 		//获取修改的商品记录
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
 		
-		//将本次录入的数据与原数据比较，获得相差数量
-		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
+		BigDecimal sl = BigDecimal.ZERO;
 		BigDecimal csl = BigDecimal.ZERO;
-		//获取相差金额
-		BigDecimal je = sl.multiply(tXsthDet.getZdwdj());
+		BigDecimal je = BigDecimal.ZERO;
+		BigDecimal ysje = BigDecimal.ZERO;
 		
-		//检查是否已修改过
+		//将本次录入的数据与原数据比较，获得相差数量
+		if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
+			sl = xsth.getThsl();
+			je = sl.multiply(tXsthDet.getZdwdj());
+			ysje = xsth.getThsl().subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
+		}else{
+			sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
+			//获取相差金额
+			je = sl.multiply(tXsthDet.getZdwdj());
+			ysje = je;
+		}
+		
+		//检查是否已修改过,未改过的将原zdwsl保存到thsl
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
 		}
@@ -1212,7 +1223,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setHjsl(tXsth.getHjsl().add(csl));
 		
 		//更新临时总账数量
-		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, BigDecimal.ZERO, je, Constant.UPDATE_RK, lszzDao);
+		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, csl, je, Constant.UPDATE_RK, lszzDao);
 		
 		//更新应收总账的金额
 		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
@@ -1224,7 +1235,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setRealName(tXsth.getYwymc());
 			
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, je, Constant.UPDATE_YS_TH, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, ysje, Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 

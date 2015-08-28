@@ -1649,6 +1649,7 @@ function printShd(){
 							}else{
 								$.messager.alert('警告', '选择的销售提货记录未确认数量，请重新选择！',  'warning');
 							}
+							//detDg = undefined;
 						}else{
 							$.messager.alert('警告', '选择的销售提货记录未实施计划，请重新选择！',  'warning');
 						}
@@ -1661,7 +1662,6 @@ function printShd(){
 			}else{
 				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
 			}
-			detDg = undefined;
 		}else{
 			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 			return false;
@@ -1680,40 +1680,48 @@ function confirmThsl(){
 		if(detRow != null){
 			if(xsthRow.isZs == '1'){
 				if(xsthRow.isCancel == '0'){
-					if(xsthRow.isKp == '0'){
-						$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
-							if (thsl != undefined){
-								$.ajax({
-									url : '${pageContext.request.contextPath}/jxc/xsthAction!confirmThsl.action',
-									data : {
-										id : detRow.id,
-										thsl: thsl,
-										//fromOther: 'xsth',
-										bmbh : jxc_kfck_did,
-										menuId : jxc_kfck_menuId,
-									},
-									dataType : 'json',
-									success : function(d) {
-										detDg.datagrid('reload');
-										detDg.datagrid('unselectAll');
-										$.messager.show({
-											title : '提示',
-											msg : d.msg
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						if(xsthRow.isKp == '0'){
+							if(detRow.cgjhlsh != undefined){
+								$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
+									if (thsl != undefined){
+										$.ajax({
+											url : '${pageContext.request.contextPath}/jxc/xsthAction!updateThsl.action',
+											data : {
+												id : detRow.id,
+												thsl: thsl,
+												fromOther: 'xsth',
+												bmbh : xsth_did,
+												menuId : xsth_menuId,
+											},
+											dataType : 'json',
+											success : function(d) {
+												detDg.datagrid('reload');
+												detDg.datagrid('unselectAll');
+												$.messager.show({
+													title : '提示',
+													msg : d.msg
+												});
+											}
 										});
 									}
 								});
+							}else{
+								$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
 							}
-						});
+							//detDg = undefined;
+						}else{
+							$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
+						}
 					}else{
-						$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
-					}	
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
 				}else{
 					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
 				}
 			}else{
 				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
 			}
-			detDg = undefined;
 		}else{
 			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 			return false;
@@ -1724,40 +1732,6 @@ function confirmThsl(){
 		return false;
 	}
 	
-	
-
-	var row = xsth_dghDg.datagrid('getSelected');
-	if(row != undefined){
-		if(row.isKp != '1'){
-			$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
-				if (thsl != undefined){
-					$.ajax({
-						url : '${pageContext.request.contextPath}/jxc/xsthAction!updateThsl.action',
-						data : {
-							id : row.id,
-							thsl: thsl,
-							fromOther: 'xsth',
-							bmbh : jxc_kfck_did,
-							menuId : jxc_kfck_menuId,
-						},
-						dataType : 'json',
-						success : function(d) {
-							kfck_xsthDg.datagrid('reload');
-							kfck_xsthDg.datagrid('unselectAll');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
-							});
-						}
-					});
-				}
-			});
-		}else{
-			$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
-		}
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
-	}
 }
 
 function searchXsth(){
