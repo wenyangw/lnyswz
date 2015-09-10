@@ -277,7 +277,9 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					tYwzz.setXsse(tYwzz.getXsse().add(se));
 					tYwzz.setXscb(tYwzz.getXscb().add(cb));
 					//2014.10.10，冲减销售开票时，如无单位成本，重新计算
-					if(tYwzz.getDwcb().compareTo(Constant.BD_ZERO) == 0){
+					//if(tYwzz.getDwcb().compareTo(Constant.BD_ZERO) == 0){
+					//2015.09.10，冲减销售开票时，重新计算成本
+					if(zsl.compareTo(Constant.BD_ZERO) < 0){
 						BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
 						BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
 						if(kcsl.compareTo(Constant.BD_ZERO) != 0){

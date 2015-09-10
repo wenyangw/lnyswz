@@ -46,8 +46,9 @@ public class XsthDet{
 
 	private BigDecimal zdwrksl;
 	private BigDecimal cdwrksl;
-	
 	private String Shdz;
+	private BigDecimal dwcb;
+
 	
 	public int getId() {
 		return id;
@@ -229,11 +230,19 @@ public class XsthDet{
 	public void setCdwrksl(BigDecimal cdwrksl) {
 		this.cdwrksl = cdwrksl;
 	}
+
 	public String getShdz() {
 		return Shdz;
 	}
 	public void setShdz(String shdz) {
 		Shdz = shdz;
+	}
+
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
 	}
 
 	

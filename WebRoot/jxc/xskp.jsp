@@ -737,13 +737,22 @@ function saveAll(){
 		return false;
 	}
 	var spbhs = undefined;
+	var spbhsZero = undefined;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
 		
-		if(Number(this.zdwdj) <= Number(this.dwcb) || Number(this.zhxs) == 0 ? false : Number(this.cdwdj) <= Number(this.dwcb) * Number(this.zhxs) * (1 + SL)){
+		if(Number(this.dwcb) == 0){
+			if(spbhsZero == undefined){
+				spbhsZero = '' + this.spbh;
+			}else{
+				spbhsZero += ',' + this.spbh;
+			}
+		}
+		
+		if((Number(this.zdwdj) <= Number(this.dwcb)) || (Number(this.zhxs) == 0 ? false : (Number(this.cdwdj) <= (Number(this.dwcb) * Number(this.zhxs) * (1 + SL))))){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
 			}else{
@@ -752,8 +761,17 @@ function saveAll(){
 		}
 	});
 	
- 	if(spbhs != undefined){
- 		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+ 	if(spbhs != undefined || spbhsZero != undefined){
+		var messZero = '';
+		if(spbhs != undefined){
+			messZero += '<br>请确认商品(' + spbhs + ')销售单价小于销售成本！';
+		}
+		if(spbhsZero != undefined){
+			messZero += '<br>请确认商品(' + spbhsZero + ')库存不为零！';
+		}
+		
+		
+ 		$.messager.confirm('提示', messZero + '<br>是-继续， 否-返回', function(data){
  			if(data){
  				save();	
  			}else{
@@ -1003,7 +1021,7 @@ function setEditing(){
     		zslEditor.target.focus();
     		return false;
     	}
-	    
+    	
 // 	    if($('input[name=xsthDetIds]').val() == ''){
 // 	    	var kxssl = undefined;
 // 	    	if(kcRow == undefined){
