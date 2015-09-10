@@ -1111,8 +1111,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		String sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
 				+ " max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
 				+ " cast(round(sum(thDet.zdwsl - thDet.kpsl) * max(thDet.zdwdj), 2) as numeric(12, 2))  spje,"
-				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl"
-				+ " from t_xsth_det thDet";
+				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
+				+ " from t_xsth_det thDet "
+				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and "
+				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
 				//+ " sum(thDet.spje) - isnull(SUM(kp.spje), 0) spje"
 				//+ " left join"
 				//+ " (select tk.xsthdetId, kpDet.spbh, SUM(zdwsl) zdwsl, SUM(kpDet.spje + kpDet.spse) spje from t_xsth_xskp tk left join t_xskp_det kpDet on tk.xskplsh = kpDet.xskplsh"
@@ -1149,6 +1151,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			BigDecimal sphj = new BigDecimal(os[5].toString());
 			BigDecimal cdwthsl = new BigDecimal(os[6].toString());
 			BigDecimal cdwytsl = new BigDecimal(os[7].toString());
+			BigDecimal dwcb = new BigDecimal(os[8].toString());
 			
 			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_DOWN); 
 			
@@ -1159,6 +1162,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			xd.setZjldwmc(sp.getZjldw().getJldwmc());
 			xd.setZdwthsl(zdwthsl);
 			xd.setZdwytsl(zdwytsl);
+			xd.setDwcb(dwcb);
 			if(sp.getCjldw() != null){
 				xd.setCjldwId(sp.getCjldw().getId());
 				xd.setCjldwmc(sp.getCjldw().getJldwmc());

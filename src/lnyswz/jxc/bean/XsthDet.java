@@ -45,6 +45,7 @@ public class XsthDet{
 
 	private BigDecimal zdwrksl;
 	private BigDecimal cdwrksl;
+	private BigDecimal dwcb;
 	
 	public int getId() {
 		return id;
@@ -219,6 +220,12 @@ public class XsthDet{
 	}
 	public void setCdwrksl(BigDecimal cdwrksl) {
 		this.cdwrksl = cdwrksl;
+	}
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
 	}
 
 	
