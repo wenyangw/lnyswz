@@ -186,6 +186,15 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 			return true;
 		}
 		break;
+	case '08':
+		//文达纸业不参与审批流程	
+		var kh08 = ['21010103'];
+		if(kh08.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
 	default:
 		return true;
 		break;
