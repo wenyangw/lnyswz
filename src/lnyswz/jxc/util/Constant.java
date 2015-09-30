@@ -189,6 +189,12 @@ public interface Constant {
 		put("07","");
 		put("08","");
 	}};
+	
+	public static final Map<String, String> YWPD_TITLE = new HashMap<String, String>(){{
+		put("01","商  品  盘  点  单");
+		put("02","商  品  客  诉  单");
+		put("03","商  品  自  用  单"); 
+	}};
 
 	
 	public static final String XSKP_SPMC_WITHCD = "1";

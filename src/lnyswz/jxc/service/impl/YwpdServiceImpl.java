@@ -240,7 +240,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			lsh += tYwpd.getCjYwpdlsh() + " - ";
 		}
 		lsh += tYwpd.getYwpdlsh();
-		map.put("title", "商   品   盘   点   单");
+		map.put("title", Constant.YWPD_TITLE.get(tYwpd.getPdlxId()));
 		map.put("bmmc", tYwpd.getBmmc());
 		map.put("createTime", DateUtil.dateToString(tYwpd.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
 		map.put("ywpdlsh", lsh);
