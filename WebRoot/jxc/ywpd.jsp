@@ -847,8 +847,8 @@ function cjYwpd(){
 								});
 								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 									if (r) {
-										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + d.obj.pdlxId;
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW); 
 									}
 								});
 							}
@@ -872,7 +872,7 @@ function printYwpd(){
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + row.ywpdlsh + '&bmbh=' + did;
+				var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + row.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + row.pdlxId;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});

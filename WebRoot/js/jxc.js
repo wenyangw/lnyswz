@@ -504,7 +504,7 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
-		width:700,
+		width:800,
 		height:420,
 		modal : true,
 		onLoad: function(){
