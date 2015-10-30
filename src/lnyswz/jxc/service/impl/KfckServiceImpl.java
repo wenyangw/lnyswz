@@ -29,6 +29,8 @@ import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfck;
 import lnyswz.jxc.bean.KfckDet;
+import lnyswz.jxc.bean.Kfrk;
+import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TCgxqDet;
@@ -37,6 +39,8 @@ import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TKfck;
 import lnyswz.jxc.model.TKfckDet;
+import lnyswz.jxc.model.TKfrk;
+import lnyswz.jxc.model.TKfrkDet;
 import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TOperalog;
@@ -419,6 +423,45 @@ public class KfckServiceImpl implements KfckServiceI {
 //		dg.setRows(nl);
 //		return dg;
 //	}
+	
+	@Override
+	public DataGrid printKfck(Kfck kfck) {
+		DataGrid datagrid = new DataGrid();
+		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+		
+		List<KfckDet> nl = new ArrayList<KfckDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		for (TKfckDet yd : tKfck.getTKfckDets()) {
+			KfckDet kfckDet = new KfckDet();
+			BeanUtils.copyProperties(yd, kfckDet);
+			nl.add(kfckDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfckDet());
+			}
+		}
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   出   库   单");
+		map.put("kfcklsh", kfck.getKfcklsh());
+		map.put("bmmc", tKfck.getBmmc());
+		map.put("printName", kfck.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tKfck.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("khbh", tKfck.getKhbh());
+		map.put("khmc", tKfck.getKhmc());
+		map.put("ckmc", tKfck.getCkmc());
+		map.put("hj", hj);
+		map.put("bz", tKfck.getBz());
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
 	
 	@Override
 	public DataGrid getSpkc(Kfck kfck) {

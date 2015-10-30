@@ -1,7 +1,5 @@
 package lnyswz.jxc.service;
 
-import java.util.List;
-
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Kfck;
 
@@ -14,4 +12,5 @@ public interface KfckServiceI {
 	public DataGrid detDatagrid(String kfcklsh);
 //	public DataGrid toYwrk(String kfcklshs);
 	public DataGrid getSpkc(Kfck kfck);
+	public DataGrid printKfck(Kfck kfck);
 }

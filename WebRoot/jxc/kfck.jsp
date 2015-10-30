@@ -1049,6 +1049,20 @@ function generateKfck(){
 	}
 }
 
+function printKfck(){
+	var row = kfck_xsthDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + row.kfcklsh + "&bmbh=" + jxc_kfck_did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 function printThd(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if (row != undefined) {
