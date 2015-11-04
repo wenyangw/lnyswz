@@ -38,7 +38,8 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 		kfck.setCreateName(user.getRealName());
 		Json j = new Json();
 		try{
-			kfckService.save(kfck);		
+			j.setObj(kfckService.save(kfck));
+			;		
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("保存库房出库成功！");

@@ -5,7 +5,7 @@ import lnyswz.jxc.bean.Kfck;
 
 
 public interface KfckServiceI {
-	public void save(Kfck kfck);
+	public Kfck save(Kfck kfck);
 	public void cjKfck(Kfck kfck);
 //	public void updateComplete(Kfck kfck);
 	public DataGrid datagrid(Kfck kfck);

@@ -69,11 +69,12 @@ public class KfckServiceImpl implements KfckServiceI {
 	
 
 	@Override
-	public void save(Kfck kfck) {
+	public Kfck save(Kfck kfck) {
 		TKfck tKfck = new TKfck();
 		BeanUtils.copyProperties(kfck, tKfck);
 		tKfck.setCreateTime(new Date());
-		tKfck.setKfcklsh(LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao));
+		String lsh = LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao);
+		tKfck.setKfcklsh(lsh);
 		tKfck.setBmmc(depDao.load(TDepartment.class, kfck.getBmbh()).getDepName());
 		tKfck.setIsCj("0");
 		
@@ -180,6 +181,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		
 		OperalogServiceImpl.addOperalog(kfck.getCreateId(), kfck.getBmbh(), kfck.getMenuId(), tKfck.getKfcklsh(), "生成库房出库", operalogDao);
 		
+		Kfck rKfck = new Kfck();
+		rKfck.setKfcklsh(lsh);
+		return rKfck;
 	}
 	
 	@Override
@@ -428,6 +432,7 @@ public class KfckServiceImpl implements KfckServiceI {
 	public DataGrid printKfck(Kfck kfck) {
 		DataGrid datagrid = new DataGrid();
 		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+		TXsth tXsth = ((TXsthDet)tKfck.getTXsths().iterator().next()).getTXsth();
 		
 		List<KfckDet> nl = new ArrayList<KfckDet>();
 		BigDecimal hj = Constant.BD_ZERO;
@@ -443,6 +448,26 @@ public class KfckServiceImpl implements KfckServiceI {
 				nl.add(new KfckDet());
 			}
 		}
+		
+		String bz = tXsth.getXsthlsh() + "/";
+		if(tXsth.getYwymc() != null){
+			bz += tXsth.getYwymc().trim();
+		}
+		if("0".equals(tXsth.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXsth.getShdz() != null){
+			bz += " " + tXsth.getShdz();
+		}
+		if(tXsth.getThr() != null){
+			bz += " " + tXsth.getThr();
+		}
+		if(tXsth.getCh() != null){
+			bz += " " + tXsth.getCh();
+		}
+		
 		//Kfrk kfrk = new Kfrk();
 		//BeanUtils.copyProperties(yk, kfrk);
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -454,9 +479,10 @@ public class KfckServiceImpl implements KfckServiceI {
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		map.put("khbh", tKfck.getKhbh());
 		map.put("khmc", tKfck.getKhmc());
+		map.put("fhmc", tKfck.getFhmc() != null ? tKfck.getFhmc() : "");
 		map.put("ckmc", tKfck.getCkmc());
-		map.put("hj", hj);
-		map.put("bz", tKfck.getBz());
+		map.put("hjsl", hj);
+		map.put("bz", bz);
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);

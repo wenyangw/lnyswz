@@ -45,11 +45,8 @@ public interface Constant {
 
 	//库房出库单
 	public static final Map<String, String> REPORT_KFCK = new HashMap<String, String>(){{
-		put("01","kfrk_report_s_ys");
-		put("04","kfrk_report_s");
-		put("05","kfrk_report_s");
-		put("07","kfrk_report_s");
-		put("08","kfrk_report_s");
+		put("04","kfck_report_s_ns");
+		put("05","kfck_report_s_ns");
 	}};	
 	
 	//业务盘点单

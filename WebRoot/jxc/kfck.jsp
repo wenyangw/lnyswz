@@ -623,6 +623,12 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
+					if (r) {
+						var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + rsp.obj.kfcklsh + '&bmbh=' + jxc_kfck_did;
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					}
+				});
 			}  
 		},
 		error: function(){
@@ -1050,7 +1056,7 @@ function generateKfck(){
 }
 
 function printKfck(){
-	var row = kfck_xsthDg.datagrid('getSelected');
+	var row = kfck_dg.datagrid('getSelected');
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
 			if (r) {
