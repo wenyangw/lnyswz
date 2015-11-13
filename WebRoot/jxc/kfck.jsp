@@ -1042,6 +1042,7 @@ function generateKfck(){
 								$('.thfs_zt').css('display', 'none');
 								$('.thfs_sh').css('display', 'table-cell');
 							}
+							$('input[name=jxc_kfck_bz]').val(rows[0].bz);
 						
 							
 							kfck_tabs.tabs('select', 0);

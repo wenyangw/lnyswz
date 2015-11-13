@@ -432,7 +432,11 @@ public class KfckServiceImpl implements KfckServiceI {
 	public DataGrid printKfck(Kfck kfck) {
 		DataGrid datagrid = new DataGrid();
 		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
-		TXsth tXsth = ((TXsthDet)tKfck.getTXsths().iterator().next()).getTXsth();
+		
+		TXsth tXsth = null;
+		if(tKfck.getTXsths().size() > 0){
+			tXsth = ((TXsthDet)tKfck.getTXsths().iterator().next()).getTXsth();
+		}
 		
 		List<KfckDet> nl = new ArrayList<KfckDet>();
 		BigDecimal hj = Constant.BD_ZERO;
@@ -448,11 +452,13 @@ public class KfckServiceImpl implements KfckServiceI {
 				nl.add(new KfckDet());
 			}
 		}
-		
-		String bz = tXsth.getXsthlsh() + "/";
+		String bz = "";
+		if(tXsth != null){
+		bz = tXsth.getXsthlsh() + "/";
 		if(tXsth.getYwymc() != null){
 			bz += tXsth.getYwymc().trim();
 		}
+		
 		if("0".equals(tXsth.getThfs())){
 			bz += " 送货：";
 		}else{
@@ -466,6 +472,7 @@ public class KfckServiceImpl implements KfckServiceI {
 		}
 		if(tXsth.getCh() != null){
 			bz += " " + tXsth.getCh();
+		}
 		}
 		
 		//Kfrk kfrk = new Kfrk();

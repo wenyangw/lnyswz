@@ -1158,10 +1158,10 @@ function searchYwrkInKfrk(){
 	请输入查询起始日期:<input type="text" name="createTimeKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfrk();">查询</a>
 </div>
-<div id="jxc_kfrk_cgjhTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjhInKfrk();">查询</a>
-</div>
+<!-- <div id="jxc_kfrk_cgjhTb" style="padding:3px;height:auto"> -->
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+<!-- 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjhInKfrk();">查询</a> -->
+<!-- </div> -->
 <div id="jxc_kfrk_ywrkTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeYwrkInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwrkInKfrk();">查询</a>

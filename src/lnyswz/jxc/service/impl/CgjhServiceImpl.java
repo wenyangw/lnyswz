@@ -416,14 +416,19 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Override
 	public DataGrid datagridDet(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TCgjhDet t where t.TCgjh.bmbh = :bmbh and t.TCgjh.createTime > :createTime";
+		String hql = "from TCgjhDet t where t.TCgjh.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgjh.getBmbh());
-		if(cgjh.getCreateTime() != null){
-			params.put("createTime", cgjh.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		
+		if(!cgjh.getFromOther().equals("fromKfrk")){
+			hql += " and t.TCgjh.createTime > :createTime";
+			if(cgjh.getCreateTime() != null){
+				params.put("createTime", cgjh.getCreateTime()); 
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
 		}
+		
 		if(cgjh.getSearch() != null){
 			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search)"; 
 			params.put("search", "%" + cgjh.getSearch() + "%");
@@ -443,7 +448,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		
 		
 		String countHql = "select count(*) " + hql;
-		hql += " order by t.TCgjh.createTime desc ";
+		if(cgjh.getFromOther().equals("fromKfrk")){
+			hql += " order by t.TCgjh.createTime";
+		}else{
+			hql += " order by t.TCgjh.createTime desc ";
+		}
 		List<TCgjhDet> l = detDao.find(hql, params, cgjh.getPage(), cgjh.getRows());
 		List<Cgjh> nl = new ArrayList<Cgjh>();
 		for(TCgjhDet t : l){

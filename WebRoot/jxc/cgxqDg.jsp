@@ -40,6 +40,7 @@ $(function(){
 			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
+	        {field:'khmc',title:'客户',align:'center'},
           	{field:'spbh',title:'商品编号',align:'center'},
             {field:'spmc',title:'名称',align:'center'},
             {field:'spcd',title:'产地',align:'center'},
