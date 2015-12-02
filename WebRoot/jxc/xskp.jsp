@@ -544,7 +544,9 @@ function init(){
 	jxc_xskp_jsfsCombo.combobox('readonly', false);
 	
 	//收回商品库存信息
-	jxc.hideKc('#jxc_xskp_layout');
+	if(xskp_did != '04'){
+		jxc.hideKc('#jxc_xskp_layout');
+	}
 	//xskp_spdg.datagrid('fitColumns');
 	jxc.spInfo($('#jxc_xskp_layout'), '');
 	
@@ -649,7 +651,9 @@ function removeRow(){
             .datagrid('deleteRow', editIndex);
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xskp_layout');
+    if(xskp_did != '04'){
+    	jxc.hideKc('#jxc_xskp_layout');
+    }
     //xskp_spdg.datagrid('fitColumns');
 }
 
@@ -657,7 +661,9 @@ function removeRow(){
 function accept(){
     if (rowOk()){
     	xskp_spdg.datagrid('acceptChanges');
-    	jxc.hideKc('#jxc_xskp_layout');
+    	if(xskp_did != '04'){
+    		jxc.hideKc('#jxc_xskp_layout');
+    	}
     	//xskp_spdg.datagrid('fitColumns');
     }
 }
@@ -667,7 +673,9 @@ function cancelAll(){
 	xskp_spdg.datagrid('rejectChanges');
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xskp_layout');
+    if(xskp_did != '04'){
+    	jxc.hideKc('#jxc_xskp_layout');
+    }
     //xskp_spdg.datagrid('fitColumns');
 }
 
@@ -927,7 +935,9 @@ function setEditing(){
     			});
     }else{
     	jxc.spInfo($('#jxc_xskp_layout'), '');
-    	jxc.hideKc('#jxc_xskp_layout');
+    	if(xskp_did != '04'){
+    		jxc.hideKc('#jxc_xskp_layout');
+    	}
     }
     //xskp_spdg.datagrid('fitColumns');
     

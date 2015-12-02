@@ -79,6 +79,9 @@ var dictType = [ {
 },{
 	value : '03',
 	text : '视图'
+},{
+	value : '04',
+	text : '存储过程'
 } ];
 
 var dictDisplay = [ {

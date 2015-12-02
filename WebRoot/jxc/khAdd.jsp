@@ -38,7 +38,7 @@
 		<tr>
 			<th><label for="sh">税号</label></th>
 			<td><input name="sh" class="easyui-validatebox"
-				data-options="validType:['length[15, 20]','startWith[\'khbh\',4,\'税号前4位必须与客户编号前4位一致！\']']"
+				data-options="validType:['length[15, 20]']"
 				style="width: 220px;"></td>
 		</tr>
 		<tr>

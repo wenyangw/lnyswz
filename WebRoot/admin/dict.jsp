@@ -67,6 +67,15 @@ $(function(){
 			       	 	 }
 		       	 	}
 		       	 },
+	       	{field:'isShow',title:'是否显示',width:50,
+		        	formatter : function(value) {	
+			       	 	 if(value=='1'){
+			       	 		 return "是";
+			       	 	 }else if(value=='0'){
+			       	 		 return "否";
+			       	 	 }
+		       	 	}
+		       	 },
 	        {field:'frozen',title:'是否冻结',width:50,
 	        	formatter : function(value) {	
 		       	 	 if(value=='1'){
@@ -111,7 +120,7 @@ function appendDict() {
 		title : '增加字典',
 		href : '${pageContext.request.contextPath}/admin/dictAdd.jsp',
 		width : 340,
-		height : 510,
+		height : 630,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -166,7 +175,7 @@ function editDict(){
 			title : '修改字典类别',
 			href : '${pageContext.request.contextPath}/admin/dictEdit.jsp',
 			width : 350,
-			height : 510,
+			height : 630,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -226,6 +235,7 @@ function editDict(){
 					outGroupBy:rows[0].outGroupBy,
 					orderBy:rows[0].orderBy,
 					orderByTree:rows[0].orderByTree,
+					isShow:rows[0].isShow,
 				});
 			
 			}

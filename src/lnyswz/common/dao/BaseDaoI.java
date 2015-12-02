@@ -33,20 +33,15 @@ public interface BaseDaoI<T> {
 	public List<T> find(String hql, Map<String, Object> params, int page, int rows);
 
 	public Long count(String hql);
+	
+	public Long countBySQL(String sql);
 
 	public Long count(String hql, Map<String, Object> params);
-
+	
 	public int executeHql(String hql);
 
 	public int executeHql(String hql, Map<String, Object> params);
 	
-	public List<Object[]> execHqlR(String hql);
-	public List<Object[]> execHqlR(String hql, int page, int rows);
-	
-	public List<Object[]> execHqlR(String hql, Map<String, Object> params);
-	
-	public List<Object[]> execHqlR(String hql, Map<String, Object> params, int page, int rows);
-
 	public Object[] getMBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params, Map<String, Object> returns);

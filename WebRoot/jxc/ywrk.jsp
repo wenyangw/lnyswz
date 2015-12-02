@@ -688,7 +688,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0 ){
+		if(zslEditor.target.val() != 0 ){
 			return true;
 		}
 	}

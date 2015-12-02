@@ -134,22 +134,23 @@ $(function(){
 // 	    panelHeight: 'auto',
 // 	});
 	
-	$('input[name=isLs]').click(function(){
-		if($(this).is(':checked')){
-			$('.ls').css('display','table-row');
-			//初始化分户列表
-			if(jxc_cgxq_jsfsCombo == undefined){
-				jxc_cgxq_jsfsCombo = lnyw.initCombo($("#jxc_cgxq_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
-			}else{
-				//jxc_cgxq_jsfsCombo.combobox('selectedIndex', 0);
-			}
-		}else{
-			$('.ls').css('display','none');
-		}
-	});
+	//2015-12-01集团单位订单要统计全部需求，并能区分统一需求还是临时需求，因此客户等信息长期有效
+// 	$('input[name=isLs]').click(function(){
+// 		if($(this).is(':checked')){
+// 			$('.ls').css('display','table-row');
+// 			//初始化分户列表
+// 			if(jxc_cgxq_jsfsCombo == undefined){
+// 				jxc_cgxq_jsfsCombo = lnyw.initCombo($("#jxc_cgxq_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
+// 			}else{
+// 				//jxc_cgxq_jsfsCombo.combobox('selectedIndex', 0);
+// 			}
+// 		}else{
+// 			$('.ls').css('display','none');
+// 		}
+// 	});
 	
-// 	//初始化付款方式列表
-// 	jxc_cgxq_jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
+ 	//初始化付款方式列表
+ 	jxc_cgxq_jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
 });
 
 //以下为商品列表处理代码
@@ -163,7 +164,8 @@ function init(){
 	$('input').val('');
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
-	$('.ls').css('display','none');
+	//$('.ls').css('display','none');
+	$('.ls').css('display','table-row');
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_cgxq_layout');

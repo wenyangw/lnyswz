@@ -127,6 +127,7 @@ public class MenuServiceImpl implements MenuServiceI {
 									new ArrayList<TMenu>(role.getTMenus()),
 									false,
 									role.getTDepartment().getId(),
+									user.getId(),
 									true,
 									role.getTDepartment().getDepName()));
 					
@@ -137,6 +138,7 @@ public class MenuServiceImpl implements MenuServiceI {
 									new ArrayList<TMenu>(role.getTMenus()),
 									false,
 									user.getDid(),
+									user.getId(),
 									false,
 									null));
 				}
@@ -179,7 +181,7 @@ public class MenuServiceImpl implements MenuServiceI {
 			params.put("cid", cid);
 		}
 		List<TMenu> l = menuDao.find(hql, params);
-		return changeTree(l, false, null, false, null);
+		return changeTree(l, false, null, 0, false, null);
 	}
 	
 	/**
@@ -198,7 +200,7 @@ public class MenuServiceImpl implements MenuServiceI {
 			hql = "from TMenu t where t.TMenu is null";
 		}
 		List<TMenu> l = menuDao.find(hql, params);
-		return changeTree(l, false, null, false, null);
+		return changeTree(l, false, null, 0, false, null);
 	}
 	
 	/**
@@ -207,7 +209,7 @@ public class MenuServiceImpl implements MenuServiceI {
 	@Override
 	public List<Menu> allTopTree() {
 		String hql = "from TMenu t where t.TMenu is null";
-		return changeTree(menuDao.find(hql), true, null, false, null);
+		return changeTree(menuDao.find(hql), true, null, 0, false, null);
 	}
 	
 	@Override
@@ -265,7 +267,7 @@ public class MenuServiceImpl implements MenuServiceI {
 	 * @param isTop
 	 * @return
 	 */
-	private List<Menu> changeTree(List<TMenu> l, boolean isTop, String did, boolean isOther, String odname){
+	private List<Menu> changeTree(List<TMenu> l, boolean isTop, String did, int userId, boolean isOther, String odname){
 		//排序
 		//Collections.sort(l, new Menu2Comparator());
 		List<Menu> nl = new ArrayList<Menu>();
@@ -286,6 +288,7 @@ public class MenuServiceImpl implements MenuServiceI {
 				attributes.put("url", t.getUrl());
 				attributes.put("lx", t.getLx());
 				attributes.put("did", did);
+				attributes.put("userId", userId);
 				attributes.put("query", t.getQuery());
 				if(isOther){
 					m.setText(m.getText() + "(" + odname + ")");

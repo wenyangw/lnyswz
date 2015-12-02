@@ -129,7 +129,13 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 		Query q = this.getCurrentSession().createQuery(hql);
 		return (Long) q.uniqueResult();
 	}
-
+	
+	@Override
+	public Long countBySQL(String sql) {
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		return  getLong(query.list().get(0));
+	}
+	
 	@Override
 	public Long count(String hql, Map<String, Object> params) {
 		Query q = this.getCurrentSession().createQuery(hql);
@@ -158,47 +164,6 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 		return q.executeUpdate();
 	}
 	
-	@Override
-	public List<Object[]> execHqlR(String hql) {
-		return this.getCurrentSession().createSQLQuery(hql).list();
-	}
-	
-	public List<Object[]> execHqlR(String hql, int page, int rows) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(hql);
-		List<Object[]> q = query.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
-		if(q != null){
-			return q;
-		}
-		return null;
-	}
-	
-	@Override
-	public List<Object[]> execHqlR(String hql, Map<String, Object> params) {
-		SQLQuery q = this.getCurrentSession().createSQLQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				q.setParameter(key, params.get(key));
-			}
-		}
-		return q.list();
-	}
-	
-	@Override
-	public List<Object[]> execHqlR(String hql, Map<String, Object> params, int page, int rows) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				query.setParameter(key, params.get(key));
-			}
-		}
-		List<Object[]> q = query.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
-		if(q != null){
-			return q;
-		}
-		return null;
-	}
-	
-
 	
 	@Override
 	public Object[] getMBySQL(String sql, Map<String, Object> params) {

@@ -76,10 +76,18 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
-			{field:'cgjhlsh',title:'流水号',align:'center'},
+			{field:'cgjhlsh',title:'流水号',align:'center',
+				styler: function(value, rowData){
+					if(rowData.isCompleted == '1'){
+						return 'color:red;';
+					}
+       			}},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
-	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'gysmc',title:'*供应商名称',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
 	        {field:'ywyId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库',align:'center'},
 // 	        {field:'shdz',title:'送货地址',align:'center',

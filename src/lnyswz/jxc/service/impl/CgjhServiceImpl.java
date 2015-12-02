@@ -430,7 +430,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}
 		
 		if(cgjh.getSearch() != null){
-			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search)"; 
+			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
 			params.put("search", "%" + cgjh.getSearch() + "%");
 			
 		}

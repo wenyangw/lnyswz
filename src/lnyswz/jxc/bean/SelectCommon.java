@@ -15,6 +15,9 @@ public class SelectCommon {
 	private String spmc;
 	private String a_time;
 	private String b_time;
+	private String exec;
+	private int userId;
+	private int total;
 	public String getSqls() {
 		return sqls;
 	}
@@ -125,6 +128,30 @@ public class SelectCommon {
 
 	public void setB_time(String b_time) {
 		this.b_time = b_time;
+	}
+
+	public String getExec() {
+		return exec;
+	}
+
+	public void setExec(String exec) {
+		this.exec = exec;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
 }
