@@ -162,6 +162,7 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
+	//$('#cgxq_xqsj').datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
 	//$('.ls').css('display','none');
@@ -324,16 +325,17 @@ function saveAll(){
 	//将表头内容传入后台
 	effectRow['gysbh'] = $('input[name=gysbh]').val();
 	effectRow['gysmc'] = $('input[name=gysmc]').val();
+	effectRow['khbh'] = $('input[name=khbh]').val();
+	effectRow['khmc'] = $('input[name=khmc]').val();
+	effectRow['jsfsId'] = jxc_cgxq_jsfsCombo.combobox('getValue');
+	effectRow['jsfsmc'] = jxc_cgxq_jsfsCombo.combobox('getText');
+	effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
+	effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
+	effectRow['dhsj'] = $('input[name=dhsj]').val();
+	effectRow['xqsj'] = $('input[name=xqsj]').val();
+		
 	if($('input[name=isLs]').is(':checked')){
 		effectRow['isLs'] =  '1';
-		effectRow['khbh'] = $('input[name=khbh]').val();
-		effectRow['khmc'] = $('input[name=khmc]').val();
-		effectRow['jsfsId'] = jxc_cgxq_jsfsCombo.combobox('getValue');
-		effectRow['jsfsmc'] = jxc_cgxq_jsfsCombo.combobox('getText');
-		effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
-		effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
-		effectRow['dhsj'] = $('input[name=dhsj]').val();
-		
 		var needA = jxc.getAuditLevelCgxq(did);
 		effectRow['needAudit'] = needA;
 		if(needA != '0'){
@@ -343,7 +345,11 @@ function saveAll(){
 		effectRow['isLs'] =  '0';
 		effectRow['needAudit'] = '0';
 	}
-// 	effectRow['xqsj'] = $('input[name=xqsj]').val();
+	if($('input[name=cgxq_isZs]').is(':checked')){
+		effectRow['isZs'] =  '1';
+	}else{
+		effectRow['isZs'] =  '0';
+	}
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['bz'] = $('input[name=jxc_cgxq_bz]').val();
 	effectRow['bmbh'] = did;
@@ -834,8 +840,8 @@ function addressLoad(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">		
 				<table class="tinfo">
 					<tr>
-						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" />
-						<th class="read"></th><td><div id="createDate" class="read"></div></td>
+						<td colspan="2">临时采购<input type="checkbox" name="isLs" value="1" />&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" name="cgxq_isZs">
+						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="cgxqLsh" class="read"></div></td>
 					</tr>
 					<tr>
@@ -849,13 +855,13 @@ function addressLoad(){
 							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="8"></td>
 						<th>客户名称</th><td><input name="khmc" readonly="readonly" size="30"></td>
 <!-- 						<th>到货方式</th><td><input name="dhfs"></td> -->
+						<th>结算方式</th><td><input id="jxc_cgxq_jsfsId" name="jsfsId"  size="6"></td>
 					</tr>
 					<tr class="ls" style="display:none">
-						<th>结算方式</th><td><input id="jxc_cgxq_jsfsId" name="jsfsId"  size="6"></td>
 						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
-						<th>联系人</th><td><input name="jxc_cgxq_lxr" size="20"></td>
+						<th>联系人及电话</th><td><input name="jxc_cgxq_lxr" size="20"></td>
 						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
-<!-- 						<th>需求时间</th><td><input name="xqsj"></td> -->
+ 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" type="text" class="easyui-my97"  size="10"></td>
 					</tr>
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>
