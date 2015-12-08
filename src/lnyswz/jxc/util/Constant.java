@@ -51,6 +51,12 @@ public interface Constant {
 		put("08","kfrk_report_s");
 	}};
 
+	//库房出库单
+	public static final Map<String, String> REPORT_KFCK = new HashMap<String, String>(){{
+		put("04","kfck_report_s_ns");
+		put("05","kfck_report_s_ns");
+	}};	
+	
 	//业务盘点单
 	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
 		put("01","ywpd_report_s");

@@ -1054,6 +1054,7 @@ function searchCgjhInKfrk(){
 	kfrk_cgjhDg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeCgjhInKfrk]').val(),
+		search: $('input[name=searchCgjhInKfrk]').val(),
 		fromOther: 'fromKfrk'
 	});
 }
@@ -1159,7 +1160,8 @@ function searchYwrkInKfrk(){
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfrk();">查询</a>
 </div>
 <div id="jxc_kfrk_cgjhTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+	输入流水号、供应商、商品编号、商品名称、备注：<input type="text" name="searchCgjhInKfrk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjhInKfrk();">查询</a>
 </div>
 <div id="jxc_kfrk_ywrkTb" style="padding:3px;height:auto">

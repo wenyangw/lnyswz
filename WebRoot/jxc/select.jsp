@@ -4,6 +4,8 @@
 <script type="text/javascript">
 //部门
 var did;
+//人员
+var userId;
 //查询试图
 var query;
 //字典查询数据
@@ -24,8 +26,11 @@ var total;
 var openSelectDid='n';
 $(function(){	
 	did = lnyw.tab_options().did;
+	userId = lnyw.tab_options().userId;
 	query = lnyw.tab_options().query;
 	$('#selectcommon').attr('id', 'sc_' + query);
+	$('#total').attr('id', 'total_' + query);
+	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
 	$('#select2').attr('id', 'pro_' + query);
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
@@ -71,7 +76,6 @@ $(function(){
 			//循环data数据 拼写字符串
 			if(isNeedDep=="true"){
 				if(did>='09'){
-
 					star += '<tr>';
 					star += '<th align="left">部门 </th>';
 					star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
@@ -146,10 +150,11 @@ $(function(){
 		}
 	}
 });
+
 //查询按钮事件
 function selectClick(){
 	//创建对象 obj类型
-	total='';
+// 	total='';
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
 	query = lnyw.tab_options().query;
@@ -160,6 +165,7 @@ function selectClick(){
 		async: false,
 		data : {
 			selectType :query,
+			isShow:'1',
 		},
 		dataType : 'json',
 		success : function(data) {
@@ -184,7 +190,8 @@ function selectClick(){
 
 	}
 	var conditions=[];
-	$.each(s,function(){	
+	var execHql=[];
+	$.each(s,function(){
 		var inputVal=$(this).val().trim();
 		if(this.id.trim().length <= 0 || this.id == null){
 			var opeVal=$('input[name=ope_'+$(this).attr('name')+']').val().trim();
@@ -194,44 +201,63 @@ function selectClick(){
 				message +=dataClass[$(this).attr('name')]+"，";			
 			}
 		}
-		
-		if(inputVal != "" ){
+// 		if(inputVal == ""){
+// 			hql='';
+// 			hql +=$(this).attr('name');
+// 			hql +=" is not null";
+			
+// 		}else
+			if(inputVal != "" ){
 			//hql +=' '+$('input:radio[name=rdo_'+$(this).attr('name')+']:checked').val()+' ';	
 			hql='';
 			hql +=$(this).attr('name');
 			switch($('input[name=ope_'+$(this).attr('name')+']').val()){
 					case '1':
 						hql +=' like  \'%'+$(this).val()+'%\'';
-						
+						execHql.push( "like");
+						execHql.push("%"+$(this).val()+"%");
 						break;
 					case '2':
 						hql +=' like  \''+$(this).val()+'%\'';
+						execHql.push( "like");
+						execHql.push($(this).val()+"%");
 						break;
 					case '3':
 						hql +=' like  \'%'+$(this).val()+'\'';
+						execHql.push( "like");
+						execHql.push("%"+$(this).val());
 						break;
 					default:
 						if($(this).attr('id')==("a_"+$(this).attr('name'))){
-							hql +=' >= ';						
+							hql +=' >= ';		
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( ">=");
+							execHql.push($(this).val());
 						}else if($(this).attr('id')==("b_"+$(this).attr('name'))){
 							hql +=' <= ';
 							hql +=' \''+moment($(this).val()).add('days', 1).format('YYYY-MM-DD')+'\'';
+							execHql.push( "<=");
+							execHql.push(moment($(this).val()).add('days', 1).format('YYYY-MM-DD'));
 						}else if($(this).attr('id')==("s_"+$(this).attr('name'))){
 							hql +=' = ';
 							hql +=' \''+moment($(this).val()).format('YYYY-MM-DD')+'\'';
+							execHql.push( "=");
+							execHql.push(moment($(this).val()).format('YYYY-MM-DD'));	
 						}else if($(this).attr('id')==("c_"+$(this).attr('name'))){
 							hql +=' <= ';
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( "<=");
+							execHql.push($(this).val());
 						}else{
 							hql +=' '+$('input[name=ope_'+$(this).attr('name')+']').val();
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( $('input[name=ope_'+$(this).attr('name')+']').val());
+							execHql.push($(this).val());
 						}
 						break;
 			}		
 			conditions.push(hql);			
 		}
-	
 	});
 	if(flag){
 		$.messager.alert('提示', message+'条件输入不完整', 'error');
@@ -329,7 +355,7 @@ function selectClick(){
 	      			});	
 	      			
 	      		
-					var m = step1Ok(conditions.join(" and "),allFields);	
+					var m = step1Ok(conditions.join(" and "),allFields,	execHql.join(" , "));	
 	      			p.dialog('close');	      			
 	      			var cmenu;
 	      			function createColumnMenu(){
@@ -393,30 +419,30 @@ function selectClick(){
 		});
 	}	
 }
-function step1Ok(cons,allFields) {
+function step1Ok(cons,allFields,exec) {
   
    	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
 	var p = resultDg.datagrid('getPager'); 
     $(p).pagination({ 
     		onSelectPage: function (pageNumber, pageSize) { 
-	              getData(pageNumber, pageSize,cons,allFields); 
+	              getData(pageNumber, pageSize,cons,allFields,exec); 
 	              var p = resultDg.datagrid('getPager'); 
 	              $(p).pagination({ 
-	            		    total:total,
+	            		    total:$('#total_' + query).val(),
 	            		    pageSize:pageSize
            		  });
          	 } 
      });
-     getData(1,pageSize,cons,allFields);
+     getData(1,pageSize,cons,allFields,exec);
      var p = resultDg.datagrid('getPager'); 
      $(p).pagination({ 
-    		    total:total,
+    		    total:$('#total_' + query).val(),
     		    pageSize:pageSize
 	 });
 };
 
-function getData(page, rows,cons,allFields) { 
+function getData(page, rows,cons,allFields,exec) { 
 	query = lnyw.tab_options().query;
 
 	resultDg = $('#result_' + query);
@@ -427,34 +453,58 @@ function getData(page, rows,cons,allFields) {
 		dataType : 'json',
    		data : {
 			hqls :cons,
+			exec:exec,
 			query:query,
 			//拼写显示名称
 			con  :allFields.join(','),
 			did  :did,	
+			userId  :userId,	
 			page :page,
 			rows :rows,
+			total :$('#total_' + query).val(),
 		},
         error: function (XMLHttpRequest, textStatus, errorThrown) { 
             alert(textStatus); 
             $.messager.progress('close'); 
         }, 
         success: function (data) { 
-            sqls=data.obj.obj;
-					var dgDatas=[];
-					//遍历后台传回查询的数据
-					$.each(data.obj.rows,function(){
-					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
-						var onlyData=Object.create(Object.prototype);
-						for( var i=0;i<this.length;i++){	
-							
+          	  $('#exportExcel_sql' + query).val(data.obj.obj);
+				var dgDatas=[];
+				//遍历后台传回查询的数据
+				$.each(data.obj.rows,function(){
+				//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
+					var onlyData=Object.create(Object.prototype);
+					for( var i=0;i<this.length;i++){	
+						if(allFields[i] != undefined){
 							var allF=allFields[i].replace('(','abc').replace(')','xyz');
-							onlyData[allF]=this[i];						
-						}	
-						dgDatas.push(onlyData);						
-					});	
-            $.messager.progress('close'); 
-            total=data.obj.total;
-            resultDg.datagrid('loadData', dgDatas);
+							onlyData[allF]=this[i];	
+						}
+											
+					}	
+					dgDatas.push(onlyData);						
+				});	
+	            $.messager.progress('close');          	          
+	           $('#total_' + query).val(data.obj.total);
+	         
+	           
+// 	            eval("var total_=to");
+// 	            console.info(eval("total_"));
+// 	            total=eval("total_");
+// 	    		eval("total=total"+query);
+// 	            resultDg.pagination('refresh');	// 刷新页面右栏的信息
+// 	            resultDg.pagination('refresh',{	// 改变选项并刷新页面右栏的信息
+// 	              total: 114,
+// 	              pageNumber: 6
+// 	            });
+// 				if(data.obj.obj.indexOf("execute") >=0 ){
+// 					if(data.obj.total >38 && data.obj.total < 100){
+// 						pageSize=100;
+// 					}else{
+// 						pageSize=data.obj.total;
+// 					}
+					
+// 				}
+	            resultDg.datagrid('loadData', dgDatas);
        } 
     }); 
 };
@@ -509,7 +559,8 @@ function exportExcel(){
 		data : {
 			query:query,
 			did:did,
-			sqls:sqls,
+			userId:userId,
+			sqls: $('#exportExcel_sql' + query).val(),
 			con :fields.join(','),
 			titles:titles.join(','),
 		},
@@ -536,6 +587,8 @@ function exportExcel(){
 <div id='jxc_select_layout' class='easyui-layout' style="height: 100%;">
 	<div data-options="region:'west',title:'查询条件',split:true,"
 		style="width: 310px;">
+		<input type="hidden" id="total" name="total" >
+		<input type="hidden" id="exportExcel_sql" name="exportExcel_sql" >
 		<div id='jxc_select' class='easyui-layout'
 			data-options="split:false,border:false,fit:true"
 			style="height: 100%;">

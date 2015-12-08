@@ -129,7 +129,13 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 		Query q = this.getCurrentSession().createQuery(hql);
 		return (Long) q.uniqueResult();
 	}
-
+	
+	@Override
+	public Long countBySQL(String sql) {
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		return  getLong(query.list().get(0));
+	}
+	
 	@Override
 	public Long count(String hql, Map<String, Object> params) {
 		Query q = this.getCurrentSession().createQuery(hql);
@@ -157,6 +163,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 		}
 		return q.executeUpdate();
 	}
+	
 	
 	@Override
 	public Object[] getMBySQL(String sql, Map<String, Object> params) {

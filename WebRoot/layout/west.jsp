@@ -12,6 +12,7 @@ $(function() {
 	            		'${pageContext.request.contextPath}' + node.attributes.url,
 	            		node.id,
 	            		node.attributes.did,
+	            		node.attributes.userId,
 	            		node.attributes.lx,
 	            		node.attributes.query);
 			}
@@ -19,7 +20,7 @@ $(function() {
 	});	
 	
 	//在右边center区域打开菜单，新增tab
-	function Open(text, url, id, did, lx, query) {
+	function Open(text, url, id, did, userId, lx, query) {
 		var t = $("#layout_center_tabs");
 		var exists = false;
 		var ts = t.tabs('tabs');
@@ -40,6 +41,7 @@ $(function() {
 			t.tabs('add', {
 				id : id,
 				did : did,
+				userId : userId,
 				lx : lx,
 				query: query,
 				title : text,

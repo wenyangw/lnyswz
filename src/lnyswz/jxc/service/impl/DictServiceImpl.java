@@ -115,7 +115,7 @@ public class DictServiceImpl implements DictServiceI {
 	 */
 	@Override
 	public List<Dict> listDict(Dict dict) {
-		String hql = "from TDict t where genre = '03' ";
+		String hql = "from TDict t where genre >= '03' order by cname ";
 		List<TDict> list = dictDao.find(hql);
 		return changeDict(list);
 	}
@@ -124,7 +124,7 @@ public class DictServiceImpl implements DictServiceI {
 	 */
 	@Override
 	public List<Dict> selectTree(Dict dict) {
-		String dictSql = "from TDict t where t.genre = '03' and ename= '"
+		String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 				+ dict.getSelectType() + "'";
 		TDict dicts = dictDao.get(dictSql);
 		String hql = "from TDict t where genre = '01' and t.tname ='"+dicts.getEname()+"' order by orderNum";
@@ -132,11 +132,19 @@ public class DictServiceImpl implements DictServiceI {
 		return changeDict(list);
 	}
 	
-	
+	@Override
+	public Dict isSelectType(Dict dict) {
+		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
+		TDict td = dictDao.get(hql);
+		Dict d = new Dict();
+		BeanUtils.copyProperties(td, d);
+		return d;
+
+	}
 	
 	@Override
 	public boolean isNeedDep(Dict dict) {
-		String hql = "from TDict t where genre = '03' and ename= '"+ dict.getSelectType() + "'";
+		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
 		TDict d = dictDao.get(hql);
 		if(d.getIsDepName().equals("1")){
 			return true;
@@ -165,9 +173,13 @@ public class DictServiceImpl implements DictServiceI {
 			if (dict.getSqlSelected() != null) {
 				where += " and t.display = '1'";
 			}
-			where += " and t.tname = :tname order by orderNum";
+			if (dict.getIsShow() != null) {
+				where += " and isShow = '1' ";
+			}
+
+			where += " and t.tname = :tname   order by orderNum";
 			hql += where;
-			String dictSql = "from TDict t where t.genre = '03' and ename= '"
+			String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 					+ dict.getSelectType() + "'";
 			TDict dicts = dictDao.get(dictSql);
 			params.put("tname", dicts.getEname());

@@ -53,6 +53,10 @@
 			<td><input type="checkbox" value="1"  name="isDepName"></td>
 		</tr>
 		<tr>
+			<th><label for="isShow">是否显示</label></th>
+			<td><input type="checkbox" value="1"  name="isShow"></td>
+		</tr>
+		<tr>
 			<th><label for="frozen">是否固定</label></th>
 			<td><input type="checkbox" value="1"  name="frozen"></td>
 		</tr>

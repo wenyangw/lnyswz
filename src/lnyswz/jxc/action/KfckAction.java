@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Kfck;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfckServiceI;
+import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 /**
  * 采购需求Action
  * @author 王文阳
@@ -35,7 +38,8 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 		kfck.setCreateName(user.getRealName());
 		Json j = new Json();
 		try{
-			kfckService.save(kfck);		
+			j.setObj(kfckService.save(kfck));
+			;		
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("保存库房出库成功！");
@@ -76,6 +80,13 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 	
 	public void getSpkc(){
 		writeJson(kfckService.getSpkc(kfck));
+	}
+	
+	public void printKfck() {
+		User user = (User)session.get("user");
+		kfck.setCreateName(user.getRealName());
+		DataGrid dg = kfckService.printKfck(kfck);
+		Export.print(dg, Constant.REPORT_KFCK.get(kfck.getBmbh()));
 	}
 	
 //	public void toYwrk(){

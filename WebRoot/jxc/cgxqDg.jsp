@@ -19,6 +19,7 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
+			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'needAudit',title:'等级',align:'center',
 				styler: function(value, rowData){
 					if(rowData.needAudit == rowData.isAudit){
@@ -37,9 +38,10 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
-			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
+	        {field:'createName',title:'创建人',align:'center'},
+	        {field:'khmc',title:'客户',align:'center'},
           	{field:'spbh',title:'商品编号',align:'center'},
             {field:'spmc',title:'名称',align:'center'},
             {field:'spcd',title:'产地',align:'center'},
@@ -106,7 +108,11 @@ $(function(){
             	formatter: function(value){
             		return value == undefined ? '' : moment(value).format('YYYY-MM-DD');
         		}},
-// 	        {field:'xqsj',title:'需求时间',align:'center'},
+ 	        {field:'xqsj',title:'需求时间',align:'center',
+ 	        	formatter: function(value){
+            		return value == undefined ? '' : moment(value).format('YYYY-MM-DD');
+        		}},
+ 	        
 	        {field:'hjje',title:'金额',align:'center',
             	formatter: function(value){
             		return value == 0 ? '' : value;
@@ -125,6 +131,19 @@ $(function(){
         			return lnyw.memo(value, 15);
         		}},
         	{field:'isLs',title:'*临时',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				},
+        		sorter: function(a,b){
+        			a = a == undefined ? 0 : a;
+        			b = b == undefined ? 0 : b;
+					return (a-b);  
+				}},
+			{field:'isZs',title:'*直送',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
 						return '是';

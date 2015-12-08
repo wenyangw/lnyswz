@@ -36,6 +36,7 @@ public class Dict {
 	private String inGroupBy;
 	private String isDepName;
 	private String orderByTree;
+	private String isShow;
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -286,6 +287,14 @@ public class Dict {
 
 	public void setOrderByTree(String orderByTree) {
 		this.orderByTree = orderByTree;
+	}
+
+	public String getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(String isShow) {
+		this.isShow = isShow;
 	}
 
 }

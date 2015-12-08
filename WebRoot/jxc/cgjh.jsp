@@ -77,10 +77,18 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
-			{field:'cgjhlsh',title:'流水号',align:'center'},
+			{field:'cgjhlsh',title:'流水号',align:'center',
+				styler: function(value, rowData){
+					if(rowData.isCompleted == '1'){
+						return 'color:red;';
+					}
+       			}},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
-	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'gysmc',title:'*供应商名称',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
 	        {field:'ywyId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库',align:'center'},
 // 	        {field:'shdz',title:'送货地址',align:'center',
@@ -278,6 +286,13 @@ $(function(){
                        	formatter: function(value){
                        		return value == 0 ? '' : value;
                    		}},
+                  	{field:'cdwyrsl',title:'到货数量2',width:100,align:'center',
+                        formatter: function(value){
+                          	return value == 0 ? '' : value;
+                       	},
+                       	styler: function(value,row){
+                      			return 'color:red;';
+               			}},
                     {field:'cdwdj',title:'单价2',width:100,align:'center',
                        	formatter: function(value){
                        		return value == 0 ? '' : value;
@@ -327,9 +342,17 @@ $(function(){
 			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
-				{field:'spbh',title:'商品编号',align:'center'},
+			{field:'spbh',title:'*商品编号',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
 			{field:'spmc',title:'名称',align:'center'},
-			{field:'spcd',title:'产地',align:'center'},
+			{field:'spcd',title:'*产地',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		if(typeof(a) == "string"){ 
+	        			return a.localeCompare(b); 
+	        		}
+	        	}},
 			{field:'sppp',title:'品牌',align:'center'},
 			{field:'spbz',title:'包装',align:'center'},
 			{field:'zjldwmc',title:'单位1',align:'center',
@@ -1565,11 +1588,18 @@ function searchCgjh(){
 function createCgjh(){
 	var rows = cgjh_cgxqDg.datagrid('getSelections');
 	var cgxqDetIds = [];
+	var cgxqlshs = [];
+	var cgxqBzs = [];
 	if(rows.length > 0){
 		$.messager.confirm('请确认', '是否要将选中记录生成采购计划？', function(r) {
 			if (r) {
 				for ( var i = 0; i < rows.length; i++) {
 					cgxqDetIds.push(rows[i].id);
+					//检查每条需求的备注，并合并
+					if(cgxqlshs.indexOf(rows[i].cgxqlsh) < 0){
+						cgxqlshs.push(rows[i].cgxqlsh);						
+						cgxqBzs.push(rows[i].bz);
+					}
 				}
 				var cgxqDetStr = cgxqDetIds.join(',');
 				$.ajax({
@@ -1586,10 +1616,12 @@ function createCgjh(){
 							d.rows[index].lxr = rows[0].lxr;
 							d.rows[index].shdz = rows[0].shdz;
 							d.rows[index].dhsj = rows[0].dhsj;
+							d.rows[index].spdj = '一等';
 						});
 						cgjh_spdg.datagrid('loadData', d.rows);
 						
 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
+						$('input[name=jxc_cgjh_bz]').val(cgxqBzs.join(','));
 						cgjh_tabs.tabs('select', 0);
 					}
 				});

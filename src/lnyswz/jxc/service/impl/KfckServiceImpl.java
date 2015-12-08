@@ -29,6 +29,8 @@ import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfck;
 import lnyswz.jxc.bean.KfckDet;
+import lnyswz.jxc.bean.Kfrk;
+import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TCgxqDet;
@@ -37,6 +39,8 @@ import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TKfck;
 import lnyswz.jxc.model.TKfckDet;
+import lnyswz.jxc.model.TKfrk;
+import lnyswz.jxc.model.TKfrkDet;
 import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TOperalog;
@@ -65,11 +69,12 @@ public class KfckServiceImpl implements KfckServiceI {
 	
 
 	@Override
-	public void save(Kfck kfck) {
+	public Kfck save(Kfck kfck) {
 		TKfck tKfck = new TKfck();
 		BeanUtils.copyProperties(kfck, tKfck);
 		tKfck.setCreateTime(new Date());
-		tKfck.setKfcklsh(LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao));
+		String lsh = LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao);
+		tKfck.setKfcklsh(lsh);
 		tKfck.setBmmc(depDao.load(TDepartment.class, kfck.getBmbh()).getDepName());
 		tKfck.setIsCj("0");
 		
@@ -176,6 +181,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		
 		OperalogServiceImpl.addOperalog(kfck.getCreateId(), kfck.getBmbh(), kfck.getMenuId(), tKfck.getKfcklsh(), "生成库房出库", operalogDao);
 		
+		Kfck rKfck = new Kfck();
+		rKfck.setKfcklsh(lsh);
+		return rKfck;
 	}
 	
 	@Override
@@ -419,6 +427,74 @@ public class KfckServiceImpl implements KfckServiceI {
 //		dg.setRows(nl);
 //		return dg;
 //	}
+	
+	@Override
+	public DataGrid printKfck(Kfck kfck) {
+		DataGrid datagrid = new DataGrid();
+		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+		
+		TXsth tXsth = null;
+		if(tKfck.getTXsths().size() > 0){
+			tXsth = ((TXsthDet)tKfck.getTXsths().iterator().next()).getTXsth();
+		}
+		
+		List<KfckDet> nl = new ArrayList<KfckDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		for (TKfckDet yd : tKfck.getTKfckDets()) {
+			KfckDet kfckDet = new KfckDet();
+			BeanUtils.copyProperties(yd, kfckDet);
+			nl.add(kfckDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfckDet());
+			}
+		}
+		String bz = "";
+		if(tXsth != null){
+		bz = tXsth.getXsthlsh() + "/";
+		if(tXsth.getYwymc() != null){
+			bz += tXsth.getYwymc().trim();
+		}
+		
+		if("0".equals(tXsth.getThfs())){
+			bz += " 送货：";
+		}else{
+			bz += " 自提：";
+		}
+		if(tXsth.getShdz() != null){
+			bz += " " + tXsth.getShdz();
+		}
+		if(tXsth.getThr() != null){
+			bz += " " + tXsth.getThr();
+		}
+		if(tXsth.getCh() != null){
+			bz += " " + tXsth.getCh();
+		}
+		}
+		
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   出   库   单");
+		map.put("kfcklsh", kfck.getKfcklsh());
+		map.put("bmmc", tKfck.getBmmc());
+		map.put("printName", kfck.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tKfck.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("khbh", tKfck.getKhbh());
+		map.put("khmc", tKfck.getKhmc());
+		map.put("fhmc", tKfck.getFhmc() != null ? tKfck.getFhmc() : "");
+		map.put("ckmc", tKfck.getCkmc());
+		map.put("hjsl", hj);
+		map.put("bz", bz);
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
 	
 	@Override
 	public DataGrid getSpkc(Kfck kfck) {

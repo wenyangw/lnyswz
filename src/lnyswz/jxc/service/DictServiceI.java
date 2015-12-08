@@ -17,6 +17,8 @@ public interface DictServiceI {
 	public List<Dict> listDict(Dict dict);
 	
 	public boolean isNeedDep(Dict d);
+
+	public Dict isSelectType(Dict dict);
 	
 	public List<Dict> selectTree(Dict dict);
 
