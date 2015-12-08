@@ -84,6 +84,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			BeanUtils.copyProperties(cgxqDet, tDet);
 			tDet.setIsCancel("0");
 			tDet.setIsRefuse("0");
+			tDet.setIsComplete("0");
 			tDet.setTCgxq(tCgxq);
 			if(cgxqDet.getZdwdj() == null){
 				tDet.setZdwdj(Constant.BD_ZERO);
@@ -136,6 +137,17 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	}
 	
 	@Override
+	public void updateComplete(Cgxq cgxq) {
+		TCgxqDet tCgxqDet = detDao.load(TCgxqDet.class, cgxq.getId());
+		tCgxqDet.setRefuseId(cgxq.getRefuseId());
+		tCgxqDet.setRefuseTime(new Date());
+		tCgxqDet.setRefuseName(cgxq.getRefuseName());
+		tCgxqDet.setIsComplete("1");			
+		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
+				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "完成采购需求记录", operalogDao);
+	}
+	
+	@Override
 	public DataGrid datagrid(Cgxq cgxq) {
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh"; // and t.TCgxq.createTime > :createTime"
@@ -153,7 +165,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){
-			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit";
+			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
 			hql += " and t.TCgxq.createId = :createId";

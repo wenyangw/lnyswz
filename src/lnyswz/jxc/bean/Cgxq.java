@@ -40,6 +40,7 @@ public class Cgxq {
 	private Integer refuseId;
 	private Date refuseTime;
 	private String refuseName;
+	private String isComplete;
 	private String spbh;
 	private String spmc;
 	private String spcd;
@@ -307,6 +308,14 @@ public class Cgxq {
 
 	public void setRefuseName(String refuseName) {
 		this.refuseName = refuseName;
+	}
+
+	public String getIsComplete() {
+		return isComplete;
+	}
+
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
 	}
 
 	public int getId() {

@@ -49,6 +49,7 @@ public class TCgxqDet implements java.io.Serializable {
 	private Integer refuseId;
 	private Date refuseTime;
 	private String refuseName;
+	private String isComplete;
 	private TCgjh TCgjh;
 
 	public TCgxqDet() {
@@ -58,7 +59,7 @@ public class TCgxqDet implements java.io.Serializable {
 			String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs,
 			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal zdwxsdj,
 			BigDecimal cdwxsdj, BigDecimal spje, String isCancel, Integer cancelId, Date cancelTime,
-			String cancelName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName,
+			String cancelName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName, String isComplete,
 			TCgjh TCgjh) {
 		this.id = id;
 		this.TCgxq = TCgxq;
@@ -87,6 +88,7 @@ public class TCgxqDet implements java.io.Serializable {
 		this.refuseId = refuseId;
 		this.refuseTime = refuseTime;
 		this.refuseName = refuseName;
+		this.isComplete = isComplete;
 		this.TCgjh = TCgjh;
 	}
 
@@ -336,6 +338,15 @@ public class TCgxqDet implements java.io.Serializable {
 	
 	public void setRefuseTime(Date refuseTime) {
 		this.refuseTime = refuseTime;
+	}
+	
+	@Column(name = "isComplete", nullable = false, length = 1)
+	public String getIsComplete() {
+		return isComplete;
+	}
+	
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)

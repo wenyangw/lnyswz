@@ -90,22 +90,22 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 	/**
 	 * 完成采购需求
 	 */
-//	public void complete(){
-//		User user = (User)session.get("user");
-//		cgxq.setCompleteId(user.getId());
-//		cgxq.setCompleteName(user.getRealName());
-//		Json j = new Json();
-//		try{
-//			cgxqService.updateComplete(cgxq);		
-//			//添加成功
-//			j.setSuccess(true);
-//			j.setMsg("完成采购需求成功！");
-//		}catch(Exception e){
-//			j.setMsg("完成采购需求失败！");
-//			e.printStackTrace();
-//		}
-//		writeJson(j);
-//	}
+	public void complete(){
+		User user = (User)session.get("user");
+		cgxq.setRefuseId(user.getId());
+		cgxq.setRefuseName(user.getRealName());
+		Json j = new Json();
+		try{
+			cgxqService.updateComplete(cgxq);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("完成采购需求成功！");
+		}catch(Exception e){
+			j.setMsg("完成采购需求失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
 	
 	public void datagrid(){
 		//操作员

@@ -1539,6 +1539,36 @@ function refuseCgxq(){
 	}
 }
 
+function completeCgxq(){
+	var row = cgjh_cgxqDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '您要完成选中的采购需求单？', function(r) {
+			if (r) {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!complete.action',
+					data : {
+						id : row.id,
+						bmbh : did,
+						menuId : menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						cgjh_dg.datagrid('reload');
+						cgjh_dg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
+
 // function searchCgxqInCgjh(){
 // 	cgjh_cgxqDg.datagrid('load',{
 // 		bmbh: did,
