@@ -124,6 +124,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					tDet.setCdwsl(Constant.BD_ZERO);
 				}
 			}
+			tDet.setIsBack("0");
+			tDet.setIsLock("0");
 			tDet.setTCgjh(tCgjh);
 			tDets.add(tDet);
 		}
@@ -246,6 +248,25 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		tCgjh.setReturnHt("1");
 		OperalogServiceImpl.addOperalog(cgjh.getHtId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(), 
 				"采购计划单标记合同收回", operalogDao);
+	}
+	
+	@Override
+	public void updateLockSpInCgjh(Cgjh cgjh) {
+		TCgjhDet tCgjhDet = detDao.get(TCgjhDet.class, cgjh.getId());
+		//tCgjh.setHtId(cgjh.getHtId());
+		//tCgjh.setHtTime(new Date());
+		//tCgjh.setHtName(cgjh.getCompleteName());
+		tCgjhDet.setIsLock("1");
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), String.valueOf(cgjh.getId()), 
+				"采购计划商品锁定", operalogDao);
+	}
+	
+	@Override
+	public void updateBackSpInCgjh(Cgjh cgjh) {
+		TCgjhDet tCgjhDet = detDao.get(TCgjhDet.class, cgjh.getId());
+		tCgjhDet.setIsBack("1");
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), String.valueOf(cgjh.getCgjhlsh()), 
+				"采购计划商品取消", operalogDao);
 	}
 	
 	@Override
@@ -438,6 +459,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
 			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
+			
+			if(cgjh.getFromOther().equals("fromKfrk")){
+				hql += " and t.isLock = '0' and isBack = 0";
+			}
+			
+			if(cgjh.getFromOther().equals("fromYwrk")){
+				hql += " and isBack = 0";
+			}
+			
 			//是否直送
 			if("1".equals(cgjh.getIsZs())){
 				 hql += " and t.TCgjh.isZs = '1'";

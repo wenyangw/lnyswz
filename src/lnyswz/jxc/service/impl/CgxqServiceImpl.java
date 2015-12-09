@@ -58,6 +58,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	private BaseDaoI<TCgxq> cgxqDao;
 	private BaseDaoI<TCgxqDet> detDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TYwzz> ywzzDao;
@@ -168,8 +169,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
-			hql += " and t.TCgxq.createId = :createId";
-			params.put("createId", cgxq.getCreateId());
+			TUser tUser = userDao.load(TUser.class, cgxq.getCreateId());
+			if(tUser.getTPost().getId().equals(Constant.USER_POSTID)){
+				hql += " and t.TCgxq.createId = :createId";
+				params.put("createId", cgxq.getCreateId());
+			}
 		}
 		
 		String countHql = "select count(*) " + hql;
@@ -328,6 +332,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
 	}
 
 	@Autowired
