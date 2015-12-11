@@ -155,7 +155,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	@Override
 	public DataGrid printCgxq(Cgxq cgxq) {
 		DataGrid datagrid = new DataGrid();
-		TCgxq tCgxq = cgxqDao.load(TCgxq.class, cgxq.getCgjhlsh());
+		TCgxq tCgxq = cgxqDao.load(TCgxq.class, cgxq.getCgxqlsh());
 		BigDecimal hjsl = Constant.BD_ZERO;
 		
 		String hql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh and t.isCancel = '0' order by t.spbh";
