@@ -326,6 +326,62 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+	
+	@Override
+	public DataGrid toYwdb(Cgxq cgxq){
+		String sql = "select spbh, sum(zdwsl) zdwsl from t_cgxq_det t ";
+		
+		if(cgxqDetIds != null && cgxqDetIds.trim().length() > 0){
+			String[] cs = cgxqDetIds.split(",");
+			sql += "where ";
+			for(int i = 0; i < cs.length; i++){
+				sql += "t.id = '" + cs[i] + "'";
+				if(i != cs.length - 1){
+					sql += " or ";
+				}
+ 			}
+		}
+		sql += " group by spbh";
+		logger.info("sql:" + sql);
+		
+		List<Object[]> l = detDao.findBySQL(sql);
+		
+		List<CgxqDet> nl = new ArrayList<CgxqDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			CgxqDet cd = new CgxqDet();
+			cd.setSpbh(spbh);
+			cd.setSpmc(sp.getSpmc());
+			cd.setSpcd(sp.getSpcd());
+			cd.setSppp(sp.getSppp());
+			cd.setSpbz(sp.getSpbz());
+			cd.setZjldwId(sp.getZjldw().getId());
+			cd.setZjldwmc(sp.getZjldw().getJldwmc());
+			cd.setZdwsl(zdwsl);
+			if(sp.getCjldw() != null){
+				cd.setCjldwId(sp.getCjldw().getId());
+				cd.setCjldwmc(sp.getCjldw().getJldwmc());
+				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
+					cd.setZhxs(sp.getZhxs());
+					cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				}else{
+					cd.setZhxs(Constant.BD_ZERO);
+					cd.setCdwsl(Constant.BD_ZERO);
+				}
+			}
+			
+			nl.add(cd);
+		}
+		nl.add(new CgxqDet());
+		DataGrid dg = new DataGrid();
+		dg.setRows(nl);
+		return dg;
+	}
+
 		
 	@Autowired
 	public void setCgxqDao(BaseDaoI<TCgxq> cgxqDao) {

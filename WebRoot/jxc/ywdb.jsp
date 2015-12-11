@@ -741,7 +741,7 @@ function setValueBySpbh(rowData){
 
 //////////////////////////////////////////////以上为商品列表处理代码
 
-//////////////////////////////////////////////以下为库房入库划列表处理代码
+//////////////////////////////////////////////以下为业务调拨列表处理代码
 function cjYwdb(){
 	var row = ywdb_dg.datagrid('getSelected');
 	if (row != undefined) {
@@ -791,6 +791,56 @@ function searchYwdb(){
 
 //////////////////////////////////////////////以上为业务调拨列表处理代码
 
+//////////////////////////////////////////////以下为采购需求列表处理代码
+
+function createCgjh(){
+	var rows = cgjh_cgxqDg.datagrid('getSelections');
+	var cgxqDetIds = [];
+	var cgxqlshs = [];
+	var cgxqBzs = [];
+	if(rows.length > 0){
+		$.messager.confirm('请确认', '是否要将选中记录生成采购计划？', function(r) {
+			if (r) {
+				for ( var i = 0; i < rows.length; i++) {
+					cgxqDetIds.push(rows[i].id);
+					//检查每条需求的备注，并合并
+					if(cgxqlshs.indexOf(rows[i].cgxqlsh) < 0){
+						cgxqlshs.push(rows[i].cgxqlsh);						
+						cgxqBzs.push(rows[i].bz);
+					}
+				}
+				var cgxqDetStr = cgxqDetIds.join(',');
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!toCgjh.action',
+					data : {
+						cgxqDetIds : cgxqDetStr
+					},
+					dataType : 'json',
+					success : function(d) {
+						$.each(d.rows, function(index){
+							if(index == d.rows.length - 1){
+								return false;
+							}
+							d.rows[index].lxr = rows[0].lxr;
+							d.rows[index].shdz = rows[0].shdz;
+							d.rows[index].dhsj = rows[0].dhsj;
+							d.rows[index].spdj = '一等';
+						});
+						cgjh_spdg.datagrid('loadData', d.rows);
+						
+						$('input[name=cgxqDetIds]').val(cgxqDetStr);
+						$('input[name=jxc_cgjh_bz]').val(cgxqBzs.join(','));
+						cgjh_tabs.tabs('select', 0);
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
+//////////////////////////////////////////////以上为采购需求列表处理代码
 
 </script>
 

@@ -122,6 +122,10 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		writeJson(cgxqService.toCgjh(cgxq.getCgxqDetIds()));
 	}
 	
+	public void toYwdb(){
+		writeJson(cgxqService.toYwdb(cgxq));
+	}
+	
 	public void getSpkc(){
 		writeJson(cgxqService.getSpkc(cgxq));
 	}
