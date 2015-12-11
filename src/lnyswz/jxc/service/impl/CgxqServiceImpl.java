@@ -27,10 +27,14 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
+import lnyswz.jxc.bean.Cgjh;
+import lnyswz.jxc.bean.CgjhDet;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.XsthDet;
+import lnyswz.jxc.model.TCgjh;
+import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
@@ -146,6 +150,55 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		tCgxqDet.setIsComplete("1");			
 		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
 				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "完成采购需求记录", operalogDao);
+	}
+	
+	@Override
+	public DataGrid printCgxq(Cgxq cgxq) {
+		DataGrid datagrid = new DataGrid();
+		TCgxq tCgxq = cgxqDao.load(TCgxq.class, cgxq.getCgjhlsh());
+		BigDecimal hjsl = Constant.BD_ZERO;
+		
+		String hql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh and t.isCancel = '0' order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgxqlsh", cgxq.getCgxqlsh());
+		List<TCgxqDet> tCgxqDets = detDao.find(hql, params);
+		
+		List<CgxqDet> nl = new ArrayList<CgxqDet>();
+		for (TCgxqDet yd : tCgxqDets) {
+			CgxqDet cgxqDet = new CgxqDet();
+			BeanUtils.copyProperties(yd, cgxqDet);
+			if (cgxqDet.getSpbh().substring(0, 1).equals("4")){
+				cgxqDet.setZdwdj(Constant.BD_ZERO);
+			}else{
+				cgxqDet.setZdwdj(cgxqDet.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)));
+			}
+			hjsl = hjsl.add(yd.getCdwsl());
+			nl.add(cgxqDet);
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new CgxqDet());
+			}
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "采   购   需   求   单");
+		map.put("gsmc", Constant.BMMCS.get(tCgxq.getBmbh()));
+		map.put("gysbh", tCgxq.getGysbh());
+		map.put("gysmc", tCgxq.getGysmc());
+		map.put("khbh", tCgxq.getKhbh());
+		map.put("khmc", tCgxq.getKhmc());
+		map.put("bmmc", tCgxq.getBmmc());
+		map.put("createTime", DateUtil.dateToString(tCgxq.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("cgxqlsh", tCgxq.getCgxqlsh());
+		map.put("hjsl", hjsl);
+		map.put("hjje", tCgxq.getHjje());
+		map.put("bz", tCgxq.getBz());
+		map.put("printName", cgxq.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
 	}
 	
 	@Override

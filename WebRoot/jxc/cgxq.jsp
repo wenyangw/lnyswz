@@ -371,6 +371,14 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	if(needA == undefined || needA == '0'){
+			    	$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + rsp.obj.cgxqlsh + "&bmbh=" + did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+		    	}
 			}  
 		},
 		error: function(){
@@ -827,6 +835,25 @@ function addressLoad(){
 // 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 // 	}
 // }
+
+function printCgxq(){
+	var row = cgxq_dg.datagrid('getSelected');
+	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+				if (r) {
+					var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + row.cgxqlsh + "&bmbh=" + did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的需求单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
