@@ -8,6 +8,7 @@ var ywdb_lx;
 var ywdb_menuId;
 var ywdb_spdg;
 var ywdb_dg;
+var ywdb_cgxqDg;
 var ywdb_tabs;
 var jxc_ywdb_ckComboF;
 var jxc_ywdb_ckComboT;
@@ -131,6 +132,128 @@ $(function(){
         }
     });
 	
+	ywdb_cgxqDg = $('#jxc_ywdb_cgxqDg').datagrid({
+		fit : true,
+	    border : false,
+	    remoteSort: false,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+			{field:'id',title:'记录号',align:'center',checkbox:true},
+			{field:'cgxqlsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'时间',align:'center'},
+			{field:'spbh',title:'*商品编号',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
+			{field:'spmc',title:'名称',align:'center'},
+			{field:'spcd',title:'*产地',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		if(typeof(a) == "string"){ 
+	        			return a.localeCompare(b); 
+	        		}
+	        	}},
+			{field:'sppp',title:'品牌',align:'center'},
+			{field:'spbz',title:'包装',align:'center'},
+			{field:'zjldwmc',title:'单位1',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				}},
+			{field:'zdwsl',title:'数量1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'zdwdj',title:'单价1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'zdwxsdj',title:'销价1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				}},
+			{field:'cdwdj',title:'单价2',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'cdwxsdj',title:'销价2',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'spje',title:'金额',align:'center',
+			    formatter: function(value){
+			    	return value == 0 ? '' : lnyw.formatNumberRgx(value);
+					}},      
+	        {field:'gysbh',title:'供应商编号',align:'center', hidden:true},
+	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        {field:'khbh',title:'客户编号',align:'center', hidden:true},
+	        {field:'khmc',title:'客户名称',align:'center'},
+	        {field:'createId',title:'创建人id',align:'center',hidden:true},
+	        {field:'createName',title:'业务员',align:'center'},
+// 	        {field:'dhfs',title:'到货方式',align:'center'},
+	        {field:'lxr',title:'联系人',align:'center'},
+	        {field:'shdz',title:'送货地址',align:'center'},
+	        {field:'jsfsmc',title:'结算方式',align:'center'},
+	        {field:'dhsj',title:'到货时间',align:'center'},
+// 	        {field:'xqsj',title:'需求时间',align:'center'},
+	        {field:'hjje',title:'金额',align:'center'},
+        	{field:'bz',title:'备注',align:'center',
+        		formatter: function(value){
+        			return lnyw.memo(value, 15);
+        		}},
+        	{field:'cgjhlsh',title:'采购计划流水号',align:'center',
+           		formatter: function(value){
+           			return lnyw.memo(value, 15);
+           		}},
+        	{field:'isLs',title:'*临时',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				},
+        		sorter: function(a,b){
+        			a = a == undefined ? 0 : a;
+        			b = b == undefined ? 0 : b;
+					return (a-b);  
+				}},
+//         	{field:'isCancel',title:'状态',align:'center',sortable:true,
+//         		formatter : function(value) {
+// 					if (value == '1') {
+// 						return '取消';
+// 					} else {
+// 						return '正常';
+// 					}
+// 				},
+//         		sorter: function(a,b){
+//         			a = a == undefined ? 0 : a;
+//         			b = b == undefined ? 0 : b;
+// 					return (a-b);  
+// 				}},
+//         	{field:'isCompleted',title:'完成',align:'center',sortable:true,
+//         		formatter : function(value) {
+// 					if (value == '1') {
+// 						return '是';
+// 					} else {
+// 						return '否';
+// 					}
+// 				},
+// 				sorter: function(a,b){
+// 	        			a = a == undefined ? 0 : a;
+// 	        			b = b == undefined ? 0 : b;
+// 						return (a-b);  
+// 				}},
+	    ]],
+	    toolbar:'#jxc_ywdb_cgxqTb',
+	});
+	lnyw.toolbar(2, ywdb_cgxqDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywdb_did);
 	
 	//选中列表标签后，装载数据
 	ywdb_tabs = $('#jxc_ywdb_tabs').tabs({
@@ -140,6 +263,15 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/ywdbAction!datagrid.action',
 					queryParams:{
 						bmbh: ywdb_did,
+					}
+				});
+			}
+			if(index == 2){
+				ywdb_cgxqDg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/cgxqAction!datagrid.action',
+					queryParams:{
+						bmbh: ywdb_did,
+						fromOther: 'fromYwdb',
 					}
 				});
 			}
@@ -681,6 +813,7 @@ function searchYwdb(){
 						<th>备注</th><td colspan="7"><input name="jxc_ywdb_bz" style="width:90%"></td>
 					</tr>
 				</table>
+				<input name="cgxqlsh" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_ywdb_spdg'></table>
@@ -693,9 +826,17 @@ function searchYwdb(){
     <div title="业务调拨列表" data-options="closable:false" >
     	<table id='jxc_ywdb_dg'></table>
     </div>
+    <div title="采购需求列表" data-options="closable:false" >
+			<table id='jxc_ywdb_cgxqDg'></table>
+	</div>
 </div>
 
 <div id="jxc_ywdb_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeYwdb" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwdb();">查询</a>
+</div>
+<div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto">
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+	输入流水号、客户编号、名称、备注：<input type="text" name="searchCgxqInYwdb" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInYwdb();">查询</a>
 </div>

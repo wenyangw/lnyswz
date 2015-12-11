@@ -86,6 +86,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			tDet.setIsCancel("0");
 			tDet.setIsRefuse("0");
 			tDet.setIsComplete("0");
+			tDet.setIsDb("0");
 			tDet.setTCgxq(tCgxq);
 			if(cgxqDet.getZdwdj() == null){
 				tDet.setZdwdj(Constant.BD_ZERO);
@@ -107,8 +108,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 					tDet.setCdwxsdj(Constant.BD_ZERO);
 				}
 			}
+			tDet.setDbsl(Constant.BD_ZERO);
+			tDet.setCdbsl(Constant.BD_ZERO);
 			tDets.add(tDet);
 		}
+		
 		tCgxq.setTCgxqDets(tDets);
 		cgxqDao.save(tCgxq);
 		OperalogServiceImpl.addOperalog(cgxq.getCreateId(), cgxq.getBmbh(), cgxq.getMenuId(), 
@@ -166,7 +170,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){
-			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
+			if(cgxq.getFromOther().equals("fromCgjh")){
+				hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
+			}else if(cgxq.getFromOther().equals("fromYwdb")){
+				hql += " and t.isCancel = '0' and t.isRefuse = '0' and needAudit = isAudit and (t.isDb = '0' or t.zdwsl <> t.dbsl)";
+			}
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
 			TUser tUser = userDao.load(TUser.class, cgxq.getCreateId());

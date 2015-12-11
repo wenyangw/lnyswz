@@ -21,6 +21,7 @@ public class Ywdb{
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String cgxqlsh;
 	
 	private String search;
 	
@@ -163,6 +164,14 @@ public class Ywdb{
 
 	public void setCjName(String cjName) {
 		this.cjName = cjName;
+	}
+
+	public String getCgxqlsh() {
+		return cgxqlsh;
+	}
+
+	public void setCgxqlsh(String cgxqlsh) {
+		this.cgxqlsh = cgxqlsh;
 	}
 
 	public String getSearch() {

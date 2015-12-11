@@ -41,6 +41,7 @@ public class Cgxq {
 	private Date refuseTime;
 	private String refuseName;
 	private String isComplete;
+	private String isDb;
 	private String spbh;
 	private String spmc;
 	private String spcd;
@@ -58,6 +59,8 @@ public class Cgxq {
 	private BigDecimal zdwxsdj;
 	private BigDecimal cdwxsdj;
 	private BigDecimal spje;
+	private BigDecimal dbsl;
+	private BigDecimal cdbsl;
 	private String cgjhlsh;
 	private String isLs;
 	private String isZs;
@@ -318,6 +321,14 @@ public class Cgxq {
 		this.isComplete = isComplete;
 	}
 
+	public String getIsDb() {
+		return isDb;
+	}
+
+	public void setIsDb(String isDb) {
+		this.isDb = isDb;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -460,6 +471,22 @@ public class Cgxq {
 
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+
+	public BigDecimal getDbsl() {
+		return dbsl;
+	}
+
+	public void setDbsl(BigDecimal dbsl) {
+		this.dbsl = dbsl;
+	}
+
+	public BigDecimal getCdbsl() {
+		return cdbsl;
+	}
+
+	public void setCdbsl(BigDecimal cdbsl) {
+		this.cdbsl = cdbsl;
 	}
 
 	public String getSearch() {
