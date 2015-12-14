@@ -16,6 +16,9 @@ var cgjh_tabs;
 var jxc_cgjh_jsfsCombo;
 var jxc_cgjh_ckCombo;
 
+var cgjh_detDg;
+var cgjhRow;
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -241,7 +244,8 @@ $(function(){
             return '<div style="padding:2px"><table id="cgjh-ddv-' + index + '"></table></div>';
         },
         onExpandRow: function(index,row){
-            $('#cgjh-ddv-'+index).datagrid({
+        	cgjhRow = cgjh_dg.datagrid('selectRow', index).datagrid('getSelected');
+        	cgjh_detDg = $('#cgjh-ddv-'+index).datagrid({
                 url:'${pageContext.request.contextPath}/jxc/cgjhAction!detDatagrid.action',
                 fitColumns:true,
                 singleSelect:true,
@@ -314,6 +318,22 @@ $(function(){
                 		formatter: function(value){
                 			return lnyw.memo(value, 15);
                 		}},
+               		{field:'isLock',title:'锁定',align:'center',
+                   		formatter : function(value) {
+           					if (value == '1') {
+           						return '是';
+           					} else {
+           						return '';
+           					}
+           				}},
+       				{field:'isBack',title:'取消',align:'center',
+                   		formatter : function(value) {
+           					if (value == '1') {
+           						return '是';
+           					} else {
+           						return '';
+           					}
+           				}},
                 ]],
                 onResize:function(){
                 	cgjh_dg.datagrid('fixDetailRowHeight',index);
@@ -1572,6 +1592,102 @@ function htCgjh(){
 	}
 }
 
+function lockSpInCgjh(){
+	if(cgjh_detDg != undefined){
+		var cgjh_detRow = cgjh_detDg.datagrid('getSelected');
+		if(cgjh_detRow != null){
+			if(cgjh_detRow.isLock == '0'){
+				if(cgjh_detRow.isBack == '0'){
+					if(cgjh_detRow.zdwyrsl != undefined){
+						$.messager.confirm('请确认', '您是否要锁定选中的采购计划商品品种？', function(r) {
+							if (r) {
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/cgjhAction!lockSpInCgjh.action',
+									data : {
+										//cgjhlsh : row.cgjhlsh,
+										id : cgjh_detRow.id,
+										bmbh : did,
+										menuId : menuId,
+									},
+									dataType : 'json',
+									success : function(d) {
+										cgjh_detDg.datagrid('reload');
+										cgjh_detDg.datagrid('unselectAll');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选择的商品记录还未到货，只能做取消操作，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的商品记录已被取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的商品记录已被锁定，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+}
+
+function backSpInCgjh(){
+	if(cgjh_detDg != undefined){
+		var cgjh_detRow = cgjh_detDg.datagrid('getSelected');
+		if(cgjh_detRow != null){
+			if(cgjh_detRow.isLock == '0'){
+				if(cgjh_detRow.isBack == '0'){
+					if(cgjh_detRow.zdwyrsl == undefined){
+						$.messager.confirm('请确认', '您是否要取消选中的采购计划商品品种？', function(r) {
+							if (r) {
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/cgjhAction!backSpInCgjh.action',
+									data : {
+										id : cgjh_detRow.id,
+										bmbh : did,
+										menuId : menuId,
+									},
+									dataType : 'json',
+									success : function(d) {
+										cgjh_detDg.datagrid('reload');
+										cgjh_detDg.datagrid('unselectAll');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选择的商品记录已到货，不能取消，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的商品记录已被取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的商品记录已被锁定，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+}
+
 function searchCgjh(){
 	cgjh_dg.datagrid('load',{
 		bmbh: did,
@@ -1579,6 +1695,13 @@ function searchCgjh(){
 		search: $('input[name=searchCgjh]').val(),
 	});
 }
+
+function expandRows(){
+	$.each(cgjh_dg.datagrid('getRows'), function(index){
+		cgjh_dg.datagrid('expandRow', index);
+	});
+}
+
 
 //////////////////////////////////////////////以上为采购计划列表处理代码
 
@@ -1660,6 +1783,36 @@ function refuseCgxq(){
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}
 }
+
+function completeCgxq(){
+	var row = cgjh_cgxqDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '您要完成选中的采购需求单？', function(r) {
+			if (r) {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!complete.action',
+					data : {
+						id : row.id,
+						bmbh : did,
+						menuId : menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						cgjh_dg.datagrid('reload');
+						cgjh_dg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
 
 // function searchCgxqInCgjh(){
 // 	cgjh_cgxqDg.datagrid('load',{
@@ -1828,6 +1981,8 @@ function createCgjhFromXsth(){
 	请输入查询起始日期:<input type="text" name="createTimeCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、供应商编号、名称、备注：<input type="text" name="searchCgjh" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjh();">查询</a>
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="expandRows();">展开</a>
+	
 </div>
 <!-- <div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto"> -->
 <!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->

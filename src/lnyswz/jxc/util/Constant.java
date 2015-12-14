@@ -41,6 +41,9 @@ public interface Constant {
 	
 	public static final String YWLX_XSTH = "05";
 	
+	//操作人员为业务员
+	public static final String USER_POSTID = "12";
+	
 
 	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
@@ -156,7 +159,11 @@ public interface Constant {
 		put("05","cgjh_report");
 		put("07","cgjh_report_c");
 		put("08","cgjh_report");
-		
+	}};
+	
+	//采购需求单
+	public static final Map<String, String> REPORT_CGXQ = new HashMap<String, String>(){{
+		put("04","cgxq_report_b");
 	}};
 	
 	//销售未回款

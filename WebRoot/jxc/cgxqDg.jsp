@@ -182,6 +182,19 @@ $(function(){
 	        			b = b == undefined ? 0 : b;
 						return (a-b);  
 				}},
+			{field:'isComplete',title:'*有货',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				},
+				sorter: function(a,b){
+	        			a = a == undefined ? 0 : a;
+	        			b = b == undefined ? 0 : b;
+						return (a-b);  
+				}},
 	    ]],
 	    toolbar:'#jxc_cgxq_tb',
 	});

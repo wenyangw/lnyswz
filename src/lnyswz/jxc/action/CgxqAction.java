@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgxqServiceI;
+import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 
 /**
  * 采购需求Action
@@ -90,22 +93,29 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 	/**
 	 * 完成采购需求
 	 */
-//	public void complete(){
-//		User user = (User)session.get("user");
-//		cgxq.setCompleteId(user.getId());
-//		cgxq.setCompleteName(user.getRealName());
-//		Json j = new Json();
-//		try{
-//			cgxqService.updateComplete(cgxq);		
-//			//添加成功
-//			j.setSuccess(true);
-//			j.setMsg("完成采购需求成功！");
-//		}catch(Exception e){
-//			j.setMsg("完成采购需求失败！");
-//			e.printStackTrace();
-//		}
-//		writeJson(j);
-//	}
+	public void complete(){
+		User user = (User)session.get("user");
+		cgxq.setRefuseId(user.getId());
+		cgxq.setRefuseName(user.getRealName());
+		Json j = new Json();
+		try{
+			cgxqService.updateComplete(cgxq);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("完成采购需求成功！");
+		}catch(Exception e){
+			j.setMsg("完成采购需求失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	public void printCgxq() {
+		User user = (User) session.get("user");
+		cgxq.setCreateName(user.getRealName());
+		DataGrid dg = cgxqService.printCgxq(cgxq);
+		Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));
+	}
 	
 	public void datagrid(){
 		//操作员

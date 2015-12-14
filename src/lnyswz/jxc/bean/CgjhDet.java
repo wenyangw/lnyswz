@@ -30,10 +30,13 @@ public class CgjhDet {
 	private String shdz;
 	private String lxr;
 	private Date dhsj;
+	private String isLock;
+	private String isBack;
 	private BigDecimal zdwjhsl;
 	private BigDecimal cdwjhsl;
 	private BigDecimal zdwyrsl;
 	private BigDecimal cdwyrsl;
+	
 		
 	//记录直送计划对应的业务入库数量
 	private BigDecimal zdwrksl;
@@ -250,6 +253,22 @@ public class CgjhDet {
 
 	public void setDhsj(Date dhsj) {
 		this.dhsj = dhsj;
+	}
+
+	public String getIsLock() {
+		return isLock;
+	}
+
+	public void setIsLock(String isLock) {
+		this.isLock = isLock;
+	}
+
+	public String getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(String isBack) {
+		this.isBack = isBack;
 	}
 
 	public BigDecimal getKcsl() {

@@ -137,6 +137,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					tDet.setCdwsl(Constant.BD_ZERO);
 				}
 			}
+			tDet.setIsBack("0");
+			tDet.setIsLock("0");
 			tDet.setTCgjh(tCgjh);
 			tDets.add(tDet);
 		}
@@ -262,6 +264,25 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	}
 	
 	@Override
+	public void updateLockSpInCgjh(Cgjh cgjh) {
+		TCgjhDet tCgjhDet = detDao.get(TCgjhDet.class, cgjh.getId());
+		//tCgjh.setHtId(cgjh.getHtId());
+		//tCgjh.setHtTime(new Date());
+		//tCgjh.setHtName(cgjh.getCompleteName());
+		tCgjhDet.setIsLock("1");
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), String.valueOf(cgjh.getId()), 
+				"采购计划商品锁定", operalogDao);
+	}
+	
+	@Override
+	public void updateBackSpInCgjh(Cgjh cgjh) {
+		TCgjhDet tCgjhDet = detDao.get(TCgjhDet.class, cgjh.getId());
+		tCgjhDet.setIsBack("1");
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), String.valueOf(cgjh.getCgjhlsh()), 
+				"采购计划商品取消", operalogDao);
+	}
+	
+	@Override
 	public DataGrid datagrid(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TCgjh t where t.bmbh = :bmbh and t.createTime > :createTime";
@@ -363,28 +384,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			CgjhDet c = new CgjhDet();
 			BeanUtils.copyProperties(t, c);
 			
-			Set<TKfrk> tKfrks = t.getTKfrks();
-			if(tKfrks != null && tKfrks.size() > 0){
-				String kfrklshs = "";
-				int i = 0;
-				for(TKfrk k : tKfrks){
-					
-					if("0".equals(k.getIsCj())){
-						kfrklshs += k.getKfrklsh();
-						if(i < tKfrks.size() - 1){
-							kfrklshs += ",";
-						}
-					}
-					i++;
-				}
-				c.setKfrklshs(kfrklshs);
-				
-				c.setZdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "zdwsl"));
-				c.setCdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "cdwsl"));
-			}
 			
 			
-			if(cgjh.getFromOther() != null){
+			
+			
+			if(cgjh.getFromOther() != null || cgjh.getFromOther().equals("fromJhsh")){
 				String bmbh = cgjh.getCgjhlsh().substring(4, 6);
 				
 				Object[] ywkc = YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao);
@@ -398,27 +402,48 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				Object zzlo = YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao);
 				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
 				c.setZzl(zzl);
-			}
-			
-			
-			Set<TYwrk> tYwrks = t.getTYwrks();
-			if(tYwrks != null && tYwrks.size() > 0){
-				String ywrklshs = "";
-				int i = 0;
-				for(TYwrk k : tYwrks){
-					
-					if("0".equals(k.getIsCj())){
-						ywrklshs += k.getYwrklsh();
-						if(i < tYwrks.size() - 1){
-							ywrklshs += ",";
-						}
-					}
-					i++;
-				}
-				c.setYwrklshs(ywrklshs);
 				
-				c.setZdwrksl(getRksl(cgjh.getCgjhlsh(), t.getSpbh()));
+			}else{
+				Set<TKfrk> tKfrks = t.getTKfrks();
+				if(tKfrks != null && tKfrks.size() > 0){
+					String kfrklshs = "";
+					int i = 0;
+					for(TKfrk k : tKfrks){
+						
+						if("0".equals(k.getIsCj())){
+							kfrklshs += k.getKfrklsh();
+							if(i < tKfrks.size() - 1){
+								kfrklshs += ",";
+							}
+						}
+						i++;
+					}
+					c.setKfrklshs(kfrklshs);
+					
+					c.setZdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "zdwsl"));
+					c.setCdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "cdwsl"));
+				}
+				
+				Set<TYwrk> tYwrks = t.getTYwrks();
+				if(tYwrks != null && tYwrks.size() > 0){
+					String ywrklshs = "";
+					int i = 0;
+					for(TYwrk k : tYwrks){
+						
+						if("0".equals(k.getIsCj())){
+							ywrklshs += k.getYwrklsh();
+							if(i < tYwrks.size() - 1){
+								ywrklshs += ",";
+							}
+						}
+						i++;
+					}
+					c.setYwrklshs(ywrklshs);
+					
+					c.setZdwrksl(getRksl(cgjh.getCgjhlsh(), t.getSpbh()));
+				}
 			}
+			
 			
 			nl.add(c);
 		}
@@ -451,6 +476,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
 			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
+			
+			if(cgjh.getFromOther().equals("fromKfrk")){
+				hql += " and t.isLock = '0' and isBack = 0";
+			}
+			
+			if(cgjh.getFromOther().equals("fromYwrk")){
+				hql += " and isBack = 0";
+			}
+			
 			//是否直送
 			if("1".equals(cgjh.getIsZs())){
 				 hql += " and t.TCgjh.isZs = '1'";

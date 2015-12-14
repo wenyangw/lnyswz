@@ -45,6 +45,9 @@ public class Cgjh {
 	private String isAudit;
 	private String isZs;
 	
+	private String isLock;
+	private String isBack;
+	
 	private int id;
 	private String spbh;
 	private String spmc;
@@ -361,6 +364,22 @@ public class Cgjh {
 
 	public void setIsZs(String isZs) {
 		this.isZs = isZs;
+	}
+
+	public String getIsLock() {
+		return isLock;
+	}
+
+	public void setIsLock(String isLock) {
+		this.isLock = isLock;
+	}
+
+	public String getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(String isBack) {
+		this.isBack = isBack;
 	}
 
 	public int getId() {
