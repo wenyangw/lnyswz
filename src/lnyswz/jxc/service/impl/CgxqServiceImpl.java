@@ -194,8 +194,8 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		map.put("hjsl", hjsl);
 		map.put("hjje", tCgxq.getHjje());
 		map.put("bz", tCgxq.getBz());
-		map.put("printName", cgxq.getCreateName());
-		map.put("printTime", DateUtil.dateToString(new Date()));
+		//map.put("printName", cgxq.getCreateName());
+		//map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
