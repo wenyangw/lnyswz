@@ -516,10 +516,14 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
+    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
     	if($(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();
+    	}else{
+    		return false;
+    	}
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		cdjEditor.target.focus();
@@ -529,10 +533,10 @@ function setEditing(){
         
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
-    	}
-    	calculate();
+	   	if($(zhxsEditor.target).val() != 0){
+	   		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
+	   	}
+	   	calculate();
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
