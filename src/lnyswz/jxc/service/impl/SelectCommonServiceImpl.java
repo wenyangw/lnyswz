@@ -161,9 +161,9 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			String hql = "from TDict t where ename='" + d.getQuery() + "'";
 			TDict dict = dictDao.get(hql);
 			// String n = dict.getOrderBy();
-			if (dict.getOrderBy().trim().length() > 0) {
-				sql += " " + dicts.getOrderBy();
-			}
+//			if (dict.getOrderBy().trim().length() > 0) {
+//				sql += " " + dicts.getOrderBy();
+//			}
 			if (dict.getInGroupBy() != null) {
 				sql += " " + dict.getInGroupBy();
 
@@ -180,6 +180,9 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 					}
 
 				}
+			}
+			if (dict.getOrderBy().trim().length() > 0) {
+				sql += " " + dicts.getOrderBy();
 			}
 			String sq = sql.replace("abc", "(").replace("xyz", ")")
 					.replace("fgh", ",").replace("mno", "'")

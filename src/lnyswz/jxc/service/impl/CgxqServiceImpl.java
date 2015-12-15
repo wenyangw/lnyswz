@@ -9,13 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.StringType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,21 +24,15 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
-import lnyswz.jxc.bean.Xskp;
-import lnyswz.jxc.bean.XsthDet;
+import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TGys;
-import lnyswz.jxc.model.TJsfs;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TUser;
-import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.VCgxq;
 import lnyswz.jxc.service.CgxqServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -66,11 +55,12 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	
 
 	@Override
-	public void save(Cgxq cgxq) {
+	public Cgxq save(Cgxq cgxq) {
 		TCgxq tCgxq = new TCgxq();
 		BeanUtils.copyProperties(cgxq, tCgxq);
 		tCgxq.setCreateTime(new Date());
-		tCgxq.setCgxqlsh(LshServiceImpl.updateLsh(cgxq.getBmbh(), cgxq.getLxbh(), lshDao));
+		String cgxqlsh = LshServiceImpl.updateLsh(cgxq.getBmbh(), cgxq.getLxbh(), lshDao);
+		tCgxq.setCgxqlsh(cgxqlsh);
 		tCgxq.setBmmc(depDao.load(TDepartment.class, cgxq.getBmbh()).getDepName());
 		tCgxq.setIsAudit("0");
 		
@@ -117,6 +107,10 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		cgxqDao.save(tCgxq);
 		OperalogServiceImpl.addOperalog(cgxq.getCreateId(), cgxq.getBmbh(), cgxq.getMenuId(), 
 				tCgxq.getCgxqlsh(), "生成采购需求单", operalogDao);
+		
+		Cgxq rCgxq = new Cgxq();
+		rCgxq.setCgxqlsh(cgxqlsh);
+		return rCgxq;
 	}
 	
 	@Override
@@ -150,6 +144,57 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		tCgxqDet.setIsComplete("1");			
 		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
 				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "完成采购需求记录", operalogDao);
+	}
+	
+	@Override
+	public DataGrid printCgxq(Cgxq cgxq) {
+		DataGrid datagrid = new DataGrid();
+		TCgxq tCgxq = cgxqDao.load(TCgxq.class, cgxq.getCgxqlsh());
+		BigDecimal hjsl = Constant.BD_ZERO;
+		
+		String hql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh and t.isCancel = '0' order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgxqlsh", cgxq.getCgxqlsh());
+		List<TCgxqDet> tCgxqDets = detDao.find(hql, params);
+		
+		List<CgxqDet> nl = new ArrayList<CgxqDet>();
+		for (TCgxqDet yd : tCgxqDets) {
+			CgxqDet cgxqDet = new CgxqDet();
+			BeanUtils.copyProperties(yd, cgxqDet);
+			if (cgxqDet.getSpbh().substring(0, 1).equals("4")){
+				cgxqDet.setZdwdj(Constant.BD_ZERO);
+			}else{
+				cgxqDet.setZdwdj(cgxqDet.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)));
+			}
+			hjsl = hjsl.add(yd.getCdwsl());
+			nl.add(cgxqDet);
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new CgxqDet());
+			}
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "采   购   需   求   单");
+		//map.put("gsmc", Constant.BMMCS.get(tCgxq.getBmbh()));
+		map.put("gysbh", tCgxq.getGysbh());
+		map.put("gysmc", tCgxq.getGysmc());
+		map.put("khbh", tCgxq.getKhbh());
+		map.put("khmc", tCgxq.getKhmc());
+		map.put("bmmc", tCgxq.getBmmc());
+		map.put("createTime", DateUtil.dateToString(tCgxq.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("cgxqlsh", tCgxq.getCgxqlsh());
+		map.put("isZs", tCgxq.getIsZs().equals("1") ? "是" : "否");
+		map.put("isLs", tCgxq.getIsLs().equals("1") ? "是" : "否");
+		map.put("hjsl", hjsl);
+		map.put("hjje", tCgxq.getHjje());
+		map.put("bz", tCgxq.getBz());
+		map.put("printName", cgxq.getCreateName());
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
 	}
 	
 	@Override

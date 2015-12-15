@@ -371,28 +371,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			CgjhDet c = new CgjhDet();
 			BeanUtils.copyProperties(t, c);
 			
-			Set<TKfrk> tKfrks = t.getTKfrks();
-			if(tKfrks != null && tKfrks.size() > 0){
-				String kfrklshs = "";
-				int i = 0;
-				for(TKfrk k : tKfrks){
-					
-					if("0".equals(k.getIsCj())){
-						kfrklshs += k.getKfrklsh();
-						if(i < tKfrks.size() - 1){
-							kfrklshs += ",";
-						}
-					}
-					i++;
-				}
-				c.setKfrklshs(kfrklshs);
-				
-				c.setZdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "zdwsl"));
-				c.setCdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "cdwsl"));
-			}
 			
 			
-			if(cgjh.getFromOther() != null){
+			
+			
+			if(cgjh.getFromOther() != null && cgjh.getFromOther().equals("fromJhsh")){
 				String bmbh = cgjh.getCgjhlsh().substring(4, 6);
 				
 				Object[] ywkc = YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao);
@@ -406,27 +389,48 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				Object zzlo = YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao);
 				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
 				c.setZzl(zzl);
-			}
-			
-			
-			Set<TYwrk> tYwrks = t.getTYwrks();
-			if(tYwrks != null && tYwrks.size() > 0){
-				String ywrklshs = "";
-				int i = 0;
-				for(TYwrk k : tYwrks){
-					
-					if("0".equals(k.getIsCj())){
-						ywrklshs += k.getYwrklsh();
-						if(i < tYwrks.size() - 1){
-							ywrklshs += ",";
-						}
-					}
-					i++;
-				}
-				c.setYwrklshs(ywrklshs);
 				
-				c.setZdwrksl(getRksl(cgjh.getCgjhlsh(), t.getSpbh()));
+			}else{
+				Set<TKfrk> tKfrks = t.getTKfrks();
+				if(tKfrks != null && tKfrks.size() > 0){
+					String kfrklshs = "";
+					int i = 0;
+					for(TKfrk k : tKfrks){
+						
+						if("0".equals(k.getIsCj())){
+							kfrklshs += k.getKfrklsh();
+							if(i < tKfrks.size() - 1){
+								kfrklshs += ",";
+							}
+						}
+						i++;
+					}
+					c.setKfrklshs(kfrklshs);
+					
+					c.setZdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "zdwsl"));
+					c.setCdwyrsl(getYrsl(cgjh.getCgjhlsh(), t.getSpbh(), "cdwsl"));
+				}
+				
+				Set<TYwrk> tYwrks = t.getTYwrks();
+				if(tYwrks != null && tYwrks.size() > 0){
+					String ywrklshs = "";
+					int i = 0;
+					for(TYwrk k : tYwrks){
+						
+						if("0".equals(k.getIsCj())){
+							ywrklshs += k.getYwrklsh();
+							if(i < tYwrks.size() - 1){
+								ywrklshs += ",";
+							}
+						}
+						i++;
+					}
+					c.setYwrklshs(ywrklshs);
+					
+					c.setZdwrksl(getRksl(cgjh.getCgjhlsh(), t.getSpbh()));
+				}
 			}
+			
 			
 			nl.add(c);
 		}

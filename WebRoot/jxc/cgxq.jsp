@@ -371,6 +371,14 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	if(needA == undefined || needA == '0'){
+			    	$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + rsp.obj.cgxqlsh + "&bmbh=" + did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+		    	}
 			}  
 		},
 		error: function(){
@@ -508,10 +516,14 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
+    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
     	if($(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();
+    	}else{
+    		return false;
+    	}
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		cdjEditor.target.focus();
@@ -521,10 +533,10 @@ function setEditing(){
         
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
-    	}
-    	calculate();
+	   	if($(zhxsEditor.target).val() != 0){
+	   		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
+	   	}
+	   	calculate();
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
@@ -827,6 +839,25 @@ function addressLoad(){
 // 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 // 	}
 // }
+
+function printCgxq(){
+	var row = cgxq_dg.datagrid('getSelected');
+	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+				if (r) {
+					var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + row.cgxqlsh + "&bmbh=" + did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的需求单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 
 //////////////////////////////////////////////以上为采购需求列表处理代码

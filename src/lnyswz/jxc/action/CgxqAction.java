@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgxqServiceI;
+import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 
 /**
  * 采购需求Action
@@ -36,7 +39,7 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		cgxq.setCreateName(user.getRealName());
 		Json j = new Json();
 		try{
-			cgxqService.save(cgxq);		
+			j.setObj(cgxqService.save(cgxq));		
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("保存采购需求成功！");
@@ -105,6 +108,13 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 			e.printStackTrace();
 		}
 		writeJson(j);
+	}
+	
+	public void printCgxq() {
+		User user = (User) session.get("user");
+		cgxq.setCreateName(user.getRealName());
+		DataGrid dg = cgxqService.printCgxq(cgxq);
+		Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));
 	}
 	
 	public void datagrid(){

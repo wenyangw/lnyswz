@@ -318,7 +318,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_cgjh jh on jh.bmbh = t.bmbh and a.ywlxId = SUBSTRING(jh.cgjhlsh, 7, 2)"
-				+ " where t.bmbh = ? and t.userId = ? and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
+				+ " where t.bmbh = ? and t.userId = ? and jh.isCancel = '0' and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywsh.getBmbh());
 		params.put("1", ywsh.getCreateId());

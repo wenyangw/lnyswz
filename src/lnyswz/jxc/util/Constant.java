@@ -133,7 +133,11 @@ public interface Constant {
 		put("05","cgjh_report");
 		put("07","cgjh_report_c");
 		put("08","cgjh_report");
-		
+	}};
+	
+	//采购需求单
+	public static final Map<String, String> REPORT_CGXQ = new HashMap<String, String>(){{
+		put("04","cgxq_report_b");
 	}};
 	
 	//销售未回款
