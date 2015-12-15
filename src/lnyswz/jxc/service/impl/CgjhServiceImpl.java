@@ -375,7 +375,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			
 			
 			
-			if(cgjh.getFromOther() != null || cgjh.getFromOther().equals("fromJhsh")){
+			if(cgjh.getFromOther() != null && cgjh.getFromOther().equals("fromJhsh")){
 				String bmbh = cgjh.getCgjhlsh().substring(4, 6);
 				
 				Object[] ywkc = YwzzServiceImpl.getYwzzSl(bmbh, t.getSpbh(), null, "z", ywzzDao);
