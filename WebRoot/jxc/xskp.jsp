@@ -1177,7 +1177,7 @@ function setEditing(){
     	$(spseEditor.target).numberbox('setValue', $(sphjEditor.target).val() - $(spjeEditor.target).val());
     	$(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
     	if($(zhxsEditor.target).val() != 0){
-	    	$(cdjEditor.target).numberbox('setValue', $(sphjEditor.target).val() / $(cslEditor.target).val());
+	    	$(cdjEditor.target).numberbox('setValue', $(sphjEditor.target).val() / $(cslEditor.target).val() == Infinity ? 0 : $(sphjEditor.target).val() / $(cslEditor.target).val());
     	}
     	updateFooter();
   	}
