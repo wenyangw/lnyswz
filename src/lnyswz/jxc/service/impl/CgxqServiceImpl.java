@@ -374,8 +374,9 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	
 	@Override
 	public DataGrid toYwdb(Cgxq cgxq){
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_cgxq_det t ";
+		String sql = "select spbh, zdwsl, cdwsl, dbsl, cdbsl, zdwsl - dbsl, cdwsl - cdbsl from t_cgxq_det t ";
 		
+		String cgxqDetIds = cgxq.getCgxqDetIds(); 
 		if(cgxqDetIds != null && cgxqDetIds.trim().length() > 0){
 			String[] cs = cgxqDetIds.split(",");
 			sql += "where ";
@@ -386,16 +387,20 @@ public class CgxqServiceImpl implements CgxqServiceI {
 				}
  			}
 		}
-		sql += " group by spbh";
-		logger.info("sql:" + sql);
-		
+		//sql += " group by spbh";
+				
 		List<Object[]> l = detDao.findBySQL(sql);
 		
 		List<CgxqDet> nl = new ArrayList<CgxqDet>();
 		
 		for(Object[] os : l){
 			String spbh = (String)os[0];
-			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal xqsl = new BigDecimal(os[1].toString());
+			BigDecimal cxqsl = new BigDecimal(os[2].toString());
+			BigDecimal dbsl = new BigDecimal(os[3].toString());
+			BigDecimal cdbsl = new BigDecimal(os[4].toString());
+			BigDecimal zdwsl = new BigDecimal(os[5].toString());
+			BigDecimal cdwsl = new BigDecimal(os[6].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			CgxqDet cd = new CgxqDet();
@@ -406,7 +411,12 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			cd.setSpbz(sp.getSpbz());
 			cd.setZjldwId(sp.getZjldw().getId());
 			cd.setZjldwmc(sp.getZjldw().getJldwmc());
+			cd.setXqsl(zdwsl);
+			cd.setCxqsl(cdwsl);
+			cd.setDbsl(dbsl);
+			cd.setCdbsl(cdbsl);
 			cd.setZdwsl(zdwsl);
+			cd.setCdwsl(cdwsl);
 			if(sp.getCjldw() != null){
 				cd.setCjldwId(sp.getCjldw().getId());
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());

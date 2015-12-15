@@ -165,11 +165,7 @@ $(function(){
 			   	formatter: function(value){
 			   		return value == 0 ? '' : value;
 					}},
-			{field:'zdwdj',title:'单价1',align:'center',
-			   	formatter: function(value){
-			   		return value == 0 ? '' : value;
-					}},
-			{field:'zdwxsdj',title:'销价1',align:'center',
+			{field:'dbsl',title:'调拨数量1',align:'center',
 			   	formatter: function(value){
 			   		return value == 0 ? '' : value;
 					}},
@@ -178,18 +174,10 @@ $(function(){
 				formatter: function(value){
 					return value == 0 ? '' : value;
 				}},
-			{field:'cdwdj',title:'单价2',align:'center',
+			{field:'cdbsl',title:'调拨数量2',align:'center',
 			   	formatter: function(value){
 			   		return value == 0 ? '' : value;
 					}},
-			{field:'cdwxsdj',title:'销价2',align:'center',
-			   	formatter: function(value){
-			   		return value == 0 ? '' : value;
-					}},
-			{field:'spje',title:'金额',align:'center',
-			    formatter: function(value){
-			    	return value == 0 ? '' : lnyw.formatNumberRgx(value);
-					}},      
 	        {field:'gysbh',title:'供应商编号',align:'center', hidden:true},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'khbh',title:'客户编号',align:'center', hidden:true},
@@ -292,6 +280,8 @@ $(function(){
 	        {field:'sppp',title:'商品品牌',width:25,align:'center',editor:'text',hidden:true},
 	        {field:'spbz',title:'商品包装',width:25,align:'center',editor:'text',hidden:true},
 	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead'},
+	        {field:'xqsl',title:'需求1',width:25,align:'center',editor:'textRead'},
+       		{field:'dbsl',title:'调拨1',width:25,align:'center',editor:'textRead'},
 	        {field:'zdwsl',title:'数量1',width:25,align:'center',
 	        	editor:{
 	        		type:'numberbox',
@@ -300,6 +290,8 @@ $(function(){
 	        			precision:3,
 	        		}}},
 	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead'},
+        	{field:'cxqsl',title:'需求2',width:25,align:'center',editor:'textRead'},
+        	{field:'cdbsl',title:'调拨2',width:25,align:'center',editor:'textRead'},
 	        {field:'cdwsl',title:'数量2',width:25,align:'center',
 	        		editor:{
         				type:'numberbox',
@@ -793,13 +785,13 @@ function searchYwdb(){
 
 //////////////////////////////////////////////以下为采购需求列表处理代码
 
-function createCgjh(){
-	var rows = cgjh_cgxqDg.datagrid('getSelections');
+function createYwdb(){
+	var rows = ywdb_cgxqDg.datagrid('getSelections');
 	var cgxqDetIds = [];
 	var cgxqlshs = [];
 	var cgxqBzs = [];
 	if(rows.length > 0){
-		$.messager.confirm('请确认', '是否要将选中记录生成采购计划？', function(r) {
+		$.messager.confirm('请确认', '是否要将选中记录生成业务调拨？', function(r) {
 			if (r) {
 				for ( var i = 0; i < rows.length; i++) {
 					cgxqDetIds.push(rows[i].id);
@@ -811,26 +803,26 @@ function createCgjh(){
 				}
 				var cgxqDetStr = cgxqDetIds.join(',');
 				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/cgxqAction!toCgjh.action',
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!toYwdb.action',
 					data : {
 						cgxqDetIds : cgxqDetStr
 					},
 					dataType : 'json',
 					success : function(d) {
-						$.each(d.rows, function(index){
-							if(index == d.rows.length - 1){
-								return false;
-							}
-							d.rows[index].lxr = rows[0].lxr;
-							d.rows[index].shdz = rows[0].shdz;
-							d.rows[index].dhsj = rows[0].dhsj;
-							d.rows[index].spdj = '一等';
-						});
-						cgjh_spdg.datagrid('loadData', d.rows);
+						//$.each(d.rows, function(index){
+						//	if(index == d.rows.length - 1){
+						//		return false;
+						//	}
+						//	d.rows[index].lxr = rows[0].lxr;
+						//	d.rows[index].shdz = rows[0].shdz;
+						//	d.rows[index].dhsj = rows[0].dhsj;
+						//	d.rows[index].spdj = '一等';
+						//});
+						ywdb_spdg.datagrid('loadData', d.rows);
 						
 						$('input[name=cgxqDetIds]').val(cgxqDetStr);
-						$('input[name=jxc_cgjh_bz]').val(cgxqBzs.join(','));
-						cgjh_tabs.tabs('select', 0);
+						$('input[name=jxc_ywdb_bz]').val(cgxqBzs.join(','));
+						ywdb_tabs.tabs('select', 0);
 					}
 				});
 			}
@@ -885,7 +877,7 @@ function createCgjh(){
 	请输入查询起始日期:<input type="text" name="createTimeYwdb" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwdb();">查询</a>
 </div>
-<div id="jxc_cgjh_cgxqTb" style="padding:3px;height:auto">
+<div id="jxc_ywdb_cgxqTb" style="padding:3px;height:auto">
 <!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
 	输入流水号、客户编号、名称、备注：<input type="text" name="searchCgxqInYwdb" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInYwdb();">查询</a>
