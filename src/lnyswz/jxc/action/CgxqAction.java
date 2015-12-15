@@ -39,7 +39,7 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		cgxq.setCreateName(user.getRealName());
 		Json j = new Json();
 		try{
-			cgxqService.save(cgxq);		
+			j.setObj(cgxqService.save(cgxq));		
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("保存采购需求成功！");
