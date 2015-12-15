@@ -384,10 +384,6 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			CgjhDet c = new CgjhDet();
 			BeanUtils.copyProperties(t, c);
 			
-			
-			
-			
-			
 			if(cgjh.getFromOther() != null && cgjh.getFromOther().equals("fromJhsh")){
 				String bmbh = cgjh.getCgjhlsh().substring(4, 6);
 				
