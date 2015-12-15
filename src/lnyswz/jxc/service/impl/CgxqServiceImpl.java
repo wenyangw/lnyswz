@@ -24,6 +24,7 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
+import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
@@ -54,11 +55,12 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	
 
 	@Override
-	public void save(Cgxq cgxq) {
+	public Cgxq save(Cgxq cgxq) {
 		TCgxq tCgxq = new TCgxq();
 		BeanUtils.copyProperties(cgxq, tCgxq);
 		tCgxq.setCreateTime(new Date());
-		tCgxq.setCgxqlsh(LshServiceImpl.updateLsh(cgxq.getBmbh(), cgxq.getLxbh(), lshDao));
+		String cgxqlsh = LshServiceImpl.updateLsh(cgxq.getBmbh(), cgxq.getLxbh(), lshDao);
+		tCgxq.setCgxqlsh(cgxqlsh);
 		tCgxq.setBmmc(depDao.load(TDepartment.class, cgxq.getBmbh()).getDepName());
 		tCgxq.setIsAudit("0");
 		
@@ -101,6 +103,10 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		cgxqDao.save(tCgxq);
 		OperalogServiceImpl.addOperalog(cgxq.getCreateId(), cgxq.getBmbh(), cgxq.getMenuId(), 
 				tCgxq.getCgxqlsh(), "生成采购需求单", operalogDao);
+		
+		Cgxq rCgxq = new Cgxq();
+		rCgxq.setCgxqlsh(cgxqlsh);
+		return rCgxq;
 	}
 	
 	@Override
