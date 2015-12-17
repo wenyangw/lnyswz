@@ -516,11 +516,11 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
-    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
-    	}
-    	calculate();
+    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 110){
+    		if($(zhxsEditor.target).val() != 0){
+    			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    		}
+    		calculate();
     	}else{
     		return false;
     	}
