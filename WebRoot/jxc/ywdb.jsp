@@ -23,8 +23,12 @@ var spcdEditor;
 var spppEditor;
 var spbzEditor;
 var zjldwEditor;
+var xqslEditor;
+var dbslEditor;
 var zslEditor;
 var cjldwEditor;
+var cxqslEditor;
+var cdbslEditor;
 var cslEditor;
 var zhxsEditor;
 var zjldwIdEditor;
@@ -276,12 +280,12 @@ $(function(){
 		columns:[[
 	        {field:'spbh',title:'商品编号',width:25,align:'center',editor:'text'},
 	        {field:'spmc',title:'商品名称',width:100,align:'center',editor:'textRead'},
-	        {field:'spcd',title:'商品产地',width:25,align:'center',editor:'textRead'},
-	        {field:'sppp',title:'商品品牌',width:25,align:'center',editor:'text',hidden:true},
-	        {field:'spbz',title:'商品包装',width:25,align:'center',editor:'text',hidden:true},
-	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead'},
-	        {field:'xqsl',title:'需求1',width:25,align:'center',editor:'textRead'},
-       		{field:'dbsl',title:'调拨1',width:25,align:'center',editor:'textRead'},
+	        {field:'spcd',title:'商品产地',width:20,align:'center',editor:'textRead'},
+	        {field:'sppp',title:'商品品牌',width:20,align:'center',editor:'text',hidden:true},
+	        {field:'spbz',title:'商品包装',width:20,align:'center',editor:'text',hidden:true},
+	        {field:'zjldwmc',title:'单位1',width:15,align:'center',editor:'textRead'},
+	        {field:'xqsl',title:'需求1',width:20,align:'center',editor:'textRead'},
+       		{field:'dbsl',title:'调拨1',width:20,align:'center',editor:'textRead'},
 	        {field:'zdwsl',title:'数量1',width:25,align:'center',
 	        	editor:{
 	        		type:'numberbox',
@@ -289,9 +293,9 @@ $(function(){
 	        			//精度
 	        			precision:3,
 	        		}}},
-	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead'},
-        	{field:'cxqsl',title:'需求2',width:25,align:'center',editor:'textRead'},
-        	{field:'cdbsl',title:'调拨2',width:25,align:'center',editor:'textRead'},
+	        {field:'cjldwmc',title:'单位2',width:15,align:'center',editor:'textRead'},
+        	{field:'cxqsl',title:'需求2',width:20,align:'center',editor:'textRead'},
+        	{field:'cdbsl',title:'调拨2',width:20,align:'center',editor:'textRead'},
 	        {field:'cdwsl',title:'数量2',width:25,align:'center',
 	        		editor:{
         				type:'numberbox',
@@ -302,6 +306,7 @@ $(function(){
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主计量单位id',align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次计量单位id',align:'center',editor:'text', hidden:true},
+        	{field:'cgxqDetId',title:'采购需求Id',align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -498,6 +503,7 @@ function saveYwdb(){
 	effectRow['ckIdT'] = jxc_ywdb_ckComboT.combobox('getValue');
 	effectRow['ckmcT'] = jxc_ywdb_ckComboT.combobox('getText');
 	effectRow['bz'] = $('input[name=jxc_ywdb_bz]').val();
+	effectRow['cgxqlsh'] = $('input[name=cgxqlsh]').val();
 	effectRow['bmbh'] = ywdb_did;
 	effectRow['lxbh'] = ywdb_lx;
 	effectRow['menuId'] = ywdb_menuId;
@@ -539,12 +545,16 @@ function setEditing(){
     spppEditor = editors[3];
     spbzEditor = editors[4];
     zjldwEditor = editors[5];
-    zslEditor = editors[6];
-    cjldwEditor = editors[7];
-    cslEditor = editors[8];
-    zhxsEditor = editors[9];
-    zjldwIdEditor = editors[10];
-    cjldwIdEditor = editors[11];
+    xqslEditor = editors[6];
+    dbslEditor = editors[7];
+    zslEditor = editors[8];
+    cjldwEditor = editors[9];
+    cxqslEditor = editors[10];
+    cdbslEditor = editors[11];
+    cslEditor = editors[12];
+    zhxsEditor = editors[13];
+    zjldwIdEditor = editors[14];
+    cjldwIdEditor = editors[15];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_ywdb_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -640,6 +650,14 @@ function setEditing(){
     	var zsl = Number($(zslEditor.target).val());
     	if(zsl > kxssl){
     		$.messager.alert("提示", "调拨数量不能大于可调拨数量，请重新输入！");
+    		$(zslEditor.target).numberbox('setValue', 0);
+    		zslEditor.target.focus();
+    		return false;
+    	}
+    	
+    	var wdsl = (Number($(xqslEditor.target).val()) - Number($(dbslEditor.target).val())).toFixed(LENGTH_SL);
+    	if(Number($(zslEditor.target).val()) > wdsl && wdsl > 0){
+    		$.messager.alert("提示", "调拨数量不能大于需求数量，请重新输入！");
     		$(zslEditor.target).numberbox('setValue', 0);
     		zslEditor.target.focus();
     		return false;
@@ -788,49 +806,54 @@ function searchYwdb(){
 function createYwdb(){
 	var rows = ywdb_cgxqDg.datagrid('getSelections');
 	var cgxqDetIds = [];
-	var cgxqlshs = [];
-	var cgxqBzs = [];
 	if(rows.length > 0){
-		$.messager.confirm('请确认', '是否要将选中记录生成业务调拨？', function(r) {
-			if (r) {
-				for ( var i = 0; i < rows.length; i++) {
-					cgxqDetIds.push(rows[i].id);
-					//检查每条需求的备注，并合并
-					if(cgxqlshs.indexOf(rows[i].cgxqlsh) < 0){
-						cgxqlshs.push(rows[i].cgxqlsh);						
-						cgxqBzs.push(rows[i].bz);
-					}
+		var preRow = undefined;
+		var flag = true;
+	    $.each(rows, function(index){
+			cgxqDetIds.push(rows[index].id);
+	    	if(index != 0){
+	    		if(this.cgxqlsh != preRow.cgxqlsh){
+	    			$.messager.alert('提示', '请选择同一需求单的商品进行提货！', 'error');
+					flag = false;
+					//return false;
+	    		}else{
+	    			preRow = this;
+	    		}
+	    	}
+	    	preRow = this;
+	    });
+	    if(flag){
+	    	$.messager.confirm('请确认', '是否要将选中记录生成业务调拨？', function(r) {
+				if (r) {
+					var cgxqDetStr = cgxqDetIds.join(',');
+					
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/cgxqAction!toYwdb.action',
+						data : {
+							cgxqDetIds : cgxqDetStr,
+							bmbh: ywdb_did,
+							khbh: rows[0].khbh
+						},
+						dataType : 'json',
+						success : function(d) {
+							ywdb_spdg.datagrid('loadData', d.rows);
+							
+							$('input[name=cgxqlsh]').val(rows[0].cgxqlsh);
+							$('input[name=jxc_ywdb_bz]').val(rows[0].bz);
+							//var cks = jxc.getCkByKhbh(ywdb_did);
+							jxc_ywdb_ckComboT.combobox('setValue', d.obj.ckId);
+							ywdb_tabs.tabs('select', 0);
+						}
+					});
 				}
-				var cgxqDetStr = cgxqDetIds.join(',');
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/cgxqAction!toYwdb.action',
-					data : {
-						cgxqDetIds : cgxqDetStr
-					},
-					dataType : 'json',
-					success : function(d) {
-						//$.each(d.rows, function(index){
-						//	if(index == d.rows.length - 1){
-						//		return false;
-						//	}
-						//	d.rows[index].lxr = rows[0].lxr;
-						//	d.rows[index].shdz = rows[0].shdz;
-						//	d.rows[index].dhsj = rows[0].dhsj;
-						//	d.rows[index].spdj = '一等';
-						//});
-						ywdb_spdg.datagrid('loadData', d.rows);
-						
-						$('input[name=cgxqDetIds]').val(cgxqDetStr);
-						$('input[name=jxc_ywdb_bz]').val(cgxqBzs.join(','));
-						ywdb_tabs.tabs('select', 0);
-					}
-				});
-			}
-		});
+			});
+	    }
 	}else{
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}
-}
+}	
+	
+
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
 

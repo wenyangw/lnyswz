@@ -586,6 +586,9 @@ $(function(){
 // 			checkKh();
 // 		}
  		loadKh($('input[name=khbh]').val().trim());
+ 		var cks = jxc.getCkByKhbh(xsth_did);
+ 		console.info(cks[$('input[name=khbh]').val()]);
+ 		jxc_xsth_ckCombo.combobox('setValue', cks[$('input[name=khbh]').val()]);
  		updateJsfs();
  	});
 	

@@ -374,7 +374,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	
 	@Override
 	public DataGrid toYwdb(Cgxq cgxq){
-		String sql = "select spbh, zdwsl, cdwsl, dbsl, cdbsl, zdwsl - dbsl, cdwsl - cdbsl from t_cgxq_det t ";
+		String sql = "select spbh, zdwsl xqsl, cdwsl cxqsl, dbsl, cdbsl, zdwsl - dbsl zdwsl, cdwsl - cdbsl cdwsl, id from t_cgxq_det t ";
 		
 		String cgxqDetIds = cgxq.getCgxqDetIds(); 
 		if(cgxqDetIds != null && cgxqDetIds.trim().length() > 0){
@@ -401,6 +401,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			BigDecimal cdbsl = new BigDecimal(os[4].toString());
 			BigDecimal zdwsl = new BigDecimal(os[5].toString());
 			BigDecimal cdwsl = new BigDecimal(os[6].toString());
+			int cgxqDetId = Integer.parseInt(os[7].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			CgxqDet cd = new CgxqDet();
@@ -411,12 +412,13 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			cd.setSpbz(sp.getSpbz());
 			cd.setZjldwId(sp.getZjldw().getId());
 			cd.setZjldwmc(sp.getZjldw().getJldwmc());
-			cd.setXqsl(zdwsl);
-			cd.setCxqsl(cdwsl);
+			cd.setXqsl(xqsl);
+			cd.setCxqsl(cxqsl);
 			cd.setDbsl(dbsl);
 			cd.setCdbsl(cdbsl);
 			cd.setZdwsl(zdwsl);
 			cd.setCdwsl(cdwsl);
+			cd.setCgxqDetId(cgxqDetId);
 			if(sp.getCjldw() != null){
 				cd.setCjldwId(sp.getCjldw().getId());
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());
@@ -431,9 +433,21 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			
 			nl.add(cd);
 		}
+		
+		String ckSql = "select ckId from v_glfkh_ck where bmbh = ? and khbh = ?";
+		Map<String, Object> paramsCk = new HashMap<String, Object>();
+		paramsCk.put("0", cgxq.getBmbh());
+		paramsCk.put("1", cgxq.getKhbh());
+		String ckId = cgxqDao.getBySQL(ckSql, paramsCk).toString();
+		
+		Cgxq rCgxq = new Cgxq();
+		rCgxq.setCkId(ckId);
+		
 		nl.add(new CgxqDet());
 		DataGrid dg = new DataGrid();
+		
 		dg.setRows(nl);
+		dg.setObj(rCgxq);
 		return dg;
 	}
 

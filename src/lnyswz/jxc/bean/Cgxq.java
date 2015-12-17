@@ -67,6 +67,7 @@ public class Cgxq {
 	private String needAudit;
 	private String isAudit;
 	
+	private String ckId;
 	private String search;
 	private BigDecimal rksl;
 	
@@ -503,6 +504,14 @@ public class Cgxq {
 
 	public void setRksl(BigDecimal rksl) {
 		this.rksl = rksl;
+	}
+
+	public String getCkId() {
+		return ckId;
+	}
+
+	public void setCkId(String ckId) {
+		this.ckId = ckId;
 	}
 
 	public String getMenuId() {

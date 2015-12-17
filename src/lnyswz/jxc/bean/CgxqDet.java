@@ -30,6 +30,7 @@ public class CgxqDet {
 	private BigDecimal dbsl;
 	private BigDecimal cdbsl;
 	
+	private int cgxqDetId;
 	private BigDecimal xqsl;
 	private BigDecimal cxqsl;
 	
@@ -199,6 +200,14 @@ public class CgxqDet {
 
 	public void setCdbsl(BigDecimal cdbsl) {
 		this.cdbsl = cdbsl;
+	}
+
+	public int getCgxqDetId() {
+		return cgxqDetId;
+	}
+
+	public void setCgxqDetId(int cgxqDetId) {
+		this.cgxqDetId = cgxqDetId;
 	}
 
 	public BigDecimal getXqsl() {

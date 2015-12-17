@@ -12,6 +12,22 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
+jxc.getCkByKhbh = function(bmbh, khbh){
+	var ck = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		return ck[khbh] == undefined ? '02' : ck[khbh];
+		break;
+	case '04':
+		ck['21010082'] = '09';
+		return ck[khbh] == undefined ? '01' : ck[khbh];
+		break;
+	default:
+		break;
+	}
+	
+};
+
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
@@ -116,6 +132,7 @@ jxc.auditLevelCgjh = function(bmbh){
 		break;
 	}
 };
+
 
 jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;

@@ -737,6 +737,7 @@ function khLoad(){
 						//设置信息字段值
 						$('input[name=khmc]').val(data.obj.khmc);
 // 						$('input[name=ywyId]').focus();
+						
 					}else{
 						$.messager.alert('提示', '客户信息不存在！', 'error');
 					}
