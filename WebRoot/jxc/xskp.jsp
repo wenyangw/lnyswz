@@ -488,6 +488,7 @@ $(function(){
 		}
 	});
 	
+	
 	//初始化仓库列表
 	jxc_xskp_ckCombo = lnyw.initCombo($("#jxc_xskp_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + xskp_did);
 	

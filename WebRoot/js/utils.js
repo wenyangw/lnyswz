@@ -341,7 +341,7 @@ lnyw.initCombo = function(target, key, value, url){
 	    width: 100,
 	    valueField: key,
 	    textField: value,
-	    panelHeight: 'auto',
+	    //panelHeight: 'auto',
 //	    onLoadSuccess:function(){
 //	    	target.combobox('selectedIndex', 0);
 //	    }
