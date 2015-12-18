@@ -19,8 +19,31 @@ jxc.getCkByKhbh = function(bmbh, khbh){
 		return ck[khbh] == undefined ? '02' : ck[khbh];
 		break;
 	case '04':
-		ck['21010082'] = '09';
+		ck['21010798'] = '31'; //传媒
+		ck['21010017'] = '32'; //辽海
+		ck['21010036'] = '33'; //美术
+		ck['21010082'] = '34'; //人民
+		ck['21010010'] = '35'; //教育
+		ck['21010011'] = '36'; //春风
+		ck['21010014'] = '37'; //民族
+		ck['21010080'] = '38'; //少儿
+		ck['21010081'] = '39'; //科技
+		ck['21010463'] = '40'; //万卷
+		ck['21010940'] = '41'; //音像
+		ck['21010245'] = '42'; //电子
+		ck['21010078'] = '43'; //万榕
+		ck['11011364'] = '44'; //智品
+		
 		return ck[khbh] == undefined ? '01' : ck[khbh];
+		break;
+	case '05':
+		return ck[khbh] == undefined ? '03' : ck[khbh];
+		break;
+	case '07':
+		return ck[khbh] == undefined ? '21' : ck[khbh];
+		break;
+	case '08':
+		return ck[khbh] == undefined ? '04' : ck[khbh];
 		break;
 	default:
 		break;

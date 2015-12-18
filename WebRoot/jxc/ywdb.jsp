@@ -840,8 +840,8 @@ function createYwdb(){
 							
 							$('input[name=cgxqlsh]').val(rows[0].cgxqlsh);
 							$('input[name=jxc_ywdb_bz]').val(rows[0].bz);
-							//var cks = jxc.getCkByKhbh(ywdb_did);
-							jxc_ywdb_ckComboT.combobox('setValue', d.obj.ckId);
+							jxc_ywdb_ckComboT.combobox('setValue', jxc.getCkByKhbh(ywdb_did, rows[0].khbh));
+							
 							ywdb_tabs.tabs('select', 0);
 						}
 					});

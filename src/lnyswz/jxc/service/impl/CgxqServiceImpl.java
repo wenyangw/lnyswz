@@ -24,7 +24,6 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
-import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
@@ -434,20 +433,20 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			nl.add(cd);
 		}
 		
-		String ckSql = "select ckId from v_glfkh_ck where bmbh = ? and khbh = ?";
-		Map<String, Object> paramsCk = new HashMap<String, Object>();
-		paramsCk.put("0", cgxq.getBmbh());
-		paramsCk.put("1", cgxq.getKhbh());
-		String ckId = cgxqDao.getBySQL(ckSql, paramsCk).toString();
-		
-		Cgxq rCgxq = new Cgxq();
-		rCgxq.setCkId(ckId);
+//		String ckSql = "select ckId from v_glfkh_ck where bmbh = ? and khbh = ?";
+//		Map<String, Object> paramsCk = new HashMap<String, Object>();
+//		paramsCk.put("0", cgxq.getBmbh());
+//		paramsCk.put("1", cgxq.getKhbh());
+//		String ckId = cgxqDao.getBySQL(ckSql, paramsCk).toString();
+//		
+//		Cgxq rCgxq = new Cgxq();
+//		rCgxq.setCkId(ckId);
 		
 		nl.add(new CgxqDet());
 		DataGrid dg = new DataGrid();
 		
 		dg.setRows(nl);
-		dg.setObj(rCgxq);
+		//dg.setObj(rCgxq);
 		return dg;
 	}
 
