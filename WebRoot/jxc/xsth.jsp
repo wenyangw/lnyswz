@@ -586,6 +586,7 @@ $(function(){
 // 			checkKh();
 // 		}
  		loadKh($('input[name=khbh]').val().trim());
+ 		jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  	});
 	

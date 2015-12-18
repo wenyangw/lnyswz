@@ -32,6 +32,9 @@ public class YwdbDet{
 	private BigDecimal zdwsl;
 	private BigDecimal cdwsl;
 	
+	//采购需求
+	private int cgxqDetId;
+	
 	public int getId() {
 		return id;
 	}
@@ -115,5 +118,11 @@ public class YwdbDet{
 	}
 	public void setCdwsl(BigDecimal cdwsl) {
 		this.cdwsl = cdwsl;
+	}
+	public int getCgxqDetId() {
+		return cgxqDetId;
+	}
+	public void setCgxqDetId(int cgxqDetId) {
+		this.cgxqDetId = cgxqDetId;
 	}
 }

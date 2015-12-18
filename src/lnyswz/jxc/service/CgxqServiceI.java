@@ -15,6 +15,7 @@ public interface CgxqServiceI {
 	public DataGrid datagrid(Cgxq cgxq);
 //	public DataGrid detDatagrid(String cgxqlsh);
 	public DataGrid toCgjh(String cgxqDetIds);
+	public DataGrid toYwdb(Cgxq cgxq);
 	public DataGrid getSpkc(Cgxq cgxq);
 	public DataGrid detDatagrid(String cgxqlsh);
 }
