@@ -11,6 +11,7 @@ public interface CgxqServiceI {
 	public void updateCancel(Cgxq cgxq);
 	public void updateRefuse(Cgxq cgxq);
 	public void updateComplete(Cgxq cgxq);
+	public void updateDbxq(Cgxq cgxq);
 	public DataGrid printCgxq(Cgxq cgxq);
 	public DataGrid datagrid(Cgxq cgxq);
 //	public DataGrid detDatagrid(String cgxqlsh);

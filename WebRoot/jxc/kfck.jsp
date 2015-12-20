@@ -1023,7 +1023,7 @@ function generateKfck(){
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
-							jxc_kfck_ckCombo.combobox('setValue', rows[0].ckId);
+							jxc_kfck_ckCombo.combobox('setValue', (jxc_kfck_did == '04') ? jxc.getCkByKhbh(jxc_kfck_did, '00000000') : rows[0].ckId);
 							if(rows[0].isFh == '1'){
 								
 								$('#jxc_kfck_isFh').prop('checked', 'checked');

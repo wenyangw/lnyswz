@@ -146,6 +146,17 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	}
 	
 	@Override
+	public void updateDbxq(Cgxq cgxq) {
+		TCgxqDet tCgxqDet = detDao.load(TCgxqDet.class, cgxq.getId());
+		tCgxqDet.setRefuseId(cgxq.getRefuseId());
+		tCgxqDet.setRefuseTime(new Date());
+		tCgxqDet.setRefuseName(cgxq.getRefuseName());
+		tCgxqDet.setIsDb("1");			
+		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
+				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "采购需求调拨完成记录", operalogDao);
+	}
+	
+	@Override
 	public DataGrid printCgxq(Cgxq cgxq) {
 		DataGrid datagrid = new DataGrid();
 		TCgxq tCgxq = cgxqDao.load(TCgxq.class, cgxq.getCgxqlsh());
@@ -217,7 +228,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			if(cgxq.getFromOther().equals("fromCgjh")){
 				hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
 			}else if(cgxq.getFromOther().equals("fromYwdb")){
-				hql += " and t.isCancel = '0' and t.isRefuse = '0' and needAudit = isAudit and (t.isDb = '0' or t.zdwsl <> t.dbsl)";
+				hql += " and t.isCancel = '0' and t.isRefuse = '0' and needAudit = isAudit and (t.isDb = '0' and t.zdwsl <> t.dbsl)";
 			}
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
