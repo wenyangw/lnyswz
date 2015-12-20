@@ -91,7 +91,7 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 	}
 	
 	/**
-	 * 完成采购需求
+	 * 完成采购需求，不再进行采购计划
 	 */
 	public void complete(){
 		User user = (User)session.get("user");
@@ -109,7 +109,26 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		}
 		writeJson(j);
 	}
-	
+		
+	/**
+	 * 完成采购需求,不再进行调拨
+	 */
+	public void dbxq(){
+		User user = (User)session.get("user");
+		cgxq.setRefuseId(user.getId());
+		cgxq.setRefuseName(user.getRealName());
+		Json j = new Json();
+		try{
+			cgxqService.updateDbxq(cgxq);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("采购需求调拨完成成功！");
+		}catch(Exception e){
+			j.setMsg("采购需求调拨完成失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
 	public void printCgxq() {
 		User user = (User) session.get("user");
 		cgxq.setCreateName(user.getRealName());

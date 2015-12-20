@@ -853,7 +853,34 @@ function createYwdb(){
 	}
 }	
 	
-
+function completeCgxq(){
+	var row = ywdb_cgxqDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '您要调拨完成选中的采购需求单？', function(r) {
+			if (r) {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!dbxq.action',
+					data : {
+						id : row.id,
+						bmbh : ywdb_did,
+						menuId : ywdb_menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						ywdb_cgxqDg.datagrid('reload');
+						ywdb_cgxqDg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
 
