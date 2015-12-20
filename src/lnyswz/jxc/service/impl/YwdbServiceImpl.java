@@ -87,7 +87,7 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			TYwdbDet tDet = new TYwdbDet();
 			BeanUtils.copyProperties(ywdbDet, tDet);
 			
-			if(ywdb.getCgxqlsh() != null){
+			if(ywdb.getCgxqlsh() != null && ywdb.getCgxqlsh().length() != 0){
 				TCgxqDet tCgxqDet = cgxqDetDao.load(TCgxqDet.class, ywdbDet.getCgxqDetId());
 				tCgxqDet.setDbsl(tCgxqDet.getDbsl().add(ywdbDet.getZdwsl()));
 				if (!("".equals(ywdbDet.getCjldwId()) || ywdbDet.getZhxs() == null || ywdbDet.getZhxs().compareTo(Constant.BD_ZERO) == 0)){
