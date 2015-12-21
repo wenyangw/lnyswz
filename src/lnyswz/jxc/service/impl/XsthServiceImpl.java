@@ -594,10 +594,11 @@ public class XsthServiceImpl implements XsthServiceI {
 //		int j = 0;
 //		Set<TXskp> xskps = null;
 		for (TXsthDet yd : tXsth.getTXsthDets()) {
-			String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			//String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			String hql = "from TSpBgy t where t.depId = :bmbh and t.spbh = :spbh and t.bgyId = :bgyId";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("bmbh", tXsth.getBmbh());
-			params.put("ckId", tXsth.getCkId());
+			//params.put("ckId", tXsth.getCkId());
 			params.put("spbh", yd.getSpbh());
 			params.put("bgyId", xsth.getBgyId());
 			
@@ -685,7 +686,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid getSpBgys(Xsth xsth) {
 		String sql = "select distinct bgy.bgyId, bgy.bgyName from t_xsth th "
 				+ "left join t_xsth_det det on th.xsthlsh = det.xsthlsh "
-				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and th.ckId = bgy.ckId and det.spbh = bgy.spbh "
+				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and det.spbh = bgy.spbh "
 				+ "where th.xsthlsh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", xsth.getXsthlsh());

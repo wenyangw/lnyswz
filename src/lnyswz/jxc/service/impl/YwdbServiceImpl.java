@@ -184,7 +184,7 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			tDet.setTYwdb(tYwdb);
 			tDets.add(tDet);
 			
-			if(yTYwdb.getCgxqlsh() != null){
+			if(yTYwdb.getCgxqlsh() != null && yTYwdb.getCgxqlsh().trim().length() > 0){
 				String cgxqHql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh and t.spbh = :spbh";
 				Map<String, Object> cgxqParams = new HashMap<String, Object>();
 				cgxqParams.put("cgxqlsh", yTYwdb.getCgxqlsh());

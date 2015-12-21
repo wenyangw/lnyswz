@@ -240,7 +240,13 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		}
 		
 		String countHql = "select count(*) " + hql;
-		hql += " order by t.TCgxq.createTime desc ";
+		
+		if(cgxq.getFromOther() != null){
+			hql += " order by t.TCgxq.createTime";
+		}else{
+			hql += " order by t.TCgxq.createTime desc ";
+		}
+		
 		List<TCgxqDet> l = detDao.find(hql, params, cgxq.getPage(), cgxq.getRows());
 		List<Cgxq> nl = new ArrayList<Cgxq>();
 		for(TCgxqDet t : l){
