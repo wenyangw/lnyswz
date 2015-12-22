@@ -148,6 +148,11 @@ $(function(){
 			{field:'id',title:'记录号',align:'center',checkbox:true},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
+			{field:'khbh',title:'客户编号',align:'center', hidden:true},
+	        {field:'khmc',title:'*客户名称',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
 			{field:'spbh',title:'*商品编号',align:'center', sortable:true,
 	        	sorter: function(a, b){
 	        		return a.localeCompare(b);
@@ -184,8 +189,7 @@ $(function(){
 					}},
 	        {field:'gysbh',title:'供应商编号',align:'center', hidden:true},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
-	        {field:'khbh',title:'客户编号',align:'center', hidden:true},
-	        {field:'khmc',title:'客户名称',align:'center'},
+	        
 	        {field:'createId',title:'创建人id',align:'center',hidden:true},
 	        {field:'createName',title:'业务员',align:'center'},
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
