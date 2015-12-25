@@ -471,7 +471,9 @@ $(function(){
 // 			loadKh($('input[name=khbh]').val().trim());
 // 		}
 		loadKh($('input[name=khbh]').val().trim());
-		jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=khbh]').val()));
+		if($('input[name=xsthDetIds]').val() == ''){
+			jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=khbh]').val()));
+		}
 	});
 	
 
@@ -1392,7 +1394,9 @@ function khLoad(){
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
-			jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=khbh]').val()));
+			if($('input[name=xsthDetIds]').val() == ''){
+				jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=khbh]').val()));
+			}
 		}
 		break;
 	}

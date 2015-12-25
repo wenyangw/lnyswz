@@ -390,7 +390,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 	
 	@Override
 	public DataGrid toYwdb(Cgxq cgxq){
-		String sql = "select spbh, zdwsl xqsl, cdwsl cxqsl, dbsl, cdbsl, zdwsl - dbsl zdwsl, cdwsl - cdbsl cdwsl, id from t_cgxq_det t ";
+		String sql = "select spbh, zdwsl xqsl, cdwsl cxqsl, dbsl, cdbsl, id from t_cgxq_det t ";
 		
 		String cgxqDetIds = cgxq.getCgxqDetIds(); 
 		if(cgxqDetIds != null && cgxqDetIds.trim().length() > 0){
@@ -415,9 +415,9 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			BigDecimal cxqsl = new BigDecimal(os[2].toString());
 			BigDecimal dbsl = new BigDecimal(os[3].toString());
 			BigDecimal cdbsl = new BigDecimal(os[4].toString());
-			BigDecimal zdwsl = new BigDecimal(os[5].toString());
-			BigDecimal cdwsl = new BigDecimal(os[6].toString());
-			int cgxqDetId = Integer.parseInt(os[7].toString());
+			//BigDecimal zdwsl = new BigDecimal(os[5].toString());
+			//BigDecimal cdwsl = new BigDecimal(os[6].toString());
+			int cgxqDetId = Integer.parseInt(os[5].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			CgxqDet cd = new CgxqDet();
@@ -432,18 +432,18 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			cd.setCxqsl(cxqsl);
 			cd.setDbsl(dbsl);
 			cd.setCdbsl(cdbsl);
-			cd.setZdwsl(zdwsl);
-			cd.setCdwsl(cdwsl);
+			//cd.setZdwsl(zdwsl);
+			//cd.setCdwsl(cdwsl);
 			cd.setCgxqDetId(cgxqDetId);
 			if(sp.getCjldw() != null){
 				cd.setCjldwId(sp.getCjldw().getId());
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					cd.setZhxs(sp.getZhxs());
-					cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				//	cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 				}else{
 					cd.setZhxs(Constant.BD_ZERO);
-					cd.setCdwsl(Constant.BD_ZERO);
+				//	cd.setCdwsl(Constant.BD_ZERO);
 				}
 			}
 			

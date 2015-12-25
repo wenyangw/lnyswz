@@ -763,7 +763,7 @@ function setEditing(){
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
     	if($(zthslEditor.target).val() > 0){
-    		if($(zslEditor.target).val() > ($(zthslEditor.target).val() - $(zytslEditor.target).val())){
+    		if((Number($(zslEditor.target).val()) - (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val()))).toFixed(3) > 0){
     			$.messager.alert("提示", "提货数量大于未提货数量，请重新输入！");
         		$(zslEditor.target).numberbox('setValue', 0);
         		zslEditor.target.focus();

@@ -222,6 +222,8 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010082', //辽宁人民出版社
 		    		'21010245', //辽宁电子出版社
 		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
+		    		'21010940', //辽宁音像
+		    		
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;

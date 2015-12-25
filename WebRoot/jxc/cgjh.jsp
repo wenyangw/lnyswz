@@ -701,6 +701,7 @@ function init(){
 	jxc.spInfo($('#jxc_cgjh_layout'), '');
 	
  	jxc_cgjh_ckCombo.combobox('clear');
+ 	jxc_cgjh_ckCombo.combobox('selectedIndex', 0);
  	jxc_cgjh_jsfsCombo.combobox('clear');
 	
 	//初始化流水号
