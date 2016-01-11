@@ -736,7 +736,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getYwyId() > 0){
-			hql += " and t.createId = :ywyId";
+			hql += " and (t.createId = :ywyId or t.ywyId = :ywyId)";
 			params.put("ywyId", xsth.getYwyId());
 		}
 		
@@ -846,7 +846,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
 			}else{
-				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
+				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
 			}
 		}

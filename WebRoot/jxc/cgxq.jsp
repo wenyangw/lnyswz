@@ -162,7 +162,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	//$('#cgxq_xqsj').datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+	$('#cgxq_xqsj').datebox().datebox('setValue', moment().format('YYYY-MM-DD'));
+	
+	
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
 	//$('.ls').css('display','none');
@@ -893,7 +895,7 @@ function printCgxq(){
 						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
 						<th>联系人及电话</th><td><input name="jxc_cgxq_lxr" size="20"></td>
 						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
- 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" type="text" class="easyui-my97"  size="10"></td>
+ 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" size="10"></td>
 					</tr>
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>

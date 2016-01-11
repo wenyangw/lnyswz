@@ -90,6 +90,9 @@ public class Xskp {
 	private String isUp;
 	private int postponeDay;
 	
+//	private String xsthKhbh;
+//	private int xsthYwyId;
+	
 	private String ywrklsh;
 	private String xsthlshs;
 	private String xsthDetIds;

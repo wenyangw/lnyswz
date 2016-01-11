@@ -747,14 +747,18 @@ function removeRow(){
             .datagrid('deleteRow', editIndex);
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xsth_layout');
+    if(xsth_did != '04'){
+    	jxc.hideKc('#jxc_xsth_layout');
+    }
 }
 
 //保存行
 function accept(){
     if (rowOk()){
     	xsth_spdg.datagrid('acceptChanges');
-    	jxc.hideKc('#jxc_xsth_layout');
+    	if(xsth_did != '04'){
+    		jxc.hideKc('#jxc_xsth_layout');
+    	}
     }
 }
 
@@ -763,7 +767,9 @@ function cancelAll(){
 	xsth_spdg.datagrid('rejectChanges');
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xsth_layout');
+    if(xsth_did != '04'){
+    	jxc.hideKc('#jxc_xsth_layout');
+    }
 }
 
 //提交数据到后台
@@ -997,7 +1003,9 @@ function setEditing(){
     			});
     }else{
     	jxc.spInfo($('#jxc_xsth_layout'), '');
-    	jxc.hideKc('#jxc_xsth_layout');
+    	if(xsth_did != '04'){
+    		jxc.hideKc('#jxc_xsth_layout');
+    	}
    	}
     
 	//loadEditor();

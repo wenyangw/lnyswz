@@ -34,6 +34,7 @@ import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
+import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -71,6 +72,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
+	//private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
@@ -173,6 +175,24 @@ public class XskpServiceImpl implements XskpServiceI {
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
 			}else{
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+				
+				//第三方开票要处理两个客户的数据
+//				if(!xskp.getKhbh().equals(xskp.getXsthKhbh())){
+//					//yszz中kpje为新客户
+//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+//					
+//					//yszz中thje为原客户
+//					TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
+//					kh.setKhbh(xskp.getXsthKhbh());
+//					kh.setKhmc(yTKh.getKhmc());
+//					
+//					TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
+//					ywy.setId(xskp.getXsthYwyId());
+//					ywy.setRealName(yUser.getRealName());
+//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
+//				}else{
+//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+//				}
 			}
 		}
 		
@@ -1227,6 +1247,11 @@ public class XskpServiceImpl implements XskpServiceI {
 	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
 		this.khDetDao = khDetDao;
 	}
+
+//	@Autowired
+//	public void setUserDao(BaseDaoI<TUser> userDao) {
+//		this.userDao = userDao;
+//	}
 
 	@Autowired
 	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {

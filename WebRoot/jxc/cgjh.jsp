@@ -1648,8 +1648,8 @@ function refuseCgxq(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						cgjh_dg.datagrid('reload');
-						cgjh_dg.datagrid('unselectAll');
+						cgjh_cgxqDg.datagrid('reload');
+						cgjh_cgxqDg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg

@@ -733,8 +733,10 @@ function saveAll(){
 		other = jxc.isOther(
 			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
 			xskp_did, 
-			$('input[name=xsthKhbh]').val(), 
-			jxc_xskp_ywyCombo.combobox('getValue'));
+			$('input[name=xsthKhbh]').val(),
+			$('input[name=xsthYwyId]').val()
+			//jxc_xskp_ywyCombo.combobox('getValue')
+			);
 		if(!other){
 			$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
 			return false;
@@ -859,6 +861,8 @@ function saveAll(){
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
+		effectRow['xsthKhbh'] = $('input[name=xsthKhbh]').val();
+		effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
 		effectRow['bmbh'] = xskp_did;
 		effectRow['lxbh'] = xskp_lx;
 		effectRow['menuId'] = xskp_menuId;
@@ -1678,6 +1682,7 @@ function generateXskp(){
 	 						updateFooter();
 							$('input[name=xsthDetIds]').val(xsthDetStr);
 							$('input[name=xsthKhbh]').val(rows[0].khbh);
+							$('input[name=xsthYwyId]').val(rows[0].ywyId);
 							xskp_tabs.tabs('select', 0);
 						}
 					});
@@ -1752,6 +1757,7 @@ function searchXsthInXskp(){
 				</table>
 				<input name="xsthDetIds" type="hidden">
 				<input name="xsthKhbh" type="hidden">
+				<input name="xsthYwyId" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xskp_spdg'></table>
@@ -1776,6 +1782,6 @@ function searchXsthInXskp(){
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、书名、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInXskp();">查询</a>
 </div>

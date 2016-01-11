@@ -34,8 +34,10 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		if (dicts.getGenre().equals("04")) {
 			String execHql = "execute " + dicts.getTname() + "'" + d.getDid()
 					+ "','" + d.getUserId() + "'";
-			for (String path : d.getExec().split(",")) {
-				execHql += ",'" + path.trim() + "'";
+			if(d.getExec().length() > 0){
+				for (String path : d.getExec().split(",")) {
+					execHql += ",'" + path.trim() + "'";
+				}
 			}
 			List<Object[]> list = selectCommonDao.findBySQL(execHql+","+d.getPage()+","+d.getRows()+",0");
 //			Long total =selectCommonDao.countBySQL(execHql.trim()+","+d.getPage()+","+d.getRows()+",1");
