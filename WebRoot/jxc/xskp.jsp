@@ -1632,6 +1632,10 @@ function generateXskp(){
 //  		    			$.messager.alert('提示', '请选择同一客户的销售提货单的进行开票！', 'error');
 //  						flag = false;
 //  						return false;
+					}else if(this.ckId != preRow.ckId){
+						$.messager.alert('提示', '请选择相同仓库的提货单进行开票！', 'error');
+ 						flag = false;
+ 						return false;
  		    		}else{
  		    			preRow = this;
  		    		}
@@ -1655,8 +1659,8 @@ function generateXskp(){
 						success : function(d) {
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
-							$('input[name=jxc_xskp_bookmc]').val(rows[0].bookmc);
-							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
+							$('input[name=jxc_xskp_bookmc]').val(rows[rows.length - 1].bookmc);
+							$('input[name=jxc_xskp_bz]').val(rows[rows.length - 1].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							if(rows[0].isFh == '1'){
  								$('input[name=isFh]').prop('checked', true);
