@@ -1033,7 +1033,7 @@ function setEditing(){
     		}
     	}
     	var zsl = Number($(zslEditor.target).val());
-    	if(zsl > kxssl){
+    	if(zsl > kxssl && !$('input[name=xsthDetIds]').val()){
 	   		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
     		$(zslEditor.target).numberbox('setValue', 0);
     		zslEditor.target.focus();
