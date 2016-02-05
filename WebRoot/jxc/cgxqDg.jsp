@@ -68,6 +68,10 @@ $(function(){
    				formatter: function(value, row){
                   	return value == 0 ? '' : value;
               	}},
+           	{field:'dbsl',title:'调拨数量',align:'center',
+    				formatter: function(value, row){
+                   	return value == 0 ? '' : value;
+               	}},
             {field:'zdwdj',title:'单价1',align:'center',
                	formatter: function(value){
                		return value == 0 ? '' : value;

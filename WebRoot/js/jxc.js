@@ -223,7 +223,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010245', //辽宁电子出版社
 		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
 		    		'21010940', //辽宁音像
-		    		
+		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;
@@ -245,6 +245,8 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	case '05':
 		//沈阳新华印务不参与审批流程	
 		var kh05 = ['21010263', //辽宁新华印务有限公司
+		            '21010012',	//辽宁印刷物资有限责任公司
+		            '21028400',	//辽宁印刷物资有限责任公司大连分公司
 		            ];
 		if(kh05.indexOf(khbh) >= 0){
 			return false;
