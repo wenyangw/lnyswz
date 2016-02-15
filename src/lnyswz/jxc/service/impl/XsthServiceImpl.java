@@ -842,7 +842,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(xsth.getSearch() != null){
+		if(xsth.getSearch() != null && xsth.getSearch().length() > 0){
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
 			}else{
@@ -883,7 +883,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and t.zdwsl <> t.cksl";
 		}
 		
-		String countHql = "select count(*) " + hql;
+		String countHql = "select count(id) " + hql;
 		hql += " order by t.TXsth.createTime desc ";
 		List<TXsthDet> l = detDao.find(hql, params, xsth.getPage(), xsth.getRows());
 		List<Xsth> nl = new ArrayList<Xsth>();
