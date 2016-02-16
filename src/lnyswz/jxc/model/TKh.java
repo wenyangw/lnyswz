@@ -128,6 +128,7 @@ public class TKh implements java.io.Serializable {
 		this.isNsr = isNsr;
 	}
 
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TKh",cascade=CascadeType.ALL)
 	public Set<TKhDet> getTKhDets() {
 		return this.TKhDets;

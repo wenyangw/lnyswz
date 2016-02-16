@@ -76,6 +76,7 @@ public class TXsth implements java.io.Serializable {
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
+	private BigDecimal ysfy;
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
 	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
@@ -89,7 +90,7 @@ public class TXsth implements java.io.Serializable {
 			BigDecimal hjje, BigDecimal hjsl, String isLs, String bookmc, String bz, String isZs, String isCancel, 
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
-			Integer hkId, Date hkTime, String needAudit, String isAudit, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -138,6 +139,7 @@ public class TXsth implements java.io.Serializable {
 		this.hkTime = hkTime;
 		this.needAudit = needAudit;
 		this.isAudit = isAudit;
+		this.ysfy = ysfy;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
 	}
@@ -599,6 +601,15 @@ public class TXsth implements java.io.Serializable {
 		this.isAudit = isAudit;
 	}
 	
+	@Column(name = "ysfy", precision = 18, scale = 2)
+	public BigDecimal getYsfy() {
+		return ysfy;
+	}
+
+	public void setYsfy(BigDecimal ysfy) {
+		this.ysfy = ysfy;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)
 	public Set<TXsthDet> getTXsthDets() {
 		return TXsthDets;
