@@ -33,6 +33,7 @@ jxc.getCkByKhbh = function(bmbh, khbh){
 		ck['21010245'] = '42'; //电子
 		ck['21010078'] = '43'; //万榕
 		ck['11011364'] = '44'; //智品
+		ck['21010055'] = '45'; //古籍
 		
 		return ck[khbh] == undefined ? '01' : ck[khbh];
 		break;
@@ -223,6 +224,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010245', //辽宁电子出版社
 		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
 		    		'21010940', //辽宁音像
+		    		'21010055', //辽海古籍
 		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
