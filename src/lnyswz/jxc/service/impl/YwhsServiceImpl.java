@@ -196,8 +196,8 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			BeanUtils.copyProperties(jywhsDet, jsp);
 			TSp jTSp = spDao.load(TSp.class, jywhsDet.getSpbh());
 			if(jTSp.getCjldw() != null){
-				jsp.setCjldwId(zTSp.getCjldw().getId());
-				jsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
+				jsp.setCjldwId(jTSp.getCjldw().getId());
+				jsp.setCjldwmc(jTSp.getCjldw().getJldwmc());
 				jsp.setZhxs(jTSp.getZhxs());
 			}
 			
