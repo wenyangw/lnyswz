@@ -213,15 +213,17 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh"; // and t.TCgxq.createTime > :createTime"
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgxq.getBmbh());
-//		if(cgxq.getCreateTime() != null){
-//			params.put("createTime", cgxq.getCreateTime()); 
-//		}else{
-//			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-//		}
-		if(cgxq.getSearch() != null){
-			hql += " and (t.TCgxq.cgxqlsh like :search or t.TCgxq.gysmc like :search or t.bz like :search)"; 
+		if (cgxq.getFromOther() == null){
+			hql += " and t.TCgxq.createTime > :createTime";
+			if(cgxq.getCreateTime() != null){
+				params.put("createTime", cgxq.getCreateTime()); 
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
+		}
+		if(cgxq.getSearch() != null && (!cgxq.getSearch().equals(""))){
+			hql += " and (t.TCgxq.khmc like :search or t.spmc like :search)"; 
 			params.put("search", "%" + cgxq.getSearch() + "%");
-			
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){

@@ -708,6 +708,27 @@ public class XskpServiceImpl implements XskpServiceI {
 		return r.trim();
 	}
 	
+	private String getSpmcWithCdPp(String spbh, String spmc, String spcd, String sppp, String spbz){
+		String r = "";
+		r += spbh + " ";
+		if(spmc.indexOf(" ") > 0){
+			r += spmc.substring(0, spmc.indexOf(" "));
+		}else{
+			r += spmc;
+		}
+		if(spcd != null){	
+			r += "(" + spcd + ")";
+		}
+		if(sppp != null){	
+			r += "(" + sppp + ")";
+		}
+		if(spbz != null){
+			r += " " + spbz;
+		}
+		
+		return r.trim();
+	}
+	
 	private String getSpmcWithPp(String spbh, String spmc, String sppp, String spbz){
 		String r = "";
 		r += spbh + " ";
