@@ -27,6 +27,12 @@ public class CgxqDet {
 	private BigDecimal zdwxsdj;
 	private BigDecimal cdwxsdj;
 	private BigDecimal spje;
+	private BigDecimal dbsl;
+	private BigDecimal cdbsl;
+	
+	private int cgxqDetId;
+	private BigDecimal xqsl;
+	private BigDecimal cxqsl;
 	
 	public String getCgxqlsh() {
 		return cgxqlsh;
@@ -178,6 +184,46 @@ public class CgxqDet {
 
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+
+	public BigDecimal getDbsl() {
+		return dbsl;
+	}
+
+	public void setDbsl(BigDecimal dbsl) {
+		this.dbsl = dbsl;
+	}
+
+	public BigDecimal getCdbsl() {
+		return cdbsl;
+	}
+
+	public void setCdbsl(BigDecimal cdbsl) {
+		this.cdbsl = cdbsl;
+	}
+
+	public int getCgxqDetId() {
+		return cgxqDetId;
+	}
+
+	public void setCgxqDetId(int cgxqDetId) {
+		this.cgxqDetId = cgxqDetId;
+	}
+
+	public BigDecimal getXqsl() {
+		return xqsl;
+	}
+
+	public void setXqsl(BigDecimal xqsl) {
+		this.xqsl = xqsl;
+	}
+
+	public BigDecimal getCxqsl() {
+		return cxqsl;
+	}
+
+	public void setCxqsl(BigDecimal cxqsl) {
+		this.cxqsl = cxqsl;
 	}
 
 }

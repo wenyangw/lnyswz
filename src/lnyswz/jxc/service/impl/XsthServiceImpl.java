@@ -692,10 +692,11 @@ public class XsthServiceImpl implements XsthServiceI {
 //		int j = 0;
 //		Set<TXskp> xskps = null;
 		for (TXsthDet yd : tXsth.getTXsthDets()) {
-			String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			//String hql = "from TSpBgy t where t.depId = :bmbh and t.ckId = :ckId and t.spbh = :spbh and t.bgyId = :bgyId";
+			String hql = "from TSpBgy t where t.depId = :bmbh and t.spbh = :spbh and t.bgyId = :bgyId";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("bmbh", tXsth.getBmbh());
-			params.put("ckId", tXsth.getCkId());
+			//params.put("ckId", tXsth.getCkId());
 			params.put("spbh", yd.getSpbh());
 			params.put("bgyId", xsth.getBgyId());
 			
@@ -783,7 +784,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid getSpBgys(Xsth xsth) {
 		String sql = "select distinct bgy.bgyId, bgy.bgyName from t_xsth th "
 				+ "left join t_xsth_det det on th.xsthlsh = det.xsthlsh "
-				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and th.ckId = bgy.ckId and det.spbh = bgy.spbh "
+				+ "left join t_sp_bgy bgy on th.bmbh = bgy.depId and det.spbh = bgy.spbh "
 				+ "where th.xsthlsh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", xsth.getXsthlsh());
@@ -833,7 +834,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getYwyId() > 0){
-			hql += " and t.createId = :ywyId";
+			hql += " and (t.createId = :ywyId or t.ywyId = :ywyId)";
 			params.put("ywyId", xsth.getYwyId());
 		}
 		
@@ -942,11 +943,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(xsth.getSearch() != null){
+		if(xsth.getSearch() != null && xsth.getSearch().length() > 0){
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
 			}else{
-				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
+				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
 			}
 		}
@@ -991,7 +992,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and t.zdwsl <> t.cksl";
 		}
 		
-		String countHql = "select count(*) " + hql;
+		String countHql = "select count(id) " + hql;
 		hql += " order by t.TXsth.createTime desc ";
 		List<TXsthDet> l = detDao.find(hql, params, xsth.getPage(), xsth.getRows());
 		List<Xsth> nl = new ArrayList<Xsth>();

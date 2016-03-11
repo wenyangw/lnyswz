@@ -162,7 +162,9 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
-	//$('#cgxq_xqsj').datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+	$('#cgxq_xqsj').datebox().datebox('setValue', moment().format('YYYY-MM-DD'));
+	
+	
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
 	//$('.ls').css('display','none');
@@ -516,11 +518,11 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
-    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
-    	}
-    	calculate();
+    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 110){
+    		if($(zhxsEditor.target).val() != 0){
+    			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    		}
+    		calculate();
     	}else{
     		return false;
     	}
@@ -737,6 +739,7 @@ function khLoad(){
 						//设置信息字段值
 						$('input[name=khmc]').val(data.obj.khmc);
 // 						$('input[name=ywyId]').focus();
+						
 					}else{
 						$.messager.alert('提示', '客户信息不存在！', 'error');
 					}
@@ -892,7 +895,7 @@ function printCgxq(){
 						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
 						<th>联系人及电话</th><td><input name="jxc_cgxq_lxr" size="20"></td>
 						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
- 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" type="text" class="easyui-my97"  size="10"></td>
+ 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" size="10"></td>
 					</tr>
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>

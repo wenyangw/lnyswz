@@ -763,7 +763,7 @@ function setEditing(){
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
     	if($(zthslEditor.target).val() > 0){
-    		if($(zslEditor.target).val() > ($(zthslEditor.target).val() - $(zytslEditor.target).val())){
+    		if((Number($(zslEditor.target).val()) - (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val()))).toFixed(3) > 0){
     			$.messager.alert("提示", "提货数量大于未提货数量，请重新输入！");
         		$(zslEditor.target).numberbox('setValue', 0);
         		zslEditor.target.focus();
@@ -1023,7 +1023,7 @@ function generateKfck(){
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
-							jxc_kfck_ckCombo.combobox('setValue', rows[0].ckId);
+							jxc_kfck_ckCombo.combobox('setValue', (jxc_kfck_did == '04') ? jxc.getCkByKhbh(jxc_kfck_did, '00000000') : rows[0].ckId);
 							if(rows[0].isFh == '1'){
 								
 								$('#jxc_kfck_isFh').prop('checked', 'checked');

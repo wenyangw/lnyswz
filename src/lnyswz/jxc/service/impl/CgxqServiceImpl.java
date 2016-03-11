@@ -24,7 +24,6 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.CgxqDet;
-import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
@@ -76,6 +75,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			tDet.setIsCancel("0");
 			tDet.setIsRefuse("0");
 			tDet.setIsComplete("0");
+			tDet.setIsDb("0");
 			tDet.setTCgxq(tCgxq);
 			if(cgxqDet.getZdwdj() == null){
 				tDet.setZdwdj(Constant.BD_ZERO);
@@ -97,8 +97,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 					tDet.setCdwxsdj(Constant.BD_ZERO);
 				}
 			}
+			tDet.setDbsl(Constant.BD_ZERO);
+			tDet.setCdbsl(Constant.BD_ZERO);
 			tDets.add(tDet);
 		}
+		
 		tCgxq.setTCgxqDets(tDets);
 		cgxqDao.save(tCgxq);
 		OperalogServiceImpl.addOperalog(cgxq.getCreateId(), cgxq.getBmbh(), cgxq.getMenuId(), 
@@ -140,6 +143,17 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		tCgxqDet.setIsComplete("1");			
 		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
 				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "完成采购需求记录", operalogDao);
+	}
+	
+	@Override
+	public void updateDbxq(Cgxq cgxq) {
+		TCgxqDet tCgxqDet = detDao.load(TCgxqDet.class, cgxq.getId());
+		tCgxqDet.setRefuseId(cgxq.getRefuseId());
+		tCgxqDet.setRefuseTime(new Date());
+		tCgxqDet.setRefuseName(cgxq.getRefuseName());
+		tCgxqDet.setIsDb("1");			
+		OperalogServiceImpl.addOperalog(cgxq.getRefuseId(), cgxq.getBmbh(), cgxq.getMenuId(), 
+				tCgxqDet.getTCgxq().getCgxqlsh() + "/" + cgxq.getId(), "采购需求调拨完成记录", operalogDao);
 	}
 	
 	@Override
@@ -199,19 +213,25 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		String hql = "from TCgxqDet t where t.TCgxq.bmbh = :bmbh"; // and t.TCgxq.createTime > :createTime"
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgxq.getBmbh());
-//		if(cgxq.getCreateTime() != null){
-//			params.put("createTime", cgxq.getCreateTime()); 
-//		}else{
-//			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-//		}
-		if(cgxq.getSearch() != null){
-			hql += " and (t.TCgxq.cgxqlsh like :search or t.TCgxq.gysmc like :search or t.bz like :search)"; 
+		if (cgxq.getFromOther() == null){
+			hql += " and t.TCgxq.createTime > :createTime";
+			if(cgxq.getCreateTime() != null){
+				params.put("createTime", cgxq.getCreateTime()); 
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
+		}
+		if(cgxq.getSearch() != null && (!cgxq.getSearch().equals(""))){
+			hql += " and (t.TCgxq.khmc like :search or t.spmc like :search)"; 
 			params.put("search", "%" + cgxq.getSearch() + "%");
-			
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){
-			hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
+			if(cgxq.getFromOther().equals("fromCgjh")){
+				hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
+			}else if(cgxq.getFromOther().equals("fromYwdb")){
+				hql += " and t.isCancel = '0' and t.isRefuse = '0' and needAudit = isAudit and (t.isDb = '0' and t.zdwsl <> t.dbsl)";
+			}
 		}else{
 			//在当前流程，只有创建者可以查看自己的记录
 			TUser tUser = userDao.load(TUser.class, cgxq.getCreateId());
@@ -222,7 +242,13 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		}
 		
 		String countHql = "select count(*) " + hql;
-		hql += " order by t.TCgxq.createTime desc ";
+		
+		if(cgxq.getFromOther() != null){
+			hql += " order by t.TCgxq.createTime";
+		}else{
+			hql += " order by t.TCgxq.createTime desc ";
+		}
+		
 		List<TCgxqDet> l = detDao.find(hql, params, cgxq.getPage(), cgxq.getRows());
 		List<Cgxq> nl = new ArrayList<Cgxq>();
 		for(TCgxqDet t : l){
@@ -363,6 +389,86 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+	
+	@Override
+	public DataGrid toYwdb(Cgxq cgxq){
+		String sql = "select spbh, zdwsl xqsl, cdwsl cxqsl, dbsl, cdbsl, id from t_cgxq_det t ";
+		
+		String cgxqDetIds = cgxq.getCgxqDetIds(); 
+		if(cgxqDetIds != null && cgxqDetIds.trim().length() > 0){
+			String[] cs = cgxqDetIds.split(",");
+			sql += "where ";
+			for(int i = 0; i < cs.length; i++){
+				sql += "t.id = '" + cs[i] + "'";
+				if(i != cs.length - 1){
+					sql += " or ";
+				}
+ 			}
+		}
+		//sql += " group by spbh";
+				
+		List<Object[]> l = detDao.findBySQL(sql);
+		
+		List<CgxqDet> nl = new ArrayList<CgxqDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal xqsl = new BigDecimal(os[1].toString());
+			BigDecimal cxqsl = new BigDecimal(os[2].toString());
+			BigDecimal dbsl = new BigDecimal(os[3].toString());
+			BigDecimal cdbsl = new BigDecimal(os[4].toString());
+			//BigDecimal zdwsl = new BigDecimal(os[5].toString());
+			//BigDecimal cdwsl = new BigDecimal(os[6].toString());
+			int cgxqDetId = Integer.parseInt(os[5].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			CgxqDet cd = new CgxqDet();
+			cd.setSpbh(spbh);
+			cd.setSpmc(sp.getSpmc());
+			cd.setSpcd(sp.getSpcd());
+			cd.setSppp(sp.getSppp());
+			cd.setSpbz(sp.getSpbz());
+			cd.setZjldwId(sp.getZjldw().getId());
+			cd.setZjldwmc(sp.getZjldw().getJldwmc());
+			cd.setXqsl(xqsl);
+			cd.setCxqsl(cxqsl);
+			cd.setDbsl(dbsl);
+			cd.setCdbsl(cdbsl);
+			//cd.setZdwsl(zdwsl);
+			//cd.setCdwsl(cdwsl);
+			cd.setCgxqDetId(cgxqDetId);
+			if(sp.getCjldw() != null){
+				cd.setCjldwId(sp.getCjldw().getId());
+				cd.setCjldwmc(sp.getCjldw().getJldwmc());
+				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
+					cd.setZhxs(sp.getZhxs());
+				//	cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				}else{
+					cd.setZhxs(Constant.BD_ZERO);
+				//	cd.setCdwsl(Constant.BD_ZERO);
+				}
+			}
+			
+			nl.add(cd);
+		}
+		
+//		String ckSql = "select ckId from v_glfkh_ck where bmbh = ? and khbh = ?";
+//		Map<String, Object> paramsCk = new HashMap<String, Object>();
+//		paramsCk.put("0", cgxq.getBmbh());
+//		paramsCk.put("1", cgxq.getKhbh());
+//		String ckId = cgxqDao.getBySQL(ckSql, paramsCk).toString();
+//		
+//		Cgxq rCgxq = new Cgxq();
+//		rCgxq.setCkId(ckId);
+		
+		nl.add(new CgxqDet());
+		DataGrid dg = new DataGrid();
+		
+		dg.setRows(nl);
+		//dg.setObj(rCgxq);
+		return dg;
+	}
+
 		
 	@Autowired
 	public void setCgxqDao(BaseDaoI<TCgxq> cgxqDao) {

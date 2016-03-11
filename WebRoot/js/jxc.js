@@ -12,6 +12,46 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
+jxc.getCkByKhbh = function(bmbh, khbh){
+	var ck = Object.create(Object.prototype);
+	switch (bmbh) {
+	case '01':
+		return ck[khbh] == undefined ? '02' : ck[khbh];
+		break;
+	case '04':
+		ck['21010798'] = '31'; //传媒
+		ck['21010017'] = '32'; //辽海
+		ck['21010036'] = '33'; //美术
+		ck['21010082'] = '34'; //人民
+		ck['21010010'] = '35'; //教育
+		ck['21010011'] = '36'; //春风
+		ck['21010014'] = '37'; //民族
+		ck['21010080'] = '38'; //少儿
+		ck['21010081'] = '39'; //科技
+		ck['21010463'] = '40'; //万卷
+		ck['21010940'] = '41'; //音像
+		ck['21010245'] = '42'; //电子
+		ck['21010078'] = '43'; //万榕
+		ck['11011364'] = '44'; //智品
+		ck['21010055'] = '45'; //古籍
+		
+		return ck[khbh] == undefined ? '01' : ck[khbh];
+		break;
+	case '05':
+		return ck[khbh] == undefined ? '03' : ck[khbh];
+		break;
+	case '07':
+		return ck[khbh] == undefined ? '21' : ck[khbh];
+		break;
+	case '08':
+		return ck[khbh] == undefined ? '04' : ck[khbh];
+		break;
+	default:
+		break;
+	}
+	
+};
+
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
@@ -117,6 +157,7 @@ jxc.auditLevelCgjh = function(bmbh){
 	}
 };
 
+
 jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;
 	var isUp = undefined;
@@ -182,6 +223,9 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010082', //辽宁人民出版社
 		    		'21010245', //辽宁电子出版社
 		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
+		    		'21010940', //辽宁音像
+		    		'21010055', //辽海古籍
+		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;
@@ -191,9 +235,22 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		break;
 	case '01':
 		//沈阳新华印务不参与审批流程	
-		var kh01 = ['21010263', //辽宁新华印务有限公司
+		var kh01 = ['21010263',  //辽宁新华印务有限公司
+		            '21010608',  //辽宁票据印务有限公司
 		            ];
 		if(kh01.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	case '05':
+		//沈阳新华印务不参与审批流程	
+		var kh05 = ['21010263', //辽宁新华印务有限公司
+		            '21010012',	//辽宁印刷物资有限责任公司
+		            '21028400',	//辽宁印刷物资有限责任公司大连分公司
+		            ];
+		if(kh05.indexOf(khbh) >= 0){
 			return false;
 		}else{
 			return true;

@@ -602,6 +602,7 @@ $(function(){
 // 			checkKh();
 // 		}
  		loadKh($('input[name=khbh]').val().trim());
+ 		jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  	});
 	
@@ -757,31 +758,39 @@ function clickRow(rowIndex, rowData){
 
 //删除行
 function removeRow(){
-  if (editIndex == undefined){
-  	return; 
-  }
-  xsth_spdg.datagrid('cancelEdit', editIndex)
-          .datagrid('deleteRow', editIndex);
-  editIndex = undefined;
-  updateFooter();
-  jxc.hideKc('#jxc_xsth_layout');
+
+    if (editIndex == undefined){
+    	return; 
+    }
+    xsth_spdg.datagrid('cancelEdit', editIndex)
+            .datagrid('deleteRow', editIndex);
+    editIndex = undefined;
+    updateFooter();
+    if(xsth_did != '04'){
+    	jxc.hideKc('#jxc_xsth_layout');
+    }
+
 }
 
 
 //保存行
 function accept(){
-  if (rowOk()){
-  	xsth_spdg.datagrid('acceptChanges');
-  	jxc.hideKc('#jxc_xsth_layout');
-  }
+    if (rowOk()){
+    	xsth_spdg.datagrid('acceptChanges');
+    	if(xsth_did != '04'){
+    		jxc.hideKc('#jxc_xsth_layout');
+    	}
+    }
 }
 
 //取消编辑行
 function cancelAll(){
 	xsth_spdg.datagrid('rejectChanges');
-  editIndex = undefined;
-  updateFooter();
-  jxc.hideKc('#jxc_xsth_layout');
+    editIndex = undefined;
+    updateFooter();
+    if(xsth_did != '04'){
+    	jxc.hideKc('#jxc_xsth_layout');
+    }
 }
 
 
@@ -1026,7 +1035,9 @@ function setEditing(){
     			});
     }else{
     	jxc.spInfo($('#jxc_xsth_layout'), '');
-    	jxc.hideKc('#jxc_xsth_layout');
+    	if(xsth_did != '04'){
+    		jxc.hideKc('#jxc_xsth_layout');
+    	}
    	}
     
 	//loadEditor();
@@ -1461,6 +1472,7 @@ function khLoad(){
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
+			jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
 // 			$.ajax({
 // 				url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
 // 				async: false,

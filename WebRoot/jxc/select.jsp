@@ -257,7 +257,11 @@ function selectClick(){
 						break;
 			}		
 			conditions.push(hql);			
+		}else{
+			execHql.push("<>");
+			execHql.push("");
 		}
+		
 	});
 	if(flag){
 		$.messager.alert('提示', message+'条件输入不完整', 'error');

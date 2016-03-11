@@ -627,12 +627,23 @@ public class KhServiceImpl implements KhServiceI {
 	public Yszz getYszz(String bmbh, String khbh, int ywyId, String jzsj){
 		Yszz yszz = new Yszz();
 		
-		TYszz tYszz = YszzServiceImpl.getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);	
+		TYszz tYszz = YszzServiceImpl.getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);
+				
 		if(tYszz != null){
 			BeanUtils.copyProperties(tYszz, yszz);
-			return yszz;
 		}
-		return null;
+		//客户的临时出库金额以明细为准
+		String sql = "select cast(SUM((zdwsl - kpsl) * zdwdj) as numeric(18, 2)) thje from v_xsth_without_xskp "
+				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+				+ " group by bmbh, khbh, ywyId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", khbh);
+		params.put("2", ywyId);
+		
+		yszz.setThje(new BigDecimal(yszzDao.getBySQL(sql, params).toString()));
+				
+		return yszz;
 	}
 	
 	@Autowired
