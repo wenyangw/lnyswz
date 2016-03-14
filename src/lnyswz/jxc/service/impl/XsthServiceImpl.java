@@ -258,8 +258,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			//销售提货直接新生成且不是直送，计入临时总账
-			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()))){
+			//销售提货直接新生成且不是直送(教材除外)，计入临时总账
+			if("1".equals(xsth.getIsLs()) && (xsth.getBmbh().equals("04") || !"1".equals(xsth.getIsZs()))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -480,8 +480,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if("1".equals(yTXsth.getIsLs())){
-				//当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
-				if( ! ("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0))
+				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
+				if(yTXsth.getBmbh().equals("04") || ! ("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0))
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				
 			}
@@ -961,7 +961,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getFromOther().equals("fromCgjh")){
-			hql += " and t.TXsth.isZs = '1' and t.cgjhlsh is not null";
+			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null";
 		}
 		
 		
@@ -1166,9 +1166,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 	
 	/**
+	 * 直送业务确认收货数量
 	 * 库房检斤后修改实际数量
 	 * 纸张要修改次数量
 	 * 并同步更新临时总账、应收总账的数据
+	 * 
 	 */
 	@Override
 	public void updateThsl(Xsth xsth) {
@@ -1181,6 +1183,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		BigDecimal ysje = BigDecimal.ZERO;
 		
 		//将本次录入的数据与原数据比较，获得相差数量
+		//销售提货中直发业务确认数量
 		if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
 			sl = xsth.getThsl();
 			je = sl.multiply(tXsthDet.getZdwdj());
