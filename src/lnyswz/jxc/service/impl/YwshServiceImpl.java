@@ -259,7 +259,7 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid listAudits(Ywsh ywsh){
 		DataGrid dg = new DataGrid();
-		String userCondition = "select condition "
+		String userCondition = "select conditions "
 				+ "from t_audit_set aset left join t_audit au on aset.auditId = au.id "
 				+ "where aset.bmbh = ? and aset.userId = ? and au.ywlxId = ?";
 		Map<String, Object> paramsCondition = new HashMap<String, Object>();
@@ -269,7 +269,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		
 		Object userCon = ywshDao.getBySQL(userCondition, paramsCondition);
 		
-		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs, isnull(th.bz, ' ') bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and a.ywlxId = SUBSTRING(th.xsthlsh, 7, 2)"
@@ -364,7 +364,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		String jsfsmc = (String)o[8];
 		BigDecimal hjje = new BigDecimal(o[9].toString());
 		String isZs = o[10] == null ? "0" : o[10].toString();
-		String bz = (String)o[11];
+		String bz = o[11].toString();
 		String auditLevel = o[12].toString();
 		String khlxmc = o[13].toString();
 		int sxzq = o[14] == null ? 0 : Integer.valueOf(o[14].toString());

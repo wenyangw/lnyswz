@@ -183,9 +183,23 @@ public interface Constant {
 		put("05","辽宁文达纸业有限公司");
 		put("07","辽宁印刷物资有限责任公司");
 		put("08","辽宁印刷物资有限责任公司大连分公司");	
-		
 	}};
 	
+	public static final Map<String, String> BMDZS = new HashMap<String, String>(){{
+		put("01","沈阳市铁西区齐贤北街29号");
+		put("04","沈阳市铁西区齐贤北街29号");
+		put("05","沈阳市铁西区齐贤北街29号");
+		put("07","沈阳市铁西区齐贤北街29号");
+		put("08","大连市西岗区香工街香海花园35号一楼公建");	
+	}};
+	
+	public static final Map<String, String> HTDZS = new HashMap<String, String>(){{
+		put("01","沈阳市铁西区");
+		put("04","沈阳市铁西区");
+		put("05","沈阳市铁西区");
+		put("07","沈阳市铁西区");
+		put("08","大连市西岗区");	
+	}};
 	
 	public static final Map<String, String> XSKP_FH = new HashMap<String, String>(){{
 		put("01","白燕");

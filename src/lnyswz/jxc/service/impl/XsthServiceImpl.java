@@ -659,10 +659,31 @@ public class XsthServiceImpl implements XsthServiceI {
 			nl.add(xsthDet);
 		}
 		
+		
 		int num = nl.size();
 		if (num < 4) {
 			for (int i = 0; i < (4 - num); i++) {
 				nl.add(new XsthDet());
+			}
+		}
+		
+		String sqlKh = "select khlxId, sxzq from t_kh_det where depId = ? and khbh = ? and ywyId = ?";
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", tXsth.getBmbh());
+		sqlParams.put("1", tXsth.getKhbh());
+		sqlParams.put("2", tXsth.getYwyId());
+		
+		Object[] khDet = detDao.getMBySQL(sqlKh, sqlParams);
+		//付款天数，默认现款10天，月结(03)30天，授信按授信期
+		int payDays = 10;
+		
+		
+		if(khDet != null){
+			if(((String)khDet[0]).equals("03")){
+				payDays = 30;
+			}
+			if(((String)khDet[0]).equals("02")){
+				payDays = Integer.valueOf(khDet[1].toString());
 			}
 		}
 				
@@ -671,9 +692,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bmmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		map.put("bmdz", Constant.BMDZS.get(tXsth.getBmbh()));
+		map.put("htdz", Constant.HTDZS.get(tXsth.getBmbh()));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
 		map.put("shdz", tXsth.getShdz());
+		map.put("payDays", payDays);
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		
@@ -1179,20 +1203,27 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		BigDecimal sl = BigDecimal.ZERO;
 		BigDecimal csl = BigDecimal.ZERO;
-		BigDecimal je = BigDecimal.ZERO;
+		BigDecimal lsje = BigDecimal.ZERO;
+		BigDecimal thje = BigDecimal.ZERO;
 		BigDecimal ysje = BigDecimal.ZERO;
 		
 		//将本次录入的数据与原数据比较，获得相差数量
-		//销售提货中直发业务确认数量
 		if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
+			//销售提货中直发业务确认数量
 			sl = xsth.getThsl();
-			je = sl.multiply(tXsthDet.getZdwdj());
-			ysje = xsth.getThsl().subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
+			//本次数量对应的临时金额
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			//应收差额
+			ysje = sl.subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
+			//提货单总差额
+			thje = ysje;
 		}else{
+			//库房确认数量
 			sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
 			//获取相差金额
-			je = sl.multiply(tXsthDet.getZdwdj());
-			ysje = je;
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			ysje = lsje;
+			thje = lsje;
 		}
 		
 		//检查是否已修改过,未改过的将原zdwsl保存到thsl
@@ -1223,11 +1254,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		ck.setCkmc(tXsth.getCkmc());
 		
 		//更新提货单的合计数量、金额
-		tXsth.setHjje(tXsth.getHjje().add(je));
+		tXsth.setHjje(tXsth.getHjje().add(thje));
 		tXsth.setHjsl(tXsth.getHjsl().add(csl));
 		
 		//更新临时总账数量
-		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, csl, je, Constant.UPDATE_RK, lszzDao);
+		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, csl, lsje, Constant.UPDATE_RK, lszzDao);
 		
 		//更新应收总账的金额
 		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
