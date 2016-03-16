@@ -560,7 +560,7 @@ $(function(){
 	        {field:'ywyId',title:'业务员id',align:'center',hidden:true},
 	        {field:'ywymc',title:'业务员',align:'center'},
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
-	        //{field:'lxr',title:'联系人',align:'center'},
+	        {field:'thr',title:'联系人',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
 	        //{field:'dhsj',title:'到货时间',align:'center'},
@@ -1893,7 +1893,8 @@ function createCgjhFromXsth(){
 						url : '${pageContext.request.contextPath}/jxc/xsthAction!toCgjh.action',
 						data : {
 							xsthDetIds : xsthDetIdsStr,
-							shdz: rows[0].shdz
+							shdz: rows[0].shdz,
+							thr: rows[0].thr
 						},
 						dataType : 'json',
 						type: 'post',

@@ -697,6 +697,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
 		map.put("shdz", tXsth.getShdz());
+		map.put("thr", tXsth.getThr());
 		map.put("payDays", payDays);
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
@@ -1165,6 +1166,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			XsthDet xd = new XsthDet();
 			BeanUtils.copyProperties(sp, xd);
 			xd.setShdz(xsth.getShdz());
+			xd.setLxr(xsth.getThr());
 			xd.setZjldwId(sp.getZjldw().getId());
 			xd.setZjldwmc(sp.getZjldw().getJldwmc());
 			xd.setZdwsl(zdwsl);

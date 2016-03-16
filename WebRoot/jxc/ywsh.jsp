@@ -81,7 +81,11 @@ $(function(){
 			                cc.push('<th width=20%>' + copts.title + ':</th>');
 			                if(fields[i] == 'isZs'){
 			                	if(rowData[fields[i]] == '1'){
-			                		cc.push('<td width=30% style="color:red;">是(需要合同)</td>');
+			                		if(rowData['hjje'] >= 100000){
+				                		cc.push('<td width=30% style="color:red;">是(需要合同)</td>');
+			                		}else{
+			                			cc.push('<td width=30% style="color:red;">是</td>');
+			                		}
 			                	}else{
 			                		cc.push('<td width=30%>否</td>');
 			                	}
