@@ -634,7 +634,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("khmc", tXsth.getKhmc());
 		map.put("gysmc", tCgjh.getGysmc());
-		map.put("shdz", tXsth.getShdz());
+		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
