@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -224,6 +225,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			if(tDet.getKpsl() == null){
 				tDet.setKpsl(Constant.BD_ZERO);
 			}
+			
 			if(tDet.getCkpsl() == null){
 				tDet.setCkpsl(Constant.BD_ZERO);
 			}
@@ -251,6 +253,9 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 			}
 			tDet.setThsl(Constant.BD_ZERO);
+			tDet.setQrsl(BigDecimal.ZERO);
+			
+			tDet.setCompleted("0");
 			
 			tDet.setTXsth(tXsth);
 			tDets.add(tDet);
@@ -258,8 +263,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			//销售提货直接新生成且不是直送(教材除外)，计入临时总账
-			if("1".equals(xsth.getIsLs()) && (xsth.getBmbh().equals("04") || !"1".equals(xsth.getIsZs()))){
+			//销售提货直接新生成且不是直送，计入临时总账
+			if("1".equals(xsth.getIsLs()) && !"1".equals(xsth.getIsZs())){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -481,8 +486,9 @@ public class XsthServiceImpl implements XsthServiceI {
 
 			if("1".equals(yTXsth.getIsLs())){
 				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
-				if(yTXsth.getBmbh().equals("04") || ! ("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0))
-				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)){
+					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				}
 				
 			}
 			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
@@ -635,6 +641,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("khmc", tXsth.getKhmc());
 		map.put("gysmc", tCgjh.getGysmc());
 		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("ywymc", tXsth.getYwymc());
+		map.put("printTime", DateUtil.dateToString(new Date(), "yyyy-MM-dd"));
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
@@ -1200,47 +1209,53 @@ public class XsthServiceImpl implements XsthServiceI {
 	 */
 	@Override
 	public void updateThsl(Xsth xsth) {
-		//获取修改的商品记录
-		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
-		
 		BigDecimal sl = BigDecimal.ZERO;
 		BigDecimal csl = BigDecimal.ZERO;
 		BigDecimal lsje = BigDecimal.ZERO;
-		BigDecimal thje = BigDecimal.ZERO;
-		BigDecimal ysje = BigDecimal.ZERO;
-		
-		//将本次录入的数据与原数据比较，获得相差数量
-		if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
-			//销售提货中直发业务确认数量
-			sl = xsth.getThsl();
-			//本次数量对应的临时金额
-			lsje = sl.multiply(tXsthDet.getZdwdj());
-			//应收差额
-			ysje = sl.subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
-			//提货单总差额
-			thje = ysje;
-		}else{
-			//库房确认数量
-			sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
-			//获取相差金额
-			lsje = sl.multiply(tXsthDet.getZdwdj());
-			ysje = lsje;
-			thje = lsje;
-		}
+
+		//获取修改的商品记录
+		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
+				
 		
 		//检查是否已修改过,未改过的将原zdwsl保存到thsl
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
+			tXsthDet.setZdwsl(BigDecimal.ZERO);
+		}
+				
+		sl = xsth.getThsl();
+		//将本次录入的数据与原数据比较，获得相差数量
+		//if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
+		if(xsth.getFromOther().equals("xsth")){
+
+			tXsthDet.setQrsl(sl);
+			tXsthDet.setZdwsl(tXsthDet.getZdwsl().add(sl));
+			
+			//本次数量对应的临时金额
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			//应收差额
+			//ysje = sl.subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
+			
+			//提货单总金额
+			//thje = tXsthDet.getZdwsl().multiply(tXsthDet.getZdwdj());
+		}else{
+			//库房确认数量
+			tXsthDet.setZdwsl(sl);
+			//差额
+			sl = sl.subtract(tXsthDet.getZdwsl());
+			//获取相差金额
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			//ysje = lsje;
+			//thje = lsje;
 		}
 		
 		//更新修改后数量、金额
-		tXsthDet.setZdwsl(xsth.getThsl());
-		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(xsth.getThsl()));
+		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(tXsthDet.getZdwsl()));
 		
 		//如为纸张品种，修改次单位数量
 		if(tXsthDet.getSpbh().substring(0, 1).equals("4")){
 			if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-				tXsthDet.setCdwsl(xsth.getThsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				tXsthDet.setCdwsl(tXsthDet.getZdwsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
 			}
 		}
@@ -1256,14 +1271,16 @@ public class XsthServiceImpl implements XsthServiceI {
 		ck.setCkmc(tXsth.getCkmc());
 		
 		//更新提货单的合计数量、金额
-		tXsth.setHjje(tXsth.getHjje().add(thje));
-		tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		if(!xsth.getFromOther().equals("xsth")){
+			tXsth.setHjje(tXsth.getHjje().add(lsje));
+			tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		}
 		
 		//更新临时总账数量
 		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, csl, lsje, Constant.UPDATE_RK, lszzDao);
 		
-		//更新应收总账的金额
-		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
+		//更新应收总账的金额(直送不更新)
+		if(!xsth.getFromOther().equals("xsth") && tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
 			Kh kh = new Kh();
 			kh.setKhbh(tXsth.getKhbh());
 			kh.setKhmc(tXsth.getKhmc());
@@ -1272,7 +1289,44 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setRealName(tXsth.getYwymc());
 			
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, ysje, Constant.UPDATE_YS_TH, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
+		}
+		
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
+				"修改提货数量", operalogDao);
+	}
+	
+	@Override
+	public void updateZsComplete(Xsth xsth){
+		BigDecimal sl = BigDecimal.ZERO;
+		BigDecimal csl = BigDecimal.ZERO;
+		BigDecimal lsje = BigDecimal.ZERO;
+		
+		TXsthDet tXsthDet = detDao.get(TXsthDet.class, xsth.getId());
+		tXsthDet.setCompleted("1");
+		
+		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
+		if()
+		
+		
+		TXsth tXsth = tXsthDet.getTXsth();
+		
+		
+		if(!xsth.getFromOther().equals("xsth")){
+			tXsth.setHjje(tXsth.getHjje().add(lsje));
+			tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		}
+		
+		if(!xsth.getFromOther().equals("xsth") && tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
+			Kh kh = new Kh();
+			kh.setKhbh(tXsth.getKhbh());
+			kh.setKhmc(tXsth.getKhmc());
+			User ywy = new User();
+			ywy.setId(tXsth.getYwyId());
+			ywy.setRealName(tXsth.getYwymc());
+			
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 

@@ -107,6 +107,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	/**
+	 * 直送销售提货完成
+	 */
+	public void updateZsComplete(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setLockName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateZsComplete(xsth);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("完成直送销售提货成功！");
+		}catch(Exception e){
+			j.setMsg("完成直送销售提货失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
 	 * 锁定销售提货
 	 */
 	public void updateLock(){

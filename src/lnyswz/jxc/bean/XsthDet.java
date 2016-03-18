@@ -37,6 +37,8 @@ public class XsthDet{
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
 	private BigDecimal thsl;
+	private BigDecimal qrsl;
+	private String completed;
 	private BigDecimal zdwthsl;
 	private BigDecimal cdwthsl;
 	private BigDecimal zdwytsl;
@@ -182,6 +184,18 @@ public class XsthDet{
 	}
 	public void setThsl(BigDecimal thsl) {
 		this.thsl = thsl;
+	}
+	public BigDecimal getQrsl() {
+		return qrsl;
+	}
+	public void setQrsl(BigDecimal qrsl) {
+		this.qrsl = qrsl;
+	}
+	public String getCompleted() {
+		return completed;
+	}
+	public void setCompleted(String completed) {
+		this.completed = completed;
 	}
 	public BigDecimal getZdwthsl() {
 		return zdwthsl;
