@@ -1764,6 +1764,71 @@ function confirmThsl(){
 	
 }
 
+function completeXsth(){
+	if(detDg != undefined){
+		var detRow = detDg.datagrid('getSelected');
+		if(detRow != null){
+			if(xsthRow.isZs == '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						if(xsthRow.isKp == '0'){
+							if(detRow.cgjhlsh != undefined){
+								if(detRow.thsl != 0){
+							
+									$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
+										if (thsl != undefined){
+											$.ajax({
+												url : '${pageContext.request.contextPath}/jxc/xsthAction!updateZsComplete.action',
+												data : {
+													id : detRow.id,
+													thsl: thsl,
+													fromOther: 'xsth',
+													bmbh : xsth_did,
+													menuId : xsth_menuId,
+												},
+												dataType : 'json',
+												success : function(d) {
+													detDg.datagrid('reload');
+													detDg.datagrid('unselectAll');
+													$.messager.show({
+														title : '提示',
+														msg : d.msg
+													});
+												}
+											});
+										}
+									});
+								}else{
+									$.messager.alert('警告', '选择的销售提货记录还未确认数量，请重新选择！',  'warning');
+								}
+							}else{
+								$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
+							}
+							//detDg = undefined;
+						}else{
+							$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
+						}
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+	
+}
+
 function searchXsth(){
 	xsth_dg.datagrid('load',{
 		bmbh: xsth_did,
