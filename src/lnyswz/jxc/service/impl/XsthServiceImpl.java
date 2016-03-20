@@ -614,6 +614,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
+			//将本次确认数量替换zdwsl
+			xsthDet.setZdwsl(yd.getQrsl());
 			nl.add(xsthDet);
 			if(j == 0){
 				xskps = yd.getTXskps();
@@ -1306,33 +1308,33 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsthDet.setCompleted("1");
 		
 		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
-		if()
-		
+		if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+			csl = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs());
+		}
 		
 		TXsth tXsth = tXsthDet.getTXsth();
 		
+		//只在直送确认完成时有数量更新，不需要进行判断
+		tXsth.setHjje(tXsth.getHjje().add(lsje));
+		tXsth.setHjsl(tXsth.getHjsl().add(csl));
 		
-		if(!xsth.getFromOther().equals("xsth")){
-			tXsth.setHjje(tXsth.getHjje().add(lsje));
-			tXsth.setHjsl(tXsth.getHjsl().add(csl));
-		}
-		
-		if(!xsth.getFromOther().equals("xsth") && tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
-			Kh kh = new Kh();
-			kh.setKhbh(tXsth.getKhbh());
-			kh.setKhmc(tXsth.getKhmc());
-			User ywy = new User();
-			ywy.setId(tXsth.getYwyId());
-			ywy.setRealName(tXsth.getYwymc());
+		Department dep = new Department();
+		dep.setId(tXsth.getBmbh());
+		dep.setDepName(tXsth.getBmmc());
+		Kh kh = new Kh();
+		kh.setKhbh(tXsth.getKhbh());
+		kh.setKhmc(tXsth.getKhmc());
+		User ywy = new User();
+		ywy.setId(tXsth.getYwyId());
+		ywy.setRealName(tXsth.getYwymc());
 			
-			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
-		}
-		
+		//更新授信客户应付金额
+		YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
+				
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
-				"修改提货数量", operalogDao);
+			"确认直送完成", operalogDao);
 	}
-	
+	 
 	@Override
 	public void updateLock(Xsth xsth) {
 		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());

@@ -286,4 +286,6 @@ public interface Constant {
 	}};
 	
 	public static final String XSKP_JSFS_QK = "06";
+	
+	
 }

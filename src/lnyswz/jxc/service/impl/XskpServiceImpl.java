@@ -95,10 +95,10 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setCreateName(xskp.getCreateName());
 		tXskp.setXskplsh(lsh);
 		tXskp.setIsCj("0");
-		tXskp.setYfje(Constant.BD_ZERO);
+		tXskp.setYfje(BigDecimal.ZERO);
 		
 		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
-			tXskp.setHkje(Constant.BD_ZERO);
+			tXskp.setHkje(BigDecimal.ZERO);
 		}else{
 			tXskp.setHkje(hjje);
 		}
@@ -161,8 +161,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
-			if(ysje.compareTo(Constant.BD_ZERO) < 0){
-				BigDecimal hkje = Constant.BD_ZERO;
+			if(ysje.compareTo(BigDecimal.ZERO) < 0){
+				BigDecimal hkje = BigDecimal.ZERO;
 				if(hjje.compareTo(ysje.abs()) > 0){
 					hkje = ysje.abs();
 				}else{
@@ -200,7 +200,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		TXsth tXsth = null;
 		//生成销售提货明细集合
 		Set<TXsthDet> tXsthDets = null;
-		BigDecimal hjsl = Constant.BD_ZERO;
+		BigDecimal hjsl = BigDecimal.ZERO;
 		if(needXsth){
 			tXskp.setIsTh("1");
 			
@@ -231,18 +231,18 @@ public class XskpServiceImpl implements XskpServiceI {
 			TXskpDet tDet = new TXskpDet();
 			BeanUtils.copyProperties(xskpDet, tDet);
 			if("".equals(xskpDet.getCjldwId()) || xskpDet.getCjldwId() == null || null == xskpDet.getZhxs()){
-				tDet.setCdwdj(Constant.BD_ZERO);
-				tDet.setCdwsl(Constant.BD_ZERO);
-				tDet.setZhxs(Constant.BD_ZERO);
+				tDet.setCdwdj(BigDecimal.ZERO);
+				tDet.setCdwsl(BigDecimal.ZERO);
+				tDet.setZhxs(BigDecimal.ZERO);
 			}else{
-				if(xskpDet.getZhxs() != null && xskpDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
+				if(xskpDet.getZhxs() != null && xskpDet.getZhxs().compareTo(BigDecimal.ZERO) == 0){
+					tDet.setCdwdj(BigDecimal.ZERO);
+					tDet.setCdwsl(BigDecimal.ZERO);
 				}
 			}
-			tDet.setLastThsl(Constant.BD_ZERO);
-			tDet.setcLastThsl(Constant.BD_ZERO);
-			tDet.setThsl(Constant.BD_ZERO);
+			tDet.setLastThsl(BigDecimal.ZERO);
+			tDet.setcLastThsl(BigDecimal.ZERO);
+			tDet.setThsl(BigDecimal.ZERO);
 			tDet.setTXskp(tXskp);
 			
 			Sp sp = new Sp();
@@ -262,12 +262,12 @@ public class XskpServiceImpl implements XskpServiceI {
 				
 				TXsthDet tXsthDet = new TXsthDet();
 				BeanUtils.copyProperties(tDet, tXsthDet, new String[]{"id"});
-				tXsthDet.setCksl(Constant.BD_ZERO);
-				tXsthDet.setCcksl(Constant.BD_ZERO);
+				tXsthDet.setCksl(BigDecimal.ZERO);
+				tXsthDet.setCcksl(BigDecimal.ZERO);
 				tXsthDet.setKpsl(tDet.getZdwsl());
 				tXsthDet.setCkpsl(tDet.getZdwsl());
-				tXsthDet.setThsl(Constant.BD_ZERO);
-				//tXsthDet.setLastRksl(Constant.BD_ZERO);
+				tXsthDet.setThsl(BigDecimal.ZERO);
+				//tXsthDet.setLastRksl(BigDecimal.ZERO);
 				//发票单价不含税，提货单单价含税
 				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				//提货单只有金额字段，要将发票中金额与税额相加
@@ -460,8 +460,8 @@ public class XskpServiceImpl implements XskpServiceI {
 							}
 						}else{
 							if(kpsl.compareTo(xsthDet.getKpsl()) == 1){
-								xsthDet.setKpsl(Constant.BD_ZERO);
-								xsthDet.setCkpsl(Constant.BD_ZERO);
+								xsthDet.setKpsl(BigDecimal.ZERO);
+								xsthDet.setCkpsl(BigDecimal.ZERO);
 								kpsl = kpsl.subtract(xsthDet.getKpsl());
 								ckpsl = ckpsl.subtract(xsthDet.getCkpsl());
 							}else{
@@ -623,7 +623,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		List<XskpDet> nl = new ArrayList<XskpDet>();
 		
 		Xskp x = new Xskp();
-		BigDecimal hjje = Constant.BD_ZERO;
+		BigDecimal hjje = BigDecimal.ZERO;
 		String xskplsh = "共" + lshs.length +  "张/";
 		int j = 0;
 		for(String l : lshs){
@@ -798,7 +798,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		//处理商品明细
 		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
-		BigDecimal hjsl = Constant.BD_ZERO;
+		BigDecimal hjsl = BigDecimal.ZERO;
 		Set<TXskpDet> xskpDets = tXskp.getTXskpDets();
 		for(TXskpDet xskpDet : xskpDets){
 			TXsthDet tDet = new TXsthDet();
@@ -807,14 +807,16 @@ public class XskpServiceImpl implements XskpServiceI {
 			hjsl = hjsl.add(xskpDet.getCdwsl());
 			xskpDet.setLastThsl(tDet.getZdwsl());
 			xskpDet.setThsl(tDet.getZdwsl());
-			tDet.setCksl(Constant.BD_ZERO);
-			tDet.setCcksl(Constant.BD_ZERO);
+			tDet.setCksl(BigDecimal.ZERO);
+			tDet.setCcksl(BigDecimal.ZERO);
 			tDet.setKpsl(xskpDet.getZdwsl());
 			tDet.setCkpsl(xskpDet.getZdwsl());
 			tDet.setZdwdj(xskpDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 			tDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
-			tDet.setThsl(Constant.BD_ZERO);
-			//tDet.setLastRksl(Constant.BD_ZERO);
+			tDet.setThsl(BigDecimal.ZERO);
+			tDet.setQrsl(BigDecimal.ZERO);
+			tDet.setCompleted("0");
+			//tDet.setLastRksl(BigDecimal.ZERO);
 			tDet.setTXsth(tXsth);
 //			tDet.setTXskps(tXskps);
 			tDets.add(tDet);
@@ -880,12 +882,12 @@ public class XskpServiceImpl implements XskpServiceI {
 //				xd.setCjldwId(sp.getCjldw().getId());
 //				xd.setCjldwmc(sp.getCjldw().getJldwmc());
 //				xd.setZhxs(sp.getZhxs());
-////				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
+////				if(sp.getZhxs().compareTo(BigDecimal.ZERO) != 0){
 ////					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 ////					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 ////				}else{
-////					xd.setCdwthsl(Constant.BD_ZERO);
-////					xd.setCdwytsl(Constant.BD_ZERO);
+////					xd.setCdwthsl(BigDecimal.ZERO);
+////					xd.setCdwytsl(BigDecimal.ZERO);
 ////				}
 //			}
 //			nl.add(xd);
@@ -1026,7 +1028,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	public DataGrid getSpkc(Xskp xskp) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
-		BigDecimal sl = Constant.BD_ZERO;
+		BigDecimal sl = BigDecimal.ZERO;
 		
 		List<ProBean> yw = YwzzServiceImpl.getZzsl(xskp.getBmbh(), xskp.getSpbh(), xskp.getCkId(), ywzzDao);
 		if(yw != null){
@@ -1101,7 +1103,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
 			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 			x.setHkedje(tXskp.getHkje());
-			x.setHkje(Constant.BD_ZERO);
+			x.setHkje(BigDecimal.ZERO);
 			xskps.add(x);
 		}
 		dg.setObj(kh);
