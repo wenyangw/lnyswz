@@ -615,6 +615,15 @@ $(function(){
 		}
 	});
 	
+	$('input[name=isZs]').click(function(){
+ 		if($('input#zsCheck').is(':checked')){
+ 			console.info(jxc.getZfCk(xsth_did));
+ 			jxc_xsth_ckCombo.combobox('setValue', jxc.getZfCk(xsth_did));
+		}else{
+			jxc_xsth_ckCombo.combobox('selectedIndex', 0);
+		}
+	});
+	
  	$('input[name=khmc]').change(function(){
 // 		if($('input[name=isSx]').is(':checked')){
 // 			checkKh();
@@ -932,6 +941,8 @@ function saveXsth(){
 		}else{
 			effectRow['isFh'] = '0';
 		}
+		//传入直送
+		effectRow['fromOther'] = jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) ? '' : 'cbs';
 		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
 		//effectRow['isFhth'] = '0';
 		
@@ -1291,7 +1302,7 @@ function setEditing(){
     
     function checkKc(){
     	//非直送业务要判断库存
-    	if(!$('input[name=isZs]').is(':checked')){
+    	if(!$('input[name=isZs]').is(':checked') || !jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
 	    	//判断提货数量是否大于业务数量-临时数量
 	    	//从已开票生成提货单不做判断
 	    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
@@ -1999,7 +2010,7 @@ function searchYwrkInXsth(){
 					<tr>
 						<td colspan="5">
 <!-- 							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp; -->
-							直送<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
+							直发<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
 							<span class="fh" style="display:none">
 								分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;

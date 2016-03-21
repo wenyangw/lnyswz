@@ -1135,6 +1135,7 @@ function updateThsl(){
 							data : {
 								id : row.id,
 								thsl: thsl,
+								fromOther: '',
 								bmbh : jxc_kfck_did,
 								menuId : jxc_kfck_menuId,
 							},

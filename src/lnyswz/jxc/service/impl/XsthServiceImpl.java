@@ -264,7 +264,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(xsthDet, sp);
 			
 			//销售提货直接新生成且不是直送，计入临时总账
-			if("1".equals(xsth.getIsLs()) && !"1".equals(xsth.getIsZs())){
+			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) || (xsth.getFromOther().equals("cbs")))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -707,8 +707,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("htdz", Constant.HTDZS.get(tXsth.getBmbh()));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
-		map.put("shdz", tXsth.getShdz());
-		map.put("thr", tXsth.getThr());
+		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
+		map.put("thr", tXsth.getThr() == null ? "" : tXsth.getThr());
 		map.put("payDays", payDays);
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
@@ -1222,13 +1222,16 @@ public class XsthServiceImpl implements XsthServiceI {
 		//检查是否已修改过,未改过的将原zdwsl保存到thsl
 		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
 			tXsthDet.setThsl(tXsthDet.getZdwsl());
-			tXsthDet.setZdwsl(BigDecimal.ZERO);
+			//tXsthDet.setZdwsl(BigDecimal.ZERO);
 		}
 				
 		sl = xsth.getThsl();
 		//将本次录入的数据与原数据比较，获得相差数量
 		//if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
-		if(xsth.getFromOther().equals("xsth")){
+		if(xsth.getFromOther() != null && xsth.getFromOther().equals("xsth")){
+			if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+				tXsthDet.setZdwsl(BigDecimal.ZERO);
+			}
 
 			tXsthDet.setQrsl(sl);
 			tXsthDet.setZdwsl(tXsthDet.getZdwsl().add(sl));
@@ -1241,10 +1244,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			//提货单总金额
 			//thje = tXsthDet.getZdwsl().multiply(tXsthDet.getZdwdj());
 		}else{
-			//库房确认数量
-			tXsthDet.setZdwsl(sl);
 			//差额
 			sl = sl.subtract(tXsthDet.getZdwsl());
+			//库房确认数量
+			tXsthDet.setZdwsl(xsth.getThsl());
 			//获取相差金额
 			lsje = sl.multiply(tXsthDet.getZdwdj());
 			//ysje = lsje;

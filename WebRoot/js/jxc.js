@@ -52,6 +52,28 @@ jxc.getCkByKhbh = function(bmbh, khbh){
 	
 };
 
+jxc.getZfCk = function(bmbh){
+	switch (bmbh) {
+	case '01':
+		return '11';
+		break;
+	case '04':
+		return '09';
+		break;
+	case '05':
+		return '07';
+		break;
+	case '07':
+		return '12';
+		break;
+	case '08':
+		return '08';
+		break;
+	default:
+		break;
+	}
+}
+
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {

@@ -272,6 +272,8 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				//提货单只有金额字段，要将发票中金额与税额相加
 				tXsthDet.setSpje(tDet.getSpje().add(tDet.getSpse()));
+				tXsthDet.setQrsl(BigDecimal.ZERO);
+				tXsthDet.setCompleted("0");
 				tXsthDets.add(tXsthDet);
 				tXsthDet.setTXsth(tXsth);
 				hjsl = hjsl.add(tDet.getCdwsl());
