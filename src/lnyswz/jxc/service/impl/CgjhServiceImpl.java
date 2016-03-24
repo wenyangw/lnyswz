@@ -166,6 +166,15 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				tCgxqDet.setTCgjh(null);
 			}
 		}
+		
+		//如果从销售提货(直送)生成的计划，取消关联
+		Set<TXsthDet> tXsths = tCgjh.getTXsths();
+		if(tXsths != null && tXsths.size() > 0){
+			for(TXsthDet tXsthDet : tXsths){
+				tXsthDet.setTCgjh(null);
+			}
+		}
+		
 		OperalogServiceImpl.addOperalog(cgjh.getCancelId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(), 
 				"取消采购计划单", operalogDao);
 	}

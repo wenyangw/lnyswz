@@ -617,7 +617,6 @@ $(function(){
 	
 	$('input[name=isZs]').click(function(){
  		if($('input#zsCheck').is(':checked')){
- 			console.info(jxc.getZfCk(xsth_did));
  			jxc_xsth_ckCombo.combobox('setValue', jxc.getZfCk(xsth_did));
 		}else{
 			jxc_xsth_ckCombo.combobox('selectedIndex', 0);
@@ -629,7 +628,7 @@ $(function(){
 // 			checkKh();
 // 		}
  		loadKh($('input[name=khbh]').val().trim());
- 		jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+ 		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  	});
 	
@@ -1506,6 +1505,7 @@ function khLoad(){
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
 			jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+			
 // 			$.ajax({
 // 				url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
 // 				async: false,

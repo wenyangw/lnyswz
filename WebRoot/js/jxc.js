@@ -12,7 +12,27 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
-jxc.getCkByKhbh = function(bmbh, khbh){
+jxc.cbs = function(bmbh){
+	var cbs = ['21010798', //传媒
+			'21010017', //辽海
+			'21010036', //美术
+			'21010082', //人民
+			'21010010', //教育
+			'21010011', //春风
+			'21010014', //民族
+			'21010080', //少儿
+			'21010081', //科技
+			'21010463', //万卷
+			'21010940', //音像
+			'21010245', //电子
+			'21010078', //万榕
+			'11011364', //智品
+			'21010055', //古籍
+			]
+	return cbs;
+}
+
+jxc.getCkByKhbh = function(bmbh, khbh, isZs){
 	var ck = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':

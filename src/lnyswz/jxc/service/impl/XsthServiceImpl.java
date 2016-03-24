@@ -854,12 +854,26 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(xsth.getCreateTime() != null){
 			params.put("createTime", xsth.getCreateTime()); 
 		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			//直发的统计起始时间
+			if(xsth.getSearch() != null && xsth.getSearch().equals("zf")){
+				params.put("createTime", DateUtil.stringToDate("2016-03-21"));
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
 		}
 		
 		if(xsth.getSearch() != null){
-			hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
-			params.put("search", "%" + xsth.getSearch() + "%");
+			
+			if(xsth.getSearch().equals("zf")){
+				hql += " and t.xsthlsh in (select t.TXsth.xsthlsh from TXsthDet t where t.TXsth.isZs = '1' and t.TXsth.createTime > '2016-03-21' and TXsth.fromRk = '0' and t.completed = '0' and t.TXsth.isCancel = '0' and t.TXsth.needAudit = t.TXsth.isAudit";
+				if(xsth.getBmbh().equals("04")){
+					hql += " and t.khbh not in (" + Constant.CBS_LIST + ")";
+				}
+				hql += ")";
+			}else{
+				hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
+				params.put("search", "%" + xsth.getSearch() + "%");
+			}
 			
 		}
 		
@@ -997,10 +1011,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getFromOther().equals("fromCgjh")){
-			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null";
+			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0'" ;
+			if(xsth.getBmbh().equals("04")){
+				hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
+			}
 		}
-		
-		
 		
 		//保管员筛选
 		if(xsth.getBgyId() > 0){

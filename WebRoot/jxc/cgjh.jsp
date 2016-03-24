@@ -562,6 +562,8 @@ $(function(){
 // 	        {field:'dhfs',title:'到货方式',align:'center'},
 	        {field:'thr',title:'联系人',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
+	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
 	        //{field:'dhsj',title:'到货时间',align:'center'},
 // 	        {field:'xqsj',title:'需求时间',align:'center'},

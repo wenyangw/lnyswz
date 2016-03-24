@@ -97,6 +97,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setIsCj("0");
 		tXskp.setYfje(BigDecimal.ZERO);
 		
+		
 		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 			tXskp.setHkje(BigDecimal.ZERO);
 		}else{

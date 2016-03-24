@@ -44,6 +44,8 @@ public interface Constant {
 	//操作人员为业务员
 	public static final String USER_POSTID = "12";
 	
+	public static final String CBS_LIST = "'21010798','21010017','21010036','21010082','21010010','21010011','21010014','21010080','21010081','21010463','21010940','21010245','21010078','11011364','21010055'";
+	
 
 	//库房入库单
 	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
