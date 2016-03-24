@@ -263,8 +263,13 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			//销售提货直接新生成且不是直送，计入临时总账
-			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) || (xsth.getFromOther().equals("cbs")))){
+			//销售提货直接新生成且不是直送
+			//直送业务入库生成的
+			//直送出版的
+			//计入临时总账
+			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) 
+					|| xsth.getFromOther().equals("cbs") 
+					|| (ywrkDetIds != null && ywrkDetIds.trim().length() > 0))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -486,7 +491,9 @@ public class XsthServiceImpl implements XsthServiceI {
 
 			if("1".equals(yTXsth.getIsLs())){
 				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
-				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)){
+				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
+						|| (ywrks != null && ywrks.size() > 0)
+						|| xsth.getFromOther().equals("cbs")){
 					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				}
 				

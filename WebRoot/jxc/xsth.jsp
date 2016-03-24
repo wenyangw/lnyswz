@@ -1584,6 +1584,7 @@ function cancelXsth(){
 		 									url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
 		 									data : {
 		 										xsthlsh : row.xsthlsh,
+		 										fromOther: jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs',
 		 										bmbh : xsth_did,
 		 										menuId : xsth_menuId,
 		 										lxbh: xsth_lx,
