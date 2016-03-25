@@ -606,29 +606,21 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public DataGrid printShd(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
-		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
-		
-		
+							
 		List<XsthDet> nl = new ArrayList<XsthDet>();
-		int j = 0;
-		Set<TXskp> xskps = null;
-		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh and t.TCgjh.cgjhlsh = :cgjhlsh order by t.spbh";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("xsthlsh", xsth.getXsthlsh());
-		params.put("cgjhlsh", xsth.getCgjhlsh());
-		List<TXsthDet> dets = detDao.find(hql, params);
-		//for (TXsthDet yd : tXsth.getTXsthDets()) {
+		String hql = "from TXsthDet t where t.id in (" + xsth.getXsthDetIds() + ") order by t.spbh";
+		List<TXsthDet> dets = detDao.find(hql);
 		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
 			//将本次确认数量替换zdwsl
 			xsthDet.setZdwsl(yd.getQrsl());
-			nl.add(xsthDet);
-			if(j == 0){
-				xskps = yd.getTXskps();
+			if(yd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+				xsthDet.setCdwsl(yd.getQrsl().divide(yd.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
-			j++;
+			nl.add(xsthDet);
 		}
+		TXsth tXsth = dets.get(0).getTXsth();
 					
 		int num = nl.size();
 		if (num < 4) {
@@ -637,18 +629,11 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
-		String cgjhlshSql = "select cgjhlsh from t_xsth_det where id = ?";
-		Map<String, Object> paramsCgjh = new HashMap<String, Object>();
-		paramsCgjh.put("0", dets.get(0).getId());
-			
-		Object cgjhlsh = detDao.getBySQL(cgjhlshSql, paramsCgjh);
-		TCgjh tCgjh = cgjhDao.load(TCgjh.class, (String)cgjhlsh);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "收   货   确   认   单");
 		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("khmc", tXsth.getKhmc());
-		map.put("gysmc", tCgjh.getGysmc());
+		map.put("gysmc", dets.get(0).getTCgjh().getGysmc());
 		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("ywymc", tXsth.getYwymc());
@@ -1242,16 +1227,17 @@ public class XsthServiceImpl implements XsthServiceI {
 				
 		
 		//检查是否已修改过,未改过的将原zdwsl保存到thsl
-		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
-			tXsthDet.setThsl(tXsthDet.getZdwsl());
-			//tXsthDet.setZdwsl(BigDecimal.ZERO);
-		}
+//		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+//			tXsthDet.setThsl(tXsthDet.getZdwsl());
+//			//tXsthDet.setZdwsl(BigDecimal.ZERO);
+//		}
 				
 		sl = xsth.getThsl();
 		//将本次录入的数据与原数据比较，获得相差数量
 		//if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
 		if(xsth.getFromOther() != null && xsth.getFromOther().equals("xsth")){
 			if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+				tXsthDet.setThsl(tXsthDet.getZdwsl());
 				tXsthDet.setZdwsl(BigDecimal.ZERO);
 			}
 
@@ -1266,6 +1252,9 @@ public class XsthServiceImpl implements XsthServiceI {
 			//提货单总金额
 			//thje = tXsthDet.getZdwsl().multiply(tXsthDet.getZdwdj());
 		}else{
+			if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+				tXsthDet.setThsl(tXsthDet.getZdwsl());
+			}
 			//差额
 			sl = sl.subtract(tXsthDet.getZdwsl());
 			//库房确认数量
@@ -1275,6 +1264,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			//ysje = lsje;
 			//thje = lsje;
 		}
+		
 		
 		//更新修改后数量、金额
 		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(tXsthDet.getZdwsl()));

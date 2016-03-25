@@ -238,7 +238,7 @@ $(function(){
             detDg = $('#xsth-ddv-'+index).datagrid({
                 url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
                 fitColumns:false,
-                singleSelect:true,
+                //singleSelect:true,
                 rownumbers:true,
                 loadMsg:'',
                 height:'auto',
@@ -1683,25 +1683,32 @@ function printXsht(){
 
 function printShd(){
 	if(detDg != undefined){
-		var detRow = detDg.datagrid('getSelected');
-		if(detRow != null){
+		var detRows = detDg.datagrid('getSelections');
+		if(detRows != null){
 			if(xsthRow.isZs == '1'){
 				if(xsthRow.isCancel == '0'){
 					if(xsthRow.needAudit == xsthRow.isAudit){
-						if(detRow.cgjhlsh != undefined){
-							if(detRow.thsl != 0){
-								$.messager.confirm('请确认', '是否打印收货确认单？', function(r) {
-									if (r) {
-										var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-									}
-								});
-							}else{
-								$.messager.alert('警告', '选择的销售提货记录未确认数量，请重新选择！',  'warning');
-							}
-							//detDg = undefined;
-						}else{
-							$.messager.alert('警告', '选择的销售提货记录未实施计划，请重新选择！',  'warning');
+						var xsthDetIds = [];
+						var flag = true;
+						$.each(detRows, function(index){
+						  	if(detRows[index].cgjhlsh == undefined){
+						  		$.messager.alert('提示', '选择的销售提货记录未实施计划，请重新选择！', 'error');
+								flag = false;
+						  	}
+						  	if(detRows[index].thsl == 0){
+						  		$.messager.alert('提示', '选择的销售提货记录未确认数量，请重新选择！', 'error');
+								flag = false;	
+						  	}
+						 	xsthDetIds.push(detRows[index].id);
+						});
+						if(flag){
+							$.messager.confirm('请确认', '是否打印收货确认单？', function(r) {
+								if (r) {
+								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
+									var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
+									jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+								}
+							});
 						}
 					}else{
 						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
