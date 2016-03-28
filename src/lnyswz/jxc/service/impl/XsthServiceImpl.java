@@ -1324,7 +1324,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
 		if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-			csl = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs());
+			csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
 		}
 		
 		TXsth tXsth = tXsthDet.getTXsth();
