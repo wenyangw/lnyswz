@@ -352,6 +352,7 @@ jxc.otherBm = function(bmbh){
 		return bm;
 		break;
 	case '05':
+	case '08':
 		bm['bmbh'] = '04';
 		bm['gysbh'] = '21010004';
 		bm['gysmc'] = '辽宁印刷物资有限责任公司';

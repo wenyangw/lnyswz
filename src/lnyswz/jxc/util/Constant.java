@@ -283,8 +283,10 @@ public interface Constant {
 	public static final String XSKP_FROM_YWRK = "fromYwrk";
 	
 	public static final Map<String, String> XSKP_NB = new HashMap<String, String>(){{
-		put("04","21010012");
-		put("05","21010103");
+		//部门对应的客户编号
+		put("04", "21010012");
+		put("05", "21010103"); 
+		put("08", "21028400");
 	}};
 	
 	public static final String XSKP_JSFS_QK = "06";

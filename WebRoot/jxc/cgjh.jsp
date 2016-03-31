@@ -1907,7 +1907,8 @@ function createCgjhFromXsth(){
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
 							jxc_cgjh_ckCombo.combobox('setValue', rows[0].ckId);
 							$('#jxc_cgjh_isZs').prop('checked', 'checked');
-
+							$('input[name=jxc_cgjh_bz]').val(rows[0].bz);
+							
 							cgjh_tabs.tabs('select', 0);
 						}
 					});
