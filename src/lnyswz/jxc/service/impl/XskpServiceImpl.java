@@ -641,7 +641,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				XskpDet xskpDet = new XskpDet();
 				BeanUtils.copyProperties(yd, xskpDet);
 				xskpDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
-				xskpDet.setZdwdj(xskpDet.getSpje().divide(xskpDet.getZdwsl(), 4, BigDecimal.ROUND_HALF_DOWN));
+				xskpDet.setZdwdj(xskpDet.getSpje().divide(xskpDet.getZdwsl(), 4, BigDecimal.ROUND_HALF_UP));
 				nl.add(xskpDet);
 			}
 			
@@ -861,9 +861,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		for(TXskpDet tDet : ll){
 			XskpDet kd = new XskpDet();
 			BeanUtils.copyProperties(tDet, kd, 
-					new String[]{"zdwdj", "cdwsl", "cdwdj", "spje", "spse", "xscb"});
+					//new String[]{"zdwdj", "cdwsl", "cdwdj", "spje", "spse", "xscb"});
+					new String[]{"cdwsl", "spje", "spse", "xscb"});
+			
 			kd.setKpsl(kd.getZdwsl());
 			kd.setZdwsl(null);
+			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			
 			nl.add(kd);
 		}

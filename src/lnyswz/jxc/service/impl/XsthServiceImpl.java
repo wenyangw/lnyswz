@@ -616,7 +616,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			//将本次确认数量替换zdwsl
 			xsthDet.setZdwsl(yd.getQrsl());
 			if(yd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-				xsthDet.setCdwsl(yd.getQrsl().divide(yd.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				xsthDet.setCdwsl(yd.getQrsl().divide(yd.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 			}
 			nl.add(xsthDet);
 		}
@@ -838,28 +838,29 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public DataGrid datagrid(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TXsth t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TXsth t where t.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xsth.getBmbh());
 
 		//默认显示当前月数据
-		if(xsth.getCreateTime() != null){
-			params.put("createTime", xsth.getCreateTime()); 
-		}else{
-			//直发的统计起始时间
-			if(xsth.getSearch() != null && xsth.getSearch().equals("zf")){
-				params.put("createTime", DateUtil.stringToDate("2016-03-21"));
+		if(!(xsth.getSearch() != null && xsth.getSearch().equals("zf"))){
+			hql += " and t.createTime > :createTime";
+			if(xsth.getCreateTime() != null){
+				params.put("createTime", xsth.getCreateTime()); 
 			}else{
-				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-			}
+				//直发的统计起始时间
+				//if(xsth.getSearch() != null && xsth.getSearch().equals("zf")){
+				//	params.put("createTime", DateUtil.stringToDate("2016-03-21"));
+				//}else{
+					params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+				}
 		}
 		
 		if(xsth.getSearch() != null){
-			
 			if(xsth.getSearch().equals("zf")){
 				hql += " and t.xsthlsh in (select t.TXsth.xsthlsh from TXsthDet t where t.TXsth.isZs = '1' and t.TXsth.createTime > '2016-03-21' and TXsth.fromRk = '0' and t.completed = '0' and t.TXsth.isCancel = '0' and t.TXsth.needAudit = t.TXsth.isAudit";
 				if(xsth.getBmbh().equals("04")){
-					hql += " and t.khbh not in (" + Constant.CBS_LIST + ")";
+					hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
 				}
 				hql += ")";
 			}else{
@@ -977,14 +978,19 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid datagridDet(Xsth xsth) {
 		//库房出库流程查询，保管员只可查看本人负责商品记录，其他(总账员)可以查看全部
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TXsthDet t where t.TXsth.bmbh = :bmbh and t.TXsth.createTime > :createTime";
+		String hql = "from TXsthDet t where t.TXsth.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xsth.getBmbh());
-		if(xsth.getCreateTime() != null){
-			params.put("createTime", xsth.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		
+		if(xsth.getFromOther() == null || !xsth.getFromOther().equals("fromCgjh")){
+			hql += " and t.TXsth.createTime > :createTime";
+			if(xsth.getCreateTime() != null){
+				params.put("createTime", xsth.getCreateTime()); 
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
 		}
+		
 		if(xsth.getSearch() != null && xsth.getSearch().length() > 0){
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
@@ -1272,8 +1278,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		//如为纸张品种，修改次单位数量
 		if(tXsthDet.getSpbh().substring(0, 1).equals("4")){
 			if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-				tXsthDet.setCdwsl(tXsthDet.getZdwsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
+				tXsthDet.setCdwsl(tXsthDet.getZdwsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
 			}
 		}
 		
@@ -1324,7 +1330,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
 		if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-			csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
+			csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
 		}
 		
 		TXsth tXsth = tXsthDet.getTXsth();
@@ -1422,14 +1428,14 @@ public class XsthServiceImpl implements XsthServiceI {
 			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
 			BigDecimal shui = new BigDecimal("1").add(Constant.SHUILV);
 			BigDecimal zdwdj_ws = new BigDecimal(os[3].toString());
-			BigDecimal zdwdj = zdwdj_ws.divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal zdwdj = zdwdj_ws.divide(shui, 4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			BigDecimal sphj = new BigDecimal(os[5].toString());
 			BigDecimal cdwthsl = new BigDecimal(os[6].toString());
 			BigDecimal cdwytsl = new BigDecimal(os[7].toString());
 			BigDecimal dwcb = new BigDecimal(os[8].toString());
 			
-			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_DOWN); 
+			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_UP); 
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();

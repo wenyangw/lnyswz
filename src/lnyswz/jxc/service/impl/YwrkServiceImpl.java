@@ -142,7 +142,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				tDet.setCthsl(Constant.BD_ZERO);
 			}else{
 				if(ywrkDet.getCjldwId() != null && ywrkDet.getCjldwId() != "" && ywrkDet.getCjldwId().trim().length() != 0){
-					tDet.setCthsl(tDet.getThsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					tDet.setCthsl(tDet.getThsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 				}
 			}
 			
@@ -595,14 +595,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			yd.setZdwsl(zdwsl);
 			yd.setZjldwId(sp.getZjldw().getId());
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
-			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_DOWN));
+			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_UP));
 			if(sp.getCjldw() != null){
 				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
 				yd.setCdwsl(cdwsl);
 				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_UP));
 			}
 			yd.setSpje(spje);
 			yd.setThsl(thsl);
@@ -649,7 +649,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			if(sp.getCjldw() != null){
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 			}
 			nl.add(yd);
 		}
