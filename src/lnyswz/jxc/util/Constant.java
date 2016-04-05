@@ -109,11 +109,11 @@ public interface Constant {
 
 	//收货确认单
 	public static final Map<String, String> REPORT_SHQR = new HashMap<String, String>(){{
-		put("01","xsth_report_ys");
-		put("04","xsth_report_b_ns");
+		put("01","shqrd_report");
+		put("04","shqrd_report");
 		put("05","shqrd_report");
-		put("07","xsth_report_jy");
-		put("08","xsth_report_s_dl");
+		put("07","shqrd_report");
+		put("08","shqrd_report");
 	}};
 	
 	//提货单-库房
