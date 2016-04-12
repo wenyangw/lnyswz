@@ -90,8 +90,9 @@ public class Xskp {
 	private String isUp;
 	private int postponeDay;
 	
-//	private String xsthKhbh;
-//	private int xsthYwyId;
+	//第三方开票传入提货单客户
+	private String xsthKhbh;
+	//private int xsthYwyId;
 	
 	private String ywrklsh;
 	private String xsthlshs;
@@ -690,6 +691,14 @@ public class Xskp {
 
 	public void setPostponeDay(int postponeDay) {
 		this.postponeDay = postponeDay;
+	}
+
+	public String getXsthKhbh() {
+		return xsthKhbh;
+	}
+
+	public void setXsthKhbh(String xsthKhbh) {
+		this.xsthKhbh = xsthKhbh;
 	}
 
 	public int getPage() {

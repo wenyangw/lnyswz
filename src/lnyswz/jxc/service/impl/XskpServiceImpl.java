@@ -175,25 +175,26 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(xsthDetIds == null || xsthDetIds.equals("")){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+				//YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
 				
 				//第三方开票要处理两个客户的数据
-//				if(!xskp.getKhbh().equals(xskp.getXsthKhbh())){
-//					//yszz中kpje为新客户
-//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
-//					
-//					//yszz中thje为原客户
-//					TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
-//					kh.setKhbh(xskp.getXsthKhbh());
-//					kh.setKhmc(yTKh.getKhmc());
-//					
-//					TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
-//					ywy.setId(xskp.getXsthYwyId());
-//					ywy.setRealName(yUser.getRealName());
-//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
-//				}else{
-//					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
-//				}
+				if(!xskp.getKhbh().equals(xskp.getXsthKhbh())){
+					//yszz中kpje为新客户
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+					
+					//yszz中thje为原客户
+					TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
+					kh.setKhbh(xskp.getXsthKhbh());
+					kh.setKhmc(yTKh.getKhmc());
+					
+					//暂不考虑不同业务员的第三方开票
+					//TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
+					//ywy.setId(xskp.getXsthYwyId());
+					//ywy.setRealName(yUser.getRealName());
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
+				}else{
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+				}
 			}
 		}
 		
@@ -409,6 +410,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			Arrays.sort(intXsthDetIds);
 		}
 		
+		Kh khTh = null;
+		
 		Set<TXskpDet> yTXskpDets = yTXskp.getTXskpDets();
 		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
 		for(TXskpDet yTDet : yTXskpDets){
@@ -441,7 +444,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			if("1".equals(yTXskp.getFromTh())){
 //			if(yTXskp.getTXsths() != null){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
-				
+												
 				//冲减对应销售提货单中的kpsl
 				BigDecimal kpsl = yTDet.getZdwsl();
 				BigDecimal ckpsl = yTDet.getCdwsl();
@@ -451,8 +454,26 @@ public class XskpServiceImpl implements XskpServiceI {
 				int j = 0;
 				for(int i = intXsthDetIds.length - 1; i >= 0 ; i--){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, intXsthDetIds[i]);
+					
+					User ywyTh = null;
+					
+					if(!yTXskp.getKhbh().equals(xsthDet.getTXsth().getKhbh())){
+						//销售提货的客户
+						//销售开票的在下面统一处理
+						ywyTh = new User();
+						ywyTh.setId(xsthDet.getTXsth().getYwyId());
+						ywyTh.setRealName(xsthDet.getTXsth().getYwymc());
+
+						khTh = new Kh();
+						khTh.setKhbh(xsthDet.getTXsth().getKhbh());
+						khTh.setKhmc(xsthDet.getTXsth().getKhmc());
+					}
+
 					if(yTDet.getSpbh().equals(xsthDet.getSpbh())){
 						if(j == 0){
+							if(khTh != null){
+								YszzServiceImpl.updateYszzJe(dep, khTh, ywyTh, lastThsl.multiply(xsthDet.getZdwdj()), Constant.UPDATE_YS_TH, yszzDao);
+							}
 							xsthDet.setKpsl(xsthDet.getKpsl().subtract(lastThsl));
 							xsthDet.setCkpsl(xsthDet.getCkpsl().subtract(cLastThsl));
 							if(kpsl.compareTo(lastThsl) == 0){
@@ -463,16 +484,23 @@ public class XskpServiceImpl implements XskpServiceI {
 							}
 						}else{
 							if(kpsl.compareTo(xsthDet.getKpsl()) == 1){
+								if(khTh != null){
+									YszzServiceImpl.updateYszzJe(dep, khTh, ywyTh, xsthDet.getKpsl().multiply(xsthDet.getZdwdj()), Constant.UPDATE_YS_TH, yszzDao);
+								}
 								xsthDet.setKpsl(BigDecimal.ZERO);
 								xsthDet.setCkpsl(BigDecimal.ZERO);
 								kpsl = kpsl.subtract(xsthDet.getKpsl());
 								ckpsl = ckpsl.subtract(xsthDet.getCkpsl());
 							}else{
+								if(khTh != null){
+									YszzServiceImpl.updateYszzJe(dep, khTh, ywyTh, kpsl.multiply(xsthDet.getZdwdj()), Constant.UPDATE_YS_TH, yszzDao);
+								}
 								xsthDet.setKpsl(xsthDet.getKpsl().subtract(kpsl));
 								xsthDet.setCkpsl(xsthDet.getCkpsl().subtract(ckpsl));
 								break;
 							}
 						}
+						
 						j++;
 					}
 				}
@@ -494,7 +522,11 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(yTXskp.getTXsths() == null){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
 			}else{
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
+				if(khTh != null){
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP, yszzDao);
+				}else{
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXskp.getHjje().add(tXskp.getHjse()), Constant.UPDATE_YS_KP_TH, yszzDao);
+				}
 			}
 		}
 

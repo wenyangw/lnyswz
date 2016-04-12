@@ -862,7 +862,7 @@ function saveAll(){
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 		effectRow['xsthKhbh'] = $('input[name=xsthKhbh]').val();
-		effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
+		//effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
 		effectRow['bmbh'] = xskp_did;
 		effectRow['lxbh'] = xskp_lx;
 		effectRow['menuId'] = xskp_menuId;
