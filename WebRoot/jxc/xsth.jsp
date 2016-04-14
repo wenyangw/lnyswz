@@ -334,13 +334,11 @@ $(function(){
 	    border : false,
 // 	    singleSelect : true,
 	    remoteSort: false,
-	    fitColumns: true,
+	    //fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
 		pageList : pageList,
-		frozenColumns:[[
-		]],
 		columns:[[
 			{field:'id',title:'销售开票DetId',align:'center',checkbox:true},
 			{field:'xskplsh',title:'流水号',align:'center'},
