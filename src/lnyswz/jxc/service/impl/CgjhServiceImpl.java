@@ -336,9 +336,14 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				String cgxqlshs = "";
 				int i = 0;
 				for(TCgxqDet tc : tCgxqs){
-					cgxqlshs += tc.getTCgxq().getCgxqlsh();
-					if(i < tCgxqs.size() - 1){
-						cgxqlshs += ",";
+					if(cgxqlshs.indexOf(tc.getTCgxq().getCgxqlsh()) < 0 ){
+						cgxqlshs += tc.getTCgxq().getCgxqlsh();
+						if(tc.getTCgxq().getKhmc() != null && tc.getTCgxq().getKhmc().length() > 0){
+							cgxqlshs += ":" + tc.getTCgxq().getKhmc();
+						}
+						if(i < tCgxqs.size() - 1){
+							cgxqlshs += ",";
+						}
 					}
 					i++;
 				}

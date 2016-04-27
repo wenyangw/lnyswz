@@ -457,7 +457,7 @@ public class XskpServiceImpl implements XskpServiceI {
 					
 					User ywyTh = null;
 					
-					if(!yTXskp.getKhbh().equals(xsthDet.getTXsth().getKhbh())){
+					if(!yTXskp.getKhbh().equals(xsthDet.getTXsth().getKhbh()) || (yTXskp.getYwyId() != xsthDet.getTXsth().getYwyId())){
 						//销售提货的客户
 						//销售开票的在下面统一处理
 						ywyTh = new User();
