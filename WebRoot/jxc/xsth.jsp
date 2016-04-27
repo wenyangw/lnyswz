@@ -488,6 +488,7 @@ $(function(){
 						search: countXskpInXsth == 0 ? undefined : $('input[name=searchXskpInXsth]').val(),
 						},
 				});
+				countXskpInXsth++;
 			}
 			if(index == 3){
 				xsth_ywrkDg.datagrid({
@@ -499,6 +500,7 @@ $(function(){
 						search: countYwrkInXsth == 0 ? undefined : $('input[name=searchYwrkInXsth]').val(),
 						},
 				});
+				countYwrkInXsth++;
 			}
 		},
 	});
@@ -642,7 +644,8 @@ function init(){
 	});
 	
 	//清空全部字段
-	$('input').val('');
+	//$('input').val('');
+	$('#jxc_xsth_info input').val('');
 	//$('input:checkbox').removeProp('checked');
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
@@ -2012,7 +2015,7 @@ function searchYwrkInXsth(){
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_xsth_layout' style="height:100%;width=100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:173px">		
-				<table class="tinfo">
+				<table class="tinfo" id="jxc_xsth_info">
 					<tr>
 						<td colspan="5">
 <!-- 							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp; -->
