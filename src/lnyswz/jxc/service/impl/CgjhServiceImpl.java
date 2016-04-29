@@ -308,8 +308,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				hql += " and isZs = '1' and ywrklsh = null";
 			}
 		}else{
-			hql += " and t.createId = :createId";
-			params.put("createId", cgjh.getCreateId());
+			//hql += " and t.createId = :createId";
+			//params.put("createId", cgjh.getCreateId());
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
 				hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
 				params.put("search", "%" + cgjh.getSearch() + "%");
