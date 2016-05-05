@@ -604,8 +604,10 @@ $(function(){
 	
 	$('input[name=isZs]').click(function(){
 		if($(this).is(':checked')){
+ 			jxc_ywrk_ckCombo.combobox('setValue', jxc.getZfCk(ywrk_did));
 			$('.isZs').css('display','table-cell');
 		}else{
+			jxc_ywrk_ckCombo.combobox('selectedIndex', 0);
 			$('.isZs').css('display','none');
 			$('input[name=shdz]').val('');
 		}
