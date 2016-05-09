@@ -1674,6 +1674,7 @@ function generateXskp(){
  								$('.fh').css('display','none');
  							}
 							
+							$('input[name=isZs]').prop('checked', rows[0].isZs == '1' ? true : false);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
 							jxc_xskp_jsfsCombo.combobox('readonly', true);
