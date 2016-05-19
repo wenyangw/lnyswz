@@ -456,7 +456,7 @@ public class XskpServiceImpl implements XskpServiceI {
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, intXsthDetIds[i]);
 					
 					User ywyTh = null;
-					
+										
 					if(!yTXskp.getKhbh().equals(xsthDet.getTXsth().getKhbh()) || (yTXskp.getYwyId() != xsthDet.getTXsth().getYwyId())){
 						//销售提货的客户
 						//销售开票的在下面统一处理
@@ -467,6 +467,8 @@ public class XskpServiceImpl implements XskpServiceI {
 						khTh = new Kh();
 						khTh.setKhbh(xsthDet.getTXsth().getKhbh());
 						khTh.setKhmc(xsthDet.getTXsth().getKhmc());
+					}else{
+						khTh = null;
 					}
 
 					if(yTDet.getSpbh().equals(xsthDet.getSpbh())){
