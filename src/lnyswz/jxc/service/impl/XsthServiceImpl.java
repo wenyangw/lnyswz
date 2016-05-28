@@ -1517,6 +1517,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		slBean.setGroup("可提货数量");
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
+		
+		slBean.setXscb(YwzzServiceImpl.getDwcb(xsth.getBmbh(), xsth.getSpbh(), ywzzDao).multiply(new BigDecimal(1.17)).setScale(4, BigDecimal.ROUND_HALF_UP));
+		
 		lists.add(0, slBean);
 		
 		dg.setRows(lists);

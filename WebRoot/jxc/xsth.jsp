@@ -862,7 +862,7 @@ function saveXsth(){
 	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=isFhth]').is(':checked')){
 			if(sxkh.khlxId == '02'){
-				if((Number(sxkh.qkje) + Number(footerRows[0].spje)) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
+				if((Number(sxkh.qkje) + Number(lnyw.delcommafy(footerRows[0].spje))) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
 					$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
 					return false;
 				}else{
@@ -875,33 +875,35 @@ function saveXsth(){
 		}
 	}
 	
-	if($('input[name=isFh]').is(':checked')){
-		save();
-	}else{
-		var spbhs = undefined;
-		$.each(rows.slice(0, rows.length - 1), function(){
-			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
-				if(spbhs == undefined){
-					spbhs = '' + this.spbh;
-				}else{
-					spbhs += ',' + this.spbh;
-				}
-			}
-		});
-		
-		if(spbhs != undefined){
-			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
-				if(data){
-					save();	
-				}else{
-					return false;
-				}
-			});
-		}else{
-			save();
-		}
 	
-	}
+	save();
+// 	if($('input[name=isFh]').is(':checked')){
+// 		save();
+// 	}else{
+// 		var spbhs = undefined;
+// 		$.each(rows.slice(0, rows.length - 1), function(){
+// 			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
+// 				if(spbhs == undefined){
+// 					spbhs = '' + this.spbh;
+// 				}else{
+// 					spbhs += ',' + this.spbh;
+// 				}
+// 			}
+// 		});
+		
+// 		if(spbhs != undefined){
+// 			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+// 				if(data){
+// 					save();	
+// 				}else{
+// 					return false;
+// 				}
+// 			});
+// 		}else{
+// 			save();
+// 		}
+	
+// 	}
 	
 	function save(){
 		if(NEED_AUDIT == "1" 
@@ -1195,6 +1197,15 @@ function setEditing(){
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		cslEditor.target.focus();
+     		//验证成本
+     		
+     		checkCb();
+//      		var kcRow = $('#show_spkc').propertygrid("getRows");
+// 		    if(kcRow != undefined){
+// 	       		if($(zdjEditor.target).val() <= Number(kcRow[0].xscb)){
+// 	       			$.messager.alert("提示", "销售单价小于成本，请确认后继续操作！");
+// 	       		}
+// 		    }
      		return false;
      	}
     });
@@ -1240,7 +1251,8 @@ function setEditing(){
     	}
     	calForZ();
     }).bind('keydown', function(event){
-    	if(event.keyCode == 40){
+    	if(event.keyCode == 9){
+    		checkCb();
      		spjeEditor.target.focus();
      	}
     });
@@ -1262,6 +1274,17 @@ function setEditing(){
      		spjeEditor.target.focus();
      	}
     });
+  	
+  	function checkCb(){
+  		if($(zdjEditor.target).val() > 0){
+		    var kcRow = $('#show_spkc').propertygrid("getRows");
+		    if(kcRow != undefined){
+		   		if($(zdjEditor.target).val() <= Number(kcRow[0].xscb)){
+		   			$.messager.alert("提示", "销售单价小于成本，请确认后继续操作！");
+		   		}
+		    }
+  		}
+  	}
     
       	
     //计算金额

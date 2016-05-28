@@ -242,7 +242,8 @@ lnyw.delcommafy = function(num){
 	  num = num.replace(/,/gi,'');  
 	  
 	  return num;  
-}; 
+};
+
 
 /**
  * @author 孙宇
