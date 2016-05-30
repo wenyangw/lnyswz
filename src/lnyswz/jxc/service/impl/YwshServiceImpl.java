@@ -187,6 +187,9 @@ public class YwshServiceImpl implements YwshServiceI {
 		for(TYwsh t : l){
 			Ywsh c = new Ywsh();
 			BeanUtils.copyProperties(t, c);
+			TXsth tXsth = xsthDao.load(TXsth.class, t.getLsh());
+			c.setKhmc(tXsth.getKhmc());
+			c.setYwymc(tXsth.getYwymc());
 			nl.add(c);
 		}
 		datagrid.setTotal(ywshDao.count(countHql, params));

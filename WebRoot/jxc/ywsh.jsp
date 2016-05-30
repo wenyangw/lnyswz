@@ -206,6 +206,8 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'lsh',title:'流水号',align:'center'},
+			{field:'khmc',title:'客户名称',align:'center'},
+			{field:'ywymc',title:'业务员',align:'center'},
 	        {field:'createTime',title:'时间',align:'center',width:100},
 	        {field:'createName',title:'审批人',align:'center',width:100},
 	        {field:'auditLevel',title:'等级',align:'center',width:100},

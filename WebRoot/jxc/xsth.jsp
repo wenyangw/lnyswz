@@ -1325,7 +1325,9 @@ function setEditing(){
     
     function checkKc(){
     	//非直送业务要判断库存
-    	if(!$('input[name=isZs]').is(':checked') || !jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val())){
+    	if(!$('input[name=isZs]').is(':checked') || !jxc.notInExcludeZsKhs(xsth_did, $('input[name=khbh]').val())){
+    	//if(!$('input[name=isZs]').is(':checked')){
+    	
 	    	//判断提货数量是否大于业务数量-临时数量
 	    	//从已开票生成提货单不做判断
 	    	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
@@ -1528,7 +1530,9 @@ function khLoad(){
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
-			jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+			if(!$('input[name=isZs]').is(':checked')){
+				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+			}
 			
 // 			$.ajax({
 // 				url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
