@@ -819,4 +819,55 @@ $.extend($.fn.datagrid.methods, {
     $.parser.plugins.push('my97');
 })(jQuery);
 
+/**  
+ * 使用方法: <br> 
+ * 开启: MaskUtil.mask(); <br> 
+ * 关闭: MaskUtil.unmask(); <br> 
+ *   
+ * 自定义提示文字：MaskUtil.mask('其它提示文字...');  
+ */  
+var MaskUtil = (function() {  
+  
+    var $mask = undefined, $maskMsg = undefined;  
+  
+    var defMsg = '正在处理，请稍待。。。';  
+  
+    function init() {  
+        if (!$mask) {  
+            $mask = $("<div class=\"datagrid-mask mymask\"></div>").appendTo("body");  
+        }  
+        if (!$maskMsg) {  
+            $maskMsg = $("<div class=\"datagrid-mask-msg mymask\">" + defMsg + "</div>").appendTo("body").css({  
+                'font-size' : '12px'  
+            });  
+        }  
+  
+        $mask.css({  
+            width : "100%",  
+            height : $(document).height()  
+        });  
+  
+        var scrollTop = $(document.body).scrollTop();  
+  
+        $maskMsg.css({  
+            left : ($(document.body).outerWidth(true) - 190) / 2,  
+            top : (($(window).height() - 45) / 2) + scrollTop  
+        });  
+  
+    }  
+  
+    return {  
+        mask : function(msg) {  
+            init();  
+            $mask.show();  
+            $maskMsg.html(msg || defMsg).show();  
+        },  
+        unmask : function() {  
+            $mask.hide();  
+            $maskMsg.hide();  
+        }  
+    };  
+  
+}());  
+
 
