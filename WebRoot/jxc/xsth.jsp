@@ -49,6 +49,7 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 var dwcbEditor;
 
+
 $(function(){
 	xsth_did = lnyw.tab_options().did;
 	xsth_lx = lnyw.tab_options().lx;
@@ -1448,6 +1449,10 @@ function setValueBySpbh(rowData){
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
+	//文达印刷业务员为公司(天女)、公司(天狮)时取销售单价
+	if(xsth_did == '01' && (jxc_xsth_ywyCombo.combobox('getValue') == 115 || jxc_xsth_ywyCombo.combobox('getValue') == 193)){
+		zdjEditor.target.val(rowData.specXsdj);
+	}
 	
    	var fhValue = '';
    	if($('input[name=isFh]').is(':checked')){

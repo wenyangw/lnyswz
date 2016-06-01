@@ -316,6 +316,7 @@ public class SpServiceImpl implements SpServiceI {
 					}else{
 						s.setXsdjs(Constant.BD_ZERO);
 					}
+					s.setSpecXsdj(det.getSpecXsdj());
 					s.setLimitXsdj(det.getLimitXsdj());
 				}
 			}
