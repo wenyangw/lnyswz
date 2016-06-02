@@ -132,7 +132,7 @@ $(function(){
 	        {field:'hjsl',title:'数量',align:'center'},
 	        {field:'bookmc',title:'书名',align:'center',
         		formatter: function(value){
-        			return lnyw.memo(value, 15);
+        			return lnyw.memo(value, 25);
         		}},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
@@ -987,7 +987,7 @@ function saveXsth(){
 		//将表格中的数据去掉最后一个空行后，转换为json格式
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
-		MaskUtil.mask('正在保存，请等待……');
+		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xsthAction!save.action',
@@ -1025,7 +1025,7 @@ function saveXsth(){
 				$.messager.alert("提示", "提交错误了！");
 			},
 			complete: function(){
-				MaskUtil.unmask();
+				//MaskUtil.unmask();
 			}
 		});
 	}
@@ -1618,7 +1618,7 @@ function cancelXsth(){
 		 					if(row.isTh != '1'){
 		 						$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
 		 							if (r) {
-		 								MaskUtil.mask('正在取消，请稍等……');
+		 								//MaskUtil.mask('正在取消，请稍等……');
 		 								$.ajax({
 		 									url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
 		 									data : {
@@ -1638,7 +1638,7 @@ function cancelXsth(){
 		 										});
 		 									},
 		 									complete: function(){
-		 										MaskUtil.unmask();
+		 										//MaskUtil.unmask();
 		 									}
 		 								});
 		 							}

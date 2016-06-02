@@ -826,7 +826,7 @@ $.extend($.fn.datagrid.methods, {
  *   
  * 自定义提示文字：MaskUtil.mask('其它提示文字...');  
  */  
-var MaskUtil = (function() {  
+lnyw.MaskUtil = (function() {  
   
     var $mask = undefined, $maskMsg = undefined;  
   

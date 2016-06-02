@@ -495,7 +495,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
-	MaskUtil.mask('正在保存，请等待……');
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywpdAction!save.action',
@@ -520,7 +520,7 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			MaskUtil.unmask();
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -831,7 +831,7 @@ function cjYwpd(){
 			if(row.kfpdlsh == undefined){
 				$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
 					if (bz != undefined){
-						MaskUtil.mask('正在冲减，请等待……');
+						//MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/ywpdAction!cjYwpd.action',
 							data : {
@@ -858,7 +858,7 @@ function cjYwpd(){
 								});
 							},
 							complete: function(){
-								MaskUtil.unmask();
+								//MaskUtil.unmask();
 							}
 						});
 					}

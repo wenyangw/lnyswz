@@ -1023,7 +1023,7 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
-	MaskUtil.mask('正在保存，请等待……');
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/cgjhAction!save.action',
@@ -1051,7 +1051,7 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			MaskUtil.unmask();
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -1390,7 +1390,7 @@ function cancelCgjh(){
 				if(row.isCompleted != '1'){
 					$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
 						if (r) {
-							MaskUtil.mask('正在取消，请等待……');
+							//MaskUtil.mask('正在取消，请等待……');
 							$.ajax({
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
 								data : {
@@ -1408,7 +1408,7 @@ function cancelCgjh(){
 									});
 								},
 								complete: function(){
-									MaskUtil.unmask();
+									//MaskUtil.unmask();
 								}
 							});
 						}
