@@ -40,6 +40,7 @@ import lnyswz.jxc.model.TYwdb;
 import lnyswz.jxc.model.TYwdbDet;
 import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLsh;
+import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TYwrk;
@@ -60,6 +61,7 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	private BaseDaoI<TYwdbDet> detDao;
 	private BaseDaoI<TCgxqDet> cgxqDetDao;
 	private BaseDaoI<TYwzz> ywzzDao;
+	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
@@ -277,6 +279,12 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			lists.addAll(yw);
 		}
 		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(ywdb.getBmbh(), ywdb.getSpbh(), ywdb.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
 		ProBean slBean = new ProBean();
 		slBean.setGroup("可调数量");
 		slBean.setName("数量");
@@ -306,6 +314,11 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	@Autowired
 	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {
 		this.ywzzDao = ywzzDao;
+	}
+
+	@Autowired
+	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
+		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

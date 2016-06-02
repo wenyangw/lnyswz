@@ -26,6 +26,7 @@ public class Ywsh {
 	private String khmc;
 	private String gysmc;
 	private String jsfsmc;
+	private String isZs;
 	private BigDecimal hjje;
 	private BigDecimal ysje;
 	private String khlxmc;
@@ -145,6 +146,12 @@ public class Ywsh {
 	}
 	public void setJsfsmc(String jsfsmc) {
 		this.jsfsmc = jsfsmc;
+	}
+	public String getIsZs() {
+		return isZs;
+	}
+	public void setIsZs(String isZs) {
+		this.isZs = isZs;
 	}
 	public BigDecimal getHjje() {
 		return hjje;

@@ -198,7 +198,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					if(zsl == null){
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}else{
-						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_UP));
 					}
 				}else{
 					tYwzz.setRkje(Constant.BD_ZERO);
@@ -226,14 +226,14 @@ public class YwzzServiceImpl implements YwzzServiceI {
 				tYwzz.setRkje(Constant.BD_ZERO);
 				//tYwzz.setDwcb(Constant.BD_ZERO);
 				//2014.10.10,冲减销售时，无结转记录，更新成本
-				tYwzz.setDwcb(cb.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
+				tYwzz.setDwcb(cb.divide(zsl, 4, BigDecimal.ROUND_HALF_UP));
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(je);
 					if(zsl == null){
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}else{
-						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(je.divide(zsl, 4, BigDecimal.ROUND_HALF_UP));
 					}
 					tYwzz.setRksl(Constant.BD_ZERO);
 					tYwzz.setCrksl(Constant.BD_ZERO);
@@ -264,7 +264,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
 					BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
 					if(kcsl.compareTo(Constant.BD_ZERO) != 0){
-						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_UP));
 					}else{
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}
@@ -283,7 +283,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 						BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
 						BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
 						if(kcsl.compareTo(Constant.BD_ZERO) != 0){
-							tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
+							tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_UP));
 						}else{
 							tYwzz.setDwcb(Constant.BD_ZERO);
 						}
@@ -295,7 +295,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 					BigDecimal kcje = tYwzz.getQcje().add(tYwzz.getRkje()).subtract(tYwzz.getXscb());
 					BigDecimal kcsl = tYwzz.getQcsl().add(tYwzz.getRksl()).subtract(tYwzz.getXssl());
 					if(kcsl.compareTo(Constant.BD_ZERO) != 0){
-						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_DOWN));
+						tYwzz.setDwcb(kcje.divide(kcsl, 4, BigDecimal.ROUND_HALF_UP));
 					}else{
 						tYwzz.setDwcb(Constant.BD_ZERO);
 					}

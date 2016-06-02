@@ -22,7 +22,10 @@ import lnyswz.jxc.util.Export;
 /**
  * 销售提货Action
  * @author 王文阳
- *
+ * @edited
+ * 	2015.08.12 增加打印销售合同
+ * 
+ * 
  */
 @Namespace("/jxc")
 @Action("xsthAction")
@@ -75,6 +78,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.toKfck(xsth));
 	}
 	
+	public void toCgjh(){
+		writeJson(xsthService.toCgjh(xsth));
+	}
+	
 	public void refreshXsth(){
 		writeJson(xsthService.refreshXsth(xsth));
 	}
@@ -94,6 +101,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 			j.setMsg("修改销售提货数量成功！");
 		}catch(Exception e){
 			j.setMsg("修改销售提货数量失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
+	 * 直送销售提货完成
+	 */
+	public void updateZsComplete(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setLockName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateZsComplete(xsth);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("完成直送销售提货成功！");
+		}catch(Exception e){
+			j.setMsg("完成直送销售提货失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -173,6 +200,20 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
+	}
+	
+	public void printXsht() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsht(xsth);
+		Export.print(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()));
+	}
+	
+	public void printShd() {
+		User user = (User)session.get("user");
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printShd(xsth);
+		Export.print(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()));
 	}
 	
 	public void printThd() {

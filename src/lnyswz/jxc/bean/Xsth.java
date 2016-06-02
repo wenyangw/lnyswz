@@ -86,6 +86,7 @@ public class Xsth {
 	private String search;
 	
 	private String xskplsh;
+	private String cgjhlsh;
 	private String xsthDetIds;
 	private String xskpDetIds;
 	
@@ -580,6 +581,12 @@ public class Xsth {
 	}
 	public void setXskplsh(String xskplsh) {
 		this.xskplsh = xskplsh;
+	}
+	public String getCgjhlsh() {
+		return cgjhlsh;
+	}
+	public void setCgjhlsh(String cgjhlsh) {
+		this.cgjhlsh = cgjhlsh;
 	}
 	public String getXsthDetIds() {
 		return xsthDetIds;

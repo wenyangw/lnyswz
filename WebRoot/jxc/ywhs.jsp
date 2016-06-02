@@ -904,6 +904,7 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
+	MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywhsAction!save.action',
@@ -926,6 +927,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			MaskUtil.unmask();
 		}
 	});
 }
@@ -1123,6 +1127,7 @@ function cjYwhs(){
 			if(row.isCj != '1'){
 				$.messager.prompt('请确认', '是否要冲减选中的业务调号单？请填写备注', function(bz){
 					//if (bz){
+						MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/ywhsAction!cjYwhs.action',
 							data : {
@@ -1147,6 +1152,9 @@ function cjYwhs(){
 										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 									}
 								});
+							},
+							complete: function(){
+								MaskUtil.unmask();
 							}
 						});
 					//}

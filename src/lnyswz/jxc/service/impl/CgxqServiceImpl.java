@@ -375,7 +375,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 				cd.setCjldwmc(sp.getCjldw().getJldwmc());
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					cd.setZhxs(sp.getZhxs());
-					cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					cd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 				}else{
 					cd.setZhxs(Constant.BD_ZERO);
 					cd.setCdwsl(Constant.BD_ZERO);

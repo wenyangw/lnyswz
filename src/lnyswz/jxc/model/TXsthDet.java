@@ -1,10 +1,8 @@
 package lnyswz.jxc.model;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -46,10 +43,13 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal kpsl;
 	private BigDecimal ckpsl;
 	private BigDecimal thsl;
+	private BigDecimal qrsl;
+	private String completed;
 	//private BigDecimal lastRksl;
 	
 	private Set<TKfck> TKfcks;
 	private Set<TXskp> TXskps;
+	private TCgjh TCgjh;
 	
 	public TXsthDet() {
 	}
@@ -57,7 +57,7 @@ public class TXsthDet implements java.io.Serializable {
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
 			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
-			BigDecimal thsl, Set<TKfck> TKfcks, Set<TXskp> TXskps) {
+			BigDecimal thsl, BigDecimal qrsl, String completed, Set<TKfck> TKfcks, Set<TXskp> TXskps, TCgjh TCgjh) {
 		this.id = id;
 		this.TXsth = TXsth;
 		this.spbh = spbh;
@@ -80,9 +80,12 @@ public class TXsthDet implements java.io.Serializable {
 		this.kpsl = kpsl;
 		this.ckpsl = ckpsl;
 		this.thsl = thsl;
+		this.qrsl = qrsl;
+		this.completed = completed;
 		//this.lastRksl = lastRksl;
 		this.TKfcks = TKfcks;
 		this.TXskps = TXskps;
+		this.TCgjh = TCgjh;
 	}
 
 	@Id
@@ -286,6 +289,24 @@ public class TXsthDet implements java.io.Serializable {
 		this.thsl = thsl;
 	}
 
+	@Column(name = "qrsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getQrsl() {
+		return qrsl;
+	}
+
+	public void setQrsl(BigDecimal qrsl) {
+		this.qrsl = qrsl;
+	}
+	
+	@Column(name = "completed", length = 1)
+	public String getCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(String completed) {
+		this.completed = completed;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TXsths")
 	public Set<TKfck> getTKfcks() {
 		return this.TKfcks;
@@ -302,5 +323,15 @@ public class TXsthDet implements java.io.Serializable {
 	
 	public void setTXskps(Set<TXskp> TXskps) {
 		this.TXskps = TXskps;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cgjhlsh")
+	public TCgjh getTCgjh() {
+		return this.TCgjh;
+	}
+
+	public void setTCgjh(TCgjh TCgjh) {
+		this.TCgjh = TCgjh;
 	}
 }

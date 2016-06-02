@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,7 +72,9 @@ import lnyswz.jxc.util.Constant;
 /**
  * 销售提货实现类
  * @author 王文阳
- *
+ * @edited
+ * 	2015.08.12 增加打印销售合同
+ * 	2015.08.12 直送业务不记入临时出库（各部门一致吗）
  */
 @Service("xsthService")
 public class XsthServiceImpl implements XsthServiceI {
@@ -80,6 +83,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TYwrkDet> ywrkDetDao;
+	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -221,6 +225,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			if(tDet.getKpsl() == null){
 				tDet.setKpsl(Constant.BD_ZERO);
 			}
+			
 			if(tDet.getCkpsl() == null){
 				tDet.setCkpsl(Constant.BD_ZERO);
 			}
@@ -248,6 +253,9 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 			}
 			tDet.setThsl(Constant.BD_ZERO);
+			tDet.setQrsl(BigDecimal.ZERO);
+			
+			tDet.setCompleted("0");
 			
 			tDet.setTXsth(tXsth);
 			tDets.add(tDet);
@@ -255,7 +263,13 @@ public class XsthServiceImpl implements XsthServiceI {
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(xsthDet, sp);
 			
-			if("1".equals(xsth.getIsLs())){
+			//销售提货直接新生成且不是直送
+			//直送业务入库生成的
+			//直送出版的
+			//计入临时总账
+			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) 
+					|| xsth.getFromOther().equals("cbs") 
+					|| (ywrkDetIds != null && ywrkDetIds.trim().length() > 0))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
 			if("1".equals(xsth.getIsFh()) && "0".equals(xsth.getIsFhth())){
@@ -476,7 +490,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if("1".equals(yTXsth.getIsLs())){
-				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
+				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
+						|| (ywrks != null && ywrks.size() > 0)
+						|| xsth.getFromOther().equals("cbs")){
+					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+				}
 				
 			}
 			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
@@ -579,6 +598,113 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("memo", tXsth.getBz() + " " + bz.trim());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid printShd(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+							
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		String hql = "from TXsthDet t where t.id in (" + xsth.getXsthDetIds() + ") order by t.spbh";
+		List<TXsthDet> dets = detDao.find(hql);
+		for (TXsthDet yd : dets) {
+			XsthDet xsthDet = new XsthDet();
+			BeanUtils.copyProperties(yd, xsthDet);
+			//将本次确认数量替换zdwsl
+			xsthDet.setZdwsl(yd.getQrsl());
+			if(yd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+				xsthDet.setCdwsl(yd.getQrsl().divide(yd.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+			}
+			nl.add(xsthDet);
+		}
+		TXsth tXsth = dets.get(0).getTXsth();
+					
+		int num = nl.size();
+		if (num < 4) {
+			for (int i = 0; i < (4 - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "收   货   确   认   单");
+		map.put("gsmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		map.put("khmc", tXsth.getKhmc());
+		map.put("gysmc", dets.get(0).getTCgjh().getGysmc());
+		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("ywymc", tXsth.getYwymc());
+		map.put("printTime", DateUtil.dateToString(new Date(), "yyyy-MM-dd"));
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+
+	
+	@Override
+	public DataGrid printXsht(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		int j = 0;
+		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("xsthlsh", xsth.getXsthlsh());
+		List<TXsthDet> dets = detDao.find(hql, params);
+		for (TXsthDet yd : dets) {
+			XsthDet xsthDet = new XsthDet();
+			BeanUtils.copyProperties(yd, xsthDet);
+			nl.add(xsthDet);
+		}
+		
+		
+		int num = nl.size();
+		if (num < 4) {
+			for (int i = 0; i < (4 - num); i++) {
+				nl.add(new XsthDet());
+			}
+		}
+		
+		String sqlKh = "select khlxId, sxzq from t_kh_det where depId = ? and khbh = ? and ywyId = ?";
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", tXsth.getBmbh());
+		sqlParams.put("1", tXsth.getKhbh());
+		sqlParams.put("2", tXsth.getYwyId());
+		
+		Object[] khDet = detDao.getMBySQL(sqlKh, sqlParams);
+		//付款天数，默认现款10天，月结(03)30天，授信按授信期
+		int payDays = 10;
+		
+		
+		if(khDet != null){
+			if(((String)khDet[0]).equals("03")){
+				payDays = 30;
+			}
+			if(((String)khDet[0]).equals("02")){
+				payDays = Integer.valueOf(khDet[1].toString());
+			}
+		}
+				
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bmmc", Constant.BMMCS.get(tXsth.getBmbh()));
+		map.put("bmdz", Constant.BMDZS.get(tXsth.getBmbh()));
+		map.put("htdz", Constant.HTDZS.get(tXsth.getBmbh()));
+		map.put("xsthlsh", tXsth.getXsthlsh());
+		map.put("khmc", tXsth.getKhmc());
+		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
+		map.put("thr", tXsth.getThr() == null ? "" : tXsth.getThr());
+		map.put("payDays", payDays);
+		map.put("hjje", df.format(tXsth.getHjje()));
+		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
+		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
@@ -712,20 +838,35 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public DataGrid datagrid(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TXsth t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TXsth t where t.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xsth.getBmbh());
 
 		//默认显示当前月数据
-		if(xsth.getCreateTime() != null){
-			params.put("createTime", xsth.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		if(!(xsth.getSearch() != null && xsth.getSearch().equals("zf"))){
+			hql += " and t.createTime > :createTime";
+			if(xsth.getCreateTime() != null){
+				params.put("createTime", xsth.getCreateTime()); 
+			}else{
+				//直发的统计起始时间
+				//if(xsth.getSearch() != null && xsth.getSearch().equals("zf")){
+				//	params.put("createTime", DateUtil.stringToDate("2016-03-21"));
+				//}else{
+					params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+				}
 		}
 		
 		if(xsth.getSearch() != null){
-			hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
-			params.put("search", "%" + xsth.getSearch() + "%");
+			if(xsth.getSearch().equals("zf")){
+				hql += " and t.xsthlsh in (select t.TXsth.xsthlsh from TXsthDet t where t.TXsth.isZs = '1' and t.TXsth.createTime > '2016-03-21' and TXsth.fromRk = '0' and t.completed = '0' and t.TXsth.isCancel = '0' and t.TXsth.needAudit = t.TXsth.isAudit";
+				if(xsth.getBmbh().equals("04")){
+					hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
+				}
+				hql += ")";
+			}else{
+				hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
+				params.put("search", "%" + xsth.getSearch() + "%");
+			}
 			
 		}
 		
@@ -823,6 +964,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		for(TXsthDet t : l){
 			XsthDet c = new XsthDet();
 			BeanUtils.copyProperties(t, c);
+			if(t.getTCgjh() != null){
+				c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
+			}
 			
 			nl.add(c);
 		}
@@ -834,14 +978,19 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid datagridDet(Xsth xsth) {
 		//库房出库流程查询，保管员只可查看本人负责商品记录，其他(总账员)可以查看全部
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TXsthDet t where t.TXsth.bmbh = :bmbh and t.TXsth.createTime > :createTime";
+		String hql = "from TXsthDet t where t.TXsth.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xsth.getBmbh());
-		if(xsth.getCreateTime() != null){
-			params.put("createTime", xsth.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		
+		if(xsth.getFromOther() == null || !xsth.getFromOther().equals("fromCgjh")){
+			hql += " and t.TXsth.createTime > :createTime";
+			if(xsth.getCreateTime() != null){
+				params.put("createTime", xsth.getCreateTime()); 
+			}else{
+				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			}
 		}
+		
 		if(xsth.getSearch() != null && xsth.getSearch().length() > 0){
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
@@ -859,6 +1008,20 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
+		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
+			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0))";
+		}
+		
+		
+		
+		
+		if(xsth.getFromOther().equals("fromCgjh")){
+			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0'" ;
+			if(xsth.getBmbh().equals("04")){
+				hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
+			}
+		}
+		
 		//保管员筛选
 		if(xsth.getBgyId() > 0){
 			hql += " and t.spbh in (select sb.spbh from TSpBgy sb where sb.depId = :depId and sb.bgyId = :bgyId and sb.ckId = :ckId)";
@@ -868,11 +1031,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		//通过isKp字段来判断该查询来源，
-		if("1".equals(xsth.getIsKp())){
+		if(xsth.getFromOther().equals("fromXskp") && "1".equals(xsth.getIsKp())){
 			hql += " and t.TXsth.isLs = '1' and t.TXsth.isKp = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TXskpDet tkd where tkd.TXskp in elements(t.TXskps) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.kpsl";
-		}else{
+		}
+		
+		if(xsth.getFromOther().equals("fromKfck")){
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
 			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			if(!"fh".equals(xsth.getSearch())){
@@ -1008,36 +1173,120 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 	}
 	
+	@Override
+	public DataGrid toCgjh(Xsth xsth){
+		String sql = "select spbh, isnull(sum(zdwsl), 0) zdwsl, isnull(sum(cdwsl), 0) cdwsl from t_xsth_det ";
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		String xsthDetIds = xsth.getXsthDetIds();
+		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
+			sql += "where id in (" + xsthDetIds + ")";
+		}
+		sql += " group by spbh";
+		
+		List<Object[]> l = detDao.findBySQL(sql, params);
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			XsthDet xd = new XsthDet();
+			BeanUtils.copyProperties(sp, xd);
+			xd.setShdz(xsth.getShdz());
+			xd.setLxr(xsth.getThr());
+			xd.setZjldwId(sp.getZjldw().getId());
+			xd.setZjldwmc(sp.getZjldw().getJldwmc());
+			xd.setZdwsl(zdwsl);
+			if(sp.getCjldw() != null){
+				xd.setCjldwId(sp.getCjldw().getId());
+				xd.setCjldwmc(sp.getCjldw().getJldwmc());
+				xd.setZhxs(sp.getZhxs());
+				xd.setCdwsl(cdwsl);
+//				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
+//					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//				}else{
+//					xd.setCdwthsl(Constant.BD_ZERO);
+//					xd.setCdwytsl(Constant.BD_ZERO);
+//				}
+			}
+			nl.add(xd);
+		}
+		nl.add(new XsthDet());
+		DataGrid dg = new DataGrid();
+		dg.setRows(nl);
+		return dg;
+	}
+	
 	/**
+	 * 直送业务确认收货数量
 	 * 库房检斤后修改实际数量
 	 * 纸张要修改次数量
 	 * 并同步更新临时总账、应收总账的数据
+	 * 
 	 */
 	@Override
 	public void updateThsl(Xsth xsth) {
+		BigDecimal sl = BigDecimal.ZERO;
+		BigDecimal csl = BigDecimal.ZERO;
+		BigDecimal lsje = BigDecimal.ZERO;
+
 		//获取修改的商品记录
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
+				
 		
+		//检查是否已修改过,未改过的将原zdwsl保存到thsl
+//		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+//			tXsthDet.setThsl(tXsthDet.getZdwsl());
+//			//tXsthDet.setZdwsl(BigDecimal.ZERO);
+//		}
+				
+		sl = xsth.getThsl();
 		//将本次录入的数据与原数据比较，获得相差数量
-		BigDecimal sl = xsth.getThsl().subtract(tXsthDet.getZdwsl());
-		BigDecimal csl = BigDecimal.ZERO;
-		//获取相差金额
-		BigDecimal je = sl.multiply(tXsthDet.getZdwdj());
-		
-		//检查是否已修改过
-		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
-			tXsthDet.setThsl(tXsthDet.getZdwsl());
+		//if(xsth.getFromOther().equals("xsth") && tXsthDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
+		if(xsth.getFromOther() != null && xsth.getFromOther().equals("xsth")){
+			if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+				tXsthDet.setThsl(tXsthDet.getZdwsl());
+				tXsthDet.setZdwsl(BigDecimal.ZERO);
+			}
+
+			tXsthDet.setQrsl(sl);
+			tXsthDet.setZdwsl(tXsthDet.getZdwsl().add(sl));
+			
+			//本次数量对应的临时金额
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			//应收差额
+			//ysje = sl.subtract(tXsthDet.getZdwsl()).multiply(tXsthDet.getZdwdj());
+			
+			//提货单总金额
+			//thje = tXsthDet.getZdwsl().multiply(tXsthDet.getZdwdj());
+		}else{
+			if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
+				tXsthDet.setThsl(tXsthDet.getZdwsl());
+			}
+			//差额
+			sl = sl.subtract(tXsthDet.getZdwsl());
+			//库房确认数量
+			tXsthDet.setZdwsl(xsth.getThsl());
+			//获取相差金额
+			lsje = sl.multiply(tXsthDet.getZdwdj());
+			//ysje = lsje;
+			//thje = lsje;
 		}
 		
+		
 		//更新修改后数量、金额
-		tXsthDet.setZdwsl(xsth.getThsl());
-		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(xsth.getThsl()));
+		tXsthDet.setSpje(tXsthDet.getZdwdj().multiply(tXsthDet.getZdwsl()));
 		
 		//如为纸张品种，修改次单位数量
 		if(tXsthDet.getSpbh().substring(0, 1).equals("4")){
 			if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-				tXsthDet.setCdwsl(xsth.getThsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN);
+				tXsthDet.setCdwsl(tXsthDet.getZdwsl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				csl = sl.divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
 			}
 		}
 		
@@ -1052,14 +1301,16 @@ public class XsthServiceImpl implements XsthServiceI {
 		ck.setCkmc(tXsth.getCkmc());
 		
 		//更新提货单的合计数量、金额
-		tXsth.setHjje(tXsth.getHjje().add(je));
-		tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		if(!xsth.getFromOther().equals("xsth")){
+			tXsth.setHjje(tXsth.getHjje().add(lsje));
+			tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		}
 		
 		//更新临时总账数量
-		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, BigDecimal.ZERO, je, Constant.UPDATE_RK, lszzDao);
+		LszzServiceImpl.updateLszzSl(sp, dep, ck, sl, csl, lsje, Constant.UPDATE_RK, lszzDao);
 		
-		//更新应收总账的金额
-		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
+		//更新应收总账的金额(直送不更新)
+		if(!xsth.getFromOther().equals("xsth") && tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "1".equals(tXsth.getIsLs()) && "0".equals(tXsth.getIsFhth())){
 			Kh kh = new Kh();
 			kh.setKhbh(tXsth.getKhbh());
 			kh.setKhmc(tXsth.getKhmc());
@@ -1068,13 +1319,50 @@ public class XsthServiceImpl implements XsthServiceI {
 			ywy.setRealName(tXsth.getYwymc());
 			
 			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, je, Constant.UPDATE_YS_TH, yszzDao);
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
 		}
 		
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
 				"修改提货数量", operalogDao);
 	}
 	
+	@Override
+	public void updateZsComplete(Xsth xsth){
+		BigDecimal sl = BigDecimal.ZERO;
+		BigDecimal csl = BigDecimal.ZERO;
+		BigDecimal lsje = BigDecimal.ZERO;
+		
+		TXsthDet tXsthDet = detDao.get(TXsthDet.class, xsth.getId());
+		tXsthDet.setCompleted("1");
+		
+		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
+		if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+			csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
+		}
+		
+		TXsth tXsth = tXsthDet.getTXsth();
+		
+		//只在直送确认完成时有数量更新，不需要进行判断
+		tXsth.setHjje(tXsth.getHjje().add(lsje));
+		tXsth.setHjsl(tXsth.getHjsl().add(csl));
+		
+		Department dep = new Department();
+		dep.setId(tXsth.getBmbh());
+		dep.setDepName(tXsth.getBmmc());
+		Kh kh = new Kh();
+		kh.setKhbh(tXsth.getKhbh());
+		kh.setKhmc(tXsth.getKhmc());
+		User ywy = new User();
+		ywy.setId(tXsth.getYwyId());
+		ywy.setRealName(tXsth.getYwymc());
+			
+		//更新授信客户应付金额
+		YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
+				
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
+			"确认直送完成", operalogDao);
+	}
+	 
 	@Override
 	public void updateLock(Xsth xsth) {
 		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
@@ -1147,14 +1435,14 @@ public class XsthServiceImpl implements XsthServiceI {
 			BigDecimal zdwytsl = new BigDecimal(os[2].toString());
 			BigDecimal shui = new BigDecimal("1").add(Constant.SHUILV);
 			BigDecimal zdwdj_ws = new BigDecimal(os[3].toString());
-			BigDecimal zdwdj = zdwdj_ws.divide(shui, 4, BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal zdwdj = zdwdj_ws.divide(shui, 4, BigDecimal.ROUND_HALF_UP);
 			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			BigDecimal sphj = new BigDecimal(os[5].toString());
 			BigDecimal cdwthsl = new BigDecimal(os[6].toString());
 			BigDecimal cdwytsl = new BigDecimal(os[7].toString());
 			BigDecimal dwcb = new BigDecimal(os[8].toString());
 			
-			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_DOWN); 
+			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_UP); 
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -1229,6 +1517,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		slBean.setGroup("可提货数量");
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
+		
+		slBean.setXscb(YwzzServiceImpl.getDwcb(xsth.getBmbh(), xsth.getSpbh(), ywzzDao).multiply(new BigDecimal(1.17)).setScale(4, BigDecimal.ROUND_HALF_UP));
+		
 		lists.add(0, slBean);
 		
 		dg.setRows(lists);
@@ -1263,6 +1554,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setYwrkDetDao(BaseDaoI<TYwrkDet> ywrkDetDao) {
 		this.ywrkDetDao = ywrkDetDao;
+	}
+
+	@Autowired
+	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
+		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired

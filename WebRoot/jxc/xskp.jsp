@@ -862,7 +862,7 @@ function saveAll(){
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 		effectRow['xsthKhbh'] = $('input[name=xsthKhbh]').val();
-		effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
+		//effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
 		effectRow['bmbh'] = xskp_did;
 		effectRow['lxbh'] = xskp_lx;
 		effectRow['menuId'] = xskp_menuId;
@@ -871,6 +871,7 @@ function saveAll(){
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
 		//$.ajaxSettings.traditional=true;
+		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
@@ -894,6 +895,9 @@ function saveAll(){
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
+			},
+			complete: function(){
+				//MaskUtil.unmask();
 			}
 		});
 	}
@@ -1417,6 +1421,7 @@ function cjXskp(){
 					if(row.fromTh == '1' || (row.xsthlshs == undefined || row.xsthlshs.trim == '')){
 						$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
 							if (bz != undefined) {
+								//MaskUtil.mask('正在冲减，请等待……');
 								$.ajax({
 									url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
 									data : {
@@ -1434,6 +1439,9 @@ function cjXskp(){
 											title : '提示',
 											msg : d.msg
 										});
+									},
+									complete: function(){
+										//MaskUtil.unmask();
 									}
 								});
 							}
@@ -1674,6 +1682,7 @@ function generateXskp(){
  								$('.fh').css('display','none');
  							}
 							
+							$('input[name=isZs]').prop('checked', rows[0].isZs == '1' ? true : false);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
 							jxc_xskp_jsfsCombo.combobox('readonly', true);

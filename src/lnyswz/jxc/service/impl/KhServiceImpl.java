@@ -641,7 +641,10 @@ public class KhServiceImpl implements KhServiceI {
 		params.put("1", khbh);
 		params.put("2", ywyId);
 		
-		yszz.setThje(new BigDecimal(yszzDao.getBySQL(sql, params).toString()));
+		Object thjeO = yszzDao.getBySQL(sql, params);
+		if(thjeO != null){
+			yszz.setThje(new BigDecimal(thjeO.toString()));
+		}
 				
 		return yszz;
 	}

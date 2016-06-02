@@ -12,7 +12,37 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
-jxc.getCkByKhbh = function(bmbh, khbh){
+jxc.cbs = function(bmbh){
+	switch(bmbh){
+	case '04':
+		return ['21010798', //传媒
+		        '21010263', //新华印务
+				'21010017', //辽海
+				'21010036', //美术
+				'21010082', //人民
+				'21010010', //教育
+				'21010011', //春风
+				'21010014', //民族
+				'21010080', //少儿
+				'21010081', //科技
+				'21010463', //万卷
+				'21010940', //音像
+				'21010245', //电子
+				'21010078', //万榕
+				'11011364', //智品
+				'21010055', //古籍
+				];
+		break;
+	case '01':
+	case '05':
+	case '07':
+	case '08':
+		return '';
+		break;
+	}
+}
+
+jxc.getCkByKhbh = function(bmbh, khbh, isZs){
 	var ck = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':
@@ -20,6 +50,7 @@ jxc.getCkByKhbh = function(bmbh, khbh){
 		break;
 	case '04':
 		ck['21010798'] = '31'; //传媒
+		ck['21010263'] = '31'; //新华印务
 		ck['21010017'] = '32'; //辽海
 		ck['21010036'] = '33'; //美术
 		ck['21010082'] = '34'; //人民
@@ -51,6 +82,28 @@ jxc.getCkByKhbh = function(bmbh, khbh){
 	}
 	
 };
+
+jxc.getZfCk = function(bmbh){
+	switch (bmbh) {
+	case '01':
+		return '11';
+		break;
+	case '04':
+		return '09';
+		break;
+	case '05':
+		return '07';
+		break;
+	case '07':
+		return '12';
+		break;
+	case '08':
+		return '08';
+		break;
+	default:
+		break;
+	}
+}
 
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
@@ -207,6 +260,7 @@ jxc.getAuditLevelCgjh = function(bmbh){
 	return jxc.auditLevelCgjh(bmbh)['first'];
 };
 
+//不参与销售审批流程的客户
 jxc.notInExcludeKhs = function(bmbh, khbh){
 	switch (bmbh) {
 	case '04':
@@ -226,6 +280,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010940', //辽宁音像
 		    		'21010055', //辽海古籍
 		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
+		    		'21010263', //辽宁新华印务有限公司
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;
@@ -237,6 +292,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		//沈阳新华印务不参与审批流程	
 		var kh01 = ['21010263',  //辽宁新华印务有限公司
 		            '21010608',  //辽宁票据印务有限公司
+		            '21010183',  //辽宁北方出版物配送有限公司
 		            ];
 		if(kh01.indexOf(khbh) >= 0){
 			return false;
@@ -266,6 +322,43 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 			return true;
 		}
 		break;
+	default:
+		return true;
+		break;
+	}
+};
+
+//不参与直送业务流程的客户
+jxc.notInExcludeZsKhs = function(bmbh, khbh){
+	switch (bmbh) {
+	case '04':
+		//教材公司，股份公司和辽海公司不参与审批流程	
+		var kh04 = ['21010017', //北方联合出版传媒（集团）股份有限公司辽海出版社分公司
+		            '21010798', //北方联合出版传媒（集团）股份有限公司
+		            '21010103', //辽宁文达纸业有限公司
+		            '21010010', //辽宁教育出版社
+		    		'21010011', //春风文艺出版社有限责任公司
+		    		'21010014', //辽宁民族出版社
+		    		'21010036', //辽宁美术出版社有限责任公司
+		    		'21010080', //辽宁少年儿童出版社有限责任公司
+		    		'21010081', //辽宁科学技术出版社有限责任公司
+		    		'21010082', //辽宁人民出版社
+		    		'21010245', //辽宁电子出版社
+		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
+		    		'21010940', //辽宁音像
+		    		'21010055', //辽海古籍
+		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
+		    		'21010263', //辽宁新华印务有限公司
+		            ];
+		if(kh04.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	case '01':
+	case '05':
+	case '08':
 	default:
 		return true;
 		break;
@@ -310,6 +403,7 @@ jxc.otherBm = function(bmbh){
 		return bm;
 		break;
 	case '05':
+	case '08':
 		bm['bmbh'] = '04';
 		bm['gysbh'] = '21010004';
 		bm['gysmc'] = '辽宁印刷物资有限责任公司';

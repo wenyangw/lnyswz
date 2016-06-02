@@ -275,6 +275,7 @@ function selectClick(){
 	            text:'查询',
 	            iconCls:'icon-ok',
 	            handler:function(){
+	            	
 					//数组fields 用于存放 查询所需要查询内容
 	      			var fields=[];
 					var frozens=[];
@@ -555,6 +556,7 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
+	//lnyw.MaskUtil.mask('正在导出，请等待……');
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -581,6 +583,9 @@ function exportExcel(){
 				title : "提示",
 				msg : json.msg
 			});
+		},
+		complete: function(){
+			//lnyw.MaskUtil.unmask();
 		}
 	});
 }

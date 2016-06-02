@@ -81,6 +81,9 @@ public class Cgjh {
 	private int rows;
 	//由采购需求生成计划时，传参数
 	private String cgxqDetIds;
+	//由销售提货(直送)生成计划时，传参数
+	private String xsthDetIds;
+
 	//采购计划列表中，表示与采购需求的关系
 	private String cgxqlshs;
 	//向库房入库导出时，传递参数
@@ -601,6 +604,14 @@ public class Cgjh {
 
 	public void setCgxqDetIds(String cgxqDetIds) {
 		this.cgxqDetIds = cgxqDetIds;
+	}
+
+	public String getXsthDetIds() {
+		return xsthDetIds;
+	}
+
+	public void setXsthDetIds(String xsthDetIds) {
+		this.xsthDetIds = xsthDetIds;
 	}
 
 	public String getCgxqlshs() {

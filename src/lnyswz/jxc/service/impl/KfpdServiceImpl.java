@@ -290,7 +290,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
 				if(sp.getZhxs().compareTo(ZERO) != 0){
-					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 				}else{
 					kd.setCdwsl(ZERO);
 				}

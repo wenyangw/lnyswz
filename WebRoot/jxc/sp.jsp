@@ -82,6 +82,7 @@ $(function(){
 	        {field:'zhxs',title:'系数'},
 	        {field:'yxq',title:'有效期'},
 	        {field:'xsdj',title:'销售单价'},
+	        {field:'specXsdj',title:'特定销价'},
 			{field:'limitXsdj',title:'最低销价'},
 			{field:'maxKc',title:'最大库存'},
 			{field:'minKc',title:'最小库存'},
@@ -279,7 +280,7 @@ function editSpDet(){
 			title : '修改商品专属信息',
 			href : '${pageContext.request.contextPath}/jxc/spDet.jsp',
 			width : 340,
-			height : 240,
+			height : 300,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
