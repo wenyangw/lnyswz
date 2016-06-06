@@ -373,6 +373,10 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					c.setIsKfrk("2");
 				}
 			}
+			
+			if(t.getTXsths() != null && t.getTXsths().size() > 0){
+				c.setXsthlsh(t.getTXsths().iterator().next().getTXsth().getXsthlsh());
+			}
 
 			BigDecimal hjsl = BigDecimal.ZERO;
 			for(TCgjhDet tDet : tDets){

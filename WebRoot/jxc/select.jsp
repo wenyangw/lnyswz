@@ -556,7 +556,7 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
-	//lnyw.MaskUtil.mask('正在导出，请等待……');
+	lnyw.MaskUtil.mask('正在导出，请等待……');
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -585,7 +585,7 @@ function exportExcel(){
 			});
 		},
 		complete: function(){
-			//lnyw.MaskUtil.unmask();
+			lnyw.MaskUtil.unmask();
 		}
 	});
 }
