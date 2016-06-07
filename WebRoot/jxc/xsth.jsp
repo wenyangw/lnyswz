@@ -632,6 +632,12 @@ $(function(){
  		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  	});
+ 	
+ 	$('input[name=jxc_xsth_shdz]').keyup(function(event){
+ 		if(event.which == 27){
+ 			khLoad();
+ 		}
+ 	});
 	
 	//初始化信息
 	init();
