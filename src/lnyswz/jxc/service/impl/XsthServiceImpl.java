@@ -1016,7 +1016,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		
 		if(xsth.getFromOther().equals("fromCgjh")){
-			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0'" ;
+			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0' and t.completed = '0'" ;
 			if(xsth.getBmbh().equals("04")){
 				hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
 			}
