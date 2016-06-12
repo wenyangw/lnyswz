@@ -1982,6 +1982,7 @@ function searchXskpInXsth(){
 	xsth_xskpDg.datagrid('load',{
 		bmbh: xsth_did,
 		createTime: $('input[name=createTimeXskpInXsth]').val(),
+		search: countXskpInXsth = $('input[name=searchXskpInXsth]').val(),
 		fromOther: 'fromXsth'
 	});
 }
