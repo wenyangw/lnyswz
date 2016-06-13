@@ -187,7 +187,7 @@ $(function(){
 	xskp_xsthDg = $('#jxc_xskp_xsthDg').datagrid({
 		fit : true,
 	    border : false,
-	    //remoteSort: false,
+	    remoteSort: false,
 // 	    fitColumns: true,
 // 	    singleSelect: true, 
 	    pagination : true,
@@ -230,7 +230,10 @@ $(function(){
 						return '送货';
 					}
 				}},
-			{field:'spbh',title:'商品编号',align:'center',},
+			{field:'spbh',title:'*商品编号',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		return  a - b;
+	        	}},
 			{field:'spmc',title:'名称',align:'center',},
 			{field:'spcd',title:'产地',align:'center'},
 			{field:'sppp',title:'品牌',align:'center'},
