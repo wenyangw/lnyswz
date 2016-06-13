@@ -154,6 +154,7 @@ $(function(){
         			b = b == undefined ? 0 : b;
 					return (a-b);  
 				}},
+			{field:'xsthlsh',title:'销售提货流水号',align:'center',},
         	{field:'isHt',title:'*合同',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {

@@ -83,6 +83,7 @@ public class Cgjh {
 	private String cgxqDetIds;
 	//由销售提货(直送)生成计划时，传参数
 	private String xsthDetIds;
+	private String xsthlsh;
 
 	//采购计划列表中，表示与采购需求的关系
 	private String cgxqlshs;
@@ -612,6 +613,14 @@ public class Cgjh {
 
 	public void setXsthDetIds(String xsthDetIds) {
 		this.xsthDetIds = xsthDetIds;
+	}
+
+	public String getXsthlsh() {
+		return xsthlsh;
+	}
+
+	public void setXsthlsh(String xsthlsh) {
+		this.xsthlsh = xsthlsh;
 	}
 
 	public String getCgxqlshs() {

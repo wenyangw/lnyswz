@@ -222,7 +222,7 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			}
 		}
 		if(cgxq.getSearch() != null && (!cgxq.getSearch().equals(""))){
-			hql += " and (t.TCgxq.khmc like :search or t.spmc like :search)"; 
+			hql += " and (t.TCgxq.khbh like :search or t.TCgxq.khmc like :search or t.spbh like :search or t.spmc like :search)"; 
 			params.put("search", "%" + cgxq.getSearch() + "%");
 		}
 		//采购计划流程只查询未完成的有效数据

@@ -363,7 +363,7 @@ function searchCgxq(){
 </div>
 <div id="jxc_cgxq_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeCgxq" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入客户名称、商品名称：<input type="text" name="searchCgxq" style="width:100px">
+	输入客户编号、名称，商品编号、名称：<input type="text" name="searchCgxq" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxq();">查询</a>
 </div>
 

@@ -1787,7 +1787,7 @@ function confirmThsl(){
 				if(xsthRow.isCancel == '0'){
 					if(xsthRow.needAudit == xsthRow.isAudit){
 						if(xsthRow.isKp == '0'){
-							if(detRow.cgjhlsh != undefined){
+							//if(detRow.cgjhlsh != undefined){
 								if(detRow.completed == '0'){
 									$.messager.prompt('请确认', '是否要确认提货数量？请输入', function(thsl){
 										if (thsl != undefined){
@@ -1815,9 +1815,9 @@ function confirmThsl(){
 								}else{
 									$.messager.alert('警告', '选择的销售提货已完成，请重新选择！',  'warning');
 								}
-							}else{
-								$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
-							}
+// 							}else{
+// 								$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
+// 							}
 							//detDg = undefined;
 						}else{
 							$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
@@ -1852,7 +1852,7 @@ function completeXsth(){
 					if(xsthRow.isCancel == '0'){
 						if(xsthRow.needAudit == xsthRow.isAudit){
 							if(xsthRow.isKp == '0'){
-								if(detRow.cgjhlsh != undefined){
+								//if(detRow.cgjhlsh != undefined){
 									if(detRow.thsl != undefined){
 										$.messager.confirm('请确认', '是否要确认直送完成？', function(r) {
 											if (r) {
@@ -1878,9 +1878,9 @@ function completeXsth(){
 									}else{
 										$.messager.alert('警告', '选择的销售提货记录还未确认数量，请重新选择！',  'warning');
 									}
-								}else{
-									$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
-								}
+// 								}else{
+// 									$.messager.alert('警告', '选择的销售提货记录还未实施计划，请重新选择！',  'warning');
+// 								}
 								//detDg = undefined;
 							}else{
 								$.messager.alert('警告', '选择的销售提货记录已经开票，请重新选择！',  'warning');
@@ -1988,6 +1988,7 @@ function searchXskpInXsth(){
 	xsth_xskpDg.datagrid('load',{
 		bmbh: xsth_did,
 		createTime: $('input[name=createTimeXskpInXsth]').val(),
+		search: countXskpInXsth = $('input[name=searchXskpInXsth]').val(),
 		fromOther: 'fromXsth'
 	});
 }
