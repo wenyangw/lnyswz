@@ -805,7 +805,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 };
 
 //供应商、客户快速查询
-jxc.query = function(title, input_bh, input_mc, urlJsp, urlAction){
+jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 	$('#jxc_query_dialog').dialog({
 		href: urlJsp,
 		title:title,
@@ -840,6 +840,7 @@ jxc.query = function(title, input_bh, input_mc, urlJsp, urlAction){
 			    	if(input_bh != ''){
 			    		$(input_bh).val(rowData.bh);
 			    		$(input_mc).val(rowData.mc);
+			    		$(input_dist).val(rowData.dist);
 			    		$(input_mc).change();
 			    	}else{
 			    		if(rowData.address == undefined){

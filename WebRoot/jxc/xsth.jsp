@@ -613,6 +613,7 @@ $(function(){
 		}else{
 			$('.isSh').css('display','none');
 			$('.isZt').css('display','table-cell');
+			$('.isSh input').val('');
 		}
 	});
 	
@@ -625,18 +626,21 @@ $(function(){
 	});
 	
  	$('input[name=khmc]').change(function(){
-// 		if($('input[name=isSx]').is(':checked')){
-// 			checkKh();
-// 		}
  		loadKh($('input[name=khbh]').val().trim());
  		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  	});
  	
+ 	
+ 	
  	$('input[name=jxc_xsth_shdz]').keyup(function(event){
  		if(event.which == 27){
- 			khLoad();
+ 			khShLoad();
  		}
+ 	});
+ 	
+ 	$('input[name=jxc_xsth_shdz]').change(function(){
+ 		updateYf();
  	});
 	
 	//初始化信息
@@ -1391,6 +1395,28 @@ function updateFooter(){
 		cdwsl : hjsl.toFixed(LENGTH_SL),
 		}]
 	);
+	
+	if($('input#thfs_sh').is(':checked')){
+		updateYf();
+	}
+}
+
+function updateYf(){
+	console.info('%%' + $('input[name=jxc_xsth_dist]').val() + '%%');
+
+	if($('input[name=jxc_xsth_dist]').val() == ''){
+		$('input[name=jxc_xsth_ysfy]').val('');
+	}else{
+		var footerRows = xsth_spdg.datagrid('getFooterRows');
+kkh		var hjsl = footerRows[0]['cdwsl'];
+		if(hjsl != undefined){
+			if(hjsl == 0){
+				$('input[name=jxc_xsth_ysfy]').val('');
+			}else{
+				$('input[name=jxc_xsth_ysfy]').val(hjsl * $('input[name=jxc_xsth_dist]').val());
+			}
+		}
+	}
 }
 
 //验证记录是否已存在
@@ -1534,6 +1560,57 @@ function khLoad(){
 	switch(event.keyCode){
 	case 27:
 		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+				'${pageContext.request.contextPath}/jxc/query.jsp',
+				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
+// 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
+		break;
+	case 9:
+		break;
+	default:
+		if($('input[name=khbh]').val().trim().length == 0){
+			$('input[name=khmc]').val('');
+		}
+		if($('input[name=khbh]').val().trim().length == 8){
+			loadKh($('input[name=khbh]').val().trim());
+			if(!$('input[name=isZs]').is(':checked')){
+				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+			}
+			
+// 			$.ajax({
+// 				url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
+// 				async: false,
+// 				context:this,
+// 				data:{
+// 					khbh: $('input[name=khbh]').val().trim(),
+// 				},
+// 				dataType:'json',
+// 				success:function(data){
+// 					if(data.success){
+// 						//设置信息字段值
+// 						$('input[name=khmc]').val(data.obj.khmc);
+// 						$('input[name=khmc]').change();
+// 						console.info("ywyId:" + data.obj.ywyId);
+// 						jxc_xsth_ywyCombo.combobox('setValue', data.obj.ywyId);
+// 						if(data.obj.isSx == '1'){
+// 							$('input[name=isSx]').prop('checked', 'ckecked');
+// 						}
+// 						//$('#jxc_xsth_ywyId').focus();
+// 						//rowKh = data;
+// 					}else{
+// 						$.messager.alert('提示', '客户信息不存在！', 'error');
+// 					}
+// 				}
+// 			});
+		}
+		break;
+	}
+}
+
+//在前台页面响应输入事件，按ESC键弹出客户列表或直接输入客户编码
+function khShLoad(){
+	switch(event.keyCode){
+	case 27:
+		jxc.query('客户检索', $('input[name=jxc_xsth_shkhbh]'), $('input[name=jxc_xsth_shdz]'), $('input[name=jxc_xsth_dist]'),  
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
@@ -2090,7 +2167,7 @@ function searchYwrkInXsth(){
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th>提货人</th><td><input name="thr" size="10"></td>
 						<th class="isSh" style="display:none" colspan="2">送货地址</th><td  class="isSh"><input name="jxc_xsth_shdz" size="20"></td>
-						<th class="isSh" style="display:none" colspan="2">运费</th><td class="isSh"><input name="jxc_xsth_ysfy" size="20"></td>
+						<th class="isSh" style="display:none" colspan="2">运费</th><td class="isSh"><input name="jxc_xsth_ysfy" size="20">元</td>
 					</tr>
 					<tr class='jxc_xsth_bookmc'>
 						<th>书名</th><td colspan="10"><input name="jxc_xsth_bookmc" type="text" style="width:71%"></td>
@@ -2101,6 +2178,9 @@ function searchYwrkInXsth(){
 				</table>
 				<input name="xskpDetIds" type="hidden">
 				<input name="ywrkDetIds" type="hidden">
+				<input class="isSh" name="jxc_xsth_shkhbh" type="hidden">
+				<input class="isSh" name="jxc_xsth_dist">
+				
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>
