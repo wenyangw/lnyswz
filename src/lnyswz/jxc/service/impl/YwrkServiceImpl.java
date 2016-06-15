@@ -623,7 +623,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Ywrk ywrk = new Ywrk();
 		BeanUtils.copyProperties(tYwrk, ywrk);
 		//商品明细处理
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_ywrk_det t ";
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(cdwsl) cdwsl from t_ywrk_det t ";
 		
 		if(ywrklsh != null && ywrklsh.trim().length() > 0){
 			sql += "where ywrklsh = " + ywrklsh;
@@ -636,20 +636,20 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwrkDet yd = new YwrkDet();
-			yd.setSpbh(spbh);
-			yd.setSpmc(sp.getSpmc());
-			yd.setSpcd(sp.getSpcd());
-			yd.setSppp(sp.getSppp());
-			yd.setSpbz(sp.getSpbz());
+			BeanUtils.copyProperties(sp, yd);
 			yd.setZdwsl(zdwsl);
+			yd.setZjldwId(sp.getZjldw().getId());
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				yd.setCdwsl(cdwsl);
 			}
 			nl.add(yd);
 		}
