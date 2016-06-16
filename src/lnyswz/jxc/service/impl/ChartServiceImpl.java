@@ -43,10 +43,16 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		String sql = "";
 		if(chart.getField().equals("xsje")){
-			sql = "select jzsj, round(xsje / 10000, 2) from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+			sql = "select jzsj, round(xsje / 10000, 2)";
 		}else if(chart.getField().equals("xsml")){
-			sql = "select jzsj, round((xsje - xscb) / 10000, 2) from v_xstj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
 		}
+		if(chart.getIncludeNb().equals("1")){
+			sql += " from v_xstj";
+		}else{
+			sql += " from v_xstj_nonb";
+		}
+		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
 		
 		int year = 3;
 		String[] years = new String[year];
