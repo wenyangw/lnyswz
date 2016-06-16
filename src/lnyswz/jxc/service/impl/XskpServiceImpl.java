@@ -662,6 +662,10 @@ public class XskpServiceImpl implements XskpServiceI {
 		Xskp x = new Xskp();
 		BigDecimal hjje = BigDecimal.ZERO;
 		String xskplsh = "共" + lshs.length +  "张/";
+		//录入实际发票数目
+		if(xskp.getLens() != null && xskp.getLens().length() > 0){
+			xskplsh = "共" + xskp.getLens() +  "张/";
+		}
 		int j = 0;
 		for(String l : lshs){
 			TXskp tXskp = xskpDao.load(TXskp.class, l);
