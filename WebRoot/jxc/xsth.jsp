@@ -130,6 +130,7 @@ $(function(){
 	        		return lnyw.formatNumberRgx(value);
 	        	}},
 	        {field:'hjsl',title:'数量',align:'center'},
+	        {field:'ysfy',title:'运费',align:'center'},
 	        {field:'bookmc',title:'书名',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 25);
@@ -987,11 +988,14 @@ function saveXsth(){
 		}
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
 		effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
+		effectRow['ysfy'] = $('input#thfs_sh').is(':checked') ? $('input[name=jxc_xsth_ysfy]').val() : 0;
 		
 		effectRow['bookmc'] = $('input[name=jxc_xsth_bookmc]').val();
 		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
 		effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
 		effectRow['ywrkDetIds'] = $('input[name=ywrkDetIds]').val();
+		
+		
 		
 		effectRow['bmbh'] = xsth_did;
 		effectRow['lxbh'] = xsth_lx;
@@ -2145,7 +2149,6 @@ function searchYwrkInXsth(){
 				<table class="tinfo" id="jxc_xsth_info">
 					<tr>
 						<td colspan="5">
-<!-- 							授信客户<input type="checkbox" name="isSx">&nbsp;&nbsp;&nbsp; -->
 							直发<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
 							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
 							<span class="fh" style="display:none">
@@ -2180,8 +2183,8 @@ function searchYwrkInXsth(){
 				</table>
 				<input name="xskpDetIds" type="hidden">
 				<input name="ywrkDetIds" type="hidden">
-				<input class="isSh" name="jxc_xsth_shkhbh" type="hidden">
-				<input class="isSh" name="jxc_xsth_dist">
+				<input name="jxc_xsth_shkhbh" type="hidden">
+				<input name="jxc_xsth_dist" type="hidden">
 				
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		

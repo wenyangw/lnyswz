@@ -1389,7 +1389,7 @@ function khLoad(){
 // 				params += '?isNsr=1';
 // 			}
 // 		}
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action' + params);

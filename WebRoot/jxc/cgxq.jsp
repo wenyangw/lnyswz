@@ -684,7 +684,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
@@ -721,7 +721,7 @@ function gysLoad(){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 		break;
@@ -757,7 +757,7 @@ function khLoad(){
 function addressLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', "", $('input[name=jxc_cgxq_shdz]'), 
+		jxc.query('客户检索', "", $('input[name=jxc_cgxq_shdz]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 		break;

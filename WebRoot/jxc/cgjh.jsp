@@ -1165,7 +1165,7 @@ function setEditing(){
     shdzEditor.target.bind('keydown', function(event){
     	//按Tab键,根据商品编号获取商品信息
     	if(event.keyCode == 27){
-    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target, 
+    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target, '',
     				'${pageContext.request.contextPath}/jxc/queryAddr.jsp',
     				'${pageContext.request.contextPath}/jxc/shdzAction!shdzDg.action');
     	}
@@ -1345,7 +1345,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
