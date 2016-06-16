@@ -851,9 +851,9 @@ function saveAll(){
 		effectRow['bookmc'] = $('input[name=jxc_xskp_bookmc]').val();
 		effectRow['khbh'] = $('input[name=khbh]').val();
 		effectRow['khmc'] = $('input[name=khmc]').val();
-		effectRow['sh'] = $('input[name=sh]').val();
-		effectRow['khh'] = $('input[name=khh]').val();
-		effectRow['dzdh'] = $('input[name=dzdh]').val();
+		effectRow['sh'] = $('input[name=xskp_sh]').val();
+		effectRow['khh'] = $('input[name=xskp_khh]').val();
+		effectRow['dzdh'] = $('input[name=xskp_dzdh]').val();
 		effectRow['ckId'] = jxc_xskp_ckCombo.combobox('getValue');
 		effectRow['ckmc'] = jxc_xskp_ckCombo.combobox('getText');
 		effectRow['ywyId'] = jxc_xskp_ywyCombo.combobox('getValue');
@@ -1321,9 +1321,9 @@ function checkKh(){
 				$.messager.alert('提示', data.msg, 'error');
 				$('input[name=khbh]').val('');
 				$('input[name=khmc]').val('');
-				$('input[name=sh]').val('');
-				$('input[name=khh]').val('');
-				$('input[name=dzdh]').val('');
+				$('input[name=xskp_sh]').val('');
+				$('input[name=xskp_khh]').val('');
+				$('input[name=xskp_dzdh]').val('');
 				$('input[name=khbh]').focus();
 				return false;
 			}
@@ -1348,9 +1348,9 @@ function loadKh(khbh){
 			if(data.success){
 				//设置信息字段值
 				$('input[name=khmc]').val(data.obj.khmc);
-				$('input[name=sh]').val(data.obj.sh);
-				$('input[name=khh]').val(data.obj.khh);
-				$('input[name=dzdh]').val(data.obj.dzdh);
+				$('input[name=xskp_sh]').val(data.obj.sh);
+				$('input[name=xskp_khh]').val(data.obj.khh);
+				$('input[name=xskp_dzdh]').val(data.obj.dzdh);
 				jxc_xskp_ywyCombo.combobox('setValue', data.obj.ywyId);
 // 				if(data.obj.isSx == '1'){
 // 					$('input[name=isSx]').prop('checked', 'ckecked');
@@ -1399,9 +1399,9 @@ function khLoad(){
 	default:
 		if($('input[name=khbh]').val().trim().length == 0){
 			$('input[name=khmc]').val('');
-			$('input[name=sh]').val('');
-			$('input[name=khh]').val('');
-			$('input[name=dzdh]').val('');
+			$('input[name=xskp_sh]').val('');
+			$('input[name=xskp_khh]').val('');
+			$('input[name=xskp_dzdh]').val('');
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
@@ -1753,9 +1753,9 @@ function searchXsthInXskp(){
 						<th class="read">客户名称</th><td colspan="3"  class="read"><input name="khmc" readonly="readonly" style="width:100%"></td>
 					</tr>
 					<tr>
-						<th class="read">税号</th><td class="read"><input name="sh" readonly="readonly"></td>
-						<th class="read">开户行账号</th><td class="read"><input name="khh" readonly="readonly"></td>
-						<th class="read">地址电话</th><td class="read"><input name="dzdh" readonly="readonly"></td>
+						<th class="read">税号</th><td class="read"><input name="xskp_sh" readonly="readonly"></td>
+						<th class="read">开户行账号</th><td class="read"><input name="xskp_khh" readonly="readonly"></td>
+						<th class="read">地址电话</th><td class="read"><input name="xskp_dzdh" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th>结算方式</th><td><input id="jxc_xskp_jsfsId" name="jsfsId" type="text"></td>
