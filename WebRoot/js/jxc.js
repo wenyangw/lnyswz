@@ -564,6 +564,34 @@ jxc.getKhDet = function(url, depId, khbh, ywyId){
 	return sxkh;
 };
 
+jxc.getYf = function(bmbh, dist, hjsl){
+	var je = 0;
+	switch(bmbh){
+	case '05':
+		//2吨的倍数
+		var bet = Math.floor(hjsl / 2);
+		//取2吨倍数后的余数 
+		var sl = (hjsl * 1000) % (2000) / 1000;
+		//每个公里数段对应的吨数单价：小于等于5公里（dist=1）,大于5公里小于等于25公里（dist=2）,大于25公里（dist=3）
+		var jes = new Array(new Array(60, 65, 75, 80), new Array(85, 95, 105, 110), new Array(105, 115, 125, 130));
+		
+		if(sl <= 0.5){
+			je = jes[dist - 1][0];
+		}else if(sl > 0.5 && sl <= 1){
+			je = jes[dist - 1][1];
+		}else if(sl > 1 && sl <= 1.5){
+			je = jes[dist - 1][2];
+		}else if(sl > 1.5 && sl <= 2){
+			je = jes[dist - 1][3];
+		}
+		return bet * jes[dist - 1][3] + je;
+	case '08':
+		return 0;
+	default:
+		return 0;
+	}
+};
+
 //var dictType = [ {
 //	value : '00',
 //	text : '变量'

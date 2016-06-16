@@ -629,6 +629,9 @@ $(function(){
  		loadKh($('input[name=khbh]').val().trim());
  		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
+ 		if($('input#thfs_sh').is(':checked')){
+ 			updateYf();
+ 		}
  	});
  	
  	
@@ -1402,18 +1405,17 @@ function updateFooter(){
 }
 
 function updateYf(){
-	console.info('%%' + $('input[name=jxc_xsth_dist]').val() + '%%');
-
 	if($('input[name=jxc_xsth_dist]').val() == ''){
 		$('input[name=jxc_xsth_ysfy]').val('');
 	}else{
 		var footerRows = xsth_spdg.datagrid('getFooterRows');
-kkh		var hjsl = footerRows[0]['cdwsl'];
+		var hjsl = footerRows[0]['cdwsl'];
 		if(hjsl != undefined){
 			if(hjsl == 0){
 				$('input[name=jxc_xsth_ysfy]').val('');
 			}else{
-				$('input[name=jxc_xsth_ysfy]').val(hjsl * $('input[name=jxc_xsth_dist]').val());
+				jxc.getYf(xsth_did, $('input[name=jxc_xsth_dist]').val(), hjsl);
+				$('input[name=jxc_xsth_ysfy]').val(jxc.getYf(xsth_did, $('input[name=jxc_xsth_dist]').val(), hjsl));
 			}
 		}
 	}
@@ -1559,7 +1561,7 @@ function loadKh(khbh){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), $('input[name=jxc_xsth_dist]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
