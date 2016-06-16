@@ -131,6 +131,7 @@ $(function(){
 	        	}},
 	        {field:'hjsl',title:'数量',align:'center'},
 	        {field:'ysfy',title:'运费',align:'center'},
+	        {field:'yysfy',title:'原运费',align:'center'},
 	        {field:'bookmc',title:'书名',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 25);

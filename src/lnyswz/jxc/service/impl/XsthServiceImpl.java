@@ -1385,6 +1385,24 @@ public class XsthServiceImpl implements XsthServiceI {
 				"解锁销售提货", operalogDao);
 	}
 	
+	
+	@Override
+	public void updateYf(Xsth xsth) {
+		
+		//获取修改的商品记录
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXskplsh());
+				
+		
+		//检查是否已修改过, 未改过的将原ysyf保存到yysfy
+		if(tXsth.getYysfy().compareTo(BigDecimal.ZERO) == 0){
+			tXsth.setYysfy(tXsth.getYsfy());
+		}
+		tXsth.setYsfy(xsth.getYsfy());
+				
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getXsthlsh()), 
+				"修改运费", operalogDao);
+	}
+	
 	@Override
 	public DataGrid toXskp(String xsthDetIds){
 //		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +

@@ -30,4 +30,5 @@ public interface XsthServiceI {
 	public DataGrid getYsje(Xsth xsth);
 	public DataGrid refreshXsth(Xsth xsth);
 	public void updateZsComplete(Xsth xsth);
+	public void updateYf(Xsth xsth);
 }

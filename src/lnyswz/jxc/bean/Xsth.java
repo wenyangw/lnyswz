@@ -59,6 +59,7 @@ public class Xsth {
 	private String needAudit;
 	private String isAudit;
 	private BigDecimal ysfy;
+	private BigDecimal yysfy;
 	
 	private int id;
 	private String spbh;
@@ -431,6 +432,12 @@ public class Xsth {
 	}
 	public void setYsfy(BigDecimal ysfy) {
 		this.ysfy = ysfy;
+	}
+	public BigDecimal getYysfy() {
+		return yysfy;
+	}
+	public void setYysfy(BigDecimal yysfy) {
+		this.yysfy = yysfy;
 	}
 	public int getId() {
 		return id;
