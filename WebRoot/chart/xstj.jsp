@@ -182,6 +182,7 @@ $(function(){
 <td class="bm" style="display:none">部门：<input id="jxc_xstj_dep" name="jxc_xstj_dep"></td>
 <td>统计类型：<input id="jxc_xstj_tjlx" name="jxc_xstj_tjlx"></td>
 <td>图表类型：<input id="jxc_xstj_tblx" name="jxc_xstj_tblx"></td>
+<td align="right"><button id="refresh">刷新</button></td>
 <td align="right"><button id="export">导出</button></td>
 </tr></table>
 <br>
