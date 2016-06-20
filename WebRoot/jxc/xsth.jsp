@@ -1201,19 +1201,15 @@ function setEditing(){
     	}
     	calForZ();
     }).bind('keydown', function(event){
-     	if(event.keyCode == 9){
-     		cslEditor.target.focus();
-     		//验证成本
-     		
-     		checkCb();
-//      		var kcRow = $('#show_spkc').propertygrid("getRows");
-// 		    if(kcRow != undefined){
-// 	       		if($(zdjEditor.target).val() <= Number(kcRow[0].xscb)){
-// 	       			$.messager.alert("提示", "销售单价小于成本，请确认后继续操作！");
-// 	       		}
-// 		    }
-     		return false;
-     	}
+      	if(event.keyCode == 9){
+      		cslEditor.target.focus();
+      		return false;
+      	}
+     }).bind('focusout', function(event){
+   		//验证成本
+     	checkCb();
+     	return false;
+     	
     });
   	
 //     cslEditor.target.bind('keyup', function(event){
@@ -1257,11 +1253,14 @@ function setEditing(){
     	}
     	calForZ();
     }).bind('keydown', function(event){
-    	if(event.keyCode == 9){
-    		checkCb();
-     		spjeEditor.target.focus();
+     	if(event.keyCode == 9){
+      		spjeEditor.target.focus();
      	}
-    });
+    }).bind('focusout', function(event){
+ 		//验证成本
+ 		checkCb();
+ 		return false;
+	});
     
   	//输入金额计算单价
     spjeEditor.target.bind('keyup', function(event){

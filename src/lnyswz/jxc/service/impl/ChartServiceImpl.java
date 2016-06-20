@@ -39,8 +39,6 @@ public class ChartServiceImpl implements ChartServiceI {
 	
 	@Override
 	public Chart getXstj(Chart chart) {
-		Chart c = new Chart();
-		
 		String sql = "";
 		if(chart.getField().equals("xsje")){
 			sql = "select jzsj, round(xsje / 10000, 2)";
@@ -54,6 +52,25 @@ public class ChartServiceImpl implements ChartServiceI {
 		}
 		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
 		
+		return getChartByMonth(chart, sql);
+	}
+	
+	@Override
+	public Chart getKctj(Chart chart) {
+		String sql = "";
+		if(chart.getField().equals("kcje")){
+			sql = "select jzsj, round(kcje / 10000, 2)";
+		}else if(chart.getField().equals("xscb")){
+			sql = "select jzsj, round(xscb / 10000, 2)";
+		}
+		
+		sql += " from v_kctj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		
+		return getChartByMonth(chart, sql);
+	}
+
+	private Chart getChartByMonth(Chart chart, String sql) {
+		Chart c = new Chart();
 		int year = 3;
 		String[] years = new String[year];
 		for(int y = 0; y < year; y++){
@@ -102,6 +119,7 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		return c;
 	}
+
 
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
