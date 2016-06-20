@@ -632,7 +632,12 @@ $(function(){
  		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
  		updateJsfs();
  		if($('input#thfs_sh').is(':checked')){
- 			updateYf();
+ 			if(editIndex == 0){
+ 	 			updateYf(spbhEditor.target.val());
+ 	 		}else{
+ 				var rows = xsth_spdg.datagrid('getRows');
+ 				updateYf(rows[0].spbh);
+ 	 		}
  		}
  	});
  	
@@ -645,7 +650,12 @@ $(function(){
  	});
  	
  	$('input[name=jxc_xsth_shdz]').change(function(){
- 		updateYf();
+ 		if(editIndex == 0){
+ 			updateYf(spbhEditor.target.val());
+ 		}else{
+			var rows = xsth_spdg.datagrid('getRows');
+			updateYf(rows[0].spbh);
+ 		}
  	});
 	
 	//初始化信息
@@ -1383,15 +1393,18 @@ function updateFooter(){
 	var spmc_footer = '合计';
 	var hjje = 0.00;
 	var hjsl = 0.000;
+	var spbh;
 	$.each(rows, function(){
 		var index = xsth_spdg.datagrid('getRowIndex', this);
 		if(index < rows.length - 1){
 			if(editIndex == index){
 				hjje += Number(spjeEditor.target.val());
 				hjsl += Number(cslEditor.target.val());
+				spbh = spbhEditor.target.val();
 			}else{
 				hjje += Number(this.spje);
 				hjsl += Number(this.cdwsl);
+				spbh = this.spbh;
 			}
 		}
  		
@@ -1402,27 +1415,24 @@ function updateFooter(){
 		cdwsl : hjsl.toFixed(LENGTH_SL),
 		}]
 	);
-	
-	if($('input#thfs_sh').is(':checked')){
-		updateYf();
+	if($('input#thfs_sh').is(':checked') && (xsth_did == '05' || xsth_did == '08')){
+		updateYf(spbh);
 	}
 }
 
-function updateYf(){
+function updateYf(spbh){
 	if($('input[name=jxc_xsth_dist]').val() == ''){
 		$('input[name=jxc_xsth_ysfy]').val('');
 	}else{
-		//var rows = xsth_spdg.datagrid('getRows');
-		console.info(spbhEditor.target.val());
 		var footerRows = xsth_spdg.datagrid('getFooterRows');
 		var hjsl = footerRows[0]['cdwsl'];
 		if(hjsl != undefined){
-			if(hjsl == 0){
-				$('input[name=jxc_xsth_ysfy]').val('');
-			}else{
-				jxc.getYf(xsth_did, $('input[name=jxc_xsth_dist]').val(), hjsl);
-				$('input[name=jxc_xsth_ysfy]').val(jxc.getYf(xsth_did, spbhEditor.target.val(), $('input[name=jxc_xsth_dist]').val(), hjsl));
-			}
+			$('input[name=jxc_xsth_ysfy]').val(jxc.getYf(xsth_did, spbh, $('input[name=jxc_xsth_dist]').val(), hjsl));
+// 			if(hjsl == 0){
+// 				$('input[name=jxc_xsth_ysfy]').val('');
+// 			}else{
+// 				$('input[name=jxc_xsth_ysfy]').val(jxc.getYf(xsth_did, spbh, $('input[name=jxc_xsth_dist]').val(), hjsl));
+// 			}
 		}
 	}
 }

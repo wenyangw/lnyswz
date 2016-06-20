@@ -567,6 +567,9 @@ jxc.getKhDet = function(url, depId, khbh, ywyId){
 };
 
 jxc.getYf = function(bmbh, spbh, dist, hjsl){
+	console.info('spbh:' + spbh);
+	console.info('dist:' + dist);
+	console.info('hjsl:' + hjsl);
 	var je = 0;
 	switch(bmbh){
 	case '05':
@@ -574,10 +577,12 @@ jxc.getYf = function(bmbh, spbh, dist, hjsl){
 		var bet = Math.floor(hjsl / 2);
 		//取2吨倍数后的余数 
 		var sl = (hjsl * 1000) % (2000) / 1000;
-		//每个公里数段对应的吨数单价：小于等于5公里（dist=1）,大于5公里小于等于25公里（dist=2）,大于25公里（dist=3）
+		//每个公里数段对应的价格：小于等于5公里（dist=1）,大于5公里小于等于25公里（dist=2）,大于25公里（dist=3）
 		var jes = new Array(new Array(60, 65, 75, 80), new Array(85, 95, 105, 110), new Array(105, 115, 125, 130));
 		
-		if(sl <= 0.5){
+		if(sl <= 0.25){
+			je = 0;
+		}else if(sl > 0.25 && sl <= 0.5){
 			je = jes[dist - 1][0];
 		}else if(sl > 0.5 && sl <= 1){
 			je = jes[dist - 1][1];
@@ -586,9 +591,18 @@ jxc.getYf = function(bmbh, spbh, dist, hjsl){
 		}else if(sl > 1.5 && sl <= 2){
 			je = jes[dist - 1][3];
 		}
+		
 		return bet * jes[dist - 1][3] + je;
 	case '08':
-		return 0;
+		//大连运费分两档(远近)
+		//纸张，1档：吨数*45, 2档：吨数*50
+		//耗材，1档：150，2档：200
+		var splb = spbh.substring(0, 1);
+		if(splb == '4'){
+			return dist == 1 ? hjsl * 45 : hjsl * 50;
+		}else{
+			return dist == 1 ? 150 : 200;
+		}
 	default:
 		return 0;
 	}
