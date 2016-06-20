@@ -2,12 +2,12 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
-var xstj_did;
-var xstj_bmbh;
-var xstj_chart;
+var kctj_did;
+var kctj_bmbh;
+var kctj_chart;
 
 $(function(){
-	xstj_did = lnyw.tab_options().did;
+	kctj_did = lnyw.tab_options().did;
 	
 	var types = [{
 	    "id": 'column',
@@ -18,64 +18,65 @@ $(function(){
 	},];
 
 	var fields = [{
-	    "id": 'xsje',
-	    "text": "销售金额(不含税)"
-	},{
-	    "id": 'xsml',
-	    "text": "销售毛利"
-	},];
+	    "id": 'kcje',
+	    "text": "库存金额"
+	},
+// 	{
+// 	    "id": 'xscb',
+// 	    "text": "销售成本"
+// 	},
+	];
 	
-	if(xstj_did >= '10'){
-		//$('.bm').css('display','table-cell');
+	if(kctj_did >= '10'){
 		$('.bm').css('display','inline');
-		$('#jxc_xstj_dep').combobox({
+		$('#jxc_kctj_dep').combobox({
 			data: ywbms,
 		    width:100,
 		    valueField: 'id',
 		    textField: 'depName',
 		    panelHeight: 'auto',
 		    onSelect: function(rec){
-		    	xstj_bmbh = $(this).combobox('getValue');
+		    	kctj_bmbh = $(this).combobox('getValue');
 		    }
 		}).combobox('selectedIndex', 0);
-		xstj_bmbh = $('#jxc_xstj_dep').combobox('getValue');
+		kctj_bmbh = $('#jxc_kctj_dep').combobox('getValue');
 	}else{
-		xstj_bmbh = xstj_did;
+		kctj_bmbh = kctj_did;
 	}
 	
-	$('#jxc_xstj_tblx').combobox({
+	$('#jxc_kctj_tblx').combobox({
 	    data: types,
 	    width:100,
 	    valueField: 'id',
 	    textField: 'text',
 	    panelHeight: 'auto',
 	    onSelect: function(rec){
-	    	xstj_options.chart.type = $(this).combobox('getValue');
-	    	xstj_setColumnLabel();
-	    	xstj_chart = new Highcharts.Chart(xstj_options);
+	    	kctj_options.chart.type = $(this).combobox('getValue');
+	    	kctj_setColumnLabel();
+	    	kctj_chart = new Highcharts.Chart(kctj_options);
 	    }
 	}).combobox('selectedIndex', 0);
 	
 	
 	
-	$('#jxc_xstj_tjlx').combobox({
+	$('#jxc_kctj_tjlx').combobox({
 	    data: fields,
 	    width:100,
 	    valueField: 'id',
 	    textField: 'text',
 	    panelHeight: 'auto',
-	    onSelect: function(){
-	    	xstj_options.title.text = $(this).combobox('getText') + '对比分析';
+	    onSelect: function(rec){
+	    	kctj_options.title.text = $(this).combobox('getText') + '对比分析';
 	    }
 	}).combobox('selectedIndex', 0);
 	
 	$('#export').click(function() {
-	    xstj_chart.exportChart();
+	    kctj_chart.exportChart();
 	});
 	
 });
 
-var xstj_column_dataLabels = {
+var kctj_column_dataLabels = {
     enabled: true,
     rotation: -90,
 //     color: '#FFFFFF',
@@ -89,7 +90,7 @@ var xstj_column_dataLabels = {
 //     }
 };
 
-var xstj_line_dataLabels = {
+var kctj_line_dataLabels = {
         enabled: true,
         //rotation: -90,
 //         color: '#FFFFFF',
@@ -103,12 +104,12 @@ var xstj_line_dataLabels = {
 //         }
     };
 
-var xstj_options = {
+var kctj_options = {
     chart: {
-        renderTo: 'xstj_container',
+        renderTo: 'kctj_container',
     },
     title:{
-   		text: '销售金额(不含税)分析',
+   		text: '库存金额分析',
    		style: {
    			fontSize: '26px',
    		}
@@ -143,38 +144,37 @@ var xstj_options = {
     }
 };
 	
-function xstj_drawChart(data){
-	xstj_options.chart.type = $('#jxc_xstj_tblx').combobox('getValue');
-	xstj_options.xAxis.categories = data.categories;
-	xstj_options.series = data.series;
-	xstj_setColumnLabel();
-	xstj_chart = new Highcharts.Chart(xstj_options);
+function kctj_drawChart(data){
+	kctj_options.chart.type = $('#jxc_kctj_tblx').combobox('getValue');
+	kctj_options.xAxis.categories = data.categories;
+	kctj_options.series = data.series;
+	kctj_setColumnLabel();
+	kctj_chart = new Highcharts.Chart(kctj_options);
 };
 	
-function xstj_setColumnLabel(){
-	for(var i = 0; i < xstj_options.series.length; i++){
-		if($('#jxc_xstj_tblx').combobox('getValue') == 'column'){
-			xstj_options.series[i].dataLabels = xstj_column_dataLabels;
+function kctj_setColumnLabel(){
+	for(var i = 0; i < kctj_options.series.length; i++){
+		if($('#jxc_kctj_tblx').combobox('getValue') == 'column'){
+			kctj_options.series[i].dataLabels = kctj_column_dataLabels;
 		}else{
-			xstj_options.series[i].dataLabels = xstj_line_dataLabels;
+			kctj_options.series[i].dataLabels = kctj_line_dataLabels;
 		}
 	}
 }
 
-function xstj_getData(){
+function kctj_getData(){
 	lnyw.MaskUtil.mask('正在刷新，请等待……');
 	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
+		url: '${pageContext.request.contextPath}/jxc/chartAction!getKctj.action',
 		data: {
-			bmbh: xstj_bmbh,
-			field: $('#jxc_xstj_tjlx').combobox('getValue'),
-			includeNb: $('input#jxc_xstj_nb').is(':checked') ? '1' : '0',
+			bmbh: kctj_bmbh,
+			field: $('#jxc_kctj_tjlx').combobox('getValue'),
 		},
 		cache: false,
 		async: false,
 		dataType: 'json',
 		success: function(data){
-			xstj_drawChart(data);
+			kctj_drawChart(data);
 		},
 		complete: function(){
 			lnyw.MaskUtil.unmask();
@@ -184,14 +184,13 @@ function xstj_getData(){
 
 </script>
 <table width=100% style="margin:5px;"><tr>
-<td align="left"><span class="bm" style="display:none">部门：<input id="jxc_xstj_dep" name="jxc_xstj_dep"></span>
-&nbsp;&nbsp;&nbsp;&nbsp;统计类型：<input id="jxc_xstj_tjlx" name="jxc_xstj_tjlx">
-&nbsp;&nbsp;&nbsp;&nbsp;图表类型：<input id="jxc_xstj_tblx" name="jxc_xstj_tblx">
-&nbsp;&nbsp;&nbsp;&nbsp;包含内部<input type="checkbox" id="jxc_xstj_nb" name="jxc_xstj_nb">
-&nbsp;&nbsp;&nbsp;&nbsp;<button id="refresh" onclick="xstj_getData()">刷新</button>
+<td align="left"><span class="bm" style="display:none">部门：<input id="jxc_kctj_dep" name="jxc_kctj_dep"></span>
+&nbsp;&nbsp;&nbsp;&nbsp;统计类型：<input id="jxc_kctj_tjlx" name="jxc_kctj_tjlx">
+&nbsp;&nbsp;&nbsp;&nbsp;图表类型：<input id="jxc_kctj_tblx" name="jxc_kctj_tblx">
+&nbsp;&nbsp;&nbsp;&nbsp;<button id="refresh" onclick="kctj_getData()">刷新</button>
 &nbsp;&nbsp;&nbsp;&nbsp;<button id="export">导出</button></td>
 </tr></table>
 <br>
-<div id="xstj_container" style="min-width:800px;height:400px"></div>
-<div style="margin:10px;">注：因系统切换、并行等原因，2014年1月的销售金额合并在2月，2014年1-4月的毛利统计不十分准确。</div>
+<div id="kctj_container" style="min-width:800px;height:400px"></div>
+<div style="margin:10px;">注：因系统切换、并行等原因，2014年1-4月的库存统计不十分准确。</div>
 

@@ -15,6 +15,7 @@ public class Chart{
 	
 	private String bmbh;
 	private String field;
+	private String includeNb;
 	
 	public String getTitle() {
 		return title;
@@ -54,6 +55,14 @@ public class Chart{
 
 	public void setField(String field) {
 		this.field = field;
+	}
+
+	public String getIncludeNb() {
+		return includeNb;
+	}
+
+	public void setIncludeNb(String includeNb) {
+		this.includeNb = includeNb;
 	}
 
 }
