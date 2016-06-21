@@ -114,6 +114,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setIsKp("0");
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
+		tXsth.setYysfy(BigDecimal.ZERO);
 
 		//最后一笔未还款销售
 //		Xskp xskp = new Xskp();
@@ -1391,11 +1392,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	public void updateYf(Xsth xsth) {
 		
 		//获取修改的商品记录
-		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXskplsh());
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 				
 		
 		//检查是否已修改过, 未改过的将原ysyf保存到yysfy
-		if(tXsth.getYysfy().compareTo(BigDecimal.ZERO) == 0){
+		if(tXsth.getYysfy() == null || tXsth.getYysfy().compareTo(BigDecimal.ZERO) == 0){
 			tXsth.setYysfy(tXsth.getYsfy());
 		}
 		tXsth.setYsfy(xsth.getYsfy());

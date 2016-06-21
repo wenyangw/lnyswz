@@ -109,7 +109,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	/**
 	 * 修改销售提货运费
 	 */
-	public void updateYf(){
+	public void changeYf(){
 		User user = (User)session.get("user");
 		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());

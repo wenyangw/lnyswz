@@ -1873,6 +1873,41 @@ function printShd(){
 	}
 }
 
+function changeYf(){
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+	 	if(selected.isCancel != '1'){
+			$.messager.prompt('请确认', '请输入重新核算的运费：', function(yfje){
+				if (yfje != undefined){
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/xsthAction!changeYf.action',
+						data : {
+							xsthlsh : selected.xsthlsh,
+							ysfy: yfje,
+							bmbh : xsth_did,
+							menuId : xsth_menuId,
+						},
+						dataType : 'json',
+						success : function(d) {
+							xsth_dg.datagrid('reload');
+							xsth_dg.datagrid('unselectAll');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						}
+					});
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选择的销售提货已取消！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+
 //要判断处理的单据有效性（冲减、开票、直送）
 function confirmThsl(){
 	if(detDg != undefined){
