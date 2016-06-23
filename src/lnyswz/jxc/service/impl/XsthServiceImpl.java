@@ -1010,7 +1010,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
 			//内部销售的不受限制
-			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and t.TXsth.khbh in ('21010263'))))";
+			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263') or t.TXsth.fromRk='1'))))";
 		}
 		
 		
