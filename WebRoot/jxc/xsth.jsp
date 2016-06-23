@@ -2090,9 +2090,9 @@ function searchYwrkInXsth(){
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>
 					</tr>
+					<input name="xskpDetIds" type="hidden">
+					<input name="ywrkDetIds" type="hidden">
 				</table>
-				<input name="xskpDetIds" type="hidden">
-				<input name="ywrkDetIds" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>
