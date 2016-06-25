@@ -2115,7 +2115,7 @@ function searchYwrkInXsth(){
 
 <div id="jxc_xsth_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsth();">查询</a>
 </div>
 <div id="jxc_xsth_xskpTb" style="padding:3px;height:auto">

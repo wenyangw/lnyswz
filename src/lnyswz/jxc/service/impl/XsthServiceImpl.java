@@ -864,7 +864,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 				hql += ")";
 			}else{
-				hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
+				hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
 			}
 			
