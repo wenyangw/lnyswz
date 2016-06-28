@@ -611,9 +611,13 @@ $(function(){
 	$('input[name=thfs]').click(function(){
  		if($('input#thfs_sh').is(':checked')){
 			$('.isSh').css('display','table-cell');
+			if(xsth_did == '05' || xsth_did == '08'){
+				$('.isShYf').css('display','table-cell');
+			}
 			$('.isZt').css('display','none');
 		}else{
 			$('.isSh').css('display','none');
+			$('.isShYf').css('display','none');
 			$('.isZt').css('display','table-cell');
 			$('.isSh input').val('');
 		}
@@ -2219,7 +2223,7 @@ function searchYwrkInXsth(){
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th>提货人</th><td><input name="thr" size="10"></td>
 						<th class="isSh" style="display:none" colspan="2">送货地址</th><td  class="isSh"><input name="jxc_xsth_shdz" size="20"></td>
-						<th class="isSh" style="display:none" colspan="2">运费</th><td class="isSh"><input name="jxc_xsth_ysfy" size="20">元</td>
+						<th class="isShYf" style="display:none" colspan="2">运费</th><td class="isShYf" style="display:none"><input name="jxc_xsth_ysfy" size="20">元</td>
 					</tr>
 					<tr class='jxc_xsth_bookmc'>
 						<th>书名</th><td colspan="10"><input name="jxc_xsth_bookmc" type="text" style="width:71%"></td>
