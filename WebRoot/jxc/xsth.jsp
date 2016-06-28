@@ -2231,12 +2231,12 @@ function searchYwrkInXsth(){
 					<tr>
 						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>
 					</tr>
-				</table>
-				<input name="xskpDetIds" type="hidden">
-				<input name="ywrkDetIds" type="hidden">
-				<input name="jxc_xsth_shkhbh" type="hidden">
-				<input name="jxc_xsth_dist" type="hidden">
+					<input name="xskpDetIds" type="hidden">
+					<input name="ywrkDetIds" type="hidden">
+					<input name="jxc_xsth_shkhbh" type="hidden">
+					<input name="jxc_xsth_dist" type="hidden">
 				
+				</table>
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>
@@ -2259,7 +2259,7 @@ function searchYwrkInXsth(){
 
 <div id="jxc_xsth_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsth();">查询</a>
 </div>
 <div id="jxc_xsth_xskpTb" style="padding:3px;height:auto">

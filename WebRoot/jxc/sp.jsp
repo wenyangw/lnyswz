@@ -292,7 +292,7 @@ function editSpDet(){
 						success : function(d) {
 							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
-								sp_dg.datagrid('reload',{depId: did});
+								sp_dg.datagrid('reload');
 								detDialog.dialog('close');
 							}
 							$.messager.show({

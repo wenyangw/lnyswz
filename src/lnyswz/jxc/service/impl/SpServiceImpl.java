@@ -162,7 +162,7 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
-		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
+		dg.setRows(changeSps(spDao.find("select t " + hql + " order by t.spbh", params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
 		return dg;
 	}
 	
