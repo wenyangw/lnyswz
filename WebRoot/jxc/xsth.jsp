@@ -611,7 +611,7 @@ $(function(){
 	$('input[name=thfs]').click(function(){
  		if($('input#thfs_sh').is(':checked')){
 			$('.isSh').css('display','table-cell');
-			if(xsth_did == '05' || xsth_did == '08'){
+			if((xsth_did == '05' || xsth_did == '08') && !$('input#zsCheck').is(':checked')){
 				$('.isShYf').css('display','table-cell');
 			}
 			$('.isZt').css('display','none');
@@ -1003,7 +1003,7 @@ function saveXsth(){
 		}
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
 		effectRow['hjsl'] = lnyw.delcommafy(footerRows[0]['cdwsl']);
-		effectRow['ysfy'] = $('input#thfs_sh').is(':checked') ? $('input[name=jxc_xsth_ysfy]').val() : 0;
+		effectRow['ysfy'] = ($('input#thfs_sh').is(':checked') && !$('input#zsCheck').is(':checked')) ? $('input[name=jxc_xsth_ysfy]').val() : 0;
 		
 		effectRow['bookmc'] = $('input[name=jxc_xsth_bookmc]').val();
 		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();

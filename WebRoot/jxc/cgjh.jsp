@@ -1163,9 +1163,9 @@ function setEditing(){
     });
     
     shdzEditor.target.bind('keydown', function(event){
-    	//按Tab键,根据商品编号获取商品信息
+    	//按ESC键,弹出送货地址列表
     	if(event.keyCode == 27){
-    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target, '',
+    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target,
     				'${pageContext.request.contextPath}/jxc/queryAddr.jsp',
     				'${pageContext.request.contextPath}/jxc/shdzAction!shdzDg.action');
     	}

@@ -312,6 +312,7 @@ function editSpDet(){
 					maxKc: rows[0].maxKc,
 					minKc: rows[0].minKc,
 					xsdj: rows[0].xsdj,
+					specXsdj: rows[0].specXsdj,
 					limitXsdj: rows[0].limitXsdj,
 					depId: did,
 					menuId : menuId,
