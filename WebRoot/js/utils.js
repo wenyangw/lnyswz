@@ -339,7 +339,7 @@ lnyw.comboDefault = function(target, key){
 lnyw.initCombo = function(target, key, value, url){
 	return target.combobox({
 	    url: url,
-	    width: 100,
+	    width: 90,
 	    valueField: key,
 	    textField: value,
 	    //panelHeight: 'auto',

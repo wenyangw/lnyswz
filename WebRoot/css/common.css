@@ -30,3 +30,14 @@ table th{
 .read{
 	color: #8F5700;
 }
+
+.form_line{
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.form_label{
+	margin-left: 5px;
+	font-weight:bold;
+}
+

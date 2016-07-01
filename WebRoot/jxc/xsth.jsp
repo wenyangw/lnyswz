@@ -595,7 +595,7 @@ $(function(){
 	//初始化分户列表
 	$('input[name=isFh]').click(function(){
 		if($(this).is(':checked')){
-			$('.isFh').css('display','table-cell');
+			$('.isFh').css('display','inline');
  			$('.isFhth').css('display','inline');
 			//初始化分户列表
 			if(jxc_xsth_fhCombo == undefined){
@@ -610,15 +610,15 @@ $(function(){
 	
 	$('input[name=thfs]').click(function(){
  		if($('input#thfs_sh').is(':checked')){
-			$('.isSh').css('display','table-cell');
+			$('.isSh').css('display','inline');
 			if((xsth_did == '05' || xsth_did == '08') && !$('input#zsCheck').is(':checked')){
-				$('.isShYf').css('display','table-cell');
+				$('.isShYf').css('display','inline');
 			}
 			$('.isZt').css('display','none');
 		}else{
 			$('.isSh').css('display','none');
 			$('.isShYf').css('display','none');
-			$('.isZt').css('display','table-cell');
+			$('.isZt').css('display','inline');
 			$('.isSh input').val('');
 		}
 	});
@@ -693,7 +693,7 @@ function init(){
 	}
 	
 	if(jxc.showBookmc(xsth_did)){
-		$('.jxc_xsth_bookmc').css('display', 'table-row');
+		$('.jxc_xsth_bookmc').css('display', 'block');
 	}else{
 		$('.jxc_xsth_bookmc').css('display', 'none');
 	}
@@ -2191,52 +2191,58 @@ function searchYwrkInXsth(){
 </script>
 
 
-
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_xsth_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_xsth_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:173px">		
-				<table class="tinfo" id="jxc_xsth_info">
-					<tr>
-						<td colspan="5">
-							直发<input id="zsCheck" type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;
-							发票<input id="fpCheck" type="checkbox" name="toFp">&nbsp;&nbsp;&nbsp;
-							<span class="fh" style="display:none">
-								分户<input type="checkbox" name="isFh">&nbsp;&nbsp;&nbsp;
- 								<span class="isFhth" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
-							</span>
-						</td>
-						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
-						<th class="read">单据号</th><td colspan="4"><div id="xsthLsh" class="read"></div></td>
-					</tr>
-					<tr>
-						<th>客户编号</th><td><input name="khbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()" size="8"></td>
-						<th>客户名称</th><td colspan="3"><input name="khmc" readonly="readonly" size="50"></td>
-						<th>仓库</th><td><input id="jxc_xsth_ckId" name="ckId" size="10"></td>
-						<th class="isFh" style="display:none">分户</th><td class="isFh" style="display:none"><input id="jxc_xsth_fhId" name="fhId" size="10"></td>
-					</tr>
-					<tr>
-						<th>业务员</th><td><input id="jxc_xsth_ywyId" name="ywyId" size="8"></td>
-						<th>结算方式</th><td><input id="jxc_xsth_jsfsId" name="jsfsId" size="8"></td>
-						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
-						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th>提货人</th><td><input name="thr" size="10"></td>
-						<th class="isSh" style="display:none" colspan="2">送货地址</th><td  class="isSh"><input name="jxc_xsth_shdz" size="20"></td>
-						<th class="isShYf" style="display:none" colspan="2">运费</th><td class="isShYf" style="display:none"><input name="jxc_xsth_ysfy" size="20">元</td>
-					</tr>
-					<tr class='jxc_xsth_bookmc'>
-						<th>书名</th><td colspan="10"><input name="jxc_xsth_bookmc" type="text" style="width:71%"></td>
-					</tr>
-					<tr>
-						<th>备注</th><td colspan="10"><input name="jxc_xsth_bz" style="width:90%"></td>
-					</tr>
-					<input name="xskpDetIds" type="hidden">
-					<input name="ywrkDetIds" type="hidden">
-					<input name="jxc_xsth_shkhbh" type="hidden">
-					<input name="jxc_xsth_dist" type="hidden">
-				
-				</table>
+			<div id="jxc_xsth_info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">
+				<div class="form_line">
+					<span class="form_label">直发<input id="zsCheck" type="checkbox" name="isZs"></span>
+					<span class="form_label">发票<input id="fpCheck" type="checkbox" name="toFp"></span>
+					<span class="fh form_label" style="display:none">分户<input type="checkbox" name="isFh"></span>
+	 				<span class="isFhth form_label" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
+					<span class="read form_label">时间</span>
+					<span id="createDate" class="read"></span>
+					<span class="read form_label">单据号</span>
+					<span id="xsthLsh" class="read"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">客户编号</span>
+					<span><input name="khbh" class="easyui-validatebox" data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()" size="6"></span>
+					<span class="form_label">客户名称</span>
+					<span><input name="khmc" readonly="readonly" size="30"></span>
+					<span class="form_label">仓库</span>
+					<span><input id="jxc_xsth_ckId" name="ckId" size="10"></span>
+					<span class="isFh form_label" style="display:none">分户</span>
+					<span class="isFh" style="display:none"><input id="jxc_xsth_fhId" name="fhId" size="10"></span>
+					<span class="isShYf form_label" style="display:none">运费</span>
+					<span class="isShYf" style="display:none"><input name="jxc_xsth_ysfy" size="4">元</span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">业务员</span>
+					<span><input id="jxc_xsth_ywyId" name="ywyId" size="4"></span>
+					<span class="form_label">结算方式</span>
+					<span><input id="jxc_xsth_jsfsId" name="jsfsId" size="4"></span>
+					<span class="form_label">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1"></span><span class="form_label">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></span>
+					<span class="isZt form_label">车号</span>
+					<span class="isZt"><input name="ch" size="10"></span>
+					<span class="form_label">提货人</span>
+					<span><input name="thr" size="10"></span>
+					<span class="isSh form_label" style="display:none">送货地址</span>
+					<span class="isSh" style="display:none"><input name="jxc_xsth_shdz" size="12"></span>
+				</div>
+				<div class='jxc_xsth_bookmc form_line'>
+						<span class="form_label">书名</span>
+						<span><input name="jxc_xsth_bookmc" type="text" style="width:71%"></span>
+					</div>
+				<div class="form_line">
+					<span class="form_label">备注</span>
+					<span><input name="jxc_xsth_bz" style="width:90%"></span>
+				</div>
+				<input name="xskpDetIds" type="hidden">
+				<input name="ywrkDetIds" type="hidden">
+				<input name="jxc_xsth_shkhbh" type="hidden">
+				<input name="jxc_xsth_dist" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>

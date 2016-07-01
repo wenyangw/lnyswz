@@ -168,7 +168,7 @@ function init(){
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
 	//$('.ls').css('display','none');
-	$('.ls').css('display','table-row');
+	$('.ls').css('display','block');
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_cgxq_layout');
@@ -876,35 +876,45 @@ function printCgxq(){
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_cgxq_layout' style="height:100%;width=100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">		
-				<table class="tinfo">
-					<tr>
-						<td colspan="2">临时采购<input type="checkbox" name="isLs" value="1" />&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" name="cgxq_isZs">
-						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
-						<th class="read">单据号</th><td><div id="cgxqLsh" class="read"></div></td>
-					</tr>
-					<tr>
-						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
-						<th class="read">供应商名称</th><td><input name="gysmc" readonly="readonly" size="30"></td>
+				<div class="form_line">
+					<span class="form_label">临时采购<input type="checkbox" name="isLs" value="1" /></span>
+					<span class="form_label">直送<input type="checkbox" name="cgxq_isZs"></span>
+					<span class="read form_label">时间</span>
+					<span id="createDate" class="read"></span>
+					<span class="read form_label">单据号</span>
+					<span id="cgxqLsh" class="read"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">供应商编码</span>
+					<span><input name="gysbh" class="easyui-validatebox"
+						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="6"></span>
+					<span class="read form_label">供应商名称</span>
+					<span><input name="gysmc" readonly="readonly" size="20"></span>
 <!-- 						<th>业务员</th><td><input name="ywyId"></td> -->
-					</tr>
-					<tr class="ls" style="display:none">
-						<th>客户编码</th><td><input name="khbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="8"></td>
-						<th>客户名称</th><td><input name="khmc" readonly="readonly" size="30"></td>
+				</div>
+				<div class="ls form_line" style="display:none">
+					<span class="form_label">客户编码</span>
+					<span><input name="khbh" class="easyui-validatebox"	data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="6"></span>
+					<span class="form_label">客户名称</span>
+					<span><input name="khmc" readonly="readonly" size="20"></span>
 <!-- 						<th>到货方式</th><td><input name="dhfs"></td> -->
-						<th>结算方式</th><td><input id="jxc_cgxq_jsfsId" name="jsfsId"  size="6"></td>
-					</tr>
-					<tr class="ls" style="display:none">
-						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
-						<th>联系人及电话</th><td><input name="jxc_cgxq_lxr" size="20"></td>
-						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
- 						<th>需求时间</th><td><input name="xqsj" id="cgxq_xqsj" size="10"></td>
-					</tr>
-					<tr>
-						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>
-					</tr>
-				</table>
+					<span class="form_label">结算方式</span>
+					<span><input id="jxc_cgxq_jsfsId" name="jsfsId"></span>
+					<span class="form_label">到货时间</span>
+					<span><input name="dhsj" type="text" class="easyui-my97"  size="8"></span>
+				</div>
+				<div class="ls form_line" style="display:none">
+					<span class="form_label">联系人及电话</span>
+					<span><input name="jxc_cgxq_lxr" size="15"></span>
+					<span class="form_label">送货地址</span>
+					<span><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="20"></span>
+					<span class="form_label">需求时间</span>
+					<span><input name="xqsj" id="cgxq_xqsj" size="8"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">备注</span>
+					<span><input name="jxc_cgxq_bz" style="width:90%"></span>
+				</div>
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_cgxq_spdg'></table>

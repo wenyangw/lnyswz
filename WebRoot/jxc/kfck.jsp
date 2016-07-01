@@ -412,7 +412,7 @@ function init(){
 	//默认自提选中
 	$('input#thfs_zt').attr('checked', 'checked');
 	//自提显示
-	$('.thfs_zt').css('display', 'table-cell');
+	$('.thfs_zt').css('display', 'inline');
 	//送货隐藏
 	$('.thfs_sh').css('display', 'none');
 	
@@ -1035,12 +1035,12 @@ function generateKfck(){
 							if(rows[0].isFh == '1'){
 								
 								$('#jxc_kfck_isFh').prop('checked', 'checked');
-								$('.jxc_kfck_isFh').css('display', 'table-cell');
+								$('.jxc_kfck_isFh').css('display', 'inline');
 								jxc_kfck_fhCombo.combobox('setValue', rows[0].fhId);
 							}
 							if(rows[0].thfs == '1'){
 								$('input#thfs_zt').attr('checked', 'checked');
-								$('.thfs_zt').css('display', 'table-cell');
+								$('.thfs_zt').css('display', 'inline');
 								$('.thfs_sh').css('display', 'none');
 								$('input[name=thr]').val(rows[0].thr);
 								$('input[name=ch]').val(rows[0].ch);
@@ -1048,7 +1048,7 @@ function generateKfck(){
 								$('input#thfs_sh').attr('checked', 'checked');
 								$('input[name=shdz]').val(rows[0].shdz);
 								$('.thfs_zt').css('display', 'none');
-								$('.thfs_sh').css('display', 'table-cell');
+								$('.thfs_sh').css('display', 'inline');
 							}
 							$('input[name=jxc_kfck_bz]').val(rows[0].bz);
 						
@@ -1254,30 +1254,40 @@ function searchXsthInKfck(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_kfck_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
-				<table class="tinfo">
-					<tr>
-						<th class="read">分户</th><td class="read" colspan="5"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></td>
-						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
-						<th class="read">单据号</th><td><div id="kfckLsh" class="read"></div></td>
-					</tr>
-					<tr>
-						<th class="read">客户编号</th><td><input name="khbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" class="read" size="8" disabled="disabled"></td>
-						<th class="read">供应商名称</th><td class="read" colspan="5"><input name="khmc" disabled="disabled" size="50"></td>
-						<th class="read jxc_kfck_isFh" style="display:none">分户</th><td class="read jxc_kfck_isFh" style="display:none"><input id="jxc_kfck_fhId" name="fhId" disabled="disabled" size="8"></td>
-					</tr>
-					<tr>
-						<th class="read">仓库</th><td class="read"><input id="jxc_kfck_ckId" name="ckId" disabled="disabled" size="8"></td>
-						<td colspan="2" align="right" class="read">自提<input type="radio" name="thfs" id='thfs_zt' disabled="disabled">送货<input type="radio" name="thfs" id="thfs_sh" disabled="disabled"></td>
-						<th class="read thfs_zt">提货人</th><td class="read thfs_zt"><input name="thr" type="text" disabled="disabled" size="8"></td>
-						<th class="read thfs_zt">车号</th><td class="read thfs_zt"><input name="ch" type="text" disabled="disabled" size="8"></td>
-						<th class="read thfs_sh" style="display:none">送货地址</th><td class="read thfs_sh" style="display:none"><input name="shdz" type="text" disabled="disabled" size="20"></td>
-					</tr>
-					<tr>
-						<th>备注</th><td colspan="7"><input name="jxc_kfck_bz" style="width:90%"></td>
-					</tr>
-				</table>
+			<div class="tinfo" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
+				<div class="form_line">
+					<span class="read form_label">分户</span>
+					<span class="read"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></span>
+					<span class="read form_label">时间</span>
+					<span id="createDate" class="read"></span>
+					<span class="read form_label">单据号</span>
+					<span id="kfckLsh" class="read"></span>
+				</div>
+				<div class="form_line">
+					<span class="read form_label">客户编号</span>
+					<span><input name="khbh" class="easyui-validatebox"
+						data-options="validType:['mustLength[8]','integer']" class="read" size="8" disabled="disabled"></span>
+					<span class="read form_label">供应商名称</span>
+					<span class="read"><input name="khmc" disabled="disabled" size="20"></span>
+					<span class="read jxc_kfck_isFh form_label" style="display:none">分户</span>
+					<span class="read jxc_kfck_isFh" style="display:none"><input id="jxc_kfck_fhId" name="fhId" disabled="disabled" size="8"></span>
+				</div>
+				<div class="form_line">
+					<span class="read form_label">仓库</span>
+					<span class="read"><input id="jxc_kfck_ckId" name="ckId" disabled="disabled" size="8"></span>
+					<span class="read form_label">自提<input type="radio" name="thfs" id='thfs_zt' disabled="disabled"></span>
+					<span class="read form_label">送货<input type="radio" name="thfs" id="thfs_sh" disabled="disabled"></span>
+					<span class="read thfs_zt form_label">提货人</span>
+					<span class="read thfs_zt"><input name="thr" type="text" disabled="disabled" size="8"></span>
+					<span class="read thfs_zt form_label">车号</span>
+					<span class="read thfs_zt"><input name="ch" type="text" disabled="disabled" size="8"></span>
+					<span class="read thfs_sh form_label" style="display:none">送货地址</span>
+					<span class="read thfs_sh" style="display:none"><input name="shdz" type="text" disabled="disabled" size="20"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">备注</span>
+					<span><input name="jxc_kfck_bz" style="width:90%"></span>
+				</div>
 				<input name="xsthDetIds" type="hidden">
 				<input name="xskplsh" type="hidden">
 			</div>
