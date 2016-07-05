@@ -542,21 +542,19 @@ function searchYwrkInYwbt(){
 <div id="jxc_ywbt_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_ywbt_layout' style="height:100%;width=100%">
-			<div class="tinfo" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:115px">		
-				<div class="form_line">
-					<span class="read form_label">时间</span>
-					<span id="createDate" class="read"></span>
-					<span class="read form_label">单据号</span>
-					<span id="ywbtLsh" class="read"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">业务入库流水号</span>
-					<span><input name="ywrklsh" disabled="disabled" size="12"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">备注</span>
-					<span><input name="jxc_ywbt_bz" style="width:90%"></span>
-				</div>
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:105px">		
+				<table class="tinfo">
+					<tr>
+						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
+						<th class="read">单据号</th><td><div id="ywbtLsh" class="read"></div></td>
+					</tr>
+					<tr>
+						<th>业务入库流水号</th><td><input name="ywrklsh" disabled="disabled" size="12"></td>
+					</tr>
+					<tr>
+						<th>备注</th><td><input name="jxc_ywbt_bz" size="100" ></td>
+					</tr>
+				</table>
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_ywbt_spdg'></table>

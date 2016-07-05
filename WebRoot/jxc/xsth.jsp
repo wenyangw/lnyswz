@@ -1416,7 +1416,7 @@ function updateFooter(){
 	xsth_spdg.datagrid('reloadFooter', [{
 		spmc : spmc_footer,
 		spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
-		cdwsl : hjsl.toFixed(LENGTH_SL),
+		cdwsl : isNaN(hjsl) ? '' : hjsl.toFixed(LENGTH_SL),
 		}]
 	);
 	if($('input#thfs_sh').is(':checked') && (xsth_did == '05' || xsth_did == '08')){

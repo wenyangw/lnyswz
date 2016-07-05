@@ -605,7 +605,7 @@ $(function(){
 	$('input[name=isZs]').click(function(){
 		if($(this).is(':checked')){
  			jxc_ywrk_ckCombo.combobox('setValue', jxc.getZfCk(ywrk_did));
-			$('.isZs').css('display','inline');
+			$('.isZs').css('display','table-cell');
 		}else{
 			jxc_ywrk_ckCombo.combobox('selectedIndex', 0);
 			$('.isZs').css('display','none');
@@ -640,9 +640,6 @@ function init(){
 	//收回商品库存信息
 	jxc.hideKc('#jxc_ywrk_layout');
 	jxc.spInfo($('#jxc_ywrk_layout'), '');
-	
-	$('.isZs').css('display','none');
-	$('.isDep').css('display','none');
 
 	jxc_ywrk_ckCombo.combobox('selectedIndex', 0);
 	jxc_ywrk_rklxCombo.combobox('selectedIndex', 0);
@@ -672,7 +669,7 @@ function init(){
 
 function depChange(bmbh){
 	if($('input[name=isDep]').is(':checked')){
-		$('.isDep').css('display','inline');
+		$('.isDep').css('display','table-cell');
 		//初始化部门列表
 		if(jxc_ywrk_depCombo == undefined){
 			jxc_ywrk_depCombo = lnyw.initCombo($("#jxc_ywrk_depId"), 'id', 'depName', '${pageContext.request.contextPath}/admin/departmentAction!listDeps.action');
@@ -1511,36 +1508,28 @@ function searchXskpInYwrk(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_ywrk_layout' style="height:100%;width=100%">
-			<div class="tinfo" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:160px">		
-				<div class="form_line">
-					<span class="form_label">直送<input type="checkbox" name="isZs"></span>
-					<span class="form_label">内部<input type="checkbox" name="isDep"></span>
-					<span class="form_label">入库类型</span>
-					<span><input id="jxc_ywrk_rklxId" name="rklxId" type="text" size="8"></span>
-					<span class="read form_label">时间</span>
-					<span id="createDate" class="read"></span>
-					<span class="read form_label">单据号</span>
-					<span id="ywrkLsh" class="read"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">供应商编码</span>
-					<span><input name="gysbh" class="easyui-validatebox"
-						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></span>
-					<span class="read form_label">供应商名称</span>
-					<span><input name="gysmc" readonly="readonly" size="40"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">仓库</span>
-					<span><input id="jxc_ywrk_ckId" name="ckId" type="text" size="8"></span>
-					<span class="isZs form_label" style="display:none">送货地址</span>
-					<span class="isZs" style="display:none"><input name="shdz" type="text" size="20"></span>
-					<span class="isDep form_label" style="display:none">部门</span>
-					<span class="isDep" style="display:none"><input id="jxc_ywrk_depId" name="depId" type="text" size="8"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">备注</span>
-					<span><input name="jxc_ywrk_bz" style="width:90%"></span>
-				</div>
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
+				<table class="tinfo">
+					<tr>
+						<td colspan="2">直送<input type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;&nbsp;内部<input type="checkbox" name="isDep"></td>
+						<th>入库类型</th><td><input id="jxc_ywrk_rklxId" name="rklxId" type="text" size="8"></td>
+						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
+						<th class="read">单据号</th><td><div id="ywrkLsh" class="read"></div></td>
+					</tr>
+					<tr>
+						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
+							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+						<th class="read">供应商名称</th><td colspan="3"><input name="gysmc" readonly="readonly" size="50"></td>
+					</tr>
+					<tr>
+						<th>仓库</th><td><input id="jxc_ywrk_ckId" name="ckId" type="text" size="8"></td>
+						<th class="isZs" style="display:none">送货地址</th><td class="isZs" style="display:none"><input name="shdz" type="text" size="8"></td>
+						<th class="isDep" style="display:none">部门</th><td class="isDep" style="display:none"><input id="jxc_ywrk_depId" name="depId" type="text" size="8"></td>
+					</tr>
+					<tr>
+						<th>备注</th><td colspan="7"><input name="jxc_ywrk_bz" style="width:90%"></td>
+					</tr>
+				</table>
 				<input name="xskplsh" type="hidden">
 				<input name="ywrklshs" type="hidden">
 				<input name="kfrklshs" type="hidden">

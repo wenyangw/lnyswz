@@ -1939,38 +1939,32 @@ function createCgjhFromXsth(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_cgjh_layout' style="height:100%;width=100%">
-			<div class="tinfo" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
-				<div class="form_line">
-					<span class="form_label">合同<input type="checkbox" name="isHt" id="isHt"></span>
-					<span class="form_label">直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs"></span>
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
+				<table class="tinfo">
+					<tr>
+						<td colspan="4">合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs"></td>
 <!-- 						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" /> -->
-					<span class="read form_label">时间</span>
-					<span id="createDate" class="read"></span>
-					<span class="read form_label">单据号</span>
-					<span id="cgjhLsh" class="read"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">供应商编码</span>
-					<span><input name="gysbh" class="easyui-validatebox"
-						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></span>
-					<span class="read form_label">供应商名称</span>
-					<span class="read"><input name="gysmc" readonly="readonly" size="20"></span>
+						<th class="read"></th><td><div id="createDate" class="read"></div></td>
+						<th class="read">单据号</th><td><div id="cgjhLsh" class="read"></div></td>
+					</tr>
+					<tr>
+						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
+							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+						<th class="read">供应商名称</th><td class="read"><input name="gysmc" readonly="readonly" size="50"></td>
 <!-- 						<th>业务员</th><td><input name="ywyId"></td> -->
-					<span class="form_label">结算方式</span>
-					<span><input id="jxc_cgjh_jsfsId" name="jsfsId"></span>
-					<span class="form_label">仓库</span>
-					<span><input id="jxc_cgjh_ckId" name="ckId"></span>
-				</div>
+						<th>结算方式</th><td><input id="jxc_cgjh_jsfsId" name="jsfsId" size="8"></td>
+						<th>仓库</th><td><input id="jxc_cgjh_ckId" name="ckId" size="8"></td>
+					</tr>
 <!-- 					<tr> -->
 <!-- 						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97" size="8"></td> -->
 <!-- 						<th>送货地址</th><td><input name="shdz" onkeyup="addressLoad()" size="50"></td> -->
 <!-- 						<th>联系人</th><td><input name="lxr" size="20"></td> -->
 <!-- 						----<th>需求时间</th><td><input name="xqsj"></td> -->
 <!-- 					</tr> -->
-				<div class="form_line">
-					<span class="form_label">备注</span>
-					<span><input name="jxc_cgjh_bz" style="width:90%"></span>
-				</div>
+					<tr>
+						<th>备注</th><td colspan="7"><input name="jxc_cgjh_bz" style="width:90%"></td>
+					</tr>
+				</table>
 				<input name="cgxqDetIds" type="hidden">
 				<input name="cgjh_xsthDetIds" type="hidden">
 			</div>

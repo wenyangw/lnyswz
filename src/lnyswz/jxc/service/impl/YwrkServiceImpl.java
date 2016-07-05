@@ -684,13 +684,19 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid toXsth(Ywrk ywrk){
 		String ywrkDetIds= ywrk.getYwrkDetIds();
-		String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
+		//String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
+		
+		String sql = "select det.spbh, zdwsl, thsl thsl, cdwsl, cthsl, isnull(xsdj, 0) xsdj"
+				+ " from v_ywrk det left join t_sp_det sp on sp.depId = det.bmbh and sp.spbh = det.spbh"
+				+ " where zdwsl <> thsl";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
-			sql += " and id in (" + ywrkDetIds + ")";
+			sql += " and det.id in (" + ywrkDetIds + ")";
 		}
 		//sql += " group by spbh";
+		
+		System.out.println(sql);
 		
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		
@@ -702,6 +708,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
 			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
 			BigDecimal cdwthsl = new BigDecimal(os[4].toString());
+			BigDecimal xsdj = new BigDecimal(os[5].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -719,6 +726,10 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			if(sp.getCjldw() != null){
 				xd.setCdwsl(cdwrksl);
 				//xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+			}
+			if(xsdj.compareTo(BigDecimal.ZERO) != 0){
+				xd.setZdwdj(xsdj.multiply(new BigDecimal(1.17)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				xd.setSpje(xd.getZdwdj().multiply(xd.getZdwsl()).setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
 			
 			nl.add(xd);

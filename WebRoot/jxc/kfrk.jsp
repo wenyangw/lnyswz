@@ -1119,34 +1119,28 @@ function searchYwrkInKfrk(){
 	
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_kfrk_layout' style="height:100%;width=100%">
-			<div class="tinfo" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
-				<div class="form_line">
-					<span class="read form_label">时间</span>
-					<span id="createDate" class="read"></span>
-					<span class="read form_label">单据号</span>
-					<span id="kfrkLsh" class="read"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">供应商编码</span>
-					<span><input name="gysbh" class="easyui-validatebox"
-						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></span>
-					<span class="read form_label">供应商名称</span>
-					<span><input name="gysmc" readonly="readonly" size="20"></span>
-					<span class="form_label">仓库</span>
-					<span><input id="jxc_kfrk_ckId" name="ckId" size="8"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">送货人</span>
-					<span><input name="shry" type="text" size="8"></span>
-					<span class="form_label">证件号</span>
-					<span><input name="zjh" type="text" size="20"></span>
-					<span class="form_label">车号</span>
-					<span><input name="ch" type="text" size="8"></span>
-				</div>
-				<div class="form_line">
-					<span class="form_label">备注</span>
-					<span><input name="jxc_kfrk_bz" style="width:90%"></span>
-				</div>
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
+				<table class="tinfo">
+					<tr>
+						<td colspan="4"></td>
+						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
+						<th class="read">单据号</th><td><div id="kfrkLsh" class="read"></div></td>
+					</tr>
+					<tr>
+						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
+							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+						<th class="read">供应商名称</th><td><input name="gysmc" readonly="readonly" size="50"></td>
+						<th>仓库</th><td><input id="jxc_kfrk_ckId" name="ckId" size="8"></td>
+					</tr>
+					<tr>
+						<th>送货人</th><td><input name="shry" type="text" size="8"></td>
+						<th>证件号</th><td><input name="zjh" type="text" size="40"></td>
+						<th>车号</th><td><input name="ch" type="text" size="8"></td>
+					</tr>
+					<tr>
+						<th>备注</th><td colspan="7"><input name="jxc_kfrk_bz" style="width:90%"></td>
+					</tr>
+				</table>
 				<input name="cgjhDetIds" type="hidden">
 				<input name="ywrklsh" type="hidden">
 			</div>
