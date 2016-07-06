@@ -68,6 +68,14 @@ $(function(){
 	        {field:'khmc',width:250,title:'客户名称'},
 	        {field:'ywyId',title:'业务员id', hidden:true},
 	        {field:'ywyName',width:60,title:'业务员'},
+	        {field:'isDef',width:70,title:'关联业务员',
+	        	formatter : function(value, rowData, rowIndex) {
+		        	if(value == '1'){
+		        		return '是';
+		        	}else{
+		        		return '';
+		        	}				
+				}},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
 	        {field:'khlxmc',width:55,title:'客户类型'},
 	        {field:'sxzq',title:'授信账期(天)',
@@ -239,7 +247,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 420,
+			height : 500,
 			buttons : [ {
 				text : '确定',
 				handler : function() {

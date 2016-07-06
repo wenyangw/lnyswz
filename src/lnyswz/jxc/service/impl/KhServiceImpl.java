@@ -416,7 +416,7 @@ public class KhServiceImpl implements KhServiceI {
 		Kh k = new Kh();
 		BeanUtils.copyProperties(t, k);
 
-		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh order by t.ywyId";
+		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh order by t.isDef desc, t.ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("depId", depId);
 		params.put("khbh", khbh);

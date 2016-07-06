@@ -21,6 +21,10 @@
 			<td><input name="ywyId" style="width:160px;"></td>
 		</tr>
 		<tr>
+			<th><label for="isDef">关联业务员</label></th>
+			<td><input name="isDef" type="checkbox" value="1"></td>
+ 		</tr>
+		<tr>
 			<th><label for="khlxId">客户类型</label></th>
 			<td><input name="khlxId" style="width:160px;"></td>
 		</tr>

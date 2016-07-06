@@ -173,6 +173,40 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setRealName(yTXshk.getYwymc());
 		
 		if(yTXshk.getIsLs().equals("0")){
+			if(yTXshk.getIsYf().equals("1")){
+				BigDecimal hkje = yTXshk.getHkje();
+				//当前应收余额
+				BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(yTXshk.getBmbh(), yTXshk.getKhbh(), yTXshk.getYwyId(), null, yszzDao);
+				if(ysje.compareTo(BigDecimal.ZERO) < 0){
+					if(hkje.add(ysje).compareTo(BigDecimal.ZERO) > 0){
+						hkje = hkje.add(ysje);
+					}else{
+						hkje = BigDecimal.ZERO;
+					}
+				}
+				while(hkje.compareTo(BigDecimal.ZERO) > 0){
+					String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.isCj = '0' and t.yfje <> 0 order by t.createTime desc";
+					Map<String, Object> params = new HashMap<String, Object>();
+					params.put("bmbh", yTXshk.getBmbh());
+					params.put("khbh", yTXshk.getKhbh());
+					params.put("ywyId", yTXshk.getYwyId());
+					
+					TXskp tXskp = xskpDao.get(hql, params);
+					if(tXskp == null){
+						break;
+					}
+					if(hkje.compareTo(tXskp.getYfje()) >= 0){
+						hkje = hkje.subtract(tXskp.getYfje());
+						tXskp.setHkje(tXskp.getHkje().subtract(tXskp.getYfje()));
+						tXskp.setYfje(BigDecimal.ZERO);
+					}else{
+						hkje = BigDecimal.ZERO;
+						tXskp.setHkje(tXskp.getHkje().subtract(hkje));
+						tXskp.setYfje(tXskp.getYfje().subtract(hkje));
+					}
+				}
+			}
+			
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 			
@@ -203,6 +237,7 @@ public class XshkServiceImpl implements XshkServiceI {
 				//it.remove();
 	        }  
 			
+	        
 			//yTXshk.setHkje(null);
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
