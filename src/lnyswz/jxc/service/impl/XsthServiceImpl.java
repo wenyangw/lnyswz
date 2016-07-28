@@ -865,7 +865,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 				hql += ")";
 			}else{
-				hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
+				hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
 			}
 			
@@ -1070,8 +1070,18 @@ public class XsthServiceImpl implements XsthServiceI {
 			if(t.getTXskps() != null && t.getTXskps().size() > 0){
 				c.setIsKp("1");
 			}
-
-//			if(t.getTKfcks() != null){
+			
+			String sql = "select jhrk.ywrklsh from v_xsth_det thDet"
+					+ "	left join t_cgjh_det jhDet on thDet.cgjhlsh = jhDet.cgjhlsh and thDet.spbh = jhDet.spbh"
+					+ " left join t_cgjh_ywrk jhrk on jhDet.id = jhrk.cgjhdetId"
+					+ " where thDet.id = ?";
+			Map<String, Object> paramsSql = new HashMap<String, Object>();
+			paramsSql.put("0", t.getId());
+			
+			Object y = detDao.getBySQL(sql, paramsSql);
+			
+			
+			//			if(t.getTKfcks() != null){
 //				//c.setKfcklshs(t.getTKfcks().getKfcklsh());
 //				if("1".equals(xsth.getIsKp())){
 //					c.setZdwytsl(getYksl(t.getTXsth().getXsthlsh(), t.getSpbh()));
@@ -1079,7 +1089,13 @@ public class XsthServiceImpl implements XsthServiceI {
 //					c.setZdwytsl(getYtsl(t.getTXsth().getXsthlsh(), t.getSpbh()));
 //				}
 //			}
-			nl.add(c);
+			if(xsth.getFromOther().equals("fromXskp") && tXsth.getIsZs().equals("1")){
+				if(y != null){
+					nl.add(c);
+				}
+			}else{
+				nl.add(c);
+			}
 		}
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
@@ -1574,11 +1590,6 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setYwrkDetDao(BaseDaoI<TYwrkDet> ywrkDetDao) {
 		this.ywrkDetDao = ywrkDetDao;
-	}
-
-	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired

@@ -36,6 +36,13 @@ public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 	}
 	
 	/**
+	 * 销售结构分析
+	 */
+	public void getXsjgfx(){
+		writeJson(chartService.getXsjgfx(chart));
+	}
+	
+	/**
 	 * 库存对比
 	 */
 	public void getKctj(){

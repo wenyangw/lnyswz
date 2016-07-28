@@ -563,6 +563,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				}
 			}
 			
+			//显示对应的直送提货单流水号
+			if(t.getTCgjh().getTXsths() != null && t.getTCgjh().getTXsths().size() > 0){
+				c.setXsthlsh(t.getTCgjh().getTXsths().iterator().next().getTXsth().getXsthlsh());
+			}
+			
 			nl.add(c);
 		}
 		datagrid.setTotal(detDao.count(countHql, params));

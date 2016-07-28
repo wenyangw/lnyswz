@@ -24,6 +24,8 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
+import lnyswz.jxc.bean.Kfrk;
+import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.bean.Ywrk;
@@ -31,6 +33,7 @@ import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TKfrk;
+import lnyswz.jxc.model.TKfrkDet;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXskp;
@@ -529,6 +532,45 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		map.put("ckmc", tYwrk.getCkmc());
 		map.put("printName", ywrk.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid printKfrk(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+				
+		List<KfrkDet> nl = new ArrayList<KfrkDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
+			KfrkDet kfrkDet = new KfrkDet();
+			BeanUtils.copyProperties(yd, kfrkDet);
+			nl.add(kfrkDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfrkDet());
+			}
+		}
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   入   库   单");
+		map.put("kfrklsh", ywrk.getYwrklsh());
+		map.put("bmmc", tYwrk.getBmmc());
+		map.put("printName", ywrk.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tYwrk.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("gysbh", tYwrk.getGysbh());
+		map.put("gysmc", tYwrk.getGysmc());
+		map.put("ckmc", tYwrk.getCkmc());
+		map.put("hj", hj);
+		map.put("bz", tYwrk.getBz());
+		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;

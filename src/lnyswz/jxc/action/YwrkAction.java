@@ -127,6 +127,13 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		DataGrid dg = ywrkService.printYwrk(ywrk);
 		Export.print(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()));
 	}
+	
+	public void printKfrk() {
+		User user = (User) session.get("user");
+		ywrk.setCreateName(user.getRealName());
+		DataGrid dg = ywrkService.printKfrk(ywrk);
+		Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
+	}
 
 	@Override
 	public Ywrk getModel() {

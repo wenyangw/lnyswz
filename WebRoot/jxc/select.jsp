@@ -35,6 +35,7 @@ $(function(){
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
 	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
+	//$('#jxc_select_layout').attr('id', 'layout_' + query);
 // 	$('#select_dep').attr('id','select_dep_'+query);
 // 	$('#div_select').attr('id','div_select_'+query);
 // 	$("input[name=depName]").attr('name','dep_'+query);

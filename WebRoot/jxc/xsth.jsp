@@ -1802,7 +1802,7 @@ function printXsht(){
  	if (selected != undefined) {
  		if(selected.isCancel == '0'){
  			if(selected.isKp == '0'){
- 				if(selected.isZs == '1'){
+ 				//if(selected.isZs == '1'){
  					if(selected.needAudit == selected.isAudit){
 					 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
@@ -1813,9 +1813,9 @@ function printXsht(){
  					}else{
  						$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
  					}
- 	 			}else{
- 	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
- 	 	 		}
+//  	 			}else{
+//  	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
+//  	 	 		}
 
  			}else{
  	 			$.messager.alert('警告', '选择的记录已开票，请重新选择！',  'warning');
@@ -2265,7 +2265,7 @@ function searchYwrkInXsth(){
 
 <div id="jxc_xsth_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsth" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注、书名：<input type="text" name="searchXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsth();">查询</a>
 </div>
 <div id="jxc_xsth_xskpTb" style="padding:3px;height:auto">

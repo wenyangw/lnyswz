@@ -68,9 +68,28 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		return getChartByMonth(chart, sql);
 	}
+	
+	@Override
+	public Chart getXsjgfx(Chart chart) {
+		String sql = "";
+		if(chart.getField().equals("xsje")){
+			sql = "select jzsj, round(xsje / 10000, 2)";
+		}else if(chart.getField().equals("xsml")){
+			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
+		}
+		if(chart.getIncludeNb().equals("1")){
+			sql += " from v_xstj";
+		}else{
+			sql += " from v_xstj_nonb";
+		}
+		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		
+		return getChartByMonth(chart, sql);
+	}
 
 	private Chart getChartByMonth(Chart chart, String sql) {
 		Chart c = new Chart();
+		//三年数据
 		int year = 3;
 		String[] years = new String[year];
 		for(int y = 0; y < year; y++){

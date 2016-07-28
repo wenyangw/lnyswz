@@ -60,7 +60,7 @@ public class Xsth {
 	private String isAudit;
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
-	
+		
 	private int id;
 	private String spbh;
 	private String spmc;
@@ -88,6 +88,7 @@ public class Xsth {
 	
 	private String xskplsh;
 	private String cgjhlsh;
+	private String ywrklsh;
 	private String xsthDetIds;
 	private String xskpDetIds;
 	
@@ -594,6 +595,12 @@ public class Xsth {
 	}
 	public void setCgjhlsh(String cgjhlsh) {
 		this.cgjhlsh = cgjhlsh;
+	}
+	public String getYwrklsh() {
+		return ywrklsh;
+	}
+	public void setYwrklsh(String ywrklsh) {
+		this.ywrklsh = ywrklsh;
 	}
 	public String getXsthDetIds() {
 		return xsthDetIds;

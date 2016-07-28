@@ -137,11 +137,12 @@ public class YwzzServiceImpl implements YwzzServiceI {
 	}
 	
 	public static Object getZzl(String bmbh, String spbh, BaseDaoI<TYwzz> baseDao){
-		String sql = "select slzzl from v_ywzzl where bmbh = ? and spbh = ? and jzsj = ? ";
+		//String sql = "select slzzl from v_ywzzl where bmbh = ? and spbh = ? and jzsj = ? ";
+		String sql = "select dbo.getKczzl(?, ?, ?)";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
-		params.put("1", spbh);
-		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
+		params.put("1", DateUtil.getCurrentDateString("yyyyMM"));
+		params.put("2", spbh);
 				
 		return baseDao.getBySQL(sql, params);
 	}
