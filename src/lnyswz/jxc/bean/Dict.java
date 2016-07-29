@@ -37,6 +37,8 @@ public class Dict {
 	private String isDepName;
 	private String orderByTree;
 	private String isShow;
+	private String treeShow;
+	private String treeSql;
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -295,6 +297,22 @@ public class Dict {
 
 	public void setIsShow(String isShow) {
 		this.isShow = isShow;
+	}
+
+	public String getTreeShow() {
+		return treeShow;
+	}
+
+	public void setTreeShow(String treeShow) {
+		this.treeShow = treeShow;
+	}
+
+	public String getTreeSql() {
+		return treeSql;
+	}
+
+	public void setTreeSql(String treeSql) {
+		this.treeSql = treeSql;
 	}
 
 }

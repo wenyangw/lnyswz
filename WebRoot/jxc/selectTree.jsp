@@ -62,6 +62,7 @@ $(function(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		cache: false,
 		data : {
 			selectType :query,
 			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
@@ -95,6 +96,12 @@ $(function(){
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
 					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';				
+				}else if(this.specials=="sjzsj"){
+					star += '<td align="right">起始月份</td><td>&#12288;<input id="a_'+this.ename+'"'; 
+					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
+					star += '</tr><tr><th></th><td align="right">结束月份</td>';
+					star += '<td>&#12288;<input id="c_'+this.ename+'"';
+					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 				}else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
@@ -186,7 +193,9 @@ function selectClick(){
 		eval("did=did_"+query);
 
 	}
-	var conditions=[];	
+	var conditions=[];
+	var execHql=[];	
+	var treeExec=[];	
 	//遍历input 进行hql拼写
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
@@ -216,39 +225,56 @@ function selectClick(){
 			hql +=$(this).attr('name');
 			switch($('input[name=ope_'+$(this).attr('name')+']').val()){
 					case '1':
-						hql +=' like  \'%'+$(this).val()+'%\'';					
+						hql +=' like  \'%'+$(this).val()+'%\'';
+						execHql.push( "like");
+						execHql.push("%"+$(this).val()+"%");
 						break;
 					case '2':
 						hql +=' like  \''+$(this).val()+'%\'';
+						execHql.push( "like");
+						execHql.push($(this).val()+"%");
 						break;
 					case '3':
-						hql +=' like  \'%'+$(this).val()+'\'';		
+						hql +=' like  \'%'+$(this).val()+'\'';
+						execHql.push( "like");
+						execHql.push("%"+$(this).val());
 						break;
 					default:
 						if($(this).attr('id')==("a_"+$(this).attr('name'))){					
 							hql +=' >= ';						
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( ">=");
+							execHql.push($(this).val());
 						}else if($(this).attr('id')==("b_"+$(this).attr('name'))){
 							hql +=' <= ';
 							hql +=' \''+moment($(this).val()).add('days', 1).format('YYYY-MM-DD')+'\'';
+							execHql.push( "<=");
+							execHql.push(moment($(this).val()).add('days', 1).format('YYYY-MM-DD'));
 						}else if($(this).attr('id')==("c_"+$(this).attr('name'))){
 							hql +=' <= ';
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( "<=");
+							execHql.push($(this).val());
 						}else{
 							hql +=' '+$('input[name=ope_'+$(this).attr('name')+']').val();
 							hql +=' \''+$(this).val()+'\'';
+							execHql.push( $('input[name=ope_'+$(this).attr('name')+']').val());
+							execHql.push($(this).val());
 						}
 						break;
 			}
 			conditions.push(hql);	
-		 }
+		 }else{
+			execHql.push("<>");
+			execHql.push("");
+		}
 		if($(this).attr('id')!=undefined){
 			if($(this).attr('id').indexOf('select_')==0){
 				hql='';
 	 			hql +=$(this).attr('id').replace('select_','') +' = ';
 	 			hql +=('\''+jxc_select_fhCombo.combobox('getValue')+'\'').trim();
-	 			conditions.push(hql);	
-					 		}
+	 			
+				}
 		}		
 	});
 
@@ -268,6 +294,8 @@ function selectClick(){
 		var allTitle=[];
 		var allFields=[];
 		var treeFields=[];
+		var treeShow=[];
+		var treeSql=[];
 		var i=0;
 		$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
@@ -283,12 +311,19 @@ function selectClick(){
 							var treeTitle=Object.create(Object.prototype);
 							var elseTitle=Object.create(Object.prototype);
 							var frozen=Object.create(Object.prototype);
-							if(this.tree == '1'){
-								i++;
+							if(this.tree == '1'){							
 								treeFields.push(this.ename);
 								treeTitle["field"]=this.ename;
 								treeTitle["title"]=this.cname;
 								title.push(treeTitle);
+								if(this.treeShow != '1'){
+									treeShow.push(this.ename);
+								}
+								if(this.treeSql == '1'){
+									treeSql.push(i);
+									treeExec.push("");								
+								}
+								i++;
 							}else{
 								if(this.frozen=="1"){      				
 									frozen["field"]=this.ename;
@@ -301,10 +336,11 @@ function selectClick(){
 		      					}
 								
 							}
-						
 						});
 			}											
 		});	
+	
+		
 		$.ajax({
 			url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonTree.action',
 			async: false,
@@ -312,6 +348,8 @@ function selectClick(){
 			data : {
 					hqls :conditions.join(" and "),
 					query:query,
+					exec:execHql.join(" , "),
+					treeExec:treeExec.join(" , "),
 					//拼写显示名称
 					con  :treeFields.join(','),
 					did  :did,	
@@ -322,32 +360,30 @@ function selectClick(){
 						if(data.success){
 							var datas=[];
 							//遍历后台传回查询的数据
-							$.each(data.obj.rows,function(){
+							$.each(data.obj.rows,function(){	
 							//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 								var onlyData=Object.create(Object.prototype);				
-// 								for( var i=0;i<this.length;i++){									
-// 									onlyData[treeFields[i]]=this[i];	
-// 								}
 								for(var m=0;m<i;m++){
-								onlyData[treeFields[m]]=this[m];
-								}
+									onlyData[treeFields[m]]=this[m];
+								}			
 								datas.push(onlyData);
 							});	
-							
+
 							$('#str_' + query).datagrid({
 								data:datas,
-								loadMsg:'',
 						 		fit : true,
+								loadMsg:"加载数据中，请稍后",  
 						 	    border : false,
 						 	    singleSelect : true,
 						 	    fitColumns: false,
 						 	    pagePosition : 'bottom',	
 								columns:[title],
 								onSelect:function(){
+									var treeSelectExec=[];	
 									//根据tree进行筛选
 									query = lnyw.tab_options().query;
 									var rows = $('#str_' + query).datagrid('getSelections');
-									var title=[];	
+									var title=[];									
 									$.ajax({
 										url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 										async: false,
@@ -355,7 +391,8 @@ function selectClick(){
 												selectType :query,
 												},
 										dataType : 'json',
-										success : function(data) {												
+										success : function(data) {		
+						
 													$.each(data,function(){
 														var treeTitle=Object.create(Object.prototype);
 														if(this.tree == '1'){
@@ -368,7 +405,13 @@ function selectClick(){
 									});
 									var hqlTree="";
 									treeHql="";
-									if(rows[0][title[1].field] == null){							
+									if(treeSql.length > 0){
+											$.each(treeSql,function(){							
+												treeSelectExec.push(rows[0][treeFields[this]]);
+											});									
+									}			
+									if(rows[0][title[1].field] == null){		
+										
 										 hqlTree = 'and '+title[0].field+' is '+rows[0][title[0].field];
 // 										 treeHql +=hqlTree;
 									}else{										
@@ -377,27 +420,32 @@ function selectClick(){
 									}
 // 									eval("hqlTree += hql_"+query);
 
-									spbh= rows[0][title[0].field];
-					                showDatagrid(conditions.join(" and ")+ hqlTree,allFields,allTitle);
+// 									spbh= rows[0][title[0].field];
+					                showDatagrid(conditions.join(" and ")+ hqlTree,allFields,allTitle,execHql.join(" , "),treeSelectExec.join(" , "));
 					            
 				                }					
 							});	
-							if(datas.length>0){
+							var treeFirst=[];
+							hide('1',treeShow);   //隐藏tree不显示的列
+							if(datas.length>0){	
 									var hqlNews="";
 									hqlNews=" and "+treeFields[0];
+									if(treeSql.length > 0){
+										$.each(treeSql,function(){							
+											treeFirst.push(datas[0][treeFields[this]]);
+										});									
+									}
 									if(datas[0][treeFields[0]]==null){
 										hqlNews += " is "+datas[0][treeFields[0]];
 									}else{
 										hqlNews += "= '"+datas[0][treeFields[0]]+"'";
 									}
-										
-									
 // 									treeHql="";
 // 									treeHql +=hqlNews;
 // 									eval("hqlNews += hql_"+query);
 // 									hqlNews +=conditions.join(" and ");
-									spbh= datas[0][treeFields[0]];
-					                showDatagrid(conditions.join(" and ")+ hqlNews,allFields,allTitle);
+// 									spbh= datas[0][treeFields[0]];
+					                showDatagrid(conditions.join(" and ")+ hqlNews,allFields,allTitle,execHql.join(" , "),treeFirst.join(" , "));
 					             
 					                
 							}else{
@@ -415,12 +463,13 @@ function selectClick(){
 	}	
 }
 //显示datagrid数据
-function showDatagrid(hqls,allFields,allTitle){
+function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 	query = lnyw.tab_options().query;
 // 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
 	treeHql="";
 	treeHql +=hqls;
+	
 	$.ajax({
 		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		async: false,
@@ -428,7 +477,8 @@ function showDatagrid(hqls,allFields,allTitle){
 		data : {
 				hqls :hqls,
 				query:query,
-
+				exec:exec,
+				treeExec:treeExec,
 				//拼写显示名称
 				con  :allFields.join(','),
 				did  :did,	
@@ -438,15 +488,15 @@ function showDatagrid(hqls,allFields,allTitle){
 				//判断后台查询是否成功
 				if(data.success){
 					var datas=[];
-					
 					//遍历后台传回查询的数据
 					sqls=data.obj.obj;
 					$.each(data.obj.rows,function(){
 					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 						var onlyData=Object.create(Object.prototype);
-						for( var i=0;i<this.length;i++){
+						
+						for( var i=0;i<this.length-1;i++){
 						var allF=allFields[i].replace('(','abc').replace(')','xyz').replace(',','fgh').replace("'","mno").replace("'","mno");									
-						onlyData[allF]=this[i];	
+						onlyData[allF]=this[i];							
 						}	
 						datas.push(onlyData);						
 					});	
@@ -560,6 +610,19 @@ function showDatagrid(hqls,allFields,allTitle){
 // 	});
 // }
 
+function hide(isTree,data){
+	$.each(data,function(){
+		if(isTree == '1'){
+			$('#str_' + query).datagrid('hideColumn', this);
+		}else{
+			$('#jsd_' + query).datagrid('hideColumn', this);
+		}
+	
+		
+});
+}
+
+
 function cleanClick(){
 	var s=$('input.inputval').val('');
 	$.each(datas,function(){
@@ -666,7 +729,7 @@ $.ajax({
 		style="width: 100%; height: 100%">
 		<div id='select_treeShow_layout' style="height: 100%;">
 			<div data-options="region:'west',title:'视图',split:true"
-				style="height: 100px; width: 150px">
+				style="height: 100px; width: 350px">
 				<ul id="select_tree"></ul>
 			</div>
 			<div data-options="region:'center',title:'详细内容',split:true, fit:true"

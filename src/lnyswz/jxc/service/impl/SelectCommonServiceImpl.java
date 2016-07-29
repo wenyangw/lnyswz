@@ -32,69 +32,59 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
 		if (dicts.getGenre().equals("04")) {
-			String execHql = "execute " + dicts.getTname() + "'" + d.getDid()
-					+ "','" + d.getUserId() + "'";
-			if(d.getExec().length() > 0){
-				for (String path : d.getExec().split(",")) {
-					execHql += ",'" + path.trim() + "'";
+				String execHql = "execute " + dicts.getTname() + "'" + d.getDid()+ "','" + d.getUserId() + "'";
+				execHql = spellFor(d.getExec(),execHql);
+				String treeExec = "";
+				treeExec =spellFor(d.getTreeExec(),treeExec);
+				List<Object[]> list = selectCommonDao.findBySQL(execHql+","+d.getPage()+","+d.getRows()+",0"+treeExec);
+				if(d.getPage() == 1){
+					dg.setTotal(selectCommonDao.countBySQL(execHql+","+d.getPage()+","+d.getRows()+",1"+treeExec));
+				}else {
+					dg.setTotal((long) d.getTotal());
 				}
-			}
-			List<Object[]> list = selectCommonDao.findBySQL(execHql+","+d.getPage()+","+d.getRows()+",0");
-//			Long total =selectCommonDao.countBySQL(execHql.trim()+","+d.getPage()+","+d.getRows()+",1");
-			if(d.getPage() == 1){
-				dg.setTotal(selectCommonDao.countBySQL(execHql+","+d.getPage()+","+d.getRows()+",1"));
-			}else {
-				dg.setTotal((long) d.getTotal());
-			}
-			dg.setRows(list);
-			String exec =execHql +","+1+","+dg.getTotal()+",0";
-			dg.setObj(exec);
+	
+				dg.setRows(list);
+				String exec =execHql +","+1+","+dg.getTotal()+",0";
+				dg.setObj(exec);
 		} else {
-			String sql = "select " + d.getCon() + " from " + dicts.getTname()
-					+ "";
-			if (dicts.getIsDepName() != null) {
-				if (dicts.getIsDepName().equals("1")) {
-					condition += " where bmbh = '" + d.getDid() + "' ";
-					if (d.getHqls().trim().length() > 0) {
-						condition += " and " + d.getHqls();
-					}
-				} else {
-					if (d.getHqls().trim().length() > 0) {
-						condition += " where " + d.getHqls();
-					}
-				}
+						String sql = "select " + d.getCon() + " from " + dicts.getTname()+ "";
+						if (dicts.getIsDepName() != null) {
+							if (dicts.getIsDepName().equals("1")) {
+								condition += " where bmbh = '" + d.getDid() + "' ";
+								if (d.getHqls().trim().length() > 0) {
+									condition += " and " + d.getHqls();
+								}
+							} else {
+								if (d.getHqls().trim().length() > 0) {
+									condition += " where " + d.getHqls();
+								}
+							}
+						}			
+						sql += condition;
+						if (dicts.getInGroupBy() != null) {
+							sql += " " + dicts.getInGroupBy();			
+						}			
+						if (dicts.getIsHj() != null) {
+							if (dicts.getOutGroupBy() != null
+									&& dicts.getOutGroupBy().trim().length() > 0) {
+								sql = "select * from (" + sql;
+								sql += " " + dicts.getOutGroupBy() + " )as ab";
+								if (dicts.getSqlWhere() != null
+										&& dicts.getSqlWhere().trim().length() > 0) {
+									sql += " " + dicts.getSqlWhere();
+								}			
+							}
+						}
+						if (dicts.getOrderBy().trim().length() > 0) {
+							sql += " " + dicts.getOrderBy();
+						}
+						String totalHql = "select count(*) from " + dicts.getTname()+ condition;
+						List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),d.getRows());
+						dg.setRows(list);
+						dg.setTotal(selectCommonDao.countSQL(totalHql));
+						dg.setObj(d.getHqls());
 			}
-
-			sql += condition;
-			if (dicts.getInGroupBy() != null) {
-				sql += " " + dicts.getInGroupBy();
-
-			}
-
-			if (dicts.getIsHj() != null) {
-				if (dicts.getOutGroupBy() != null
-						&& dicts.getOutGroupBy().trim().length() > 0) {
-					sql = "select * from (" + sql;
-					sql += " " + dicts.getOutGroupBy() + " )as ab";
-					if (dicts.getSqlWhere() != null
-							&& dicts.getSqlWhere().trim().length() > 0) {
-						sql += " " + dicts.getSqlWhere();
-					}
-
-				}
-			}
-			if (dicts.getOrderBy().trim().length() > 0) {
-				sql += " " + dicts.getOrderBy();
-			}
-			String totalHql = "select count(*) from " + dicts.getTname()
-					+ condition;
-			List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
-					d.getRows());
-			dg.setRows(list);
-			dg.setTotal(selectCommonDao.countSQL(totalHql));
-			dg.setObj(d.getHqls());
-		}
-
+		
 		return dg;
 	}
 
@@ -102,9 +92,20 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonTree(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-		String dictSql = "from TDict t where t.genre = '03' and ename= '"
+		String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
+		if (dicts.getGenre().equals("04")) {
+			String execHql = "execute " + dicts.getTname() + "'" + d.getDid()
+					+ "','" + d.getUserId() + "'";
+			execHql = spellFor(d.getExec(),execHql);
+			execHql +=","+d.getPage()+","+d.getRows()+",5";
+			execHql = spellFor(d.getTreeExec(),execHql);
+			List<Object[]> list = selectCommonDao.findBySQL(execHql);
+			dg.setRows(list);
+			String exec =execHql +","+1+","+dg.getTotal()+",0";
+			dg.setObj(exec);
+		} else {
 		String sql = "select distinct  " + d.getCon() + " from "
 				+ dicts.getTname() + "";
 		if (dicts.getIsDepName() != null) {
@@ -128,6 +129,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		List<Object[]> list = selectCommonDao.findBySQL(sql);
 		dg.setRows(list);
 		dg.setObj(sql);
+		}
 		return dg;
 	}
 
@@ -194,6 +196,18 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		}
 	}
 
+public String spellFor(String exec,String sql){
+	if(exec != null && exec.length() > 0){
+		for (String path : exec.split(",")) {
+			sql += ",'" + path.trim() + "'";
+		}
+	}
+	return sql;
+	
+}
+	
+	
+	
 	@Autowired
 	public void setSelectCommonDao(BaseDaoI<Object> selectCommonDao) {
 		this.selectCommonDao = selectCommonDao;

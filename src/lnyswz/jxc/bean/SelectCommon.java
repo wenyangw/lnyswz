@@ -18,6 +18,10 @@ public class SelectCommon {
 	private String exec;
 	private int userId;
 	private int total;
+	
+	private String treeExec;
+	
+	
 	public String getSqls() {
 		return sqls;
 	}
@@ -153,5 +157,15 @@ public class SelectCommon {
 	public void setTotal(int total) {
 		this.total = total;
 	}
+
+	public String getTreeExec() {
+		return treeExec;
+	}
+
+	public void setTreeExec(String treeExec) {
+		this.treeExec = treeExec;
+	}
+
+
 
 }

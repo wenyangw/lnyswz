@@ -4,7 +4,7 @@
 	<form id="admin_dictEdit_form" method="post">
 	<table>
 		<tr>
-			<th><label for="ename">名称</label></th>
+			<th><label for="ename">英文名称</label></th>
 			<td><input name="ename" class="easyui-validatebox"
 				data-options="required:true,missingMessage:'请填写名称'"
 				style="width: 156px;"></td>
@@ -21,17 +21,17 @@
 				style="width: 156px;"></td>
 		</tr>
 		<tr>
-			<th><label for="orderNum">排序</label></th>
-			<td><input name="orderNum" class="easyui-validatebox"
-				style="width: 156px;"></td>
-		</tr>
-		<tr>
-			<th><label for="genre">类别</label></th>
+			<th><label for="genre">类型</label></th>
 			<td><input name="genre" style="width: 160px;"></td>
-		</tr>
+		</tr>	
 		<tr>
 			<th><label for="show">提示信息</label></th>
 			<td><input name="show" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for=specials>特殊种类</label></th>
+			<td><input name="specials" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>
 		<tr>
@@ -39,13 +39,10 @@
 			<td><input name="specialValues" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>
+		
 		<tr>
-			<th><label for="tree">分类</label></th>
-			<td><input type="checkbox" value="1"  name="tree"></td>
-		</tr>
-		<tr>
-			<th><label for="orderByTree">分类排序条件</label></th>
-			<td><input name="orderByTree" class="easyui-validatebox"
+			<th><label for="orderNum">排序</label></th>
+			<td><input name="orderNum" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>
 		<tr>
@@ -65,10 +62,22 @@
 			<td><input type="checkbox" value="1"  name="display"></td>
 		</tr>
 		<tr>
-			<th><label for=specials>特殊类型</label></th>
-			<td><input name="specials" class="easyui-validatebox"
-				style="width: 156px;"></td>
+			<th><label for="tree">分类</label></th>
+			<td><input type="checkbox" value="1"  name="tree"></td>
 		</tr>
+		<tr>
+			<th><label for="treeShow">分类显示</label></th>
+			<td><input type="checkbox" value="1"  name="treeShow"></td>
+		</tr>
+		<tr>
+			<th><label for="treeSql">是否分类查询</label></th>
+			<td><input type="checkbox" value="1"  name="treeSql"></td>
+		</tr>		
+		<tr>
+			<th><label for="orderByTree">分类排序条件</label></th>
+			<td><input name="orderByTree" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>	
 		<tr>
 			<th><label for="orderBy">排序条件</label></th>
 			<td><input name="orderBy" class="easyui-validatebox"
@@ -76,8 +85,8 @@
 		</tr>
 			<tr>
 			<th><label for="isHj">是否合计</label></th>
-				<td><input type="checkbox" checked=true value="01"  name="isHj"/> 
-				</td>
+			<td><input type="checkbox" checked=true value="01"  name="isHj"/> 
+			</td>
 		</tr>
 		<tr>
 			<th><label for="sqlWhere">合计筛选</label></th>

@@ -660,6 +660,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
+			//大连分公司的纸张合同使用吨为计量单位
+			if(tXsth.getBmbh().equals("08") && yd.getSpbh().startsWith("4")){
+				xsthDet.setZjldwmc(yd.getCjldwmc());
+				xsthDet.setZdwsl(yd.getCdwsl());
+				xsthDet.setZdwdj(yd.getCdwdj());
+			}
 			nl.add(xsthDet);
 		}
 		
