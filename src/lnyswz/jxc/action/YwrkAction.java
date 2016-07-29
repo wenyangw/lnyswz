@@ -57,10 +57,28 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		ywrk.setCreateName(user.getRealName());
 		Json j = new Json();
 		try {
-			j.setObj(ywrkService.save(ywrk));
-			// 添加成功
-			j.setSuccess(true);
-			j.setMsg("保存业务入库成功！");
+			boolean flag = true;
+			if(ywrk.getYwrklshs() != null && ywrk.getYwrklshs().length() > 0){
+				String[] lshs = ywrk.getYwrklshs().split(",");
+				for(String lsh : lshs){
+					ywrk.setYwrklsh(lsh);
+					Ywrk y = ywrkService.getYwrk(ywrk);
+					if(y.getIsCj().equals("1")){
+						flag = false;
+						break;
+					}
+				}
+			}
+			if(flag){
+				j.setObj(ywrkService.save(ywrk));
+				// 添加成功
+				j.setSuccess(true);
+				j.setMsg("保存业务入库成功！");
+				
+			}else{
+				j.setSuccess(false);
+				j.setMsg("该笔业务入库已转换，请不要重复提交！");
+			}
 		} catch (Exception e) {
 			j.setMsg("保存业务入库失败！");
 			e.printStackTrace();
@@ -77,11 +95,16 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		ywrk.setCjName(user.getRealName());;
 		Json j = new Json();
 		try {
-			
-			// 添加成功
-			j.setObj(ywrkService.cjYwrk(ywrk));
-			j.setSuccess(true);
-			j.setMsg("冲减业务入库单成功！");
+			Ywrk y = ywrkService.getYwrk(ywrk);
+			if(y.getIsCj().equals("1")){
+				j.setSuccess(false);
+				j.setMsg("该笔业务入库单已冲减，不要重复提交！");
+			}else{
+				// 添加成功
+				j.setObj(ywrkService.cjYwrk(ywrk));
+				j.setSuccess(true);
+				j.setMsg("冲减业务入库单成功！");
+			}
 		} catch (Exception e) {
 			j.setMsg("冲减业务入库单失败！");
 			e.printStackTrace();

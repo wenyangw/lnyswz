@@ -784,6 +784,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 	}
 	
+	@Override
+	public Ywrk getYwrk(Ywrk ywrk){
+		Ywrk y = new Ywrk();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+		BeanUtils.copyProperties(tYwrk, y);
+		return y;
+	}
+	
 	@Autowired
 	public void setYwrkDao(BaseDaoI<TYwrk> ywrkDao) {
 		this.ywrkDao = ywrkDao;
