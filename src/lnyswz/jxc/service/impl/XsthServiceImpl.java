@@ -63,6 +63,7 @@ import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
+import lnyswz.jxc.model.TZsqr;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XsthServiceI;
@@ -83,7 +84,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TYwrkDet> ywrkDetDao;
-	private BaseDaoI<TCgjh> cgjhDao;
+	private BaseDaoI<TZsqr> zsqrDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -1268,6 +1269,16 @@ public class XsthServiceImpl implements XsthServiceI {
 //			tXsthDet.setThsl(tXsthDet.getZdwsl());
 //			//tXsthDet.setZdwsl(BigDecimal.ZERO);
 //		}
+		
+		//记录每次确认的提货数量
+		TZsqr tZsqr = new TZsqr();
+		tZsqr.setXsthlsh(tXsthDet.getTXsth().getXsthlsh());
+		tZsqr.setSpbh(tXsthDet.getSpbh());
+		tZsqr.setQrsl(xsth.getThsl());
+		tZsqr.setCreateId(xsth.getCreateId());
+		tZsqr.setCreateName(xsth.getCreateName());
+		tZsqr.setCreateTime(new Date());
+		zsqrDao.save(tZsqr);
 				
 		sl = xsth.getThsl();
 		//将本次录入的数据与原数据比较，获得相差数量
@@ -1621,6 +1632,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
+	}
+
+	@Autowired
+	public void setZsqrDao(BaseDaoI<TZsqr> zsqrDao) {
+		this.zsqrDao = zsqrDao;
 	}
 
 	@Autowired
