@@ -50,7 +50,7 @@ public class ChartServiceImpl implements ChartServiceI {
 		}else{
 			sql += " from v_xstj_nonb";
 		}
-		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? and splbmc is null order by jzsj";
 		
 		return getChartByMonth(chart, sql);
 	}
@@ -73,19 +73,63 @@ public class ChartServiceImpl implements ChartServiceI {
 	public Chart getXsjgfx(Chart chart) {
 		String sql = "";
 		if(chart.getField().equals("xsje")){
-			sql = "select jzsj, round(xsje / 10000, 2)";
+			sql = "select splbmc, round(xsje / 10000, 2)";
 		}else if(chart.getField().equals("xsml")){
-			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
+			sql = "select splbmc, round((xsje - xscb) / 10000, 2)";
 		}
 		if(chart.getIncludeNb().equals("1")){
-			sql += " from v_xstj";
+			sql += " from v_xsjgfx";
 		}else{
-			sql += " from v_xstj_nonb";
+			sql += " from v_xsjgfx_nonb";
 		}
-		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		sql += " where bmbh = ? and jzsj = ? and splbmc is not null order by jzsj";
 		
-		return getChartByMonth(chart, sql);
+		return getPieByMonth(chart, sql);
 	}
+
+	
+	private Chart getPieByMonth(Chart chart, String sql) {
+		Chart c = new Chart();
+		//两年数据
+		int year = 2;
+		String[] years = new String[year];
+		for(int y = 0; y < year; y++){
+			years[y] = String.valueOf(DateUtil.getYear() - y);
+		}
+		
+		List<Serie> series = new ArrayList<Serie>();
+		for(String yy : years){
+			Serie serie = new Serie();
+			serie.setName(yy + "年");
+			
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("0", chart.getBmbh());
+			params.put("1", yy);
+			List<Object[]> lists = xskpDao.findBySQL(sql, params);
+			
+			List<Object> cate = new ArrayList<Object>();
+			List<Object> data = new ArrayList<Object>();
+			
+			if(lists != null && lists.size() > 0){
+				for(Object[] o : lists){
+					//data1.add(new BigDecimal(o[1].toString()));
+					cate.add(o[0]);
+					data.add(o[1]);
+				}
+				serie.setCate(cate);
+				serie.setData(data);
+				
+				series.add(serie);
+			}
+			
+		}
+		c.setSeries(series);
+		
+		return c;
+	}
+
+	
 
 	private Chart getChartByMonth(Chart chart, String sql) {
 		Chart c = new Chart();
@@ -107,11 +151,12 @@ public class ChartServiceImpl implements ChartServiceI {
 			Serie serie = new Serie();
 			serie.setName(yy + "年");
 			
-			List<BigDecimal> data1 = new ArrayList<BigDecimal>();
+			List<Object> data1 = new ArrayList<Object>();
 			
 			if(lists != null && lists.size() > 0){
 				for(Object[] o : lists){
-					data1.add(new BigDecimal(o[1].toString()));
+					//data1.add(new BigDecimal(o[1].toString()));
+					data1.add(o[1]);
 				}
 				serie.setData(data1);
 				series.add(serie);
@@ -119,7 +164,6 @@ public class ChartServiceImpl implements ChartServiceI {
 			
 		}
 		c.setSeries(series);
-		
 		
 		List<String> categories = new ArrayList<String>();
 		categories.add("一月");

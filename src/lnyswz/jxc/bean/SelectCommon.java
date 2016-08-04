@@ -18,6 +18,7 @@ public class SelectCommon {
 	private String exec;
 	private int userId;
 	private int total;
+	private String hid;
 	
 	private String treeExec;
 	
@@ -166,6 +167,12 @@ public class SelectCommon {
 		this.treeExec = treeExec;
 	}
 
+	public String getHid() {
+		return hid;
+	}
 
+	public void setHid(String hid) {
+		this.hid = hid;
+	}
 
 }

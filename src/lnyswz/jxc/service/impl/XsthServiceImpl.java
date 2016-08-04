@@ -960,18 +960,29 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		return dg;
 	}
-	
+	/**
+	 * 业务审核显示商品明细时调用
+	 */
 	@Override
-	public DataGrid detDatagrid(String xsthlsh) {
+	public DataGrid detDatagrid(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("xsthlsh", xsthlsh);
+		params.put("xsthlsh", xsth.getXsthlsh());
 		List<TXsthDet> l = detDao.find(hql, params);
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		for(TXsthDet t : l){
 			XsthDet c = new XsthDet();
 			BeanUtils.copyProperties(t, c);
+			if(xsth.getFromOther() != null && xsth.getFromOther().equals("ywsh")){
+				//取得成本后加税
+				BigDecimal dwcb = YwzzServiceImpl.getDwcb(t.getTXsth().getBmbh(), t.getSpbh(), ywzzDao).multiply(new BigDecimal("1").add(Constant.SHUILV));
+				if(dwcb.compareTo(BigDecimal.ZERO) == 0){
+					c.setDwcb(BigDecimal.ZERO);
+				}else{
+					c.setDwcb(t.getZdwdj().subtract(dwcb).divide(t.getZdwdj(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP));
+				}
+			}
 			if(t.getTCgjh() != null){
 				c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
 			}

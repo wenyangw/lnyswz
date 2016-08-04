@@ -2,6 +2,11 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
+/**
+ * 说明
+ 存储过程 tree 必须两个字段 。如果只需要一个，在存储过程中加''。
+ tree 第一列为选择条件
+ */
 //部门
 var did;
 //查询试图
@@ -22,7 +27,6 @@ var b_bh;
 var spmc;
 var a_time;
 var b_time;
-var treeHql="";
 var jxc_select_fhCombo;
 var openTreeSelectDid='n';
 //页面数据加载
@@ -41,6 +45,8 @@ $(function(){
 	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);
 	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
 	$('#div_select_tree').attr('id','div_tree_select_'+query);
+	$('#exportExcelTree_sql').attr('id', 'exportExcelTree_sql' + query);
+	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
@@ -359,6 +365,7 @@ function selectClick(){
 					//判断后台查询是否成功
 						if(data.success){
 							var datas=[];
+							$('#exportExcelTree_sql' + query).val(data.obj.obj);
 							//遍历后台传回查询的数据
 							$.each(data.obj.rows,function(){	
 							//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
@@ -404,7 +411,6 @@ function selectClick(){
 										}											
 									});
 									var hqlTree="";
-									treeHql="";
 									if(treeSql.length > 0){
 											$.each(treeSql,function(){							
 												treeSelectExec.push(rows[0][treeFields[this]]);
@@ -421,6 +427,7 @@ function selectClick(){
 // 									eval("hqlTree += hql_"+query);
 
 // 									spbh= rows[0][title[0].field];
+// 									console.info(spbh);
 					                showDatagrid(conditions.join(" and ")+ hqlTree,allFields,allTitle,execHql.join(" , "),treeSelectExec.join(" , "));
 					            
 				                }					
@@ -440,11 +447,14 @@ function selectClick(){
 									}else{
 										hqlNews += "= '"+datas[0][treeFields[0]]+"'";
 									}
+// 									console.info(spbh);
 // 									treeHql="";
 // 									treeHql +=hqlNews;
 // 									eval("hqlNews += hql_"+query);
 // 									hqlNews +=conditions.join(" and ");
 // 									spbh= datas[0][treeFields[0]];
+// 									console.info(execHql.join(" , "));
+// 									console.info(treeFirst.join(" , "));
 					                showDatagrid(conditions.join(" and ")+ hqlNews,allFields,allTitle,execHql.join(" , "),treeFirst.join(" , "));
 					             
 					                
@@ -467,9 +477,6 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 	query = lnyw.tab_options().query;
 // 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
-	treeHql="";
-	treeHql +=hqls;
-	
 	$.ajax({
 		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		async: false,
@@ -487,45 +494,66 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 		success : function(data) {
 				//判断后台查询是否成功
 				if(data.success){
-					var datas=[];
-					//遍历后台传回查询的数据
-					sqls=data.obj.obj;
-					$.each(data.obj.rows,function(){
-					//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
-						var onlyData=Object.create(Object.prototype);
-						
-						for( var i=0;i<this.length-1;i++){
-						var allF=allFields[i].replace('(','abc').replace(')','xyz').replace(',','fgh').replace("'","mno").replace("'","mno");									
-						onlyData[allF]=this[i];							
+						$('#exportExcel_sql' + query).val(data.obj.obj);
+						var datas=[];
+						//遍历后台传回查询的数据
+						sqls=data.obj.obj;
+						$.each(data.obj.rows,function(){
+							//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
+							var onlyData=Object.create(Object.prototype);							
+							for( var i=0;i<this.length-1;i++){
+								var allF=allFields[i].replace('(','abc').replace(')','xyz').replace(',','fgh').replace("'","mno").replace("'","mno");									
+								onlyData[allF]=this[i];							
+							}	
+							datas.push(onlyData);						
+						});	
+						resultDg.datagrid({
+							data:datas,
+							loadMsg:'加载中',
+					 		fit : true,
+					 	    border : false,
+					 	    singleSelect : true,
+					 	    fitColumns: false,	  
+							columns:[allTitle],
+							toolbar: [{
+					   			iconCls: 'icon-edit',
+					   			text   : '导出报表',
+					   			handler: function(){
+					   				exportExcel();
+						   			},			   		
+						   		},
+							],
+					   		onHeaderContextMenu: function(e, titles){
+				                   	e.preventDefault();
+				                    if (!cmenu){
+				                        createColumnMenu();
+				                    }
+				                    cmenu.menu('show', {
+				                        left:e.pageX,
+				                        top:e.pageY
+				                    });
+				             }					
+						});						
+						if(treeExec.length > 0 ){
+							var options = resultDg.datagrid('options');
+							options.toolbar.push(
+										{
+											iconCls: 'icon-edit',
+											text   : '导出全部报表',
+											handler: function(){
+												exportExcelAll();
+										},			   		
+									});
+							options.toolbar.push(
+									{
+										iconCls: 'icon-edit',
+										text   : '导出视图报表',
+										handler: function(){
+											exportExcelTree();
+									},			   		
+							});
+							resultDg.datagrid(options);
 						}	
-						datas.push(onlyData);						
-					});	
-					resultDg.datagrid({
-						data:datas,
-						loadMsg:'加载中',
-				 		fit : true,
-				 	    border : false,
-				 	    singleSelect : true,
-				 	    fitColumns: false,	  
-						columns:[allTitle],
-						toolbar: [{
-				   			iconCls: 'icon-edit',
-				   			text   : '导出报表',
-				   			handler: function(){
-				   				exportExcel();
-				   			},			   		
-				   		}],
-				   		onHeaderContextMenu: function(e, titles){
-			                   	e.preventDefault();
-			                    if (!cmenu){
-			                        createColumnMenu();
-			                    }
-			                    cmenu.menu('show', {
-			                        left:e.pageX,
-			                        top:e.pageY
-			                    });
-			                }					
-					});						
 				}else{
 					$.messager.show({
 						title : "提示",
@@ -632,9 +660,10 @@ function cleanClick(){
 	$('input[id^="a_"]').val(moment().date(1).format('YYYY-MM-DD'));
 
 }
-function exportExcel(){
+function exportExcelTree(){
 	var titles=[];
 	var fields=[];
+	var hid=[];
 // 
 	query = lnyw.tab_options().query;
 	var dd;
@@ -642,9 +671,78 @@ function exportExcel(){
 		dd=$('#select_tree_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
 		eval("did=did_"+query);
-
 	}
-$.ajax({
+	$.ajax({
+			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
+			async: false,
+			cache: false,
+			data : {
+					selectType :query,
+					},
+			dataType : 'json',
+			success : function(data) {	
+						var i=1;
+						$.each(data,function(){
+							if(this.tree == '1'){								
+								if(this.treeShow == '1'){
+// 									hid.push(i);	
+									fields.push(this.ename);
+									titles.push(this.cname);
+								}else{
+									hid.push(i);	
+								}
+							}
+							i++;
+						});
+			}											
+		});	
+
+	$.ajax({	
+		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
+		async: false,
+		cache: false,
+		context:this,	
+		data : {
+			query:query,
+			did:did,
+			con :fields.join(','),
+			sqls:$('#exportExcelTree_sql' + query).val(),
+			titles:titles.join(','),
+			hid:hid.join(','),
+		},
+		success:function(data){	
+			var json = $.parseJSON(data);
+			if (json.success) {
+				var dd="${pageContext.request.contextPath}/"+json.obj;
+				if (json.success) {
+					
+					window.open(dd);						
+				}						
+			}
+			$.messager.show({
+				title : "提示",
+				msg : json.msg
+			});
+		}
+	});
+		
+}
+
+
+
+
+function exportExcelAll(){
+	var titles=[];
+	var fields=[];
+	query = lnyw.tab_options().query;
+	var dd;
+	if(openTreeSelectDid=='y'){
+		dd=$('#select_tree_dep_' + query).combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
+	}
+	
+	$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
 			cache: false,
@@ -661,10 +759,6 @@ $.ajax({
 			}											
 		});	
 
-
-
-
-
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -674,7 +768,8 @@ $.ajax({
 			query:query,
 			did:did,
 			con :fields.join(','),
-			sqls:treeHql,
+			sqls:$('#exportExcelTree_sql' + query).val().replace(/,5,/, ",0,"),
+// 			sqls:treeHql,
 			titles:titles.join(','),
 		},
 		success:function(data){	
@@ -696,6 +791,74 @@ $.ajax({
 
 
 
+
+function exportExcel(){
+	var titles=[];
+	var fields=[];
+	query = lnyw.tab_options().query;
+	var dd;
+	if(openTreeSelectDid=='y'){
+		dd=$('#select_tree_dep_' + query).combobox('getValue');
+		eval("var did_"+query+"=dd");
+		eval("did=did_"+query);
+	}
+	$.ajax({
+			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
+			async: false,
+			cache: false,
+			data : {
+					selectType :query,
+					},
+			dataType : 'json',
+			success : function(data) {	
+						$.each(data,function(){
+							fields.push(this.ename.replace('abc','(').replace('xyz',')').replace('fgh',',').replace("mno","'").replace("mno","'"));
+							titles.push(this.cname);
+						
+						});
+			}											
+		});	
+// 	console.info($('#exportExcelTree_sql' + query).val());
+// 	console.info($('#exportExcelTree_sql' + query).val().replace(/,5,/, ",0,"));
+	$.ajax({	
+		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
+		async: false,
+		cache: false,
+		context:this,	
+		data : {
+			query:query,
+			did:did,
+			con :fields.join(','),
+			sqls:$('#exportExcel_sql' + query).val(),
+// 			sqls:treeHql,
+			titles:titles.join(','),
+		},
+		success:function(data){	
+			var json = $.parseJSON(data);
+			if (json.success) {
+				var dd="${pageContext.request.contextPath}/"+json.obj;
+				if (json.success) {
+					window.open(dd);						
+				}						
+			}
+			$.messager.show({
+				title : "提示",
+				msg : json.msg
+			});
+		}
+	});
+		
+}
+
+
+
+
+
+
+
+
+
+
 </script>
 <div id='jxc_selectTree_layout' class='easyui-layout'
 	style="height: 100%;">
@@ -706,6 +869,8 @@ $.ajax({
 			style="height: 100%;">
 			<div align="center" data-options="region:'north',border:false"
 				style="height: 48px;">
+				<input type="hidden" id="exportExcelTree_sql" name="exportExcelTree_sql" />
+				<input type="hidden" id="exportExcel_sql" name="exportExcel_sql" />
 				<a href="#" class="easyui-linkbutton"
 					data-options="iconCls:'icon-search',plain:true"
 					onclick="selectClick();">查询</a> <a href="#"
