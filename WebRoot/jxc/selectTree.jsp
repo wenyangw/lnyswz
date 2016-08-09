@@ -279,7 +279,7 @@ function selectClick(){
 				hql='';
 	 			hql +=$(this).attr('id').replace('select_','') +' = ';
 	 			hql +=('\''+jxc_select_fhCombo.combobox('getValue')+'\'').trim();
-	 			
+	 				conditions.push(hql);
 				}
 		}		
 	});
