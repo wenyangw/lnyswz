@@ -82,6 +82,7 @@ $(function(){
 	        {field:'zhxs',title:'系数'},
 	        {field:'yxq',title:'有效期'},
 	        {field:'xsdj',title:'销售单价'},
+	        {field:'specXsdj',title:'特定销价'},
 			{field:'limitXsdj',title:'最低销价'},
 			{field:'maxKc',title:'最大库存'},
 			{field:'minKc',title:'最小库存'},
@@ -279,7 +280,7 @@ function editSpDet(){
 			title : '修改商品专属信息',
 			href : '${pageContext.request.contextPath}/jxc/spDet.jsp',
 			width : 340,
-			height : 240,
+			height : 300,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -291,7 +292,7 @@ function editSpDet(){
 						success : function(d) {
 							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
-								sp_dg.datagrid('reload',{depId: did});
+								sp_dg.datagrid('reload');
 								detDialog.dialog('close');
 							}
 							$.messager.show({
@@ -311,6 +312,7 @@ function editSpDet(){
 					maxKc: rows[0].maxKc,
 					minKc: rows[0].minKc,
 					xsdj: rows[0].xsdj,
+					specXsdj: rows[0].specXsdj,
 					limitXsdj: rows[0].limitXsdj,
 					depId: did,
 					menuId : menuId,

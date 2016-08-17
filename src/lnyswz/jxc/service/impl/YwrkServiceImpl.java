@@ -24,6 +24,8 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
+import lnyswz.jxc.bean.Kfrk;
+import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.bean.Ywrk;
@@ -31,6 +33,7 @@ import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TKfrk;
+import lnyswz.jxc.model.TKfrkDet;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXskp;
@@ -535,6 +538,45 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	}
 	
 	@Override
+	public DataGrid printKfrk(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+				
+		List<KfrkDet> nl = new ArrayList<KfrkDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
+			KfrkDet kfrkDet = new KfrkDet();
+			BeanUtils.copyProperties(yd, kfrkDet);
+			nl.add(kfrkDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfrkDet());
+			}
+		}
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   入   库   单");
+		map.put("kfrklsh", ywrk.getYwrklsh());
+		map.put("bmmc", tYwrk.getBmmc());
+		map.put("printName", ywrk.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tYwrk.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("gysbh", tYwrk.getGysbh());
+		map.put("gysmc", tYwrk.getGysmc());
+		map.put("ckmc", tYwrk.getCkmc());
+		map.put("hj", hj);
+		map.put("bz", tYwrk.getBz());
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
 	public DataGrid getSpkc(Ywrk ywrk) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
@@ -623,7 +665,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Ywrk ywrk = new Ywrk();
 		BeanUtils.copyProperties(tYwrk, ywrk);
 		//商品明细处理
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_ywrk_det t ";
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(cdwsl) cdwsl from t_ywrk_det t ";
 		
 		if(ywrklsh != null && ywrklsh.trim().length() > 0){
 			sql += "where ywrklsh = " + ywrklsh;
@@ -636,20 +678,20 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwrkDet yd = new YwrkDet();
-			yd.setSpbh(spbh);
-			yd.setSpmc(sp.getSpmc());
-			yd.setSpcd(sp.getSpcd());
-			yd.setSppp(sp.getSppp());
-			yd.setSpbz(sp.getSpbz());
+			BeanUtils.copyProperties(sp, yd);
 			yd.setZdwsl(zdwsl);
+			yd.setZjldwId(sp.getZjldw().getId());
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				yd.setCdwsl(cdwsl);
 			}
 			nl.add(yd);
 		}
@@ -684,13 +726,19 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public DataGrid toXsth(Ywrk ywrk){
 		String ywrkDetIds= ywrk.getYwrkDetIds();
-		String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
+		//String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
+		
+		String sql = "select det.spbh, zdwsl, thsl thsl, cdwsl, cthsl, isnull(xsdj, 0) xsdj"
+				+ " from v_ywrk det left join t_sp_det sp on sp.depId = det.bmbh and sp.spbh = det.spbh"
+				+ " where zdwsl <> thsl";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
-			sql += " and id in (" + ywrkDetIds + ")";
+			sql += " and det.id in (" + ywrkDetIds + ")";
 		}
 		//sql += " group by spbh";
+		
+		System.out.println(sql);
 		
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		
@@ -702,6 +750,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
 			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
 			BigDecimal cdwthsl = new BigDecimal(os[4].toString());
+			BigDecimal xsdj = new BigDecimal(os[5].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -720,6 +769,10 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				xd.setCdwsl(cdwrksl);
 				//xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
+			if(xsdj.compareTo(BigDecimal.ZERO) != 0){
+				xd.setZdwdj(xsdj.multiply(new BigDecimal(1.17)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				xd.setSpje(xd.getZdwdj().multiply(xd.getZdwsl()).setScale(2, BigDecimal.ROUND_HALF_UP));
+			}
 			
 			nl.add(xd);
 		}
@@ -729,6 +782,14 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		dg.setRows(nl);
 		return dg;
 		
+	}
+	
+	@Override
+	public Ywrk getYwrk(Ywrk ywrk){
+		Ywrk y = new Ywrk();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+		BeanUtils.copyProperties(tYwrk, y);
+		return y;
 	}
 	
 	@Autowired

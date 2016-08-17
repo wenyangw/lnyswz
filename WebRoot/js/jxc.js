@@ -13,24 +13,33 @@ var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
 jxc.cbs = function(bmbh){
-	var cbs = ['21010798', //传媒
-	        '21010263', //新华印务
-			'21010017', //辽海
-			'21010036', //美术
-			'21010082', //人民
-			'21010010', //教育
-			'21010011', //春风
-			'21010014', //民族
-			'21010080', //少儿
-			'21010081', //科技
-			'21010463', //万卷
-			'21010940', //音像
-			'21010245', //电子
-			'21010078', //万榕
-			'11011364', //智品
-			'21010055', //古籍
-			]
-	return cbs;
+	switch(bmbh){
+	case '04':
+		return ['21010798', //传媒
+		        '21010263', //新华印务
+				'21010017', //辽海
+				'21010036', //美术
+				'21010082', //人民
+				'21010010', //教育
+				'21010011', //春风
+				'21010014', //民族
+				'21010080', //少儿
+				'21010081', //科技
+				'21010463', //万卷
+				'21010940', //音像
+				'21010110', //电子
+				'21010078', //万榕
+				'11011364', //智品
+				'21010055', //古籍
+				];
+		break;
+	case '01':
+	case '05':
+	case '07':
+	case '08':
+		return '';
+		break;
+	}
 }
 
 jxc.getCkByKhbh = function(bmbh, khbh, isZs){
@@ -52,7 +61,7 @@ jxc.getCkByKhbh = function(bmbh, khbh, isZs){
 		ck['21010081'] = '39'; //科技
 		ck['21010463'] = '40'; //万卷
 		ck['21010940'] = '41'; //音像
-		ck['21010245'] = '42'; //电子
+		ck['21010110'] = '42'; //电子
 		ck['21010078'] = '43'; //万榕
 		ck['11011364'] = '44'; //智品
 		ck['21010055'] = '45'; //古籍
@@ -251,6 +260,7 @@ jxc.getAuditLevelCgjh = function(bmbh){
 	return jxc.auditLevelCgjh(bmbh)['first'];
 };
 
+//不参与销售审批流程的客户
 jxc.notInExcludeKhs = function(bmbh, khbh){
 	switch (bmbh) {
 	case '04':
@@ -265,12 +275,14 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		    		'21010080', //辽宁少年儿童出版社有限责任公司
 		    		'21010081', //辽宁科学技术出版社有限责任公司
 		    		'21010082', //辽宁人民出版社
-		    		'21010245', //辽宁电子出版社
+		    		'21010110', //辽宁电子出版社有限责任公司
 		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
 		    		'21010940', //辽宁音像
 		    		'21010055', //辽海古籍
 		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
 		    		'21010263', //辽宁新华印务有限公司
+		    		'21019996', //辽宁大耳娃文化发展有限责任公司
+		    		'21010989', //辽宁北方教育报刊出版有限公司
 		            ];
 		if(kh04.indexOf(khbh) >= 0){
 			return false;
@@ -282,6 +294,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		//沈阳新华印务不参与审批流程	
 		var kh01 = ['21010263',  //辽宁新华印务有限公司
 		            '21010608',  //辽宁票据印务有限公司
+		            '21010183',  //辽宁北方出版物配送有限公司
 		            ];
 		if(kh01.indexOf(khbh) >= 0){
 			return false;
@@ -311,6 +324,43 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 			return true;
 		}
 		break;
+	default:
+		return true;
+		break;
+	}
+};
+
+//不参与直送业务流程的客户
+jxc.notInExcludeZsKhs = function(bmbh, khbh){
+	switch (bmbh) {
+	case '04':
+		//教材公司，股份公司和辽海公司不参与审批流程	
+		var kh04 = ['21010017', //北方联合出版传媒（集团）股份有限公司辽海出版社分公司
+		            '21010798', //北方联合出版传媒（集团）股份有限公司
+		            '21010103', //辽宁文达纸业有限公司
+		            '21010010', //辽宁教育出版社
+		    		'21010011', //春风文艺出版社有限责任公司
+		    		'21010014', //辽宁民族出版社
+		    		'21010036', //辽宁美术出版社有限责任公司
+		    		'21010080', //辽宁少年儿童出版社有限责任公司
+		    		'21010081', //辽宁科学技术出版社有限责任公司
+		    		'21010082', //辽宁人民出版社
+		    		'21010110', //辽宁电子出版社有限责任公司
+		    		'21010463', //万卷出版有限责任公司(万卷出版公司)
+		    		'21010940', //辽宁音像
+		    		'21010055', //辽海古籍
+		    		'21028400',	//辽宁印刷物资有限责任公司大连分公司
+		    		'21010263', //辽宁新华印务有限公司
+		            ];
+		if(kh04.indexOf(khbh) >= 0){
+			return false;
+		}else{
+			return true;
+		}
+		break;
+	case '01':
+	case '05':
+	case '08':
 	default:
 		return true;
 		break;
@@ -514,6 +564,48 @@ jxc.getKhDet = function(url, depId, khbh, ywyId){
 		}
 	});
 	return sxkh;
+};
+
+jxc.getYf = function(bmbh, spbh, dist, hjsl){
+	console.info('spbh:' + spbh);
+	console.info('dist:' + dist);
+	console.info('hjsl:' + hjsl);
+	var je = 0;
+	switch(bmbh){
+	case '05':
+		//2吨的倍数
+		var bet = Math.floor(hjsl / 2);
+		//取2吨倍数后的余数 
+		var sl = (hjsl * 1000) % (2000) / 1000;
+		//每个公里数段对应的价格：小于等于5公里（dist=1）,大于5公里小于等于25公里（dist=2）,大于25公里（dist=3）
+		var jes = new Array(new Array(60, 65, 75, 80), new Array(85, 95, 105, 110), new Array(105, 115, 125, 130));
+		
+		if(sl <= 0.25){
+			je = 0;
+		}else if(sl > 0.25 && sl <= 0.5){
+			je = jes[dist - 1][0];
+		}else if(sl > 0.5 && sl <= 1){
+			je = jes[dist - 1][1];
+		}else if(sl > 1 && sl <= 1.5){
+			je = jes[dist - 1][2];
+		}else if(sl > 1.5 && sl <= 2){
+			je = jes[dist - 1][3];
+		}
+		
+		return bet * jes[dist - 1][3] + je;
+	case '08':
+		//大连运费分两档(远近)
+		//纸张，1档：吨数*45, 2档：吨数*50
+		//耗材，1档：150，2档：200
+		var splb = spbh.substring(0, 1);
+		if(splb == '4'){
+			return dist == 1 ? hjsl * 45 : hjsl * 50;
+		}else{
+			return dist == 1 ? 150 : 200;
+		}
+	default:
+		return 0;
+	}
 };
 
 //var dictType = [ {
@@ -757,7 +849,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 };
 
 //供应商、客户快速查询
-jxc.query = function(title, input_bh, input_mc, urlJsp, urlAction){
+jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 	$('#jxc_query_dialog').dialog({
 		href: urlJsp,
 		title:title,
@@ -792,6 +884,9 @@ jxc.query = function(title, input_bh, input_mc, urlJsp, urlAction){
 			    	if(input_bh != ''){
 			    		$(input_bh).val(rowData.bh);
 			    		$(input_mc).val(rowData.mc);
+			    		if(input_dist != ''){
+			    			$(input_dist).val(rowData.dist);
+			    		}
 			    		$(input_mc).change();
 			    	}else{
 			    		if(rowData.address == undefined){

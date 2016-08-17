@@ -38,6 +38,7 @@ public class Kh {
 	private BigDecimal limitPer;
 	private BigDecimal limitJe;
 	private String isLocked;
+	private String isDef;
 	
 	
 	private String detId;
@@ -305,6 +306,14 @@ public class Kh {
 
 	public void setIsLocked(String isLocked) {
 		this.isLocked = isLocked;
+	}
+
+	public String getIsDef() {
+		return isDef;
+	}
+
+	public void setIsDef(String isDef) {
+		this.isDef = isDef;
 	}
 
 	public String getDetId() {

@@ -107,6 +107,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	/**
+	 * 修改销售提货运费
+	 */
+	public void changeYf(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setCreateName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateYf(xsth);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("修改销售运费成功！");
+		}catch(Exception e){
+			j.setMsg("修改销售运费失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
 	 * 直送销售提货完成
 	 */
 	public void updateZsComplete(){
@@ -183,7 +203,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	public void detDatagrid(){
-		writeJson(xsthService.detDatagrid(xsth.getXsthlsh()));
+		writeJson(xsthService.detDatagrid(xsth));
 	}
 	
 	public void datagridDet(){

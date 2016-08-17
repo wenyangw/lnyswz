@@ -27,6 +27,7 @@ public class TSpDet implements java.io.Serializable {
 	private BigDecimal maxKc;
 	private BigDecimal minKc;
 	private BigDecimal xsdj;
+	private BigDecimal specXsdj;
 	private BigDecimal limitXsdj;
 	private BigDecimal lastRkdj;
 
@@ -34,13 +35,14 @@ public class TSpDet implements java.io.Serializable {
 	}
 
 	public TSpDet(int id, TSp TSp, TDepartment TDepartment, BigDecimal maxKc, BigDecimal minKc,
-			BigDecimal xsdj, BigDecimal limitXsdj, BigDecimal lastRkdj) {
+			BigDecimal xsdj, BigDecimal specXsdj, BigDecimal limitXsdj, BigDecimal lastRkdj) {
 		this.id = id;
 		this.TSp = TSp;
 		this.TDepartment = TDepartment;
 		this.maxKc = maxKc;
 		this.minKc = minKc;
 		this.xsdj = xsdj;
+		this.specXsdj = specXsdj;
 		this.limitXsdj = limitXsdj;
 		this.lastRkdj = lastRkdj;
 	}
@@ -101,6 +103,15 @@ public class TSpDet implements java.io.Serializable {
 
 	public void setXsdj(BigDecimal xsdj) {
 		this.xsdj = xsdj;
+	}
+
+	@Column(name = "specXsdj")
+	public BigDecimal getSpecXsdj() {
+		return specXsdj;
+	}
+
+	public void setSpecXsdj(BigDecimal specXsdj) {
+		this.specXsdj = specXsdj;
 	}
 
 	@Column(name = "limitXsdj")

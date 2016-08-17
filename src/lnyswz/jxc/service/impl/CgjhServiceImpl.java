@@ -373,6 +373,10 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					c.setIsKfrk("2");
 				}
 			}
+			
+			if(t.getTXsths() != null && t.getTXsths().size() > 0){
+				c.setXsthlsh(t.getTXsths().iterator().next().getTXsth().getXsthlsh());
+			}
 
 			BigDecimal hjsl = BigDecimal.ZERO;
 			for(TCgjhDet tDet : tDets){
@@ -557,6 +561,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 					
 					c.setZdwyrsl(getYwrksl(t.getTCgjh().getCgjhlsh(), t.getSpbh()));
 				}
+			}
+			
+			//显示对应的直送提货单流水号
+			if(t.getTCgjh().getTXsths() != null && t.getTCgjh().getTXsths().size() > 0){
+				c.setXsthlsh(t.getTCgjh().getTXsths().iterator().next().getTXsth().getXsthlsh());
 			}
 			
 			nl.add(c);

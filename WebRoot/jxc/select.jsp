@@ -35,6 +35,7 @@ $(function(){
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
 	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
+	//$('#jxc_select_layout').attr('id', 'layout_' + query);
 // 	$('#select_dep').attr('id','select_dep_'+query);
 // 	$('#div_select').attr('id','div_select_'+query);
 // 	$("input[name=depName]").attr('name','dep_'+query);
@@ -275,6 +276,7 @@ function selectClick(){
 	            text:'查询',
 	            iconCls:'icon-ok',
 	            handler:function(){
+	            	
 					//数组fields 用于存放 查询所需要查询内容
 	      			var fields=[];
 					var frozens=[];
@@ -555,6 +557,7 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
+	lnyw.MaskUtil.mask('正在导出，请等待……');
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -581,6 +584,9 @@ function exportExcel(){
 				title : "提示",
 				msg : json.msg
 			});
+		},
+		complete: function(){
+			lnyw.MaskUtil.unmask();
 		}
 	});
 }

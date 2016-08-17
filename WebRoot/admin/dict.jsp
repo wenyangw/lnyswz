@@ -34,6 +34,7 @@ $(function(){
 	        {field:'id',title:'编号',width:100, checkbox : true},
 	        {field:'ename',title:'英文名',width:80},
 	        {field:'cname',title:'中文名',width:100},
+	        {field:'tname',title:'所属表名',width:80},
 	       	{field:'genre',title:'类型',width:40,
 	        	formatter : function(value) {	
 					for(var i=0;i<dictType.length;i++){
@@ -43,21 +44,11 @@ $(function(){
 					}
 				}
 			},
+			
 			{field:'specials',title:'特殊种类',width:70},
-	        {field:'tname',title:'所属表名',width:80},
 	        {field:'show',title:'提示信息',width:140},
 	        {field:'specialValues',title:'特殊值',width:160},
-	        {field:'orderNum',title:'排序',width:50},
-	        {field:'tree',title:'分类',width:50,
-	        	formatter : function(value) {	
-		       	 	 if(value=='1'){
-		       	 		 return "是";
-		       	 	 }else if(value=='0'){
-		       	 		 return "否";
-		       	 	 }
-	       	 	}
-	       	 },
-	        {field:'orderByTree',title:'分类排序条件',width:80},
+	        {field:'orderNum',title:'排序',width:50},	        
 	       	{field:'isDepName',title:'是否需要部门',width:50,
 		        	formatter : function(value) {	
 			       	 	 if(value=='1'){
@@ -76,7 +67,7 @@ $(function(){
 			       	 	 }
 		       	 	}
 		       	 },
-	        {field:'frozen',title:'是否冻结',width:50,
+	        {field:'frozen',title:'是否固定',width:50,
 	        	formatter : function(value) {	
 		       	 	 if(value=='1'){
 		       	 		 return "是";
@@ -94,6 +85,34 @@ $(function(){
 	       	 	 }
 	       	 }
 	        },
+	        {field:'tree',title:'分类',width:50,
+	        	formatter : function(value) {	
+		       	 	 if(value=='1'){
+		       	 		 return "是";
+		       	 	 }else if(value=='0'){
+		       	 		 return "否";
+		       	 	 }
+	       	 	}
+	       	 },
+	        {field:'treeShow',title:'分类显示',width:50,
+	        	formatter : function(value) {	
+		       	 	 if(value=='1'){
+		       	 		 return "是";
+		       	 	 }else if(value=='0'){
+		       	 		 return "否";
+		       	 	 }
+	       	 	}
+	       	 },
+	        {field:'treeSql',title:'是否分类查询',width:50,
+	        	formatter : function(value) {	
+		       	 	 if(value=='1'){
+		       	 		 return "是";
+		       	 	 }else if(value=='0'){
+		       	 		 return "否";
+		       	 	 }
+	       	 	}
+	       	 },       	
+	        {field:'orderByTree',title:'分类排序条件',width:80},
 	        {field:'orderBy',title:'排序条件',width:80},
 	        {field:'isHj',title:'是否合计',width:50,
 	        	formatter : function(value) {	
@@ -226,6 +245,8 @@ function editDict(){
 					genre:rows[0].genre,
 					frozen:rows[0].frozen,
 					tree:rows[0].tree,
+					treeShow:rows[0].treeShow,
+					treeSql:rows[0].treeSql,
 					isDepName:rows[0].isDepName,
 					depId:did,
 					menuId:mid,	

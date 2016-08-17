@@ -29,18 +29,18 @@ import org.apache.poi.hssf.util.HSSFColor;
  */
 public class ExportExcel<T> {
 
-	public void exportExcel(List<Object[]> dataset, OutputStream out) {
-		exportExcel("Sheet1", null, dataset, out, "yyyy-MM-dd");
+	public void exportExcel(List<Object[]> dataset, OutputStream out,String hidNum) {
+		exportExcel("Sheet1", null, dataset, out, "yyyy-MM-dd",hidNum);
 	}
 
 	public void exportExcel(String[] headers, List<Object[]> dataset,
-			OutputStream out) {
-		exportExcel("Sheet1", headers, dataset, out, "yyyy-MM-dd");
+			OutputStream out,String hidNum) {
+		exportExcel("Sheet1", headers, dataset, out, "yyyy-MM-dd",hidNum);
 	}
 
 	public void exportExcel(String[] headers, List<Object[]> dataset,
-			OutputStream out, String pattern) {
-		exportExcel("Sheet1", headers, dataset, out, pattern);
+			OutputStream out, String pattern,String hidNum) {
+		exportExcel("Sheet1", headers, dataset, out, pattern,hidNum);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ExportExcel<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void exportExcel(String title, String[] headers,
-			List<Object[]> dataset, OutputStream out, String pattern) {
+			List<Object[]> dataset, OutputStream out, String pattern,String  hidNum) {
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -119,13 +119,20 @@ public class ExportExcel<T> {
 			cell.setCellValue(text);
 		}
 		// 遍历集合数据，产生数据行
+		
 		int i = 0;
 		for (Object[] d : dataset) {
-			i++;
+			i++;	
 			row = sheet.createRow(i);
+			hidNum ="0,"+hidNum+",";
+			int cellRow=0;
 			for (int n = 0; n < d.length; n++) {
-				HSSFCell cell = row.createCell(n);
-				
+				String num=","+(n+1)+",";
+				if(hidNum.indexOf(num)>0){
+					continue;
+				}
+				HSSFCell cell = row.createCell(cellRow);
+				cellRow++;
 				String textValue = null;	//用于 时间 字符串 		
 				if (d[n] instanceof Integer) {
 					int intValue = (Integer) d[n];

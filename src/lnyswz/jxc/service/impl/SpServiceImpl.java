@@ -162,7 +162,7 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
-		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
+		dg.setRows(changeSps(spDao.find("select t " + hql + " order by t.spbh", params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
 		return dg;
 	}
 	
@@ -315,6 +315,9 @@ public class SpServiceImpl implements SpServiceI {
 						s.setXsdjs(det.getXsdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 					}else{
 						s.setXsdjs(Constant.BD_ZERO);
+					}
+					if(det.getSpecXsdj() != null){
+						s.setSpecXsdj(det.getSpecXsdj());
 					}
 					s.setLimitXsdj(det.getLimitXsdj());
 				}

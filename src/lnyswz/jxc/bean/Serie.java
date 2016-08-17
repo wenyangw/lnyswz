@@ -5,17 +5,24 @@ import java.util.List;
 
 public class Serie {
 	private String name;
-	private List<BigDecimal> data;
+	private List<Object> cate;
+	private List<Object> data;
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<BigDecimal> getData() {
+	public List<Object> getCate() {
+		return cate;
+	}
+	public void setCate(List<Object> cate) {
+		this.cate = cate;
+	}
+	public List<Object> getData() {
 		return data;
 	}
-	public void setData(List<BigDecimal> data) {
+	public void setData(List<Object> data) {
 		this.data = data;
 	}
 	

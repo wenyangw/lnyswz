@@ -29,10 +29,24 @@ public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 	private ChartServiceI chartService;
 	
 	/**
-	 * 返回所有功能按钮，供管理用，有分页
+	 * 销售数据对比
 	 */
 	public void getXstj(){
 		writeJson(chartService.getXstj(chart));
+	}
+	
+	/**
+	 * 销售结构分析
+	 */
+	public void getXsjgfx(){
+		writeJson(chartService.getXsjgfx(chart));
+	}
+	
+	/**
+	 * 库存对比
+	 */
+	public void getKctj(){
+		writeJson(chartService.getKctj(chart));
 	}
 	
 	@Override

@@ -68,6 +68,10 @@ public class SelectCommomAction extends BaseAction implements
 		String location = null;
 		ExportExcel<Object[]> ex = new ExportExcel<Object[]>();
 		String[] headers = selectCommon.getTitles().split(",");
+		if(selectCommon.getHid() == null){
+			selectCommon.setHid("");
+		}
+		String hidNum = selectCommon.getHid();
 		OutputStream out;
 		List<Object[]> dataset = selectCommonService.Exprot(selectCommon);
 		try {
@@ -78,7 +82,7 @@ public class SelectCommomAction extends BaseAction implements
 							"yyyyMMddHHmmss") + ".xls";
 			String address = Export.getRootPath() + location;
 			out = new FileOutputStream(address);
-			ex.exportExcel(headers, dataset, out);
+			ex.exportExcel(headers, dataset, out,hidNum);
 			out.close();
 			j.setSuccess(true);
 			j.setObj(location);

@@ -108,6 +108,7 @@ public class Xskp {
 
 	private String otherBm;
 	private String fromOther;
+	private String lens;
 
 	public String getXskplsh() {
 		return xskplsh;
@@ -731,6 +732,14 @@ public class Xskp {
 
 	public void setFromOther(String fromOther) {
 		this.fromOther = fromOther;
+	}
+
+	public String getLens() {
+		return lens;
+	}
+
+	public void setLens(String lens) {
+		this.lens = lens;
 	}
 
 	public String getSpbh() {

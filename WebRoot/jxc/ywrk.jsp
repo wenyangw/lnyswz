@@ -157,21 +157,22 @@ $(function(){
         			ywrklsh: row.ywrklsh,
         		},
                 columns:[[
-                    {field:'spbh',title:'商品编号',width:200,align:'center'},
+                    {field:'spbh',title:'商品编号',width:40,align:'center'},
                     {field:'spmc',title:'名称',width:100,align:'center'},
-                    {field:'spcd',title:'产地',width:100,align:'center'},
-                    {field:'sppp',title:'品牌',width:100,align:'center'},
-                    {field:'spbz',title:'包装',width:100,align:'center'},
-                    {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-                    {field:'zdwsl',title:'数量1',width:100,align:'center'},
-                    {field:'zdwdj',title:'单价1',width:100,align:'center'},
-                    {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-                    {field:'cdwsl',title:'数量2',width:100,align:'center'},
-                    {field:'cdwdj',title:'单价2',width:100,align:'center'},
-                    {field:'spje',title:'金额',width:100,align:'center',
+                    {field:'spcd',title:'产地',width:40,align:'center'},
+                    {field:'sppp',title:'品牌',width:40,align:'center'},
+                    {field:'spbz',title:'包装',width:40,align:'center'},
+                    {field:'zjldwmc',title:'单位1',width:30,align:'center'},
+                    {field:'zdwsl',title:'数量1',width:70,align:'center'},
+                    {field:'zdwdj',title:'单价1',width:70,align:'center'},
+                    {field:'cjldwmc',title:'单位2',width:30,align:'center'},
+                    {field:'cdwsl',title:'数量2',width:70,align:'center'},
+                    {field:'cdwdj',title:'单价2',width:70,align:'center'},
+                    {field:'spje',title:'金额',width:70,align:'center',
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+        	        {field:'blank',title:'',width:150,align:'center'},
                 ]],
                 onResize:function(){
                 	ywrk_dg.datagrid('fixDetailRowHeight',index);
@@ -341,6 +342,7 @@ $(function(){
 				formatter: function(value){
 					return lnyw.memo(value, 15);
 				}},
+			{field:'xsthlsh',title:'销售提货流水号',align:'center',},
 	    ]],
 	    toolbar:'#jxc_ywrk_cgjhTb',
 	});
@@ -852,6 +854,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywrkAction!save.action',
@@ -874,6 +877,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -1013,6 +1019,9 @@ function setEditing(){
     });
     
     cslEditor.target.bind('keyup', function(event){
+    	if(event.keyCode == 9){
+    		return false;
+    	}
     	if(($(spbhEditor.target).val().substring(0, 3) < '513' 
     			|| $(spbhEditor.target).val().substring(0, 3) > '518') 
     			&& $(zhxsEditor.target).val() != 0){
@@ -1161,7 +1170,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
@@ -1204,6 +1213,7 @@ function cjYwrk(){
 			if(row.kfrklsh == undefined){
 				$.messager.prompt('请确认', '是否要冲减选中的业务入库单？请填写备注', function(bz){
 					if (bz != undefined){
+						//MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/ywrkAction!cjYwrk.action',
 							data : {
@@ -1228,6 +1238,9 @@ function cjYwrk(){
 										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 									}
 								});
+							},
+							complete: function(){
+								//MaskUtil.unmask();
 							}
 						});
 					}
@@ -1249,6 +1262,20 @@ function printYwrk(){
 		$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + row.ywrklsh + '&bmbh=' + row.bmbh;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function printKfrk(){
+	var row = ywrk_dg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否打印库房入库单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/ywrkAction!printKfrk.action?ywrklsh=' + row.ywrklsh + '&bmbh=' + row.bmbh;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});

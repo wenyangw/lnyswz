@@ -611,6 +611,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	////MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfckAction!save.action',
@@ -633,6 +634,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			////MaskUtil.unmask();
 		}
 	});
 }
@@ -939,6 +943,7 @@ function cjKfck(){
 			if(row.isCj != '1'){
 				$.messager.confirm('请确认', '是否要冲减选中的库房出库单？', function(r) {
 					if (r) {
+						////MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/kfckAction!cjKfck.action',
 							data : {
@@ -955,6 +960,9 @@ function cjKfck(){
 									title : '提示',
 									msg : d.msg
 								});
+							},
+							complete: function(){
+								////MaskUtil.unmask();
 							}
 						});
 					}

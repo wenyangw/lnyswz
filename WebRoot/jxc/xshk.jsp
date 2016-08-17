@@ -283,6 +283,8 @@ $(function(){
 	});
 	
 	$('#hkje').keyup(function() {
+		
+		//如回款为历史陈欠，不处理下面的代码
 		if($('input[name=isLs]').is(':checked')){
 			return false;
 		}
@@ -336,6 +338,7 @@ $(function(){
 				$('input[name=isLs]').removeProp('checked');
 				return false;
 			}
+			//清除已填写的销售发票明细数据
 			var rows = xshk_xskpDg.datagrid('getRows');
 			if(rows != undefined){
 				$.each(rows, function(index){

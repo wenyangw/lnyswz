@@ -13,7 +13,7 @@ public interface XsthServiceI {
 	public Xsth save(Xsth xsth);
 	public void cancelXsth(Xsth xsth);
 	public DataGrid datagrid(Xsth xsth);
-	public DataGrid detDatagrid(String xsthlsh);
+	public DataGrid detDatagrid(Xsth xsth);
 	public DataGrid toKfck(Xsth xsth);
 	public DataGrid toCgjh(Xsth xsth);
 	public DataGrid toXskp(String xsthDetIds);
@@ -30,4 +30,5 @@ public interface XsthServiceI {
 	public DataGrid getYsje(Xsth xsth);
 	public DataGrid refreshXsth(Xsth xsth);
 	public void updateZsComplete(Xsth xsth);
+	public void updateYf(Xsth xsth);
 }

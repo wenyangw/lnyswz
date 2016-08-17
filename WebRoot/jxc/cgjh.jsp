@@ -154,6 +154,7 @@ $(function(){
         			b = b == undefined ? 0 : b;
 					return (a-b);  
 				}},
+			{field:'xsthlsh',title:'销售提货流水号',align:'center',},
         	{field:'isHt',title:'*合同',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -1023,6 +1024,7 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/cgjhAction!save.action',
@@ -1048,6 +1050,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -1158,9 +1163,9 @@ function setEditing(){
     });
     
     shdzEditor.target.bind('keydown', function(event){
-    	//按Tab键,根据商品编号获取商品信息
+    	//按ESC键,弹出送货地址列表
     	if(event.keyCode == 27){
-    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target, 
+    		jxc.queryAddr('地址检索', shdzEditor.target, lxrEditor.target,
     				'${pageContext.request.contextPath}/jxc/queryAddr.jsp',
     				'${pageContext.request.contextPath}/jxc/shdzAction!shdzDg.action');
     	}
@@ -1340,7 +1345,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
@@ -1386,6 +1391,7 @@ function cancelCgjh(){
 				if(row.isCompleted != '1'){
 					$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
 						if (r) {
+							//MaskUtil.mask('正在取消，请等待……');
 							$.ajax({
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
 								data : {
@@ -1401,6 +1407,9 @@ function cancelCgjh(){
 										title : '提示',
 										msg : d.msg
 									});
+								},
+								complete: function(){
+									//MaskUtil.unmask();
 								}
 							});
 						}

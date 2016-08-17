@@ -166,6 +166,7 @@ $(function(){
 	    		url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
 	    		queryParams: {
 	        		xsthlsh: xsthlsh,
+	        		fromOther: 'ywsh',
 	        	},
 	    		fit : true,
 	    	    border : false,
@@ -173,20 +174,24 @@ $(function(){
 	    	    remoteSort: false,
 //	     	    fitColumns: true,
 	    		columns:[[
-					{field:'spbh',title:'商品编号',width:60,align:'center'},
-					{field:'spmc',title:'名称',width:200,align:'center'},
+					{field:'spbh',title:'商品编号',width:50,align:'center'},
+					{field:'spmc',title:'名称',width:150,align:'center'},
 					{field:'spcd',title:'产地',width:50,align:'center'},
 					{field:'sppp',title:'品牌',width:60,align:'center'},
 					{field:'spbz',title:'包装',width:60,align:'center'},
-					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
+					{field:'zjldwmc',title:'单位1',width:40,align:'center'},
 					{field:'zdwsl',title:'数量1',width:90,align:'center'},
 					{field:'zdwdj',title:'单价1',width:90,align:'center'},
-					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
+					{field:'cjldwmc',title:'单位2',width:40,align:'center'},
 					{field:'cdwsl',title:'数量2',width:90,align:'center'},
 					{field:'cdwdj',title:'单价2',width:90,align:'center'},
 					{field:'spje',title:'金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
+						}},
+					{field:'dwcb',title:'毛利率',width:90,align:'center',
+						formatter: function(value){
+							return value + '%';
 						}},
 	    	    ]],
 	    	});
@@ -206,6 +211,8 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'lsh',title:'流水号',align:'center'},
+			{field:'khmc',title:'客户名称',align:'center'},
+			{field:'ywymc',title:'业务员',align:'center'},
 	        {field:'createTime',title:'时间',align:'center',width:100},
 	        {field:'createName',title:'审批人',align:'center',width:100},
 	        {field:'auditLevel',title:'等级',align:'center',width:100},
@@ -247,6 +254,7 @@ $(function(){
                 height:'auto',
                 queryParams: {
         			xsthlsh: row.lsh,
+        			fromOther: 'ywsh',
         		},
                 columns:[[
                     {field:'spbh',title:'商品编号',width:200,align:'center'},
@@ -264,6 +272,10 @@ $(function(){
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+       	        	{field:'dwcb',title:'毛利率',width:90,align:'center',
+   						formatter: function(value){
+   							return value + '%';
+   						}},
                 ]],
                 onResize:function(){
                 	ywsh_dg.datagrid('fixDetailRowHeight',index);

@@ -63,6 +63,7 @@ import lnyswz.jxc.model.TYszz;
 import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
+import lnyswz.jxc.model.TZsqr;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XsthServiceI;
@@ -83,7 +84,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TYwrkDet> ywrkDetDao;
-	private BaseDaoI<TCgjh> cgjhDao;
+	private BaseDaoI<TZsqr> zsqrDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TKh> khDao;
@@ -114,6 +115,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setIsKp("0");
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
+		tXsth.setYysfy(BigDecimal.ZERO);
 
 		//最后一笔未还款销售
 //		Xskp xskp = new Xskp();
@@ -659,6 +661,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		for (TXsthDet yd : dets) {
 			XsthDet xsthDet = new XsthDet();
 			BeanUtils.copyProperties(yd, xsthDet);
+			//大连分公司的纸张合同使用吨为计量单位
+			if(tXsth.getBmbh().equals("08") && yd.getSpbh().startsWith("4")){
+				xsthDet.setZjldwmc(yd.getCjldwmc());
+				xsthDet.setZdwsl(yd.getCdwsl());
+				xsthDet.setZdwdj(yd.getCdwdj());
+			}
 			nl.add(xsthDet);
 		}
 		
@@ -864,7 +872,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 				hql += ")";
 			}else{
-				hql += " and (t.xsthlsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search)"; 
+				hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
 				params.put("search", "%" + xsth.getSearch() + "%");
 			}
 			
@@ -952,18 +960,29 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		return dg;
 	}
-	
+	/**
+	 * 业务审核显示商品明细时调用
+	 */
 	@Override
-	public DataGrid detDatagrid(String xsthlsh) {
+	public DataGrid detDatagrid(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("xsthlsh", xsthlsh);
+		params.put("xsthlsh", xsth.getXsthlsh());
 		List<TXsthDet> l = detDao.find(hql, params);
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		for(TXsthDet t : l){
 			XsthDet c = new XsthDet();
 			BeanUtils.copyProperties(t, c);
+			if(xsth.getFromOther() != null && xsth.getFromOther().equals("ywsh")){
+				//取得成本后加税
+				BigDecimal dwcb = YwzzServiceImpl.getDwcb(t.getTXsth().getBmbh(), t.getSpbh(), ywzzDao).multiply(new BigDecimal("1").add(Constant.SHUILV));
+				if(dwcb.compareTo(BigDecimal.ZERO) == 0){
+					c.setDwcb(BigDecimal.ZERO);
+				}else{
+					c.setDwcb(t.getZdwdj().subtract(dwcb).divide(t.getZdwdj(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP));
+				}
+			}
 			if(t.getTCgjh() != null){
 				c.setCgjhlsh(t.getTCgjh().getCgjhlsh());
 			}
@@ -1008,8 +1027,16 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		
+		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
+			//内部销售的不受限制
+			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263') or t.TXsth.fromRk='1'))))";
+		}
+		
+		
+		
+		
 		if(xsth.getFromOther().equals("fromCgjh")){
-			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0'" ;
+			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0' and t.completed = '0'" ;
 			if(xsth.getBmbh().equals("04")){
 				hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
 			}
@@ -1061,8 +1088,18 @@ public class XsthServiceImpl implements XsthServiceI {
 			if(t.getTXskps() != null && t.getTXskps().size() > 0){
 				c.setIsKp("1");
 			}
-
-//			if(t.getTKfcks() != null){
+			
+			String sql = "select jhrk.ywrklsh from v_xsth_det thDet"
+					+ "	left join t_cgjh_det jhDet on thDet.cgjhlsh = jhDet.cgjhlsh and thDet.spbh = jhDet.spbh"
+					+ " left join t_cgjh_ywrk jhrk on jhDet.id = jhrk.cgjhdetId"
+					+ " where thDet.id = ?";
+			Map<String, Object> paramsSql = new HashMap<String, Object>();
+			paramsSql.put("0", t.getId());
+			
+			Object y = detDao.getBySQL(sql, paramsSql);
+			
+			
+			//			if(t.getTKfcks() != null){
 //				//c.setKfcklshs(t.getTKfcks().getKfcklsh());
 //				if("1".equals(xsth.getIsKp())){
 //					c.setZdwytsl(getYksl(t.getTXsth().getXsthlsh(), t.getSpbh()));
@@ -1070,7 +1107,13 @@ public class XsthServiceImpl implements XsthServiceI {
 //					c.setZdwytsl(getYtsl(t.getTXsth().getXsthlsh(), t.getSpbh()));
 //				}
 //			}
-			nl.add(c);
+			if(xsth.getFromOther().equals("fromXskp") && tXsth.getIsZs().equals("1")){
+				if(y != null){
+					nl.add(c);
+				}
+			}else{
+				nl.add(c);
+			}
 		}
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
@@ -1237,6 +1280,16 @@ public class XsthServiceImpl implements XsthServiceI {
 //			tXsthDet.setThsl(tXsthDet.getZdwsl());
 //			//tXsthDet.setZdwsl(BigDecimal.ZERO);
 //		}
+		
+		//记录每次确认的提货数量
+		TZsqr tZsqr = new TZsqr();
+		tZsqr.setXsthlsh(tXsthDet.getTXsth().getXsthlsh());
+		tZsqr.setSpbh(tXsthDet.getSpbh());
+		tZsqr.setQrsl(xsth.getThsl());
+		tZsqr.setCreateId(xsth.getCreateId());
+		tZsqr.setCreateName(xsth.getCreateName());
+		tZsqr.setCreateTime(new Date());
+		zsqrDao.save(tZsqr);
 				
 		sl = xsth.getThsl();
 		//将本次录入的数据与原数据比较，获得相差数量
@@ -1378,6 +1431,24 @@ public class XsthServiceImpl implements XsthServiceI {
 				"解锁销售提货", operalogDao);
 	}
 	
+	
+	@Override
+	public void updateYf(Xsth xsth) {
+		
+		//获取修改的商品记录
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+				
+		
+		//检查是否已修改过, 未改过的将原ysyf保存到yysfy
+		if(tXsth.getYysfy() == null || tXsth.getYysfy().compareTo(BigDecimal.ZERO) == 0){
+			tXsth.setYysfy(tXsth.getYsfy());
+		}
+		tXsth.setYsfy(xsth.getYsfy());
+				
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getXsthlsh()), 
+				"修改运费", operalogDao);
+	}
+	
 	@Override
 	public DataGrid toXskp(String xsthDetIds){
 //		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +
@@ -1510,6 +1581,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		slBean.setGroup("可提货数量");
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
+		
+		slBean.setXscb(YwzzServiceImpl.getDwcb(xsth.getBmbh(), xsth.getSpbh(), ywzzDao).multiply(new BigDecimal(1.17)).setScale(4, BigDecimal.ROUND_HALF_UP));
+		
 		lists.add(0, slBean);
 		
 		dg.setRows(lists);
@@ -1547,11 +1621,6 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
-	}
-
-	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
 	}
@@ -1574,6 +1643,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
+	}
+
+	@Autowired
+	public void setZsqrDao(BaseDaoI<TZsqr> zsqrDao) {
+		this.zsqrDao = zsqrDao;
 	}
 
 	@Autowired

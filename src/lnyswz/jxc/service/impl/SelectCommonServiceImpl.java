@@ -34,20 +34,20 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		if (dicts.getGenre().equals("04")) {
 			String execHql = "execute " + dicts.getTname() + "'" + d.getDid()
 					+ "','" + d.getUserId() + "'";
-			if(d.getExec().length() > 0){
-				for (String path : d.getExec().split(",")) {
-					execHql += ",'" + path.trim() + "'";
-				}
-			}
-			List<Object[]> list = selectCommonDao.findBySQL(execHql+","+d.getPage()+","+d.getRows()+",0");
-//			Long total =selectCommonDao.countBySQL(execHql.trim()+","+d.getPage()+","+d.getRows()+",1");
-			if(d.getPage() == 1){
-				dg.setTotal(selectCommonDao.countBySQL(execHql+","+d.getPage()+","+d.getRows()+",1"));
-			}else {
+			execHql = spellFor(d.getExec(), execHql);
+			String treeExec = "";
+			treeExec = spellFor(d.getTreeExec(), treeExec);
+			List<Object[]> list = selectCommonDao.findBySQL(execHql + ","
+					+ d.getPage() + "," + d.getRows() + ",0" + treeExec);
+			if (d.getPage() == 1) {
+				dg.setTotal(selectCommonDao.countBySQL(execHql + ","
+						+ d.getPage() + "," + d.getRows() + ",1" + treeExec));
+			} else {
 				dg.setTotal((long) d.getTotal());
 			}
+
 			dg.setRows(list);
-			String exec =execHql +","+1+","+dg.getTotal()+",0";
+			String exec = execHql + "," + 1 + "," + dg.getTotal() + ",0"+treeExec;
 			dg.setObj(exec);
 		} else {
 			String sql = "select " + d.getCon() + " from " + dicts.getTname()
@@ -64,13 +64,10 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 					}
 				}
 			}
-
 			sql += condition;
 			if (dicts.getInGroupBy() != null) {
 				sql += " " + dicts.getInGroupBy();
-
 			}
-
 			if (dicts.getIsHj() != null) {
 				if (dicts.getOutGroupBy() != null
 						&& dicts.getOutGroupBy().trim().length() > 0) {
@@ -80,7 +77,6 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 							&& dicts.getSqlWhere().trim().length() > 0) {
 						sql += " " + dicts.getSqlWhere();
 					}
-
 				}
 			}
 			if (dicts.getOrderBy().trim().length() > 0) {
@@ -102,32 +98,44 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonTree(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
-		String dictSql = "from TDict t where t.genre = '03' and ename= '"
+		String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
-		String sql = "select distinct  " + d.getCon() + " from "
-				+ dicts.getTname() + "";
-		if (dicts.getIsDepName() != null) {
-			if (dicts.getIsDepName().equals("1")) {
-				condition += " where bmbh = '" + d.getDid() + "' ";
-				if (d.getHqls().trim().length() > 0) {
-					condition += " and " + d.getHqls();
-				}
-			} else {
-				if (d.getHqls().trim().length() > 0) {
-					condition += " where " + d.getHqls();
+		if (dicts.getGenre().equals("04")) {
+			String execHql = "execute " + dicts.getTname() + "'" + d.getDid()
+					+ "','" + d.getUserId() + "'";
+			execHql = spellFor(d.getExec(), execHql);
+			execHql += "," + d.getPage() + "," + d.getRows() + ",5";
+			execHql = spellFor(d.getTreeExec(), execHql);
+			List<Object[]> list = selectCommonDao.findBySQL(execHql);
+			dg.setRows(list);
+			String exec = execHql ;
+			dg.setObj(exec);
+		} else {
+			String sql = "select distinct  " + d.getCon() + " from "
+					+ dicts.getTname() + "";
+			if (dicts.getIsDepName() != null) {
+				if (dicts.getIsDepName().equals("1")) {
+					condition += " where bmbh = '" + d.getDid() + "' ";
+					if (d.getHqls().trim().length() > 0) {
+						condition += " and " + d.getHqls();
+					}
+				} else {
+					if (d.getHqls().trim().length() > 0) {
+						condition += " where " + d.getHqls();
+					}
 				}
 			}
+			sql += condition;
+			if (dicts.getOrderByTree() != null) {
+				if (dicts.getOrderByTree().trim().length() > 0) {
+					sql += " " + dicts.getOrderByTree();
+				}
+			}		
+			List<Object[]> list = selectCommonDao.findBySQL(sql);
+			dg.setRows(list);
+			dg.setObj(sql);
 		}
-		sql += condition;
-		if (dicts.getOrderByTree() != null) {
-			if (dicts.getOrderByTree().trim().length() > 0) {
-				sql += " " + dicts.getOrderByTree();
-			}
-		}
-		List<Object[]> list = selectCommonDao.findBySQL(sql);
-		dg.setRows(list);
-		dg.setObj(sql);
 		return dg;
 	}
 
@@ -139,6 +147,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		TDict dicts = dictDao.get(dictSql);
 		// 判断是执行sql语句还是存储过程
 		if (dicts.getGenre().equals("04")) {
+			
 			List<Object[]> list = selectCommonDao.findBySQL(d.getSqls().trim());
 			return list;
 		}
@@ -162,10 +171,6 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 
 			String hql = "from TDict t where ename='" + d.getQuery() + "'";
 			TDict dict = dictDao.get(hql);
-			// String n = dict.getOrderBy();
-//			if (dict.getOrderBy().trim().length() > 0) {
-//				sql += " " + dicts.getOrderBy();
-//			}
 			if (dict.getInGroupBy() != null) {
 				sql += " " + dict.getInGroupBy();
 
@@ -192,6 +197,16 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			List<Object[]> list = selectCommonDao.findBySQL(sq);
 			return list;
 		}
+	}
+
+	public String spellFor(String exec, String sql) {
+		if (exec != null && exec.length() > 0) {
+			for (String path : exec.split(",")) {
+				sql += ",'" + path.trim() + "'";
+			}
+		}
+		return sql;
+
 	}
 
 	@Autowired

@@ -447,6 +447,7 @@ function saveAll(){
 	//将表格中的数据转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfpdAction!save.action',
@@ -463,6 +464,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -475,6 +479,7 @@ function cjKfpd(){
 		if(row.isCj != '1'){
 			$.messager.prompt('请确认', '是否要冲减选中的库房盘点单？请填写备注', function(bz){
 				if(bz != undefined){
+					//MaskUtil.mask('正在冲减，请等待……');
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/kfpdAction!cjKfpd.action',
 						data : {
@@ -493,6 +498,9 @@ function cjKfpd(){
 								title : '提示',
 								msg : d.msg
 							});
+						},
+						complete: function(){
+							//MaskUtil.unmask();
 						}
 					});
 				}

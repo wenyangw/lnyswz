@@ -187,7 +187,7 @@ $(function(){
 	xskp_xsthDg = $('#jxc_xskp_xsthDg').datagrid({
 		fit : true,
 	    border : false,
-	    //remoteSort: false,
+	    remoteSort: false,
 // 	    fitColumns: true,
 // 	    singleSelect: true, 
 	    pagination : true,
@@ -230,8 +230,11 @@ $(function(){
 						return '送货';
 					}
 				}},
-			{field:'spbh',title:'商品编号',align:'center'},
-			{field:'spmc',title:'名称',align:'center'},
+			{field:'spbh',title:'*商品编号',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		return  a - b;
+	        	}},
+			{field:'spmc',title:'名称',align:'center',},
 			{field:'spcd',title:'产地',align:'center'},
 			{field:'sppp',title:'品牌',align:'center'},
 			{field:'spbz',title:'包装',align:'center'},
@@ -848,9 +851,9 @@ function saveAll(){
 		effectRow['bookmc'] = $('input[name=jxc_xskp_bookmc]').val();
 		effectRow['khbh'] = $('input[name=khbh]').val();
 		effectRow['khmc'] = $('input[name=khmc]').val();
-		effectRow['sh'] = $('input[name=sh]').val();
-		effectRow['khh'] = $('input[name=khh]').val();
-		effectRow['dzdh'] = $('input[name=dzdh]').val();
+		effectRow['sh'] = $('input[name=xskp_sh]').val();
+		effectRow['khh'] = $('input[name=xskp_khh]').val();
+		effectRow['dzdh'] = $('input[name=xskp_dzdh]').val();
 		effectRow['ckId'] = jxc_xskp_ckCombo.combobox('getValue');
 		effectRow['ckmc'] = jxc_xskp_ckCombo.combobox('getText');
 		effectRow['ywyId'] = jxc_xskp_ywyCombo.combobox('getValue');
@@ -871,6 +874,7 @@ function saveAll(){
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
 		//$.ajaxSettings.traditional=true;
+		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
@@ -894,6 +898,9 @@ function saveAll(){
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
+			},
+			complete: function(){
+				//MaskUtil.unmask();
 			}
 		});
 	}
@@ -1314,9 +1321,9 @@ function checkKh(){
 				$.messager.alert('提示', data.msg, 'error');
 				$('input[name=khbh]').val('');
 				$('input[name=khmc]').val('');
-				$('input[name=sh]').val('');
-				$('input[name=khh]').val('');
-				$('input[name=dzdh]').val('');
+				$('input[name=xskp_sh]').val('');
+				$('input[name=xskp_khh]').val('');
+				$('input[name=xskp_dzdh]').val('');
 				$('input[name=khbh]').focus();
 				return false;
 			}
@@ -1341,9 +1348,9 @@ function loadKh(khbh){
 			if(data.success){
 				//设置信息字段值
 				$('input[name=khmc]').val(data.obj.khmc);
-				$('input[name=sh]').val(data.obj.sh);
-				$('input[name=khh]').val(data.obj.khh);
-				$('input[name=dzdh]').val(data.obj.dzdh);
+				$('input[name=xskp_sh]').val(data.obj.sh);
+				$('input[name=xskp_khh]').val(data.obj.khh);
+				$('input[name=xskp_dzdh]').val(data.obj.dzdh);
 				jxc_xskp_ywyCombo.combobox('setValue', data.obj.ywyId);
 // 				if(data.obj.isSx == '1'){
 // 					$('input[name=isSx]').prop('checked', 'ckecked');
@@ -1382,7 +1389,7 @@ function khLoad(){
 // 				params += '?isNsr=1';
 // 			}
 // 		}
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action' + params);
@@ -1392,9 +1399,9 @@ function khLoad(){
 	default:
 		if($('input[name=khbh]').val().trim().length == 0){
 			$('input[name=khmc]').val('');
-			$('input[name=sh]').val('');
-			$('input[name=khh]').val('');
-			$('input[name=dzdh]').val('');
+			$('input[name=xskp_sh]').val('');
+			$('input[name=xskp_khh]').val('');
+			$('input[name=xskp_dzdh]').val('');
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=khbh]').val().trim());
@@ -1417,6 +1424,7 @@ function cjXskp(){
 					if(row.fromTh == '1' || (row.xsthlshs == undefined || row.xsthlshs.trim == '')){
 						$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
 							if (bz != undefined) {
+								//MaskUtil.mask('正在冲减，请等待……');
 								$.ajax({
 									url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
 									data : {
@@ -1434,6 +1442,9 @@ function cjXskp(){
 											title : '提示',
 											msg : d.msg
 										});
+									},
+									complete: function(){
+										//MaskUtil.unmask();
 									}
 								});
 							}
@@ -1537,15 +1548,18 @@ function printXsqk(){
 			$.messager.prompt('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？\n请填写发票号', function(bz){
 				if (bz != undefined) {
 					if(bz.length > 0){
-				
-				//if (r) {
-						for (var i = 0; i < rows.length; i++) {
-							xskplshs.push(rows[i].xskplsh);
-						}
-						var xskplsh = xskplshs.join(',');
-					
-						var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						$.messager.prompt('请确认', '如发票数目与记录数不符，请输入实际发票数：', function(num){
+							if (num != undefined) {
+								bz += '&lens=' + num;
+							}
+							for (var i = 0; i < rows.length; i++) {
+								xskplshs.push(rows[i].xskplsh);
+							}
+							var xskplsh = xskplshs.join(',');
+						
+							var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						});	
 					}else{
 						$.messager.alert('提示', '必须填写发票号！', 'error');
 					}
@@ -1739,9 +1753,9 @@ function searchXsthInXskp(){
 						<th class="read">客户名称</th><td colspan="3"  class="read"><input name="khmc" readonly="readonly" style="width:100%"></td>
 					</tr>
 					<tr>
-						<th class="read">税号</th><td class="read"><input name="sh" readonly="readonly"></td>
-						<th class="read">开户行账号</th><td class="read"><input name="khh" readonly="readonly"></td>
-						<th class="read">地址电话</th><td class="read"><input name="dzdh" readonly="readonly"></td>
+						<th class="read">税号</th><td class="read"><input name="xskp_sh" readonly="readonly"></td>
+						<th class="read">开户行账号</th><td class="read"><input name="xskp_khh" readonly="readonly"></td>
+						<th class="read">地址电话</th><td class="read"><input name="xskp_dzdh" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th>结算方式</th><td><input id="jxc_xskp_jsfsId" name="jsfsId" type="text"></td>
