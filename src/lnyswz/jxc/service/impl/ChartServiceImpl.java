@@ -50,7 +50,7 @@ public class ChartServiceImpl implements ChartServiceI {
 		}else{
 			sql += " from v_xstj_nonb";
 		}
-		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? and splbmc is null order by jzsj";
+		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
 		
 		return getChartByMonth(chart, sql);
 	}
