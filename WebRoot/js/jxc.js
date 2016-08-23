@@ -295,6 +295,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		var kh01 = ['21010263',  //辽宁新华印务有限公司
 		            '21010608',  //辽宁票据印务有限公司
 		            '21010183',  //辽宁北方出版物配送有限公司
+		            '21028400',  //大连分公司
 		            ];
 		if(kh01.indexOf(khbh) >= 0){
 			return false;

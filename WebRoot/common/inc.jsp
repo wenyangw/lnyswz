@@ -13,7 +13,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui-lang-zh_CN.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.portal.js" charset="utf-8"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20160708"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20160823"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20160708"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/json.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/datepicker/WdatePicker.js"></script>
