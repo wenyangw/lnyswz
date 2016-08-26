@@ -1,5 +1,6 @@
 package lnyswz.jxc.util;
 
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import lnyswz.common.bean.DataGrid;
 
 public class Export {
 	private static final String CONTENTTYPE = "application/octet-stream";
+	private static final String CONTENTTYPE_PDF = "application/pdf;charset=GBK";
 
 	public static void print(DataGrid dg, String fileName) {
 		java.io.File fileReport = new java.io.File(getRootPath() + "/report/"
@@ -53,7 +59,7 @@ public class Export {
 		}
 
 	}
-
+	
 	public static String getRootPath() {
 		// 因为类名为"Export"，因此" Export.class"一定能找到
 		String result = Export.class.getResource("Export.class").toString();

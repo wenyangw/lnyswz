@@ -1797,6 +1797,7 @@ function printXsth(){
 	}
 }
 
+
 function printXsht(){
 	var selected = xsth_dg.datagrid('getSelected');
  	if (selected != undefined) {

@@ -159,7 +159,7 @@ function appendDict() {
 						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							dict_dg.datagrid('appendRow', json.obj);
-							if(json.obj.genre == '03'){
+							if(json.obj.genre == '03' || json.obj.genre == '04'){
 								$('#admin_dict_tree').tree('reload');
 							}
 							p.dialog('close');
@@ -213,7 +213,7 @@ function editDict(){
 							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								dict_dg.datagrid('reload');
-								if(rows[0].genre == '03'){
+								if(rows[0].genre == '03' || rows[0].genre == '04'){
 									$('#admin_dict_tree').tree('reload');
 								}
 								p.dialog('close');
@@ -287,7 +287,7 @@ function removeDict(){
 					success : function(d) {
 						dict_dg.datagrid('reload');
 						dict_dg.datagrid('unselectAll');
-						if(rows[0].genre == '03'){
+						if(rows[0].genre == '03' || rows[0].genre == '04'){
 							$('#admin_dict_tree').tree('reload');
 						}
 						$.messager.show({

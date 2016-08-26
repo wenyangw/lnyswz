@@ -1029,7 +1029,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
 			//内部销售的不受限制
-			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263') or t.TXsth.fromRk='1'))))";
+			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05'))))))";
 		}
 		
 		
@@ -1109,7 +1109,7 @@ public class XsthServiceImpl implements XsthServiceI {
 //					c.setZdwytsl(getYtsl(t.getTXsth().getXsthlsh(), t.getSpbh()));
 //				}
 //			}
-			if(xsth.getFromOther().equals("fromXskp") && tXsth.getIsZs().equals("1") && !(tXsth.getBmbh().equals("01") && tXsth.getKhbh().equals("21010263"))){
+			if(xsth.getFromOther().equals("fromXskp") && tXsth.getIsZs().equals("1") && !(tXsth.getBmbh().equals("01") && tXsth.getKhbh().equals("21010263")) && !(tXsth.getBmbh().equals("05") && tXsth.getFromRk().equals("1"))){
 				if(y != null){
 					nl.add(c);
 				}
