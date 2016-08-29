@@ -57,10 +57,8 @@ public class YwbtServiceImpl implements YwbtServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TYwrk> ywrkDao;
 	private BaseDaoI<TLsh> lshDao;
-	private BaseDaoI<TSpDet> spDetDao;
 	private BaseDaoI<TDepartment> depDao;
 
-	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -83,8 +81,10 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		//处理商品明细
 		Set<TYwbtDet> tDets = new HashSet<TYwbtDet>();
 		ArrayList<YwbtDet> ywbtDets = JSON.parseObject(ywbt.getDatagrid(), new TypeReference<ArrayList<YwbtDet>>(){});
+		TYwbtDet tDet = null;
+		Sp sp = null;
 		for(YwbtDet ywbtDet : ywbtDets){
-			TYwbtDet tDet = new TYwbtDet();
+			tDet = new TYwbtDet();
 			BeanUtils.copyProperties(ywbtDet, tDet, new String[]{"id"});
 			if(null == ywbtDet.getBtje()){
 				tDet.setSpje(Constant.BD_ZERO);
@@ -92,7 +92,7 @@ public class YwbtServiceImpl implements YwbtServiceI {
 				tDet.setSpje(ywbtDet.getBtje());
 			}
 			
-			Sp sp = new Sp();
+			sp = new Sp();
 			BeanUtils.copyProperties(ywbtDet, sp);
 
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywbt.getBmbh(), tDet.getSpbh(), ywzzDao));
@@ -121,8 +121,9 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		TYwbt tYwbt = ywbtDao.load(TYwbt.class, ywbt.getYwbtlsh());
 		
 		List<YwbtDet> nl = new ArrayList<YwbtDet>();
+		YwbtDet ywbtDet = null;
 		for (TYwbtDet yd : tYwbt.getTYwbtDets()) {
-			YwbtDet ywbtDet = new YwbtDet();
+			ywbtDet = new YwbtDet();
 			BeanUtils.copyProperties(yd, ywbtDet);
 			nl.add(ywbtDet);
 		}
@@ -138,6 +139,7 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		map.put("createTime", DateUtil.dateToString(tYwbt.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
 		map.put("ywbtlsh", tYwbt.getYwbtlsh());
 		map.put("ywrklsh", tYwbt.getTYwrk().getYwrklsh());
+		map.put("gysmc", tYwbt.getTYwrk().getGysmc());
 		map.put("rklxmc", "补调");
 		map.put("ckmc", tYwbt.getTYwrk().getCkmc());
 		map.put("hjje", tYwbt.getHjje());
@@ -153,7 +155,8 @@ public class YwbtServiceImpl implements YwbtServiceI {
 	@Override
 	public DataGrid datagrid(Ywbt ywbt) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime";
+		StringBuilder hql = new StringBuilder(" from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime");
+		//String hql = " from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywbt.getBmbh());
 		if(ywbt.getCreateTime() != null){
@@ -162,13 +165,18 @@ public class YwbtServiceImpl implements YwbtServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		
-		String countHql = " select count(*)" + hql;
-		hql += " order by t.createTime desc";
-		List<TYwbt> l = ywbtDao.find(hql, params, ywbt.getPage(), ywbt.getRows());
+		//String countHql = " select count(*)" + hql;
+		StringBuilder countHql = new StringBuilder("select count(*)").append(hql);
+		//hql += " order by t.createTime desc";
+		hql.append(" order by t.createTime desc");
+		List<TYwbt> l = ywbtDao.find(hql.toString(), params, ywbt.getPage(), ywbt.getRows());
 		List<Ywbt> nl = new ArrayList<Ywbt>();
+		Ywbt c = null;
 		for(TYwbt t : l){
-			Ywbt c = new Ywbt();
+			c = new Ywbt();
 			BeanUtils.copyProperties(t, c);
+			
+			c.setGysmc(t.getTYwrk().getGysmc());
 			
 			if(t.getTYwrk() != null){
 				c.setYwrklsh(t.getTYwrk().getYwrklsh());
@@ -176,7 +184,7 @@ public class YwbtServiceImpl implements YwbtServiceI {
 			
 			nl.add(c);
 		}
-		datagrid.setTotal(ywbtDao.count(countHql, params));
+		datagrid.setTotal(ywbtDao.count(countHql.toString(), params));
 		datagrid.setRows(nl);
 		return datagrid;
 	}
@@ -189,8 +197,9 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		params.put("ywbtlsh", ywbtlsh);
 		List<TYwbtDet> l = detDao.find(hql, params);
 		List<YwbtDet> nl = new ArrayList<YwbtDet>();
+		YwbtDet c = null;
 		for(TYwbtDet t : l){
-			YwbtDet c = new YwbtDet();
+			c = new YwbtDet();
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
@@ -227,17 +236,6 @@ public class YwbtServiceImpl implements YwbtServiceI {
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
 	}
-
-	@Autowired
-	public void setSpDao(BaseDaoI<TSp> spDao) {
-		this.spDao = spDao;
-	}
-	
-	@Autowired
-	public void setSpDetDao(BaseDaoI<TSpDet> spDetDao) {
-		this.spDetDao = spDetDao;
-	}
-
 
 	@Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {

@@ -56,6 +56,7 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+        	{field:'gysmc',title:'供应商',align:'center'},	
         	{field:'ywrklsh',title:'业务入库',align:'center'},
 	    ]],
 	    toolbar:'#jxc_ywbt_tb',

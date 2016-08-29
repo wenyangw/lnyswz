@@ -24,7 +24,6 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.XsthDet;
@@ -33,7 +32,6 @@ import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TKfrkDet;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXskp;
@@ -296,10 +294,12 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		Set<TYwrkDet> yTYwrkDets = yTYwrk.getTYwrkDets();
 		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
+		TYwrkDet tDet = null;
+		Sp sp = null;
 		for(TYwrkDet yTDet : yTYwrkDets){
-			TYwrkDet tDet = new TYwrkDet();
+			tDet = new TYwrkDet();
 			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id", "TXsths"});
-			Sp sp = new Sp();
+			sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
 			tDet.setZdwsl(yTDet.getZdwsl().negate());
 			if(yTDet.getCdwsl() != null){
@@ -372,10 +372,13 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		hql += " order by t.createTime desc";
 		List<TYwrk> l = ywrkDao.find(hql, params, ywrk.getPage(), ywrk.getRows());
 		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
+		Set<TKfrk> tKfrks = null;
+		Set<TCgjhDet> tCgjhs = null;
 		for(TYwrk t : l){
-			Ywrk c = new Ywrk();
+			c = new Ywrk();
 			BeanUtils.copyProperties(t, c);
-			Set<TKfrk> tKfrks = t.getTKfrks();
+			tKfrks = t.getTKfrks();
 			if(tKfrks != null && tKfrks.size() > 0){
 				String kfrklshs = "";
 				int i = 0;
@@ -388,7 +391,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				}
 				c.setKfrklshs(kfrklshs);
 			}
-			Set<TCgjhDet> tCgjhs = t.getTCgjhs();
+			tCgjhs = t.getTCgjhs();
 			if(tCgjhs != null && tCgjhs.size() > 0){
 				String cgjhlshs = "";
 				int i = 0;
@@ -419,8 +422,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		params.put("ywrklsh", ywrklsh);
 		List<TYwrkDet> l = detDao.find(hql, params);
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet c = null;
 		for(TYwrkDet t : l){
-			YwrkDet c = new YwrkDet();
+			c = new YwrkDet();
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
@@ -455,20 +459,24 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		List<TYwrkDet> l = detDao.find(hql, params);
 		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
 		for(TYwrkDet t : l){
-			Ywrk c = new Ywrk();
-			BeanUtils.copyProperties(t, c);
-			c.setYwrklsh(t.getTYwrk().getYwrklsh());
-			c.setCreateTime(t.getTYwrk().getCreateTime());
-			c.setCreateName(t.getTYwrk().getCreateName());
-			c.setGysbh(t.getTYwrk().getGysbh());
-			c.setGysmc(t.getTYwrk().getGysmc());
-			c.setCkId(t.getTYwrk().getCkId());
-			c.setCkmc(t.getTYwrk().getCkmc());
-			c.setRklxId(t.getTYwrk().getRklxId());
-			c.setRklxmc(t.getTYwrk().getRklxmc());
-			
-			nl.add(c);
+			//在销售提货流程中，由直送计划生成的入库不显示
+			if("fromXsth".equals(ywrk.getFromOther()) && t.getTYwrk().getTCgjhs() == null){
+				c = new Ywrk();
+				BeanUtils.copyProperties(t, c);
+				c.setYwrklsh(t.getTYwrk().getYwrklsh());
+				c.setCreateTime(t.getTYwrk().getCreateTime());
+				c.setCreateName(t.getTYwrk().getCreateName());
+				c.setGysbh(t.getTYwrk().getGysbh());
+				c.setGysmc(t.getTYwrk().getGysmc());
+				c.setCkId(t.getTYwrk().getCkId());
+				c.setCkmc(t.getTYwrk().getCkmc());
+				c.setRklxId(t.getTYwrk().getRklxId());
+				c.setRklxmc(t.getTYwrk().getRklxmc());
+				
+				nl.add(c);
+			}
 		}
 		
 		datagrid.setRows(nl);
@@ -494,8 +502,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 		}
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet ywrkDet = null;
 		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
-			YwrkDet ywrkDet = new YwrkDet();
+			ywrkDet = new YwrkDet();
 			BeanUtils.copyProperties(yd, ywrkDet);
 			nl.add(ywrkDet);
 		}
@@ -544,8 +553,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				
 		List<KfrkDet> nl = new ArrayList<KfrkDet>();
 		BigDecimal hj = Constant.BD_ZERO;
+		KfrkDet kfrkDet = null;
 		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
-			KfrkDet kfrkDet = new KfrkDet();
+			kfrkDet = new KfrkDet();
 			BeanUtils.copyProperties(yd, kfrkDet);
 			nl.add(kfrkDet);
 			hj = hj.add(yd.getCdwsl());
@@ -711,8 +721,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		List<TYwrkDet> l = detDao.find(hql, params);
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet ywrkDet = null;
 		for(TYwrkDet tYwrkDet : l){
-			YwrkDet ywrkDet = new YwrkDet();
+			ywrkDet = new YwrkDet();
 			BeanUtils.copyProperties(tYwrkDet, ywrkDet);
 			
 			nl.add(ywrkDet);
@@ -749,7 +760,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BigDecimal zdwrksl = new BigDecimal(os[1].toString());
 			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
 			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
-			BigDecimal cdwthsl = new BigDecimal(os[4].toString());
 			BigDecimal xsdj = new BigDecimal(os[5].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);

@@ -833,8 +833,8 @@ function saveAll(){
 		effectRow['isDep'] =  '0';
 	}
 	
-	effectRow['gysbh'] = $('input[name=gysbh]').val();
-	effectRow['gysmc'] = $('input[name=gysmc]').val();
+	effectRow['gysbh'] = $('input[name=jxc_ywrk_gysbh]').val();
+	effectRow['gysmc'] = $('input[name=jxc_ywrk_gysmc]').val();
 	effectRow['ckId'] = jxc_ywrk_ckCombo.combobox('getValue');
 	effectRow['ckmc'] = jxc_ywrk_ckCombo.combobox('getText');
 	effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
@@ -1137,7 +1137,7 @@ function existKey(value, rowIndex){
 
 function formValid(){
 	var message = '';
-	if($('input[name=gysmc]').val() == ''){
+	if($('input[name=jxc_ywrk_gysmc]').val() == ''){
 		message += '供应商信息<br>';
 	}
 	
@@ -1170,29 +1170,29 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
+		jxc.query('供应商检索', $('input[name=jxc_ywrk_gysbh]'), $('input[name=jxc_ywrk_gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
 	case 9:
 		break;
 	default:
-		if($('input[name=gysbh]').val().trim().length == 0){
-			$('input[name=gysmc]').val('');
+		if($('input[name=jxc_ywrk_gysbh]').val().trim().length == 0){
+			$('input[name=jxc_ywrk_gysmc]').val('');
 		}
-		if($('input[name=gysbh]').val().trim().length == 8){
+		if($('input[name=jxc_ywrk_gysbh]').val().trim().length == 8){
 			$.ajax({
 				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
 				async: false,
 				context:this,
 				data:{
-					gysbh: $('input[name=gysbh]').val().trim(),
+					gysbh: $('input[name=jxc_ywrk_gysbh]').val().trim(),
 				},
 				dataType:'json',
 				success:function(data){
 					if(data.success){
 						//设置信息字段值
-						$('input[name=gysmc]').val(data.obj.gysmc);
+						$('input[name=jxc_ywrk_gysmc]').val(data.obj.gysmc);
 					}else{
 						$.messager.alert('提示', '供应商信息不存在！', 'error');
 					}
@@ -1332,8 +1332,8 @@ function changeYwrk(){
 						method: 'post',
 						dataType : 'json',
 						success : function(d) {
-							$('input[name=gysbh]').val(selected[0].gysbh);
-							$('input[name=gysmc]').val(selected[0].gysmc);
+							$('input[name=jxc_ywrk_gysbh]').val(selected[0].gysbh);
+							$('input[name=jxc_ywrk_gysmc]').val(selected[0].gysmc);
 							if (selected[0].isZs == '1') {
 								$('input[name=isZs]').prop('checked', true);
 							}
@@ -1396,8 +1396,8 @@ function generateYwrk(){
 						});
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
-						$('input[name=gysbh]').val(rows[0].gysbh);
-						$('input[name=gysmc]').val(rows[0].gysmc);
+						$('input[name=jxc_ywrk_gysbh]').val(rows[0].gysbh);
+						$('input[name=jxc_ywrk_gysmc]').val(rows[0].gysmc);
 						$('input[name=kfrklshs]').val(kfrklshsStr);
 						ywrk_tabs.tabs('select', 0);
 					}
@@ -1445,8 +1445,8 @@ function createYwrkFromCgjh(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						$('input[name=gysbh]').val(rows[0].gysbh);
-						$('input[name=gysmc]').val(rows[0].gysmc);
+						$('input[name=jxc_ywrk_gysbh]').val(rows[0].gysbh);
+						$('input[name=jxc_ywrk_gysmc]').val(rows[0].gysmc);
 						$('input[name=isZs]').prop('checked', true);
 						jxc_ywrk_ckCombo.combobox('setValue', rows[0].ckId);
 						ywrk_spdg.datagrid('loadData', d.rows);
@@ -1490,8 +1490,8 @@ function toYwrk(){
 						$('input[name=isDep]').prop('checked', 'checked');
 						$('input[name=isDep]').attr('checked', 'checked');
 						depChange(row.bmbh);
-						$('input[name=gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
-						$('input[name=gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
+						$('input[name=jxc_ywrk_gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
+						$('input[name=jxc_ywrk_gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
 						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
 						$('input[name=jxc_ywrk_bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
@@ -1536,9 +1536,9 @@ function searchXskpInYwrk(){
 						<th class="read">单据号</th><td><div id="ywrkLsh" class="read"></div></td>
 					</tr>
 					<tr>
-						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
+						<th>供应商编码</th><td><input name="jxc_ywrk_gysbh" class="easyui-validatebox"
 							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
-						<th class="read">供应商名称</th><td colspan="3"><input name="gysmc" readonly="readonly" size="50"></td>
+						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_ywrk_gysmc" readonly="readonly" size="50"></td>
 					</tr>
 					<tr>
 						<th>仓库</th><td><input id="jxc_ywrk_ckId" name="ckId" type="text" size="8"></td>
