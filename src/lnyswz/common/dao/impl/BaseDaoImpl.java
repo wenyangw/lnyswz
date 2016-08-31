@@ -165,6 +165,12 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	}
 	
 	@Override
+	public int updateBySQL(String sql) {
+		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+		return query.executeUpdate();
+	}
+	
+	@Override
 	public Object[] getMBySQL(String sql, Map<String, Object> params) {
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		if (params != null && !params.isEmpty()) {

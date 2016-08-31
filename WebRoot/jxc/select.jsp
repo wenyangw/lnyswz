@@ -525,6 +525,7 @@ function cleanClick(){
 }
 
 function exportExcel(){
+	lnyw.MaskUtil.mask('正在导出，请等待……');
     var titles=[];
 	var fields=[];
 	query = lnyw.tab_options().query;
@@ -557,7 +558,6 @@ function exportExcel(){
 			fields.push(s);		
 		}	
 	});	
-	lnyw.MaskUtil.mask('正在导出，请等待……');
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,

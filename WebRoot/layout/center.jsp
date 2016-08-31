@@ -82,3 +82,5 @@ $(function(){
 <div id="jxc_queryAddr_dialog"></div>
 <div id="printDialog"></div>
 <div id="fileDialog"></div>
+<div class="datagrid-mask"></div>  
+<div class="datagrid-mask-msg"></div>

@@ -519,6 +519,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 					   			iconCls: 'icon-edit',
 					   			text   : '导出报表',
 					   			handler: function(){
+					   				lnyw.MaskUtil.mask('正在导出，请等待……');
 					   				exportExcel();
 						   			},			   		
 						   		},
@@ -541,6 +542,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 											iconCls: 'icon-edit',
 											text   : '导出全部报表',
 											handler: function(){
+												lnyw.MaskUtil.mask('正在导出，请等待……');
 												exportExcelAll();
 										},			   		
 									});
@@ -549,6 +551,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 										iconCls: 'icon-edit',
 										text   : '导出视图报表',
 										handler: function(){
+											lnyw.MaskUtil.mask('正在导出，请等待……');
 											exportExcelTree();
 									},			   		
 							});
@@ -562,7 +565,6 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 				}							
 		}											
 	});
-	p.dialog('destroy');
 	var cmenu;
 	function createColumnMenu(){
 			cmenu = $('<div/>').appendTo('body');
@@ -661,6 +663,7 @@ function cleanClick(){
 
 }
 function exportExcelTree(){
+	
 	var titles=[];
 	var fields=[];
 	var hid=[];
@@ -697,6 +700,7 @@ function exportExcelTree(){
 			}											
 		});	
 
+	
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -723,6 +727,9 @@ function exportExcelTree(){
 				title : "提示",
 				msg : json.msg
 			});
+		},
+		complete: function(){
+			lnyw.MaskUtil.unmask();
 		}
 	});
 		
@@ -784,6 +791,9 @@ function exportExcelAll(){
 				title : "提示",
 				msg : json.msg
 			});
+		},
+		complete: function(){
+			lnyw.MaskUtil.unmask();
 		}
 	});
 		
@@ -820,6 +830,7 @@ function exportExcel(){
 		});	
 // 	console.info($('#exportExcelTree_sql' + query).val());
 // 	console.info($('#exportExcelTree_sql' + query).val().replace(/,5,/, ",0,"));
+
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -845,6 +856,9 @@ function exportExcel(){
 				title : "提示",
 				msg : json.msg
 			});
+		},
+		complete: function(){
+			lnyw.MaskUtil.unmask();
 		}
 	});
 		
@@ -890,14 +904,14 @@ function exportExcel(){
 				data-options="region:'center',border:false"></div>
 		</div>
 	</div>
-	<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+	<div data-options="region:'center',title:'详细内容',split:true"
 		style="width: 100%; height: 100%">
 		<div id='select_treeShow_layout' style="height: 100%;">
 			<div data-options="region:'west',title:'视图',split:true"
 				style="height: 100px; width: 350px">
 				<ul id="select_tree"></ul>
 			</div>
-			<div data-options="region:'center',title:'详细内容',split:true, fit:true"
+			<div data-options="region:'center',title:'详细内容',split:true"
 				style="height: 100px;">
 				<div id='jxc_select_dg'></div>
 			</div>

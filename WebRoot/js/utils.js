@@ -832,14 +832,18 @@ lnyw.MaskUtil = (function() {
   
     var defMsg = '正在处理，请稍待。。。';  
   
-    function init() {  
+    function init() {
         if (!$mask) {  
-            $mask = $("<div class=\"datagrid-mask mymask\"></div>").appendTo("body");  
+            //$mask = $("<div class=\"datagrid-mask mymask\"></div>").appendTo("body");
+            $mask = $(".datagrid-mask");
         }  
         if (!$maskMsg) {  
-            $maskMsg = $("<div class=\"datagrid-mask-msg mymask\">" + defMsg + "</div>").appendTo("body").css({  
+            //$maskMsg = $("<div class=\"datagrid-mask-msg mymask\">" + defMsg + "</div>").appendTo("body").css({  
+            //    'font-size' : '12px'  
+            //});
+            $maskMsg = $(".datagrid-mask-msg").css({  
                 'font-size' : '12px'  
-            });  
+            });
         }  
   
         $mask.css({  
@@ -858,13 +862,57 @@ lnyw.MaskUtil = (function() {
   
     return {  
         mask : function(msg) {  
-            init();  
-            $mask.show();  
-            $maskMsg.html(msg || defMsg).show();  
+            init();
+            $mask.show();
+            $maskMsg.html(msg || defMsg).show();
+        	
+        	/**
+        	var $mask = $('.datagrid-mask');  
+            var $mask_msg = $('.datagrid-mask-msg');  
+              
+            $mask.css({  
+                display: 'block',  
+                width : "100%",  
+                height : $(document).height()  
+            }).appendTo(document.body);  
+              
+            $mask_msg.css({  
+                display: 'block', //显示出来  
+                'z-index': 9999, //最顶层，用户才能点到链接  
+                //width: 560,  
+                //height: 90,  
+                //padding: '10px 10px 10px 60px', //覆盖原来的样式  
+                //background: '#ffc url("${ctx}/jquery-easyui/themes/default/images/messager_warning.gif") no-repeat scroll 10px 10px', //覆盖原来的样式  
+                left: ($(window).width()  - $mask_msg.outerWidth())/2,  
+                top:  ($(window).height() - $mask_msg.outerHeight())/2  
+            }).html(msg || defMsg);  
+      
+            $(window).resize(function() {  
+                $mask.css({  
+                    width:  $(window).width(),   
+                    height: $(window).height()  
+                });  
+                $mask_msg.css({  
+                    left: ($(window).width()  - $mask_msg.outerWidth())/2,  
+                    top:  ($(window).height() - $mask_msg.outerHeight())/2  
+                });  
+            }).resize(); 
+        	**/
         },  
         unmask : function() {  
             $mask.hide();  
-            $maskMsg.hide();  
+            $maskMsg.hide();
+        	
+        	/**
+        	var $mask = $('.datagrid-mask');  
+            var $mask_msg = $('.datagrid-mask-msg');
+            $mask.css({  
+                display: 'none',
+            });
+            $mask_msg.css({  
+                display: 'none',
+            });
+            **/
         }  
     };  
   
