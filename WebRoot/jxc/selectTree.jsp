@@ -501,7 +501,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 						$.each(data.obj.rows,function(){
 							//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 							var onlyData=Object.create(Object.prototype);							
-							for( var i=0;i<this.length-1;i++){
+							for( var i=0;i<this.length;i++){
 								var allF=allFields[i].replace('(','abc').replace(')','xyz').replace(',','fgh').replace("'","mno").replace("'","mno");									
 								onlyData[allF]=this[i];							
 							}	
