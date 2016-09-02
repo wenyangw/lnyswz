@@ -1,32 +1,16 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Kfpd;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfpdServiceI;
-import lnyswz.jxc.util.Constant;
-import lnyswz.jxc.util.Export;
 
 /**
  * 库房盘点Action
@@ -37,7 +21,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("kfpdAction")
 public class KfpdAction extends BaseAction implements ModelDriven<Kfpd> {
-	private Logger logger = Logger.getLogger(KfpdAction.class);
+	private static final long serialVersionUID = 1L;
 	private Kfpd kfpd = new Kfpd();
 	private KfpdServiceI kfpdService;
 

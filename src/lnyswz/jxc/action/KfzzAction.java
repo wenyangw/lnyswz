@@ -1,9 +1,5 @@
 package lnyswz.jxc.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Button;
-import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.Kfzz;
-import lnyswz.jxc.bean.User;
-import lnyswz.jxc.service.ButtonServiceI;
 import lnyswz.jxc.service.KfzzServiceI;
 /**
  * 库房总账Action
@@ -26,7 +17,7 @@ import lnyswz.jxc.service.KfzzServiceI;
 @Namespace("/jxc")
 @Action("kfzzAction")
 public class KfzzAction extends BaseAction implements ModelDriven<Kfzz>{
-	private Logger logger = Logger.getLogger(KfzzAction.class);
+	private static final long serialVersionUID = 1L;
 	private Kfzz kfzz = new Kfzz();
 	private KfzzServiceI kfzzService;
 	

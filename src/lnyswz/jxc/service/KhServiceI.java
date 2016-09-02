@@ -1,10 +1,8 @@
 package lnyswz.jxc.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import lnyswz.common.bean.DataGrid;
-import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Yszz;
 

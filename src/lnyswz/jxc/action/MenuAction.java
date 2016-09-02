@@ -3,10 +3,8 @@ package lnyswz.jxc.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
-import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lnyswz.common.action.BaseAction;
@@ -25,7 +23,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @Namespace("/admin")
 @Action("menuAction")
 public class MenuAction extends BaseAction implements ModelDriven<Menu> {
-	private final static Logger logger = Logger.getLogger(MenuAction.class);
+	private static final long serialVersionUID = 1L;
 	private Menu menu = new Menu();
 	private MenuServiceI menuService;
 	

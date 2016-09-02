@@ -11,7 +11,6 @@ import lnyswz.jxc.service.MonthServiceI;
 @Action("monthAction")
 public class MonthAction extends BaseAction {
 	private static final long serialVersionUID = 1L;
-	//private MonthHandler monthHandler = new MonthHandler();
 	private MonthServiceI monthService;
 
 	/**
@@ -22,9 +21,9 @@ public class MonthAction extends BaseAction {
 		try {
 			monthService.update();
 			j.setSuccess(true);
-			j.setMsg("月末结转成功！");
+			j.setMsg("月末结账成功！");
 		} catch (Exception e) {
-			j.setMsg("月末结转失败！");
+			j.setMsg("月末结账失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);

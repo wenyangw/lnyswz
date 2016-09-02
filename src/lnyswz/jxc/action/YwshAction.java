@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import lnyswz.jxc.bean.Ywsh;
 import lnyswz.jxc.service.YwshServiceI;
 
 /**
- * 业务盘点Action
+ * 业务审批Action
  * 
  * @author 王文阳
  * 
@@ -22,7 +21,7 @@ import lnyswz.jxc.service.YwshServiceI;
 @Namespace("/jxc")
 @Action("ywshAction")
 public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
-	private Logger logger = Logger.getLogger(YwshAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywsh ywsh = new Ywsh();
 	private YwshServiceI ywshService;
 

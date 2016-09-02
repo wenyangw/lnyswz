@@ -12,7 +12,6 @@ import lnyswz.jxc.service.OperalogServiceI;
 @Namespace("/admin")
 @Action("operalogAction")
 public class OperalogAction extends BaseAction implements ModelDriven<Operalog> {
-
 	private static final long serialVersionUID = 1L;
 	private Operalog ope = new Operalog();
 	private OperalogServiceI opeService;

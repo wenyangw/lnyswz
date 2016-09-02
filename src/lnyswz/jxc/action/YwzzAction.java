@@ -1,9 +1,5 @@
 package lnyswz.jxc.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,22 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Button;
-import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.Ywzz;
-import lnyswz.jxc.bean.User;
-import lnyswz.jxc.service.ButtonServiceI;
 import lnyswz.jxc.service.YwzzServiceI;
+
 /**
- * 库房总账Action
+ * 业务总账Action
  * @author 王文阳
  *
  */
 @Namespace("/jxc")
 @Action("ywzzAction")
 public class YwzzAction extends BaseAction implements ModelDriven<Ywzz>{
-	private Logger logger = Logger.getLogger(YwzzAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywzz ywzz = new Ywzz();
 	private YwzzServiceI ywzzService;
 	

@@ -1,7 +1,6 @@
 package lnyswz.jxc.action;
 
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import lnyswz.jxc.service.UserServiceI;
 public class LoginAction extends BaseAction implements ModelDriven<User> {
 
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 
 	private UserServiceI userService;
 	private CatalogServiceI catalogService;

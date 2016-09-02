@@ -1,7 +1,6 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,8 @@ import lnyswz.jxc.service.ButtonServiceI;
 @Namespace("/admin")
 @Action("buttonAction")
 public class ButtonAction extends BaseAction implements ModelDriven<Button>{
-	private Logger logger = Logger.getLogger(ButtonAction.class);
+	private static final long serialVersionUID = 1L;
+	//private Logger logger = Logger.getLogger(ButtonAction.class);
 	private Button button = new Button();
 	private ButtonServiceI buttonService;
 	

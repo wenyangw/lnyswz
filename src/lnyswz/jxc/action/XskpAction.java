@@ -1,13 +1,9 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -27,7 +23,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("xskpAction")
 public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
-	private Logger logger = Logger.getLogger(XskpAction.class);
+	private static final long serialVersionUID = 1L;
 	private Xskp xskp = new Xskp();
 	private XskpServiceI xskpService;
 	

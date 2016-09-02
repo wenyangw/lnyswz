@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import lnyswz.jxc.service.DictServiceI;
 @Action("dictAction")
 public class DictAction extends BaseAction implements ModelDriven<Dict> {
 	private static final long serialVersionUID = 1L;
-	private Logger logger = Logger.getLogger(DictAction.class);
 	private Dict dict = new Dict();
 	private DictServiceI dictService;
 
@@ -96,7 +94,6 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 		writeJson(dictService.selectTree(dict));
 	}
 	public void listFields() {
-		logger.info(dict.getSelectType());
 		writeJson(dictService.listFields(dict));
 	}
 

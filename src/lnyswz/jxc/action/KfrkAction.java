@@ -1,13 +1,9 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -27,7 +23,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("kfrkAction")
 public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
-	private Logger logger = Logger.getLogger(KfrkAction.class);
+	private static final long serialVersionUID = 1L;
 	private Kfrk kfrk = new Kfrk();
 	private KfrkServiceI kfrkService;
 	

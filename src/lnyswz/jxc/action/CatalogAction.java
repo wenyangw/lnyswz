@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Catalog;
-import lnyswz.jxc.model.TCatalog;
 import lnyswz.jxc.service.CatalogServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -20,6 +19,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @Namespace("/admin")
 @Action("catalogAction")
 public class CatalogAction extends BaseAction implements ModelDriven<Catalog> {
+	private static final long serialVersionUID = 1L;
 	//模型驱动获得传入对象
 	private Catalog catalog = new Catalog();
 	private CatalogServiceI catalogService;

@@ -3,6 +3,7 @@ package lnyswz.jxc.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLszz;
@@ -19,10 +20,6 @@ import lnyswz.jxc.service.MonthServiceI;
 @Service("monthService")
 public class MonthServiceImpl implements MonthServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
-	private BaseDaoI<TLszz> lszzDao;
-	private BaseDaoI<TKfzz> kfzzDao;
-	private BaseDaoI<TYszz> yszzDao;
-	private BaseDaoI<TFhzz> fhzzDao;
 	
 	/**
 	 * 月末结账
@@ -47,7 +44,7 @@ public class MonthServiceImpl implements MonthServiceI {
 				+ " convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj,"
 				+ " cqcsl + clssl - ckpsl cqcsl, 0 clssl, 0 ckpsl"
 				+ " from t_lszz where jzsj = convert(char(6), GETDATE(), 112) and qcsl + lssl - kpsl <> 0";
-		lszzDao.updateBySQL(lszz_sql);
+		ywzzDao.updateBySQL(lszz_sql);
 		
 		//处理t_kfzz
 		String kfzz_sql = "insert into t_kfzz"
@@ -55,7 +52,7 @@ public class MonthServiceImpl implements MonthServiceI {
 				+ " qcsl + rksl - cksl qcsl, cqcsl + crksl - ccksl cqcsl, 0 rksl, 0 crksl, 0 cksl, 0 ccksl, convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj"
 				+ " from t_kfzz"
 				+ " where jzsj = convert(char(6), GETDATE(), 112) and qcsl + rksl - cksl <> 0";
-		kfzzDao.updateBySQL(kfzz_sql);
+		ywzzDao.updateBySQL(kfzz_sql);
 		
 		//处理t_fhzz;
 		String fhzz_sql = "insert into t_fhzz"
@@ -63,15 +60,18 @@ public class MonthServiceImpl implements MonthServiceI {
 				+ " qcsl + rksl - cksl qcsl, 0 rksl, 0 cksl"
 				+ "	from t_fhzz"
 				+ " where jzsj = convert(char(6), GETDATE(), 112) and qcsl + rksl - cksl <> 0";
-		fhzzDao.updateBySQL(fhzz_sql);
+		ywzzDao.updateBySQL(fhzz_sql);
 		
 		//处理t_yszz
 		String yszz_sql = "insert into t_yszz"
 				+ " select bmbh, bmmc, khbh, khmc, ywyId, ywymc,"
 				+ " lsje, qcje + kpje - hkje qcje, qcthje, 0 kpje, thje, 0 hkje, convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj"
 				+ " from t_yszz where jzsj = convert(char(6), GETDATE(), 112) and (qcje + kpje - hkje <> 0 or thje <> 0)";
-		yszzDao.updateBySQL(yszz_sql);
+		ywzzDao.updateBySQL(yszz_sql);
 		
+		//库存平衡表处理
+		String kcphb_sql = "exec p_kcphb '', 1, '=', '" + DateUtil.getCurrentDateString("yyyyMM") + "', 1, 1, 2";
+		ywzzDao.updateBySQL(kcphb_sql);
 	}
 
 	
@@ -80,26 +80,4 @@ public class MonthServiceImpl implements MonthServiceI {
 		this.ywzzDao = ywzzDao;
 	}
 	
-	@Autowired
-	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
-		this.lszzDao = lszzDao;
-	}
-	
-	@Autowired
-	public void setKfzzDao(BaseDaoI<TKfzz> kfzzDao) {
-		this.kfzzDao = kfzzDao;
-	}
-	
-	@Autowired
-	public void setFhzzDao(BaseDaoI<TFhzz> fhzzDao) {
-		this.fhzzDao = fhzzDao;
-	}
-	
-	@Autowired
-	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
-		this.yszzDao = yszzDao;
-	}
-
-	
-
 }

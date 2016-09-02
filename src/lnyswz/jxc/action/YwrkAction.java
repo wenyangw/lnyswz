@@ -1,26 +1,9 @@
 package lnyswz.jxc.action;
 
-import java.io.ObjectOutputStream;
-import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -42,12 +25,10 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywrkAction")
 public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
-	private Logger logger = Logger.getLogger(YwrkAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywrk ywrk = new Ywrk();
 	private YwrkServiceI ywrkService;
 	
-	private static final String CONTENTTYPE = "application/octet-stream";
-
 	/**
 	 * 保存数据
 	 */

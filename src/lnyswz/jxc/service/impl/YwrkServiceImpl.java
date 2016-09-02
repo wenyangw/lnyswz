@@ -462,7 +462,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Ywrk c = null;
 		for(TYwrkDet t : l){
 			//在销售提货流程中，由直送计划生成的入库不显示
-			if("fromXsth".equals(ywrk.getFromOther()) && t.getTYwrk().getTCgjhs() == null){
+			if("fromXsth".equals(ywrk.getFromOther()) && t.getTYwrk().getTCgjhs().size() == 0){
 				c = new Ywrk();
 				BeanUtils.copyProperties(t, c);
 				c.setYwrklsh(t.getTYwrk().getYwrklsh());

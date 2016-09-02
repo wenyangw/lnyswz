@@ -1,12 +1,9 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -28,7 +25,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywbtAction")
 public class YwbtAction extends BaseAction implements ModelDriven<Ywbt> {
-	private Logger logger = Logger.getLogger(YwbtAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywbt ywbt = new Ywbt();
 	private YwbtServiceI ywbtService;
 

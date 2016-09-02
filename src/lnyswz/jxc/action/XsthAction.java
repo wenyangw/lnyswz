@@ -1,13 +1,8 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
-
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -30,7 +25,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("xsthAction")
 public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
-	private Logger logger = Logger.getLogger(XsthAction.class);
+	private static final long serialVersionUID = 1L;
 	private Xsth xsth = new Xsth();
 	private XsthServiceI xsthService;
 	

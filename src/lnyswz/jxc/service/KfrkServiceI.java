@@ -1,10 +1,7 @@
 package lnyswz.jxc.service;
 
-import java.util.List;
-
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Kfrk;
-
 
 public interface KfrkServiceI {
 	public Kfrk save(Kfrk kfrk);

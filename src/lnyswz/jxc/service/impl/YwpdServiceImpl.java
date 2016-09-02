@@ -105,7 +105,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			TYwpdDet tDet = new TYwpdDet();
 			BeanUtils.copyProperties(ywpdDet, tDet);
 			
-			if("".equals(ywpdDet.getCjldwId()) || null == ywpdDet.getZhxs()){
+			if("".equals(ywpdDet.getCjldwId()) || null == ywpdDet.getZhxs() || ywpdDet.getZhxs().compareTo(BigDecimal.ZERO) == 0){
 				tDet.setCdwdj(Constant.BD_ZERO);
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);

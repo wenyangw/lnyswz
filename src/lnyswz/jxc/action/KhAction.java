@@ -1,13 +1,11 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Yszz;
@@ -19,7 +17,6 @@ import com.opensymphony.xwork2.ModelDriven;
 @Action("khAction")
 public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private Kh kh = new Kh();
 	private KhServiceI khService;
 

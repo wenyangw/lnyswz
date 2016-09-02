@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import lnyswz.jxc.util.ExportExcel;
 public class SelectCommomAction extends BaseAction implements
 		ModelDriven<SelectCommon> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private SelectCommon selectCommon = new SelectCommon();
 	private SelectCommonServiceI selectCommonService;
 
