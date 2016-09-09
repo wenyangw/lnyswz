@@ -574,6 +574,39 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		datagrid.setRows(nl);
 		return datagrid;
 	}
+	
+	@Override
+	public DataGrid detDg(Cgjh cgjh) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TCgjhDet t where t.TCgjh.bmbh != :bmbh and t.TCgjh.gysbh = :gysbh and t.TCgjh.jhlsh = null";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", cgjh.getBmbh());
+		params.put("gysbh", cgjh.getGysbh());
+		
+		//采购计划流程只查询未完成的有效数据
+		if(cgjh.getFromOther() != null){
+			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
+		}
+		
+		String countHql = "select count(*) " + hql;
+		hql += " order by t.TCgjh.createTime";
+
+		List<TCgjhDet> l = detDao.find(hql, params, cgjh.getPage(), cgjh.getRows());
+		List<Cgjh> nl = new ArrayList<Cgjh>();
+		Cgjh c = null;
+		TCgjh tCgjh = null;
+		for(TCgjhDet t : l){
+			c = new Cgjh();
+			BeanUtils.copyProperties(t, c);
+			tCgjh = t.getTCgjh();
+			BeanUtils.copyProperties(tCgjh, c);
+			
+			nl.add(c);
+		}
+		datagrid.setTotal(detDao.count(countHql, params));
+		datagrid.setRows(nl);
+		return datagrid;
+	}
 
 	private BigDecimal getYrsl(String cgjhlsh, String spbh, String type) {
 		

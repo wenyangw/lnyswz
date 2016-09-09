@@ -20,4 +20,5 @@ public interface CgjhServiceI {
 	public DataGrid getSpkc(Cgjh cgjh);
 	public DataGrid toYwrk(String cgjhDetIds);
 	public DataGrid printCgjh(Cgjh cgjh);
+	public DataGrid detDg(Cgjh cgjh);
 }

@@ -2,13 +2,14 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
-var did;
-var lx;
-var menuId;
+var cgjh_did;
+var cgjh_lx;
+var cgjh_menuId;
 var cgjh_spdg;
 var cgjh_dg;
 var cgjh_cgxqDg;
 var cgjh_xsthDg;
+// var cgjh_cgjhDg;
 var cgjh_spkcDg;
 var editIndex = undefined;
 var cgjh_tabs;
@@ -41,9 +42,9 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 
 $(function(){
-	did = lnyw.tab_options().did;
-	lx = lnyw.tab_options().lx;
-	menuId = lnyw.tab_options().id;
+	cgjh_did = lnyw.tab_options().did;
+	cgjh_lx = lnyw.tab_options().lx;
+	cgjh_menuId = lnyw.tab_options().id;
 	
 	$('#jxc_cgjh_layout').layout({
 		fit : true,
@@ -236,7 +237,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_cgjh_tb',
 	});
-	lnyw.toolbar(1, cgjh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(1, cgjh_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 	
 	cgjh_dg.datagrid({
@@ -472,7 +473,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_cgjh_cgxqTb',
 	});
-	lnyw.toolbar(2, cgjh_cgxqDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(2, cgjh_cgxqDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 
 	cgjh_spkcDg = $('#jxc_cgjh_spkcDg').datagrid({
 		fit : true,
@@ -503,7 +504,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_cgjh_spkcTb',
 	});
-	lnyw.toolbar(3, cgjh_spkcDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(3, cgjh_spkcDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 	cgjh_xsthDg = $('#jxc_cgjh_xsthDg').datagrid({
 		fit : true,
@@ -615,7 +616,67 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_cgjh_xsthTb',
 	});
-	lnyw.toolbar(4, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(4, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
+	
+	
+// 	cgjh_cgjhDg = $('#jxc_cgjh_cgjhDg').datagrid({
+// 		fit : true,
+// 	    border : false,
+// 	    remoteSort: false,
+// // 	    fitColumns: true,
+// 	    pagination : true,
+// 		pagePosition : 'bottom',
+// 		pageSize : pageSize,
+// 		pageList : pageList,
+// 		columns:[[
+// 			{field:'id',title:'detId',align:'center', checkbox:true},
+// 			{field:'cgjhlsh',title:'流水号',align:'center'},
+// 			{field:'createTime',title:'时间',align:'center'},
+// 			{field:'createName',title:'计划员',align:'center'},
+// 			{field:'spbh',title:'商品编号',align:'center'},
+// 			{field:'spmc',title:'名称',align:'center'},
+// 			{field:'spcd',title:'产地',align:'center'},
+// 			{field:'sppp',title:'品牌',align:'center'},
+// 			{field:'spbz',title:'包装',align:'center'},
+// 			{field:'zjldwmc',title:'单位1',align:'center'},
+// 			{field:'zdwsl',title:'数量1',align:'center',
+// 			   	formatter: function(value){
+// 			   		return value == 0 ? '' : value;
+// 					}},
+// 			{field:'zdwdj',title:'单价1',align:'center',
+// 			   	formatter: function(value){
+// 			   		return value == 0 ? '' : value;
+// 				}},	
+// 			{field:'cjldwmc',title:'单位2',align:'center'},
+// 			{field:'cdwsl',title:'数量2',align:'center',
+// 			   	formatter: function(value){
+// 			   		return value == 0 ? '' : value;
+// 				}},
+// 			{field:'cdwdj',title:'单价2',align:'center',
+// 			   	formatter: function(value){
+// 			   		return value == 0 ? '' : value;
+// 				}},
+// 			{field:'spje',title:'金额',align:'center',
+// 			   	formatter: function(value){
+// 			   		return value == 0 ? '' : lnyw.formatNumberRgx(value);
+// 				}},
+// 			{field:'gysbh',title:'供应商编号',align:'center'},
+// 			{field:'gysmc',title:'供应商名称',align:'center'},
+// 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
+// 			{field:'ckmc',title:'仓库',align:'center'},
+// 			{field:'jsfsmc',title:'付款方式',align:'center'},
+// 			{field:'shdz',title:'送货地址',align:'center'},
+// 			{field:'lxr',title:'联系人',align:'center'},
+// 			{field:'dhsj',title:'到货时间',align:'center'},
+// 			{field:'bz',title:'备注',align:'center',
+// 				formatter: function(value){
+// 					return lnyw.memo(value, 15);
+// 				}},
+// 	    ]],
+// 	    toolbar:'#jxc_cgjh_cgjhTb',
+// 	});
+// 	lnyw.toolbar(5, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
+	
 
 	
 // 	cgjh_cgxqDg.datagrid({
@@ -668,7 +729,7 @@ $(function(){
 				cgjh_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagrid.action',
 					queryParams: {
-						bmbh: did,
+						bmbh: cgjh_did,
 					},
 				});
 			}
@@ -677,7 +738,7 @@ $(function(){
 				cgjh_cgxqDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/cgxqAction!datagrid.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: cgjh_did,
 						fromOther: 'fromCgjh',
 					}
 				});
@@ -686,7 +747,7 @@ $(function(){
 				cgjh_spkcDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/ywzzAction!listLowSps.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: cgjh_did,
 					}
 				});
 			}
@@ -694,12 +755,22 @@ $(function(){
 				cgjh_xsthDg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
 					queryParams:{
-						bmbh: did,
+						bmbh: cgjh_did,
 						fromOther: 'fromCgjh',
 					}
 				});
 			}
-
+// 			if(index == 5){
+// 				cgjh_cgjhDg.datagrid({
+// 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!detDg.action',
+// 					queryParams:{
+// 						bmbh: cgjh_did,
+// 						gysbh:  '21010004',
+// 						fromOther: 'fromCgjh',
+						
+// 					}
+// 				});
+// 			}
 			
 		}
 	});
@@ -801,7 +872,7 @@ $(function(){
 	jxc_cgjh_jsfsCombo = lnyw.initCombo($("#jxc_cgjh_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
 	
 	//初始化仓库列表
-	jxc_cgjh_ckCombo = lnyw.initCombo($("#jxc_cgjh_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + did);
+	jxc_cgjh_ckCombo = lnyw.initCombo($("#jxc_cgjh_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + cgjh_did);
 	
 
 	//初始化信息
@@ -834,8 +905,8 @@ function init(){
 		url: '${pageContext.request.contextPath}/jxc/lshAction!getLsh.action',
 		cache: false,
 		data: {
-			bmbh: did,
-			lxbh: lx,
+			bmbh: cgjh_did,
+			lxbh: cgjh_lx,
 		},
 		dataType: 'json',
 		success: function(d){
@@ -846,7 +917,7 @@ function init(){
 	});
 	
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, cgjh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, cgjh_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 	//清空合计内容
 	cgjh_spdg.datagrid('reloadFooter',[{}]);
@@ -858,7 +929,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0){
+		if(zslEditor.target.val() > 0 && zdjEditor.target.val() > 0){
 			return true;
 		}
 	}
@@ -1008,11 +1079,11 @@ function saveAll(){
 	effectRow['bz'] = $('input[name=jxc_cgjh_bz]').val();
 	effectRow['cgxqDetIds'] = $('input[name=cgxqDetIds]').val();
 	effectRow['xsthDetIds'] = $('input[name=cgjh_xsthDetIds]').val();
-	effectRow['bmbh'] = did;
-	effectRow['lxbh'] = lx;
-	effectRow['menuId'] = menuId;
+	effectRow['bmbh'] = cgjh_did;
+	effectRow['lxbh'] = cgjh_lx;
+	effectRow['menuId'] = cgjh_menuId;
 	//获取采购计划审批权限，无设置即为不需要审批
-	var needA = jxc.getAuditLevelCgjh(did);
+	var needA = jxc.getAuditLevelCgjh(cgjh_did, lnyw.delcommafy(footerRows[0]['spje']));
 	if(needA != '0'){
 		effectRow['needAudit'] = needA;
 		$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
@@ -1041,7 +1112,7 @@ function saveAll(){
 		    	if(needA == undefined || needA == '0'){
 			    	$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
 						if (r) {
-							var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + rsp.obj.cgjhlsh + "&bmbh=" + did;
+							var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + rsp.obj.cgjhlsh + "&bmbh=" + cgjh_did;
 							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 						}
 					});
@@ -1089,7 +1160,7 @@ function setEditing(){
 		jxc.showKc('#jxc_cgjh_layout', 
 				'${pageContext.request.contextPath}/jxc/cgjhAction!getSpkc.action', 
 				{
-					bmbh : did, 
+					bmbh : cgjh_did, 
 					ckId : jxc_cgjh_ckCombo.combobox('getValue'),
 					spbh : $(spbhEditor.target).val(),
 				});
@@ -1127,7 +1198,7 @@ function setEditing(){
     					context:this,
     					data:{
     						spbh: $(this).val(),
-    						depId : did,
+    						depId : cgjh_did,
     					},
     					dataType:'json',
     					success:function(data){
@@ -1152,7 +1223,7 @@ function setEditing(){
     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
-    				did,
+    				cgjh_did,
     				undefined,
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
@@ -1336,7 +1407,7 @@ function setValueBySpbh(rowData){
 	jxc.showKc('#jxc_cgjh_layout', 
 			'${pageContext.request.contextPath}/jxc/cgjhAction!getSpkc.action', 
 			{
-				bmbh : did, 
+				bmbh : cgjh_did, 
 				ckId : jxc_cgjh_ckCombo.combobox('getValue'),
 				spbh : $(spbhEditor.target).val(),
 			});
@@ -1396,8 +1467,8 @@ function cancelCgjh(){
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
 								data : {
 									cgjhlsh : row.cgjhlsh,
-									bmbh : did,
-									menuId : menuId,
+									bmbh : cgjh_did,
+									menuId : cgjh_menuId,
 								},
 								dataType : 'json',
 								success : function(d) {
@@ -1434,7 +1505,7 @@ function printCgjh(){
 		if(row.needAudit == row.isAudit){
 			$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
 				if (r) {
-					var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + did;
+					var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + cgjh_did;
 					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 				}
 			});
@@ -1458,8 +1529,8 @@ function completeCgjh(){
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!complete.action',
 								data : {
 									cgjhlsh : row.cgjhlsh,
-									bmbh : did,
-									menuId : menuId,
+									bmbh : cgjh_did,
+									menuId : cgjh_menuId,
 								},
 								dataType : 'json',
 								success : function(d) {
@@ -1497,8 +1568,8 @@ function unComplete(){
 						url : '${pageContext.request.contextPath}/jxc/cgjhAction!unComplete.action',
 						data : {
 							cgjhlsh : row.cgjhlsh,
-							bmbh : did,
-							menuId : menuId,
+							bmbh : cgjh_did,
+							menuId : cgjh_menuId,
 						},
 						dataType : 'json',
 						success : function(d) {
@@ -1533,8 +1604,8 @@ function changeHt(){
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!changeHt.action',
 								data : {
 									cgjhlsh : row.cgjhlsh,
-									bmbh : did,
-									menuId : menuId,
+									bmbh : cgjh_did,
+									menuId : cgjh_menuId,
 								},
 								dataType : 'json',
 								success : function(d) {
@@ -1575,8 +1646,8 @@ function htCgjh(){
 								url : '${pageContext.request.contextPath}/jxc/cgjhAction!ht.action',
 								data : {
 									cgjhlsh : row.cgjhlsh,
-									bmbh : did,
-									menuId : menuId,
+									bmbh : cgjh_did,
+									menuId : cgjh_menuId,
 								},
 								dataType : 'json',
 								success : function(d) {
@@ -1618,8 +1689,8 @@ function lockSpInCgjh(){
 									data : {
 										//cgjhlsh : row.cgjhlsh,
 										id : cgjh_detRow.id,
-										bmbh : did,
-										menuId : menuId,
+										bmbh : cgjh_did,
+										menuId : cgjh_menuId,
 									},
 									dataType : 'json',
 									success : function(d) {
@@ -1666,8 +1737,8 @@ function backSpInCgjh(){
 									url : '${pageContext.request.contextPath}/jxc/cgjhAction!backSpInCgjh.action',
 									data : {
 										id : cgjh_detRow.id,
-										bmbh : did,
-										menuId : menuId,
+										bmbh : cgjh_did,
+										menuId : cgjh_menuId,
 									},
 									dataType : 'json',
 									success : function(d) {
@@ -1702,7 +1773,7 @@ function backSpInCgjh(){
 
 function searchCgjh(){
 	cgjh_dg.datagrid('load',{
-		bmbh: did,
+		bmbh: cgjh_did,
 		createTime: $('input[name=createTimeCgjh]').val(),
 		search: $('input[name=searchCgjh]').val(),
 	});
@@ -1776,8 +1847,8 @@ function refuseCgxq(){
 					url : '${pageContext.request.contextPath}/jxc/cgxqAction!refuse.action',
 					data : {
 						id : row.id,
-						bmbh : did,
-						menuId : menuId,
+						bmbh : cgjh_did,
+						menuId : cgjh_menuId,
 					},
 					dataType : 'json',
 					success : function(d) {
@@ -1805,8 +1876,8 @@ function completeCgxq(){
 					url : '${pageContext.request.contextPath}/jxc/cgxqAction!complete.action',
 					data : {
 						id : row.id,
-						bmbh : did,
-						menuId : menuId,
+						bmbh : cgjh_did,
+						menuId : cgjh_menuId,
 					},
 					dataType : 'json',
 					success : function(d) {
@@ -1979,16 +2050,18 @@ function createCgjhFromXsth(){
     <div title="采购计划列表" data-options="closable:false" >
     	<table id='jxc_cgjh_dg'></table>
     </div>
-<%--     <%@ include file="cgjh_cgxqDg.jsp"%> --%>
 	<div title="采购需求列表" data-options="closable:false" >
-			<table id='jxc_cgjh_cgxqDg'></table>
+		<table id='jxc_cgjh_cgxqDg'></table>
 	</div>
 	<div title="商品库存列表" data-options="closable:false" >
-			<table id='jxc_cgjh_spkcDg'></table>
+		<table id='jxc_cgjh_spkcDg'></table>
 	</div>
 	<div title="销售提货(直送)列表" data-options="closable:false" >
-			<table id='jxc_cgjh_xsthDg'></table>
+		<table id='jxc_cgjh_xsthDg'></table>
 	</div>
+<!-- 	<div title="采购计划(内部)列表" data-options="closable:false" > -->
+<!-- 		<table id='jxc_cgjh_cgjhDg'></table> -->
+<!-- 	</div> -->
 </div>
 
 <div id="jxc_cgjh_tb" style="padding:3px;height:auto">

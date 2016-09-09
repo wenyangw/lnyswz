@@ -699,7 +699,10 @@ function init(){
 	}
 	
 	//收回商品库存信息
-	$('#jxc_xsth_layout').layout('collapse', 'east');
+	if(xsth_did != '04'){
+		jxc.hideKc('#jxc_xsth_layout');
+		//$('#jxc_xsth_layout').layout('collapse', 'east');
+	}
 	jxc.spInfo($('#jxc_xsth_layout'), '');
 	
 	jxc_xsth_ckCombo.combobox('selectedIndex', 0);

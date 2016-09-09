@@ -209,6 +209,10 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		writeJson(cgjhService.datagridDet(cgjh));
 	}
 	
+	public void detDg(){
+		writeJson(cgjhService.detDg(cgjh));
+	}
+	
 	public void getSpkc(){
 		writeJson(cgjhService.getSpkc(cgjh));
 	}

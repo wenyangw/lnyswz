@@ -181,8 +181,8 @@ jxc.auditLevelCgjh = function(bmbh){
 	var level = Object.create(Object.prototype);
 	switch (bmbh) {
 	case '01':
-		level['first'] = '0';
-		level['second'] = '0';
+		level['first'] = '1';
+		level['second'] = '2';
 		return level;
 		break;
 	case '04':
@@ -255,9 +255,20 @@ jxc.getAuditLevelCgxq = function(bmbh){
 	return jxc.auditLevelCgxq(bmbh)['first'];
 };
 
-jxc.getAuditLevelCgjh = function(bmbh){
-	//采购计划审批目前只需一级审批
-	return jxc.auditLevelCgjh(bmbh)['first'];
+jxc.getAuditLevelCgjh = function(bmbh, hjje){
+	//采购计划审批
+	switch(bmbh){
+		case '01':
+			//文达印刷金额大于30000元二级审批，主管经理
+			if(hjje <= 30000){
+				return jxc.auditLevelCgjh(bmbh)['first'];
+			}else{
+				return jxc.auditLevelCgjh(bmbh)['second'];
+			}
+			break;
+		default:
+			return jxc.auditLevelCgjh(bmbh)['first'];
+	}
 };
 
 //不参与销售审批流程的客户
