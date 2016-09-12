@@ -21,4 +21,5 @@ public interface CgjhServiceI {
 	public DataGrid toYwrk(String cgjhDetIds);
 	public DataGrid printCgjh(Cgjh cgjh);
 	public DataGrid detDg(Cgjh cgjh);
+	public DataGrid toCgjhFromCgjh(Cgjh cgjh);
 }

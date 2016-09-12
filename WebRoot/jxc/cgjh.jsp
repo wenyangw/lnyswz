@@ -9,7 +9,7 @@ var cgjh_spdg;
 var cgjh_dg;
 var cgjh_cgxqDg;
 var cgjh_xsthDg;
-// var cgjh_cgjhDg;
+var cgjh_cgjhDg;
 var cgjh_spkcDg;
 var editIndex = undefined;
 var cgjh_tabs;
@@ -619,63 +619,64 @@ $(function(){
 	lnyw.toolbar(4, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 	
-// 	cgjh_cgjhDg = $('#jxc_cgjh_cgjhDg').datagrid({
-// 		fit : true,
-// 	    border : false,
-// 	    remoteSort: false,
-// // 	    fitColumns: true,
-// 	    pagination : true,
-// 		pagePosition : 'bottom',
-// 		pageSize : pageSize,
-// 		pageList : pageList,
-// 		columns:[[
-// 			{field:'id',title:'detId',align:'center', checkbox:true},
-// 			{field:'cgjhlsh',title:'流水号',align:'center'},
-// 			{field:'createTime',title:'时间',align:'center'},
-// 			{field:'createName',title:'计划员',align:'center'},
-// 			{field:'spbh',title:'商品编号',align:'center'},
-// 			{field:'spmc',title:'名称',align:'center'},
-// 			{field:'spcd',title:'产地',align:'center'},
-// 			{field:'sppp',title:'品牌',align:'center'},
-// 			{field:'spbz',title:'包装',align:'center'},
-// 			{field:'zjldwmc',title:'单位1',align:'center'},
-// 			{field:'zdwsl',title:'数量1',align:'center',
-// 			   	formatter: function(value){
-// 			   		return value == 0 ? '' : value;
-// 					}},
-// 			{field:'zdwdj',title:'单价1',align:'center',
-// 			   	formatter: function(value){
-// 			   		return value == 0 ? '' : value;
-// 				}},	
-// 			{field:'cjldwmc',title:'单位2',align:'center'},
-// 			{field:'cdwsl',title:'数量2',align:'center',
-// 			   	formatter: function(value){
-// 			   		return value == 0 ? '' : value;
-// 				}},
-// 			{field:'cdwdj',title:'单价2',align:'center',
-// 			   	formatter: function(value){
-// 			   		return value == 0 ? '' : value;
-// 				}},
-// 			{field:'spje',title:'金额',align:'center',
-// 			   	formatter: function(value){
-// 			   		return value == 0 ? '' : lnyw.formatNumberRgx(value);
-// 				}},
-// 			{field:'gysbh',title:'供应商编号',align:'center'},
-// 			{field:'gysmc',title:'供应商名称',align:'center'},
-// 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
-// 			{field:'ckmc',title:'仓库',align:'center'},
-// 			{field:'jsfsmc',title:'付款方式',align:'center'},
-// 			{field:'shdz',title:'送货地址',align:'center'},
-// 			{field:'lxr',title:'联系人',align:'center'},
-// 			{field:'dhsj',title:'到货时间',align:'center'},
-// 			{field:'bz',title:'备注',align:'center',
-// 				formatter: function(value){
-// 					return lnyw.memo(value, 15);
-// 				}},
-// 	    ]],
-// 	    toolbar:'#jxc_cgjh_cgjhTb',
-// 	});
-// 	lnyw.toolbar(5, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
+	cgjh_cgjhDg = $('#jxc_cgjh_cgjhDg').datagrid({
+		fit : true,
+	    border : false,
+	    remoteSort: false,
+// 	    fitColumns: true,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+			{field:'id',title:'detId',align:'center', checkbox:true},
+			{field:'bmmc',title:'部门',align:'center'},
+			{field:'cgjhlsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'时间',align:'center'},
+			{field:'createName',title:'计划员',align:'center'},
+			{field:'spbh',title:'商品编号',align:'center'},
+			{field:'spmc',title:'名称',align:'center'},
+			{field:'spcd',title:'产地',align:'center'},
+			{field:'sppp',title:'品牌',align:'center'},
+			{field:'spbz',title:'包装',align:'center'},
+			{field:'zjldwmc',title:'单位1',align:'center'},
+			{field:'zdwsl',title:'数量1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'zdwdj',title:'单价1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+				}},	
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+				}},
+			{field:'cdwdj',title:'单价2',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+				}},
+			{field:'spje',title:'金额',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : lnyw.formatNumberRgx(value);
+				}},
+			{field:'gysbh',title:'供应商编号',align:'center'},
+			{field:'gysmc',title:'供应商名称',align:'center'},
+			{field:'ckId',title:'仓库id',align:'center',hidden:true},
+			{field:'ckmc',title:'仓库',align:'center'},
+			{field:'jsfsmc',title:'付款方式',align:'center'},
+			{field:'shdz',title:'送货地址',align:'center'},
+			{field:'lxr',title:'联系人',align:'center'},
+			{field:'dhsj',title:'到货时间',align:'center'},
+			{field:'bz',title:'备注',align:'center',
+				formatter: function(value){
+					return lnyw.memo(value, 15);
+				}},
+	    ]],
+	    toolbar:'#jxc_cgjh_cgjhTb',
+	});
+	lnyw.toolbar(5, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 
 	
@@ -760,17 +761,17 @@ $(function(){
 					}
 				});
 			}
-// 			if(index == 5){
-// 				cgjh_cgjhDg.datagrid({
-// 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!detDg.action',
-// 					queryParams:{
-// 						bmbh: cgjh_did,
-// 						gysbh:  '21010004',
-// 						fromOther: 'fromCgjh',
+			if(index == 5){
+				cgjh_cgjhDg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/cgjhAction!detDg.action',
+					queryParams:{
+						bmbh: cgjh_did,
+						gysbh:  jxc.getNbjhGys(cgjh_did),
+						fromOther: 'fromCgjh',
 						
-// 					}
-// 				});
-// 			}
+					}
+				});
+			}
 			
 		}
 	});
@@ -2002,6 +2003,64 @@ function createCgjhFromXsth(){
 
 ///////////////////////////////////以上为销售提货(直送)列表处理内容
 
+///////////////////////////////////以下为采购计划(内部)列表处理内容
+function createCgjhFromCgjh(){
+	var rows = cgjh_cgjhDg.datagrid('getSelections');
+	//var cgjhDetIds = [];
+	var flag = true;
+	if(rows.length > 0){
+    	if(rows.length > 1){
+    		var preRow = undefined;
+		    $.each(rows, function(index){
+		    	if(index != 0){
+		    		if(this.cgjhlsh != preRow.cgjhlsh){
+		    			$.messager.alert('提示', '请选择同一张采购计划单的商品进行出库！', 'error');
+						flag = false;
+						return false;
+		    		}else{
+		    			preRow = this;
+		    		}
+		    	}
+		    	preRow = this;
+		    });
+    	}
+    	if(flag){
+			$.messager.confirm('请确认', '是否要将选中记录进行采购？', function(r) {
+				if (r) {
+					//for ( var i = 0; i < rows.length; i++) {
+					//	xsthDetIds.push(rows[i].id);
+					//}
+					//var xsthDetIdsStr = xsthDetIds.join(',');
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/cgjhAction!toCgjhFromCgjh.action',
+						data : {
+							cgjhlsh : rows[0].cgjhlsh,
+							//shdz: rows[0].shdz,
+							//thr: rows[0].thr
+						},
+						dataType : 'json',
+						type: 'post',
+						success : function(d) {
+							cgjh_spdg.datagrid('loadData', d.rows);
+							updateFooter();
+							//$('input[name=cgjh_xsthDetIds]').val(xsthDetIdsStr);
+//							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
+							$('input[name=nbjhlsh]').val(rows[0].nbjhlsh);
+							jxc_cgjh_ckCombo.combobox('setValue', rows[0].ckId);
+							$('#jxc_cgjh_isZs').prop('checked', 'checked');
+							$('input[name=jxc_cgjh_bz]').val(rows[0].bz);
+							
+							cgjh_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+    	}
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+///////////////////////////////////以上为采购计划(内部)列表处理内容
 
 </script>
 
@@ -2059,9 +2118,9 @@ function createCgjhFromXsth(){
 	<div title="销售提货(直送)列表" data-options="closable:false" >
 		<table id='jxc_cgjh_xsthDg'></table>
 	</div>
-<!-- 	<div title="采购计划(内部)列表" data-options="closable:false" > -->
-<!-- 		<table id='jxc_cgjh_cgjhDg'></table> -->
-<!-- 	</div> -->
+	<div title="采购计划(内部)列表" data-options="closable:false" >
+		<table id='jxc_cgjh_cgjhDg'></table>
+	</div>
 </div>
 
 <div id="jxc_cgjh_tb" style="padding:3px;height:auto">

@@ -578,7 +578,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Override
 	public DataGrid detDg(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TCgjhDet t where t.TCgjh.bmbh != :bmbh and t.TCgjh.gysbh = :gysbh and t.TCgjh.jhlsh = null";
+		String hql = "from TCgjhDet t where t.TCgjh.bmbh != :bmbh and t.TCgjh.gysbh =:gysbh and t.TCgjh.nbjhlsh = null";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgjh.getBmbh());
 		params.put("gysbh", cgjh.getGysbh());
@@ -589,7 +589,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}
 		
 		String countHql = "select count(*) " + hql;
-		hql += " order by t.TCgjh.createTime";
+		hql += " order by t.TCgjh.createTime desc";
 
 		List<TCgjhDet> l = detDao.find(hql, params, cgjh.getPage(), cgjh.getRows());
 		List<Cgjh> nl = new ArrayList<Cgjh>();
@@ -808,6 +808,31 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+	
+	@Override
+	public DataGrid toCgjhFromCgjh(Cgjh cgjh){
+		String hql = " from TCgjhDet t where cgjhlsh = :cgjhlsh";
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cgjhlsh", cgjh.getCgjhlsh());
+		
+		List<TCgjhDet> l = detDao.find(hql, params);
+		
+		List<CgjhDet> nl = new ArrayList<CgjhDet>();
+		
+		CgjhDet cd = null;
+		for(TCgjhDet t: l){
+			cd = new CgjhDet();
+			BeanUtils.copyProperties(t, cd);
+			
+			nl.add(cd);
+		}
+		//nl.add(new CgjhDet());
+		DataGrid dg = new DataGrid();
+		dg.setRows(nl);
+		return dg;
+	}
+	
 	
 	@Autowired
 	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {

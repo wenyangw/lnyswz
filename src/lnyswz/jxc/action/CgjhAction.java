@@ -221,6 +221,11 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		writeJson(cgjhService.toKfrk(cgjh.getCgjhDetIds()));
 	}
 	
+	public void toCgjhFromCgjh(){
+		writeJson(cgjhService.toCgjhFromCgjh(cgjh));
+	}
+	
+	
 	public void toYwrk(){
 		writeJson(cgjhService.toYwrk(cgjh.getCgjhDetIds()));
 	}

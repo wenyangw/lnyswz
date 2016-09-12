@@ -450,6 +450,22 @@ jxc.earliestXskp = function(area, url, params){
 };
 
 
+jxc.getNbjhGys = function(bmbh){
+	switch(bmbh){
+	case '04':
+		return '21010004';
+		break;
+	case '05':
+		return '21010074';
+		break;
+	case '08':
+		return '21020026';
+		break;
+	default:
+		return false;
+	}
+};
+
 jxc.showFh = function(bmbh){
 	switch(bmbh){
 	case '04':

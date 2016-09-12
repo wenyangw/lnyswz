@@ -54,6 +54,7 @@ public class TCgjh implements java.io.Serializable {
 	private String needAudit;
 	private String isAudit;
 	private String isZs;
+	private String nbjhlsh;
 	private Set<TCgjhDet> TCgjhDets = new HashSet<TCgjhDet>(0);
 	private Set<TCgxqDet> TCgxqs = new HashSet<TCgxqDet>(0);
 	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
@@ -68,7 +69,7 @@ public class TCgjh implements java.io.Serializable {
 			Integer xqsj, String jsfsId, String jsfsmc, BigDecimal hjje, String bz,	
 			String isHt, String returnHt, Integer htId, Date htTime, String htName, String isCancel, Date cancelTime,
 			Integer cancelId, String cancelName, String isCompleted, Date completeTime, Integer completeId, 
-			String completeName, String needAudit, String isAudit, String isZs, Set<TCgjhDet> TCgjhDets, 
+			String completeName, String needAudit, String isAudit, String isZs, String nbjhlsh, Set<TCgjhDet> TCgjhDets, 
 			Set<TCgxqDet> TCgxqs, Set<TXsthDet> TXsths) {
 		this.cgjhlsh = cgjhlsh;
 		this.createTime = createTime;
@@ -99,6 +100,7 @@ public class TCgjh implements java.io.Serializable {
 		this.needAudit = needAudit;
 		this.isAudit = isAudit;
 		this.isZs = isZs;
+		this.nbjhlsh = nbjhlsh;
 		this.TCgjhDets = TCgjhDets;
 		this.TCgxqs = TCgxqs;
 		this.TXsths = TXsths;
@@ -380,6 +382,15 @@ public class TCgjh implements java.io.Serializable {
 		this.isZs = isZs;
 	}
 	
+	@Column(name = "nbjhlsh", nullable = false, length = 12)
+	public String getNbjhlsh() {
+		return nbjhlsh;
+	}
+
+	public void setNbjhlsh(String nbjhlsh) {
+		this.nbjhlsh = nbjhlsh;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TCgjh", cascade=CascadeType.ALL)
 	public Set<TCgjhDet> getTCgjhDets() {
 		return this.TCgjhDets;
