@@ -382,7 +382,7 @@ public class TCgjh implements java.io.Serializable {
 		this.isZs = isZs;
 	}
 	
-	@Column(name = "nbjhlsh", nullable = false, length = 12)
+	@Column(name = "nbjhlsh", nullable = true, length = 12)
 	public String getNbjhlsh() {
 		return nbjhlsh;
 	}

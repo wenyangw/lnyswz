@@ -757,13 +757,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		}else{
 			r += spmc;
 		}
-		if(spcd != null){	
+		if(spcd != null && spcd.length() > 0){	
 			r += "(" + spcd + ")";
 		}
-		if(sppp != null){	
+		if(sppp != null && sppp.length() > 0){	
 			r += "(" + sppp + ")";
 		}
-		if(spbz != null){
+		if(spbz != null && spbz.length() > 0){
 			r += " " + spbz;
 		}
 		
@@ -778,10 +778,10 @@ public class XskpServiceImpl implements XskpServiceI {
 		}else{
 			r += spmc;
 		}
-		if(sppp != null){	
+		if(sppp != null && sppp.length() > 0){	
 			r += "(" + sppp + ")";
 		}
-		if(spbz != null){
+		if(spbz != null && spbz.length() > 0){
 			r += " " + spbz;
 		}
 		

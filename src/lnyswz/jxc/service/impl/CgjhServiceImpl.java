@@ -84,12 +84,6 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		tCgjh.setIsCancel("0");
 		tCgjh.setIsCompleted("0");
 		tCgjh.setIsAudit("0");
-//		tCgjh.setNeedAudit("0");
-//		if(tCgjh.getNeedAudit().equals("1")){
-//			tCgjh.setIsAudit("0");
-//		}else{
-//			tCgjh.setIsAudit("1");
-//		}
 		
 		tCgjh.setReturnHt("0");
 		
@@ -113,6 +107,12 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				TXsthDet tXsthDet = xsthDao.load(TXsthDet.class, Integer.valueOf(detId));
 				tXsthDet.setTCgjh(tCgjh);
 			}
+		}
+		
+		if(cgjh.getNbjhlsh() != null && cgjh.getNbjhlsh().trim().length() > 0){
+			TCgjh nbCgjh = cgjhDao.load(TCgjh.class, cgjh.getNbjhlsh());
+			nbCgjh.setNbjhlsh(lsh);
+			//tCgjh.setNbjhlsh(cgjh.getNbjhlsh());
 		}
 		
 		
@@ -173,6 +173,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			for(TXsthDet tXsthDet : tXsths){
 				tXsthDet.setTCgjh(null);
 			}
+		}
+		
+		if(tCgjh.getNbjhlsh() != null){
+			TCgjh nbCgjh = cgjhDao.load(TCgjh.class, tCgjh.getNbjhlsh());
+			nbCgjh.setNbjhlsh(null);
 		}
 		
 		OperalogServiceImpl.addOperalog(cgjh.getCancelId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(), 
@@ -823,11 +828,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		CgjhDet cd = null;
 		for(TCgjhDet t: l){
 			cd = new CgjhDet();
-			BeanUtils.copyProperties(t, cd);
+			BeanUtils.copyProperties(t, cd, new String[]{"id", "cgjhlsh"});
 			
 			nl.add(cd);
 		}
-		//nl.add(new CgjhDet());
+		nl.add(new CgjhDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
 		return dg;

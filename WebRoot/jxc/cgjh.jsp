@@ -661,11 +661,20 @@ $(function(){
 			   	formatter: function(value){
 			   		return value == 0 ? '' : lnyw.formatNumberRgx(value);
 				}},
-			{field:'gysbh',title:'供应商编号',align:'center'},
-			{field:'gysmc',title:'供应商名称',align:'center'},
+			{field:'gysbh',title:'供应商编号',align:'center',hidden:true},
+			{field:'gysmc',title:'供应商名称',align:'center',hidden:true},
 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
-			{field:'ckmc',title:'仓库',align:'center'},
+			{field:'ckmc',title:'仓库',align:'center',hidden:true},
 			{field:'jsfsmc',title:'付款方式',align:'center'},
+			{field:'isZs',title:'直送',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				},
+			},
 			{field:'shdz',title:'送货地址',align:'center'},
 			{field:'lxr',title:'联系人',align:'center'},
 			{field:'dhsj',title:'到货时间',align:'center'},
@@ -676,7 +685,7 @@ $(function(){
 	    ]],
 	    toolbar:'#jxc_cgjh_cgjhTb',
 	});
-	lnyw.toolbar(5, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
+	lnyw.toolbar(5, cgjh_cgjhDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
 
 	
@@ -1080,6 +1089,7 @@ function saveAll(){
 	effectRow['bz'] = $('input[name=jxc_cgjh_bz]').val();
 	effectRow['cgxqDetIds'] = $('input[name=cgxqDetIds]').val();
 	effectRow['xsthDetIds'] = $('input[name=cgjh_xsthDetIds]').val();
+	effectRow['nbjhlsh'] = $('input[name=cgjh_nbjhlsh]').val();
 	effectRow['bmbh'] = cgjh_did;
 	effectRow['lxbh'] = cgjh_lx;
 	effectRow['menuId'] = cgjh_menuId;
@@ -2006,7 +2016,6 @@ function createCgjhFromXsth(){
 ///////////////////////////////////以下为采购计划(内部)列表处理内容
 function createCgjhFromCgjh(){
 	var rows = cgjh_cgjhDg.datagrid('getSelections');
-	//var cgjhDetIds = [];
 	var flag = true;
 	if(rows.length > 0){
     	if(rows.length > 1){
@@ -2027,29 +2036,22 @@ function createCgjhFromCgjh(){
     	if(flag){
 			$.messager.confirm('请确认', '是否要将选中记录进行采购？', function(r) {
 				if (r) {
-					//for ( var i = 0; i < rows.length; i++) {
-					//	xsthDetIds.push(rows[i].id);
-					//}
-					//var xsthDetIdsStr = xsthDetIds.join(',');
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/cgjhAction!toCgjhFromCgjh.action',
 						data : {
 							cgjhlsh : rows[0].cgjhlsh,
-							//shdz: rows[0].shdz,
-							//thr: rows[0].thr
 						},
 						dataType : 'json',
 						type: 'post',
 						success : function(d) {
 							cgjh_spdg.datagrid('loadData', d.rows);
 							updateFooter();
-							//$('input[name=cgjh_xsthDetIds]').val(xsthDetIdsStr);
-//							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
-							$('input[name=nbjhlsh]').val(rows[0].nbjhlsh);
-							jxc_cgjh_ckCombo.combobox('setValue', rows[0].ckId);
-							$('#jxc_cgjh_isZs').prop('checked', 'checked');
+							$('input[name=cgjh_nbjhlsh]').val(rows[0].cgjhlsh);
+							if(rows[0].isZs == '1'){
+								jxc_cgjh_ckCombo.combobox('setValue', jxc.getZfCk(cgjh_did));
+							}
+							$('#jxc_cgjh_isZs').prop('checked', rows[0].isZs == '1' ? 'checked' : undefined);
 							$('input[name=jxc_cgjh_bz]').val(rows[0].bz);
-							
 							cgjh_tabs.tabs('select', 0);
 						}
 					});
@@ -2097,6 +2099,7 @@ function createCgjhFromCgjh(){
 				</table>
 				<input name="cgxqDetIds" type="hidden">
 				<input name="cgjh_xsthDetIds" type="hidden">
+				<input name="cgjh_nbjhlsh" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_cgjh_spdg'></table>
