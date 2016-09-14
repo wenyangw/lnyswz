@@ -40,6 +40,7 @@ public class TUser implements java.io.Serializable {
 	private Date createTime;
 	private Date modifyTime;
 	private Date lastTime;
+	private String valid;
 	private Set<TRole> TRoles = new HashSet<TRole>(0);
 
 	public TUser() {
@@ -47,7 +48,7 @@ public class TUser implements java.io.Serializable {
 
 	public TUser(int id, TDepartment TDepartment, String userName,
 			String password, String realName, String sex, int orderNum, Date createTime,
-			Date modifyTime, Date lastTime, Set<TRole> TRoles) {
+			Date modifyTime, Date lastTime, String valid, Set<TRole> TRoles) {
 		this.id = id;
 		this.TDepartment = TDepartment;
 		this.userName = userName;
@@ -58,6 +59,7 @@ public class TUser implements java.io.Serializable {
 		this.createTime = createTime;
 		this.modifyTime = modifyTime;
 		this.lastTime = lastTime;
+		this.valid = valid;
 		this.TRoles = TRoles;
 	}
 
@@ -183,6 +185,15 @@ public class TUser implements java.io.Serializable {
 
 	public void setLastTime(Date lastTime) {
 		this.lastTime = lastTime;
+	}
+
+	@Column(name = "valid")
+	public String getValid() {
+		return valid;
+	}
+
+	public void setValid(String valid) {
+		this.valid = valid;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)

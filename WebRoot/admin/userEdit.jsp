@@ -48,6 +48,10 @@
 			<td><input name="isBgy" type="checkbox" value="1"></td>
 		</tr>
 		<tr>
+			<th><label for="valid">有效</label></th>
+			<td><input name="valid" type="checkbox" value="1"></td>
+		</tr>
+		<tr>
 			<th><label for="roleIds">拥有角色</label></th>
 			<td><input name="roleIds" style="width: 160px;"></td>
 		</tr>

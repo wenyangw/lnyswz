@@ -21,6 +21,7 @@ public class User {
 	private Date createTime;
 	private Date modifyTime;
 	private Date lastTime;
+	private String valid;
 	private String did;
 	private String dname;
 	private String postId;
@@ -114,6 +115,12 @@ public class User {
 	}
 	public void setLastTime(Date lastTime) {
 		this.lastTime = lastTime;
+	}
+	public String getValid() {
+		return valid;
+	}
+	public void setValid(String valid) {
+		this.valid = valid;
 	}
 	public String getDid() {
 		return did;

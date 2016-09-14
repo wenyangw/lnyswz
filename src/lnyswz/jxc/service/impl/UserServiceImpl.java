@@ -97,6 +97,9 @@ public class UserServiceImpl implements UserServiceI {
 		if(user.getPassword() != null && user.getPassword().trim().length() > 0){
 			t.setPassword(Encrypt.e(user.getPassword()));
 		}
+		/*if(user.getValid() == null){
+			t.setValid("0");
+		}*/
 		// 设置修改时间
 		t.setModifyTime(new Date());
 		t.setTDepartment(departmentDao.load(TDepartment.class, user.getDid()));

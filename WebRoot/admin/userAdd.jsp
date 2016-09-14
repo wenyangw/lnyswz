@@ -49,6 +49,10 @@
 			<th><label for="isBgy">是否保管员</label></th>
 			<td><input name="isBgy" type="checkbox" value="1"></td>
 		</tr>
+		<tr>
+			<th><label for="valid">有效</label></th>
+			<td><input name="valid" type="checkbox" value="1"></td>
+		</tr>
 		
 		</table>
 		<input name="menuId" type="hidden">
