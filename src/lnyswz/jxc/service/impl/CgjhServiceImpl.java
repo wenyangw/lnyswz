@@ -175,7 +175,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			}
 		}
 		
-		if(tCgjh.getNbjhlsh() != null){
+		if(tCgjh.getNbjhlsh() != null && tCgjh.getNbjhlsh().trim().length() > 0){
 			TCgjh nbCgjh = cgjhDao.load(TCgjh.class, tCgjh.getNbjhlsh());
 			nbCgjh.setNbjhlsh(null);
 		}
