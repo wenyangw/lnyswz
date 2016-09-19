@@ -113,6 +113,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			TCgjh nbCgjh = cgjhDao.load(TCgjh.class, cgjh.getNbjhlsh());
 			nbCgjh.setNbjhlsh(lsh);
 			//tCgjh.setNbjhlsh(cgjh.getNbjhlsh());
+		}else{
+			tCgjh.setNbjhlsh(null);
 		}
 		
 		
