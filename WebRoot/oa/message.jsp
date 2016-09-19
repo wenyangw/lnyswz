@@ -6,9 +6,76 @@ $(function(){
 		
 });
 
+var contact_from = [
+        {
+			id: 1, text:'经理室',
+			children:
+				[
+				 {id:11, text:'侯总'}, 
+				{id:12, text:'翟总'}
+				 ],
+		},
+		{id:2, text:'综合办公室', 
+		children:[],}
+];
+var contact_to = [];
+
 
 function showContacts(){
-	alert('Hello');
+	var dialog = $('#message_contact_select');
+	dialog.dialog({
+		title : '选择收件人',
+		href : '${pageContext.request.contextPath}/oa/selectContact.jsp',
+		width : 350,
+		height : 380,
+		buttons : [ {
+			text : '确定',
+			handler : function() {
+				var f = dialog.find('form');
+				f.form('submit', {
+					url : '${pageContext.request.contextPath}/admin/userAction!edit.action',
+					onSubmit:function(){},
+					success : function(d) {
+						var json = $.parseJSON(jxc.toJson(d));
+						if (json.success) {
+							user_dg.datagrid('unselectAll');
+							user_dg.datagrid('reload');
+							dialog.dialog('close');
+						}
+						$.messager.show({
+							msg : json.msg,
+							title : '提示'
+						});
+					}
+				});
+			}
+		} ],
+		onLoad : function(){
+			var tt = $('#contact_from');
+			tt.tree({
+				data:contact_from,
+				onDblClick: function(node){
+					if(tt.tree('isLeaf', node.target)){
+						var i = 0;
+						for(; i < contact_from.length; i++){
+							if(contact_from[i].id == tt.tree('getParent', node.target).id){
+								console.info()
+							}
+						}
+						;
+						
+					}else{
+						contact_from[]
+						node.id;
+					}
+					
+					
+					  // alert node text property when clicked
+				},
+			});
+		}
+		
+	});
 }
 </script>
 <div id="oa_message_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
@@ -38,6 +105,6 @@ function showContacts(){
 		<div id='oa_messageR_dg'></div>
 	</div>
 </div>
-
+<div id="message_contact_select"></div>
 
 	
