@@ -320,6 +320,7 @@ $(function(){
                 		formatter: function(value){
                 			return lnyw.memo(value, 15);
                 		}},
+                	{field:'ywrklshs',title:'业务入库流水号',width:100,align:'center',},
                		{field:'isLock',title:'锁定',align:'center',
                    		formatter : function(value) {
            					if (value == '1') {
