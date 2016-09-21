@@ -1215,30 +1215,32 @@ public class XskpServiceImpl implements XskpServiceI {
 //				i++;
 //			}
 //		}else{
-			Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
+		//查询是否有未开票及未回款的记录	
+		Object[] o = YszzServiceImpl.getLatestXs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), yszzDao);
 			
-			if(o != null){
-				Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
-				Date createTime = DateUtil.stringToDate(o[3].toString());
-				Date payTime = DateUtil.stringToDate(o[4].toString());
-			
-				Xskp x = new Xskp();
-				x.setPayTime(payTime);
-				if(kh.getKhlxId().equals(Constant.KHLX_XK)){
-					x.setPostponeDay(0);
-					x.setIsUp("1");
-				}else{
-					//x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
-					x.setPostponeDay(kh.getPostponeDay());
-					x.setIsUp(kh.getIsUp());
-				}
-			
-				dg.setObj(x);
-				return dg;
-			}
+		Kh kh = KhServiceImpl.getKhsx(xskp.getKhbh(), xskp.getBmbh(), xskp.getYwyId(), khDao, khDetDao, khlxDao);
+		//Date createTime = DateUtil.stringToDate(o[3].toString());
+		//Date payTime = DateUtil.stringToDate(o[4].toString());
+	
+		Xskp x = new Xskp();
+		if(o != null){
+			//x.setPayTime(payTime);
+			x.setPayTime(DateUtil.stringToDate(o[4].toString()));
+		}
+		if(kh.getKhlxId().equals(Constant.KHLX_XK)){
+			x.setPostponeDay(0);
+			x.setIsUp("1");
+		}else{
+			//x.setPayTime(DateUtil.dateIncreaseByDay(createTime, kh.getSxzq()));
+			x.setPostponeDay(kh.getPostponeDay());
+			x.setIsUp(kh.getIsUp());
+		}
+	
+		dg.setObj(x);
+		return dg;
 //		}
 				
-		return null;
+		//return null;
 	}
 	
 	@Override
