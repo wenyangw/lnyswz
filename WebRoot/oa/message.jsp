@@ -1,11 +1,70 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
-<script type="text/javascript">
-$(function(){
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/kindeditor/themes/default/default.css"  />
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/kindeditor/kindeditor-all-min.js"></script>
 
+<script type="text/javascript">
+
+var contact_from;
+var contact_to;
+
+$(function(){
+	contact_from = [
+				    {
+		          		id: 1, 
+		          		text:'经理室',
+		          		children: [
+		          		    {
+		          			id:11, 
+		          			text:'侯总',
+		          			orderNum: 1,
+		          			}, 
+		          			{
+		          			id:12, 
+		          			text:'翟总',
+		          			orderNum: 2,
+		          			},
+		          			],
+		          		orderNum: 1
+		          	},
+		          	{
+		          		id:2, 
+		          		text:'综合办公室', 
+		          		children: [{
+		          				id: 21,
+		          				text: '张跃',
+		          				orderNum: 1,
+		          				
+		          			},
+		          			{
+		          				id: 22,
+		          				text: '赵青娟',
+		          				orderNum: 2,
+		          			}],
+		          			orderNum: 2,
+		          	}
+		          			
+		        ];
+
+	contact_to = [];
 	
+	
+	//var editor;
+    //window.editor = 
+	KindEditor.create('#editorc', {
+ 		resizeType:2, 
+ 		uploadJson : '${pageContext.request.contextPath}/js/kindeditor/jsp/upload_json.jsp',
+        fileManagerJson : '${pageContext.request.contextPath}/js/kindeditor/jsp/file_manager_json.jsp',
+        allowFileManager : true
+ 		//urlType:'domain', // 带有域名的绝对路径
+	});
+	//KindEditor.instances[0].html("");
+
 });
+
+
+
 
 function showContacts(){
 	var dialog = $('#message_contact_select');
@@ -17,74 +76,36 @@ function showContacts(){
 		buttons : [{
 			text : '确定',
 			handler : function() {
-				var f = dialog.find('form');
-				f.form('submit', {
-					url : '${pageContext.request.contextPath}/admin/userAction!edit.action',
-					onSubmit:function(){},
-					success : function(d) {
-						var json = $.parseJSON(jxc.toJson(d));
-						if (json.success) {
-							user_dg.datagrid('unselectAll');
-							user_dg.datagrid('reload');
-							dialog.dialog('close');
-						}
-						$.messager.show({
-							msg : json.msg,
-							title : '提示'
-						});
+				var names = [];
+				var ids = [];
+				
+				
+				for(var i = 0, len = contact_to.length; i < len; i++){
+					for(var j = 0, lenc = contact_to[i].children.length; j < lenc; j++){
+						ids.push(contact_to[i].children[j].id);
+						names.push(contact_to[i].children[j].text);
 					}
-				});
+				}
+				
+				$('input[name=receive_id]').val(ids.join(','));
+				$('input[name=receive_name]').val(names.join(','));
+				dialog.dialog('close');
 			}
 		}],
 		onLoad : function(){
-			var contact_from = [
-			    {
-	          		id: 1, 
-	          		text:'经理室',
-	          		children: [
-	          		    {
-	          			id:11, 
-	          			text:'侯总'
-	          			}, 
-	          			{
-	          			id:12, 
-	          			text:'翟总'
-	          			},
-	          			],
-	          		},
-	          	{
-	          		id:2, 
-	          		text:'综合办公室', 
-	          		children: [{
-	          			id: 21,
-	          			text: '张跃'
-	          			},
-	          			{
-	          				id: 22,
-	          				text: '赵青娟'
-	          			}],}
-	        ];
-	        var contact_to = [];
 			var source = $('#contact_from');
 			var target = $('#contact_to');
+
 			source.tree({
 				data:contact_from,
 				onDblClick: function(node){
 					contactTrans(node, source, target, contact_from, contact_to);
-					console.info('from');
-					console.info(source);
-					console.info('to');
-					console.info(target);
 				},
 			});
 			target.tree({
 				data:contact_to,
 				onDblClick: function(node){
 					contactTrans(node, target, source, contact_to, contact_from);
-					console.info('from');
-					console.info(target);
-					console.info('to');
-					console.info(source);
 				},
 			});
 		},
@@ -103,11 +124,9 @@ function contactTrans(node, source, target, array_from, array_to){
 					text: node.text,
 					}],
 			}];
-			trans(par, array_to);
-			target.tree('reload');
-// 			target.tree({
-// 				data: trans(par, array_to),
-// 			});
+			target.tree({
+				data: trans(par, array_to),
+			});
 			for(var i = 0, len = array_from.length; i < len; i++){
 				if(array_from[i].id == source.tree('getParent', node.target).id){
 					for(var j = 0, lenc = array_from[i].children.length; j < lenc; j++){
@@ -115,11 +134,9 @@ function contactTrans(node, source, target, array_from, array_to){
 							array_from[i].children.splice(j, 1);
 							if(array_from[i].children.length == 0){
 								array_from.splice(i, 1);
-								source.tree('reload');
-								//source.tree('remove', source.tree('getParent', node.target).target);
+								source.tree('remove', source.tree('getParent', node.target).target);
 							}
-							//source.tree('remove', node.target);
-							source.tree('reload');
+							source.tree('remove', node.target);
 							break;
 						}
 					}
@@ -129,16 +146,13 @@ function contactTrans(node, source, target, array_from, array_to){
 	}else{
 		for(var i = 0, len = array_from.length; i < len; i++){
 			if(array_from[i].id == node.id){
-				trans(array_from.splice(i, 1), array_to);
-				target.tree('reload');
-// 				target.tree({
-// 					data: trans(array_from.splice(i, 1), array_to)
-// 				});
+				target.tree({
+					data: trans(array_from.splice(i, 1), array_to)
+				});
 				break;
 			}
 		}
-		source.tree('reload');
-		//source.tree('remove', node.target);
+		source.tree('remove', node.target);
 	}
 }
 
@@ -160,8 +174,9 @@ function trans(node, target){
 	
     <div title="新增记录" data-options="closable:false">
 		<div>
-			<span class="input_label"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="showContacts()">收件人</a></span>
-			<input class="easyui-textbox" type="text" name="receive_name" data-options="required:true"></input><a>...</a>
+			<span class="input_label"><a href="javascript:void(0)" onclick="showContacts()">收件人</a></span>
+			<input class="easyui-textbox" type="text" name="receive_name" data-options="required:true"></input>
+			<input type="hidden" name="receive_id"></input>
 		</div>
 		<div>
 			<span class="input_label">主题</span>
@@ -169,7 +184,7 @@ function trans(node, target){
 		</div>
 		<div>
 			<span class="input_label">内容</span>
-			<input class="easyui-textbox" type="text" name="memo" data-options="required:true,multiline:true" style="height:60px"></input>
+			<textarea name="editorc" id="editorc"  style="width:700px;height:300px;"></textarea>
 		</div>
 		<div>
 			<span class="input_label">附件</span>
