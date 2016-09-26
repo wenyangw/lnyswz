@@ -1,6 +1,12 @@
 package lnyswz.jxc.action;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +16,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgjh;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgjhServiceI;
@@ -193,6 +200,30 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		cgjh.setCreateName(user.getRealName());
 		DataGrid dg = cgjhService.printCgjh(cgjh);
 		Export.print(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()));
+	}
+	
+	public void export() {
+		User user = (User) session.get("user");
+		cgjh.setCreateName(user.getRealName());
+		Json j = new Json();
+		OutputStream out;
+		try {
+			String location = "/pdf/cgjh_" + cgjh.getCgjhlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+			String address = Export.getRootPath() + location;
+			out = new FileOutputStream(address);			
+			DataGrid dg = cgjhService.printCgjh(cgjh);
+			Export.export(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()), out);
+			out.close();
+			j.setSuccess(true);
+			j.setObj(location);
+			j.setMsg("导出成功");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			j.setMsg("导出失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
 	}
 	
 	public void datagrid(){

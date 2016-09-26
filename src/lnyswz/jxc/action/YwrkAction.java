@@ -146,28 +146,6 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		Export.print(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()));
 	}
 	
-	public void exportYwrk() {
-		Json j = new Json();
-		OutputStream out;
-		try {
-			String location = "/pdf/ywrk_" + ywrk.getYwrklsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
-			String address = Export.getRootPath() + location;
-			out = new FileOutputStream(address);
-			DataGrid dg = ywrkService.printYwrk(ywrk);
-			Export.export(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()), out);
-			out.close();
-			j.setSuccess(true);
-			j.setObj(location);
-			j.setMsg("导出成功");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			j.setMsg("导出失败！");
-			e.printStackTrace();
-		}
-		writeJson(j);
-	}
-	
 	public void printKfrk() {
 		User user = (User) session.get("user");
 		ywrk.setCreateName(user.getRealName());

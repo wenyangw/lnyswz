@@ -1529,6 +1529,45 @@ function printCgjh(){
 	}
 }
 
+function exportCgjh(){
+	var row = cgjh_dg.datagrid('getSelected');
+	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否导出采购计划单？', function(r) {
+				if (r) {
+					$.ajax({	
+						url:'${pageContext.request.contextPath}/jxc/cgjhAction!export.action',
+						async: false,
+						cache: false,
+						context:this,	
+						data : {
+							cgjhlsh : row.cgjhlsh,
+							bmbh: cgjh_did,
+						},
+						success:function(data){
+							var json = $.parseJSON(data);
+							
+							window.open("${pageContext.request.contextPath}/"+json.obj);
+							
+							$.messager.show({
+								title : "提示",
+								msg : json.msg
+							});
+						},
+						complete: function(){
+							//lnyw.MaskUtil.unmask();
+						}
+					});
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的计划单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 function completeCgjh(){
 	var row = cgjh_dg.datagrid('getSelected');
 	if (row != undefined) {

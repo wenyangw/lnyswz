@@ -1270,42 +1270,6 @@ function printYwrk(){
 	}
 }
 
-function exportYwrk(){
-	var row = ywrk_dg.datagrid('getSelected');
-	if (row != undefined) {
-		$.messager.confirm('请确认', '是否导出业务入库单？', function(r) {
-			if (r) {
-				$.ajax({	
-					url:'${pageContext.request.contextPath}/jxc/ywrkAction!exportYwrk.action',
-					async: false,
-					cache: false,
-					context:this,	
-					data : {
-						ywrklsh : row.ywrklsh,
-						bmbh: ywrk_did,
-					},
-					success:function(data){
-						var json = $.parseJSON(data);
-						window.open("${pageContext.request.contextPath}/" + json.obj);
-											
-						
-						$.messager.show({
-							title : "提示",
-							msg : json.msg
-						});
-					},
-					complete: function(){
-						//lnyw.MaskUtil.unmask();
-					}
-				});
-				
-				
-			}
-		});
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
-	}
-}
 
 function printKfrk(){
 	var row = ywrk_dg.datagrid('getSelected');

@@ -524,6 +524,72 @@ function printXshk(){
 	}
 }
 
+function exportXshk(){
+	var khbh = $('#khbh').html();
+	if(khbh != ''){
+		var ywyId = jxc_xshk_ywyCombo.combobox('getValue');
+		
+		var dialog = $('#jxc_xshk_dateDialog');
+		dialog.dialog({
+			title : '请选择统计时间',
+			//href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
+			width : 240,
+			height : 120,
+			buttons : [{
+				text : '确定',
+				handler : function() {
+					var selectTime = $('input#selectTime').val();
+					if(selectTime != ''){
+						//var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
+						//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						$.ajax({	
+							url:'${pageContext.request.contextPath}/jxc/xshkAction!exportXshk.action',
+							async: false,
+							cache: false,
+							context:this,	
+							data : {
+								bmbh: xshk_did,
+								khbh: khbh,
+								ywyId: ywyId,
+								selectTime: selectTime
+							},
+							success:function(data){
+								var json = $.parseJSON(data);
+								
+								window.open("${pageContext.request.contextPath}/"+json.obj);
+								
+								$.messager.show({
+									title : "提示",
+									msg : json.msg
+								});
+							},
+							complete: function(){
+								//lnyw.MaskUtil.unmask();
+							}
+						});
+						
+						dialog.dialog('close');
+					}else{
+						$.messager.alert('提示', '请选择打印时间！', 'error');
+						return false;
+					}
+				},
+			},{
+				text : '取消',
+				handler : function() {
+					dialog.dialog('close');
+				},
+			}],
+			onLoad : function() {
+				
+			}
+		});
+	}else{
+		$.messager.alert('提示', '没有选中客户进行打印,请重新操作！', 'error');
+		return false;
+	}
+}
+
 //////////////////////////////////////////////以下为销售回款列表处理代码
 function cancelXshk(){
 	var row = xshk_dg.datagrid('getSelected');

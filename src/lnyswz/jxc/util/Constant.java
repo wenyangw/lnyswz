@@ -24,7 +24,6 @@ public interface Constant {
 	
 	//金穗接口文本存储路径
 	public static final String JS_FILEPATH = "C:/Lnyswz/";
-	public static final String PDF_FILEPATH = "D:/Pdf/";
 	//金穗接口文本增值税文件
 	public static final String JS_ZZS_FILENAME = "bill.txt";
 	//金穗接口文本普通文件

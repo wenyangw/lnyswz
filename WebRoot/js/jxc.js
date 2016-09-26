@@ -1048,30 +1048,6 @@ jxc.toJs = function(url, isZzs){
 //	document.write('</APPLET>');
 };
 
-jxc.pdf = function(url, type){
-	var appletStr = '<APPLET ID="JrPdf" NAME="JrPdf" CODE="lnyswz/common/applet/ExportApplet.class" CODEBASE="applets" ARCHIVE="export.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +    
-		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
-		' <PARAM NAME="scriptable" VALUE="false">' +   
-		' <PARAM NAME="DATA_URL" VALUE="'+url+'">' +
-		' <PARAM NAME="Export_Type" VALUE="'+type+'">' +
-		' </APPLET>';
-
-	$('#fileDialog').html(appletStr);
-	$.messager.show({
-		title:'提示',
-		msg:'正在导出' + type + '文件，请稍候……',
-		timeout:2000,
-		showType:'slide',
-		style:{
-			right:'',
-			bottom:'',
-			height:50,
-		}
-	});
-	
-};
-
-
 jxc.checkNum = function(val){
 	return val == undefined ? 0 : val;
 };

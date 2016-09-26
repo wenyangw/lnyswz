@@ -1,6 +1,12 @@
 package lnyswz.jxc.action;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +16,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Xshk;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XshkServiceI;
@@ -74,6 +81,33 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		xshk.setCreateName(user.getRealName());
 		DataGrid dg = xshkService.printXshk(xshk);
 		Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
+	}
+	
+	
+	public void exportXshk() {
+		User user = (User)session.get("user");
+		xshk.setCreateName(user.getRealName());
+		Json j = new Json();
+		OutputStream out;
+		try {
+			String location = "/pdf/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+			String address = Export.getRootPath() + location;
+			out = new FileOutputStream(address);			
+			DataGrid dg = xshkService.printXshk(xshk);
+			Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), out);
+			out.close();
+			j.setSuccess(true);
+			j.setObj(location);
+			j.setMsg("导出成功");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			j.setMsg("导出失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+		
+		
 	}
 	
 	/**
