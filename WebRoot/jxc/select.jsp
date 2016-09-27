@@ -574,8 +574,12 @@ function exportExcel(){
 		success:function(data){
 		
 			var json = $.parseJSON(data);
+			
 			if (json.success) {
 				var dd="${pageContext.request.contextPath}/"+json.obj;
+				console.info(dd);
+				
+				
 				if (json.success) {
 					window.open(dd);						
 				}						

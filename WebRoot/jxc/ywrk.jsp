@@ -1270,6 +1270,7 @@ function printYwrk(){
 	}
 }
 
+
 function printKfrk(){
 	var row = ywrk_dg.datagrid('getSelected');
 	if (row != undefined) {

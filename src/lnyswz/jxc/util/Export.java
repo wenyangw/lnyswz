@@ -1,8 +1,9 @@
 package lnyswz.jxc.util;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import org.apache.struts2.ServletActionContext;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -25,10 +25,9 @@ import lnyswz.common.bean.DataGrid;
 
 public class Export {
 	private static final String CONTENTTYPE = "application/octet-stream";
-	private static final String CONTENTTYPE_PDF = "application/pdf;charset=GBK";
 
 	public static void print(DataGrid dg, String fileName) {
-		java.io.File fileReport = new java.io.File(getRootPath() + "/report/"
+		File fileReport = new java.io.File(getRootPath() + "/report/"
 				+ fileName + ".jasper");
 
 		JasperReport jasperReport = null;
@@ -55,6 +54,35 @@ public class Export {
 				ouputStream.close();
 			}
 
+		} catch (Exception e) {
+		}
+
+	}
+	
+	public static void export(DataGrid dg, String fileName, String location) {
+		File fileReport = new File(getRootPath() + "/report/" + fileName + ".jasper");
+
+		JasperReport jasperReport = null;
+		JasperPrint jasperPrint = null;
+		OutputStream out;
+		try {
+			jasperReport = (JasperReport) JRLoader.loadObject(fileReport);
+			JRDataSource datasource = new JRBeanCollectionDataSource(
+					dg.getRows());
+			// 填充报表
+			jasperPrint = JasperFillManager.fillReport(jasperReport, (Map<String, Object>) dg.getObj(), datasource);
+			out = new FileOutputStream(Export.getRootPath() + location);
+			if (null != jasperPrint) {
+				
+				JRPdfExporter exporter = new JRPdfExporter();  
+		        exporter.setParameter(JRPdfExporterParameter.JASPER_PRINT, jasperPrint);  
+		        exporter.setParameter(JRPdfExporterParameter.CHARACTER_ENCODING, "UTF-8");  
+		        //exporter.setParameter(JRPdfExporterParameter.OUTPUT_FILE_NAME, getRootPath() + "/pdf/" + pdfName);
+		        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+                //注意此处用的不是JRPdfExporterParameter.OUTPUT_FILE，要用这个，还需新建File  
+		        exporter.exportReport();
+		        out.close();
+			}
 		} catch (Exception e) {
 		}
 

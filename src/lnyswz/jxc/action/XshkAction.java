@@ -1,6 +1,8 @@
 package lnyswz.jxc.action;
 
 
+import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Xshk;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XshkServiceI;
@@ -74,6 +77,20 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		xshk.setCreateName(user.getRealName());
 		DataGrid dg = xshkService.printXshk(xshk);
 		Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
+	}
+	
+	
+	public void exportXshk() {
+		User user = (User)session.get("user");
+		xshk.setCreateName(user.getRealName());
+		Json j = new Json();
+		String location = "/pdf/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+		DataGrid dg = xshkService.printXshk(xshk);
+		Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), location);
+		j.setSuccess(true);
+		j.setObj(location);
+		j.setMsg("导出成功");
+		writeJson(j);
 	}
 	
 	/**

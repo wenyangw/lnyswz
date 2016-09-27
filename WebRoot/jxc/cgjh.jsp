@@ -637,7 +637,10 @@ $(function(){
 			{field:'createName',title:'计划员',align:'center'},
 			{field:'spbh',title:'商品编号',align:'center'},
 			{field:'spmc',title:'名称',align:'center'},
-			{field:'spcd',title:'产地',align:'center'},
+			{field:'spcd',title:'*产地',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
 			{field:'sppp',title:'品牌',align:'center'},
 			{field:'spbz',title:'包装',align:'center'},
 			{field:'zjldwmc',title:'单位1',align:'center'},
@@ -667,13 +670,18 @@ $(function(){
 			{field:'ckId',title:'仓库id',align:'center',hidden:true},
 			{field:'ckmc',title:'仓库',align:'center',hidden:true},
 			{field:'jsfsmc',title:'付款方式',align:'center'},
-			{field:'isZs',title:'直送',align:'center',sortable:true,
+			{field:'isZs',title:'*直送',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
 						return '是';
 					} else {
 						return '否';
 					}
+				},
+				sorter: function(a,b){
+        			a = a == undefined ? 0 : a;
+        			b = b == undefined ? 0 : b;
+					return (a-b);  
 				},
 			},
 			{field:'shdz',title:'送货地址',align:'center'},
@@ -1519,6 +1527,49 @@ function printCgjh(){
 				if (r) {
 					var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + cgjh_did;
 					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的计划单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function exportCgjh(){
+	var row = cgjh_dg.datagrid('getSelected');
+	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否导出采购计划单？', function(r) {
+				if (r) {
+					var data = {
+							cgjhlsh : row.cgjhlsh,
+							bmbh: cgjh_did,
+						};
+					jxc.export('${pageContext.request.contextPath}', '/jxc/cgjhAction!export.action', data);
+// 					$.ajax({	
+// 						url:'${pageContext.request.contextPath}/jxc/cgjhAction!export.action',
+// 						async: false,
+// 						cache: false,
+// 						context:this,	
+// 						data : {
+// 							cgjhlsh : row.cgjhlsh,
+// 							bmbh: cgjh_did,
+// 						},
+// 						success:function(data){
+// 							var json = $.parseJSON(data);
+							
+// 							window.open("${pageContext.request.contextPath}/"+json.obj);
+// 							$.messager.show({
+// 								title : "提示",
+// 								msg : json.msg
+// 							});
+// 						},
+// 						complete: function(){
+// 							//lnyw.MaskUtil.unmask();
+// 						}
+// 					});
 				}
 			});
 		}else{

@@ -1800,6 +1800,43 @@ function printXsth(){
 	}
 }
 
+function exportXsth(){
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+ 		var data = {
+ 				xsthlsh : selected.xsthlsh,
+				bmbh: xsth_did,
+			};
+		jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsth.action', data);
+
+// 		$.ajax({	
+// 			url:'${pageContext.request.contextPath}/jxc/xsthAction!exportXsth.action',
+// 			async: false,
+// 			cache: false,
+// 			context:this,	
+// 			data : {
+// 				xsthlsh : selected.xsthlsh,
+// 				bmbh: xsth_did,
+// 			},
+// 			success:function(data){
+// 				var json = $.parseJSON(data);
+				
+// 				window.open("${pageContext.request.contextPath}/"+json.obj);
+				
+// 				$.messager.show({
+// 					title : "提示",
+// 					msg : json.msg
+// 				});
+// 			},
+// 			complete: function(){
+// 				//lnyw.MaskUtil.unmask();
+// 			}
+// 		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 function printXsht(){
 	var selected = xsth_dg.datagrid('getSelected');
@@ -1831,6 +1868,65 @@ function printXsht(){
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
 }
+
+function exportXsht(){
+	var selected = xsth_dg.datagrid('getSelected');
+ 	if (selected != undefined) {
+ 		if(selected.isCancel == '0'){
+ 			if(selected.isKp == '0'){
+ 				//if(selected.isZs == '1'){
+ 					if(selected.needAudit == selected.isAudit){
+					 	$.messager.confirm('请确认', '是否导出销售合同？', function(r) {
+							if (r) {
+								var data = {
+										xsthlsh : selected.xsthlsh,
+										bmbh: xsth_did,
+									};
+								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
+								
+// 								$.ajax({	
+// 									url:'${pageContext.request.contextPath}/jxc/xsthAction!exportXsht.action',
+// 									async: false,
+// 									cache: false,
+// 									context:this,	
+// 									data : {
+// 										xsthlsh : selected.xsthlsh,
+// 										bmbh: xsth_did,
+// 									},
+// 									success:function(data){
+// 										var json = $.parseJSON(data);
+										
+// 										window.open("${pageContext.request.contextPath}/"+json.obj);
+										
+// 										$.messager.show({
+// 											title : "提示",
+// 											msg : json.msg
+// 										});
+// 									},
+// 									complete: function(){
+// 										//lnyw.MaskUtil.unmask();
+// 									}
+// 								});
+							}
+						});
+ 					}else{
+ 						$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
+ 					}
+//  	 			}else{
+//  	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
+//  	 	 		}
+
+ 			}else{
+ 	 			$.messager.alert('警告', '选择的记录已开票，请重新选择！',  'warning');
+ 	 		}
+ 		}else{
+ 			$.messager.alert('警告', '选择的记录已取消，请重新选择！',  'warning');
+ 		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
 
 function printShd(){
 	if(detDg != undefined){
@@ -1880,6 +1976,90 @@ function printShd(){
 		return false;
 	}
 }
+
+
+function exportShd(){
+	if(detDg != undefined){
+		var detRows = detDg.datagrid('getSelections');
+		if(detRows != null){
+			if(xsthRow.isZs == '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						var xsthDetIds = [];
+						var flag = true;
+						$.each(detRows, function(index){
+						  	if(detRows[index].cgjhlsh == undefined){
+						  		$.messager.alert('提示', '选择的销售提货记录未实施计划，请重新选择！', 'error');
+								flag = false;
+						  	}
+						  	if(detRows[index].thsl == 0){
+						  		$.messager.alert('提示', '选择的销售提货记录未确认数量，请重新选择！', 'error');
+								flag = false;	
+						  	}
+						 	xsthDetIds.push(detRows[index].id);
+						});
+						if(flag){
+							$.messager.confirm('请确认', '是否导出收货确认单？', function(r) {
+								if (r) {
+								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
+									//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
+									//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+									
+									var data = {
+										xsthDetIds : xsthDetIds.join(','),
+										cgjhlsh: detRows[0].cgjhlsh,
+										bmbh: xsth_did,
+									};
+									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
+								
+								
+// 									$.ajax({	
+// 										url:'${pageContext.request.contextPath}/jxc/xsthAction!exportShd.action',
+// 										async: false,
+// 										cache: false,
+// 										context:this,	
+// 										data : {
+// 											xsthDetIds : xsthDetIds.join(','),
+// 											cgjhlsh: detRows[0].cgjhlsh,
+// 											bmbh: xsth_did,
+// 										},
+// 										success:function(data){
+// 											var json = $.parseJSON(data);
+											
+// 											window.open("${pageContext.request.contextPath}/" + json.obj);
+											
+// 											$.messager.show({
+// 												title : "提示",
+// 												msg : json.msg
+// 											});
+// 										},
+// 										complete: function(){
+// 											//lnyw.MaskUtil.unmask();
+// 										}
+// 									});
+								}
+							});
+						}
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+}
+
 
 function changeYf(){
 	var selected = xsth_dg.datagrid('getSelected');
