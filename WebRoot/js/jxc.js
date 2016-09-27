@@ -1048,6 +1048,29 @@ jxc.toJs = function(url, isZzs){
 //	document.write('</APPLET>');
 };
 
+
+jxc.export = function(url, action, query){
+	$.ajax({	
+		url:url + action,
+		async: false,
+		cache: false,
+		context:this,	
+		data : query,
+		success:function(data){
+			var json = $.parseJSON(data);
+			
+			window.open(url + json.obj);
+			$.messager.show({
+				title : "提示",
+				msg : json.msg
+			});
+		},
+		complete: function(){
+			//lnyw.MaskUtil.unmask();
+		}
+	});
+}
+
 jxc.checkNum = function(val){
 	return val == undefined ? 0 : val;
 };

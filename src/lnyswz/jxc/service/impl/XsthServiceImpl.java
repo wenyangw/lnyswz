@@ -1109,7 +1109,7 @@ public class XsthServiceImpl implements XsthServiceI {
 //					c.setZdwytsl(getYtsl(t.getTXsth().getXsthlsh(), t.getSpbh()));
 //				}
 //			}
-			if(xsth.getFromOther().equals("fromXskp") && tXsth.getIsZs().equals("1") && !(tXsth.getBmbh().equals("01") && (tXsth.getKhbh().equals("21010263") || tXsth.getKhbh().equals("21010608"))) && !(tXsth.getBmbh().equals("05") && tXsth.getFromRk().equals("1"))){
+			if(xsth.getFromOther().equals("fromXskp") && tXsth.getJsfsId().equals("06") && tXsth.getIsZs().equals("1") && !(tXsth.getBmbh().equals("01") && (tXsth.getKhbh().equals("21010263") || tXsth.getKhbh().equals("21010608"))) && !(tXsth.getBmbh().equals("05") && tXsth.getFromRk().equals("1"))){
 				if(y != null){
 					nl.add(c);
 				}

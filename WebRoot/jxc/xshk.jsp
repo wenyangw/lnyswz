@@ -542,31 +542,39 @@ function exportXshk(){
 					if(selectTime != ''){
 						//var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
 						//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-						$.ajax({	
-							url:'${pageContext.request.contextPath}/jxc/xshkAction!exportXshk.action',
-							async: false,
-							cache: false,
-							context:this,	
-							data : {
+						var data = {
 								bmbh: xshk_did,
 								khbh: khbh,
 								ywyId: ywyId,
 								selectTime: selectTime
-							},
-							success:function(data){
-								var json = $.parseJSON(data);
+							};
+						jxc.export('${pageContext.request.contextPath}', '/jxc/xshkAction!exportXshk.action', data);
+						
+// 						$.ajax({	
+// 							url:'${pageContext.request.contextPath}/jxc/xshkAction!exportXshk.action',
+// 							async: false,
+// 							cache: false,
+// 							context:this,	
+// 							data : {
+// 								bmbh: xshk_did,
+// 								khbh: khbh,
+// 								ywyId: ywyId,
+// 								selectTime: selectTime
+// 							},
+// 							success:function(data){
+// 								var json = $.parseJSON(data);
 								
-								window.open("${pageContext.request.contextPath}/"+json.obj);
+// 								window.open("${pageContext.request.contextPath}/"+json.obj);
 								
-								$.messager.show({
-									title : "提示",
-									msg : json.msg
-								});
-							},
-							complete: function(){
-								//lnyw.MaskUtil.unmask();
-							}
-						});
+// 								$.messager.show({
+// 									title : "提示",
+// 									msg : json.msg
+// 								});
+// 							},
+// 							complete: function(){
+// 								//lnyw.MaskUtil.unmask();
+// 							}
+// 						});
 						
 						dialog.dialog('close');
 					}else{

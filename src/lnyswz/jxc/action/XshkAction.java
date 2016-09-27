@@ -1,10 +1,6 @@
 package lnyswz.jxc.action;
 
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -88,26 +84,13 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		User user = (User)session.get("user");
 		xshk.setCreateName(user.getRealName());
 		Json j = new Json();
-		OutputStream out;
-		try {
-			String location = "/pdf/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
-			String address = Export.getRootPath() + location;
-			out = new FileOutputStream(address);			
-			DataGrid dg = xshkService.printXshk(xshk);
-			Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), out);
-			out.close();
-			j.setSuccess(true);
-			j.setObj(location);
-			j.setMsg("导出成功");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			j.setMsg("导出失败！");
-			e.printStackTrace();
-		}
+		String location = "/pdf/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+		DataGrid dg = xshkService.printXshk(xshk);
+		Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), location);
+		j.setSuccess(true);
+		j.setObj(location);
+		j.setMsg("导出成功");
 		writeJson(j);
-		
-		
 	}
 	
 	/**
