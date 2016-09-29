@@ -1223,6 +1223,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		//Date payTime = DateUtil.stringToDate(o[4].toString());
 	
 		Xskp x = new Xskp();
+		x.setKhlxId(kh.getKhlxId());
 		if(o != null){
 			//x.setPayTime(payTime);
 			x.setPayTime(DateUtil.stringToDate(o[4].toString()));
