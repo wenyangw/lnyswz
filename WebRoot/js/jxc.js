@@ -215,6 +215,7 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;
 	var isUp = undefined;
 	var postponeDay = undefined;
+	var khlxId = undefined;
 	$.ajax({
 		url: url,
 		data: {
@@ -229,15 +230,16 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 			payTime = data.obj.payTime;
 			isUp = data.obj.isUp;
 			postponeDay = Number(data.obj.postponeDay);
+			khlxId = data.obj.khlxId;
 		}
 	});
-	
 	//超期时间大于延期日期，禁止提货
 	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
 	}else{
+		
 		//延期天数为0(非授信客户)或超期天数大于0的非优质客户，进行二级审批
-		if(postponeDay == 0 || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
+		if((postponeDay == 0 && khlxId == KHLX_XK) || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
 			return jxc.auditLevel(bmbh)['second'];
 		}else{
 			//优质客户超期30天进行二级审批，否则进行一级审批
@@ -398,6 +400,7 @@ var ywbms = [{
 
 //销售欠款值
 var JSFS_QK = '06';
+var KHLX_XK = '01';
 var LENGTH_JE = 4;
 var LENGTH_SL = 3;
 var SL = 0.17;

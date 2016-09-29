@@ -611,6 +611,7 @@ public class KhServiceImpl implements KhServiceI {
 		if(tKhDet != null){
 			BeanUtils.copyProperties(tKhDet, kh);
 			kh.setKhmc(tKhDet.getTKh().getKhmc());
+			kh.setKhlxId(tKhDet.getKhlxId());
 			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
 		}else{
 			kh.setKhmc(khDao.load(TKh.class, khbh).getKhmc());

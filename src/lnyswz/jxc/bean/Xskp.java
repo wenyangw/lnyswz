@@ -88,6 +88,7 @@ public class Xskp {
 	private Date payTime;
 	private BigDecimal hkedje;
 	private String isUp;
+	private String khlxId;
 	private int postponeDay;
 	
 	//第三方开票传入提货单客户
@@ -684,6 +685,14 @@ public class Xskp {
 
 	public void setIsUp(String isUp) {
 		this.isUp = isUp;
+	}
+
+	public String getKhlxId() {
+		return khlxId;
+	}
+
+	public void setKhlxId(String khlxId) {
+		this.khlxId = khlxId;
 	}
 
 	public int getPostponeDay() {
