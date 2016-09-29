@@ -14,38 +14,26 @@
 	var contact_from;
 	var contact_to;
 	
-
-	contact_source = [ {
-		id : 1,
-		text : '经理室',
-		children : [ {
-			id : 11,
-			text : '侯总',
-			orderNum : 1,
-		}, {
-			id : 12,
-			text : '翟总',
-			orderNum : 2,
-		}, ],
-		orderNum : 1
-	}, {
-		id : 2,
-		text : '综合办公室',
-		children : [ {
-			id : 21,
-			text : '张跃',
-			orderNum : 1,
-		}, {
-			id : 22,
-			text : '赵青娟',
-			orderNum : 2,
-		} ],
-		orderNum : 2,
-	}
-
-	];
+	var source;
+	var target;
 	
-	contact_reset();
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
+		dataType : 'json',
+		success : function(d) {
+			contact_source = d;
+			array_sort(contact_source);
+			contact_reset();
+		}
+	});
+	
+	function array_sort(arr){
+		arr.sort(function(a, b){
+			return a.orderNum - b.orderNum;
+		});
+	}
+	
 	
 	$('input[name="menuId"]').val(lnyw.tab_options().id);
 
@@ -86,8 +74,11 @@
 				.dialog({
 					title : '选择收件人',
 					href : '${pageContext.request.contextPath}/oa/selectContact.jsp',
-					width : 550,
-					height : 400,
+					width : 515,
+					height : 471,
+					closable: false,
+				    cache: false,
+				    modal: true,
 					buttons : [ {
 						text : '确定',
 						handler : function() {
@@ -107,8 +98,8 @@
 						}
 					} ],
 					onLoad : function() {
-						var source = $('#contact_from');
-						var target = $('#contact_to');
+						source = $('#contact_from');
+						target = $('#contact_to');
 						
 						source.tree({
 							data : contact_from,
@@ -127,6 +118,21 @@
 					},
 
 				});
+	}
+	
+	
+	function trans_toR(){
+		trans_all(source, target, contact_from, contact_to);
+	}
+	function trans_toL(){
+		trans_all(target, source, contact_to, contact_from);
+	}
+	
+	function trans_all(source, target, array_from, array_to){
+		var nodes = source.tree('getRoots');
+		for(var i = 0; i < nodes.length; i++){
+			contactTrans(nodes[i], source, target, array_from, array_to);
+		}
 	}
 
 	function contactTrans(node, source, target, array_from, array_to) {
@@ -162,13 +168,17 @@
 		} else {
 			for (var i = 0, len = array_from.length; i < len; i++) {
 				if (array_from[i].id == node.id) {
-					target.tree({
-						data : trans(array_from.splice(i, 1), array_to)
-					});
+					
+					target.tree('loadData', trans(array_from.splice(i, 1), array_to));
+
+// 					target.tree({
+// 						data : trans(array_from.splice(i, 1), array_to)
+// 					});
 					break;
 				}
 			}
-			source.tree('remove', node.target);
+			source.tree('loadData', array_from);
+			//source.tree('remove', node.target);
 		}
 	}
 
@@ -225,11 +235,11 @@
 	function contact_reset(){
 		contact_from = [];
 		for(var i = 0; i < contact_source.length; i++){
-			//contact_from[contact_from.length] = Extend({}, obj);
 			contact_from[contact_from.length] = $.extend(true, {}, contact_source[i]);
 		}
 		contact_to = [];
 	}
+	
 	
 </script>
 <div id="oa_message_tabs" class="easyui-tabs"

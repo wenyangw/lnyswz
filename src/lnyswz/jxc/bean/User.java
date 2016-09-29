@@ -28,7 +28,8 @@ public class User {
 	private String postName;
 	private String csex;
 	private String source;
-	
+	private String text;
+		
 	private int operaId;
 	private String menuId;
 	private String operaDepId;
@@ -157,6 +158,12 @@ public class User {
 	}
 	public void setSource(String source) {
 		this.source = source;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
 	}
 	public int getOperaId() {
 		return operaId;

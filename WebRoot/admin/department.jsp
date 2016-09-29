@@ -20,6 +20,14 @@ $(function(){
 	        {field:'id',title:'编号',width:100},
 	        {field:'depName',title:'部门名称',width:100},
 	        {field:'orderNum',title:'显示顺序',width:100},
+	        {field:'valid',title:'有效',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				}},
 	    ]],
 	});
 	//根据权限，动态加载功能按钮
@@ -96,6 +104,7 @@ function editDepa(){
 					id : rows[0].id,
 					depName : rows[0].depName,
 					orderNum : rows[0].orderNum,
+					valid: rows[0].valid
 				});
 				f.find('input[name=id]').attr('readonly', true);
 				f.find('input[name=depName]').focus();

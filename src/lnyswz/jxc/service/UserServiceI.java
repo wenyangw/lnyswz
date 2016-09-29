@@ -3,6 +3,7 @@ package lnyswz.jxc.service;
 import java.util.List;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.User;
 
 public interface UserServiceI {
@@ -24,5 +25,5 @@ public interface UserServiceI {
 
 	public List<User> listBgys(User user);
 
-	
+	public List<Department> getContacts(User user);
 }

@@ -127,6 +127,10 @@ public class UserAction extends BaseAction implements ModelDriven<User>{
 		writeJson(userService.listBgys(user));
 	}
 	
+	public void getContacts(){
+		writeJson(userService.getContacts(user));
+	}
+	
 	@Override
 	public User getModel() {
 		return user;
