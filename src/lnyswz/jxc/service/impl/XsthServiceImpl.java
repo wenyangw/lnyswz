@@ -1068,8 +1068,6 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and t.zdwsl <> t.cksl";
 		}
 		
-		System.out.println(hql);
-		
 		String countHql = "select count(id) " + hql;
 		hql += " order by t.TXsth.createTime desc ";
 		List<TXsthDet> l = detDao.find(hql, params, xsth.getPage(), xsth.getRows());

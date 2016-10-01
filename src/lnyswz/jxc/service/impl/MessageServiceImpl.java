@@ -95,7 +95,32 @@ public class MessageServiceImpl implements MessageServiceI {
 	}
 
 	@Override
-	public DataGrid datagrid(Message c) {
+	public DataGrid sendDg(Message message) {
+		DataGrid dg = new DataGrid();
+		String hql = "from TMessage t where createId = :createId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("createId", message.getCreateId());
+		List<Message> nl = new ArrayList<Message>();
+		// 传入页码、每页条数
+		
+		String totalHql = "select count(*) " + hql;
+		hql += " order by createTime desc";
+		
+		List<TMessage> l = messageDao.find(hql, message.getPage(), message.getRows());
+		// 处理返回信息
+		for (TMessage t : l) {
+			Message nc = new Message();
+			BeanUtils.copyProperties(t, nc, new String[]{"memo"});
+			nl.add(nc);
+		}
+		
+		dg.setTotal(messageDao.count(totalHql));
+		dg.setRows(nl);
+		return dg;
+	}
+	
+	@Override
+	public DataGrid receiveDg(Message c) {
 		DataGrid dg = new DataGrid();
 		String hql = "from TMessage t ";
 		String totalHql = "select count(*) " + hql;
@@ -112,6 +137,7 @@ public class MessageServiceImpl implements MessageServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+
 
 	@Autowired
 	public void setMessageDao(BaseDaoI<TMessage> messageDao) {

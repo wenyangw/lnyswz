@@ -69,10 +69,16 @@ public class MessageAction extends BaseAction implements ModelDriven<Message> {
 		writeJson(j);
 	}
 
-	public void datagrid() {
-		super.writeJson(messageService.datagrid(message));
+	public void sendDg() {
+		User u = (User) session.get("user");
+		message.setCreateId(u.getId());
+		super.writeJson(messageService.sendDg(message));
 	}
-
+	
+	public void receiveDg() {
+		super.writeJson(messageService.receiveDg(message));
+	}
+	
 	public Message getModel() {
 		return message;
 	}

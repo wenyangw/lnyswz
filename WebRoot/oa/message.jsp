@@ -17,7 +17,7 @@
 	var source;
 	var target;
 	
-	
+	//装载联系人
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
 		dataType : 'json',
@@ -28,10 +28,18 @@
 		}
 	});
 	
+	//数组的排序
 	function array_sort(arr){
+		//根排序
 		arr.sort(function(a, b){
 			return a.orderNum - b.orderNum;
 		});
+		//子结点排序
+		for(var i = 0; i < arr.length; i++){
+			arr[i].children.sort(function(a, b){
+				return a.orderNum - b.orderNum;
+			});
+		}
 	}
 	
 	
@@ -62,12 +70,10 @@
 				{
 					items : editor_items,
 					uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
-				//allowImageRemote : false,
 				});
 
 	memo.__proto__.html('');
 	
-
 	function showContacts() {
 		var dialog = $('#message_contact_select');
 		dialog
@@ -104,15 +110,13 @@
 						source.tree({
 							data : contact_from,
 							onDblClick : function(node) {
-								contactTrans(node, source, target,
-										contact_from, contact_to);
+								contactTrans(node, source, target, contact_from, contact_to);
 							},
 						});
 						target.tree({
 							data : contact_to,
 							onDblClick : function(node) {
-								contactTrans(node, target, source, contact_to,
-										contact_from);
+								contactTrans(node, target, source, contact_to, contact_from);
 							},
 						});
 					},
@@ -120,14 +124,26 @@
 				});
 	}
 	
+	//更新后，排序、刷新树
+	function reload_tree(){
+		array_sort(contact_from);
+		array_sort(contact_to);
+		
+		source.tree('loadData', contact_from);
+		target.tree('loadData', contact_to);
+	}
 	
+	//全部命中
 	function trans_toR(){
 		trans_all(source, target, contact_from, contact_to);
 	}
+	
+	//全部移除
 	function trans_toL(){
 		trans_all(target, source, contact_to, contact_from);
 	}
 	
+	//全部操作时将源删除、目标增加
 	function trans_all(source, target, array_from, array_to){
 		var nodes = source.tree('getRoots');
 		for(var i = 0; i < nodes.length; i++){
@@ -135,66 +151,93 @@
 		}
 	}
 
+	//处理选中结点，并删除对应源数组、增加目标数据（以后可能中间步骤拿出去）
 	function contactTrans(node, source, target, array_from, array_to) {
 		if (source.tree('isLeaf', node.target)) {
-			var par = [ {
-				id : source.tree('getParent', node.target).id,
-				text : source.tree('getParent', node.target).text,
-				children : [ {
-					id : node.id,
-					text : node.text,
-				} ],
-			} ];
-			target.tree({
-				data : trans(par, array_to),
-			});
+			//部门结点
+			var parNode = source.tree('getParent', node.target);
+		
+			//获取人员包括部门
+			var par = [{
+				id: parNode.id,
+				text: parNode.text,
+				orderNum: getOrderNum(array_from, parNode.id),
+				children: [{
+					id: node.id,
+					text: node.text,
+					orderNum: getOrderNum(array_from, parNode.id, node.id),
+				}],
+			}];
+			
+			//处理源数驵的子结点
 			for (var i = 0, len = array_from.length; i < len; i++) {
-				if (array_from[i].id == source.tree('getParent', node.target).id) {
+				if (array_from[i].id == parNode.id) {
 					for (var j = 0, lenc = array_from[i].children.length; j < lenc; j++) {
 						if (array_from[i].children[j].id == node.id) {
+							//移除选中的子结点
 							array_from[i].children.splice(j, 1);
+							//移除子结点后部门下无人员
 							if (array_from[i].children.length == 0) {
+								//移除部门
 								array_from.splice(i, 1);
-								source.tree('remove', source.tree('getParent',
-										node.target).target);
 							}
-							source.tree('remove', node.target);
 							break;
 						}
 					}
 					break;
 				}
 			}
+			
+			//增加到目标数组
+			trans(par, array_to);
 		} else {
-			for (var i = 0, len = array_from.length; i < len; i++) {
+			for(var i = 0, len = array_from.length; i < len; i++) {
 				if (array_from[i].id == node.id) {
-					
-					target.tree('loadData', trans(array_from.splice(i, 1), array_to));
+					//处理目标数组，中间代码已处理源数组
+					trans(array_from.splice(i, 1), array_to);
 
-// 					target.tree({
-// 						data : trans(array_from.splice(i, 1), array_to)
-// 					});
 					break;
 				}
 			}
-			source.tree('loadData', array_from);
-			//source.tree('remove', node.target);
 		}
+		
+		reload_tree();
 	}
-
-	function trans(node, target) {
-		if (target.length > 0) {
-			for (var i = 0, len = target.length; i < len; i++) {
-				if (node[0].id == target[i].id) {
-					target[i].children.push(node[0].children[0]);
-					return target;
+	
+	//将选中结点（包括父结点加入目标数组）
+	function trans(node, array_target) {
+		if (array_target.length > 0) {
+			for (var i = 0, len = array_target.length; i < len; i++) {
+				if (node[0].id == array_target[i].id) {
+					for(var j = 0; j < node[0].children.length; j++){
+						array_target[i].children.push(node[0].children[j]);
+					}
+					return;
 				}
 			}
 		}
-		target.push(node[0]);
-		return target;
+		array_target.push(node[0]);
 	}
-
+	
+	//获取根、子结点的OrderNum(以后可能会改为attributes)
+	function getOrderNum(array_from, pid, id){
+		for(var i = 0; i < array_from.length; i++){
+			if(array_from[i].id == pid){
+				if(id){
+					for(var j = 0; j < array_from[i].children.length; j++){
+						if(array_from[i].children[j].id == id){
+							return array_from[i].children[j].orderNum;
+						}
+					}
+				}else{
+					return array_from[i].orderNum; 
+				}
+			}
+		}
+	}
+	
+	
+	//信息提交
 	function message_submit() {
 		var form = $('#message_send');
 		form.form('submit', {
@@ -226,12 +269,14 @@
 		});
 	}
 	
+	//信息重置
 	function message_reset(){
 		$('input.cont').val('');
 		memo.html('');
 		contact_reset();
 	}
 	
+	//联系人重置
 	function contact_reset(){
 		contact_from = [];
 		for(var i = 0; i < contact_source.length; i++){
@@ -239,7 +284,28 @@
 		}
 		contact_to = [];
 	}
+
 	
+	//-------------------------------------列表管理
+	
+	var message_sendDg = $('#oa_messageS_dg');
+	message_sendDg.datagrid({
+		url:'${pageContext.request.contextPath}/oa/messageAction!sendDg.action',
+		fit : true,
+		singleSelect:true,
+	    border : false,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+	    columns:[[    	
+	        {field:'id',title:'编号',width:100},	       
+	        {field:'createTime',title:'时间',width:100},
+	        {field:'subject',title:'主题',width:100,},
+	    ]],
+	});
+	//根据权限，动态加载功能按钮
+	lnyw.toolbar(0, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 	
 </script>
 <div id="oa_message_tabs" class="easyui-tabs"

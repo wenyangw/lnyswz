@@ -10,5 +10,7 @@ public interface MessageServiceI {
 
 	public boolean delete(Message message);
 
-	public DataGrid datagrid(Message message);
+	public DataGrid sendDg(Message message);
+	
+	public DataGrid receiveDg(Message message);
 }
