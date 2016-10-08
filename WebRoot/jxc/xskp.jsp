@@ -381,6 +381,7 @@ $(function(){
 	});
 	
 	xskp_spdg = $('#jxc_xskp_spdg').datagrid({
+		width: '100%',
 		fit : true,
 	    border : false,
 	    singleSelect : true,

@@ -7,7 +7,7 @@
 <head>
     <jsp:include page="/common/inc.jsp"></jsp:include>
 </head>
-<body class="easyui-layout">
+<body class="easyui-layout" data-options="fit:true,border:false">
 	<div data-options="region:'north',border:false, href:'${pageContext.request.contextPath}/layout/top.jsp'" style="height:75px;background:#95CCD9;padding:10px">辽宁印刷物资有限责任公司进销存平台</div>
 	<div data-options="region:'west',split:false,title:'功能导航', href:'${pageContext.request.contextPath}/layout/west.jsp'" style="width:200px;padding:0px;"></div>
 	<div data-options="region:'east',split:true,collapsed:true,title:'提示信息', href:'${pageContext.request.contextPath}/layout/east.jsp'" style="width:250px;padding:10px;">信息</div>

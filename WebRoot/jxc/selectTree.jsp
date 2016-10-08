@@ -43,14 +43,15 @@ $(function(){
 	$('#select2').attr('id', 'pro_' + query);
 	$('#jxc_select_dg').attr('id', 'jsd_' + query);
 	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);
-	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
+// 	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
+	$('#jxc_selectTree_layout').attr('id', 'jxc_selectTree_layout' + query);
 	$('#div_select_tree').attr('id','div_tree_select_'+query);
 	$('#exportExcelTree_sql').attr('id', 'exportExcelTree_sql' + query);
 	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
-	p = $('#jsa_' + query);
+// 	p = $('#jsa_' + query);
 	var isNeedDepTree;
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/admin/dictAction!isNeedDep.action',
@@ -69,6 +70,7 @@ $(function(){
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
 		cache: false,
+		
 		data : {
 			selectType :query,
 			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
@@ -92,36 +94,36 @@ $(function(){
 				star += '<tr>';
 				star += '<th align="left">'+this.cname+'</th>';
 				if(this.specials=="time"){
-					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+'"'; 
+					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().date(1).format('YYYY-MM-DD')+'" ';
 					star += 'name='+this.ename+' size="12"></td>';
 					star += '</tr><tr><th></th><td align="right">结束日期</td>';
-					star += '<td>&#12288;<input id="b_'+this.ename+'"';
+					star += '<td>&#12288;<input id="b_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
 					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';				
 				}else if(this.specials=="sjzsj"){
-					star += '<td align="right">起始月份</td><td>&#12288;<input id="a_'+this.ename+'"'; 
+					star += '<td align="right">起始月份</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					star += '</tr><tr><th></th><td align="right">结束月份</td>';
-					star += '<td>&#12288;<input id="c_'+this.ename+'"';
+					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 				}else if(this.specials=="scope"){
-					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+'"'; 
+					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					star += '</tr><tr><th></th><td align="right">结束范围</td>';
-					star += '<td>&#12288;<input id="c_'+this.ename+'"';
+					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+'" name="ope_'+this.ename+'" style="width:70px;"value="=" ></td>';
- 						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
+						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
+ 						star += '<td>&#12288;<input class="inputval'+query+'" id='+this.ename+query+' name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					}else{
 					//将checked属性名设置为：字典英文名，属性值设置为：“checked”。					
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+'" name="ope_'+this.ename+'" style="width:70px;" ></td>';
-						star += '<td>&#12288;<input class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
+						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;" ></td>';
+						star += '<td>&#12288;<input class="inputval'+query+'" id="'+this.ename+query+'"  name="'+this.ename+'" style="width:100px;"></td>';
 					}
 					if(this.show != null && this.show.trim().length > 0 ){
  						star += '<tr><td></td><td></td><td class="show">&#12288;'+this.show+'</td></tr>';
@@ -135,13 +137,17 @@ $(function(){
 			$('#sc_' + query).html(star);
 		}
 	});		
-	var selectbox= $('input[name^="ope_"]').combobox({
+	var selectbox= $('input[id^="ope_"]').combobox({
 			data:dictOpe,
 			panelHeight: 'auto',
 	});
 	did = lnyw.tab_options().did;
 	jxc_select_fhCombo = lnyw.initCombo($('input[name^="select_"]'), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did);
 	jxc_select_fhCombo.combobox('selectedIndex', 0);		
+
+
+
+
 // 		$('#select_fhId').combobox({
 // 				    url:'${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + did ,
 // 				    valueField:'id',
@@ -160,11 +166,14 @@ $(function(){
 					}).combobox('selectedIndex', 0);
 			openTreeSelectDid='y';
 		}
+
 	}
+
+
 	
 });
 //查询按钮事件
-function selectClick(){
+function selectClickTree(){
 	//取 input值
 	//select where条件拼写
 	var hql='';
@@ -199,25 +208,49 @@ function selectClick(){
 		eval("did=did_"+query);
 
 	}
+
 	var conditions=[];
 	var execHql=[];	
 	var treeExec=[];	
 	//遍历input 进行hql拼写
 	$.each(s,function(){	
 		var inputVal=$(this).val().trim();
-		if(this.id.trim().length <= 0 || this.id == null){
-			var opeVal=$('input[name=ope_'+$(this).attr('name')+']').val().trim();
-			//判断input 里面是否有值，将有值的数据进行拼写;
-			if((inputVal.length >0 && opeVal.length <=0)||(inputVal.length <=0 && opeVal.length >0)){
-				flag=true;
-				message +=dataClass[$(this).attr('name')]+"，";			
-			}
-		}
+// 		if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query) ) ){		
+// 			if(($('input[name=ope_'+$(this).attr('id')+']').val() != ""&&$('input[name=ope_'+$(this).attr('id')+']').val() != undefined )){	
+// 				if($(this).val().trim().length <= 0 ){
+// 					flag=true;
+// 				}	
+// 			}else{
+// 				if($(this).val().trim().length > 0){
+// 						if($('input[name=ope_'+$(this).attr('id')+']').val() == ""&&$('input[name=ope_'+$(this).attr('id')+']').val() != undefined){
+// 								flag=true;
+// 						}
+// 				}	
+// 			}
+// 		}
 		
 	var hql='';
 
 		if(inputVal != "" ){
 		
+			if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query) ) ){																	
+//					if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
+				//下拉列表条件是否选择
+					if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
+							if($(this).val().trim().length <= 0 ){
+								flag=true;
+							}										
+						}else{
+							if($(this).val().trim().length > 0){
+		//								if($('input[name=ope_'+$(this).attr('name')+query+']').val() == ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined){
+											flag=true;
+		// 											}
+							}	
+						}
+ 				}
+			
+			
+			
 // 			if($(this).attr('id')=="spmc"){
 // 				b_bh=$(this).val();
 // 			}
@@ -227,9 +260,10 @@ function selectClick(){
 // 			if($(this).attr('id')=="b_createTime"){
 // 				b_time=moment($(this).val()).add('days', 1).format('YYYY-MM-DD');
 // 			}
+
 			string +=',';
 			hql +=$(this).attr('name');
-			switch($('input[name=ope_'+$(this).attr('name')+']').val()){
+			switch($('input[name=ope_'+$(this).attr('name')+query+']').val()){
 					case '1':
 						hql +=' like  \'%'+$(this).val()+'%\'';
 						execHql.push( "like");
@@ -246,25 +280,25 @@ function selectClick(){
 						execHql.push("%"+$(this).val());
 						break;
 					default:
-						if($(this).attr('id')==("a_"+$(this).attr('name'))){					
+						if($(this).attr('id')==("a_"+$(this).attr('name')+query)){					
 							hql +=' >= ';						
 							hql +=' \''+$(this).val()+'\'';
 							execHql.push( ">=");
 							execHql.push($(this).val());
-						}else if($(this).attr('id')==("b_"+$(this).attr('name'))){
+						}else if($(this).attr('id')==("b_"+$(this).attr('name')+query)){
 							hql +=' <= ';
 							hql +=' \''+moment($(this).val()).add('days', 1).format('YYYY-MM-DD')+'\'';
 							execHql.push( "<=");
 							execHql.push(moment($(this).val()).add('days', 1).format('YYYY-MM-DD'));
-						}else if($(this).attr('id')==("c_"+$(this).attr('name'))){
+						}else if($(this).attr('id')==("c_"+$(this).attr('name')+query)){
 							hql +=' <= ';
 							hql +=' \''+$(this).val()+'\'';
 							execHql.push( "<=");
 							execHql.push($(this).val());
 						}else{
-							hql +=' '+$('input[name=ope_'+$(this).attr('name')+']').val();
+							hql +=' '+$('input[name=ope_'+$(this).attr('name')+query+']').val();
 							hql +=' \''+$(this).val()+'\'';
-							execHql.push( $('input[name=ope_'+$(this).attr('name')+']').val());
+							execHql.push( $('input[name=ope_'+$(this).attr('name')+query+']').val());
 							execHql.push($(this).val());
 						}
 						break;
@@ -273,6 +307,12 @@ function selectClick(){
 		 }else{
 			execHql.push("<>");
 			execHql.push("");
+			if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
+// 				console.info($(this).attr('name'));
+				if($(this).val().trim().length <= 0 ){
+					flag=true;
+				}
+			}
 		}
 		if($(this).attr('id')!=undefined){
 			if($(this).attr('id').indexOf('select_')==0){
@@ -428,12 +468,12 @@ function selectClick(){
 
 // 									spbh= rows[0][title[0].field];
 // 									console.info(spbh);
-					                showDatagrid(conditions.join(" and ")+ hqlTree,allFields,allTitle,execHql.join(" , "),treeSelectExec.join(" , "));
+					                showDatagridTree(conditions.join(" and ")+ hqlTree,allFields,allTitle,execHql.join(" , "),treeSelectExec.join(" , "));
 					            
 				                }					
 							});	
 							var treeFirst=[];
-							hide('1',treeShow);   //隐藏tree不显示的列
+							hideTree('1',treeShow);   //隐藏tree不显示的列
 							if(datas.length>0){	
 									var hqlNews="";
 									hqlNews=" and "+treeFields[0];
@@ -455,7 +495,7 @@ function selectClick(){
 // 									spbh= datas[0][treeFields[0]];
 // 									console.info(execHql.join(" , "));
 // 									console.info(treeFirst.join(" , "));
-					                showDatagrid(conditions.join(" and ")+ hqlNews,allFields,allTitle,execHql.join(" , "),treeFirst.join(" , "));
+					                showDatagridTree(conditions.join(" and ")+ hqlNews,allFields,allTitle,execHql.join(" , "),treeFirst.join(" , "));
 					             
 					                
 							}else{
@@ -473,7 +513,7 @@ function selectClick(){
 	}	
 }
 //显示datagrid数据
-function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
+function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 	query = lnyw.tab_options().query;
 // 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
@@ -499,6 +539,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 						//遍历后台传回查询的数据
 						sqls=data.obj.obj;
 						$.each(data.obj.rows,function(){
+	
 							//创建olnyData对象 ，将属性名设置为fields对象内的值  将遍历后的查询数据设置为属性值
 							var onlyData=Object.create(Object.prototype);							
 							for( var i=0;i<this.length;i++){
@@ -519,7 +560,6 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 					   			iconCls: 'icon-edit',
 					   			text   : '导出报表',
 					   			handler: function(){
-					   				lnyw.MaskUtil.mask('正在导出，请等待……');
 					   				exportExcel();
 						   			},			   		
 						   		},
@@ -527,7 +567,7 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 					   		onHeaderContextMenu: function(e, titles){
 				                   	e.preventDefault();
 				                    if (!cmenu){
-				                        createColumnMenu();
+				                        createColumnMenuTree();
 				                    }
 				                    cmenu.menu('show', {
 				                        left:e.pageX,
@@ -542,7 +582,6 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 											iconCls: 'icon-edit',
 											text   : '导出全部报表',
 											handler: function(){
-												lnyw.MaskUtil.mask('正在导出，请等待……');
 												exportExcelAll();
 										},			   		
 									});
@@ -551,7 +590,6 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 										iconCls: 'icon-edit',
 										text   : '导出视图报表',
 										handler: function(){
-											lnyw.MaskUtil.mask('正在导出，请等待……');
 											exportExcelTree();
 									},			   		
 							});
@@ -565,13 +603,14 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 				}							
 		}											
 	});
+
 	var cmenu;
-	function createColumnMenu(){
+	function createColumnMenuTree(){
 			cmenu = $('<div/>').appendTo('body');
 			cmenu.menu({
 		     	onClick: function(item){
 	                if (item.iconCls == 'icon-ok'){
-	                	$('#jsd_' + query).datagrid('hideColumn', item.name);
+	                	$('#jsd_' + query).datagrid('hideTreeColumn', item.name);
 	                    cmenu.menu('setIcon', {
 	                    	target: item.target,
 	                   		iconCls: 'icon-empty'
@@ -640,12 +679,12 @@ function showDatagrid(hqls,allFields,allTitle,exec,treeExec){
 // 	});
 // }
 
-function hide(isTree,data){
+function hideTree(isTree,data){
 	$.each(data,function(){
 		if(isTree == '1'){
-			$('#str_' + query).datagrid('hideColumn', this);
+			$('#str_' + query).datagrid('hideTreeColumn', this);
 		}else{
-			$('#jsd_' + query).datagrid('hideColumn', this);
+			$('#jsd_' + query).datagrid('hideTreeColumn', this);
 		}
 	
 		
@@ -653,21 +692,21 @@ function hide(isTree,data){
 }
 
 
-function cleanClick(){
-	var s=$('input.inputval').val('');
+function cleanClickTree(){
+	query = lnyw.tab_options().query;
+	var s=$('input.inputval'+query).val('');
 	$.each(datas,function(){
-		 $('#ope_'+this.ename).combobox('clear');
+		 $('#ope_'+this.ename+query).combobox('clear');
 	});
 	$('input[id^="b_"]').val(moment().format('YYYY-MM-DD'));
 	$('input[id^="a_"]').val(moment().date(1).format('YYYY-MM-DD'));
 
 }
 function exportExcelTree(){
-	
+	lnyw.MaskUtil.mask('正在导出，请等待……');
 	var titles=[];
 	var fields=[];
 	var hid=[];
-// 
 	query = lnyw.tab_options().query;
 	var dd;
 	if(openTreeSelectDid=='y'){
@@ -700,7 +739,6 @@ function exportExcelTree(){
 			}											
 		});	
 
-	
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -739,6 +777,7 @@ function exportExcelTree(){
 
 
 function exportExcelAll(){
+	lnyw.MaskUtil.mask('正在导出，请等待……');
 	var titles=[];
 	var fields=[];
 	query = lnyw.tab_options().query;
@@ -803,6 +842,7 @@ function exportExcelAll(){
 
 
 function exportExcel(){
+	lnyw.MaskUtil.mask('正在导出，请等待……');
 	var titles=[];
 	var fields=[];
 	query = lnyw.tab_options().query;
@@ -830,7 +870,6 @@ function exportExcel(){
 		});	
 // 	console.info($('#exportExcelTree_sql' + query).val());
 // 	console.info($('#exportExcelTree_sql' + query).val().replace(/,5,/, ",0,"));
-
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
@@ -887,10 +926,10 @@ function exportExcel(){
 				<input type="hidden" id="exportExcel_sql" name="exportExcel_sql" />
 				<a href="#" class="easyui-linkbutton"
 					data-options="iconCls:'icon-search',plain:true"
-					onclick="selectClick();">查询</a> <a href="#"
+					onclick="selectClickTree();">查询</a> <a href="#"
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
-					onclick="cleanClick();">清除</a> <br>
+					onclick="cleanClickTree();">清除</a> <br>
 <!-- 				<div id='div_select_tree'> -->
 <!-- 					<th align="left"><b>部门</b></th> -->
 <!-- 					<tr> -->
@@ -908,7 +947,7 @@ function exportExcel(){
 		style="width: 100%; height: 100%">
 		<div id='select_treeShow_layout' style="height: 100%;">
 			<div data-options="region:'west',title:'视图',split:true"
-				style="height: 100px; width: 350px">
+				style="height: 100px; width: 400px">
 				<ul id="select_tree"></ul>
 			</div>
 			<div data-options="region:'center',title:'详细内容',split:true"
