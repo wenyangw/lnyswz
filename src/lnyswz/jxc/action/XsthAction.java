@@ -235,9 +235,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		Json j = new Json();
-		String location = "/pdf/xsth_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+		String type = Export.getExportType(xsth.getType());
+		String location = "/export/xsth_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printXsth(xsth);
-		Export.export(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()), location);
+		Export.export(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");
@@ -248,9 +249,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		Json j = new Json();
-		String location = "/pdf/gxht_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+		String type = Export.getExportType(xsth.getType());
+		String location = "/export/gxht_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printXsht(xsth);
-		Export.export(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()), location);
+		Export.export(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");
@@ -268,9 +270,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		Json j = new Json();
-		String location = "/pdf/shqrd_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".pdf";
+		String type = Export.getExportType(xsth.getType());
+		String location = "/export/shqrd_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printShd(xsth);
-		Export.export(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()), location);
+		Export.export(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");

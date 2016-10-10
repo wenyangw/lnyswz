@@ -1546,6 +1546,7 @@ function exportCgjh(){
 					var data = {
 							cgjhlsh : row.cgjhlsh,
 							bmbh: cgjh_did,
+							//type: 'rtf'
 						};
 					jxc.export('${pageContext.request.contextPath}', '/jxc/cgjhAction!export.action', data);
 // 					$.ajax({	
