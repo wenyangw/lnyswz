@@ -239,6 +239,10 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+       		{field:'bookmc',title:'书名',align:'center',
+           		formatter: function(value){
+           			return lnyw.memo(value, 15);
+           		}},
         	{field:'isKp',title:'已开票',align:'center',
         		formatter: function(value){
             		return value == '1' ? '是' : '';
