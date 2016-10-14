@@ -1882,7 +1882,7 @@ function exportXsht(){
 								var data = {
 										xsthlsh : selected.xsthlsh,
 										bmbh: xsth_did,
-										//type: 'rtf'
+										type: 'rtf'
 									};
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
 							}
