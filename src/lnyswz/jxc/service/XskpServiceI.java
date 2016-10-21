@@ -8,10 +8,13 @@ import lnyswz.jxc.bean.Xskp;
 
 public interface XskpServiceI {
 	public Xskp save(Xskp xskp);
+	public Xskp saveXsfl(Xskp xskp);
 	public void cjXskp(Xskp xskp);
+	public void cjXsfl(Xskp xskp);
 	public void createXsth(Xskp xskp);
 //	public void updateComplete(Xskp xskp);
 	public DataGrid datagrid(Xskp xskp);
+	public DataGrid datagridXsfl(Xskp xskp);
 	public DataGrid detDatagrid(String xskplsh);
 	public DataGrid getSpkc(Xskp xskp);
 	public List<String> toJs(String xskplsh);

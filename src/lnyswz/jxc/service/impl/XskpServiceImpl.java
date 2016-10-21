@@ -96,6 +96,9 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setXskplsh(lsh);
 		tXskp.setIsCj("0");
 		tXskp.setYfje(BigDecimal.ZERO);
+		tXskp.setXslxId("01");
+		tXskp.setXslxmc("正式");
+		
 		
 		
 		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
@@ -355,6 +358,91 @@ public class XskpServiceImpl implements XskpServiceI {
 		rXskp.setFplxId(tXskp.getFplxId());
 		return rXskp;
 	}
+
+	@Override
+	public Xskp saveXsfl(Xskp xskp) {
+		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
+
+		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
+		
+		TXskp tXskp = new TXskp();
+		BeanUtils.copyProperties(xskp, tXskp);
+		tXskp.setCreateTime(new Date());
+		tXskp.setCreateName(xskp.getCreateName());
+		tXskp.setXskplsh(lsh);
+		tXskp.setIsCj("0");
+		tXskp.setYfje(BigDecimal.ZERO);
+		
+		tXskp.setHjje(tXskp.getHjje().negate());
+		tXskp.setHjse(tXskp.getHjse().negate());
+		
+		tXskp.setHkje(hjje.negate());
+		
+		String bmmc = depDao.load(TDepartment.class, xskp.getBmbh()).getDepName();
+		tXskp.setBmmc(bmmc);
+		
+		tXskp.setNeedAudit("0");
+		tXskp.setIsAudit("0");
+		
+		Department dep = new Department();
+		dep.setId(xskp.getBmbh());
+		dep.setDepName(bmmc);
+		
+		Ck ck = new Ck();
+		ck.setId(xskp.getCkId());
+		ck.setCkmc(xskp.getCkmc());
+		
+		Kh kh = new Kh();
+		kh.setKhbh(xskp.getKhbh());
+		kh.setKhmc(xskp.getKhmc());
+
+		//处理商品明细
+		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
+		ArrayList<XskpDet> xskpDets = JSON.parseObject(xskp.getDatagrid(), new TypeReference<ArrayList<XskpDet>>(){});
+		for(XskpDet xskpDet : xskpDets){
+			TXskpDet tDet = new TXskpDet();
+			BeanUtils.copyProperties(xskpDet, tDet);
+			
+			tDet.setZdwdj(BigDecimal.ZERO);
+			tDet.setZdwsl(BigDecimal.ZERO);
+			tDet.setCdwdj(BigDecimal.ZERO);
+			tDet.setCdwsl(BigDecimal.ZERO);
+			
+			tDet.setLastThsl(BigDecimal.ZERO);
+			tDet.setcLastThsl(BigDecimal.ZERO);
+			tDet.setThsl(BigDecimal.ZERO);
+			
+			tDet.setSpje(tDet.getSpje().negate());
+			tDet.setSpse(tDet.getSpse().negate());
+			
+			tDet.setXscb(BigDecimal.ZERO);
+			
+			tDet.setTXskp(tXskp);
+			
+			Sp sp = new Sp();
+			BeanUtils.copyProperties(xskpDet, sp);
+
+			tDets.add(tDet);
+			
+			//更新业务总账
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+			
+		}
+	
+		tXskp.setTXskpDets(tDets);
+		
+		//保存单据
+		xskpDao.save(tXskp);
+		
+		OperalogServiceImpl.addOperalog(xskp.getCreateId(), xskp.getBmbh(), xskp.getMenuId(), tXskp.getXskplsh(), 
+				"生成销售开票单", operalogDao);
+		
+		Xskp rXskp = new Xskp();
+		rXskp.setXskplsh(lsh);
+		rXskp.setFplxId(tXskp.getFplxId());
+		return rXskp;
+	}
+
 	
 	@Override
 	public void cjXskp(Xskp xskp) {
@@ -539,6 +627,80 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setTXskpDets(tDets);
 		xskpDao.save(tXskp);
 	}
+	
+	@Override
+	public void cjXsfl(Xskp xskp) {
+		Date now = new Date();
+		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
+		//更新原单据信息
+		TXskp yTXskp = xskpDao.get(TXskp.class, xskp.getXskplsh());
+		//新增冲减单据信息
+		TXskp tXskp = new TXskp();
+		BeanUtils.copyProperties(yTXskp, tXskp, new String[]{"TXsths"});
+
+		//更新原单据信息
+		yTXskp.setCjId(xskp.getCjId());
+		yTXskp.setCjTime(now);
+		yTXskp.setCjName(xskp.getCjName());
+		yTXskp.setIsCj("1");
+
+		//??
+		//直送不需要生成销售提货
+		//if("0".equals(yTXskp.getIsTh())){
+		//	needXsth = false;
+		//}
+		
+		tXskp.setXskplsh(lsh);
+		tXskp.setCjXskplsh(yTXskp.getXskplsh());
+		tXskp.setCreateId(xskp.getCjId());
+		tXskp.setCreateTime(now);
+		tXskp.setCreateName(xskp.getCjName());
+		tXskp.setIsCj("1");
+		tXskp.setCjId(xskp.getCjId());
+		tXskp.setCjName(xskp.getCjName());
+		tXskp.setCjTime(now);
+		tXskp.setHjje(tXskp.getHjje().negate());
+		tXskp.setHjse(tXskp.getHjse().negate());
+		tXskp.setHkje(tXskp.getHkje().negate());
+		tXskp.setBz(xskp.getBz());
+		
+		Department dep = new Department();
+		dep.setId(xskp.getBmbh());
+		dep.setDepName(depDao.load(TDepartment.class, xskp.getBmbh()).getDepName());
+		
+		Ck ck = new Ck();
+		ck.setId(tXskp.getCkId());
+		ck.setCkmc(tXskp.getCkmc());
+		
+		Kh khTh = null;
+		
+		Set<TXskpDet> yTXskpDets = yTXskp.getTXskpDets();
+		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
+		TXskpDet tDet = null;
+		for(TXskpDet yTDet : yTXskpDets){
+			tDet = new TXskpDet();
+			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
+			//tDet.setZdwsl(yTDet.getZdwsl().negate());
+			//if(yTDet.getCdwsl() != null){
+			//	tDet.setCdwsl(yTDet.getCdwsl().negate());
+			//}
+			tDet.setSpje(yTDet.getSpje().negate());
+			tDet.setSpse(yTDet.getSpse().negate());
+			//tDet.setXscb(yTDet.getXscb().negate());
+			tDet.setTXskp(tXskp);
+			tDets.add(tDet);
+
+			//更新业务总账
+			Sp sp = new Sp();
+			BeanUtils.copyProperties(yTDet, sp);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+
+		}
+				
+		tXskp.setTXskpDets(tDets);
+		xskpDao.save(tXskp);
+	}
+
 	
 	@Override
 	public List<String> toJs(String xskplsh) {
@@ -947,7 +1109,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	@Override
 	public DataGrid datagrid(Xskp xskp) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TXskp t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TXskp t where t.xslxId = '01' and t.bmbh = :bmbh and t.createTime > :createTime";
 		if(xskp.getFromOther() != null){
 			hql += " and t.isCj = '0'";
 		}
@@ -969,7 +1131,6 @@ public class XskpServiceImpl implements XskpServiceI {
 			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
 			params.put("search", "%" + xskp.getSearch() + "%");
 		}
-		
 		
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
@@ -997,6 +1158,38 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(t.getTYwrk() != null){
 				c.setYwrklsh(t.getTYwrk().getYwrklsh());
 			}
+			nl.add(c);
+		}
+		datagrid.setTotal(xskpDao.count(countHql, params));
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid datagridXsfl(Xskp xskp) {
+		DataGrid datagrid = new DataGrid();
+		String hql = " from TXskp t where t.xslxId = '02' and t.bmbh = :bmbh and t.createTime > :createTime";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xskp.getBmbh());
+		if(xskp.getCreateTime() != null){
+			params.put("createTime", xskp.getCreateTime()); 
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+		
+		if(xskp.getSearch() != null){
+			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search)"; 
+			params.put("search", "%" + xskp.getSearch() + "%");
+		}
+		
+		String countHql = " select count(*)" + hql;
+		hql += " order by t.createTime desc";
+		List<TXskp> l = xskpDao.find(hql, params, xskp.getPage(), xskp.getRows());
+		List<Xskp> nl = new ArrayList<Xskp>();
+		for(TXskp t : l){
+			Xskp c = new Xskp();
+			BeanUtils.copyProperties(t, c);
+						
 			nl.add(c);
 		}
 		datagrid.setTotal(xskpDao.count(countHql, params));

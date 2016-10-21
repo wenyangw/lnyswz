@@ -356,6 +356,7 @@ $(function(){
 					queryParams:{
 						bmbh: xskp_did,
 						createTime: countXskp == 0 ? undefined : $('input[name=createTimeXskp]').val(),
+						xslxId: '01',
 						search: countXskp == 0 ? undefined : $('input[name=searchXskp]').val(),
 					}
 				});

@@ -227,7 +227,11 @@ public class YwzzServiceImpl implements YwzzServiceI {
 				tYwzz.setRkje(Constant.BD_ZERO);
 				//tYwzz.setDwcb(Constant.BD_ZERO);
 				//2014.10.10,冲减销售时，无结转记录，更新成本
-				tYwzz.setDwcb(cb.divide(zsl, 4, BigDecimal.ROUND_HALF_UP));
+				if(zsl.compareTo(BigDecimal.ZERO) != 0){
+					tYwzz.setDwcb(cb.divide(zsl, 4, BigDecimal.ROUND_HALF_UP));
+				}else{
+					tYwzz.setDwcb(BigDecimal.ZERO);
+				}
 			}else if(type.equals(Constant.UPDATE_BT)){
 				if(ck == null){
 					tYwzz.setRkje(je);
