@@ -73,6 +73,7 @@ public class Cgjh {
 	private String isKfrk;
 	
 	private String search;
+	private String type;
 	
 	private String lxbh; 
 	private String menuId; 
@@ -534,6 +535,14 @@ public class Cgjh {
 
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getIsKfrk() {

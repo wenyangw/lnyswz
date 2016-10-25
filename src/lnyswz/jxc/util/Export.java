@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -20,6 +21,11 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporterParameter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import lnyswz.common.bean.DataGrid;
 
@@ -59,7 +65,7 @@ public class Export {
 
 	}
 	
-	public static void export(DataGrid dg, String fileName, String location) {
+	public static void export(DataGrid dg, String fileName, String location, String type) {
 		File fileReport = new File(getRootPath() + "/report/" + fileName + ".jasper");
 
 		JasperReport jasperReport = null;
@@ -73,19 +79,36 @@ public class Export {
 			jasperPrint = JasperFillManager.fillReport(jasperReport, (Map<String, Object>) dg.getObj(), datasource);
 			out = new FileOutputStream(Export.getRootPath() + location);
 			if (null != jasperPrint) {
+				JRExporter exporter = getExporter(type);
 				
-				JRPdfExporter exporter = new JRPdfExporter();  
-		        exporter.setParameter(JRPdfExporterParameter.JASPER_PRINT, jasperPrint);  
-		        exporter.setParameter(JRPdfExporterParameter.CHARACTER_ENCODING, "UTF-8");  
-		        //exporter.setParameter(JRPdfExporterParameter.OUTPUT_FILE_NAME, getRootPath() + "/pdf/" + pdfName);
-		        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-                //注意此处用的不是JRPdfExporterParameter.OUTPUT_FILE，要用这个，还需新建File  
-		        exporter.exportReport();
+				exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);  
+				exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8");  
+				//注意此处用的不是JRPdfExporterParameter.OUTPUT_FILE，要用这个，还需新建File  
+				//exporter.setParameter(JRPdfExporterParameter.OUTPUT_FILE_NAME, getRootPath() + "/pdf/" + pdfName);
+				exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+		        
+				exporter.exportReport();
+		        
 		        out.close();
 			}
 		} catch (Exception e) {
 		}
 
+	}
+
+	private static JRExporter getExporter(String type) {
+		JRExporter exporter;
+		if("xls".equals(type)){
+			exporter = new JRXlsExporter();
+		}else if("docx".equals(type)){
+			exporter = new JRDocxExporter();
+		}else if("rtf".equals(type)){
+			exporter = new JRRtfExporter();
+		}else{
+			exporter = new JRPdfExporter();
+		}
+		
+		return exporter;
 	}
 	
 	public static String getRootPath() {
@@ -119,6 +142,14 @@ public class Export {
 			oos.close();
 		} catch (Exception e) {
 
+		}
+	}
+	
+	public static String getExportType(String etype) {
+		if(etype != null){ 
+			return etype;
+		}else{
+			return "pdf";
 		}
 	}
 }

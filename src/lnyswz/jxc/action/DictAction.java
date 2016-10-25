@@ -84,8 +84,8 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 	/**
 	 * 判断是否需要部门
 	 */
-	public void isNeedDep() {
-		writeJson(dictService.isNeedDep(dict));
+	public void getDict() {
+		writeJson(dictService.getDict(dict));
 	}
 	public void listDict() {
 		writeJson(dictService.listDict(dict));

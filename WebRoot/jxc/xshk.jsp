@@ -546,7 +546,8 @@ function exportXshk(){
 								bmbh: xshk_did,
 								khbh: khbh,
 								ywyId: ywyId,
-								selectTime: selectTime
+								selectTime: selectTime,
+								//type: 'rtf'
 							};
 						jxc.export('${pageContext.request.contextPath}', '/jxc/xshkAction!exportXshk.action', data);
 						

@@ -356,6 +356,7 @@ $(function(){
 					queryParams:{
 						bmbh: xskp_did,
 						createTime: countXskp == 0 ? undefined : $('input[name=createTimeXskp]').val(),
+						xslxId: '01',
 						search: countXskp == 0 ? undefined : $('input[name=searchXskp]').val(),
 					}
 				});
@@ -381,6 +382,7 @@ $(function(){
 	});
 	
 	xskp_spdg = $('#jxc_xskp_spdg').datagrid({
+		width: '100%',
 		fit : true,
 	    border : false,
 	    singleSelect : true,

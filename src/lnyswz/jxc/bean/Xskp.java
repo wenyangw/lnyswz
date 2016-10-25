@@ -33,6 +33,8 @@ public class Xskp {
 	private String jsfsmc;
 	private String fplxId;
 	private String fplxmc;
+	private String xslxId;
+	private String xslxmc;
 	private String bookmc;
 	private String fyr;
 	private String thfs;
@@ -261,6 +263,22 @@ public class Xskp {
 
 	public void setFplxmc(String fplxmc) {
 		this.fplxmc = fplxmc;
+	}
+
+	public String getXslxId() {
+		return xslxId;
+	}
+
+	public void setXslxId(String xslxId) {
+		this.xslxId = xslxId;
+	}
+
+	public String getXslxmc() {
+		return xslxmc;
+	}
+
+	public void setXslxmc(String xslxmc) {
+		this.xslxmc = xslxmc;
 	}
 
 	public String getBookmc() {

@@ -34,6 +34,7 @@ public class TDict implements java.io.Serializable {
 	private String isShow;
 	private String treeShow;
 	private String treeSql;
+	private String bz;
 	
 	public TDict() {
 	}
@@ -44,7 +45,7 @@ public class TDict implements java.io.Serializable {
 		this.cname = cname;
 	}
 	public TDict(String id,String ename,String cname,String tname,String genre,String display,String description,int orderNum,String frozen,String specialValues,String show,String tree,String orderBy,
-				String isHj,String sqlWhere,String outGroupBy,String inGroupBy,String isDepName,String orderByTree,String isShow,String treeShow,String treeSql){
+				String isHj,String sqlWhere,String outGroupBy,String inGroupBy,String isDepName,String orderByTree,String isShow,String treeShow,String treeSql,String bz){
 		this.id=id;
 		this.ename=ename;
 		this.cname=cname;
@@ -67,6 +68,7 @@ public class TDict implements java.io.Serializable {
 		this.isShow=isShow;
 		this.treeShow=treeShow;
 		this.treeSql=treeSql;
+		this.bz=bz;
 	}
 	@Id
 	@Column(name = "id", unique = true, nullable = false, length = 36) 
@@ -248,5 +250,13 @@ public class TDict implements java.io.Serializable {
 	
 	public void setIsShow(String isShow) {
 		this.isShow = isShow;
+	}
+	@Column(name = "bz", nullable = true, length = 200)
+	public String getBz() {
+		return this.bz;
+	}
+	
+	public void setBz(String bz) {
+		this.bz = bz;
 	}
 }

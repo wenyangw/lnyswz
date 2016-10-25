@@ -86,6 +86,8 @@ public class Xsth {
 	
 	private String search;
 	
+	private String type;
+	
 	private String xskplsh;
 	private String cgjhlsh;
 	private String ywrklsh;
@@ -583,6 +585,12 @@ public class Xsth {
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	public String getXskplsh() {
 		return xskplsh;

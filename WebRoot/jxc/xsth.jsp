@@ -1806,6 +1806,7 @@ function exportXsth(){
  		var data = {
  				xsthlsh : selected.xsthlsh,
 				bmbh: xsth_did,
+				//type: 'rtf'
 			};
 		jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsth.action', data);
 
@@ -1881,32 +1882,9 @@ function exportXsht(){
 								var data = {
 										xsthlsh : selected.xsthlsh,
 										bmbh: xsth_did,
+										type: 'rtf'
 									};
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
-								
-// 								$.ajax({	
-// 									url:'${pageContext.request.contextPath}/jxc/xsthAction!exportXsht.action',
-// 									async: false,
-// 									cache: false,
-// 									context:this,	
-// 									data : {
-// 										xsthlsh : selected.xsthlsh,
-// 										bmbh: xsth_did,
-// 									},
-// 									success:function(data){
-// 										var json = $.parseJSON(data);
-										
-// 										window.open("${pageContext.request.contextPath}/"+json.obj);
-										
-// 										$.messager.show({
-// 											title : "提示",
-// 											msg : json.msg
-// 										});
-// 									},
-// 									complete: function(){
-// 										//lnyw.MaskUtil.unmask();
-// 									}
-// 								});
 							}
 						});
  					}else{
@@ -2009,6 +1987,7 @@ function exportShd(){
 										xsthDetIds : xsthDetIds.join(','),
 										cgjhlsh: detRows[0].cgjhlsh,
 										bmbh: xsth_did,
+										//type: 'rtf'
 									};
 									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
 								
