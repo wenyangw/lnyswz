@@ -16,16 +16,59 @@
 	
 	var source;
 	var target;
+
+	var memo;
 	
-	//装载联系人
-	$.ajax({
-		url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
-		dataType : 'json',
-		success : function(d) {
-			contact_source = d;
-			array_sort(contact_source);
-			contact_reset();
-		}
+	$(function(){
+		//装载联系人
+		$.ajax({
+			url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
+			dataType : 'json',
+			success : function(d) {
+				contact_source = d;
+				array_sort(contact_source);
+				contact_reset();
+			}
+		});
+		
+		$('input[name="menuId"]').val(lnyw.tab_options().id);
+	
+		var editor_items = [  'undo', 'redo', '|', 'preview',
+				//'print', 'template', 'code', 
+				'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft',
+				'justifycenter', 'justifyright', 'justifyfull',
+				'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent',
+				'subscript', 'superscript', 'clearhtml', 'quickformat',
+				'selectall', '|',
+				//'fullscreen', 
+				'/',
+				'formatblock', 'fontname', 'fontsize', '|', 'forecolor',
+				'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough',
+				'lineheight', 'removeformat', '|', 'image',
+				//'multiimage', 'flash', 'media', 
+				'insertfile', 'table', 'hr',
+				//'emoticons', 'baidumap', 'pagebreak', 'anchor', 
+				'link', 'unlink', '|', 'source', 'about' ];
+	
+		var K = KindEditor;
+		
+		window.memo = K
+			.create(
+					'#memo',
+					{
+						items : editor_items,
+						uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
+					});
+	
+		memo.__proto__.html('');
+		//memo.html('');
+	
+// 	KindEditor.create('#memo',
+// 			{
+// 				width : '200px',
+// 				height : '500px',
+// 			});
+// 	KindEditor.instances[0].html("");
 	});
 	
 	//数组的排序
@@ -41,38 +84,6 @@
 			});
 		}
 	}
-	
-	
-	$('input[name="menuId"]').val(lnyw.tab_options().id);
-
-	var editor_items = [  'undo', 'redo', '|', 'preview',
-			//'print', 'template', 'code', 
-			'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft',
-			'justifycenter', 'justifyright', 'justifyfull',
-			'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent',
-			'subscript', 'superscript', 'clearhtml', 'quickformat',
-			'selectall', '|',
-			//'fullscreen', 
-			'/',
-			'formatblock', 'fontname', 'fontsize', '|', 'forecolor',
-			'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough',
-			'lineheight', 'removeformat', '|', 'image',
-			//'multiimage', 'flash', 'media', 
-			'insertfile', 'table', 'hr',
-			//'emoticons', 'baidumap', 'pagebreak', 'anchor', 
-			'link', 'unlink', '|', 'source', 'about' ];
-
-	var K = KindEditor;
-	var memo;
-	window.memo = K
-		.create(
-				'#memo',
-				{
-					items : editor_items,
-					uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
-				});
-
-	memo.__proto__.html('');
 	
 	function showContacts() {
 		var dialog = $('#message_contact_select');
@@ -254,6 +265,7 @@
 					$.messager.alert('提示', '请录入' + error.join('，') + '！', 'error');
 					return false;
 				}
+				
 				$('#memo').val(memo.html());
 			},
 			success : function(data) {
@@ -285,7 +297,6 @@
 		contact_to = [];
 	}
 
-	
 	//-------------------------------------列表管理
 	
 	var message_sendDg = $('#oa_messageS_dg');
@@ -327,7 +338,7 @@
 			</div>
 			<div>
 				<span class="input_label">内容</span>
-				<input class="cont" name="memo" id="memo" style="width: 700px; height: 300px;"></input>
+				<input class="cont" name="memo" id="memo"></div>
 			</div>
 			<input type='hidden' name='menuId' />
 		</form>
