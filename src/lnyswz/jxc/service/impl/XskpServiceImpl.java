@@ -97,7 +97,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setIsCj("0");
 		tXskp.setYfje(BigDecimal.ZERO);
 		tXskp.setXslxId("01");
-		tXskp.setXslxmc("正式");
+		tXskp.setXslxmc("销售");
 		
 		
 		

@@ -132,27 +132,38 @@ public class DictServiceImpl implements DictServiceI {
 		return changeDict(list);
 	}
 	
+//	@Override
+//	public Dict isSelectType(Dict dict) {
+//		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
+//		TDict td = dictDao.get(hql);
+//		Dict d = new Dict();
+//		BeanUtils.copyProperties(td, d);
+//		return d;
+//	}
+	
 	@Override
-	public Dict isSelectType(Dict dict) {
+	public Dict getDict(Dict dict) {
 		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
 		TDict td = dictDao.get(hql);
 		Dict d = new Dict();
 		BeanUtils.copyProperties(td, d);
 		return d;
-
+		
 	}
 	
-	@Override
-	public boolean isNeedDep(Dict dict) {
-		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
-		TDict d = dictDao.get(hql);
-		if(d.getIsDepName().equals("1")){
-			return true;
-		}else{
-			return false;
-		}
+	
+//	@Override
+//	public boolean isNeedDep(Dict dict) {
+//		String hql = "from TDict t where genre >= '03' and ename= '"+ dict.getSelectType() + "'";
+//		TDict d = dictDao.get(hql);
+//		if(d.getIsDepName().equals("1")){
+//			return true;
+//		}else{
+//			return false;
+//		}
+//
+//	}
 
-	}
 
 	/*
 	 * 查询(non-Javadoc)

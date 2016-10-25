@@ -48,7 +48,7 @@ $(function(){
 			{field:'specials',title:'特殊种类',width:70},
 	        {field:'show',title:'提示信息',width:140},
 	        {field:'specialValues',title:'特殊值',width:160},
-	        {field:'orderNum',title:'排序',width:50},	        
+	        {field:'orderNum',title:'排序',width:50},
 	       	{field:'isDepName',title:'是否需要部门',width:50,
 		        	formatter : function(value) {	
 			       	 	 if(value=='1'){
@@ -111,7 +111,8 @@ $(function(){
 		       	 		 return "否";
 		       	 	 }
 	       	 	}
-	       	 },       	
+	       	 },     
+	       	{field:'bz',title:'备注',width:100},
 	        {field:'orderByTree',title:'分类排序条件',width:80},
 	        {field:'orderBy',title:'排序条件',width:80},
 	        {field:'isHj',title:'是否合计',width:50,
@@ -139,7 +140,7 @@ function appendDict() {
 		title : '增加字典',
 		href : '${pageContext.request.contextPath}/admin/dictAdd.jsp',
 		width : 340,
-		height : 630,
+		height : 650,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -159,7 +160,7 @@ function appendDict() {
 						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							dict_dg.datagrid('appendRow', json.obj);
-							if(json.obj.genre == '03' || json.obj.genre == '04'){
+							if(json.obj.genre == '03' || json.obj.genre == '04' ){
 								$('#admin_dict_tree').tree('reload');
 							}
 							p.dialog('close');
@@ -194,7 +195,7 @@ function editDict(){
 			title : '修改字典类别',
 			href : '${pageContext.request.contextPath}/admin/dictEdit.jsp',
 			width : 350,
-			height : 630,
+			height : 650,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -257,6 +258,7 @@ function editDict(){
 					orderBy:rows[0].orderBy,
 					orderByTree:rows[0].orderByTree,
 					isShow:rows[0].isShow,
+					bz:rows[0].bz,
 				});
 			
 			}

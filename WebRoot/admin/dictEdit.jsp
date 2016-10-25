@@ -72,7 +72,12 @@
 		<tr>
 			<th><label for="treeSql">是否分类查询</label></th>
 			<td><input type="checkbox" value="1"  name="treeSql"></td>
-		</tr>		
+		</tr>
+		<tr>
+			<th><label for="bz">备注</label></th>
+			<td><input name="bz" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>			
 		<tr>
 			<th><label for="orderByTree">分类排序条件</label></th>
 			<td><input name="orderByTree" class="easyui-validatebox"

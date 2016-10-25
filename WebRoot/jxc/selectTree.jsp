@@ -43,6 +43,7 @@ $(function(){
 	$('#select2').attr('id', 'pro_' + query);
 	$('#jxc_select_dg').attr('id', 'jsd_' + query);
 	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);
+	$('#bzTreeShow').attr('id', 'bzTreeShow' + query);
 // 	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
 	$('#jxc_selectTree_layout').attr('id', 'jxc_selectTree_layout' + query);
 	$('#div_select_tree').attr('id','div_tree_select_'+query);
@@ -51,18 +52,24 @@ $(function(){
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
-// 	p = $('#jsa_' + query);
-	var isNeedDepTree;
+	var isNeedDepTree= "";
+	//
 	$.ajax({	
-		url:'${pageContext.request.contextPath}/admin/dictAction!isNeedDep.action',
+		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
 		async: false,
 		cache: false,
 		context:this,	
 		data : {
 			selectType:query,
 		},
+		dataType : 'json',
 		success:function(data){
-			isNeedDepTree=data;		
+			if(data.isDepName == '1'){
+				isNeedDepTree="true";
+			}
+			if(data.bz != undefined){
+				$('#bzTreeShow' + query).html("<font color='#0000FF'> "+data.bz+"</font>");	
+			}
 		}
 	});
 	//初始化页面信息
@@ -938,6 +945,7 @@ function exportExcel(){
 <!-- 							class="inputval" name="select_tree_depName" style="width: 104px;"></td> -->
 <!-- 					</tr> -->
 <!-- 				</div> -->
+				<div id="bzTreeShow"  name="bzTreeShow"  align="center"></div>
 			</div>
 			<div id='selectcommonTree'
 				data-options="region:'center',border:false"></div>

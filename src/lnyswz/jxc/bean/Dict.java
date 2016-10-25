@@ -39,6 +39,9 @@ public class Dict {
 	private String isShow;
 	private String treeShow;
 	private String treeSql;
+	private String bz;
+	
+	
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -315,4 +318,14 @@ public class Dict {
 		this.treeSql = treeSql;
 	}
 
+	public String getBz() {
+		return bz;
+	}
+
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+
+	
+	
 }

@@ -660,7 +660,7 @@
 			effectRow['isHk'] = '1';
 			effectRow['fromTh'] = '0';
 			effectRow['xslxId'] = '02';
-			effectRow['xslxmc'] = '返利';
+			effectRow['xslxmc'] = '折扣';
 			effectRow['thfs'] = '1';
 			
 

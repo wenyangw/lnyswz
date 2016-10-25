@@ -32,6 +32,7 @@ $(function(){
 	$('#total').attr('id', 'total_' + query);
 	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
 	$('#select2').attr('id', 'pro_' + query);
+	$('#bzShow').attr('id', 'bzShow' + query);
 	$('#result_dg').attr('id', 'result_' + query);
 	resultDg = $('#result_' + query);
 	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
@@ -45,21 +46,27 @@ $(function(){
 	checkeds=Object.create(Object.prototype);
 // 	checkeds[query]=Object.create(Object.prototype);	
 // 	p = $('#dialog_' + query);
-	
-	var isNeedDep='';
+	var isNeedDep="";
+
 	$.ajax({	
-		url:'${pageContext.request.contextPath}/admin/dictAction!isNeedDep.action',
+		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
 		async: false,
 		cache: false,
 		context:this,	
 		data : {
 			selectType:query,
 		},
+		dataType : 'json',
 		success:function(data){
-			isNeedDep=data;		
+			if(data.isDepName == '1'){
+				isNeedDep="true";	
+			}
+			if(data.bz != undefined){
+				$('#bzShow' + query).html("<font color='#0000FF'> "+data.bz+"</font>");	
+			}
+
 		}
 	});
-
 	//初始化页面信息
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
@@ -71,10 +78,10 @@ $(function(){
 			sqlSelected : 1,
 		},
 		dataType : 'json',
-		success : function(data) {			
+		success : function(data) {		
 			//字符串拼写
 			datas=data;
-			var star='<table>';
+			var star='<table ">';
 			//循环data数据 拼写字符串
 			if(isNeedDep=="true"){
 				if(did>='09'){
@@ -192,8 +199,8 @@ function selectClick(){
 		dd=$('#select_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
 		eval("did=did_"+query);
-
 	}
+	
 	var conditions=[];
 	var execHql=[];
 	
@@ -416,7 +423,9 @@ function selectClick(){
 			
 	        }],  
 	        onBeforeOpen : function() {
-				var stars="<table width='100%'>";			
+				
+	        	$('#select2').attr('id', 'pro_' + query);
+	        	var stars="<table width='100%'>";			
 				var i=0;
 				stars += '<tr>';
 				//遍历字典数据 拼写checkbox < name="字典英文名" checked value="字典英文名" > 字典中文名
@@ -435,7 +444,8 @@ function selectClick(){
 				stars += '</tr>';
 				stars +='</table>';
 				//初始化显示页面
- 				$('#pro_' + query).html('');
+//  				$('#pro_' + query).html('');
+//				console.info(stars);
  				$('#pro_' + query).html(stars);
  				stars='';
 				//绑定button点击事件			
@@ -628,6 +638,7 @@ function exportExcel(){
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a>
+					<div id="bzShow"  name="bzShow"  align="center"></div>
 			</div>
 			<div id='selectcommon' data-options="region:'center',border:false"></div>
 

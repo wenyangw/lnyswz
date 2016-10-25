@@ -16,11 +16,11 @@ public interface DictServiceI {
 
 	public List<Dict> listDict(Dict dict);
 	
-	public boolean isNeedDep(Dict d);
-
-	public Dict isSelectType(Dict dict);
+//	public Dict isSelectType(Dict dict);
 	
 	public List<Dict> selectTree(Dict dict);
 
 	public List<Dict> listFields(Dict dict);
+	
+	public Dict getDict(Dict dict);
 }
