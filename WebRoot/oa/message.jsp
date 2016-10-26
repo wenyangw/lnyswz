@@ -2,11 +2,18 @@
 	pageEncoding="utf-8"%>
 
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/js/kindeditor/themes/default/default.css" />
+	href="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/themes/default/default.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/kindeditor/kindeditor-all.js"></script>
+	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/kindeditor-all-min.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/kindeditor/lang/zh-CN.js"></script>
+	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/lang/zh-CN.js"></script>
+<style>
+			
+			textarea {
+				display: block;
+			}
+			
+		</style>
 
 <script type="text/javascript">
 
@@ -17,7 +24,7 @@
 	var source;
 	var target;
 
-	var memo;
+	var editor;
 	
 	$(function(){
 		//装载联系人
@@ -50,18 +57,23 @@
 				//'emoticons', 'baidumap', 'pagebreak', 'anchor', 
 				'link', 'unlink', '|', 'source', 'about' ];
 	
-		var K = KindEditor;
+ 		//var K = KindEditor;
 		
-		window.memo = K
-			.create(
-					'#memo',
-					{
-						items : editor_items,
-						uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
-					});
-	
-		memo.__proto__.html('');
-		//memo.html('');
+ 		KindEditor
+ 			.create(
+ 					'textarea[name="memo"]',
+ 					{
+ 						resizeType : 1,
+ 						//items : editor_items,
+ 						//uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
+ 					});
+ 		 		 		
+ 		//editor.html('ada');
+ 		//KindEditor.instances[0].html('ada');
+ 		
+ 		
+		
+		
 	
 // 	KindEditor.create('#memo',
 // 			{
@@ -338,10 +350,12 @@
 			</div>
 			<div>
 				<span class="input_label">内容</span>
-				<input class="cont" name="memo" id="memo"></div>
+<!-- 				<textarea class="cont" name="memo" id="memo" ></textarea> -->
+				
 			</div>
 			<input type='hidden' name='menuId' />
 		</form>
+		<textarea name="memo" style="width:800px;height:400px;">KindEditor</textarea>
 		<input type="button" value="提交" onclick="message_submit()"></input>
 		<input type="button" value="重置" onclick="message_reset()"></input>
 	</div>
