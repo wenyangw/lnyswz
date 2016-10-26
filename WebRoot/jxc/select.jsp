@@ -47,7 +47,7 @@ $(function(){
 // 	checkeds[query]=Object.create(Object.prototype);	
 // 	p = $('#dialog_' + query);
 	var isNeedDep="";
-
+	var bz="";
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
 		async: false,
@@ -62,7 +62,7 @@ $(function(){
 				isNeedDep="true";	
 			}
 			if(data.bz != undefined){
-				$('#bzShow' + query).html("<font color='#0000FF'> "+data.bz+"</font>");	
+				bz=data.bz;	
 			}
 
 		}
@@ -81,7 +81,10 @@ $(function(){
 		success : function(data) {		
 			//字符串拼写
 			datas=data;
-			var star='<table ">';
+			var star='<table>';
+			if(bz !=undefined && bz != "" ){
+				star +='<tr ><th class="query" colspan="3"><font color="#0000FF">'+bz+'</font></th></tr>';
+			}
 			//循环data数据 拼写字符串
 			if(isNeedDep=="true"){
 				if(did>='09'){
@@ -93,11 +96,9 @@ $(function(){
 			}
 			$.each(data,function(){
 				star += '<tr>';
-				star += '<th align="left">'+this.cname+'</th>';
-				
+				star += '<th align="left">'+this.cname+'</th>';			
 				if(this.specials=="time"){
-					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
-					
+					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 					
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().date(1).format('YYYY-MM-DD')+'" ';
 					star += '  name='+this.ename+' size="12"></td>';
 					star += '</tr><tr><td></td><td align="right">结束日期</td>';
@@ -105,16 +106,13 @@ $(function(){
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
-				}
-				else if(this.specials=="scope"){
+			   }else if(this.specials=="scope"){
 					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					star += '</tr><tr><td></td><td align="right">结束范围</td>';
 					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
-				}
-				else if(this.specials=="stime"){
-				
+				}else if(this.specials=="stime"){
 					star += '<td align="right">查询日期</td>';
 					star += '<td>&#12288;<input id="s_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
@@ -146,7 +144,7 @@ $(function(){
 		}
 	});		
 
-	var selectbox= $('input[id^="ope_"]').combobox({
+	$('input[id^="ope_"]').combobox({
 			data:dictOpe,
 			panelHeight: 'auto',
 	});
@@ -386,7 +384,7 @@ function selectClick(){
 	      			});	
 	      			
 	      		
-					var m = step1Ok(conditions.join(" and "),allFields,	execHql.join(" , "));	
+					step1Ok(conditions.join(" and "),allFields,	execHql.join(" , "));	
 					$('#dialog_' + query).dialog('close');	      			
 	      			var cmenu;
 	      			function createColumnMenu(){
@@ -445,9 +443,9 @@ function selectClick(){
 				stars +='</table>';
 				//初始化显示页面
 //  				$('#pro_' + query).html('');
-//				console.info(stars);
+// 				console.info(stars);
  				$('#pro_' + query).html(stars);
- 				stars='';
+//  				stars='';
 				//绑定button点击事件			
 			},	
 		});
@@ -544,7 +542,7 @@ function getData(page, rows,cons,allFields,exec) {
 };
 function cleanClick(){
 	query = lnyw.tab_options().query;
-	var s=$('input.inputval'+query).val('');
+	$('input.inputval'+query).val('');
 	$.each(datas,function(){
 		 $('#ope_'+this.ename+query).combobox('clear');
 	});
@@ -638,7 +636,7 @@ function exportExcel(){
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a>
-					<div id="bzShow"  name="bzShow"  align="center"></div>
+<!-- 					<div id="bzShow"  name="bzShow"  align="center"></div> -->
 			</div>
 			<div id='selectcommon' data-options="region:'center',border:false"></div>
 

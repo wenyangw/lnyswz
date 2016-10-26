@@ -59,7 +59,9 @@ $(function(){
 
 <div id='layout_center_tabs' >
 	<div title="首页">
-		<div id="pp" style="position:fixed">
+<!-- 		<div id="pp" style="position:fixed"> -->
+		<div id="pp" style="width:800px;height:500px;">
+		
 <!-- 			<div style="width:50%;"> -->
 <!-- 				<div title="更新日志1" collapsible="true" closable="true" style="width:500px;height:500px; padding:15px;"> -->
 <!-- 			    	<div id="updateLog1"></div> -->
