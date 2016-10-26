@@ -27,6 +27,11 @@ table th{
 	text-align: right;
 }
 
+table th.query{
+	text-align: left;
+	padding-left:10px;
+}
+
 .read{
 	color: #8F5700;
 }
@@ -40,4 +45,5 @@ table th{
 	margin-left: 5px;
 	font-weight:bold;
 }
+
 

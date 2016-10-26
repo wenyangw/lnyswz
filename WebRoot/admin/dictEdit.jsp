@@ -75,8 +75,8 @@
 		</tr>
 		<tr>
 			<th><label for="bz">备注</label></th>
-			<td><input name="bz" class="easyui-validatebox"
-				style="width: 156px;"></td>
+			<td><input name="bz" class="easyui-textbox" data-options="multiline:true"
+				style="width:156px;height:50px"></td>
 		</tr>			
 		<tr>
 			<th><label for="orderByTree">分类排序条件</label></th>

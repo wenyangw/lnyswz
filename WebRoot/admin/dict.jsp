@@ -140,7 +140,7 @@ function appendDict() {
 		title : '增加字典',
 		href : '${pageContext.request.contextPath}/admin/dictAdd.jsp',
 		width : 340,
-		height : 650,
+		height : 700,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -195,7 +195,7 @@ function editDict(){
 			title : '修改字典类别',
 			href : '${pageContext.request.contextPath}/admin/dictEdit.jsp',
 			width : 350,
-			height : 650,
+			height : 700,
 			buttons : [ {
 				text : '确定',
 				handler : function() {

@@ -53,6 +53,7 @@ $(function(){
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
 	var isNeedDepTree= "";
+	var bzTree="";
 	//
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
@@ -64,20 +65,19 @@ $(function(){
 		},
 		dataType : 'json',
 		success:function(data){
-			if(data.isDepName == '1'){
-				isNeedDepTree="true";
-			}
-			if(data.bz != undefined){
-				$('#bzTreeShow' + query).html("<font color='#0000FF'> "+data.bz+"</font>");	
-			}
+				if(data.isDepName == '1'){
+					isNeedDepTree="true";	
+				}
+				if(data.bz != undefined){
+					bzTree=data.bz;	
+				}
 		}
 	});
 	//初始化页面信息
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
-		cache: false,
-		
+		cache: false,		
 		data : {
 			selectType :query,
 			//判断参数（根据参数进行查询条件筛选）sqlSelected(值可以是任意不等于空值) 当sqlSelected有值时为查询条件字段
@@ -88,6 +88,9 @@ $(function(){
 			//字符串拼写
 			datas=data;
 			var star='<table>';
+			if(bzTree !=undefined && bzTree != "" ){
+				star +='<tr ><th class="query" colspan="3"><font color="#0000FF">'+bzTree+'</font></th></tr>';
+			}
 			//循环data数据 拼写字符串
 			if(isNeedDepTree=="true"){
 				if(did>='09'){
