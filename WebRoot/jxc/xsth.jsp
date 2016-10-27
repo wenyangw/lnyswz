@@ -1214,7 +1214,7 @@ function setEditing(){
         		return false;
     		}
     	}
-        	
+        
     	if($(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}

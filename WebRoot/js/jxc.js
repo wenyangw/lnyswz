@@ -805,13 +805,19 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 	    	query.val(value);
 	    	query.focus();
 	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_spQuery_dg').datagrid('load', 
-	    				{
-	    					query: query.val(),
-	    					depId: depId,
-	    					ckId: ckId
-	    				});
+	    	var last;
+	    	query.keyup(function(event){
+	    		last = event.timeStamp;
+	    		setTimeout(function(){    //设时延迟0.5s执行
+	                if(last - event.timeStamp == 0){
+	                	$('#jxc_spQuery_dg').datagrid('load', 
+		    				{
+		    					query: query.val(),
+		    					depId: depId,
+		    					ckId: ckId
+		    				});
+	                }
+		    	}, 500);
 	    	});
 		},
 	});
