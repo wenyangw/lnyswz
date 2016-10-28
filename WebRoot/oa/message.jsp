@@ -1,30 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
-<!-- <link rel="stylesheet" type="text/css" -->
-<%-- 	href="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/themes/default/default.css" /> --%>
-<!-- <script type="text/javascript" -->
-<%-- 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/kindeditor-all-min.js"></script> --%>
-<!-- <script type="text/javascript" -->
-<%-- 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.10/lang/zh-CN.js"></script> --%>
-
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/themes/default/css/ueditor.css" />	
-<!-- 配置文件 -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.config.js"></script>
-<!-- 编辑器源码文件 -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.all.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js"></script>
-<!-- 实例化编辑器 -->
+	href="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/themes/default/default.css" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/kindeditor-all-min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/lang/zh-CN.js"></script>
 
-<!-- 加载编辑器的容器 -->
+<!-- <link rel="stylesheet" type="text/css" -->
+<%-- 	href="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/themes/default/css/ueditor.css" />	 --%>
+<!-- <!-- 配置文件 --> -->
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.config.js"></script> --%>
+<!-- <!-- 编辑器源码文件 --> -->
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.all.js"></script> --%>
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js"></script> --%>
+
+
+
 
 <div id="oa_message_tabs" class="easyui-tabs"
 	data-options="fit:true, border:false,"
 	style="width: 100%; height: 100%;">
 
 	<div title="新增记录" data-options="closable:false">
-		<form id="message_send" method="post">
+<!-- 		<form id="message_send" method="post"> -->
 			<div>
 				<span class="input_label"><a href="javascript:void(0)"
 					onclick="showContacts()">收件人</a></span>
@@ -38,13 +38,13 @@
 			</div>
 			<div>
 				<span class="input_label">内容</span>
-				<script id="container" name="memo" type="text/plain"></script>
+<!-- 				<script id="container" name="memo" type="text/plain"></script> -->
 <!-- 				<textarea class="cont" name="memo" id="memo" ></textarea> -->
-<!-- 				<textarea name="memo" style="width:800px;height:400px;">KindEditor</textarea> -->
+				<textarea name="memo" style="width:800px;height:400px;">KindEditor</textarea>
 				
 			</div>
 			<input type='hidden' name='menuId' />
-		</form>
+<!-- 		</form> -->
 		<input type="button" value="提交" onclick="message_submit()"></input>
 		<input type="button" value="重置" onclick="message_reset()"></input>
 	</div>
@@ -81,6 +81,8 @@
 		});
 		
 		$('input[name="menuId"]').val(lnyw.tab_options().id);
+		
+		$('#jxc_xsth_tabs').
 	
 		var editor_items = [  'undo', 'redo', '|', 'preview',
 				//'print', 'template', 'code', 
@@ -100,18 +102,18 @@
 				'link', 'unlink', '|', 'source', 'about' ];
 	
  		//var K = KindEditor;
-		var ue = UE.getEditor('container');
+// 		var ue = UE.getEditor('container');
 		
-//  		editor = KindEditor
-//  			.create(
-//  					'textarea[name="memo"]',
-//  					{
-//  						resizeType : 1,
-//  						//items : editor_items,
-//  						//uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
-//  					});
+ 		window.editor = KindEditor
+ 			.create(
+ 					'textarea[name="memo"]',
+ 					{
+ 						resizeType : 1,
+ 						//items : editor_items,
+ 						//uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
+ 					});
  		 		 		
-//  		editor.__proto__.html('ada');
+  		editor.html('ada');
  		//KindEditor.instances[0].html('ada');
  		
  	
