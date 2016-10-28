@@ -118,13 +118,13 @@ $(function(){
 					star += '<td align="right">起始月份</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					star += '</tr><tr><th></th><td align="right">结束月份</td>';
-					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
+					star += '<td>&#12288;<input id="b_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 				}else if(this.specials=="scope"){
-					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
+					star += '<td align="right">起始范围</td><td>&#12288;<input id="c_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					star += '</tr><tr><th></th><td align="right">结束范围</td>';
-					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
+					star += '<td>&#12288;<input id="d_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
@@ -243,7 +243,7 @@ function selectClickTree(){
 
 		if(inputVal != "" ){
 		
-			if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query) ) ){																	
+			if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query)|| $(this).attr('id') == ("d_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query) ) ){																	
 //					if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
 				//下拉列表条件是否选择
 					if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
@@ -301,6 +301,11 @@ function selectClickTree(){
 							execHql.push( "<=");
 							execHql.push(moment($(this).val()).add('days', 1).format('YYYY-MM-DD'));
 						}else if($(this).attr('id')==("c_"+$(this).attr('name')+query)){
+							hql +=' >= ';
+							hql +=' \''+$(this).val()+'\'';
+							execHql.push( ">=");
+							execHql.push($(this).val());
+						}else if($(this).attr('id')==("d_"+$(this).attr('name')+query)){
 							hql +=' <= ';
 							hql +=' \''+$(this).val()+'\'';
 							execHql.push( "<=");

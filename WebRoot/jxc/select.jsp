@@ -107,10 +107,10 @@ $(function(){
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 			   }else if(this.specials=="scope"){
-					star += '<td align="right">起始范围</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
+					star += '<td align="right">起始范围</td><td>&#12288;<input id="c_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 					star += '</tr><tr><td></td><td align="right">结束范围</td>';
-					star += '<td>&#12288;<input id="c_'+this.ename+query+'"';
+					star += '<td>&#12288;<input id="d_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else if(this.specials=="stime"){
 					star += '<td align="right">查询日期</td>';
@@ -208,7 +208,7 @@ function selectClick(){
 			
 			if(inputVal != "" ){
 				//排除特殊值情况（商品编号范围，时间范围）	
-				if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query)  ) ){																	
+				if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) || $(this).attr('id') == ("d_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query)  ) ){																	
 									if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
 									//下拉列表条件是否选择
 // 									if(($('input[name=ope_'+$(this).attr('name')+query+']').val().trim().length > 0 &&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
@@ -260,6 +260,11 @@ function selectClick(){
 							execHql.push( "=");
 							execHql.push(moment($(this).val()).format('YYYY-MM-DD'));	
 						}else if($(this).attr('id')==("c_"+$(this).attr('name')+query)){
+							hql +=' >= ';
+							hql +=' \''+$(this).val()+'\'';
+							execHql.push( ">=");
+							execHql.push($(this).val());
+						}else if($(this).attr('id')==("d_"+$(this).attr('name')+query)){
 							hql +=' <= ';
 							hql +=' \''+$(this).val()+'\'';
 							execHql.push( "<=");
@@ -444,7 +449,9 @@ function selectClick(){
 				//初始化显示页面
 //  				$('#pro_' + query).html('');
 // 				console.info(stars);
- 				$('#pro_' + query).html(stars);
+				$('#pro_' + query).html(stars);
+// 				console.info(stars);
+// 				console.info($('#pro_' + query));
 //  				stars='';
 				//绑定button点击事件			
 			},	
