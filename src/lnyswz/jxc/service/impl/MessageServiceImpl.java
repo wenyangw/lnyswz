@@ -97,7 +97,7 @@ public class MessageServiceImpl implements MessageServiceI {
 	@Override
 	public DataGrid sendDg(Message message) {
 		DataGrid dg = new DataGrid();
-		String hql = "from TMessage t where createId = :createId";
+		String hql = "from TMessage t where t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("createId", message.getCreateId());
 		List<Message> nl = new ArrayList<Message>();
@@ -106,7 +106,7 @@ public class MessageServiceImpl implements MessageServiceI {
 		String totalHql = "select count(*) " + hql;
 		hql += " order by createTime desc";
 		
-		List<TMessage> l = messageDao.find(hql, message.getPage(), message.getRows());
+		List<TMessage> l = messageDao.find(hql, params, message.getPage(), message.getRows());
 		// 处理返回信息
 		for (TMessage t : l) {
 			Message nc = new Message();
@@ -114,7 +114,7 @@ public class MessageServiceImpl implements MessageServiceI {
 			nl.add(nc);
 		}
 		
-		dg.setTotal(messageDao.count(totalHql));
+		dg.setTotal(messageDao.count(totalHql, params));
 		dg.setRows(nl);
 		return dg;
 	}

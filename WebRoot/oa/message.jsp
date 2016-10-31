@@ -8,54 +8,6 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/lang/zh-CN.js"></script>
 
-<!-- <link rel="stylesheet" type="text/css" -->
-<%-- 	href="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/themes/default/css/ueditor.css" />	 --%>
-<!-- <!-- 配置文件 --> -->
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.config.js"></script> --%>
-<!-- <!-- 编辑器源码文件 --> -->
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/ueditor.all.js"></script> --%>
-<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/ueditor-1.4.3.3/lang/zh-cn/zh-cn.js"></script> --%>
-
-
-
-
-<div id="oa_message_tabs" class="easyui-tabs"
-	data-options="fit:true, border:false,"
-	style="width: 100%; height: 100%;">
-
-	<div title="新增记录" data-options="closable:false">
-<!-- 		<form id="message_send" method="post"> -->
-			<div>
-				<span class="input_label"><a href="javascript:void(0)"
-					onclick="showContacts()">收件人</a></span>
-					<input class="cont" type="text" readOnly="readOnly"
-					name="receiverNames" id="receiverNames"></input>
-				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
-			</div>
-			<div>
-				<span class="input_label">主题</span> <input class="cont"
-					type="text" name="subject" id="subject" data-options="required:true"></input>
-			</div>
-			<div>
-				<span class="input_label">内容</span>
-<!-- 				<script id="container" name="memo" type="text/plain"></script> -->
-<!-- 				<textarea class="cont" name="memo" id="memo" ></textarea> -->
-				<textarea name="memo" style="width:800px;height:400px;">KindEditor</textarea>
-				
-			</div>
-			<input type='hidden' name='menuId' />
-<!-- 		</form> -->
-		<input type="button" value="提交" onclick="message_submit()"></input>
-		<input type="button" value="重置" onclick="message_reset()"></input>
-	</div>
-	<div title="已发送列表" data-options="closable:false">
-		<div id='oa_messageS_dg'></div>
-	</div>
-	<div title="接收列表" data-options="closable:false">
-		<div id='oa_messageR_dg'></div>
-	</div>
-</div>
-<div id="message_contact_select"></div>
 
 <script type="text/javascript">
 
@@ -66,7 +18,7 @@
 	var source;
 	var target;
 
-	var editor;
+	var memoEditor;
 	
 	$(function(){
 		//装载联系人
@@ -82,8 +34,6 @@
 		
 		$('input[name="menuId"]').val(lnyw.tab_options().id);
 		
-		$('#jxc_xsth_tabs').
-	
 		var editor_items = [  'undo', 'redo', '|', 'preview',
 				//'print', 'template', 'code', 
 				'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft',
@@ -102,30 +52,25 @@
 				'link', 'unlink', '|', 'source', 'about' ];
 	
  		//var K = KindEditor;
-// 		var ue = UE.getEditor('container');
-		
- 		window.editor = KindEditor
- 			.create(
- 					'textarea[name="memo"]',
- 					{
- 						resizeType : 1,
- 						//items : editor_items,
- 						//uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
- 					});
- 		 		 		
-  		editor.html('ada');
- 		//KindEditor.instances[0].html('ada');
- 		
- 	
-		
-		
-	
-// 	KindEditor.create('#memo',
-// 			{
-// 				width : '200px',
-// 				height : '500px',
-// 			});
-// 	KindEditor.instances[0].html("");
+		$('#oa_message_tabs').tabs({
+			onSelect: function(title, index){
+				if(index == 0){
+					memoEditor = KindEditor
+	 				.create(
+	 					//'textarea[name="memo"]',
+	 					'#memo_editor',
+	 					{
+	 						items : editor_items,
+	 						uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
+	 					});
+				}
+			},
+			onBeforeClose: function(title, index){
+				if(index == 0){
+					KindEditor.remove('#memo_editor');
+				}
+			}
+		});
 	});
 	
 	//数组的排序
@@ -323,7 +268,7 @@
 					return false;
 				}
 				
-				$('#memo').val(memo.html());
+				$('#memo_editor').val(memoEditor.html());
 			},
 			success : function(data) {
 				var json = $.parseJSON(data);
@@ -341,7 +286,7 @@
 	//信息重置
 	function message_reset(){
 		$('input.cont').val('');
-		memo.html('');
+		memoEditor.html('');
 		contact_reset();
 	}
 	
@@ -377,4 +322,38 @@
 	
 </script>
 
+<div id="oa_message_tabs" class="easyui-tabs"
+	data-options="fit:true, border:false,"
+	style="width: 100%; height: 100%;">
+
+	<div title="新增记录" data-options="closable:false">
+ 		<form id="message_send" method="post">
+			<div>
+				<span class="input_label"><a href="javascript:void(0)"
+					onclick="showContacts()">收件人</a></span>
+					<input class="cont" type="text" readOnly="readOnly"
+					name="receiverNames" id="receiverNames"></input>
+				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
+			</div>
+			<div>
+				<span class="input_label">主题</span> <input class="cont"
+					type="text" name="subject" id="subject" data-options="required:true"></input>
+			</div>
+			<div>
+				<span class="input_label">内容</span>
+				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;"></textarea>
+			</div>
+			<input type='hidden' name='menuId' />
+	 	</form>
+		<input type="button" value="提交" onclick="message_submit()"></input>
+		<input type="button" value="重置" onclick="message_reset()"></input>
+	</div>
+	<div title="已发送列表" data-options="closable:false">
+		<div id='oa_messageS_dg'></div>
+	</div>
+	<div title="接收列表" data-options="closable:false">
+		<div id='oa_messageR_dg'></div>
+	</div>
+</div>
+<div id="message_contact_select"></div>
 
