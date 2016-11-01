@@ -29,5 +29,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.0.3/exporting.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/json/json.js"></script>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20160831_7"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20161101"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20161027"></script>
