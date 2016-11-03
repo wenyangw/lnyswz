@@ -1234,7 +1234,7 @@ function updateFooter(){
 	
 	xskp_spdg.datagrid('reloadFooter',
 			[{
-				spmc : '合计',
+				spmc : '合计(共' + (rows.length - 1) + '条)',
 				spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
 				spse : lnyw.formatNumberRgx(hjse.toFixed(2)),
 				sphj : lnyw.formatNumberRgx((hjje + hjse).toFixed(2))

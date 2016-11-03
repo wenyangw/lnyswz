@@ -1417,7 +1417,7 @@ function updateFooter(){
  		
  	});
 	xsth_spdg.datagrid('reloadFooter', [{
-		spmc : spmc_footer,
+		spmc : spmc_footer + '(共' + (rows.length - 1) + '条)',
 		spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
 		cdwsl : isNaN(hjsl) ? '' : hjsl.toFixed(LENGTH_SL),
 		}]
