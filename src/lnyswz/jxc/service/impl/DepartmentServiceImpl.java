@@ -133,9 +133,8 @@ public class DepartmentServiceImpl implements DepartmentServiceI {
 		return nl;
 	}
 	
-	@Override
-	public String getDepName(String str){
-		TDepartment tDep = departmentDao.load(TDepartment.class, str);
+	public static String getDepName(String str, BaseDaoI<TDepartment> depDao){
+		TDepartment tDep = depDao.load(TDepartment.class, str);
 		return tDep.getDepName();
 	}
 

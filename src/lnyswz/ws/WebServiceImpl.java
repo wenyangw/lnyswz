@@ -28,6 +28,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.dao.impl.BaseDaoImpl;
+import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.service.DepartmentServiceI;
 import lnyswz.jxc.service.impl.DepartmentServiceImpl;
 
@@ -41,8 +44,9 @@ public class WebServiceImpl implements WebServiceI {
 	
 	@Override
 	public String lg2pr(@WebParam(name="xml")String xml) {
-		DepartmentServiceI depI = new DepartmentServiceImpl();
-		System.out.println(depI.getDepName("05"));
+		BaseDaoI<TDepartment> depDao = new BaseDaoImpl<TDepartment>(); 
+		//DepartmentServiceI depI = new DepartmentServiceImpl();
+		System.out.println(DepartmentServiceImpl.getDepName("05", depDao));
 		
 		return parserXml(xml);
 	}
