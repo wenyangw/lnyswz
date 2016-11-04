@@ -67,6 +67,10 @@
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
+	<!-- WebService监听器 -->
+	<listener>
+    	<listener-class>lnyswz.ws.listener.WebServicePublishListener</listener-class>
+  	</listener>
 	
 	<!-- druid监控页面，使用${pageContext.request.contextPath}/druid/index.html访问 -->
 	<servlet>
