@@ -1088,7 +1088,7 @@ function updateFooter(){
 			}
 		}
  	});
-	ywrk_spdg.datagrid('reloadFooter', [{spmc : spmc_footer, spje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE))}]);
+	ywrk_spdg.datagrid('reloadFooter', [{spmc : spmc_footer + '(共' + (rows.length - 1) + '条)', spje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE))}]);
 }
 
 function expandKc(bmbh, spbh){
