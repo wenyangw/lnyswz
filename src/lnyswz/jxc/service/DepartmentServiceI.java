@@ -14,5 +14,4 @@ public interface DepartmentServiceI {
 	public DataGrid datagrid(Department department);
 	public List<Department> listDeps();
 	public List<Department> listYws(Department department);
-	//public String getDepName(String str, BaseDaoI<TDepartment> depDao);
 }

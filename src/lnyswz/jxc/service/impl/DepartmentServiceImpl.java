@@ -133,11 +133,6 @@ public class DepartmentServiceImpl implements DepartmentServiceI {
 		return nl;
 	}
 	
-	public static String getDepName(String str, BaseDaoI<TDepartment> depDao){
-		TDepartment tDep = depDao.load(TDepartment.class, str);
-		return tDep.getDepName();
-	}
-
 	@Autowired
 	public void setDepartmentDao(BaseDaoI<TDepartment> departmentDao) {
 		this.departmentDao = departmentDao;
