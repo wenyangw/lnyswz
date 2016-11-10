@@ -98,6 +98,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 			<tx:method name="cancel*" />
 			<tx:method name="complete*" />
 			<tx:method name="create*" />
+			<tx:method name="lg2pr*" />
 			
 <!-- 			<tx:method name="repair" /> -->
 <!-- 			<tx:method name="deleteAndRepair" /> -->

@@ -77,6 +77,16 @@
 		<servlet-name>druidStatView</servlet-name>
 		<url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
+	
+	<!-- Web Service 2016-11-07 -->
+	<servlet>
+        <servlet-name>CXFService</servlet-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CXFService</servlet-name>
+        <url-pattern>/ws/*</url-pattern>
+    </servlet-mapping>
 
 	<!-- 配置session超时时间，单位分钟 -->
 	<session-config>
