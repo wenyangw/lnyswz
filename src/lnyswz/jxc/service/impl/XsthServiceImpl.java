@@ -554,8 +554,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		String bz = "";
+		
+		if(tXsth.getBookmc() != null){
+			bz = " " + tXsth.getBookmc().trim();
+		}
 		if(tXsth.getYwymc() != null){
-			bz = " " + tXsth.getYwymc().trim();
+			bz += " " + tXsth.getYwymc().trim();
 		}
 		if("0".equals(tXsth.getThfs())){
 			bz += " 送货：";
