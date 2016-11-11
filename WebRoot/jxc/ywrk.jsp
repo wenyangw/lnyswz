@@ -1392,7 +1392,7 @@ function generateYwrk(){
 					success : function(d) {
 						$.each(d.rows, function(index){
 							if(index != d.rows.length - 1){
-								d.rows[index].spje = d.rows[index].zdwsl * d.rows[index].zdwdj;
+								d.rows[index].spje = (d.rows[index].zdwsl * d.rows[index].zdwdj).toFixed(LENGTH_JE);
 							}
 						});
 						ywrk_spdg.datagrid('loadData', d.rows);

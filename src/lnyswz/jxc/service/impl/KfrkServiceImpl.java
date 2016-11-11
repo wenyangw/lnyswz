@@ -321,8 +321,8 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	
 	@Override
 	public DataGrid toYwrk(String kfrklshs){
-		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj, sum(t.cdwsl) cdwsl from t_kfrk_det t"
-				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
+		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj, sum(t.cdwsl) cdwsl, isnull(MAX(ck.cdwdj), 0) cdwdj from t_kfrk_det t"
+				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj, jh.cdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(kfrklshs != null && kfrklshs.trim().length() > 0){
@@ -347,6 +347,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwdj = new BigDecimal(os[2].toString());
 			BigDecimal cdwsl = new BigDecimal(os[3].toString());
+			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			KfrkDet kd = new KfrkDet();
@@ -360,12 +361,13 @@ public class KfrkServiceImpl implements KfrkServiceI {
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
 				kd.setCdwsl(cdwsl);
+				kd.setCdwdj(cdwdj);
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					//kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-					kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
+					//kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
 				}else{
 					//kd.setCdwsl(Constant.BD_ZERO);
-					kd.setCdwdj(Constant.BD_ZERO);
+					//kd.setCdwdj(Constant.BD_ZERO);
 				}
 			}
 			nl.add(kd);
