@@ -144,6 +144,10 @@ public class WebServiceImpl implements WebServiceI {
 		maps.put(node.getNodeName(), node.getTextContent());
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private String verify(){
 		if(maps.isEmpty()){
 			return result("", "1", "数据解析失败");
