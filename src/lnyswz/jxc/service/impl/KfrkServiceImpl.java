@@ -27,8 +27,6 @@ import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjh;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TDepartment;
@@ -40,7 +38,6 @@ import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -55,7 +52,6 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TKfrkDet> detDao;
 	private BaseDaoI<TKfzz> kfzzDao;
-	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TYwrk> ywrkDao;
 	private BaseDaoI<TLsh> lshDao;
@@ -391,11 +387,6 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	@Autowired
 	public void setDetDao(BaseDaoI<TKfrkDet> detDao) {
 		this.detDao = detDao;
-	}
-
-	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired
