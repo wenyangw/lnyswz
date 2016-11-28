@@ -102,6 +102,10 @@ public class WebServiceImpl implements WebServiceI {
 		return null;
 	}	
 	
+	/**
+	 * 根据传入节点列表，对不同节点类型（只包含一层节点：getField(NodeList lists)，包含多层子节点：getNodes(NodeList lists)）执行不同的操作
+	 * @param lists
+	 */
 	private void getNodes(NodeList lists){
 		for (int i = 0; i < lists.getLength(); i++) {
 			Node node = lists.item(i);
@@ -121,12 +125,20 @@ public class WebServiceImpl implements WebServiceI {
 		}
 	}
 	
+	/**
+	 * 根据传入节点列表（只有子节点），循环获取节点内容
+	 * @param lists
+	 */
 	private void getField(NodeList lists){
 		for (int i = 0; i < lists.getLength(); i++) {
 			getField(lists.item(i));
 		}
 	}
 	
+	/**
+	 * 根据传入node获取节点内容
+	 * @param node
+	 */
 	private void getField(Node node){
 		//System.out.println(node.getNodeName() + ":" + node.getTextContent());
 		maps.put(node.getNodeName(), node.getTextContent());
