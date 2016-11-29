@@ -20,6 +20,7 @@ import com.alibaba.fastjson.TypeReference;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
@@ -278,14 +279,16 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			Set<TCgjhDet> tCgjhs = t.getTCgjhs();
 			if(tCgjhs != null && tCgjhs.size() > 0){
 				String cgjhlshs = "";
-				int i = 0;
 				for(TCgjhDet tc : tCgjhs){
-					cgjhlshs += tc.getTCgjh().getCgjhlsh();
-					if(i < tCgjhs.size() - 1){
-						cgjhlshs += ",";
-					}
-					i++;
+					cgjhlshs = Common.joinString(cgjhlshs, tc.getTCgjh().getCgjhlsh(), ",");
+//					if(cgjhlshs.indexOf(tc.getTCgjh().getCgjhlsh()) < 0){
+//						if(cgjhlshs.length() > 0){
+//							cgjhlshs += ",";
+//						}
+//						cgjhlshs += tc.getTCgjh().getCgjhlsh();
+//					}
 				}
+				
 				c.setCgjhlshs(cgjhlshs);
 			}
 			if(t.getTYwrk() != null){

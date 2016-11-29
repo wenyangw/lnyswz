@@ -42,7 +42,10 @@ public class CgjhDet {
 	private BigDecimal zdwrksl;
 	
 	private BigDecimal kcsl;
+	//审批时显示的周转率
 	private BigDecimal zzl;
+	//审批时显示的需求内容
+	private String xqs;
 	
 	private String kfrklshs;
 	private String ywrklshs;
@@ -285,6 +288,14 @@ public class CgjhDet {
 
 	public void setZzl(BigDecimal zzl) {
 		this.zzl = zzl;
+	}
+
+	public String getXqs() {
+		return xqs;
+	}
+
+	public void setXqs(String xqs) {
+		this.xqs = xqs;
 	}
 
 	public String getKfrklshs() {

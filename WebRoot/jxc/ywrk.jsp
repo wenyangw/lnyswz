@@ -208,6 +208,7 @@ $(function(){
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
+        	{field:'cgjhlshs',title:'采购计划',align:'center',width:80},
 //         	{field:'isCj',title:'状态',align:'center',sortable:true,
 //         		formatter : function(value) {
 // 					if (value == '1') {

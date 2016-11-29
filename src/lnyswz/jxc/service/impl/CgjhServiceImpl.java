@@ -22,6 +22,7 @@ import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgjh;
 import lnyswz.jxc.bean.CgjhDet;
@@ -423,6 +424,20 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				Object zzlo = YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao);
 				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
 				c.setZzl(zzl);
+				
+				String xqs = "";
+				String hqlCgxq = "from TCgxqDet t where t.TCgjh.cgjhlsh = :cgjhlsh and t.spbh = :spbh";
+				Map<String, Object> paramsCgxq = new HashMap<String, Object>();
+				paramsCgxq.put("cgjhlsh", t.getTCgjh().getCgjhlsh());
+				paramsCgxq.put("spbh", t.getSpbh());
+				List<TCgxqDet> listCgxq = cgxqDao.find(hqlCgxq, paramsCgxq);
+				if(listCgxq != null && listCgxq.size() > 0){
+					for(TCgxqDet xqDet : listCgxq){
+						//xqs += xqDet.getTCgxq().getCreateName() + xqDet.getZdwsl();
+						xqs = Common.joinString(xqs, xqDet.getTCgxq().getCreateName() + xqDet.getZdwsl(), ",");
+					}
+				}
+				c.setXqs(xqs);
 				
 			}else{
 				Set<TKfrk> tKfrks = t.getTKfrks();

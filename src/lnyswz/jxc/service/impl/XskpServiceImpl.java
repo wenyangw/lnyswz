@@ -15,6 +15,7 @@ import java.util.Set;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Ck;
@@ -1144,14 +1145,11 @@ public class XskpServiceImpl implements XskpServiceI {
 			Set<TXsthDet> tXsths = t.getTXsths(); 
 			if(tXsths != null && tXsths.size() > 0){
 				String xsthlshs = "";
-				int i = 0;
+				
 				for(TXsthDet txd : tXsths){
-					xsthlshs += txd.getTXsth().getXsthlsh();
-					if(i < tXsths.size() - 1){
-						xsthlshs += ",";
-					}
-					i++;
+					xsthlshs = Common.joinString(xsthlshs, txd.getTXsth().getXsthlsh(), ",");
 				}
+				
 				c.setXsthlshs(xsthlshs);
 			}
 			
