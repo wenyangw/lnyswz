@@ -73,7 +73,7 @@ public interface Constant {
 	
 	//业务调号单
 	public static final Map<String, String> REPORT_YWHS = new HashMap<String, String>(){{
-		put("01","ywhs_report_b");
+		put("01","ywhs_report_s");
 		put("04","ywhs_report_s");
 		put("05","ywhs_report_b");
 		put("07","ywhs_report_s");
