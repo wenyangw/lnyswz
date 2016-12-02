@@ -52,9 +52,10 @@ public class WebServiceImpl implements WebServiceI {
 
 	@Override
 	public String lg2pr(@WebParam(name="xml")String xml) {
-		TDepartment tDep = depDao.load(TDepartment.class, "05");
-		System.out.println(tDep.getDepName());
+		//TDepartment tDep = depDao.load(TDepartment.class, "05");
+		//System.out.println(tDep.getDepName());
 		
+		//转换xml，并返回验证结果xml
 		return parserXml(xml);
 		
 	}
@@ -76,7 +77,9 @@ public class WebServiceImpl implements WebServiceI {
 			Document document = db.parse(source);
 
 			maps = new HashMap<String, Object>();
+			//获取每个节点的内容，并保存到maps中
 			getNodes(document.getChildNodes());
+			
 			return verify();
 		} catch (FileNotFoundException e) {
 			System.out.println("FileNotFoundException");
