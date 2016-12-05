@@ -672,11 +672,26 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	public DataGrid getSpkc(Cgjh cgjh) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = BigDecimal.ZERO;
 		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), null, ywzzDao);
+		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), ywzzDao);
 		if(yw != null){
+			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
 			lists.addAll(yw);
 		}
+		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("实际库存数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+				
+		lists.add(0, slBean);
 		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());
