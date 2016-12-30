@@ -1068,7 +1068,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			kd.setKpsl(kd.getZdwsl());
 			kd.setZdwsl(null);
 			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
-			kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			//kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			
 			nl.add(kd);
 		}

@@ -18,6 +18,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgjhServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购计划Action
@@ -195,7 +196,8 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		User user = (User) session.get("user");
 		cgjh.setCreateName(user.getRealName());
 		DataGrid dg = cgjhService.printCgjh(cgjh);
-		Export.print(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()));
+		Export.print(dg, Util.getReportName(cgjh.getBmbh(), "report_cgjh.json"));
+		//Export.print(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()));
 	}
 	
 	public void export() {
@@ -205,7 +207,8 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		String type = Export.getExportType(cgjh.getType());
 		String location = "/export/cgjh_" + cgjh.getCgjhlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = cgjhService.printCgjh(cgjh);
-		Export.export(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()), location, type);
+		Export.export(dg, Util.getReportName(cgjh.getBmbh(), "report_cgjh.json"), location, type);
+		//Export.export(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");

@@ -15,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 采购需求Action
  * @author 王文阳
@@ -83,7 +84,8 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 		User user = (User)session.get("user");
 		kfrk.setCreateName(user.getRealName());
 		DataGrid dg = kfrkService.printKfrk(kfrk);
-		Export.print(dg, Constant.REPORT_KFRK.get(kfrk.getBmbh()));
+		Export.print(dg, Util.getReportName(kfrk.getBmbh(), "report_kfrk.json"));
+		//Export.print(dg, Constant.REPORT_KFRK.get(kfrk.getBmbh()));
 	}
 	
 	@Override

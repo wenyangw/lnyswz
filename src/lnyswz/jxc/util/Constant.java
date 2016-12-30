@@ -93,7 +93,9 @@ public interface Constant {
 	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
 		//put("01","xsth_report_ys");
 		put("01","xsth_report_ys_kf");
-		put("04","xsth_report_b_ns");
+		//put("04","xsth_report_b_ns");
+		//教材预开需要打印金额项 20161229马岩
+		put("04","xsth_report_b_jc");
 		put("05","xsth_report_b_zy");
 		put("07","xsth_report_jy");
 		put("08","xsth_report_s_dl");

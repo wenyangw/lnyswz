@@ -16,6 +16,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfckServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 采购需求Action
  * @author 王文阳
@@ -85,7 +86,8 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 		User user = (User)session.get("user");
 		kfck.setCreateName(user.getRealName());
 		DataGrid dg = kfckService.printKfck(kfck);
-		Export.print(dg, Constant.REPORT_KFCK.get(kfck.getBmbh()));
+		Export.print(dg, Util.getReportName(kfck.getBmbh(), "report_kfck.json"));
+		//Export.print(dg, Constant.REPORT_KFCK.get(kfck.getBmbh()));
 	}
 	
 //	public void toYwrk(){

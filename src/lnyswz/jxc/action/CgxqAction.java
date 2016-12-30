@@ -16,6 +16,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgxqServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求Action
@@ -132,7 +133,8 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		User user = (User) session.get("user");
 		cgxq.setCreateName(user.getRealName());
 		DataGrid dg = cgxqService.printCgxq(cgxq);
-		Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));
+		Export.print(dg, Util.getReportName(cgxq.getBmbh(), "report_cgxq.json"));
+		//Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));
 	}
 	
 	public void datagrid(){
