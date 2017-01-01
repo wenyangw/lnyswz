@@ -26,6 +26,11 @@
 			<td><input name="phone" class="easyui-validatebox"
 					data-options="required:true,missingMessage:'请填写电话号码'"
 					style="width: 220px;"></td>
+		</tr>
+		<tr>
+			<th><label for="orderNum">排序</label></th>
+			<td><input name="orderNum" class="easyui-numberspinner" style="width:160px;"
+        		required="required" data-options="value:1,min:1,max:99,editable:false"></td>
 		</tr>		
 			
 	</table>
