@@ -48,6 +48,7 @@ import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.service.KfckServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 库房出库实现类
@@ -330,9 +331,11 @@ public class KfckServiceImpl implements KfckServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(kfck.getSearch() != null){
-			hql += " and (t.kfcklsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + kfck.getSearch() + "%");
-			
+			//hql += " and (t.kfcklsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search)"; 
+			//params.put("search", "%" + kfck.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(kfck.getSearch(), new String[]{"t.kfcklsh", "t.khbh", "t.khmc", "t.bz"}, params)
+					+ ")";
 		}
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";

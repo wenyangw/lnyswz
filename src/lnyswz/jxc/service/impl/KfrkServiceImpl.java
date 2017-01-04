@@ -41,6 +41,7 @@ import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -261,9 +262,11 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(kfrk.getSearch() != null){
-			hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + kfrk.getSearch() + "%");
-			
+			//hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
+			//params.put("search", "%" + kfrk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(kfrk.getSearch(), new String[]{"t.kfrklsh", "t.gysmc", "t.bz"}, params)
+					+ ")";
 		}
 		if(kfrk.getFromOther() != null){
 			hql += " and t.isCj = '0' and t.TYwrk = null";

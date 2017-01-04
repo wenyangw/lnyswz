@@ -45,6 +45,7 @@ import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.XskpServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -1129,8 +1130,11 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
-			params.put("search", "%" + xskp.getSearch() + "%");
+			//hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
+			//params.put("search", "%" + xskp.getSearch() + "%");
+			hql += " and (" + 
+				Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc"}, params)
+				+ ")";
 		}
 		
 		String countHql = " select count(*)" + hql;
@@ -1176,8 +1180,11 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search)"; 
-			params.put("search", "%" + xskp.getSearch() + "%");
+			//hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search)"; 
+			//params.put("search", "%" + xskp.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh"}, params)
+					+ ")";
 		}
 		
 		String countHql = " select count(*)" + hql;
@@ -1235,8 +1242,11 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getSearch() != null){
-			hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khbh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search or t.TXskp.bookmc like :search)"; 
-			params.put("search", "%" + xskp.getSearch() + "%");
+			//hql += " and (t.TXskp.xskplsh like :search or t.TXskp.khbh like :search or t.TXskp.khmc like :search or t.TXskp.bz like :search or t.TXskp.ywymc like :search or t.TXskp.bookmc like :search)"; 
+			//params.put("search", "%" + xskp.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(xskp.getSearch(), new String[]{"t.TXskp.xskplsh", "t.TXskp.khbh", "t.TXskp.khmc", "t.TXskp.bz", "t.TXskp.ywymc", "t.TXskp.bookmc"}, params)
+					+ ")";
 		}
 		
 		if(xskp.getFromOther() != null){

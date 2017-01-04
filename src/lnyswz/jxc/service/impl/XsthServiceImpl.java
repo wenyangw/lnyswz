@@ -69,6 +69,7 @@ import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XsthServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 销售提货实现类
@@ -876,8 +877,10 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 				hql += ")";
 			}else{
-				hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
-				params.put("search", "%" + xsth.getSearch() + "%");
+				//hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
+				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.xsthlsh", "t.khbh", "t.khmc", "t.bz", "t.ywymc", "t.bookmc"}, params) + ")";
+				
+				//params.put("search", "%" + xsth.getSearch() + "%");
 			}
 			
 		}
@@ -1018,8 +1021,9 @@ public class XsthServiceImpl implements XsthServiceI {
 			if("fh".equals(xsth.getSearch())){
 				hql += " and t.TXsth.fhId is not null and t.TXsth.isFhth = '0'";
 			}else{
-				hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
-				params.put("search", "%" + xsth.getSearch() + "%");
+				//hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
+				//params.put("search", "%" + xsth.getSearch() + "%");
+				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.TXsth.xsthlsh", "t.TXsth.khbh", "t.TXsth.khmc", "t.TXsth.bookmc", "t.TXsth.bz", "t.TXsth.ywymc"}, params) + ")";
 			}
 		}
 		
@@ -1071,8 +1075,6 @@ public class XsthServiceImpl implements XsthServiceI {
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
 			hql += " and t.zdwsl <> t.cksl";
 		}
-		
-		System.out.println(hql);
 		
 		String countHql = "select count(id) " + hql;
 		hql += " order by t.TXsth.createTime desc ";

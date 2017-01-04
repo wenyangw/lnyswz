@@ -48,6 +48,7 @@ import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.YwdbServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -230,9 +231,11 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(ywdb.getSearch() != null){
-			hql += " and (t.ywdblsh like :search or t.bz like :search)"; 
-			params.put("search", "%" + ywdb.getSearch() + "%");
-			
+			//hql += " and (t.ywdblsh like :search or t.bz like :search)"; 
+			//params.put("search", "%" + ywdb.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(ywdb.getSearch(), new String[]{"t.ywdblsh", "t.bz"}, params)
+					+ ")";
 		}
 		
 		String countHql = " select count(*)" + hql;

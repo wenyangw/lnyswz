@@ -34,6 +34,7 @@ import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.CgxqServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -222,8 +223,11 @@ public class CgxqServiceImpl implements CgxqServiceI {
 			}
 		}
 		if(cgxq.getSearch() != null && (!cgxq.getSearch().equals(""))){
-			hql += " and (t.TCgxq.khbh like :search or t.TCgxq.khmc like :search or t.spbh like :search or t.spmc like :search)"; 
-			params.put("search", "%" + cgxq.getSearch() + "%");
+			//hql += " and (t.TCgxq.khbh like :search or t.TCgxq.khmc like :search or t.spbh like :search or t.spmc like :search)"; 
+			//params.put("search", "%" + cgxq.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(cgxq.getSearch(), new String[]{"t.TCgxq.khbh", "t.TCgxq.khmc", "t.spbh", "t.spmc"}, params)
+					+ ")";
 		}
 		//采购计划流程只查询未完成的有效数据
 		if(cgxq.getFromOther() != null){

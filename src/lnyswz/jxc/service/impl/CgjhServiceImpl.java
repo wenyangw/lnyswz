@@ -52,6 +52,7 @@ import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.CgjhServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购计划实现类
@@ -319,8 +320,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			//hql += " and t.createId = :createId";
 			//params.put("createId", cgjh.getCreateId());
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
-				hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
-				params.put("search", "%" + cgjh.getSearch() + "%");
+				//hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
+				//params.put("search", "%" + cgjh.getSearch() + "%");
+				hql += " and (" + 
+						Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.cgjhlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						+ ")";
 			}else{
 				hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 				
@@ -504,9 +508,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}
 		
 		if(cgjh.getSearch() != null){
-			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
-			params.put("search", "%" + cgjh.getSearch() + "%");
-			
+			//hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
+			//params.put("search", "%" + cgjh.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.TCgjh.cgjhlsh", "t.TCgjh.gysmc", "t.TCgjh.bz", "t.spbh", "t.spmc"}, params)
+					+ ")";
 		}
 		
 		//采购计划流程只查询未完成的有效数据

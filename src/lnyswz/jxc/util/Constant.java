@@ -48,138 +48,138 @@ public interface Constant {
 	
 
 	//库房入库单
-	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
-		put("01","kfrk_report_s_ys");
-		put("04","kfrk_report_s");
-		put("05","kfrk_report_s");
-		put("07","kfrk_report_s");
-		put("08","kfrk_report_s");
-	}};
+//	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
+//		put("01","kfrk_report_s_ys");
+//		put("04","kfrk_report_s");
+//		put("05","kfrk_report_s");
+//		put("07","kfrk_report_s");
+//		put("08","kfrk_report_s");
+//	}};
 
 	//库房出库单
-	public static final Map<String, String> REPORT_KFCK = new HashMap<String, String>(){{
-		put("04","kfck_report_s_ns");
-		put("05","kfck_report_s_ns");
-	}};	
+//	public static final Map<String, String> REPORT_KFCK = new HashMap<String, String>(){{
+//		put("04","kfck_report_s_ns");
+//		put("05","kfck_report_s_ns");
+//	}};	
 	
 	//业务盘点单
-	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
-		put("01","ywpd_report_s");
-		put("04","ywpd_report_s");
-		put("05","ywpd_report_b");
-		put("07","ywpd_report_s");
-		put("08","ywpd_report_s");
-	}};
+//	public static final Map<String, String> REPORT_YWPD = new HashMap<String, String>(){{
+//		put("01","ywpd_report_s");
+//		put("04","ywpd_report_s");
+//		put("05","ywpd_report_b");
+//		put("07","ywpd_report_s");
+//		put("08","ywpd_report_s");
+//	}};
 	
 	//业务调号单
-	public static final Map<String, String> REPORT_YWHS = new HashMap<String, String>(){{
-		put("01","ywhs_report_s");
-		put("04","ywhs_report_s");
-		put("05","ywhs_report_b");
-		put("07","ywhs_report_s");
-		put("08","ywhs_report_s");
-	}};
+//	public static final Map<String, String> REPORT_YWHS = new HashMap<String, String>(){{
+//		put("01","ywhs_report_s");
+//		put("04","ywhs_report_s");
+//		put("05","ywhs_report_b");
+//		put("07","ywhs_report_s");
+//		put("08","ywhs_report_s");
+//	}};
 	
 	//业务补调单
-	public static final Map<String, String> REPORT_YWBT = new HashMap<String, String>(){{
-		put("01","ywbt_report_b");
-		put("04","ywbt_report_s");
-		put("05","ywbt_report_b");
-		put("07","ywbt_report_s");
-		put("08","ywbt_report_s");
-	}};
+	//public static final Map<String, String> REPORT_YWBT = new HashMap<String, String>(){{
+		//put("01","ywbt_report_b");
+		//put("04","ywbt_report_s");
+		//put("05","ywbt_report_b");
+		//put("07","ywbt_report_s");
+		//put("08","ywbt_report_s");
+	//}};
 	
 	//销售提货单
-	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
-		//put("01","xsth_report_ys");
-		put("01","xsth_report_ys_kf");
-		//put("04","xsth_report_b_ns");
-		//教材预开需要打印金额项 20161229马岩
-		put("04","xsth_report_b_jc");
-		put("05","xsth_report_b_zy");
-		put("07","xsth_report_jy");
-		put("08","xsth_report_s_dl");
-	}};
+//	public static final Map<String, String> REPORT_XSTH = new HashMap<String, String>(){{
+//		//put("01","xsth_report_ys");
+//		put("01","xsth_report_ys_kf");
+//		//put("04","xsth_report_b_ns");
+//		//教材预开需要打印金额项 20161229马岩
+//		put("04","xsth_report_b_jc");
+//		put("05","xsth_report_b_zy");
+//		put("07","xsth_report_jy");
+//		put("08","xsth_report_s_dl");
+//	}};
 	
 	//销售合同
-	public static final Map<String, String> REPORT_XSHT = new HashMap<String, String>(){{
-		put("01","gxht_report");
-		put("04","gxht_report");
-		put("05","gxht_report");
-		put("07","gxht_report");
-		put("08","gxht_report");
-	}};
+//	public static final Map<String, String> REPORT_XSHT = new HashMap<String, String>(){{
+//		put("01","gxht_report");
+//		put("04","gxht_report");
+//		put("05","gxht_report");
+//		put("07","gxht_report");
+//		put("08","gxht_report");
+//	}};
 
 	//收货确认单
-	public static final Map<String, String> REPORT_SHQR = new HashMap<String, String>(){{
-		put("01","shqrd_report");
-		put("04","shqrd_report");
-		put("05","shqrd_report");
-		put("07","shqrd_report");
-		put("08","shqrd_report");
-	}};
+//	public static final Map<String, String> REPORT_SHQR = new HashMap<String, String>(){{
+//		put("01","shqrd_report");
+//		put("04","shqrd_report");
+//		put("05","shqrd_report");
+//		put("07","shqrd_report");
+//		put("08","shqrd_report");
+//	}};
 	
 	//提货单-库房
-	public static final Map<String, String> REPORT_XSTH_KF = new HashMap<String, String>(){{
-		put("01","xsth_report_ys_kf");
-		put("04","xsth_report_s_ns");
-		put("05","xsth_report_s_ns");
-		//put("07","xsth_report_jy");
-		put("08","xsth_report_s_ns_dl");
-	}};
+//	public static final Map<String, String> REPORT_XSTH_KF = new HashMap<String, String>(){{
+//		put("01","xsth_report_ys_kf");
+//		put("04","xsth_report_s_ns");
+//		put("05","xsth_report_s_ns");
+//		//put("07","xsth_report_jy");
+//		put("08","xsth_report_s_ns_dl");
+//	}};
 	
 	//库房调号单
-	public static final Map<String, String> REPORT_KFHS = new HashMap<String, String>(){{
-		put("01","kfhs_report_ys");
-	}};
+//	public static final Map<String, String> REPORT_KFHS = new HashMap<String, String>(){{
+//		put("01","kfhs_report_ys");
+//	}};
 	
 	//提货单-库房按保管员打印
-	public static final Map<String, String> REPORT_XSTH_BGY = new HashMap<String, String>(){{
-		put("04","xsth_report_s_ns_bgy");
-		put("05","xsth_report_s_ns_bgy");
-	}};
+//	public static final Map<String, String> REPORT_XSTH_BGY = new HashMap<String, String>(){{
+//		put("04","xsth_report_s_ns_bgy");
+//		put("05","xsth_report_s_ns_bgy");
+//	}};
 	
 	//销售欠款单
-	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
-		put("01","qkdj_report_ys");
-		put("04","qkdj_report_jc");
-		put("05","qkdj_report_zy");
-		put("08","qkdj_report_dl");
-	}};
+//	public static final Map<String, String> REPORT_XSQK = new HashMap<String, String>(){{
+//		put("01","qkdj_report_ys");
+//		put("04","qkdj_report_jc");
+//		put("05","qkdj_report_zy");
+//		put("08","qkdj_report_dl");
+//	}};
 	
 	//业务入库单
-	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
-		put("01","ywrk_report_ys_s_c");
-		put("04","ywrk_report_s_jc");
-		put("05","ywrk_report_b");
-		put("07","ywrk_report_s");
-		put("08","ywrk_report_s");
-		
-	}};
+//	public static final Map<String, String> REPORT_YWRK = new HashMap<String, String>(){{
+//		put("01","ywrk_report_ys_s_c");
+//		put("04","ywrk_report_s_jc");
+//		put("05","ywrk_report_b");
+//		put("07","ywrk_report_s");
+//		put("08","ywrk_report_s");
+//		
+//	}};
 	
 	//采购计划单
-	public static final Map<String, String> REPORT_CGJH = new HashMap<String, String>(){{
-		put("01","cgjh_report_c");
-		put("04","cgjh_report");
-		put("05","cgjh_report");
-		put("07","cgjh_report_c");
-		put("08","cgjh_report");
-	}};
+//	public static final Map<String, String> REPORT_CGJH = new HashMap<String, String>(){{
+//		put("01","cgjh_report_c");
+//		put("04","cgjh_report");
+//		put("05","cgjh_report");
+//		put("07","cgjh_report_c");
+//		put("08","cgjh_report");
+//	}};
 	
 	//采购需求单
-	public static final Map<String, String> REPORT_CGXQ = new HashMap<String, String>(){{
-		put("04","cgxq_report_b");
-	}};
+//	public static final Map<String, String> REPORT_CGXQ = new HashMap<String, String>(){{
+//		put("04","cgxq_report_b");
+//	}};
 	
 	//销售未回款
-	public static final Map<String, String> REPORT_XSHK = new HashMap<String, String>(){{
-		put("01","xshk_report");
-		put("04","xshk_report");
-		put("05","xshk_report");
-		put("07","xshk_report");
-		put("08","xshk_report");
-		
-	}};
+//	public static final Map<String, String> REPORT_XSHK = new HashMap<String, String>(){{
+//		put("01","xshk_report");
+//		put("04","xshk_report");
+//		put("05","xshk_report");
+//		put("07","xshk_report");
+//		put("08","xshk_report");
+//		
+//	}};
 		
 	
 	public static final Map<String, String> BMMCS = new HashMap<String, String>(){{

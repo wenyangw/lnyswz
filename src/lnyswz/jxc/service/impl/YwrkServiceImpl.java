@@ -43,6 +43,7 @@ import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.YwrkServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -361,8 +362,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 		}else{
 			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
-				hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
-				params.put("search", "%" + ywrk.getSearch() + "%");
+				//hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
+				//params.put("search", "%" + ywrk.getSearch() + "%");
+				hql += " and (" + 
+						Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.ywrklsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						+ ")";
 			}else{
 				hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
 				params.put("rklxId", Constant.RKLX_ZG);
@@ -444,8 +448,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(ywrk.getSearch() != null){
-			hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)"; 
-			params.put("search", "%" + ywrk.getSearch() + "%");
+			//hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)"; 
+			//params.put("search", "%" + ywrk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.TYwrk.ywrklsh", "t.TYwrk.gysbh", "t.TYwrk.gysmc", "t.TYwrk.bz"}, params)
+					+ ")";
 			
 		}
 		
