@@ -22,7 +22,8 @@ $(function(){
 	        {field: 'khmc',title:'名称',width:100},	        
 	        {field: 'khdz',title:'地址',width:100},	        
 	        {field: 'lxr',title:'联系人',width:100},	        
-	        {field: 'phone',title:'电话',width:100},	                
+	        {field: 'phone',title:'电话',width:100},
+	        {field: 'orderNum',title:'排序',width:100},
 	     ]],
 	});
 	//根据权限，动态加载功能按钮
@@ -34,7 +35,7 @@ function appendShdz() {
 		title : '增加送货地址',
 		href : '${pageContext.request.contextPath}/jxc/shdzAdd.jsp',
 		width : 340,
-		height : 210,
+		height : 230,
 		modal : true,
 		buttons: [{
             text:'增加',
@@ -83,7 +84,7 @@ function editShdz(){
 			title : '编辑地址',
 			href : '${pageContext.request.contextPath}/jxc/shdzEdit.jsp',
 			width : 350,
-			height : 210,
+			height : 230,
 			buttons : [ {
 				text : '编辑',
 				handler : function() {
@@ -119,6 +120,7 @@ function editShdz(){
 					khdz: rows[0].khdz,
 					lxr: rows[0].lxr,
 					phone: rows[0].phone,
+					orderNum: rows[0].orderNum,
 					depId:did,
 					menuId:mid,			
 				});

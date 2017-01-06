@@ -1,0 +1,22 @@
+[
+  {
+	"bmbh" : "01",
+	"report" : "ywhs_report_s"
+  },
+  {
+	"bmbh" : "04",
+	"report" : "ywhs_report_s"
+  },
+  {
+	"bmbh" : "05",
+	"report" : "ywhs_report_b"
+  },
+  {
+	"bmbh" : "07",
+	"report" : "ywhs_report_s"
+  },
+  {
+	"bmbh" : "08",
+	"report" : "ywhs_report_s"
+  }
+]

@@ -15,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwbtServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务补调Action
@@ -53,7 +54,8 @@ public class YwbtAction extends BaseAction implements ModelDriven<Ywbt> {
 		User user = (User) session.get("user");
 		ywbt.setCreateName(user.getRealName());
 		DataGrid dg = ywbtService.printYwbt(ywbt);
-		Export.print(dg, Constant.REPORT_YWBT.get(ywbt.getBmbh()));
+		Export.print(dg, Util.getReportName(ywbt.getBmbh(), "report_ywbt.json"));
+		//Export.print(dg, Constant.REPORT_YWBT.get(ywbt.getBmbh()));
 	}
 	
 	public void datagrid() {

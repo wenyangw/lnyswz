@@ -22,6 +22,7 @@ import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Cgjh;
 import lnyswz.jxc.bean.CgjhDet;
@@ -51,6 +52,7 @@ import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.CgjhServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购计划实现类
@@ -318,8 +320,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			//hql += " and t.createId = :createId";
 			//params.put("createId", cgjh.getCreateId());
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
-				hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
-				params.put("search", "%" + cgjh.getSearch() + "%");
+				//hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
+				//params.put("search", "%" + cgjh.getSearch() + "%");
+				hql += " and (" + 
+						Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.cgjhlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						+ ")";
 			}else{
 				hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 				
@@ -424,6 +429,20 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
 				c.setZzl(zzl);
 				
+				String xqs = "";
+				String hqlCgxq = "from TCgxqDet t where t.TCgjh.cgjhlsh = :cgjhlsh and t.spbh = :spbh";
+				Map<String, Object> paramsCgxq = new HashMap<String, Object>();
+				paramsCgxq.put("cgjhlsh", t.getTCgjh().getCgjhlsh());
+				paramsCgxq.put("spbh", t.getSpbh());
+				List<TCgxqDet> listCgxq = cgxqDao.find(hqlCgxq, paramsCgxq);
+				if(listCgxq != null && listCgxq.size() > 0){
+					for(TCgxqDet xqDet : listCgxq){
+						//xqs += xqDet.getTCgxq().getCreateName() + xqDet.getZdwsl();
+						xqs = Common.joinString(xqs, xqDet.getTCgxq().getCreateName() + xqDet.getZdwsl(), ",");
+					}
+				}
+				c.setXqs(xqs);
+				
 			}else{
 				Set<TKfrk> tKfrks = t.getTKfrks();
 				if(tKfrks != null && tKfrks.size() > 0){
@@ -489,9 +508,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}
 		
 		if(cgjh.getSearch() != null){
-			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
-			params.put("search", "%" + cgjh.getSearch() + "%");
-			
+			//hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
+			//params.put("search", "%" + cgjh.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.TCgjh.cgjhlsh", "t.TCgjh.gysmc", "t.TCgjh.bz", "t.spbh", "t.spmc"}, params)
+					+ ")";
 		}
 		
 		//采购计划流程只查询未完成的有效数据
@@ -657,11 +678,26 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	public DataGrid getSpkc(Cgjh cgjh) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = BigDecimal.ZERO;
 		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), null, ywzzDao);
+		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), ywzzDao);
 		if(yw != null){
+			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
 			lists.addAll(yw);
 		}
+		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("实际库存数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+				
+		lists.add(0, slBean);
 		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());

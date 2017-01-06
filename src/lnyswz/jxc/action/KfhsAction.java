@@ -15,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfhsServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务换算Action
@@ -73,7 +74,8 @@ public class KfhsAction extends BaseAction implements ModelDriven<Kfhs> {
 		User user = (User)session.get("user");
 		kfhs.setCreateName(user.getRealName());
 		DataGrid dg = kfhsService.printKfhs(kfhs);
-		Export.print(dg, Constant.REPORT_KFHS.get(kfhs.getBmbh()));
+		Export.print(dg, Util.getReportName(kfhs.getBmbh(), "report_kfhs.json"));
+		//Export.print(dg, Constant.REPORT_KFHS.get(kfhs.getBmbh()));
 	}
 	
 	public void datagrid() {

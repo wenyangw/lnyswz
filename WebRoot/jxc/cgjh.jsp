@@ -1244,7 +1244,7 @@ function setEditing(){
     	if(event.keyCode == 27){
     		jxc.spQuery($(spbhEditor.target).val(),
     				cgjh_did,
-    				undefined,
+    				jxc_cgjh_ckCombo.combobox('getValue'), //查看指定仓库的库存，业务账-临时
     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
     				zslEditor		

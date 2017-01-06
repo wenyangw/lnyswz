@@ -47,6 +47,7 @@ import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XshkServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 销售回款实现类
@@ -333,9 +334,11 @@ public class XshkServiceImpl implements XshkServiceI {
 		}
 		
 		if(xshk.getSearch() != null){
-			hql += " and (t.xshklsh like :search or t.khmc like :search)"; 
-			params.put("search", "%" + xshk.getSearch() + "%");
-			
+			//hql += " and (t.xshklsh like :search or t.khmc like :search)"; 
+			//params.put("search", "%" + xshk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(xshk.getSearch(), new String[]{"t.xshklsh", "t.khmc"}, params)
+					+ ")";
 		}
 		
 		String countHql = "select count(*)" + hql;

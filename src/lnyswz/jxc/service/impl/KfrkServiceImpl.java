@@ -20,6 +20,7 @@ import com.alibaba.fastjson.TypeReference;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
@@ -27,8 +28,6 @@ import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjh;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TDepartment;
@@ -40,9 +39,9 @@ import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -55,7 +54,6 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TKfrkDet> detDao;
 	private BaseDaoI<TKfzz> kfzzDao;
-	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TYwrk> ywrkDao;
 	private BaseDaoI<TLsh> lshDao;
@@ -264,9 +262,11 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(kfrk.getSearch() != null){
-			hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + kfrk.getSearch() + "%");
-			
+			//hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
+			//params.put("search", "%" + kfrk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(kfrk.getSearch(), new String[]{"t.kfrklsh", "t.gysmc", "t.bz"}, params)
+					+ ")";
 		}
 		if(kfrk.getFromOther() != null){
 			hql += " and t.isCj = '0' and t.TYwrk = null";
@@ -282,14 +282,16 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			Set<TCgjhDet> tCgjhs = t.getTCgjhs();
 			if(tCgjhs != null && tCgjhs.size() > 0){
 				String cgjhlshs = "";
-				int i = 0;
 				for(TCgjhDet tc : tCgjhs){
-					cgjhlshs += tc.getTCgjh().getCgjhlsh();
-					if(i < tCgjhs.size() - 1){
-						cgjhlshs += ",";
-					}
-					i++;
+					cgjhlshs = Common.joinString(cgjhlshs, tc.getTCgjh().getCgjhlsh(), ",");
+//					if(cgjhlshs.indexOf(tc.getTCgjh().getCgjhlsh()) < 0){
+//						if(cgjhlshs.length() > 0){
+//							cgjhlshs += ",";
+//						}
+//						cgjhlshs += tc.getTCgjh().getCgjhlsh();
+//					}
 				}
+				
 				c.setCgjhlshs(cgjhlshs);
 			}
 			if(t.getTYwrk() != null){
@@ -321,8 +323,8 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	
 	@Override
 	public DataGrid toYwrk(String kfrklshs){
-		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj, sum(t.cdwsl) cdwsl from t_kfrk_det t"
-				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
+		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj, sum(t.cdwsl) cdwsl, isnull(MAX(ck.cdwdj), 0) cdwdj from t_kfrk_det t"
+				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj, jh.cdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(kfrklshs != null && kfrklshs.trim().length() > 0){
@@ -347,6 +349,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwdj = new BigDecimal(os[2].toString());
 			BigDecimal cdwsl = new BigDecimal(os[3].toString());
+			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			KfrkDet kd = new KfrkDet();
@@ -360,12 +363,13 @@ public class KfrkServiceImpl implements KfrkServiceI {
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
 				kd.setCdwsl(cdwsl);
+				kd.setCdwdj(cdwdj);
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
 					//kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-					kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
+					//kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
 				}else{
 					//kd.setCdwsl(Constant.BD_ZERO);
-					kd.setCdwdj(Constant.BD_ZERO);
+					//kd.setCdwdj(Constant.BD_ZERO);
 				}
 			}
 			nl.add(kd);
@@ -389,11 +393,6 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	@Autowired
 	public void setDetDao(BaseDaoI<TKfrkDet> detDao) {
 		this.detDao = detDao;
-	}
-
-	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired

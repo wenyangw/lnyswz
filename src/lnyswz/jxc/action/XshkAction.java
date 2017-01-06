@@ -18,6 +18,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XshkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 销售回款Action
  * @author 王文阳
@@ -76,7 +77,8 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		User user = (User)session.get("user");
 		xshk.setCreateName(user.getRealName());
 		DataGrid dg = xshkService.printXshk(xshk);
-		Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
+		Export.print(dg, Util.getReportName(xshk.getBmbh(), "report_xshk.json"));
+		//Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
 	}
 	
 	
@@ -87,7 +89,8 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		String type = Export.getExportType(xshk.getType());
 		String location = "/export/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xshkService.printXshk(xshk);
-		Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), location, type);
+		Export.export(dg, Util.getReportName(xshk.getBmbh(), "report_xshk.json"), location, type);
+		//Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");

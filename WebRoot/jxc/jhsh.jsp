@@ -27,7 +27,7 @@ $(function(){
 	var cardView = $.extend({}, $.fn.datagrid.defaults.view, {
 	    renderRow: function(target, fields, frozen, rowIndex, rowData){
 	        var cc = [];
-	        cc.push('<td colspan=' + fields.length + ' style="width:1200px; padding:10px 5px; border:0;">');
+	        cc.push('<td colspan=' + fields.length + ' style="width:1400px; padding:10px 5px; border:0;">');
 	        if (!frozen){
 	            cc.push('<table border= "0" width = 95%>');
 	            var j = 0;
@@ -157,6 +157,7 @@ $(function(){
 						}},
 					{field:'kcsl',title:'当前库存数量',width:90,align:'center'},
 					{field:'zzl',title:'周转率',width:90,align:'center'},
+					{field:'xqs',title:'需求',width:200,align:'center'},
 	    	    ]],
 	    	});
 	    },

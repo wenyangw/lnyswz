@@ -14,6 +14,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwpdServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务盘点Action
@@ -72,7 +73,8 @@ public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
 		User user = (User) session.get("user");
 		ywpd.setCreateName(user.getRealName());
 		DataGrid dg = ywpdService.printYwpd(ywpd);
-		Export.print(dg, Constant.REPORT_YWPD.get(ywpd.getBmbh()));
+		Export.print(dg, Util.getReportName(ywpd.getBmbh(), "report_ywpd.json"));
+		//Export.print(dg, Constant.REPORT_YWPD.get(ywpd.getBmbh()));
 	}
 	
 	public void getSpkc(){

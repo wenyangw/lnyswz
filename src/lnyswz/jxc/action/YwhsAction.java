@@ -14,6 +14,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwhsServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务换算Action
@@ -88,7 +89,8 @@ public class YwhsAction extends BaseAction implements ModelDriven<Ywhs> {
 		User user = (User) session.get("user");
 		ywhs.setCreateName(user.getRealName());
 		DataGrid dg = ywhsService.printYwhs(ywhs);
-		Export.print(dg, Constant.REPORT_YWHS.get(ywhs.getBmbh()));
+		Export.print(dg, Util.getReportName(ywhs.getBmbh(), "report_ywhs.json"));
+		//Export.print(dg, Constant.REPORT_YWHS.get(ywhs.getBmbh()));
 	}
 		
 	@Override

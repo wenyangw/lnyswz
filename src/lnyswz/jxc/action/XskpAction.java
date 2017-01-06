@@ -15,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XskpServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 销售开票Action
  * @author 王文阳
@@ -136,7 +137,8 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		User user = (User)session.get("user");
 		xskp.setCreateName(user.getRealName());
 		DataGrid dg = xskpService.printXsqk(xskp);
-		Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));
+		Export.print(dg, Util.getReportName(xskp.getBmbh(), "report_xsqk.json"));
+		//Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));
 	}
 	
 	public void datagrid(){

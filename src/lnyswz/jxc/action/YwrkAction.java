@@ -29,6 +29,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务入库Action
@@ -143,14 +144,16 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		User user = (User) session.get("user");
 		ywrk.setCreateName(user.getRealName());
 		DataGrid dg = ywrkService.printYwrk(ywrk);
-		Export.print(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()));
+		Export.print(dg, Util.getReportName(ywrk.getBmbh(), "report_ywrk.json"));
+		//Export.print(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()));
 	}
 	
 	public void printKfrk() {
 		User user = (User) session.get("user");
 		ywrk.setCreateName(user.getRealName());
 		DataGrid dg = ywrkService.printKfrk(ywrk);
-		Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
+		Export.print(dg, Util.getReportName(ywrk.getBmbh(), "report_kfrk.json"));
+		//Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
 	}
 	
 	@Override
