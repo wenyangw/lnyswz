@@ -749,6 +749,7 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagrid.action',
 					queryParams: {
 						bmbh: cgjh_did,
+						isZs: $('input#jxc_cgjhDg_isZs').is(':checked') ? '1' : '0',
 					},
 				});
 			}
@@ -1840,6 +1841,7 @@ function searchCgjh(){
 		bmbh: cgjh_did,
 		createTime: $('input[name=createTimeCgjh]').val(),
 		search: $('input[name=searchCgjh]').val(),
+		isZs: $('input#jxc_cgjhDg_isZs').is(':checked') ? '1' : '0',
 	});
 }
 
@@ -2182,6 +2184,7 @@ function createCgjhFromCgjh(){
 <div id="jxc_cgjh_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、供应商编号、名称、备注：<input type="text" name="searchCgjh" style="width:100px">
+	直送<input type="checkbox" id='jxc_cgjhDg_isZs'>
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjh();">查询</a>
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="expandRows();">展开</a>
 	

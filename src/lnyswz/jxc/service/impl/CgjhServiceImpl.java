@@ -319,14 +319,22 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}else{
 			//hql += " and t.createId = :createId";
 			//params.put("createId", cgjh.getCreateId());
+			if(cgjh.getIsZs().equals("1")){
+				hql += " and t.isZs = '1'";
+			}
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
 				//hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
 				//params.put("search", "%" + cgjh.getSearch() + "%");
+				
 				hql += " and (" + 
 						Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.cgjhlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
 						+ ")";
 			}else{
-				hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+				if(cgjh.getIsZs().equals("1")){
+					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1')";
+				}else{
+					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+				}
 				
 			}
 		}
