@@ -44,6 +44,8 @@ public class Cgjh {
 	private String needAudit;
 	private String isAudit;
 	private String isZs;
+	private String isNotZs;
+	private String isNb;
 	private String nbjhlsh;
 	
 	private String isLock;
@@ -367,6 +369,22 @@ public class Cgjh {
 
 	public void setIsZs(String isZs) {
 		this.isZs = isZs;
+	}
+
+	public String getIsNotZs() {
+		return isNotZs;
+	}
+
+	public void setIsNotZs(String isNotZs) {
+		this.isNotZs = isNotZs;
+	}
+
+	public String getIsNb() {
+		return isNb;
+	}
+
+	public void setIsNb(String isNb) {
+		this.isNb = isNb;
 	}
 
 	public String getNbjhlsh() {

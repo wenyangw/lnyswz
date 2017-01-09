@@ -319,9 +319,18 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}else{
 			//hql += " and t.createId = :createId";
 			//params.put("createId", cgjh.getCreateId());
-			if(cgjh.getIsZs().equals("1")){
-				hql += " and t.isZs = '1'";
+					
+			if(!(
+					(cgjh.getIsZs().equals("1") && cgjh.getIsNotZs().equals("1"))
+					|| (cgjh.getIsZs().equals("0") && cgjh.getIsNotZs().equals("0"))
+					)){
+				if(cgjh.getIsZs().equals("1")){
+					hql += " and t.isZs = '1'";
+				}else{
+					hql += " and t.isZs = '0'";
+				}
 			}
+			
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
 				//hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
 				//params.put("search", "%" + cgjh.getSearch() + "%");
@@ -330,12 +339,19 @@ public class CgjhServiceImpl implements CgjhServiceI {
 						Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.cgjhlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
 						+ ")";
 			}else{
-				if(cgjh.getIsZs().equals("1")){
-					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1')";
+				if(!(
+						(cgjh.getIsZs().equals("1") && cgjh.getIsNotZs().equals("1"))
+						|| (cgjh.getIsZs().equals("0") && cgjh.getIsNotZs().equals("0"))
+						)){
+					if(cgjh.getIsZs().equals("1")){
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1')";
+					}else{
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '0')";
+					}
+					
 				}else{
 					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
 				}
-				
 			}
 		}
 		
@@ -611,6 +627,9 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		return datagrid;
 	}
 	
+	/**
+	 * 采购计划的内部计划列表调用 
+	 */
 	@Override
 	public DataGrid detDg(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
@@ -621,7 +640,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
-			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
+			hql += " and t.TCgjh.isNb = '1' and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
 		}
 		
 		String countHql = "select count(*) " + hql;

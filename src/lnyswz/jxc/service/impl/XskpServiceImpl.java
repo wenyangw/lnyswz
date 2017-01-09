@@ -1229,6 +1229,9 @@ public class XskpServiceImpl implements XskpServiceI {
 		return datagrid;
 	}
 	
+	/*
+	 * 销售提货的销售开票列表 
+	 */
 	@Override
 	public DataGrid datagridDet(Xskp xskp) {
 		DataGrid datagrid = new DataGrid();
@@ -1250,7 +1253,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getFromOther() != null){
-			hql += " and t.TXskp.isCj = '0' and t.TXskp.isZs = '0' and t.TXskp.fromTh = '0' and t.zdwsl <> t.thsl";
+			hql += " and t.TXskp.isCj = '0' and t.TXskp.isZs = '0' and t.TXskp.fromTh = '0' and t.zdwsl <> t.thsl and t.TXskp.fhId is null";
 		}
 		
 		String countHql = "select count(*) " + hql;
