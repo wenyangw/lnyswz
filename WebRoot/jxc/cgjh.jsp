@@ -2137,7 +2137,7 @@ function createCgjhFromCgjh(){
 					<tr>
 						<td colspan="4">
 							合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;
-							直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs">
+							直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs">&nbsp;&nbsp;&nbsp;&nbsp;
 							内部<input type="checkbox" id='jxc_cgjh_isNb' name="isNb">
 							</td>
 <!-- 						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" /> -->
