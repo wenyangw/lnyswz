@@ -22,15 +22,17 @@ import javax.persistence.TemporalType;
 		private String khdz;
 		private String lxr; 
 		private String phone;
+		private int orderNum;
 		public TShdz() {
 		}
 
-		public TShdz(int id,String khmc,String khdz,String lxr,String phone){
+		public TShdz(int id,String khmc,String khdz,String lxr,String phone, int orderNum){
 			this.id = id;
 			this.khmc = khmc;
 			this.khdz=khdz;
 			this.phone=phone;
 			this.lxr=lxr;
+			this.orderNum = orderNum;
 		}
 		@Id
 		@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -65,13 +67,23 @@ import javax.persistence.TemporalType;
 		}
 		
 		@Column(name = "phone", nullable = true, length = 100)
-		public String getphone() {
+		public String getPhone() {
 			return this.phone;
 		}
 
 		public void setPhone(String phone) {
 			this.phone = phone;
 		}
+		
+		@Column(name = "orderNum", nullable = false)
+		public int getOrderNum() {
+			return orderNum;
+		}
+
+		public void setOrderNum(int orderNum) {
+			this.orderNum = orderNum;
+		}
+
 		@Column(name = "lxr", nullable = true, length = 50)
 		public String getLxr() {
 			return this.lxr;

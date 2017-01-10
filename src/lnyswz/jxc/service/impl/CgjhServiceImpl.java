@@ -52,6 +52,7 @@ import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.CgjhServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购计划实现类
@@ -318,12 +319,39 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}else{
 			//hql += " and t.createId = :createId";
 			//params.put("createId", cgjh.getCreateId());
+					
+			if(!(
+					(cgjh.getIsZs().equals("1") && cgjh.getIsNotZs().equals("1"))
+					|| (cgjh.getIsZs().equals("0") && cgjh.getIsNotZs().equals("0"))
+					)){
+				if(cgjh.getIsZs().equals("1")){
+					hql += " and t.isZs = '1'";
+				}else{
+					hql += " and t.isZs = '0'";
+				}
+			}
+			
 			if(cgjh.getSearch() != null && cgjh.getSearch().length() > 0){
-				hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
-				params.put("search", "%" + cgjh.getSearch() + "%");
-			}else{
-				hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+				//hql += " and (t.cgjhlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)"; 
+				//params.put("search", "%" + cgjh.getSearch() + "%");
 				
+				hql += " and (" + 
+						Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.cgjhlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						+ ")";
+			}else{
+				if(!(
+						(cgjh.getIsZs().equals("1") && cgjh.getIsNotZs().equals("1"))
+						|| (cgjh.getIsZs().equals("0") && cgjh.getIsNotZs().equals("0"))
+						)){
+					if(cgjh.getIsZs().equals("1")){
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1')";
+					}else{
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '0')";
+					}
+					
+				}else{
+					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+				}
 			}
 		}
 		
@@ -504,9 +532,11 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		}
 		
 		if(cgjh.getSearch() != null){
-			hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
-			params.put("search", "%" + cgjh.getSearch() + "%");
-			
+			//hql += " and (t.TCgjh.cgjhlsh like :search or t.TCgjh.gysmc like :search or t.TCgjh.bz like :search or t.spbh like :search or t.spmc like :search)"; 
+			//params.put("search", "%" + cgjh.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(cgjh.getSearch(), new String[]{"t.TCgjh.cgjhlsh", "t.TCgjh.gysmc", "t.TCgjh.bz", "t.spbh", "t.spmc"}, params)
+					+ ")";
 		}
 		
 		//采购计划流程只查询未完成的有效数据
@@ -597,6 +627,9 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		return datagrid;
 	}
 	
+	/**
+	 * 采购计划的内部计划列表调用 
+	 */
 	@Override
 	public DataGrid detDg(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
@@ -607,7 +640,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
-			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
+			hql += " and t.TCgjh.isNb = '1' and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
 		}
 		
 		String countHql = "select count(*) " + hql;
@@ -672,11 +705,26 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	public DataGrid getSpkc(Cgjh cgjh) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
+		BigDecimal sl = BigDecimal.ZERO;
 		
-		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), null, ywzzDao);
+		List<ProBean> yw = YwzzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), ywzzDao);
 		if(yw != null){
+			sl = sl.add(new BigDecimal(yw.get(0).getValue()));
 			lists.addAll(yw);
 		}
+		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(cgjh.getBmbh(), cgjh.getSpbh(), cgjh.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
+		ProBean slBean = new ProBean();
+		slBean.setGroup("实际库存数量");
+		slBean.setName("数量");
+		slBean.setValue(sl.toString());
+				
+		lists.add(0, slBean);
 		
 		dg.setRows(lists);
 		dg.setTotal((long)lists.size());

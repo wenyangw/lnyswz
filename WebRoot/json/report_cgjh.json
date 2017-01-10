@@ -1,0 +1,22 @@
+[
+  {
+	"bmbh" : "01",
+	"report" : "cgjh_report_c"
+  },
+  {
+	"bmbh" : "04",
+	"report" : "cgjh_report_jc"
+  },
+  {
+	"bmbh" : "05",
+	"report" : "cgjh_report_zy"
+  },
+  {
+	"bmbh" : "07",
+	"report" : "cgjh_report_c"
+  },
+  {
+	"bmbh" : "08",
+	"report" : "cgjh_report"
+  }
+]

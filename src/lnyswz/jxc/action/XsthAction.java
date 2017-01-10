@@ -1,10 +1,12 @@
 package lnyswz.jxc.action;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.Scanner;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -15,12 +17,14 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Xsth;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XsthServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 销售提货Action
  * @author 王文阳
@@ -221,14 +225,17 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
-		Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
+		
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));
+		//Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
 	}
 	
 	public void printXsht() {
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsht(xsth);
-		Export.print(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()));
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsht.json"));
+		//Export.print(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()));
 	}
 	
 	public void exportXsth() {
@@ -238,7 +245,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		String type = Export.getExportType(xsth.getType());
 		String location = "/export/xsth_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printXsth(xsth);
-		Export.export(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()), location, type);
+		Export.export(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"), location, type);
+		//Export.export(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");
@@ -252,7 +260,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		String type = Export.getExportType(xsth.getType());
 		String location = "/export/gxht_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printXsht(xsth);
-		Export.export(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()), location, type);
+		Export.export(dg, Util.getReportName(xsth.getBmbh(), "report_xsht.json"), location, type);
+		//Export.export(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");
@@ -263,7 +272,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printShd(xsth);
-		Export.print(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()));
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_shqr.json"));
+		//Export.print(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()));
 	}
 	
 	public void exportShd() {
@@ -273,7 +283,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		String type = Export.getExportType(xsth.getType());
 		String location = "/export/shqrd_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printShd(xsth);
-		Export.export(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()), location, type);
+		Export.export(dg, Util.getReportName(xsth.getBmbh(), "report_shqr.json"), location, type);
+		//Export.export(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
 		j.setMsg("导出成功");
@@ -284,14 +295,16 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
-		Export.print(dg, Constant.REPORT_XSTH_KF.get(xsth.getBmbh()));
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_kf.json"));
+		//Export.print(dg, Constant.REPORT_XSTH_KF.get(xsth.getBmbh()));
 	}
 	
 	public void printXsthByBgy() {
 		User user = (User)session.get("user");
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsthByBgy(xsth);
-		Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_bgy.json"));
+		//Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
 	}
 	
 	public void getSpkc(){

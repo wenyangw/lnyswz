@@ -6,6 +6,7 @@ private String khmc;
 private String khdz;
 private String lxr;
 private String phone;
+private int orderNum;
 private String depId;
 private String menuId;
 private int userId;
@@ -75,6 +76,12 @@ public String getPhone() {
 }
 public void setPhone(String phone) {
 	this.phone = phone;
+}
+public int getOrderNum() {
+	return orderNum;
+}
+public void setOrderNum(int orderNum) {
+	this.orderNum = orderNum;
 }
 public String getBh() {
 	return bh;

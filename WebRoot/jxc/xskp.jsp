@@ -1077,7 +1077,7 @@ function setEditing(){
     			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
-    	calculate();
+    	calculate("z");
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		zdjEditor.target.focus();
@@ -1090,7 +1090,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
     	}
-    	calculate();
+    	calculate("z");
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
 //         	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
@@ -1147,7 +1147,11 @@ function setEditing(){
         			&& $(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     		}
-    		calculate();
+    		if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
+    			calculate("z");
+    		}else{	
+    			calculate("c");
+    		}
     	}else{
     		return false;
     	}
@@ -1169,7 +1173,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / $(zhxsEditor.target).val() / (1 + SL));
     	}
-    	calculate();
+    	calculate("c");
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		sphjEditor.target.focus();
@@ -1200,12 +1204,25 @@ function setEditing(){
   	}
     
     //计算金额
-    function calculate(){
-    	var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
-    	var spse = (spje * SL).toFixed(2);
+    function calculate(type){
+    	var spje = 0;
+    	var spse = 0;
+    	var sphj = 0;
+    	if(type==="z"){
+    		spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+    		spse = (spje * SL).toFixed(2);
+    		sphj = Number(spje) + Number(spse);
+    	}else{
+    		sphj = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
+    		spje = sphj / (1 + SL);
+    		spse = sphj - spje;
+    	}
+    	//var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+    	//var spse = (spje * SL).toFixed(2);
         $(spjeEditor.target).numberbox('setValue', spje);
         $(spseEditor.target).numberbox('setValue', spse);
-        $(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
+        //$(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
+        $(sphjEditor.target).numberbox('setValue', sphj);
         //更新汇总列
         updateFooter();
     }
