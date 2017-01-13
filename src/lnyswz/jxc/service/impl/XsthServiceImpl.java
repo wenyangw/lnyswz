@@ -1456,44 +1456,39 @@ public class XsthServiceImpl implements XsthServiceI {
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getXsthlsh()), 
 				"修改运费", operalogDao);
 	}
-	
+
+	/**
+	 * 有同一品种出现两次以上且单价不同，合并开票时：
+	 * 	04：按最大单价，尽量不开在一起
+	 * 	其他：按金额合计为准，重新计算单价
+	 */
 	@Override
-	public DataGrid toXskp(String xsthDetIds){
-//		String sql = "select xd.spbh, isnull(sum(xd.zdwsl), 0) zdwthsl, isnull(max(kd.zdwsl), 0) zdwytsl from t_xsth_det xd " +
-//				"left join t_xsth_xskp xk on xd.id = xk.xsthdetId " +
-//				"left join t_xskp_det kd on xk.xskplsh = kd.xskplsh and kd.spbh = xd.spbh ";
-		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj from t_xsth_det ";
-		//String sql = "select spbh, isnull(sum(zdwsl), 0) zdwthsl, isnull(sum(kpsl), 0) zdwytsl, max(zdwdj) zdwdj, max(cdwdj) cdwdj, sum(spje) spje from t_xsth_det ";
-		//String sql = "select thDet.spbh, isnull(max(thDet.zdwsl), 0) zdwthsl, isnull(max(thDet.kpsl), 0) zdwytsl, max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
-			//	+ " max(thDet.spje) - isnull(SUM(kpDet.spje + kpDet.spse), 0) spje from t_xsth_det thDet"
-			//	+ " left join t_xsth_xskp xx on xx.xsthdetId = thDet.id"
-			//	+ " left join t_xskp_det kpDet on xx.xskplsh = kpDet.xskplsh and thDet.spbh = kpDet.spbh";
+	public DataGrid toXskp(Xsth xsth){
+		String sql;
 		
-		String sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
+		if(xsth.getBmbh().equals("04")){
+			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
 				+ " max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
 				+ " cast(round(sum(thDet.zdwsl - thDet.kpsl) * max(thDet.zdwdj), 2) as numeric(12, 2))  spje,"
 				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
 				+ " from t_xsth_det thDet "
 				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and "
 				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
-				//+ " sum(thDet.spje) - isnull(SUM(kp.spje), 0) spje"
-				//+ " left join"
-				//+ " (select tk.xsthdetId, kpDet.spbh, SUM(zdwsl) zdwsl, SUM(kpDet.spje + kpDet.spse) spje from t_xsth_xskp tk left join t_xskp_det kpDet on tk.xskplsh = kpDet.xskplsh"
-				//+ " group by tk.xsthdetId, kpDet.spbh) kp on thDet.id = kp.xsthDetId and thDet.spbh = kp.spbh";
-
-		
+		}else{
+			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
+				+ " sum(spje) / isnull(sum(thDet.zdwsl - thDet.kpsl), 0) zdwdj,"
+				+ " case when isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) = 0 then 0 else sum(spje) / isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) end cdwdj,"
+				+ " sum(spje) spje,"
+				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
+				+ " from t_xsth_det thDet"
+				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and"
+				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
+		}
+				
 		Map<String, Object> params = new HashMap<String, Object>();
 		
-		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
-//			String[] xs = xsthDetIds.split(",");
-			sql += " where thDet.id in (" + xsthDetIds + ")";
-//			for(int i = 0; i < xs.length; i++){
-//				sql += " xd.id = ? ";
-//				params.put(String.valueOf(i), xs[i]);
-//				if(i != xs.length - 1){
-//					sql += " or ";
-//				}
-// 			}
+		if(xsth.getXsthDetIds() != null && xsth.getXsthDetIds().trim().length() > 0){
+			sql += " where thDet.id in (" + xsth.getXsthDetIds() + ")";
 		}
 		sql += " group by thDet.spbh";
 		

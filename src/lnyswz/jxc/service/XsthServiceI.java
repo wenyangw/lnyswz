@@ -16,7 +16,7 @@ public interface XsthServiceI {
 	public DataGrid detDatagrid(Xsth xsth);
 	public DataGrid toKfck(Xsth xsth);
 	public DataGrid toCgjh(Xsth xsth);
-	public DataGrid toXskp(String xsthDetIds);
+	public DataGrid toXskp(Xsth xsth);
 	public DataGrid datagridDet(Xsth xsth);
 	public DataGrid getSpkc(Xsth xsth);
 	public DataGrid printXsth(Xsth xsth);

@@ -193,7 +193,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	public void toXskp(){
-		writeJson(xsthService.toXskp(xsth.getXsthDetIds()));
+		writeJson(xsthService.toXskp(xsth));
 	}
 	
 	public void getSpBgys(){
