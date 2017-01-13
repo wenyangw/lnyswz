@@ -1133,7 +1133,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			//hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
 			//params.put("search", "%" + xskp.getSearch() + "%");
 			hql += " and (" + 
-				Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc"}, params)
+				Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc", "t.fhmc"}, params)
 				+ ")";
 		}
 		
