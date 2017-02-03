@@ -86,6 +86,24 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		return getPieByMonth(chart, sql);
 	}
+	
+	@Override
+	public Chart getXskhtj(Chart chart) {
+		String sql = "";
+		if(chart.getField().equals("xsje")){
+			sql = "select jzsj, round(xsje / 10000, 2)";
+		}else if(chart.getField().equals("xsml")){
+			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
+		}
+		if(chart.getIncludeNb().equals("1")){
+			sql += " from v_xstj";
+		}else{
+			sql += " from v_xstj_nonb";
+		}
+		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		
+		return getChartByMonth(chart, sql);
+	}
 
 	
 	private Chart getPieByMonth(Chart chart, String sql) {

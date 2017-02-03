@@ -1305,6 +1305,9 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
+    	if(event.keyCode == 9){
+    		return false;
+    	}
     	if($(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
@@ -1315,7 +1318,7 @@ function setEditing(){
      		return false;
      	}
     });
-        
+    
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
@@ -1326,6 +1329,10 @@ function setEditing(){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
      	}
+    }).bind('focus', function(event){
+    	if($(cdjEditor.target).val() == 0){
+    		$(cdjEditor.target).val('');
+    	}
     });
     
   	//输入商品金额后，计算单价

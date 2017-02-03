@@ -1046,6 +1046,10 @@ function setEditing(){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
      	}
+    }).bind('focus', function(event){
+    	if($(cdjEditor.target).val() == 0){
+    		$(cdjEditor.target).val('');
+    	}
     });
   	
   	//输入每行总额后,重新计算单价
