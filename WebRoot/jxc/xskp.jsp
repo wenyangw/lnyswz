@@ -1077,7 +1077,7 @@ function setEditing(){
     			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
-    	calculate("z");
+    	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		zdjEditor.target.focus();
@@ -1090,7 +1090,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
     	}
-    	calculate("z");
+    	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
 //         	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
@@ -1147,11 +1147,12 @@ function setEditing(){
         			&& $(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     		}
-    		if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
-    			calculate("z");
-    		}else{	
-    			calculate("c");
-    		}
+    		calculate();
+//     		if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
+//     			calculate("z");
+//     		}else{	
+//     			calculate("c");
+//     		}
     	}else{
     		return false;
     	}
@@ -1173,7 +1174,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / $(zhxsEditor.target).val() / (1 + SL));
     	}
-    	calculate("c");
+    	calculate();
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		sphjEditor.target.focus();
@@ -1204,25 +1205,29 @@ function setEditing(){
   	}
     
     //计算金额
-    function calculate(type){
-    	var spje = 0;
-    	var spse = 0;
-    	var sphj = 0;
-    	if(type==="z"){
-    		spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
-    		spse = (spje * SL).toFixed(2);
-    		sphj = Number(spje) + Number(spse);
-    	}else{
-    		sphj = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
-    		spje = sphj / (1 + SL);
-    		spse = sphj - spje;
-    	}
-    	//var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
-    	//var spse = (spje * SL).toFixed(2);
+    //金额=数量1 * 单价1
+    //数量1，可直接录入，如录数量2,转换
+    //单价1,可直接录入，如录单价2,转换
+    //
+    function calculate(){
+//     	var spje = 0;
+//     	var spse = 0;
+//     	var sphj = 0;
+//     	if(type==="z"){
+//     		spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+//     		spse = (spje * SL).toFixed(2);
+//     		sphj = Number(spje) + Number(spse);
+//     	}else{
+//     		sphj = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
+//     		spje = sphj / (1 + SL);
+//     		spse = sphj - spje;
+//     	}
+    	var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+    	var spse = (spje * SL).toFixed(2);
         $(spjeEditor.target).numberbox('setValue', spje);
         $(spseEditor.target).numberbox('setValue', spse);
-        //$(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
-        $(sphjEditor.target).numberbox('setValue', sphj);
+        //$(sphjEditor.target).numberbox('setValue', sphj);
+        $(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
         //更新汇总列
         updateFooter();
     }
@@ -1686,6 +1691,7 @@ function generateXskp(){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/xsthAction!toXskp.action',
 						data : {
+							bmbh: xskp_did,							
 							xsthDetIds : xsthDetStr
 						},
 						dataType : 'json',
@@ -1815,7 +1821,7 @@ function searchXsthInXskp(){
 
 <div id="jxc_xskp_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、分户备注：<input type="text" name="searchXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXskp();">查询</a>
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">

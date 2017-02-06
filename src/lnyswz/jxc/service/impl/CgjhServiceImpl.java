@@ -228,6 +228,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		map.put("hjsl", hjsl);
 		map.put("hjje", tCgjh.getHjje());
 		map.put("bz", tCgjh.getBz());
+		map.put("isAudit", tCgjh.getIsAudit());
 		map.put("printName", cgjh.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);

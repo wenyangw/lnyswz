@@ -57,7 +57,6 @@ public class WebServiceImpl implements WebServiceI {
 		
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
-		
 	}
 	
 	
@@ -192,7 +191,7 @@ public class WebServiceImpl implements WebServiceI {
 		return sb.toString();
 	}
 	
-	public Object map2PO(Map<String,Object> map,Object o) throws Exception{  
+	public Object convertMap2PO(Map<String,Object> map, Object o) throws Exception{  
         if (!map.isEmpty()) {  
             for (String k : map.keySet()) {  
                 Object v = "";  

@@ -46,6 +46,13 @@ public class ChartAction extends BaseAction implements ModelDriven<Chart>{
 		writeJson(chartService.getKctj(chart));
 	}
 	
+	/**
+	 * 销售客户排名统计
+	 */
+	public void getXskhtj(){
+		writeJson(chartService.getXskhtj(chart));
+	}
+	
 	@Override
 	public Chart getModel() {
 		return chart;
