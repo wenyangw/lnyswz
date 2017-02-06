@@ -28,19 +28,18 @@ $(function(){
 	did = lnyw.tab_options().did;
 	userId = lnyw.tab_options().userId;
 	query = lnyw.tab_options().query;
-	$('#selectcommon').attr('id', 'sc_' + query);
-	$('#total').attr('id', 'total_' + query);
-	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
-	$('#select2').attr('id', 'pro_' + query);
-	$('#bzShow').attr('id', 'bzShow' + query);
-	$('#result_dg').attr('id', 'result_' + query);
-	resultDg = $('#result_' + query);
-	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
-	$('#jxc_select_layout').attr('id', 'jxc_select_layout' + query);
+	$('#jxc_select_layout').attr('id', 'jxc_select_layout' + query);//查询页面父类div
+	$('#selectcommon').attr('id', 'sc_' + query);//查询条件内容
+	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);//导出报表
+	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);//查询结果显示字段父页面div
+	$('#select2').attr('id', 'pro_' + query);//查询结果显示字段
+	$('#result_dg').attr('id', 'result_' + query);//查询结果显示
+	$('#total').attr('id', 'total_' + query);//查询结果条数
 	//$('#jxc_select_layout').attr('id', 'layout_' + query);
 // 	$('#select_dep').attr('id','select_dep_'+query);
 // 	$('#div_select').attr('id','div_select_'+query);
 // 	$("input[name=depName]").attr('name','dep_'+query);
+	resultDg = $('#result_' + query);
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);
@@ -89,45 +88,45 @@ $(function(){
 			if(isNeedDep=="true"){
 				if(did>='09'){
 					star += '<tr>';
-					star += '<th align="left">部门 </th>';
-					star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
+					star += '<th align="left"  class="query_field">部门 </th>';
+					star += '<td class="query_ope" align="left"> </td><td class="query_int">&#12288;<input id="select_dep_' + query  + '" class="inputval"  name="select_depName" style="width:104px;" ></td>';
 					star += '</tr>';
 				}
 			}
 			$.each(data,function(){
 				star += '<tr>';
-				star += '<th align="left">'+this.cname+'</th>';			
+				star += '<th class="query_field"  align="left">'+this.cname+'</th>';			
 				if(this.specials=="time"){
-					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 					
+					star += '<td  class="query_ope" align="right">开始日期</td><td class="query_int">&#12288;<input id="a_'+this.ename+query+'"'; 					
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().date(1).format('YYYY-MM-DD')+'" ';
 					star += '  name='+this.ename+' size="12"></td>';
-					star += '</tr><tr><td></td><td align="right">结束日期</td>';
-					star += '<td>&#12288;<input id="b_'+this.ename+query+'"';
+					star += '</tr><tr><th class="query_field" ></th><td  class="query_ope" align="right">结束日期</td>';
+					star += '<td class="query_int">&#12288;<input id="b_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 			   }else if(this.specials=="scope"){
-					star += '<td align="right">起始范围</td><td>&#12288;<input id="c_'+this.ename+query+'"'; 
+					star += '<td  class="query_ope"  align="right">起始范围</td><td class="query_int">&#12288;<input id="c_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
-					star += '</tr><tr><td></td><td align="right">结束范围</td>';
-					star += '<td>&#12288;<input id="d_'+this.ename+query+'"';
+					star += '</tr><tr><th class="query_field"></th><td  class="query_ope" align="right">结束范围</td>';
+					star += '<td class="query_int">&#12288;<input id="d_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else if(this.specials=="stime"){
-					star += '<td align="right">查询日期</td>';
-					star += '<td>&#12288;<input id="s_'+this.ename+query+'"';
+					star += '<td class="query_ope" align="right">查询日期</td>';
+					star += '<td class="query_int">&#12288;<input id="s_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += '  name='+this.ename+' size="12"></td>';	
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
- 						star += '<td>&#12288;<input class="inputval'+query+'" id='+this.ename+query+' name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
+						star += '<td class="query_ope">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
+ 						star += '<td class="query_int">&#12288;<input class="inputval'+query+'" id='+this.ename+query+' name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					}else{
 					//将checked属性名设置为：字典英文名，属性值设置为：“checked”。					
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;" ></td>';
-						star += '<td>&#12288;<input class="inputval'+query+'" id="'+this.ename+query+'"  name="'+this.ename+'" style="width:100px;"></td>';
+						star += '<td class="query_ope">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;" ></td>';
+						star += '<td class="query_int">&#12288;<input class="inputval'+query+'" id="'+this.ename+query+'"  name="'+this.ename+'" style="width:100px;"></td>';
 					}
 					if(this.show != null && this.show.trim().length > 0 ){
- 						star += '<tr><td></td><td></td><td class="show">&#12288;'+this.show+'</td></tr>';
+ 						star += '<tr><th class="query_field"></th><td class="query_ope"></td><td class="query_int">&#12288;'+this.show+'</td></tr>';
 					}
 				}				
 				checkeds[this.ename]="checked";
@@ -169,7 +168,7 @@ function selectClick(){
 	checkeds=Object.create(Object.prototype);
 	query = lnyw.tab_options().query;
 	//查询试图全部字段并设置dataClass，为选择显示字段用
-	p = $('#dialog_' + query);
+// 	p = $('#dialog_' + query);
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
@@ -207,7 +206,7 @@ function selectClick(){
 			//当输入框有值
 			
 			if(inputVal != "" ){
-				//排除特殊值情况（商品编号范围，时间范围）	
+				//排除特殊值情况（商品编号范围，时间范围、a_、b_ 为时间起始范围和结束范围、c_、d_ 为商品起始范围和结束范围、s_ 为查询日期、）	
 				if(!($(this).attr('id') == ("a_"+$(this).attr('name')+query) || $(this).attr('id') == ("b_"+$(this).attr('name')+query) || $(this).attr('id') == ("c_"+$(this).attr('name')+query) || $(this).attr('id') == ("d_"+$(this).attr('name')+query) ||  $(this).attr('id') == ("s_"+$(this).attr('name')+query)  ) ){																	
 									if(($('input[name=ope_'+$(this).attr('name')+query+']').val() != ""&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != " "&&$('input[name=ope_'+$(this).attr('name')+query+']').val() != undefined )){	
 									//下拉列表条件是否选择
@@ -391,9 +390,16 @@ function selectClick(){
 	      		
 					step1Ok(conditions.join(" and "),allFields,	execHql.join(" , "));	
 					$('#dialog_' + query).dialog('close');	      			
-	      			var cmenu;
+// 					$('#dialog_' + query).dialog({  
+// 						close: function () {   
+			               
+// 			               alert("dddf");
+// 		            	},  
+							
+// 					 });  
+					var cmenu;
 	      			function createColumnMenu(){
-	      						cmenu = $('<div/>').appendTo('body');
+	      						cmenu = $('</div>').appendTo('body');
 	      						cmenu.menu({
 	      					     	onClick: function(item){
 	      				                if (item.iconCls == 'icon-ok'){
@@ -426,8 +432,9 @@ function selectClick(){
 			
 	        }],  
 	        onBeforeOpen : function() {
-				
-	        	$('#select2').attr('id', 'pro_' + query);
+// 	        	$('#jxc_select_addDialog').attr('id', 'dialog_' + query);
+// 	        	$('#dialog_' + query).dialog("destroy").remove();    
+// 	        	$('#select2').attr('id', 'pro_' + query);
 	        	var stars="<table width='100%'>";			
 				var i=0;
 				stars += '<tr>';
@@ -448,12 +455,7 @@ function selectClick(){
 				stars +='</table>';
 				//初始化显示页面
 //  				$('#pro_' + query).html('');
-// 				console.info(stars);
 				$('#pro_' + query).html(stars);
-// 				console.info(stars);
-// 				console.info($('#pro_' + query));
-//  				stars='';
-				//绑定button点击事件			
 			},	
 		});
 	}	
@@ -643,7 +645,7 @@ function exportExcel(){
 					class="easyui-linkbutton"
 					data-options="iconCls:'icon-reload',plain:true"
 					onclick="cleanClick();">清除</a>
-<!-- 					<div id="bzShow"  name="bzShow"  align="center"></div> -->
+
 			</div>
 			<div id='selectcommon' data-options="region:'center',border:false"></div>
 

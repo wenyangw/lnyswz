@@ -32,6 +32,18 @@ table th.query{
 	padding-left:10px;
 }
 
+table th.queryField{
+	text-align: left;
+	width: 150px;
+	padding-left:10px;
+}
+
+table th.queryOpe{
+	text-align: right;
+	width: 50px;
+	padding-left:10px;
+}
+
 .read{
 	color: #8F5700;
 }
