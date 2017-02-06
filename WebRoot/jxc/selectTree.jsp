@@ -37,18 +37,17 @@ $(function(){
 	eval("var hql_"+query+"=''");
 	var string;
 
-	$('#selectcommonTree').attr('id', 'sc_' + query);
-	$('#select_treeShow_layout').attr('id', 'stl_' + query);
-	$('#select_tree').attr('id', 'str_' + query);
-	$('#select2').attr('id', 'pro_' + query);
-	$('#jxc_select_dg').attr('id', 'jsd_' + query);
-	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);
-	$('#bzTreeShow').attr('id', 'bzTreeShow' + query);
+	$('#jxc_selectTree_layout').attr('id', 'jxc_selectTree_layout' + query);//查询页面父类div
+	$('#selectcommonTree').attr('id', 'sc_' + query);//查询条件内容
+	$('#select2').attr('id', 'pro_' + query);//查询结果显示字段
+	$('#jxc_select_addDialog').attr('id', 'jsa_' + query);//查询结果显示字段父页面div
+	$('#select_treeShow_layout').attr('id', 'stl_' + query);//查询结果显示父div
+	$('#select_tree').attr('id', 'str_' + query);//查询结果显示视图
+	$('#jxc_select_dg').attr('id', 'jsd_' + query);//查询结果显示详细内容
 // 	$('#select_tree_dep').attr('id','select_tree_dep_'+query);
-	$('#jxc_selectTree_layout').attr('id', 'jxc_selectTree_layout' + query);
-	$('#div_select_tree').attr('id','div_tree_select_'+query);
-	$('#exportExcelTree_sql').attr('id', 'exportExcelTree_sql' + query);
-	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);
+//  $('#div_select_tree').attr('id','div_tree_select_'+query);
+	$('#exportExcelTree_sql').attr('id', 'exportExcelTree_sql' + query);//导出报表视图语句
+	$('#exportExcel_sql').attr('id', 'exportExcel_sql' + query);//导出报表语句
 	//创建对象 obj类型
 	dataClass=Object.create(Object.prototype);
 	checkeds=Object.create(Object.prototype);	
@@ -95,48 +94,48 @@ $(function(){
 			if(isNeedDepTree=="true"){
 				if(did>='09'){
 					star += '<tr>';
-					star += '<th align="left">部门 </th>';
-					star += '<th align="left"> </th><td class="tdTitle">&#12288;<input id="select_tree_dep_' + query  + '" class="inputval"  name="select_tree_depName" style="width:104px;" ></td>';
+					star += '<th   class="query_field" align="left">部门 </th>';
+					star += '<td   class="query_ope" align="left"> </td><td  class="query_int" >&#12288;<input id="select_tree_dep_' + query  + '" class="inputval"  name="select_tree_depName" style="width:104px;" ></td>';
 					star += '</tr>';
 				}
 			}
 			$.each(data,function(){
 				star += '<tr>';
-				star += '<th align="left">'+this.cname+'</th>';
+				star += '<th  class="query_field"  align="left">'+this.cname+'</th>';
 				if(this.specials=="time"){
-					star += '<td align="right">开始日期</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
+					star += '<td  class="query_ope"  align="right">开始日期</td><td  class="query_int"  >&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().date(1).format('YYYY-MM-DD')+'" ';
 					star += 'name='+this.ename+' size="12"></td>';
-					star += '</tr><tr><th></th><td align="right">结束日期</td>';
-					star += '<td>&#12288;<input id="b_'+this.ename+query+'"';
+					star += '</tr><tr><th  class="query_field" ></th> <td  class="query_ope"  align="right">结束日期</td>';
+					star += '<td  class="query_int" >&#12288;<input id="b_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += 'name='+this.ename+' size="12"></td>';
 					//checkeds[this.ename]="";
 				}else if(this.specials=="selectBox"){
-					star += '<th align="left"> </th><td class="tdTitle'+query+'">&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';				
+					star += '<td  class="query_ope"  align="left"> </th><td  class="query_int"  >&#12288;<input id="select_'+this.ename+'" class="inputval'+query+'"  name="select_'+this.ename+'" style="width:104px;" ></td>';				
 				}else if(this.specials=="sjzsj"){
-					star += '<td align="right">起始月份</td><td>&#12288;<input id="a_'+this.ename+query+'"'; 
+					star += '<td   class="query_ope"  align="right">起始月份</td><td  class="query_int" >&#12288;<input id="a_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
-					star += '</tr><tr><th></th><td align="right">结束月份</td>';
-					star += '<td>&#12288;<input id="b_'+this.ename+query+'"';
+					star += '</tr><tr><th  class="query_field" ></th><td  class="query_ope"  align="right">结束月份</td>';
+					star += '<td  class="query_int" >&#12288;<input id="b_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 				}else if(this.specials=="scope"){
-					star += '<td align="right">起始范围</td><td>&#12288;<input id="c_'+this.ename+query+'"'; 
+					star += '<td  class="query_ope"  align="right">起始范围</td><td  class="query_int"  >&#12288;<input id="c_'+this.ename+query+'"'; 
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
-					star += '</tr><tr><th></th><td align="right">结束范围</td>';
-					star += '<td>&#12288;<input id="d_'+this.ename+query+'"';
+					star += '</tr><tr><th  class="query_field" ></th><td  class="query_ope"  align="right">结束范围</td>';
+					star += '<td  class="query_int" >&#12288;<input id="d_'+this.ename+query+'"';
 					star += 'class="inputval'+query+'" name='+this.ename+' style="width:100px;"></td>';
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
- 						star += '<td>&#12288;<input class="inputval'+query+'" id='+this.ename+query+' name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
+						star += '<td   class="query_ope" >&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
+ 						star += '<td class="query_int" >&#12288;<input class="inputval'+query+'" id='+this.ename+query+' name='+this.ename+' value='+eval(this.specialValues)+' style="width:100px;"></td>';
 					}else{
 					//将checked属性名设置为：字典英文名，属性值设置为：“checked”。					
-						star += '<td class="tdTitle'+query+'">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;" ></td>';
-						star += '<td>&#12288;<input class="inputval'+query+'" id="'+this.ename+query+'"  name="'+this.ename+'" style="width:100px;"></td>';
+						star += '<td class="query_ope"  >&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;" ></td>';
+						star += '<td class="query_int" >&#12288;<input class="inputval'+query+'" id="'+this.ename+query+'"  name="'+this.ename+'" style="width:100px;"></td>';
 					}
 					if(this.show != null && this.show.trim().length > 0 ){
- 						star += '<tr><td></td><td></td><td class="show">&#12288;'+this.show+'</td></tr>';
+ 						star += '<tr><th class="query_field" ></th><td class="query_ope" ></td><td class="query_int"  >&#12288;'+this.show+'</td></tr>';
 					}
 				}				
 				checkeds[this.ename]="checked";
@@ -621,7 +620,7 @@ function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 
 	var cmenu;
 	function createColumnMenuTree(){
-			cmenu = $('<div/>').appendTo('body');
+			cmenu = $('</div>').appendTo('body');
 			cmenu.menu({
 		     	onClick: function(item){
 	                if (item.iconCls == 'icon-ok'){
@@ -953,7 +952,7 @@ function exportExcel(){
 <!-- 							class="inputval" name="select_tree_depName" style="width: 104px;"></td> -->
 <!-- 					</tr> -->
 <!-- 				</div> -->
-				<div id="bzTreeShow"  name="bzTreeShow"  align="center"></div>
+			
 			</div>
 			<div id='selectcommonTree'
 				data-options="region:'center',border:false"></div>
