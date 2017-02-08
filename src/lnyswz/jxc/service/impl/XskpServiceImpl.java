@@ -1053,8 +1053,8 @@ public class XskpServiceImpl implements XskpServiceI {
 	 */
 	@Override
 	public DataGrid toXsth(String xskpDetIds){
-		String sql = "select spbh, isnull(zdwsl, 0) kpsl, isnull(thsl, 0) thsl from t_xskp_det where zdwsl <> thsl";
-		sql += " and id in (" + xskpDetIds + ")";
+		//String sql = "select spbh, isnull(zdwsl, 0) kpsl, isnull(thsl, 0) thsl from t_xskp_det where zdwsl <> thsl";
+		//sql += " and id in (" + xskpDetIds + ")";
 		
 		String hql = "from TXskpDet t where t.zdwsl <> t.thsl and t.id in (" + xskpDetIds + ")";
 		List<TXskpDet> ll = detDao.find(hql);
