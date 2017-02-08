@@ -167,20 +167,51 @@ public class YszzServiceImpl implements YszzServiceI {
 		}
 		return Constant.BD_ZERO; 
 	}
-	
+	/**
+	 * 销售回款时根据选定业务员列出对应的客户列表
+	 * 2017-02-08
+	 * @param bmbh
+	 * @param ywyId
+	 * @param yszzDao
+	 * @return
+	 */
 	public static List<Kh> getKhsByYwy(String bmbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-		String hql = "from TYszz t where t.bmbh = :bmbh and t.ywyId = :ywyId and t.jzsj = :jzsj and t.ywyId > 0";
+		/*String hql = "from TYszz t where t.bmbh = :bmbh and t.ywyId = :ywyId and t.jzsj = :jzsj and t.ywyId > 0";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", bmbh);
 		params.put("ywyId", ywyId);
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
-		List<TYszz> tYszzs = yszzDao.find(hql, params);
-		List<Kh> khs = new ArrayList<Kh>();
+		List<TYszz> tYszzs = yszzDao.find(hql, params);*/
+		
+		/*List<Kh> khs = new ArrayList<Kh>();
 		
 		for(TYszz t : tYszzs){
 			Kh kh = new Kh();
 			kh.setKhbh(t.getKhbh());
 			kh.setKhmc(t.getKhmc());
+			
+			khs.add(kh);
+		}*/
+		
+		String sql = "select distinct mx.khbh, kh.khmc from "
+				+ " (select khbh from t_kh_det where depId = ? and ywyId = ?"
+				+ " union all"
+				+ " select khbh from t_yszz where jzsj = ? and bmbh = ? and ywyId = ?) mx"
+				+ " left join t_kh kh on mx.khbh = kh.khbh";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", ywyId);
+		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
+		params.put("3", bmbh);
+		params.put("4", ywyId);
+		
+		List<Object[]> results = yszzDao.findBySQL(sql, params);
+		List<Kh> khs = new ArrayList<Kh>();
+		
+		for(Object[] o : results){
+			Kh kh = new Kh();
+			kh.setKhbh(o[0].toString());
+			kh.setKhmc(o[1].toString());
 			
 			khs.add(kh);
 		}

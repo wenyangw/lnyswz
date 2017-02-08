@@ -1,7 +1,3 @@
-$.extend($.fn.datagrid.defaults, {
-	autoUpdateDetail: true  // Define if update the row detail content when update a row
-});
-
 var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 	render: function(target, container, frozen){
 		var state = $.data(target, 'datagrid');
@@ -37,11 +33,10 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 			
 			table.push('<tr style="display:none;">');
 			if (frozen){
-				table.push('<td colspan=' + (fields.length+(opts.rownumbers?1:0)) + ' style="border-right:0">');
+				table.push('<td colspan=' + (fields.length+2) + ' style="border-right:0">');
 			} else {
 				table.push('<td colspan=' + (fields.length) + '>');
 			}
-
 			table.push('<div class="datagrid-row-detail">');
 			if (frozen){
 				table.push('&nbsp;');
@@ -49,7 +44,6 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 				table.push(opts.detailFormatter.call(target, i, rows[i]));
 			}
 			table.push('</div>');
-
 			table.push('</td>');
 			table.push('</tr>');
 			
@@ -158,11 +152,12 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 		this.canUpdateDetail = true;
 		
 		function _insert(frozen){
-			var tr = opts.finder.getTr(target, index, 'body', frozen?1:2);
+			var v = frozen ? view1 : view2;
+			var tr = v.find('tr[datagrid-row-index='+index+']');
+			
 			if (isAppend){
-				var detail = tr.next();
 				var newDetail = tr.next().clone();
-				tr.insertAfter(detail);
+				tr.insertAfter(tr.next());
 			} else {
 				var newDetail = tr.next().next().clone();
 			}
@@ -191,7 +186,7 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 		$(target).datagrid('getExpander', rowIndex).attr('class',cls);
 		
 		// update the detail content
-		if (opts.autoUpdateDetail && this.canUpdateDetail){
+		if (this.canUpdateDetail){
 			var row = $(target).datagrid('getRows')[rowIndex];
 			var detail = $(target).datagrid('getRowDetail', rowIndex);
 			detail.html(opts.detailFormatter.call(target, rowIndex, row));
@@ -200,10 +195,6 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 	
 	bindEvents: function(target){
 		var state = $.data(target, 'datagrid');
-
-		if (state.ss.bindDetailEvents){return;}
-		state.ss.bindDetailEvents = true;
-
 		var dc = state.dc;
 		var opts = state.options;
 		var body = dc.body1.add(dc.body2);
@@ -259,14 +250,11 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 				td.prependTo(t.find('tr:first'));
 			}
 		}
-
-		// if (!state.bindDetailEvents){
-		// 	state.bindDetailEvents = true;
-		// 	var that = this;
-		// 	setTimeout(function(){
-		// 		that.bindEvents(target);
-		// 	},0);
-		// }
+		
+		var that = this;
+		setTimeout(function(){
+			that.bindEvents(target);
+		},0);
 	},
 	
 	onAfterRender: function(target){
@@ -280,64 +268,34 @@ var detailview = $.extend({}, $.fn.datagrid.defaults.view, {
 		
 		if (!state.onResizeColumn){
 			state.onResizeColumn = opts.onResizeColumn;
-			opts.onResizeColumn = function(field, width){
-				if (!opts.fitColumns){
-					resizeDetails();				
-				}
-				var rowCount = $(target).datagrid('getRows').length;
-				for(var i=0; i<rowCount; i++){
-					$(target).datagrid('fixDetailRowHeight', i);
-				}
-				
-				// call the old event code
-				state.onResizeColumn.call(target, field, width);
-			};
 		}
 		if (!state.onResize){
 			state.onResize = opts.onResize;
-			opts.onResize = function(width, height){
-				if (opts.fitColumns){
-					resizeDetails();
-				}
-				state.onResize.call(panel, width, height);
-			};
 		}
-
-		// function resizeDetails(){
-		// 	var ht = dc.header2.find('table');
-		// 	var fr = ht.find('tr.datagrid-filter-row');
-		// 	fr.hide();
-		// 	var ww = ht.width()-1;
-		// 	var details = dc.body2.find('>table.datagrid-btable>tbody>tr>td>div.datagrid-row-detail:visible')._outerWidth(ww);
-		// 	details.find('.easyui-fluid').trigger('_resize');
-		// 	fr.show();
-		// }
-		function resizeDetails(){
-			var details = dc.body2.find('>table.datagrid-btable>tbody>tr>td>div.datagrid-row-detail:visible');
-			if (details.length){
-				var ww = 0;
-				dc.header2.find('.datagrid-header-check:visible,.datagrid-cell:visible').each(function(){
-					ww += $(this).outerWidth(true) + 1;
-				});
-				if (ww != details.outerWidth(true)){
-					details._outerWidth(ww);
-					details.find('.easyui-fluid').trigger('_resize');
-				}
-			}
+		function setBodyTableWidth(){
+			var columnWidths = dc.view2.children('div.datagrid-header').find('table').width();
+			dc.body2.children('table').width(columnWidths);
 		}
 		
+		opts.onResizeColumn = function(field, width){
+			setBodyTableWidth();
+			var rowCount = $(target).datagrid('getRows').length;
+			for(var i=0; i<rowCount; i++){
+				$(target).datagrid('fixDetailRowHeight', i);
+			}
+			
+			// call the old event code
+			state.onResizeColumn.call(target, field, width);
+		};
+		opts.onResize = function(width, height){
+			setBodyTableWidth();
+			state.onResize.call(panel, width, height);
+		};
 		
 		this.canUpdateDetail = true;	// define if to update the detail content when 'updateRow' method is called;
 		
-		var footer = dc.footer1.add(dc.footer2);
-		footer.find('span.datagrid-row-expander').css('visibility', 'hidden');
+		dc.footer1.find('span.datagrid-row-expander').css('visibility', 'hidden');
 		$(target).datagrid('resize');
-
-		this.bindEvents(target);
-		var detail = dc.body1.add(dc.body2).find('div.datagrid-row-detail');
-		detail.unbind().bind('mouseover mouseout click dblclick contextmenu scroll', function(e){
-			e.stopPropagation();
-		});
 	}
 });
 
@@ -370,8 +328,7 @@ $.extend($.fn.datagrid.methods, {
 	getRowDetail: function(jq, index){
 		var opts = $.data(jq[0], 'datagrid').options;
 		var tr = opts.finder.getTr(jq[0], index, 'body', 2);
-		// return tr.next().find('div.datagrid-row-detail');
-		return tr.next().find('>td>div.datagrid-row-detail');
+		return tr.next().find('div.datagrid-row-detail');
 	},
 	expandRow: function(jq, index){
 		return jq.each(function(){
@@ -413,120 +370,3 @@ $.extend($.fn.datagrid.methods, {
 	}
 });
 
-$.extend($.fn.datagrid.methods, {
-	subgrid: function(jq, conf){
-		return jq.each(function(){
-			createGrid(this, conf);
-
-			function createGrid(target, conf, prow){
-				var queryParams = $.extend({}, conf.options.queryParams||{});
-				// queryParams[conf.options.foreignField] = prow ? prow[conf.options.foreignField] : undefined;
-				if (prow){
-					var fk = conf.options.foreignField;
-					if ($.isFunction(fk)){
-						$.extend(queryParams, fk.call(conf, prow));
-					} else {
-						queryParams[fk] = prow[fk];
-					}
-				}
-
-				var plugin = conf.options.edatagrid ? 'edatagrid' : 'datagrid';
-
-				$(target)[plugin]($.extend({}, conf.options, {
-					subgrid: conf.subgrid,
-					view: (conf.subgrid ? detailview : undefined),
-					queryParams: queryParams,
-					detailFormatter: function(index, row){
-						return '<div><table class="datagrid-subgrid"></table></div>';
-					},
-					onExpandRow: function(index, row){
-						var opts = $(this).datagrid('options');
-						var rd = $(this).datagrid('getRowDetail', index);
-						var dg = getSubGrid(rd);
-						if (!dg.data('datagrid')){
-							createGrid(dg[0], opts.subgrid, row);
-						}
-						rd.find('.easyui-fluid').trigger('_resize');
-						setHeight(this, index);
-						if (conf.options.onExpandRow){
-							conf.options.onExpandRow.call(this, index, row);
-						}
-					},
-					onCollapseRow: function(index, row){
-						setHeight(this, index);
-						if (conf.options.onCollapseRow){
-							conf.options.onCollapseRow.call(this, index, row);
-						}
-					},
-					onResize: function(){
-						var dg = $(this).children('div.datagrid-view').children('table')
-						setParentHeight(this);
-					},
-					onResizeColumn: function(field, width){
-						setParentHeight(this);
-						if (conf.options.onResizeColumn){
-							conf.options.onResizeColumn.call(this, field, width);
-						}
-					},
-					onLoadSuccess: function(data){
-						setParentHeight(this);
-						if (conf.options.onLoadSuccess){
-							conf.options.onLoadSuccess.call(this, data);
-						}
-					}
-				}));
-			}
-			function getSubGrid(rowDetail){
-				var div = $(rowDetail).children('div');
-				if (div.children('div.datagrid').length){
-					return div.find('>div.datagrid>div.panel-body>div.datagrid-view>table.datagrid-subgrid');
-				} else {
-					return div.find('>table.datagrid-subgrid');
-				}
-			}
-			function setParentHeight(target){
-				var tr = $(target).closest('div.datagrid-row-detail').closest('tr').prev();
-				if (tr.length){
-					var index = parseInt(tr.attr('datagrid-row-index'));
-					var dg = tr.closest('div.datagrid-view').children('table');
-					setHeight(dg[0], index);
-				}
-			}
-			function setHeight(target, index){
-				$(target).datagrid('fixDetailRowHeight', index);
-				$(target).datagrid('fixRowHeight', index);
-				var tr = $(target).closest('div.datagrid-row-detail').closest('tr').prev();
-				if (tr.length){
-					var index = parseInt(tr.attr('datagrid-row-index'));
-					var dg = tr.closest('div.datagrid-view').children('table');
-					setHeight(dg[0], index);
-				}
-			}
-		});
-	},
-	getSelfGrid: function(jq){
-		var grid = jq.closest('.datagrid');
-		if (grid.length){
-			return grid.find('>.datagrid-wrap>.datagrid-view>.datagrid-f');
-		} else {
-			return null;
-		}
-	},
-	getParentGrid: function(jq){
-		var detail = jq.closest('div.datagrid-row-detail');
-		if (detail.length){
-			return detail.closest('.datagrid-view').children('.datagrid-f');
-		} else {
-			return null;
-		}
-	},
-	getParentRowIndex: function(jq){
-		var detail = jq.closest('div.datagrid-row-detail');
-		if (detail.length){
-			var tr = detail.closest('tr').prev();
-			return parseInt(tr.attr('datagrid-row-index'));
-		} else {
-			return -1;
-		}
-	}
-});

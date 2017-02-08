@@ -624,7 +624,7 @@ function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 			cmenu.menu({
 		     	onClick: function(item){
 	                if (item.iconCls == 'icon-ok'){
-	                	$('#jsd_' + query).datagrid('hideTreeColumn', item.name);
+	                	$('#jsd_' + query).datagrid('hideColumn', item.name);
 	                    cmenu.menu('setIcon', {
 	                    	target: item.target,
 	                   		iconCls: 'icon-empty'
@@ -696,9 +696,9 @@ function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 function hideTree(isTree,data){
 	$.each(data,function(){
 		if(isTree == '1'){
-			$('#str_' + query).datagrid('hideTreeColumn', this);
+			$('#str_' + query).datagrid('hideColumn', this);
 		}else{
-			$('#jsd_' + query).datagrid('hideTreeColumn', this);
+			$('#jsd_' + query).datagrid('hideColumn', this);
 		}
 	
 		
