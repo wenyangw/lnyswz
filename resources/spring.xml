@@ -10,25 +10,13 @@
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd
 ">
-<!-- http://cxf.apache.org/jaxws      -->
-<!--         http://cxf.apache.org/schemas/jaxws.xsd -->
 
-<!-- 	 <import resource="classpath:META-INF/cxf/cxf.xml" /> -->
-	 
-<!-- 	 <bean id="lg2prImpl" class="lnyswz.jxc.service.impl.WebServiceImpl" /> -->
-
-	<!-- 2:通过jaxws:server方式来配置webservice -->
-<!--     <jaxws:server serviceClass="lnyswz.jxc.service.WebServiceI" -->
-<!--     	address="/lg2pr"> -->
-<!--         <jaxws:serviceBean> -->
-<!--             <ref bean="lg2prImpl" /> -->
-<!--         </jaxws:serviceBean> -->
-<!--     </jaxws:server> -->
 
 	<!-- 引入属性文件 -->
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<!-- 自动扫描dao和service包(自动注入) -->
 	<context:component-scan base-package="lnyswz.jxc.dao,lnyswz.jxc.service,lnyswz.common.dao" />
+	
 
 </beans>

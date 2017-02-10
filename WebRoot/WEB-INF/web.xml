@@ -59,10 +59,7 @@
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
 	
-	<listener>
-    	<listener-class>lnyswz.jxc.listener.WebServicePublishListener</listener-class>
-  	</listener>
-  	
+
 	<!-- spring监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -82,16 +79,21 @@
 		<url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
 	
-	<!-- Web Service 2016-11-07 -->
-<!-- 	<servlet> -->
-<!--         <servlet-name>CXFService</servlet-name> -->
-<!--         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class> -->
-<!--     </servlet> -->
-<!--     <servlet-mapping> -->
-<!--         <servlet-name>CXFService</servlet-name> -->
-<!--         <url-pattern>/ws/*</url-pattern> -->
-<!--     </servlet-mapping> -->
+	<listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
 
+    <servlet>
+        <servlet-name>WSServlet</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WSServlet</servlet-name>
+        <url-pattern>/ws/*</url-pattern>
+    </servlet-mapping>
+	
 	<!-- 配置session超时时间，单位分钟 -->
 	<session-config>
 		<session-timeout>360</session-timeout>

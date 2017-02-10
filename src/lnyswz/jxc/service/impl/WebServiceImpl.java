@@ -41,7 +41,7 @@ import lnyswz.jxc.service.WebServiceI;
  * SEI的具体实现
  */
 //使用@WebService注解标注WebServiceI接口的实现类WebServiceImpl
-@WebService
+@WebService(endpointInterface = "lnyswz.jxc.service.WebServiceI")
 public class WebServiceImpl implements WebServiceI {
 
 	private BaseDaoI<TDepartment> depDao;
@@ -52,8 +52,9 @@ public class WebServiceImpl implements WebServiceI {
 
 	@Override
 	public String lg2pr(@WebParam(name="xml")String xml) {
-		//TDepartment tDep = depDao.load(TDepartment.class, "05");
-		//System.out.println(tDep.getDepName());
+		TDepartment tDep = depDao.load(TDepartment.class, "05");
+		System.out.println("----------------------");
+		System.out.println(tDep.getDepName());
 		
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
