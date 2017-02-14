@@ -24,6 +24,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,6 +42,7 @@ import lnyswz.jxc.service.WebServiceI;
  * SEI的具体实现
  */
 //使用@WebService注解标注WebServiceI接口的实现类WebServiceImpl
+@Service
 @WebService(endpointInterface = "lnyswz.jxc.service.WebServiceI")
 public class WebServiceImpl implements WebServiceI {
 
