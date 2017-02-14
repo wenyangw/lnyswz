@@ -1198,6 +1198,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			nl.add(c);
 			c = null;
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(xskpDao.count(countHql.toString(), params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1233,6 +1235,8 @@ public class XskpServiceImpl implements XskpServiceI {
 						
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(xskpDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1261,6 +1265,8 @@ public class XskpServiceImpl implements XskpServiceI {
 //			}
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setRows(nl);
 		return datagrid;
 	}
@@ -1304,6 +1310,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			BeanUtils.copyProperties(tXskp, c);
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1354,6 +1362,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			nl.add(det);
 		}
+		tDets.clear();
+		tDets = null;
 		nl.add(new XskpDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
@@ -1391,6 +1401,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			x.setHkje(BigDecimal.ZERO);
 			xskps.add(x);
 		}
+		tXskps.clear();
+		tXskps = null;
 		dg.setObj(kh);
 		dg.setRows(xskps);
 		return dg;
@@ -1498,6 +1510,8 @@ public class XskpServiceImpl implements XskpServiceI {
 				x.setFyr(o.toString());
 				xskps.add(x);
 			}
+			fyrs.clear();
+			fyrs = null;
 			return xskps;
 		}
 		return null;

@@ -6,21 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
-import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
-import lnyswz.jxc.model.TFhzz;
 import lnyswz.jxc.model.TYszz;
-import lnyswz.jxc.service.FhzzServiceI;
 import lnyswz.jxc.service.YszzServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -31,7 +24,6 @@ import lnyswz.jxc.util.Constant;
  */
 @Service("yszzService")
 public class YszzServiceImpl implements YszzServiceI {
-	private Logger logger = Logger.getLogger(YszzServiceImpl.class);
 
 	/**
 	 * 更新应收
@@ -215,6 +207,8 @@ public class YszzServiceImpl implements YszzServiceI {
 			
 			khs.add(kh);
 		}
+		results.clear();
+		results = null;
 		
 		return khs;
 	}
