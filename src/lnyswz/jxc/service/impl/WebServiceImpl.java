@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.parsers.DocumentBuilder;
@@ -25,6 +26,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,7 +37,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.jxc.bean.Fyd;
 import lnyswz.jxc.model.TDepartment;
+import lnyswz.jxc.model.TFyd;
 import lnyswz.jxc.service.WebServiceI;
 
 /**
@@ -42,9 +47,9 @@ import lnyswz.jxc.service.WebServiceI;
  * SEI的具体实现
  */
 //使用@WebService注解标注WebServiceI接口的实现类WebServiceImpl
+@WebService (endpointInterface = "lnyswz.jxc.service.WebServiceI")
 @Service
-@WebService(endpointInterface = "lnyswz.jxc.service.WebServiceI")
-public class WebServiceImpl implements WebServiceI {
+public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebServiceI {
 
 	private BaseDaoI<TDepartment> depDao;
 	
@@ -162,6 +167,9 @@ public class WebServiceImpl implements WebServiceI {
 					return result("", "1", "没有包括" + fields[i]);
 				}
 			}
+			Fyd fyd = new Fyd();
+					
+			convertMap2PO(maps, fyd);
 		}
 		return result("", "0", "");
 	}
