@@ -53,15 +53,13 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 
 	private BaseDaoI<TDepartment> depDao;
 	
-	private Map<String, Object> maps; 
+	private Map<String, Object> maps;
 	private String[] fields = {"publisher", "publishercn", "checkCode", "tzdbh", "cbsydsno", "bsno", "bname", "yc", "sno", 
 			"zzgg", "xmdm", "xmmc", "cldm", "zzmc", "danjia", "gongj"}; 
 
 	@Override
 	public String lg2pr(@WebParam(name="xml")String xml) {
 		TDepartment tDep = depDao.load(TDepartment.class, "05");
-		System.out.println("----------------------");
-		System.out.println(tDep.getDepName());
 		
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
@@ -157,6 +155,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	/**
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
 	private String verify(){
 		if(maps.isEmpty()){
@@ -167,10 +166,11 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 					return result("", "1", "没有包括" + fields[i]);
 				}
 			}
-			Fyd fyd = new Fyd();
-					
-			convertMap2PO(maps, fyd);
 		}
+		
+		Fyd fyd = new Fyd();
+		convertMap2PO(maps, fyd);
+
 		return result("", "0", "");
 	}
 	
@@ -202,26 +202,34 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		return sb.toString();
 	}
 	
-	public Object convertMap2PO(Map<String,Object> map, Object o) throws Exception{  
+	public Object convertMap2PO(Map<String,Object> map, Object o){  
         if (!map.isEmpty()) {  
-            for (String k : map.keySet()) {  
+            for (String k : map.keySet()) {
                 Object v = "";  
                 if (!k.isEmpty()) {  
-                    v = map.get(k);  
+                    v = map.get(k);
                 }  
                 Field[] fields = null;  
-                fields = o.getClass().getDeclaredFields();  
-                String clzName = o.getClass().getSimpleName();  
+                fields = o.getClass().getDeclaredFields();
+                //String clzName = o.getClass().getSimpleName();  
                 //log.info("类："+o.getClass().getName());  
                 //log.info("***map转"+clzName+"开始****");  
                 for (Field field : fields) {  
                     int mod = field.getModifiers();  
                     if(Modifier.isStatic(mod) || Modifier.isFinal(mod)){  
                         continue;  
-                    }  
-                    if (field.getName().toUpperCase().equals(k)) {  
+                    }
+                    if (field.getName().toUpperCase().equals(k.toUpperCase())) {  
                         field.setAccessible(true);  
-                        field.set(o, v);  
+                        try {
+							field.set(o, v);
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}  
                         //log.info("key："+k+"value:"+v);  
                     }  
   
