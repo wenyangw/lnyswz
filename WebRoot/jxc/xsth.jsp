@@ -133,9 +133,10 @@ $(function(){
 	        {field:'ysfy',title:'运费',align:'center'},
 	        {field:'yysfy',title:'原运费',align:'center'},
 	        {field:'bookmc',title:'书名',align:'center',
-        		formatter: function(value){
-        			return lnyw.memo(value, 25);
-        		}},
+//         		formatter: function(value){
+//         			return lnyw.memo(value, 25);
+//         		}
+	        },
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);

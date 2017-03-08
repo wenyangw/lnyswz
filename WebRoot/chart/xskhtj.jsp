@@ -188,7 +188,7 @@ function xskhtj_getData(){
 		url: '${pageContext.request.contextPath}/jxc/chartAction!getXskhtj.action',
 		data: {
 			bmbh: xskhtj_bmbh,
-			ywyId: jxc_xskhtj_ywyCombo.combobox('getValue'),
+			//ywyId: jxc_xskhtj_ywyCombo.combobox('getValue'),
 			field: $('#jxc_xskhtj_tjlx').combobox('getValue'),
 			includeNb: $('input#jxc_xskhtj_nb').is(':checked') ? '1' : '0',
 		},

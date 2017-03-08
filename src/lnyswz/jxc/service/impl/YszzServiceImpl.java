@@ -200,12 +200,15 @@ public class YszzServiceImpl implements YszzServiceI {
 		List<Object[]> results = yszzDao.findBySQL(sql, params);
 		List<Kh> khs = new ArrayList<Kh>();
 		
+		Kh kh = null;
 		for(Object[] o : results){
-			Kh kh = new Kh();
-			kh.setKhbh(o[0].toString());
-			kh.setKhmc(o[1].toString());
+			if(o[0] != null && o[1] != null){
+				kh = new Kh();
+				kh.setKhbh(o[0].toString());
+				kh.setKhmc(o[1].toString());
+				khs.add(kh);
+			}
 			
-			khs.add(kh);
 		}
 		results.clear();
 		results = null;

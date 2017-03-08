@@ -26,6 +26,7 @@ import lnyswz.jxc.model.TSpdw;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.SpServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 商品实现类
@@ -133,11 +134,12 @@ public class SpServiceImpl implements SpServiceI {
 		params.put("depId", sp.getDepId());
 		String countHql = "select count(spbh) " + hql;
 		if(sp.getQuery() != null && sp.getQuery().trim().length() > 0){
-			String where = " and (t.spbh like :spbh or t.spmc like :spmc)";
+			//String where = " and (t.spbh like :spbh or t.spmc like :spmc)";
+			String where = " and (" + Util.getQueryWhere(sp.getQuery(), new String[]{"t.spbh", "t.spmc", "t.spcd"}, params)	+ ")";
 			hql += where;
 			countHql += where;
-			params.put("spbh", sp.getQuery() + "%");
-			params.put("spmc", "%" + sp.getQuery() + "%");
+			//params.put("spbh", sp.getQuery() + "%");
+			//params.put("spmc", "%" + sp.getQuery() + "%");
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
