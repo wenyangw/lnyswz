@@ -21,11 +21,16 @@ $(function(){
 
 	var fields = [{
 	    "id": 'xsje',
-	    "text": "销售金额(不含税)"
-	},{
-	    "id": 'xsml',
-	    "text": "销售毛利"
-	},];
+	    "text": "销售金额"
+	}];
+	
+	var years = [];
+	for(var i = 0; i < 3; i++){
+		var v = moment().year() - i;
+		years.push({"id": v, "text": v});
+	}
+	
+	
 	
 	if(xskhtj_did >= '10'){
 		//$('.bm').css('display','table-cell');
@@ -46,7 +51,7 @@ $(function(){
 		xskhtj_bmbh = xskhtj_did;
 	}
 	
-	jxc_xskhtj_ywyCombo = lnyw.initCombo($("#jxc_xskhtj_ywy"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xskhtj_bmbh);
+/* 	jxc_xskhtj_ywyCombo = lnyw.initCombo($("#jxc_xskhtj_ywy"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xskhtj_bmbh);
 	
 	$('input[name=jxc_xskhtj_nb]').prop('checked', true);
 	jxc_xskhtj_ywyCombo.combobox('disable');
@@ -56,13 +61,9 @@ $(function(){
 			jxc_xskhtj_ywyCombo.combobox('disable');
 		}else{
 			jxc_xskhtj_ywyCombo.combobox('enable');
-			//初始化业务员列表
-// 			if(jxc_xskhtj_ywyCombo == undefined){
-// 				jxc_xskhtj_ywyCombo = lnyw.initCombo($("#jxc_xskhtj_ywy"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xskhtj_bmbh);
-// 			}
 			jxc_xskhtj_ywyCombo.combobox('selectedIndex', 0);
 		}
-	});
+	}); */
 	
 	$('#jxc_xskhtj_tblx').combobox({
 	    data: types,
@@ -88,6 +89,14 @@ $(function(){
 	    onSelect: function(){
 	    	xskhtj_options.title.text = $(this).combobox('getText') + '对比分析';
 	    }
+	}).combobox('selectedIndex', 0);
+	
+	$('#jxc_xskhtj_year').combobox({
+	    data: years,
+	    width:100,
+	    valueField: 'id',
+	    textField: 'text',
+	    panelHeight: 'auto',
 	}).combobox('selectedIndex', 0);
 	
 	$('#export').click(function() {
@@ -129,24 +138,27 @@ var xskhtj_options = {
         renderTo: 'xskhtj_container',
     },
     title:{
-   		text: '销售金额(不含税)分析',
+   		text: '销售金额排名',
    		style: {
    			fontSize: '26px',
    		}
    	},
 	xAxis: {
-       	categories: []
-   	},
-       yAxis: {
+       	categories: [],
        	labels: {
-               formatter: function() {
-                   return this.value ;
-               }
-           },
-           title: {
-               text: '金额(万元)',                  //指定y轴的标题
-           },
-       },
+       		rotation: -45
+        }
+   	},
+    yAxis: {
+    	labels: {
+            formatter: function() {
+                return this.value ;
+            }
+        },
+        title: {
+            text: '金额(万元)',                  //指定y轴的标题
+        },
+    },
 //         plotOptions: {
 //             line: {
 //                 dataLabels: {
@@ -190,6 +202,7 @@ function xskhtj_getData(){
 			bmbh: xskhtj_bmbh,
 			//ywyId: jxc_xskhtj_ywyCombo.combobox('getValue'),
 			field: $('#jxc_xskhtj_tjlx').combobox('getValue'),
+			year: $('#jxc_xskhtj_year').combobox('getValue'),
 			includeNb: $('input#jxc_xskhtj_nb').is(':checked') ? '1' : '0',
 		},
 		cache: false,
@@ -207,8 +220,9 @@ function xskhtj_getData(){
 </script>
 <table width=100% style="margin:5px;"><tr>
 <td align="left"><span class="bm" style="display:none">部门：<input id="jxc_xskhtj_dep" name="jxc_xskhtj_dep"></span>
-&nbsp;&nbsp;&nbsp;&nbsp;全部<input type="checkbox" id="jxc_xskhtj_nb" name="jxc_xskhtj_nb">
-业务员：<input id="jxc_xskhtj_ywy" name="jxc_xskhtj_ywy">
+<!-- &nbsp;&nbsp;&nbsp;&nbsp;全部<input type="checkbox" id="jxc_xskhtj_nb" name="jxc_xskhtj_nb"> -->
+<!-- 业务员：<input id="jxc_xskhtj_ywy" name="jxc_xskhtj_ywy"> -->
+&nbsp;&nbsp;&nbsp;&nbsp;统计年度：<input id="jxc_xskhtj_year" name="jxc_xskhtj_year">
 &nbsp;&nbsp;&nbsp;&nbsp;统计类型：<input id="jxc_xskhtj_tjlx" name="jxc_xskhtj_tjlx">
 &nbsp;&nbsp;&nbsp;&nbsp;图表类型：<input id="jxc_xskhtj_tblx" name="jxc_xskhtj_tblx">
 &nbsp;&nbsp;&nbsp;&nbsp;<button id="refresh" onclick="xskhtj_getData()">刷新</button>
@@ -216,5 +230,7 @@ function xskhtj_getData(){
 </tr></table>
 <br>
 <div id="xskhtj_container" style="min-width:800px;height:400px"></div>
-<!-- <div style="margin:10px;">注：因系统切换、并行等原因，2014年1月的销售金额合并在2月，2014年1-4月的毛利统计不十分准确。</div> -->
+<div style="margin:20px;">1：在统计年度中销售金额前20名的客户，与上一年的对比</div>
+<div style="margin:20px;">2：统计数据的分类依据为（客户+业务员）</div>
+<div style="margin:20px;">3：统计年度为当年，数据截止到当月;统计年度为往年，数据截止到年底。</div>
 

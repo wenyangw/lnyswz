@@ -780,6 +780,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(tXsth.getCh() != null){
 			bz += " " + tXsth.getCh();
 		}
+		if(tXsth.getBookmc() != null){
+			bz += " /" + tXsth.getBookmc();
+		}
+		
 //		bz += xskplsh;
 		
 //		DecimalFormat df=new DecimalFormat("#,##0.00");

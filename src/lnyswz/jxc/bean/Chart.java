@@ -15,6 +15,7 @@ public class Chart{
 	
 	private String bmbh;
 	private String field;
+	private int year;
 	private String includeNb;
 	
 	public String getTitle() {
@@ -55,6 +56,14 @@ public class Chart{
 
 	public void setField(String field) {
 		this.field = field;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
 	}
 
 	public String getIncludeNb() {
