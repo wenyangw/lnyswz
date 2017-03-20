@@ -44,7 +44,6 @@ import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1198,6 +1197,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			nl.add(c);
 			c = null;
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(xskpDao.count(countHql.toString(), params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1233,6 +1234,8 @@ public class XskpServiceImpl implements XskpServiceI {
 						
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(xskpDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1261,6 +1264,8 @@ public class XskpServiceImpl implements XskpServiceI {
 //			}
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setRows(nl);
 		return datagrid;
 	}
@@ -1304,6 +1309,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			BeanUtils.copyProperties(tXskp, c);
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1354,6 +1361,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			nl.add(det);
 		}
+		tDets.clear();
+		tDets = null;
 		nl.add(new XskpDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
@@ -1391,6 +1400,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			x.setHkje(BigDecimal.ZERO);
 			xskps.add(x);
 		}
+		tXskps.clear();
+		tXskps = null;
 		dg.setObj(kh);
 		dg.setRows(xskps);
 		return dg;
@@ -1498,6 +1509,8 @@ public class XskpServiceImpl implements XskpServiceI {
 				x.setFyr(o.toString());
 				xskps.add(x);
 			}
+			fyrs.clear();
+			fyrs = null;
 			return xskps;
 		}
 		return null;

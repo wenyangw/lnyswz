@@ -26,8 +26,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-portal/jquery.portal.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/datepicker-4.8.b3/WdatePicker.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/momentjs-2.15.1/moment.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.0.3/highcharts.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.0.3/exporting.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.1.10/highcharts.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.1.10/exporting.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/json/json.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20170113"></script>

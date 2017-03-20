@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,6 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Cgjh;
-import lnyswz.jxc.bean.CgxqDet;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
@@ -34,22 +30,11 @@ import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.SpBgy;
 import lnyswz.jxc.bean.User;
-import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.Xsth;
 import lnyswz.jxc.bean.XsthDet;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TFh;
 import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TKfck;
-import lnyswz.jxc.model.TKfrk;
 import lnyswz.jxc.model.TKh;
-import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSpBgy;
@@ -58,9 +43,7 @@ import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TXsthDet;
-import lnyswz.jxc.model.TJsfs;
 import lnyswz.jxc.model.TYszz;
-import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.model.TZsqr;
@@ -80,7 +63,6 @@ import lnyswz.jxc.util.Util;
  */
 @Service("xsthService")
 public class XsthServiceImpl implements XsthServiceI {
-	private Logger logger = Logger.getLogger(XsthServiceImpl.class);
 	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
@@ -326,6 +308,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			
 		}
+		xsthDets.clear();
+		xsthDets = null;
 		tXsth.setTXsthDets(tDets);
 		xsthDao.save(tXsth);
 		
@@ -506,6 +490,8 @@ public class XsthServiceImpl implements XsthServiceI {
 				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
 			}
 		}
+		yTXsthDets.clear();
+		yTXsthDets = null;
 
 		if(ywrks != null && ywrks.size() > 0){
 			yTXsth.setTYwrks(null);
@@ -542,6 +528,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			j++;
 		}
+		dets.clear();
+		dets = null;
 		int num = nl.size();
 		if (num < Constant.REPORT_NUMBER) {
 			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
@@ -628,7 +616,9 @@ public class XsthServiceImpl implements XsthServiceI {
 			nl.add(xsthDet);
 		}
 		TXsth tXsth = dets.get(0).getTXsth();
-					
+		
+		
+		
 		int num = nl.size();
 		if (num < 4) {
 			for (int i = 0; i < (4 - num); i++) {
@@ -648,6 +638,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
+		
+		dets.clear();
+		dets = null;
 		return datagrid;
 	}
 
@@ -658,7 +651,6 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
-		int j = 0;
 		String hql = "from TXsthDet t where t.TXsth.xsthlsh = :xsthlsh order by t.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("xsthlsh", xsth.getXsthlsh());
@@ -720,6 +712,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
+		
+		dets.clear();
+		dets = null;
 		return datagrid;
 	}
 	
@@ -728,7 +723,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		
-		List<XsthDet> nl = new ArrayList<XsthDet>();
+		List<XsthDet> nl = new ArrayList<XsthDet>(tXsth.getTXsthDets().size());
 		BigDecimal hjsl = Constant.BD_ZERO;
 //		int j = 0;
 //		Set<TXskp> xskps = null;
@@ -785,6 +780,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(tXsth.getCh() != null){
 			bz += " " + tXsth.getCh();
 		}
+		if(tXsth.getBookmc() != null){
+			bz += " /" + tXsth.getBookmc();
+		}
+		
 //		bz += xskplsh;
 		
 //		DecimalFormat df=new DecimalFormat("#,##0.00");
@@ -818,6 +817,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("bgyName", userDao.load(TUser.class, xsth.getBgyId()).getRealName());
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
+		
+		tXsth = null;
 		return datagrid;
 	}
 	
@@ -845,6 +846,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			dg.setRows(bgys);
 			return dg;
 		}
+		
+		l.clear();
+		l = null;
+		
 		return null;
 	}
 	
@@ -908,6 +913,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		datagrid.setTotal(xsthDao.count(countHql, params));
 		datagrid.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return datagrid;
 	}
 
@@ -997,6 +1006,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			nl.add(c);
 		}
 		datagrid.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return datagrid;
 	}
 	
@@ -1125,6 +1138,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return datagrid;
 	}
 	
@@ -1213,6 +1230,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		nl.add(new XsthDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return dg;
 		
 	}
@@ -1263,6 +1284,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		nl.add(new XsthDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return dg;
 	}
 	
@@ -1549,6 +1574,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		nl.add(new XsthDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
+		
+		l.clear();
+		l = null;
+		
 		return dg;
 		
 	}

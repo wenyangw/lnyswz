@@ -89,20 +89,18 @@ public class ChartServiceImpl implements ChartServiceI {
 	
 	@Override
 	public Chart getXskhtj(Chart chart) {
-		String sql = "";
+		String sql = null;
 		if(chart.getField().equals("xsje")){
-			sql = "select jzsj, round(xsje / 10000, 2)";
+			sql = "exec p_tj_khxs ?, ?";
+			//sql = "select top 20 ywymc, khmc, round(xsje / 10000, 2) xsje, round(bxsje / 10000, 2) bxsje";
 		}else if(chart.getField().equals("xsml")){
-			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
+			sql = "";
 		}
-		if(chart.getIncludeNb().equals("1")){
-			sql += " from v_xstj";
-		}else{
-			sql += " from v_xstj_nonb";
-		}
-		sql += " where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
+		//sql += " from v_xskhtj";
 		
-		return getChartByMonth(chart, sql);
+		//sql += " where bmbh = ? and jzsj = ? order by xsje desc";
+		
+		return getChartByColumn(chart, sql);
 	}
 
 	
@@ -147,7 +145,47 @@ public class ChartServiceImpl implements ChartServiceI {
 		return c;
 	}
 
-	
+	private Chart getChartByColumn(Chart chart, String sql) {
+		Chart c = new Chart();
+		
+		List<Serie> series = new ArrayList<Serie>();
+					
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", chart.getBmbh());
+		params.put("1", chart.getYear());
+		List<Object[]> lists = xskpDao.findBySQL(sql, params);
+		
+		
+		
+		List<String> categories = new ArrayList<String>();
+		List<Object> data1 = new ArrayList<Object>();
+		List<Object> data2 = new ArrayList<Object>();
+		
+		if(lists != null && lists.size() > 0){
+			for(Object[] o : lists){
+				categories.add(o[1].toString() + "<br>" + o[0].toString());
+				data1.add(o[2]);
+				data2.add(o[3]);
+			}
+			
+		}
+		
+		
+		Serie serie = new Serie();
+		serie.setName(chart.getYear() + "年");
+		serie.setData(data1);
+		series.add(serie);
+		
+		serie = new Serie();
+		serie.setName(chart.getYear() - 1 + "年");
+		serie.setData(data2);
+		series.add(serie);
+		
+		c.setSeries(series);
+		c.setCategories(categories);
+		
+		return c;
+	}
 
 	private Chart getChartByMonth(Chart chart, String sql) {
 		Chart c = new Chart();

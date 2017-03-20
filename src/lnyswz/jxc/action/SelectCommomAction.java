@@ -82,6 +82,8 @@ public class SelectCommomAction extends BaseAction implements
 			out = new FileOutputStream(address);
 			ex.exportExcel(headers, dataset, out,hidNum);
 			out.close();
+			dataset.clear();
+			dataset = null;
 			j.setSuccess(true);
 			j.setObj(location);
 			j.setMsg("导出成功");
