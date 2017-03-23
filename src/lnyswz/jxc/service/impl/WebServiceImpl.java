@@ -10,7 +10,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,7 +35,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import lnyswz.common.dao.BaseDaoI;
-import lnyswz.jxc.bean.Fyd;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TFyd;
 import lnyswz.jxc.service.WebServiceI;
@@ -168,7 +165,8 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			}
 		}
 		
-		Fyd fyd = new Fyd();
+		TFyd fyd = new TFyd();
+
 		convertMap2PO(maps, fyd);
 
 		return result("", "0", "");
