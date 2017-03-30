@@ -1846,16 +1846,16 @@ function printXsht(){
  		if(selected.isCancel == '0'){
  			if(selected.isKp == '0'){
  				//if(selected.isZs == '1'){
- 					if(selected.needAudit == selected.isAudit){
+ 					//if(selected.needAudit == selected.isAudit){
 					 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
 								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 							}
 						});
- 					}else{
- 						$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
- 					}
+ 					//}else{
+ 					//	$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
+ 					//}
 //  	 			}else{
 //  	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
 //  	 	 		}
@@ -1877,7 +1877,7 @@ function exportXsht(){
  		if(selected.isCancel == '0'){
  			if(selected.isKp == '0'){
  				//if(selected.isZs == '1'){
- 					if(selected.needAudit == selected.isAudit){
+ 					//if(selected.needAudit == selected.isAudit){
 					 	$.messager.confirm('请确认', '是否导出销售合同？', function(r) {
 							if (r) {
 								var data = {
@@ -1888,9 +1888,9 @@ function exportXsht(){
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
 							}
 						});
- 					}else{
- 						$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
- 					}
+ 					//}else{
+ 					//	$.messager.alert('警告', '选择的记录还未审批 ，请重新选择！',  'warning');
+ 					//}
 //  	 			}else{
 //  	 	 			$.messager.alert('警告', '选择的记录不是直送业务 ，请重新选择！',  'warning');
 //  	 	 		}
