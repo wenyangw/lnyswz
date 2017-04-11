@@ -38,7 +38,7 @@ public class TFydDet implements java.io.Serializable {
 	private String ysfs;
 	private String pname;
 	private String clbz;
-	private String clkg;
+	private String clkq;
 	private String cldm;
 	private String zzmc;
 	private String zzgg;
@@ -57,7 +57,7 @@ public class TFydDet implements java.io.Serializable {
 	}
 
 	public TFydDet(int id, TFyd TFyd, String tzdbh, String cbsydsno, int sno, String xmdm, String xmmc, int xmys, int amount, int zzks, int jsyz,
-			int seshu, int seshu2, String ysfs, String pname, String clbz, String clkg, String cldm, String zzmc, String zzgg, String cllb,
+			int seshu, int seshu2, String ysfs, String pname, String clbz, String clkq, String cldm, String zzmc, String zzgg, String cllb,
 			String clweight, String danjiadw, BigDecimal sjyzl, int jfl, BigDecimal jfyzl, int tiaojfs, BigDecimal zzhjl, int czl, BigDecimal clton) {
 		this.id = id;
 		this.TFyd = TFyd;
@@ -75,7 +75,7 @@ public class TFydDet implements java.io.Serializable {
 		this.ysfs = ysfs;
 		this.pname = pname;
 		this.clbz = clbz;
-		this.clkg = clkg;
+		this.clkq = clkq;
 		this.cldm = cldm;
 		this.zzmc = zzmc;
 		this.zzgg = zzgg;
@@ -238,13 +238,13 @@ public class TFydDet implements java.io.Serializable {
 		this.clbz = clbz;
 	}
 
-	@Column(name = "clkg", nullable = false, length = 20)
-	public String getClkg() {
-		return clkg;
+	@Column(name = "clkq", nullable = false, length = 20)
+	public String getClkq() {
+		return clkq;
 	}
 
-	public void setClkg(String clkg) {
-		this.clkg = clkg;
+	public void setClkq(String clkq) {
+		this.clkq = clkq;
 	}
 
 	@Column(name = "cldm", nullable = false, length = 20)

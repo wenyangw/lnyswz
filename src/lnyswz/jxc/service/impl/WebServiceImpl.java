@@ -7,8 +7,14 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -23,6 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -35,9 +42,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import lnyswz.common.dao.BaseDaoI;
-import lnyswz.jxc.model.TDepartment;
+import lnyswz.common.util.DateUtil;
+import lnyswz.jxc.bean.Fyd;
+import lnyswz.jxc.bean.FydDet;
 import lnyswz.jxc.model.TFyd;
+import lnyswz.jxc.model.TFydDet;
+import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.service.WebServiceI;
+import lnyswz.jxc.util.Constant;
 
 /**
  * @author wenyang
@@ -48,16 +60,23 @@ import lnyswz.jxc.service.WebServiceI;
 @Service
 public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebServiceI {
 
-	private BaseDaoI<TDepartment> depDao;
+	private BaseDaoI<TFyd> fydDao;
+	private BaseDaoI<TLsh> lshDao;
 	
-	private Map<String, Object> maps;
-	private String[] fields = {"publisher", "publishercn", "checkCode", "tzdbh", "cbsydsno", "bsno", "bname", "yc", "sno", 
-			"zzgg", "xmdm", "xmmc", "cldm", "zzmc", "danjia", "gongj"}; 
+	private Map<String, Object> headMap;
+	private List<Map<String, Object>> details;
+	
+	/*private String[] headFields = {"publisher", "publishercn", "checkCode", "tzdbh", "cbsydsno", "bsno", "bname", "isbn", "tzrq", 
+			"yc", "price", "tzdys", "yangshu", "zongym", "cbzs", "kbgg", "cpgg", "dwyz", "zdr", "zdfs", "zzfs"};
+	private String[] detailFields = {"tzdbh", "cbsydsno", "sno", "xmdm", "xmmc", "xmys", "amount", "zzks", "jsyz", "seshu", "seshu2",
+			"ysfs", "pname", "clbz", "clkq", "cldm", "zzmc", "zzgg", "cllb", "clweight", "danjiadw", "sjyzl", "jfl", "jfyzl", "tiaojfs", 
+			"zzhjl", "czl", "clton"};*/
 
 	@Override
 	public String lg2pr(@WebParam(name="xml")String xml) {
-		TDepartment tDep = depDao.load(TDepartment.class, "05");
-		
+		headMap = new HashMap<String, Object>();
+		details = new ArrayList<Map<String, Object>>();
+			
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
 	}
@@ -77,8 +96,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document document = db.parse(source);
-
-			maps = new HashMap<String, Object>();
+			
 			//获取每个节点的内容，并保存到maps中
 			getNodes(document.getChildNodes());
 			
@@ -117,15 +135,13 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			if(node.getNodeName().equals("root")){
 				getNodes(node.getChildNodes());
 			}else if(node.getNodeName().equals("head")){
-				getField(node.getChildNodes());
+				getNodes(node.getChildNodes());
 			}else if(node.getNodeName().equals("deal")){
 				getNodes(node.getChildNodes());
 			}else if(node.getNodeName().equals("Details")){
-				getNodes(node.getChildNodes());
-			}else if(node.getNodeName().equals("Detail")){
-				getField(node.getChildNodes());
+				getDetail(node.getChildNodes());
 			}else{
-				getField(node);
+				getField(headMap, node);
 			}
 		}
 	}
@@ -134,9 +150,15 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	 * 根据传入节点列表（只有子节点），循环获取节点内容
 	 * @param lists
 	 */
-	private void getField(NodeList lists){
+	private void getDetail(NodeList lists){
+		Map<String, Object> detailMap = null;
 		for (int i = 0; i < lists.getLength(); i++) {
-			getField(lists.item(i));
+			detailMap = new HashMap<String, Object>();
+			NodeList ls = lists.item(i).getChildNodes();
+			for(int j = 0; j < ls.getLength(); j++){
+				getField(detailMap, ls.item(j));
+			}
+			details.add(detailMap);
 		}
 	}
 	
@@ -144,9 +166,8 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	 * 根据传入node获取节点内容
 	 * @param node
 	 */
-	private void getField(Node node){
-		//System.out.println(node.getNodeName() + ":" + node.getTextContent());
-		maps.put(node.getNodeName(), node.getTextContent());
+	private void getField(Map<String, Object> map, Node node){
+		map.put(node.getNodeName(), node.getTextContent());
 	}
 	
 	/**
@@ -155,20 +176,46 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	 * @throws Exception 
 	 */
 	private String verify(){
-		if(maps.isEmpty()){
+		if(headMap.isEmpty() || details.isEmpty()){
 			return result("", "1", "数据解析失败");
 		}else{
-			for(int i = 0; i < fields.length; i++){
+			/*for(int i = 0; i < fields.length; i++){
 				if(!maps.containsKey(fields[i])){
 					return result("", "1", "没有包括" + fields[i]);
 				}
-			}
+			}*/
 		}
 		
-		TFyd fyd = new TFyd();
-
-		convertMap2PO(maps, fyd);
-
+		Fyd fyd = new Fyd();
+		TFyd tFyd = new TFyd();
+		
+		FydDet fydDet = null;
+		TFydDet tFydDet = null;
+		
+		convertMap2PO(headMap, fyd);
+		BeanUtils.copyProperties(fyd, tFyd);
+		
+		String lsh = LshServiceImpl.updateLsh(Constant.BM_CB, Constant.YWLX_FYD, lshDao);
+		tFyd.setFydlsh(lsh);
+		tFyd.setCreateTime(new Date());
+		tFyd.setIsLast("0");
+		
+		Set<TFydDet> tDets = new HashSet<TFydDet>();
+		for(Map<String, Object> m : details){
+			fydDet = new FydDet();
+			tFydDet = new TFydDet();
+			
+			convertMap2PO(m, fydDet);
+			BeanUtils.copyProperties(fydDet, tFydDet);
+			
+			tFydDet.setTFyd(tFyd);
+			tDets.add(tFydDet);
+		}
+		
+		tFyd.setTFydDets(tDets);
+		
+		fydDao.save(tFyd);
+		
 		return result("", "0", "");
 	}
 	
@@ -207,7 +254,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
                 if (!k.isEmpty()) {  
                     v = map.get(k);
                 }  
-                Field[] fields = null;  
+                Field[] fields = null;
                 fields = o.getClass().getDeclaredFields();
                 //String clzName = o.getClass().getSimpleName();  
                 //log.info("类："+o.getClass().getName());  
@@ -220,12 +267,11 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
                     if (field.getName().toUpperCase().equals(k.toUpperCase())) {  
                         field.setAccessible(true);  
                         try {
-							field.set(o, v);
+							field.set(o, convert(v, field.getType()));
+							
 						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IllegalAccessException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}  
                         //log.info("key："+k+"value:"+v);  
@@ -236,7 +282,20 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
             }  
         }  
         return o;  
-    }  
+    }
+	
+	private static Object convert(Object object, Class<?> type) {
+    	if (type.equals(int.class) || type.equals(Integer.class)) {
+            return Integer.parseInt(object.toString());
+        }
+        if (type.equals(BigDecimal.class)) {
+            return new BigDecimal(object.toString());
+        }
+        if (type.equals(Date.class)) {
+            return DateUtil.stringToDate(object.toString()); 
+        }
+	    return object;
+	}
 	
 	/**
 	 * 访问远程(WebService)xml数据后返回的xml格式字符串并生成为本地文件
@@ -265,7 +324,12 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	}
 
 	@Autowired
-	public void setDepDao(BaseDaoI<TDepartment> depDao) {
-		this.depDao = depDao;
+	public void setFydDao(BaseDaoI<TFyd> fydDao) {
+		this.fydDao = fydDao;
+	}
+
+	@Autowired
+	public void setLshDao(BaseDaoI<TLsh> lshDao) {
+		this.lshDao = lshDao;
 	}
 }

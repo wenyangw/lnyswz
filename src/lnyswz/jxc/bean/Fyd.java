@@ -5,6 +5,9 @@ import java.util.Date;
 
 public class Fyd{
 
+	private String fydlsh;
+	private Date createTime;
+	private String isLast;
 	private String publisher;
 	private String publishercn;
 	private String checkCode;
@@ -26,6 +29,25 @@ public class Fyd{
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
+	
+	public String getFydlsh() {
+		return fydlsh;
+	}
+	public void setFydlsh(String fydlsh) {
+		this.fydlsh = fydlsh;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public String getIsLast() {
+		return isLast;
+	}
+	public void setIsLast(String isLast) {
+		this.isLast = isLast;
+	}
 	public String getPublisher() {
 		return publisher;
 	}
@@ -152,5 +174,4 @@ public class Fyd{
 	public void setZzfs(String zzfs) {
 		this.zzfs = zzfs;
 	}
-		
 }

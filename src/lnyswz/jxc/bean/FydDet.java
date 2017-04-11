@@ -20,7 +20,7 @@ public class FydDet{
 	private String ysfs;
 	private String pname;
 	private String clbz;
-	private String clkg;
+	private String clkq;
 	private String cldm;
 	private String zzmc;
 	private String zzgg;
@@ -34,6 +34,7 @@ public class FydDet{
 	private BigDecimal zzhjl;
 	private int czl;
 	private BigDecimal clton;
+	
 	public int getId() {
 		return id;
 	}
@@ -130,11 +131,11 @@ public class FydDet{
 	public void setClbz(String clbz) {
 		this.clbz = clbz;
 	}
-	public String getClkg() {
-		return clkg;
+	public String getClkq() {
+		return clkq;
 	}
-	public void setClkg(String clkg) {
-		this.clkg = clkg;
+	public void setClkq(String clkq) {
+		this.clkq = clkq;
 	}
 	public String getCldm() {
 		return cldm;
