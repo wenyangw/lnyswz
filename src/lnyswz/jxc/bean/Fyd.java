@@ -7,7 +7,7 @@ public class Fyd{
 
 	private String fydlsh;
 	private Date createTime;
-	private String isLast;
+	private String status;
 	private String publisher;
 	private String publishercn;
 	private String checkCode;
@@ -42,11 +42,11 @@ public class Fyd{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public String getIsLast() {
-		return isLast;
+	public String getStatus() {
+		return status;
 	}
-	public void setIsLast(String isLast) {
-		this.isLast = isLast;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public String getPublisher() {
 		return publisher;

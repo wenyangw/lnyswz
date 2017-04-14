@@ -25,7 +25,7 @@ public class TFyd implements java.io.Serializable {
 
 	private String fydlsh;
 	private Date createTime;
-	private String isLast;
+	private String status;
 	private String publisher;
 	private String publishercn;
 	private String checkCode;
@@ -52,12 +52,12 @@ public class TFyd implements java.io.Serializable {
 	public TFyd() {
 	}
 
-	public TFyd(String fydlsh, Date createTime,	String isLast, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
+	public TFyd(String fydlsh, Date createTime,	String status, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
 			Date tzrq, String yc, BigDecimal price, int tzdys, int yangshu, int zongym, int cbzs, int kbgg, String cpgg, int dwyz, String zdr,
 			String zdfs, String zzfs, Set<TFydDet> TFydDets) {
 		this.fydlsh = fydlsh;
 		this.createTime = createTime;
-		this.isLast = isLast;
+		this.status = status;
 		this.publisher = publisher;
 		this.publishercn = publishercn;
 		this.checkCode = checkCode;
@@ -103,13 +103,13 @@ public class TFyd implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "isLast", nullable = false, length = 1)
-	public String getIsLast() {
-		return isLast;
+	@Column(name = "status", nullable = false, length = 1)
+	public String getStatus() {
+		return status;
 	}
 
-	public void setIsLast(String isLast) {
-		this.isLast = isLast;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 

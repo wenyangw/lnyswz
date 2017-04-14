@@ -1,5 +1,6 @@
 package lnyswz.jxc.service.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import lnyswz.jxc.model.TFydDet;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.service.WebServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 
 /**
  * @author wenyang
@@ -100,7 +102,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			//获取每个节点的内容，并保存到maps中
 			getNodes(document.getChildNodes());
 			
-			return verify();
+			return verify(document);
 		} catch (FileNotFoundException e) {
 			System.out.println("FileNotFoundException");
 			System.out.println(e.getMessage());
@@ -175,7 +177,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	 * @return
 	 * @throws Exception 
 	 */
-	private String verify(){
+	private String verify(Document document){
 		if(headMap.isEmpty() || details.isEmpty()){
 			return result("", "1", "数据解析失败");
 		}else{
@@ -198,7 +200,8 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		String lsh = LshServiceImpl.updateLsh(Constant.BM_CB, Constant.YWLX_FYD, lshDao);
 		tFyd.setFydlsh(lsh);
 		tFyd.setCreateTime(new Date());
-		tFyd.setIsLast("0");
+		
+		tFyd.setStatus(getFydStatus(fyd.getTzdbh()));
 		
 		Set<TFydDet> tDets = new HashSet<TFydDet>();
 		for(Map<String, Object> m : details){
@@ -215,8 +218,25 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		tFyd.setTFydDets(tDets);
 		
 		fydDao.save(tFyd);
+		saveFile(document, Export.getRootPath() + "/xml/" + fyd.getTzdbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".xml");
 		
 		return result("", "0", "");
+	}
+	
+	private String getFydStatus(String tzdbh){
+		String sql = "select fydlsh from t_fyd where tzdbh = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", tzdbh);
+		List<Object[]> lists = fydDao.findBySQL(sql, params);
+		if(lists == null){
+			return "0";
+		}else{
+			String updateSql = "update t_fyd set status = '2' where tzdbh = ? and (status = '0' or status = '1')";
+			Map<String, Object> updateParams = new HashMap<String, Object>();
+			updateParams.put("0", tzdbh);
+			fydDao.updateBySQL(updateSql, updateParams);
+			return "1";
+		}
 	}
 	
 	
@@ -304,13 +324,20 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	public void saveFile(Document document, String savaFileURL){
 		TransformerFactory transF = TransformerFactory.newInstance();
 		try{
-			Transformer transformer = transF.newTransformer();
 			DOMSource source = new DOMSource(document);
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			Transformer transformer = transF.newTransformer();
+			StreamResult result = new StreamResult(bytes);
+			
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			transformer.setOutputProperty(OutputKeys.INDENT, "YES");
-			PrintWriter pw = new PrintWriter(new FileOutputStream(savaFileURL));
-			StreamResult result = new StreamResult(pw);
 			transformer.transform(source, result);
+		 
+			FileOutputStream fos = new FileOutputStream(savaFileURL);
+			fos.write(bytes.toByteArray());
+			fos.close();
+			
+			
 			System.out.println("生成xml文件成功!");
 		}catch(TransformerConfigurationException e){
 			System.out.println(e.getMessage());
@@ -319,6 +346,8 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		}catch(FileNotFoundException e){
 			System.out.println(e.getMessage());
 		}catch(TransformerException e){
+			System.out.println(e.getMessage());
+		}catch(IOException e){
 			System.out.println(e.getMessage());
 		}
 	}

@@ -62,12 +62,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
 	@Override
 	public T get(String hql, Map<String, Object> params) {
-		Query q = this.getCurrentSession().createQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				q.setParameter(key, params.get(key));
-			}
-		}
+		Query q = getQuery(hql, params);
 		List<T> l = q.list();
 		if (l != null && l.size() > 0) {
 			return l.get(0);
@@ -98,24 +93,24 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public List<T> find(String hql, Map<String, Object> params) {
-		Query q = this.getCurrentSession().createQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				q.setParameter(key, params.get(key));
-			}
-		}
+		Query q = getQuery(hql, params);
 		return q.list();
 	}
 
 	@Override
 	public List<T> find(String hql, Map<String, Object> params, int page, int rows) {
+		Query q = getQuery(hql, params);
+		return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
+	}
+
+	private Query getQuery(String hql, Map<String, Object> params) {
 		Query q = this.getCurrentSession().createQuery(hql);
 		if (params != null && !params.isEmpty()) {
 			for (String key : params.keySet()) {
 				q.setParameter(key, params.get(key));
 			}
 		}
-		return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
+		return q;
 	}
 
 	@Override
@@ -138,12 +133,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public Long count(String hql, Map<String, Object> params) {
-		Query q = this.getCurrentSession().createQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				q.setParameter(key, params.get(key));
-			}
-		}
+		Query q = getQuery(hql, params);
 		return (Long) q.uniqueResult();
 	}
 
@@ -155,12 +145,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
 	@Override
 	public int executeHql(String hql, Map<String, Object> params) {
-		Query q = this.getCurrentSession().createQuery(hql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				q.setParameter(key, params.get(key));
-			}
-		}
+		Query q = getQuery(hql, params);
 		return q.executeUpdate();
 	}
 	
@@ -171,14 +156,24 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	}
 	
 	@Override
-	public Object[] getMBySQL(String sql, Map<String, Object> params) {
+	public int updateBySQL(String sql, Map<String, Object> params) {
+		SQLQuery query = getQueryBySQL(sql, params);
+		return query.executeUpdate();
+	}
+
+	private SQLQuery getQueryBySQL(String sql, Map<String, Object> params) {
 		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
 		if (params != null && !params.isEmpty()) {
-			//int i = 0;
 			for (String key : params.keySet()) {
 				query.setParameter(Integer.valueOf(key), params.get(key));
 			}
 		}
+		return query;
+	}
+	
+	@Override
+	public Object[] getMBySQL(String sql, Map<String, Object> params) {
+		SQLQuery query = getQueryBySQL(sql, params);
 		List<Object[]> l = query.list();
 		if(l != null && l.size() > 0){
 			return l.get(0);
@@ -188,13 +183,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public Object getBySQL(String sql, Map<String, Object> params) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		if (params != null && !params.isEmpty()) {
-			//int i = 0;
-			for (String key : params.keySet()) {
-				query.setParameter(Integer.valueOf(key), params.get(key));
-			}
-		}
+		SQLQuery query = getQueryBySQL(sql, params);
 		List<Object[]> l = query.list();
 		if(l != null && l.size() > 0){
 			return l.get(0);
@@ -235,12 +224,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public Long countSQL (String sql, Map<String, Object> params) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				query.setParameter(Integer.valueOf(key), params.get(key));
-			}
-		}
+		SQLQuery query = getQueryBySQL(sql, params);
 		return  getLong(query.list().get(0));
 	}
 	
@@ -251,12 +235,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				query.setParameter(Integer.valueOf(key), params.get(key));
-			}
-		}
+		SQLQuery query = getQueryBySQL(sql, params);
 		List<Object[]> q = query.list();
 		if(q != null && q.size() > 0){
 			return q;
@@ -266,12 +245,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 	
 	@Override
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params, int page, int rows) {
-		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
-		if (params != null && !params.isEmpty()) {
-			for (String key : params.keySet()) {
-				query.setParameter(Integer.valueOf(key), params.get(key));
-			}
-		}
+		SQLQuery query = getQueryBySQL(sql, params);
 		List<Object[]> q = query.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
 		if(q != null){
 			return q;
