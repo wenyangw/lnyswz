@@ -24,6 +24,7 @@ import javax.persistence.TemporalType;
 public class TFyd implements java.io.Serializable {
 
 	private String fydlsh;
+	private String bmbh;
 	private Date createTime;
 	private String status;
 	private String publisher;
@@ -52,10 +53,11 @@ public class TFyd implements java.io.Serializable {
 	public TFyd() {
 	}
 
-	public TFyd(String fydlsh, Date createTime,	String status, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
+	public TFyd(String fydlsh, String bmbh, Date createTime,	String status, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
 			Date tzrq, String yc, BigDecimal price, int tzdys, int yangshu, int zongym, int cbzs, int kbgg, String cpgg, int dwyz, String zdr,
 			String zdfs, String zzfs, Set<TFydDet> TFydDets) {
 		this.fydlsh = fydlsh;
+		this.bmbh = bmbh;
 		this.createTime = createTime;
 		this.status = status;
 		this.publisher = publisher;
@@ -93,6 +95,15 @@ public class TFyd implements java.io.Serializable {
 		this.fydlsh = fydlsh;
 	}
 	
+	@Column(name = "bmbh", nullable = false, length = 2)
+	public String getBmbh() {
+		return bmbh;
+	}
+
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "createTime", nullable = false, length = 23)
 	public Date getCreateTime() {
@@ -302,7 +313,7 @@ public class TFyd implements java.io.Serializable {
 	public void setZzfs(String zzfs) {
 		this.zzfs = zzfs;
 	}
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TFyd", cascade=CascadeType.ALL)
 	public Set<TFydDet> getTFydDets() {
 		return this.TFydDets;

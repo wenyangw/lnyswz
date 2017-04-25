@@ -12,6 +12,7 @@ var xsth_spdg;
 var xsth_kfckDg;
 var xsth_xskpDg;
 var xsth_ywrkDg;
+var xsth_fydDg;
 var editIndex = undefined;
 var xsth_did;
 var xsth_lx;
@@ -19,6 +20,7 @@ var xsth_menuId;
 var countXsth = 0;
 var countXskpInXsth = 0;
 var countYwrkInXsth = 0;
+var countFydInXsth = 0;
 
 var jxc_xsth_ckCombo;
 var jxc_xsth_fhCombo;
@@ -26,7 +28,9 @@ var jxc_xsth_ywyCombo;
 var jxc_xsth_jsfsCombo;
 
 var xsthRow;
+var fydRow;
 var detDg;
+var fydDetDg;
 
 //编辑行字段
 var spbhEditor;   
@@ -466,6 +470,96 @@ $(function(){
 	});
 	lnyw.toolbar(3, xsth_ywrkDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
 	
+	xsth_fydDg = $('#jxc_xsth_fydDg').datagrid({
+		fit : true,
+	    border : false,
+	    idField: 'fydlsh',
+	    singleSelect : true,
+// 	    fitColumns : true, 
+	    remoteSort: false,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+			{field:'status',title:'状态',align:'center',
+				formatter : function(value) {
+					if (value == '0') {
+						return '新单';
+					} else if (value == '1'){
+						return '修改';
+					} else {
+						return '原始';
+					}
+				},
+			},
+			{field:'fydlsh',title:'流水号',align:'center',
+				styler: function(value, rowData){
+					if(rowData.isCancel == '1'){
+						return 'color:red;';
+					}
+				}},
+	        {field:'createTime',title:'*时间',align:'center',sortable:true,
+				sorter: function(a,b){
+					return moment(a).diff(moment(b), 'days');
+				}},
+			{field:'publisher',title:'出版社编号',align:'center',hidden:true},
+	        {field:'publishercn',title:'出版社名称',align:'center'},
+	        {field:'tzdbh',title:'印单编号',align:'center'},
+	        {field:'bname',title:'书名',align:'center'},
+	        {field:'tzrq',title:'制单日期',align:'center'},
+	        {field:'zdr',title:'制单人',align:'center'},
+	        {field:'zdfs',title:'装订方式',align:'center'},
+	        {field:'zzfs',title:'装帧方式',align:'center'},
+	        
+	    ]],
+	    toolbar:'#jxc_xsth_fydTb',
+	});
+	lnyw.toolbar(4, xsth_fydDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
+	
+	xsth_fydDg.datagrid({
+        view: detailview,
+        detailFormatter:function(index,row){
+            return '<div style="padding:2px"><table id="xsth-fyd-ddv-' + index + '"></table></div>';
+        },
+        onExpandRow: function(index,row){
+        	fydRow = xsth_fydDg.datagrid('selectRow', index).datagrid('getSelected');
+            fydDetDg = $('#xsth-fyd-ddv-'+index).datagrid({
+                url:'${pageContext.request.contextPath}/jxc/fydAction!detDatagrid.action',
+                fitColumns:true,
+                //singleSelect:true,
+                rownumbers:true,
+                loadMsg:'',
+                height:'auto',
+                queryParams: {
+        			fydlsh: row.fydlsh,
+        		},
+                columns:[[
+					{field:'id',title:'id',width:2,align:'center',hidden:true},      
+                    {field:'sno',title:'序号',width:50,align:'center'},
+                    {field:'zzmc',title:'纸张名称',width:200,align:'center'},
+                    {field:'zzgg',title:'规格',width:100,align:'center'},
+                    {field:'danjiadw',title:'单位',width:50,align:'center'},
+                    {field:'sjyzl',title:'正用纸数',width:100,align:'center'},
+                    {field:'jfl',title:'加放率',width:100,align:'center'},
+                    {field:'jfyzl',title:'加放数',width:100,align:'center'},
+                    {field:'zzhjl',title:'合计用纸',width:100,align:'center'},
+                    {field:'danjia',title:'单价',width:100,align:'center'},
+                    {field:'gongj',title:'金额',width:100,align:'center'},
+                    {field:'cton',title:'吨数',width:100,align:'center'},
+                ]],
+                onResize:function(){
+                	xsth_dg.datagrid('fixDetailRowHeight',index);
+                },
+                onLoadSuccess:function(){
+                    setTimeout(function(){
+                    	xsth_dg.datagrid('fixDetailRowHeight',index);
+                    },0);
+                }
+            });
+            xsth_dg.datagrid('fixDetailRowHeight',index);
+        }
+    });
 	
 
 	//选中列表标签后，装载数据
@@ -505,6 +599,18 @@ $(function(){
 						},
 				});
 				countYwrkInXsth++;
+			}
+			if(index == 4){
+				xsth_fydDg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/fydAction!datagrid.action',
+					queryParams: {
+						bmbh: xsth_did,
+						fromOther: 'fromXsth',
+						createTime: countFydInXsth == 0 ? undefined : $('input[name=createTimeFydInXsth]').val(),
+						search: countFydInXsth == 0 ? undefined : $('input[name=searchFydInXsth]').val(),
+						},
+				});
+				countFydInXsth++;
 			}
 		},
 	});
@@ -2350,6 +2456,88 @@ function searchYwrkInXsth(){
 
 ////////////////////////////////////////////以上为业务入库列表处理代码
 
+////////////////////////////////////////////以下为付印单列表处理代码
+function confirmXsdj(){
+	if(fydDetDg != undefined){
+		var detRow = fydDetDg.datagrid('getSelected');
+		if(detRow != null){
+			if(fydRow.status == '1' || fydRow.status == '0'){
+				$.messager.prompt('请确认', '是否要确认销售单价？请输入', function(danjia){
+					if (danjia != undefined){
+						$.ajax({
+							url : '${pageContext.request.contextPath}/jxc/fydAction!updateXsdj.action',
+							data : {
+								id : detRow.id,
+								danjia: danjia,
+								fromOther: 'xsth',
+								bmbh : xsth_did,
+								menuId : xsth_menuId,
+							},
+							dataType : 'json',
+							success : function(d) {
+								fydDetDg.datagrid('reload');
+								fydDetDg.datagrid('unselectAll');
+								$.messager.show({
+									title : '提示',
+									msg : d.msg
+								});
+							}
+						});
+					}
+				});
+			}else{
+				$.messager.alert('警告', '选择的付印单记录已进行了更新，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+		
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+	
+}
+
+function sendXml(){
+	var selected = xsth_fydDg.datagrid('getSelected');
+ 	if (selected != undefined) {
+ 		$.messager.confirm('请确认', '是否上传付印单数据？', function(r){
+			if (r != undefined){
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/fydAction!sendXml.action',
+					data : {
+						fydlsh : selected.fydlsh,
+						bmbh : xsth_did,
+					},
+					dataType : 'json',
+					success : function(d) {
+						xsth_fydDg.datagrid('reload');
+						xsth_fydDg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function searchFydInXsth(){
+	xsth_fydDg.datagrid('load',{
+		bmbh: xsth_did,
+		createTime: $('input[name=createTimeFydInXsth]').val(),
+		fromOther: 'fromXsth'
+	});
+}
+
+////////////////////////////////////////////以上为付印单列表处理代码
+
 
 
 </script>
@@ -2425,6 +2613,9 @@ function searchYwrkInXsth(){
 	<div title="业务入库列表" data-options="closable:false" >
 		<div id='jxc_xsth_ywrkDg'></div>
 	</div>
+	<div title="付印单列表" data-options="closable:false" >
+		<div id='jxc_xsth_fydDg'></div>
+	</div>
 </div>
 
 <div id="jxc_xsth_tb" style="padding:3px;height:auto">
@@ -2441,6 +2632,11 @@ function searchYwrkInXsth(){
 	请输入查询起始日期:<input type="text" name="createTimeYwrkInXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、供应商、备注：<input type="text" name="searchYwrkInXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwrkInXsth();">查询</a>
+</div>
+<div id="jxc_xsth_fydTb" style="padding:3px;height:auto">
+	请输入查询起始日期:<input type="text" name="createTimeFydInXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商、备注：<input type="text" name="searchFydInXsth" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFydInXsth();">查询</a>
 </div>
 
 

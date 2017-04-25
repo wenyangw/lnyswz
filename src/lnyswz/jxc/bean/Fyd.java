@@ -6,6 +6,7 @@ import java.util.Date;
 public class Fyd{
 
 	private String fydlsh;
+	private String bmbh;
 	private Date createTime;
 	private String status;
 	private String publisher;
@@ -29,12 +30,26 @@ public class Fyd{
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
+	private BigDecimal danjia;
+	private BigDecimal gongj; 
+	
+	private int id;
+	private String fromOther;
+	private String search;
+	private int page;
+	private int rows;
 	
 	public String getFydlsh() {
 		return fydlsh;
 	}
 	public void setFydlsh(String fydlsh) {
 		this.fydlsh = fydlsh;
+	}
+	public String getBmbh() {
+		return bmbh;
+	}
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
 	}
 	public Date getCreateTime() {
 		return createTime;
@@ -173,5 +188,47 @@ public class Fyd{
 	}
 	public void setZzfs(String zzfs) {
 		this.zzfs = zzfs;
+	}
+	public BigDecimal getDanjia() {
+		return danjia;
+	}
+	public void setDanjia(BigDecimal danjia) {
+		this.danjia = danjia;
+	}
+	public BigDecimal getGongj() {
+		return gongj;
+	}
+	public void setGongj(BigDecimal gongj) {
+		this.gongj = gongj;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getFromOther() {
+		return fromOther;
+	}
+	public void setFromOther(String fromOther) {
+		this.fromOther = fromOther;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getRows() {
+		return rows;
+	}
+	public void setRows(int rows) {
+		this.rows = rows;
 	}
 }

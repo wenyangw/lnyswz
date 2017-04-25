@@ -20,4 +20,5 @@ public interface WebServiceI {
 	String lg2pr(
 			@WebParam(name="xml")
 			String xml);
+	
 }

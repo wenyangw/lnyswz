@@ -50,6 +50,8 @@ public class TFydDet implements java.io.Serializable {
 	private BigDecimal jfyzl;
 	private int tiaojfs;
 	private BigDecimal zzhjl;
+	private BigDecimal danjia;
+	private BigDecimal gongj;
 	private int czl;
 	private BigDecimal clton;
 
@@ -58,7 +60,8 @@ public class TFydDet implements java.io.Serializable {
 
 	public TFydDet(int id, TFyd TFyd, String tzdbh, String cbsydsno, int sno, String xmdm, String xmmc, int xmys, int amount, int zzks, int jsyz,
 			int seshu, int seshu2, String ysfs, String pname, String clbz, String clkq, String cldm, String zzmc, String zzgg, String cllb,
-			String clweight, String danjiadw, BigDecimal sjyzl, int jfl, BigDecimal jfyzl, int tiaojfs, BigDecimal zzhjl, int czl, BigDecimal clton) {
+			String clweight, String danjiadw, BigDecimal sjyzl, int jfl, BigDecimal jfyzl, int tiaojfs, BigDecimal zzhjl, BigDecimal danjia, BigDecimal gongj, 
+			int czl, BigDecimal clton) {
 		this.id = id;
 		this.TFyd = TFyd;
 		this.tzdbh = tzdbh;
@@ -87,6 +90,8 @@ public class TFydDet implements java.io.Serializable {
 		this.jfyzl = jfyzl;
 		this.tiaojfs = tiaojfs;
 		this.zzhjl = zzhjl;
+		this.danjia = danjia;
+		this.gongj = gongj;
 		this.czl = czl;
 		this.clton = clton;
 	}
@@ -344,6 +349,24 @@ public class TFydDet implements java.io.Serializable {
 
 	public void setZzhjl(BigDecimal zzhjl) {
 		this.zzhjl = zzhjl;
+	}
+	
+	@Column(name = "danjia", precision = 18, scale = 2)
+	public BigDecimal getDanjia() {
+		return danjia;
+	}
+
+	public void setDanjia(BigDecimal danjia) {
+		this.danjia = danjia;
+	}
+
+	@Column(name = "gongj", precision = 18, scale = 2)
+	public BigDecimal getGongj() {
+		return gongj;
+	}
+
+	public void setGongj(BigDecimal gongj) {
+		this.gongj = gongj;
 	}
 
 	@Column(name = "czl", nullable = false)

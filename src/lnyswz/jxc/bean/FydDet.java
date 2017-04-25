@@ -32,6 +32,8 @@ public class FydDet{
 	private BigDecimal jfyzl;
 	private int tiaojfs;
 	private BigDecimal zzhjl;
+	private BigDecimal danjia;
+	private BigDecimal gongj;
 	private int czl;
 	private BigDecimal clton;
 	
@@ -202,6 +204,18 @@ public class FydDet{
 	}
 	public void setZzhjl(BigDecimal zzhjl) {
 		this.zzhjl = zzhjl;
+	}
+	public BigDecimal getDanjia() {
+		return danjia;
+	}
+	public void setDanjia(BigDecimal danjia) {
+		this.danjia = danjia;
+	}
+	public BigDecimal getGongj() {
+		return gongj;
+	}
+	public void setGongj(BigDecimal gongj) {
+		this.gongj = gongj;
 	}
 	public int getCzl() {
 		return czl;

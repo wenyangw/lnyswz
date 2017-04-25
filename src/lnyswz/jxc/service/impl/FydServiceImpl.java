@@ -77,23 +77,12 @@ public class FydServiceImpl implements FydServiceI {
 		
 		
 		if(fyd.getFromOther() != null){
-			hql += " and t.isCj = '0'";
-			if(Constant.YWRK_FROM_YWBT.equals(fyd.getFromOther())){
-				hql += " and t.rklxId = :rklxId and t.TYwbt is null";
-				params.put("rklxId", Constant.RKLX_ZS);
-			}else{
-				hql += " and t.isZs = '0' and t.TKfrks is empty";
-			}
+			
 		}else{
 			if(fyd.getSearch() != null && fyd.getSearch().length() > 0){
-				//hql += " and (t.fydlsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
-				//params.put("search", "%" + fyd.getSearch() + "%");
 				hql += " and (" + 
-						Util.getQueryWhere(fyd.getSearch(), new String[]{"t.fydlsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						Util.getQueryWhere(fyd.getSearch(), new String[]{"t.fydlsh", "t.tzdbh", "t.bname", "t.publishercn", "t.zdr"}, params)
 						+ ")";
-			}else{
-				hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
-				params.put("rklxId", Constant.RKLX_ZG);
 			}
 		}
 		String countHql = " select count(*)" + hql;
@@ -101,40 +90,10 @@ public class FydServiceImpl implements FydServiceI {
 		List<TFyd> l = fydDao.find(hql, params, fyd.getPage(), fyd.getRows());
 		List<Fyd> nl = new ArrayList<Fyd>();
 		Fyd c = null;
-		Set<TKfrk> tKfrks = null;
-		Set<TCgjhDet> tCgjhs = null;
+		
 		for(TFyd t : l){
 			c = new Fyd();
 			BeanUtils.copyProperties(t, c);
-			tKfrks = t.getTKfrks();
-			if(tKfrks != null && tKfrks.size() > 0){
-				String kfrklshs = "";
-				int i = 0;
-				for(TKfrk tc : tKfrks){
-					kfrklshs += tc.getKfrklsh();
-					if(i < tKfrks.size() - 1){
-						kfrklshs += ",";
-					}
-					i++;
-				}
-				c.setKfrklshs(kfrklshs);
-			}
-			tCgjhs = t.getTCgjhs();
-			if(tCgjhs != null && tCgjhs.size() > 0){
-				String cgjhlshs = "";
-				int i = 0;
-				for(TCgjhDet tc : tCgjhs){
-					cgjhlshs += tc.getTCgjh().getCgjhlsh();
-					if(i < tCgjhs.size() - 1){
-						cgjhlshs += ",";
-					}
-					i++;
-				}
-				c.setCgjhlshs(cgjhlshs);
-			}
-			if(t.getTYwbt() != null){
-				c.setYwbtlsh(t.getTYwbt().getYwbtlsh());
-			}
 			nl.add(c);
 		}
 		datagrid.setTotal(fydDao.count(countHql, params));
@@ -161,112 +120,13 @@ public class FydServiceImpl implements FydServiceI {
 	}
 	
 	@Override
-	public DataGrid datagridDet(Fyd fyd) {
-		DataGrid datagrid = new DataGrid();
-		String hql = "from TFydDet t where t.TFyd.bmbh = :bmbh and t.TFyd.createTime > :createTime";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", fyd.getBmbh());
-		if(fyd.getCreateTime() != null){
-			params.put("createTime", fyd.getCreateTime()); 
-		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
-		}
-		if(fyd.getSearch() != null){
-			//hql += " and (t.TFyd.fydlsh like :search or t.TFyd.gysbh like :search or t.TFyd.gysmc like :search or t.TFyd.bz like :search)"; 
-			//params.put("search", "%" + fyd.getSearch() + "%");
-			hql += " and (" + 
-					Util.getQueryWhere(fyd.getSearch(), new String[]{"t.TFyd.fydlsh", "t.TFyd.gysbh", "t.TFyd.gysmc", "t.TFyd.bz"}, params)
-					+ ")";
-			
-		}
+	public void updateXsdj(Fyd fyd) {
+		TFydDet tFydDet = detDao.load(TFydDet.class, fyd.getId());
 		
-		//在销售提货中查看
-		if(fyd.getFromOther() != null){
-			hql += " and t.TFyd.isZs = '1' and t.TFyd.isCj = '0' and t.zdwsl > t.thsl";
-		}
+		tFydDet.setDanjia(fyd.getDanjia());
+		tFydDet.setGongj(fyd.getDanjia().multiply(tFydDet.getZzhjl()));
 		
-		String countHql = "select count(*) " + hql;
-		hql += " order by t.TFyd.createTime desc ";
-		
-		List<TFydDet> l = detDao.find(hql, params);
-		List<Fyd> nl = new ArrayList<Fyd>();
-		Fyd c = null;
-		for(TFydDet t : l){
-			//在销售提货流程中，由直送计划生成的入库不显示
-			if("fromXsth".equals(fyd.getFromOther()) && t.getTFyd().getTCgjhs().size() == 0){
-				c = new Fyd();
-				BeanUtils.copyProperties(t, c);
-				c.setFydlsh(t.getTFyd().getFydlsh());
-				c.setCreateTime(t.getTFyd().getCreateTime());
-				c.setCreateName(t.getTFyd().getCreateName());
-				c.setGysbh(t.getTFyd().getGysbh());
-				c.setGysmc(t.getTFyd().getGysmc());
-				c.setCkId(t.getTFyd().getCkId());
-				c.setCkmc(t.getTFyd().getCkmc());
-				c.setRklxId(t.getTFyd().getRklxId());
-				c.setRklxmc(t.getTFyd().getRklxmc());
-				
-				nl.add(c);
-			}
-		}
-		
-		datagrid.setRows(nl);
-		datagrid.setTotal(fydDao.count(countHql, params));
-		return datagrid;
-	}
-
-	
-	@Override
-	public DataGrid changeFyd(Fyd fyd) {
-		DataGrid dg = new DataGrid();
-		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje, sum(thsl) thsl, sum(cdwsl) cdwsl, sum(cthsl) cthsl from t_fyd_det t"
-				+ " where t.fydlsh in (" + fyd.getFydlshs() + ")"
-				+ " group by t.spbh";
-		//Map<String, Object> params = new HashMap<String, Object>();
-		//params.put("0", "(" + fyd.getFydlshs() + ")");
-		
-		List<Object[]> l = detDao.findBySQL(sql);
-		List<FydDet> nl = new ArrayList<FydDet>();
-		
-		for(Object[] os : l){
-			String spbh = (String)os[0];
-			BigDecimal zdwsl = new BigDecimal(os[1].toString());
-			BigDecimal spje = new BigDecimal(os[2].toString());
-			BigDecimal thsl = new BigDecimal(os[3].toString());
-			BigDecimal cdwsl = new BigDecimal(os[4].toString());
-			BigDecimal cthsl = new BigDecimal(os[5].toString());
-			
-			TSp sp = spDao.get(TSp.class, spbh);
-			FydDet yd = new FydDet();
-			
-			yd.setSpbh(spbh);
-			yd.setSpmc(sp.getSpmc());
-			yd.setSpcd(sp.getSpcd());
-			yd.setSppp(sp.getSppp());
-			yd.setSpbz(sp.getSpbz());
-			
-			yd.setZdwsl(zdwsl);
-			yd.setZjldwId(sp.getZjldw().getId());
-			yd.setZjldwmc(sp.getZjldw().getJldwmc());
-			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_UP));
-			if(sp.getCjldw() != null){
-				yd.setCjldwId(sp.getCjldw().getId());
-				yd.setCjldwmc(sp.getCjldw().getJldwmc());
-				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(cdwsl);
-				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_UP));
-			}
-			yd.setSpje(spje);
-			yd.setThsl(thsl);
-			yd.setCthsl(cthsl);
-			
-			nl.add(yd);
-		}
-		nl.add(new FydDet());
-		
-		dg.setRows(nl);
-		return dg;
+		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
 	}
 	
 	@Autowired

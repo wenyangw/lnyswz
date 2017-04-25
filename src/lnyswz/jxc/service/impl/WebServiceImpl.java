@@ -199,6 +199,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		
 		String lsh = LshServiceImpl.updateLsh(Constant.BM_CB, Constant.YWLX_FYD, lshDao);
 		tFyd.setFydlsh(lsh);
+		tFyd.setBmbh(Constant.BM_CB);
 		tFyd.setCreateTime(new Date());
 		
 		tFyd.setStatus(getFydStatus(fyd.getTzdbh()));
