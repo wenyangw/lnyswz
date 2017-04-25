@@ -1503,7 +1503,7 @@ function toJs(){
 	    	}
 	    	xskplshs.push(rows[index].xskplsh);
 	    	if(index != 0){
-	    		if(this.khbh != preRow.khbh || this.fhId != preRow.fhId){
+	    		if(this.khbh != preRow.khbh){ // || this.fhId != preRow.fhId
 	    			$.messager.alert('提示', '请选择同一客户或分户的销售发票进行操作！', 'error');
 					flag = false;
 					//return false;
