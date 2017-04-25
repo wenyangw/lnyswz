@@ -52,15 +52,16 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		writeJson(j);
 	}
 	
-	public void sendXml() {
+	public void sendFyd() {
 		// 创建一个用于产生WebServiceImpl实例的工厂，WebServiceImplService类是wsimport工具生成的
 		// WebServiceImplService factory = new WebServiceImplService();
 		Pr2LgService factory = new Pr2LgService();
 		// 通过工厂生成一个WebServiceImpl实例，WebServiceImpl是wsimport工具生成的
 		// WebServiceImpl wsImpl = factory.getWebServiceImplPort();
-		String result = factory.getPr2LgCfc().wsCargo(createXml());
+		String result = factory.getPr2LgCfc().wsCargo(fydService.sendFyd(fyd));
 		// 调用WebService的sayHello方法
 		// String resResult = wsImpl.sayHello("孤傲苍狼");
+		
 
 		System.out.println(result);
 

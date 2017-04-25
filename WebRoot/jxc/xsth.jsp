@@ -2500,13 +2500,13 @@ function confirmXsdj(){
 	
 }
 
-function sendXml(){
+function sendFyd(){
 	var selected = xsth_fydDg.datagrid('getSelected');
  	if (selected != undefined) {
  		$.messager.confirm('请确认', '是否上传付印单数据？', function(r){
 			if (r != undefined){
 				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/fydAction!sendXml.action',
+					url : '${pageContext.request.contextPath}/jxc/fydAction!sendFyd.action',
 					data : {
 						fydlsh : selected.fydlsh,
 						bmbh : xsth_did,

@@ -129,6 +129,88 @@ public class FydServiceImpl implements FydServiceI {
 		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
 	}
 	
+	@Override
+	public String sendFyd(Fyd fyd) {
+		StringBuilder sb = new StringBuilder();
+		TFyd tFyd = fydDao.load(TFyd.class, fyd.getFydlsh());
+		Set<TFydDet> tFydDets = tFyd.getTFydDets();
+		
+		sb.append("<?xml version='1.0' encoding='UTF-8'?>"); 
+		sb.append("<root>");
+		sb.append("<head>");    
+		sb.append("<publisher>"); 
+		sb.append(tFyd.getPublisher());
+		sb.append("</publisher>");    
+		sb.append("<publishercn>");
+		sb.append(tFyd.getPublishercn());
+		sb.append("</publishercn>");  
+		sb.append("<checkCode>");
+		sb.append(tFyd.getCheckCode());
+		sb.append("</checkCode>");  
+		sb.append("</head>");  
+		sb.append("<deal id='16041514580031492' type='cbyztz' operation='0'>");
+		sb.append("<tzdbh>");
+		sb.append(tFyd.getTzdbh());
+		sb.append("</tzdbh>");
+		sb.append("<cbsydsno>");
+		sb.append(tFyd.getCbsydsno());
+		sb.append("</cbsydsno>");
+		sb.append("<bsno>");
+		sb.append(tFyd.getBsno());
+		sb.append("</bsno>");
+		sb.append("<bname>");
+		sb.append(tFyd.getBname());
+		sb.append("</bname>");
+		sb.append("<yc>");
+		sb.append(tFyd.getYc());
+		sb.append("</yc>");
+		sb.append("<Details count='"); 
+		sb.append(tFydDets.size());
+		sb.append("'>");
+		for(TFydDet tfd : tFydDets){
+			sb.append("<Detail>");
+			sb.append("<tzdbh>");
+			sb.append(tfd.getTzdbh());
+			sb.append("</tzdbh>");
+			sb.append("<cbsydsno>");
+			sb.append(tfd.getCbsydsno());
+			sb.append("</cbsydsno>");
+			sb.append("<sno>");
+			sb.append(tfd.getSno());
+			sb.append("</sno>");
+			sb.append("<xmdm>");
+			sb.append(tfd.getXmdm());
+			sb.append("</xmdm>");
+			sb.append("<xmmc>");
+			sb.append(tfd.getXmmc());
+			sb.append("</xmmc>");
+			sb.append("<cldm>");
+			sb.append(tfd.getCldm());
+			sb.append("</cldm>");
+			sb.append("<zzmc>");
+			sb.append(tfd.getZzmc());
+			sb.append("</zzmc>");
+			sb.append("<zzgg>");
+			sb.append(tfd.getZzgg());
+			sb.append("</zzgg>");
+			sb.append("<danjia>");
+			sb.append(tfd.getDanjia());
+			sb.append("</danjia>");
+			sb.append("<gongj>");
+			sb.append(tfd.getGongj());
+			sb.append("</gongj>");
+			sb.append("</Detail>");
+		}
+		sb.append("</Details>");
+		sb.append("</deal>");  
+		sb.append("</root>");
+
+		
+		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+	
 	@Autowired
 	public void setFydDao(BaseDaoI<TFyd> fydDao) {
 		this.fydDao = fydDao;
