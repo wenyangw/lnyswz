@@ -19,6 +19,7 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.Chart;
+import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Serie;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.model.TCatalog;
@@ -237,6 +238,35 @@ public class ChartServiceImpl implements ChartServiceI {
 		c.setCategories(categories);
 		
 		return c;
+	}
+	
+	@Override
+	public DataGrid listKh(Chart chart) {
+		String searchSql = "select khbh, khmc";
+		String countSql = "select count(*)";
+		String fromWhere = " from t_xskp where bmbh = ? and YEAR(createTime) = ? group by khbh, khmc";
+		String orderSql = " order by sum(hjje + hjse) desc";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", chart.getBmbh());
+		params.put("1", chart.getYear());
+		
+		List<Object[]> lists = xskpDao.findBySQL(searchSql + fromWhere + orderSql, params, chart.getPage(), chart.getRows());
+		List<Kh> ls = new ArrayList<Kh>();
+		Kh kh = null;
+		for(Object[] l : lists){
+			kh = new Kh();
+			kh.setKhbh(l[0].toString());
+			kh.setKhmc(l[1].toString());
+			ls.add(kh);
+		}
+		
+		
+		
+		DataGrid dg = new DataGrid();
+		dg.setRows(ls);
+		dg.setTotal((long)xskpDao.findBySQL(countSql + fromWhere, params).size());
+		
+		return dg;
 	}
 
 
