@@ -103,6 +103,30 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		return getChartByColumn(chart, sql);
 	}
+	
+	@Override
+	public Chart getXskhfltj(Chart chart) {
+		String sql = null;
+		if(chart.getField().equals("xsje")){
+			sql = "exec p_tj_khflxs ?, ?, ?";
+			//sql = "select top 20 ywymc, khmc, round(xsje / 10000, 2) xsje, round(bxsje / 10000, 2) bxsje";
+		}else if(chart.getField().equals("xsml")){
+			sql = "";
+		}
+		//sql += " from v_xskhtj";
+		
+		//sql += " where bmbh = ? and jzsj = ? order by xsje desc";
+		
+		//return getXskhfltjChart(chart, sql);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", chart.getBmbh());
+		params.put("1", chart.getYear());
+		params.put("2", chart.getKhbh());
+		List<Object[]> lists = xskpDao.findBySQL(sql, params);
+		
+		return getChart(chart, lists, 2, 1);
+	}
 
 	
 	private Chart getPieByMonth(Chart chart, String sql) {
@@ -168,6 +192,48 @@ public class ChartServiceImpl implements ChartServiceI {
 				data1.add(o[2]);
 				data2.add(o[3]);
 			}
+		}
+		
+		
+		Serie serie = new Serie();
+		serie.setName(chart.getYear() + "年");
+		serie.setData(data1);
+		series.add(serie);
+		
+		serie = new Serie();
+		serie.setName(chart.getYear() - 1 + "年");
+		serie.setData(data2);
+		series.add(serie);
+		
+		c.setSeries(series);
+		c.setCategories(categories);
+		
+		return c;
+	}
+	
+	private Chart getXskhfltjChart(Chart chart, String sql) {
+		Chart c = new Chart();
+		
+		List<Serie> series = new ArrayList<Serie>();
+					
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", chart.getBmbh());
+		params.put("1", chart.getYear());
+		params.put("2", chart.getKhbh());
+		List<Object[]> lists = xskpDao.findBySQL(sql, params);
+		
+		
+		
+		List<String> categories = new ArrayList<String>();
+		List<Object> data1 = new ArrayList<Object>();
+		List<Object> data2 = new ArrayList<Object>();
+		
+		if(lists != null && lists.size() > 0){
+			for(Object[] o : lists){
+				categories.add(o[0].toString());
+				data1.add(o[1]);
+				data2.add(o[2]);
+			}
 			
 		}
 		
@@ -187,6 +253,40 @@ public class ChartServiceImpl implements ChartServiceI {
 		
 		return c;
 	}
+	
+	/*
+	 * select mc, je1, je2 from ……
+	 * cols:数据列数 2 -je1, je2
+	 * from:取得数据的开始数 1 - 0, 1, 2
+	 */
+	private Chart getChart(Chart chart, List<Object[]> lists, int cols, int from) {
+		Chart c = new Chart();
+				
+		List<Serie> series = new ArrayList<Serie>();
+		
+		for(int i = 0; i < cols; i++){
+			series.add(new Serie());
+			series.get(i).setName(chart.getYear() - i + "年");
+			series.get(i).setData(new ArrayList<Object>());
+		}
+		
+		List<String> categories = new ArrayList<String>();
+		
+		if(lists != null && lists.size() > 0){
+			for(Object[] o : lists){
+				categories.add(o[0].toString());
+				for(int i = 0; i < cols; i++){
+					series.get(i).getData().add(o[from + i]);
+				}
+			}
+		}
+		
+		c.setSeries(series);
+		c.setCategories(categories);
+		
+		return c;
+	}
+
 
 	private Chart getChartByMonth(Chart chart, String sql) {
 		Chart c = new Chart();
@@ -244,13 +344,18 @@ public class ChartServiceImpl implements ChartServiceI {
 	public DataGrid listKh(Chart chart) {
 		String searchSql = "select khbh, khmc";
 		String countSql = "select count(*)";
-		String fromWhere = " from t_xskp where bmbh = ? and YEAR(createTime) = ? group by khbh, khmc";
+		String fromWhere = " from t_xskp where bmbh = ? and YEAR(createTime) = ?";
+		String groupSql = " group by khbh, khmc";
 		String orderSql = " order by sum(hjje + hjse) desc";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", chart.getBmbh());
 		params.put("1", chart.getYear());
+		if(chart.getSearch() != null && chart.getSearch().length() > 0){
+			fromWhere += " and khmc like ?";
+			params.put("2", "%" + chart.getSearch() + "%");	
+		}
 		
-		List<Object[]> lists = xskpDao.findBySQL(searchSql + fromWhere + orderSql, params, chart.getPage(), chart.getRows());
+		List<Object[]> lists = xskpDao.findBySQL(searchSql + fromWhere + groupSql + orderSql, params, chart.getPage(), chart.getRows());
 		List<Kh> ls = new ArrayList<Kh>();
 		Kh kh = null;
 		for(Object[] l : lists){
@@ -260,11 +365,9 @@ public class ChartServiceImpl implements ChartServiceI {
 			ls.add(kh);
 		}
 		
-		
-		
 		DataGrid dg = new DataGrid();
 		dg.setRows(ls);
-		dg.setTotal((long)xskpDao.findBySQL(countSql + fromWhere, params).size());
+		dg.setTotal((long)xskpDao.findBySQL(countSql + fromWhere + groupSql, params).size());
 		
 		return dg;
 	}

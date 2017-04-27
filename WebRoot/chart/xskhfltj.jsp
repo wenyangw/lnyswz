@@ -5,7 +5,6 @@
 var xskhfltj_did;
 var xskhfltj_bmbh;
 var xskhfltj_chart;
-var jxc_xskhfltj_ywyCombo;
 var xskhfltj_kh_dg;
 
 
@@ -42,10 +41,7 @@ $(function(){
 		    panelHeight: 'auto',
 		    onSelect: function(rec){
 		    	xskhfltj_bmbh = $(this).combobox('getValue');
-		    	xskhfltj_kh_dg.datagrid('load',{
-		    		bmbh: xskhfltj_bmbh,
-					year: $('#jxc_xskhfltj_year').combobox('getValue'),
-		    	});
+		    	reloadKh();
 		    }
 		}).combobox('selectedIndex', 0);
 		xskhfltj_bmbh = $('#jxc_xskhfltj_dep').combobox('getValue');
@@ -100,11 +96,7 @@ $(function(){
 	    textField: 'text',
 	    panelHeight: 'auto',
 	    onSelect: function(rec){
-	    	//xskhfltj_bmbh = $(this).combobox('getValue');
-	    	xskhfltj_kh_dg.datagrid('load',{
-	    		bmbh: xskhfltj_bmbh,
-				year: $('#jxc_xskhfltj_year').combobox('getValue'),
-	    	});
+	    	reloadKh();
 	    }
 	}).combobox('selectedIndex', 0);
 	
@@ -208,7 +200,7 @@ function xskhfltj_setColumnLabel(){
 	}
 }
 
-function xskhfltj_getData(){
+function xskhfltj_getData(khbh){
 	lnyw.MaskUtil.mask('正在刷新，请等待……');
 	$.ajax({
 		url: '${pageContext.request.contextPath}/jxc/chartAction!getXskhfltj.action',
@@ -217,7 +209,8 @@ function xskhfltj_getData(){
 			//ywyId: jxc_xskhfltj_ywyCombo.combobox('getValue'),
 			field: $('#jxc_xskhfltj_tjlx').combobox('getValue'),
 			year: $('#jxc_xskhfltj_year').combobox('getValue'),
-			includeNb: $('input#jxc_xskhfltj_nb').is(':checked') ? '1' : '0',
+			khbh: khbh,
+			//includeNb: $('input#jxc_xskhfltj_nb').is(':checked') ? '1' : '0',
 		},
 		cache: false,
 		async: false,
@@ -253,13 +246,7 @@ function listKh(){
 	    ]],
 	    toolbar:'#xskhfltj_kh_tb',
 	    onClickRow:function(rowIndex, rowData){
-	    	khDet_dg.datagrid({
-	    		url: '${pageContext.request.contextPath}/jxc/khAction!datagridDet.action',
-	 	    	queryParams:{
-	 	    		depId: kh_did,
-	 	    		khbh: rowData.khbh
-	 	    	},
-	    	});
+	    	xskhfltj_getData(rowData.khbh);
 	    	//根据权限，动态加载功能按钮
 	    	lnyw.toolbar(0, khDet_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', kh_did);
 	    	
@@ -271,38 +258,54 @@ function listKh(){
 	});
 }
 
+function reloadKh(search){
+	xskhfltj_kh_dg.datagrid('load',{
+		bmbh: xskhfltj_bmbh,
+		year: $('#jxc_xskhfltj_year').combobox('getValue'),
+		search: search === undefined ? null : search,
+	});
+}
+
+function searchKh(){
+	reloadKh($('input[name=search]').val());
+}
+
+
 </script>
-<div id='xskhfltj_layout' class="easyui-layout" style="height:100%;width=100%">
+<div id='xskhfltj_layout' class="easyui-layout" style="height:100%;">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:320px">
-		<div id='xskhfltj_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width=100%">
-			<div data-options="region:'north',title:'',split:true" style="height:100px;width:250px">		
-				<div class="bm" style="display:none">部门：<input id="jxc_xskhfltj_dep" name="jxc_xskhfltj_dep"></div>
-				<div>统计年度：<input id="jxc_xskhfltj_year" name="jxc_xskhfltj_year"></div>
+		<div id='xskhfltj_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%;">
+			<div data-options="region:'north',title:'',split:true" style="height:100px;width:250px">
+				<div>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+				<div class="bm" style="display:none; padding-top=20px;">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：<input id="jxc_xskhfltj_dep" name="jxc_xskhfltj_dep"></div>
+				<div>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+				<div>统计年度：<input id="jxc_xskhfltj_year" name="jxc_xskhfltj_year" style="padding-top=20;"></div>
 			</div>
 			<div data-options="region:'center',title:'客户列表',split:true" style="height:100px;width:250px">		
 				<div id='xskhfltj_kh_dg'></div>
 			</div>
 		</div>
 	</div>
-	<div data-options="region:'center',title:'详细信息',split:true, fit:true" style="height:100px;">
-		<table width=100% style="margin:5px;">
+	<div data-options="region:'center',title:'详细信息',split:true, fit:false" style="height:100px;">
+		<table style="width=100%; margin:5px;">
 		<tr>
 			<td align="left">
 			&nbsp;&nbsp;&nbsp;&nbsp;统计类型：<input id="jxc_xskhfltj_tjlx" name="jxc_xskhfltj_tjlx">
 			&nbsp;&nbsp;&nbsp;&nbsp;图表类型：<input id="jxc_xskhfltj_tblx" name="jxc_xskhfltj_tblx">
-			&nbsp;&nbsp;&nbsp;&nbsp;<button id="refresh" onclick="xskhfltj_getData()">刷新</button>
+			<!-- &nbsp;&nbsp;&nbsp;&nbsp;<button id="refresh" onclick="xskhfltj_getData()">刷新</button> -->
 			&nbsp;&nbsp;&nbsp;&nbsp;<button id="export">导出</button>
 			</td>
 		</tr>
 		</table>
-		<div id="xskhfltj_container" style="min-width:800px;height:400px;float:right"></div>
-		<div style="margin:20px;">1：在统计年度中销售金额前20名的客户，与上一年的对比</div>
-		<div style="margin:20px;">2：统计数据的分类依据为（客户+业务员）</div>
+		<div id="xskhfltj_container" style="min-width:800px;height:400px;"></div>
+		<div style="margin:20px;color:red">0：点击客户名称更新数据</div>
+		<div style="margin:20px;">1：客户列表按统计年度中销售总金额按大小排序</div>
+		<div style="margin:20px;">2：统计数据的分类依据为商品类别</div>
 		<div style="margin:20px;">3：统计年度为当年，数据截止到当月;统计年度为往年，数据截止到年底。</div>
     </div>
 </div>
 <div id="xskhfltj_kh_tb" style="padding:3px;height:auto">
-	输入编号、名称：<input type="text" name="search" style="width:100px">
+	输入名称：<input type="text" name="search" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKh();">查询</a>
 </div>
 
