@@ -605,7 +605,7 @@ $(function(){
 		depChange();
 	});
 	
-	$('input[name=isZs]').click(function(){
+	$('input[name=jxc_ywrk_isZs]').click(function(){
 		if($(this).is(':checked')){
  			jxc_ywrk_ckCombo.combobox('setValue', jxc.getZfCk(ywrk_did));
 			$('.isZs').css('display','table-cell');
@@ -820,7 +820,7 @@ function saveAll(){
 	var footerRows = ywrk_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
-	if($('input[name=isZs]').is(':checked')){
+	if($('input[name=jxc_ywrk_isZs]').is(':checked')){
 		effectRow['isZs'] =  '1';
 		effectRow['shdz'] =  $('input[name=shdz]').val();
 	}else{
@@ -1341,7 +1341,7 @@ function changeYwrk(){
 							$('input[name=jxc_ywrk_gysbh]').val(selected[0].gysbh);
 							$('input[name=jxc_ywrk_gysmc]').val(selected[0].gysmc);
 							if (selected[0].isZs == '1') {
-								$('input[name=isZs]').prop('checked', true);
+								$('input[name=jxc_ywrk_isZs]').prop('checked', true);
 							}
 							if (selected[0].isDep == '1') {
 								$('input[name=isDep]').prop('checked', true);
@@ -1453,7 +1453,7 @@ function createYwrkFromCgjh(){
 					success : function(d) {
 						$('input[name=jxc_ywrk_gysbh]').val(rows[0].gysbh);
 						$('input[name=jxc_ywrk_gysmc]').val(rows[0].gysmc);
-						$('input[name=isZs]').prop('checked', true);
+						$('input[name=jxc_ywrk_isZs]').prop('checked', true);
 						jxc_ywrk_ckCombo.combobox('setValue', rows[0].ckId);
 						ywrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
@@ -1536,7 +1536,7 @@ function searchXskpInYwrk(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
-						<td colspan="2">直送<input type="checkbox" name="isZs">&nbsp;&nbsp;&nbsp;&nbsp;内部<input type="checkbox" name="isDep"></td>
+						<td colspan="2">直送<input type="checkbox" name="jxc_ywrk_isZs">&nbsp;&nbsp;&nbsp;&nbsp;内部<input type="checkbox" name="isDep"></td>
 						<th>入库类型</th><td><input id="jxc_ywrk_rklxId" name="rklxId" type="text" size="8"></td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="ywrkLsh" class="read"></div></td>
@@ -1547,7 +1547,7 @@ function searchXskpInYwrk(){
 						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_ywrk_gysmc" readonly="readonly" size="50"></td>
 					</tr>
 					<tr>
-						<th>仓库</th><td><input id="jxc_ywrk_ckId" name="ckId" type="text" size="8"></td>
+						<th>仓库</th><td><input id="jxc_ywrk_ckId" name="jxc_ywrk_ckId" type="text" size="8"></td>
 						<th class="isZs" style="display:none">送货地址</th><td class="isZs" style="display:none"><input name="shdz" type="text" size="8"></td>
 						<th class="isDep" style="display:none">部门</th><td class="isDep" style="display:none"><input id="jxc_ywrk_depId" name="depId" type="text" size="8"></td>
 					</tr>
