@@ -624,7 +624,7 @@ $(function(){
 		}
 	});
 	
-	$('input[name=isZs]').click(function(){
+	$('input[name=jxc_xsth_isZs]').click(function(){
  		if($('input#zsCheck').is(':checked')){
  			jxc_xsth_ckCombo.combobox('setValue', jxc.getZfCk(xsth_did));
 		}else{
@@ -633,8 +633,8 @@ $(function(){
 	});
 	
  	$('input[name=khmc]').change(function(){
- 		loadKh($('input[name=khbh]').val().trim());
- 		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+ 		loadKh($('input[name=jxc_xsth_khbh]').val().trim());
+ 		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=jxc_xsth_khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=jxc_xsth_khbh]').val()));
  		updateJsfs();
  		if($('input#thfs_sh').is(':checked')){
  			if(editIndex == 0){
@@ -887,13 +887,13 @@ function saveXsth(){
 	
 	//销售是否超过限额
 	
-	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
+	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=jxc_xsth_khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
 	if(sxkh.isLocked == '1'){
 		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
 		return false;
 	}
 	
-	if(jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
+	if(jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=isFhth]').is(':checked')){
 			if(sxkh.khlxId == '02'){
 				if((Number(sxkh.qkje) + Number(lnyw.delcommafy(footerRows[0].spje))) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
@@ -941,14 +941,14 @@ function saveXsth(){
 	
 	function save(){
 		if(NEED_AUDIT == "1" 
-				&& jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) 
+				&& jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) 
 				&& $('input[name=xskpDetIds]').val().trim().length == 0
 				&& !$('input[name=isFhth]').is(':checked')){
 			if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 				var needA = jxc.getAuditLevel(
 						'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
 						xsth_did, 
-						$('input[name=khbh]').val(),
+						$('input[name=jxc_xsth_khbh]').val(),
 						jxc_xsth_ywyCombo.combobox('getValue'),
 						JSFS_QK);
 				if(needA != undefined){
@@ -968,7 +968,7 @@ function saveXsth(){
 		//将表头内容传入后台
 	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 		effectRow['isSx'] = '0';
-		effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
+		effectRow['isZs'] = $('input[name=jxc_xsth_isZs]').is(':checked') ? '1' : '0';
 		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
 		if($('input[name=isFh]').is(':checked')){
 			effectRow['isFh'] = '1';
@@ -978,7 +978,7 @@ function saveXsth(){
 			effectRow['isFh'] = '0';
 		}
 		//传入直送
-		effectRow['fromOther'] = jxc.notInExcludeKhs(xsth_did, $('input[name=khbh]').val()) ? '' : 'cbs';
+		effectRow['fromOther'] = jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) ? '' : 'cbs';
 		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
 		//effectRow['isFhth'] = '0';
 		
@@ -988,7 +988,7 @@ function saveXsth(){
 			effectRow['isLs'] = $('input[name=isFhth]').is(':checked') ? '0' : '1';
 		}
 		
-		effectRow['khbh'] = $('input[name=khbh]').val();
+		effectRow['khbh'] = $('input[name=jxc_xsth_khbh]').val();
 		effectRow['khmc'] = $('input[name=khmc]').val();
 		effectRow['ckId'] = jxc_xsth_ckCombo.combobox('getValue');
 		effectRow['ckmc'] = jxc_xsth_ckCombo.combobox('getText');
@@ -1046,7 +1046,7 @@ function saveXsth(){
 					//});
 			    	
 			    	//直送提货单打印销售合同，是否有金额限定未定
-			    	if($('input[name=isZs]').is(':checked')){
+			    	if($('input[name=jxc_xsth_isZs]').is(':checked')){
 				    	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
@@ -1366,7 +1366,7 @@ function setEditing(){
     
     function checkKc(){
     	//非直送业务要判断库存
-    	if(!$('input[name=isZs]').is(':checked') || !jxc.notInExcludeZsKhs(xsth_did, $('input[name=khbh]').val())){
+    	if(!$('input[name=jxc_xsth_isZs]').is(':checked') || !jxc.notInExcludeZsKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val())){
     	//if(!$('input[name=isZs]').is(':checked')){
     	
 	    	//判断提货数量是否大于业务数量-临时数量
@@ -1535,16 +1535,16 @@ function checkKh(){
 		url:'${pageContext.request.contextPath}/jxc/khAction!checkKh.action',
 		async: false,
 		data:{
-			khbh: $('input[name=khbh]').val(),
+			khbh: $('input[name=jxc_xsth_khbh]').val(),
 			depId: xsth_did,
 		},
 		dataType:'json',
 		success:function(data){
 			if(!data.success){
 				$.messager.alert('提示', data.msg, 'error');
-				$('input[name=khbh]').val('');
+				$('input[name=jxc_xsth_khbh]').val('');
 				$('input[name=khmc]').val('');
-				$('input[name=khbh]').focus();
+				$('input[name=jxc_xsth_khbh]').focus();
 			}
 		}
 	});
@@ -1585,7 +1585,7 @@ function loadKh(khbh){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), $('input[name=jxc_xsth_dist]'), 
+		jxc.query('客户检索', $('input[name=jxc_xsth_khbh]'), $('input[name=khmc]'), $('input[name=jxc_xsth_dist]'), 
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
@@ -1593,12 +1593,12 @@ function khLoad(){
 	case 9:
 		break;
 	default:
-		if($('input[name=khbh]').val().trim().length == 0){
+		if($('input[name=jxc_xsth_khbh]').val().trim().length == 0){
 			$('input[name=khmc]').val('');
 		}
-		if($('input[name=khbh]').val().trim().length == 8){
-			loadKh($('input[name=khbh]').val().trim());
-			if(!$('input[name=isZs]').is(':checked')){
+		if($('input[name=jxc_xsth_khbh]').val().trim().length == 8){
+			loadKh($('input[name=jxc_xsth_khbh]').val().trim());
+			if(!$('input[name=jxc_xsth_isZs]').is(':checked')){
 				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
 			}
 			
@@ -1644,13 +1644,13 @@ function khShLoad(){
 	case 9:
 		break;
 	default:
-		if($('input[name=khbh]').val().trim().length == 0){
+		if($('input[name=jxc_xsth_khbh]').val().trim().length == 0){
 			$('input[name=khmc]').val('');
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
-			loadKh($('input[name=khbh]').val().trim());
-			if(!$('input[name=isZs]').is(':checked')){
-				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+			loadKh($('input[name=jxc_xsth_khbh]').val().trim());
+			if(!$('input[name=jxc_xsth_isZs]').is(':checked')){
+				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=jxc_xsth_khbh]').val()));
 			}
 			
 // 			$.ajax({
@@ -1691,7 +1691,7 @@ function updateJsfs(){
 		url: '${pageContext.request.contextPath}/jxc/xsthAction!getYsje.action',
 		data: {
 			bmbh: xsth_did,
-			khbh: $('input[name=khbh]').val().trim(),
+			khbh: $('input[name=jxc_xsth_khbh]').val().trim(),
 			ywyId: jxc_xsth_ywyCombo.combobox('getValue'),
 		},
 		dataType: 'json',
@@ -2263,7 +2263,7 @@ function toXsth(){
 						dataType : 'json',
 						success : function(d) {
 							xsth_spdg.datagrid('loadData', d.rows);
-							$('input[name=khbh]').val(rows[0].khbh);
+							$('input[name=jxc_xsth_khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
 							jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
 							jxc_xsth_ywyCombo.combobox("setValue", rows[0].ywyId);
@@ -2361,7 +2361,7 @@ function searchYwrkInXsth(){
         <div id='jxc_xsth_layout' style="height:100%;width=100%">
 			<div id="jxc_xsth_info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">
 				<div class="form_line">
-					<span class="form_label">直发<input id="zsCheck" type="checkbox" name="isZs"></span>
+					<span class="form_label">直发<input id="zsCheck" type="checkbox" name="jxc_xsth_isZs"></span>
 					<span class="form_label">发票<input id="fpCheck" type="checkbox" name="toFp"></span>
 					<span class="fh form_label" style="display:none">分户<input type="checkbox" name="isFh"></span>
 	 				<span class="isFhth form_label" style="display:none">分户提货<input type="checkbox" name="isFhth"></span>
@@ -2372,11 +2372,11 @@ function searchYwrkInXsth(){
 				</div>
 				<div class="form_line">
 					<span class="form_label">客户编号</span>
-					<span><input name="khbh" class="easyui-validatebox" data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()" size="6"></span>
+					<span><input name="jxc_xsth_khbh" class="easyui-validatebox" data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()" size="6"></span>
 					<span class="form_label">客户名称</span>
 					<span><input name="khmc" readonly="readonly" size="30"></span>
 					<span class="form_label">仓库</span>
-					<span><input id="jxc_xsth_ckId" name="ckId" size="10"></span>
+					<span><input id="jxc_xsth_ckId" name="jxc_xsth_ckId" size="10"></span>
 					<span class="isFh form_label" style="display:none">分户</span>
 					<span class="isFh" style="display:none"><input id="jxc_xsth_fhId" name="fhId" size="10"></span>
 					<span class="isShYf form_label" style="display:none">运费</span>
