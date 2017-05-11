@@ -1,9 +1,23 @@
 package lnyswz.jxc.action;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -62,7 +76,10 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		// 调用WebService的sayHello方法
 		// String resResult = wsImpl.sayHello("孤傲苍狼");
 		
-
+		Document doc = parserXml(result);
+		
+		String resultCode = getNode(doc, "result");
+		
 		System.out.println(result);
 
 	}
@@ -119,6 +136,71 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		sb.append("</root>");
 
 		return sb.toString();
+	}
+	
+	private Node getNode(Document doc, String nodeName){
+		return null;
+	}
+	
+	/**
+	 * 解析xml字符串
+	 * 
+	 * @param str传递过来的xml字符串
+	 */
+	private Document parserXml(String str) {
+		try {
+			StringReader read = new StringReader(str);
+			// 创建新的输入源SAX 解析器将使用 InputSource 对象来确定如何读取 XML 输入
+			InputSource source = new InputSource(read);
+			// 创建一个新的SAXBuilder
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document document = db.parse(source);
+			
+			return document;
+			//获取每个节点的内容，并保存到maps中
+			//getNodes(document.getChildNodes());
+			
+			//return verify(document);
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException");
+			System.out.println(e.getMessage());
+		} catch (ParserConfigurationException e) {
+			System.out.println("ParserConfigurationException");
+			System.out.println(e.getMessage());
+		} catch (SAXParseException e) {
+			System.out.println("SAXParseException");
+			System.out.println(e.getMessage());
+			//return result("", "1", e.getMessage());
+		} catch (SAXException e) {
+			System.out.println("SAXException");
+			System.out.println(e.getMessage());
+			//return result("", "1", "文件读取错误！");
+		} catch (IOException e) {
+			System.out.println("IOException");
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	/**
+	 * 根据传入节点列表，对不同节点类型（只包含一层节点：getField(NodeList lists)，包含多层子节点：getNodes(NodeList lists)）执行不同的操作
+	 * @param lists
+	 */
+	private void getNodes(NodeList lists){
+		for (int i = 0; i < lists.getLength(); i++) {
+			Node node = lists.item(i);
+			if(node.getNodeName().equals("root")){
+				getNodes(node.getChildNodes());
+			}else if(node.getNodeName().equals("head")){
+				getNodes(node.getChildNodes());
+			}else if(node.getNodeName().equals("deal")){
+				getNodes(node.getChildNodes());
+			}else if(node.getNodeName().equals("Details")){
+				getDetail(node.getChildNodes());
+			}else{
+				getField(headMap, node);
+			}
+		}
 	}
 	
 	

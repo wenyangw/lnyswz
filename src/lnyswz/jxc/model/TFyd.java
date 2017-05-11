@@ -48,6 +48,10 @@ public class TFyd implements java.io.Serializable {
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
+	private String sended;
+	private int sendId;
+	private String sendName;
+	private Date sendTime;
 	private Set<TFydDet> TFydDets = new HashSet<TFydDet>(0);
 	
 	public TFyd() {
@@ -55,7 +59,7 @@ public class TFyd implements java.io.Serializable {
 
 	public TFyd(String fydlsh, String bmbh, Date createTime,	String status, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
 			Date tzrq, String yc, BigDecimal price, int tzdys, int yangshu, int zongym, int cbzs, int kbgg, String cpgg, int dwyz, String zdr,
-			String zdfs, String zzfs, Set<TFydDet> TFydDets) {
+			String zdfs, String zzfs, String sended, int sendId, String sendName, Date sendTime, Set<TFydDet> TFydDets) {
 		this.fydlsh = fydlsh;
 		this.bmbh = bmbh;
 		this.createTime = createTime;
@@ -81,6 +85,10 @@ public class TFyd implements java.io.Serializable {
 		this.zdr = zdr;
 		this.zdfs = zdfs;
 		this.zzfs = zzfs;
+		this.sended = sended;
+		this.sendId = sendId;
+		this.sendName = sendName;
+		this.sendTime = sendTime;
 		this.TFydDets = TFydDets;
 	}
 
@@ -312,6 +320,43 @@ public class TFyd implements java.io.Serializable {
 
 	public void setZzfs(String zzfs) {
 		this.zzfs = zzfs;
+	}
+
+	public String getSended() {
+		return sended;
+	}
+
+	@Column(name = "sended", nullable = false, length = 1)
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	public int getSendId() {
+		return sendId;
+	}
+
+	@Column(name = "sendId")
+	public void setSendId(int sendId) {
+		this.sendId = sendId;
+	}
+
+	@Column(name = "sendName", length = 20)
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "sendTime", nullable = false, length = 23)
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TFyd", cascade=CascadeType.ALL)

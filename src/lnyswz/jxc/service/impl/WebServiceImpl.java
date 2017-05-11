@@ -203,6 +203,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		tFyd.setCreateTime(new Date());
 		
 		tFyd.setStatus(getFydStatus(fyd.getTzdbh()));
+		tFyd.setSended("0");
 		
 		Set<TFydDet> tDets = new HashSet<TFydDet>();
 		for(Map<String, Object> m : details){

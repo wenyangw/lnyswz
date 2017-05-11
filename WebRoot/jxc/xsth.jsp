@@ -511,6 +511,27 @@ $(function(){
 	        {field:'zdr',title:'制单人',align:'center'},
 	        {field:'zdfs',title:'装订方式',align:'center'},
 	        {field:'zzfs',title:'装帧方式',align:'center'},
+	        {field:'edited',title:'确认单价',align:'center',
+	        	formatter : function(value) {
+					if (value == '0') {
+						return '否';
+					} else if (value == '1'){
+						return '是';
+					}
+				},
+	        },
+	        {field:'sended',title:'上传',align:'center',
+	        	formatter : function(value) {
+					if (value == '0') {
+						return '否';
+					} else if (value == '1'){
+						return '是';
+					}
+				},
+	        },
+	        {field:'sendId',title:'上传Id',align:'center',hidden:true},
+	        {field:'sendName',title:'上传人',align:'center'},
+	        {field:'sendTime',title:'上传时间',align:'center'},
 	        
 	    ]],
 	    toolbar:'#jxc_xsth_fydTb',
@@ -549,15 +570,15 @@ $(function(){
                     {field:'cton',title:'吨数',width:100,align:'center'},
                 ]],
                 onResize:function(){
-                	xsth_dg.datagrid('fixDetailRowHeight',index);
+                	xsth_fydDg.datagrid('fixDetailRowHeight',index);
                 },
                 onLoadSuccess:function(){
                     setTimeout(function(){
-                    	xsth_dg.datagrid('fixDetailRowHeight',index);
+                    	xsth_fydDg.datagrid('fixDetailRowHeight',index);
                     },0);
                 }
             });
-            xsth_dg.datagrid('fixDetailRowHeight',index);
+            xsth_fydDg.datagrid('fixDetailRowHeight',index);
         }
     });
 	
@@ -2475,6 +2496,7 @@ function confirmXsdj(){
 							},
 							dataType : 'json',
 							success : function(d) {
+								xsth_fydDg.datagrid('reload');
 								fydDetDg.datagrid('reload');
 								fydDetDg.datagrid('unselectAll');
 								$.messager.show({
@@ -2503,26 +2525,30 @@ function confirmXsdj(){
 function sendFyd(){
 	var selected = xsth_fydDg.datagrid('getSelected');
  	if (selected != undefined) {
- 		$.messager.confirm('请确认', '是否上传付印单数据？', function(r){
-			if (r != undefined){
-				$.ajax({
-					url : '${pageContext.request.contextPath}/jxc/fydAction!sendFyd.action',
-					data : {
-						fydlsh : selected.fydlsh,
-						bmbh : xsth_did,
-					},
-					dataType : 'json',
-					success : function(d) {
-						xsth_fydDg.datagrid('reload');
-						xsth_fydDg.datagrid('unselectAll');
-						$.messager.show({
-							title : '提示',
-							msg : d.msg
-						});
-					}
-				});
-			}
-		});
+ 		if (selected.edited != '0') {
+	 		$.messager.confirm('请确认', '是否上传付印单数据？', function(r){
+				if (r != undefined){
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/fydAction!sendFyd.action',
+						data : {
+							fydlsh : selected.fydlsh,
+							bmbh : xsth_did,
+						},
+						dataType : 'json',
+						success : function(d) {
+							xsth_fydDg.datagrid('reload');
+							xsth_fydDg.datagrid('unselectAll');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						}
+					});
+				}
+			});
+ 		}else{
+ 			$.messager.alert('警告', '选择的记录商品单价未确认，请操作！',  'warning');
+ 		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

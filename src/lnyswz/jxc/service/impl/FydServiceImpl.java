@@ -94,6 +94,13 @@ public class FydServiceImpl implements FydServiceI {
 		for(TFyd t : l){
 			c = new Fyd();
 			BeanUtils.copyProperties(t, c);
+			c.setEdited("1");
+			for(TFydDet tfd : t.getTFydDets()){
+				if(tfd.getDanjia() == null || tfd.getDanjia().compareTo(BigDecimal.ZERO) == 0){
+					c.setEdited("0");
+					break;
+				}
+			}
 			nl.add(c);
 		}
 		datagrid.setTotal(fydDao.count(countHql, params));

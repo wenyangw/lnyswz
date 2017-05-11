@@ -30,12 +30,17 @@ public class Fyd{
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
+	private String sended;
+	private int sendId;
+	private String sendName;
+	private Date sendTime;
 	private BigDecimal danjia;
 	private BigDecimal gongj; 
 	
 	private int id;
 	private String fromOther;
 	private String search;
+	private String edited;
 	private int page;
 	private int rows;
 	
@@ -189,6 +194,30 @@ public class Fyd{
 	public void setZzfs(String zzfs) {
 		this.zzfs = zzfs;
 	}
+	public String getSended() {
+		return sended;
+	}
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+	public int getSendId() {
+		return sendId;
+	}
+	public void setSendId(int sendId) {
+		this.sendId = sendId;
+	}
+	public String getSendName() {
+		return sendName;
+	}
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+	public Date getSendTime() {
+		return sendTime;
+	}
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
 	public BigDecimal getDanjia() {
 		return danjia;
 	}
@@ -218,6 +247,12 @@ public class Fyd{
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public String getEdited() {
+		return edited;
+	}
+	public void setEdited(String edited) {
+		this.edited = edited;
 	}
 	public int getPage() {
 		return page;

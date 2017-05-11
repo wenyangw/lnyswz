@@ -218,7 +218,7 @@ function xskhtj_getData(){
 }
 
 </script>
-<table width=100% style="margin:5px;"><tr>
+<table style="width=100%; margin:5px;"><tr>
 <td align="left"><span class="bm" style="display:none">部门：<input id="jxc_xskhtj_dep" name="jxc_xskhtj_dep"></span>
 <!-- &nbsp;&nbsp;&nbsp;&nbsp;全部<input type="checkbox" id="jxc_xskhtj_nb" name="jxc_xskhtj_nb"> -->
 <!-- 业务员：<input id="jxc_xskhtj_ywy" name="jxc_xskhtj_ywy"> -->
