@@ -214,7 +214,6 @@ public class FydServiceImpl implements FydServiceI {
 
 		
 		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
-		System.out.println(sb.toString());
 		return sb.toString();
 	}
 	

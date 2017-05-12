@@ -76,11 +76,12 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		// 调用WebService的sayHello方法
 		// String resResult = wsImpl.sayHello("孤傲苍狼");
 		
+		System.out.println(result);
 		Document doc = parserXml(result);
 		
-		String resultCode = getNode(doc, "result");
+		Node node = getNode(doc.getChildNodes(), "result");
 		
-		System.out.println(result);
+		System.out.println("---" + node.getNodeName());
 
 	}
 	
@@ -138,7 +139,48 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		return sb.toString();
 	}
 	
-	private Node getNode(Document doc, String nodeName){
+	private Node getNode(NodeList lists, String nodeName){
+		
+		/*for (int i = 0; i < lists.getLength(); i++) {
+			Node node = lists.item(i);
+			System.out.println(node.getNodeName());
+			if(node.hasChildNodes()){
+				getNode(node.getChildNodes(), nodeName);
+			}else{
+				if(node.getNodeName().equals(nodeName)){
+					return node;
+				}else{
+					continue;
+				}
+			}
+		}
+		return null;*/
+		for (int i = 0; i < lists.getLength(); i++) {
+			Node node = lists.item(i);
+			System.out.println(node.getNodeName());
+			if(node.getNodeName().equals("root")){
+				System.out.println("root--");
+				getNode(node.getChildNodes(), nodeName);
+			}else if(node.getNodeName().equals("head")){
+				System.out.println("head--");
+				getNode(node.getChildNodes(), nodeName);
+			}else if(node.getNodeName().equals("deals")){
+				System.out.println("deals--");
+				getNode(node.getChildNodes(), nodeName);
+			}else if(node.getNodeName().equals("deal")){
+				System.out.println("deal--");
+				getNode(node.getChildNodes(), nodeName);
+			}else{
+				System.out.println(node.getNodeName() + "++");
+				if(node.getNodeName().equals(nodeName)){
+					System.out.println(node.getNodeName() + "**");
+					return node;
+				}else{
+					System.out.println(node.getNodeName() + "%%");
+					continue;
+				}
+			}
+		}
 		return null;
 	}
 	
@@ -182,28 +224,7 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		}
 		return null;
 	}
-	/**
-	 * 根据传入节点列表，对不同节点类型（只包含一层节点：getField(NodeList lists)，包含多层子节点：getNodes(NodeList lists)）执行不同的操作
-	 * @param lists
-	 */
-	private void getNodes(NodeList lists){
-		for (int i = 0; i < lists.getLength(); i++) {
-			Node node = lists.item(i);
-			if(node.getNodeName().equals("root")){
-				getNodes(node.getChildNodes());
-			}else if(node.getNodeName().equals("head")){
-				getNodes(node.getChildNodes());
-			}else if(node.getNodeName().equals("deal")){
-				getNodes(node.getChildNodes());
-			}else if(node.getNodeName().equals("Details")){
-				getDetail(node.getChildNodes());
-			}else{
-				getField(headMap, node);
-			}
-		}
-	}
-	
-	
+		
 	@Override
 	public Fyd getModel() {
 		return fyd;
