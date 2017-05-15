@@ -1599,7 +1599,7 @@ function khLoad(){
 		if($('input[name=jxc_xsth_khbh]').val().trim().length == 8){
 			loadKh($('input[name=jxc_xsth_khbh]').val().trim());
 			if(!$('input[name=jxc_xsth_isZs]').is(':checked')){
-				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=khbh]').val()));
+				jxc_xsth_ckCombo.combobox('setValue', jxc.getCkByKhbh(xsth_did, $('input[name=jxc_xsth_khbh]').val()));
 			}
 			
 // 			$.ajax({
