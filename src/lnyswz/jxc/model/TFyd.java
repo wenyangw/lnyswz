@@ -42,9 +42,9 @@ public class TFyd implements java.io.Serializable {
 	private int yangshu;
 	private int zongym;
 	private int cbzs;
-	private int kbgg;
+	private String kbgg;
 	private String cpgg;
-	private int dwyz;
+	private BigDecimal dwyz;
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
@@ -58,7 +58,7 @@ public class TFyd implements java.io.Serializable {
 	}
 
 	public TFyd(String fydlsh, String bmbh, Date createTime,	String status, String publisher, String publishercn, String checkCode, String tzdbh, String cbsydsno, String bsno, String bname, String isbn,
-			Date tzrq, String yc, BigDecimal price, int tzdys, int yangshu, int zongym, int cbzs, int kbgg, String cpgg, int dwyz, String zdr,
+			Date tzrq, String yc, BigDecimal price, int tzdys, int yangshu, int zongym, int cbzs, String kbgg, String cpgg, BigDecimal dwyz, String zdr,
 			String zdfs, String zzfs, String sended, int sendId, String sendName, Date sendTime, Set<TFydDet> TFydDets) {
 		this.fydlsh = fydlsh;
 		this.bmbh = bmbh;
@@ -150,7 +150,7 @@ public class TFyd implements java.io.Serializable {
 		this.publishercn = publishercn;
 	}
 
-	@Column(name = "checkCode", nullable = false, length = 20)
+	@Column(name = "checkCode", nullable = true, length = 20)
 	public String getCheckCode() {
 		return checkCode;
 	}
@@ -168,7 +168,7 @@ public class TFyd implements java.io.Serializable {
 		this.tzdbh = tzdbh;
 	}
 
-	@Column(name = "cbsydsno", nullable = false, length = 20)
+	@Column(name = "cbsydsno", nullable = true, length = 20)
 	public String getCbsydsno() {
 		return cbsydsno;
 	}
@@ -177,7 +177,7 @@ public class TFyd implements java.io.Serializable {
 		this.cbsydsno = cbsydsno;
 	}
 
-	@Column(name = "bsno", nullable = false, length = 20)
+	@Column(name = "bsno", nullable = true, length = 20)
 	public String getBsno() {
 		return bsno;
 	}
@@ -186,7 +186,7 @@ public class TFyd implements java.io.Serializable {
 		this.bsno = bsno;
 	}
 
-	@Column(name = "bname", nullable = false, length = 100)
+	@Column(name = "bname", nullable = true, length = 100)
 	public String getBname() {
 		return bname;
 	}
@@ -195,7 +195,7 @@ public class TFyd implements java.io.Serializable {
 		this.bname = bname;
 	}
 
-	@Column(name = "isbn", nullable = false, length = 20)
+	@Column(name = "isbn", nullable = true, length = 20)
 	public String getIsbn() {
 		return isbn;
 	}
@@ -205,7 +205,7 @@ public class TFyd implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "tzrq", nullable = false, length = 23)
+	@Column(name = "tzrq", nullable = true, length = 23)
 	public Date getTzrq() {
 		return tzrq;
 	}
@@ -214,7 +214,7 @@ public class TFyd implements java.io.Serializable {
 		this.tzrq = tzrq;
 	}
 
-	@Column(name = "yc", nullable = false, length = 20)
+	@Column(name = "yc", nullable = true, length = 20)
 	public String getYc() {
 		return yc;
 	}
@@ -232,7 +232,7 @@ public class TFyd implements java.io.Serializable {
 		this.price = price;
 	}
 
-	@Column(name = "tzdys", nullable = false)
+	@Column(name = "tzdys", nullable = true)
 	public int getTzdys() {
 		return tzdys;
 	}
@@ -241,7 +241,7 @@ public class TFyd implements java.io.Serializable {
 		this.tzdys = tzdys;
 	}
 
-	@Column(name = "yangshu", nullable = false)
+	@Column(name = "yangshu", nullable = true)
 	public int getYangshu() {
 		return yangshu;
 	}
@@ -250,7 +250,7 @@ public class TFyd implements java.io.Serializable {
 		this.yangshu = yangshu;
 	}
 
-	@Column(name = "zongym", nullable = false)
+	@Column(name = "zongym", nullable = true)
 	public int getZongym() {
 		return zongym;
 	}
@@ -259,7 +259,7 @@ public class TFyd implements java.io.Serializable {
 		this.zongym = zongym;
 	}
 
-	@Column(name = "cbzs", nullable = false)
+	@Column(name = "cbzs", nullable = true)
 	public int getCbzs() {
 		return cbzs;
 	}
@@ -268,16 +268,16 @@ public class TFyd implements java.io.Serializable {
 		this.cbzs = cbzs;
 	}
 
-	@Column(name = "kbgg", nullable = false)
-	public int getKbgg() {
+	@Column(name = "kbgg", nullable = true, length = 20)
+	public String getKbgg() {
 		return kbgg;
 	}
 
-	public void setKbgg(int kbgg) {
+	public void setKbgg(String kbgg) {
 		this.kbgg = kbgg;
 	}
 
-	@Column(name = "cpgg", nullable = false, length = 20)
+	@Column(name = "cpgg", nullable = true, length = 20)
 	public String getCpgg() {
 		return cpgg;
 	}
@@ -286,16 +286,16 @@ public class TFyd implements java.io.Serializable {
 		this.cpgg = cpgg;
 	}
 	
-	@Column(name = "dwyz", nullable = false)
-	public int getDwyz() {
+	@Column(name = "dwyz", nullable = true)
+	public BigDecimal getDwyz() {
 		return dwyz;
 	}
 
-	public void setDwyz(int dwyz) {
+	public void setDwyz(BigDecimal dwyz) {
 		this.dwyz = dwyz;
 	}
 
-	@Column(name = "zdr", nullable = false, length = 20)
+	@Column(name = "zdr", nullable = true, length = 20)
 	public String getZdr() {
 		return zdr;
 	}
@@ -304,7 +304,7 @@ public class TFyd implements java.io.Serializable {
 		this.zdr = zdr;
 	}
 
-	@Column(name = "zdfs", nullable = false, length = 20)
+	@Column(name = "zdfs", nullable = true, length = 20)
 	public String getZdfs() {
 		return zdfs;
 	}
@@ -313,7 +313,7 @@ public class TFyd implements java.io.Serializable {
 		this.zdfs = zdfs;
 	}
 
-	@Column(name = "zzfs", nullable = false, length = 20)
+	@Column(name = "zzfs", nullable = true, length = 20)
 	public String getZzfs() {
 		return zzfs;
 	}
@@ -350,7 +350,7 @@ public class TFyd implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "sendTime", nullable = false, length = 23)
+	@Column(name = "sendTime", length = 23)
 	public Date getSendTime() {
 		return sendTime;
 	}

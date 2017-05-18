@@ -24,9 +24,9 @@ public class Fyd{
 	private int yangshu;
 	private int zongym;
 	private int cbzs;
-	private int kbgg;
+	private String kbgg;
 	private String cpgg;
-	private int dwyz;
+	private BigDecimal dwyz;
 	private String zdr;
 	private String zdfs;
 	private String zzfs;
@@ -158,10 +158,10 @@ public class Fyd{
 	public void setCbzs(int cbzs) {
 		this.cbzs = cbzs;
 	}
-	public int getKbgg() {
+	public String getKbgg() {
 		return kbgg;
 	}
-	public void setKbgg(int kbgg) {
+	public void setKbgg(String kbgg) {
 		this.kbgg = kbgg;
 	}
 	public String getCpgg() {
@@ -170,10 +170,10 @@ public class Fyd{
 	public void setCpgg(String cpgg) {
 		this.cpgg = cpgg;
 	}
-	public int getDwyz() {
+	public BigDecimal getDwyz() {
 		return dwyz;
 	}
-	public void setDwyz(int dwyz) {
+	public void setDwyz(BigDecimal dwyz) {
 		this.dwyz = dwyz;
 	}
 	public String getZdr() {

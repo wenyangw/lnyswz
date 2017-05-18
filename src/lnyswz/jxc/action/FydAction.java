@@ -75,13 +75,26 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		String result = factory.getPr2LgCfc().wsCargo(fydService.sendFyd(fyd));
 		// 调用WebService的sayHello方法
 		// String resResult = wsImpl.sayHello("孤傲苍狼");
-		
 		System.out.println(result);
-		Document doc = parserXml(result);
 		
-		Node node = getNode(doc.getChildNodes(), "result");
+		int pos = result.indexOf("<result code=\"0\">");
 		
-		System.out.println("---" + node.getNodeName());
+		Json j = new Json();
+		if(pos > 0){
+			j.setSuccess(true);
+			j.setMsg("上传数据成功！");
+		}else{
+			j.setMsg("上传数据失败！");
+		}
+		
+		writeJson(j);
+		//Document doc = parserXml(result);
+		
+		
+		
+		//Node node = getNode(doc.getChildNodes(), "result");
+		
+		//System.out.println("---" + node.getNodeName());
 
 	}
 	

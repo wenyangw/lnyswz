@@ -126,7 +126,7 @@ public class TFydDet implements java.io.Serializable {
 		this.tzdbh = tzdbh;
 	}
 
-	@Column(name = "cbsydsno", nullable = false, length = 20)
+	@Column(name = "cbsydsno", nullable = true, length = 20)
 	public String getCbsydsno() {
 		return cbsydsno;
 	}
@@ -135,7 +135,7 @@ public class TFydDet implements java.io.Serializable {
 		this.cbsydsno = cbsydsno;
 	}
 
-	@Column(name = "sno", nullable = false)
+	@Column(name = "sno", nullable = true)
 	public int getSno() {
 		return sno;
 	}
@@ -144,7 +144,7 @@ public class TFydDet implements java.io.Serializable {
 		this.sno = sno;
 	}
 
-	@Column(name = "xmdm", nullable = false, length = 20)
+	@Column(name = "xmdm", nullable = true, length = 20)
 	public String getXmdm() {
 		return xmdm;
 	}
@@ -153,7 +153,7 @@ public class TFydDet implements java.io.Serializable {
 		this.xmdm = xmdm;
 	}
 
-	@Column(name = "xmmc", nullable = false, length = 20)
+	@Column(name = "xmmc", nullable = true, length = 20)
 	public String getXmmc() {
 		return xmmc;
 	}
@@ -162,7 +162,7 @@ public class TFydDet implements java.io.Serializable {
 		this.xmmc = xmmc;
 	}
 
-	@Column(name = "xmys", nullable = false)
+	@Column(name = "xmys", nullable = true)
 	public int getXmys() {
 		return xmys;
 	}
@@ -171,7 +171,7 @@ public class TFydDet implements java.io.Serializable {
 		this.xmys = xmys;
 	}
 
-	@Column(name = "amount", nullable = false)
+	@Column(name = "amount", nullable = true)
 	public int getAmount() {
 		return amount;
 	}
@@ -180,7 +180,7 @@ public class TFydDet implements java.io.Serializable {
 		this.amount = amount;
 	}
 
-	@Column(name = "zzks", nullable = false)
+	@Column(name = "zzks", nullable = true)
 	public int getZzks() {
 		return zzks;
 	}
@@ -189,7 +189,7 @@ public class TFydDet implements java.io.Serializable {
 		this.zzks = zzks;
 	}
 
-	@Column(name = "jsyz", nullable = false)
+	@Column(name = "jsyz", nullable = true)
 	public int getJsyz() {
 		return jsyz;
 	}
@@ -198,7 +198,7 @@ public class TFydDet implements java.io.Serializable {
 		this.jsyz = jsyz;
 	}
 
-	@Column(name = "seshu", nullable = false)
+	@Column(name = "seshu", nullable = true)
 	public int getSeshu() {
 		return seshu;
 	}
@@ -207,7 +207,7 @@ public class TFydDet implements java.io.Serializable {
 		this.seshu = seshu;
 	}
 
-	@Column(name = "seshu2", nullable = false)
+	@Column(name = "seshu2", nullable = true)
 	public int getSeshu2() {
 		return seshu2;
 	}
@@ -216,7 +216,7 @@ public class TFydDet implements java.io.Serializable {
 		this.seshu2 = seshu2;
 	}
 
-	@Column(name = "ysfs", nullable = false, length = 20)
+	@Column(name = "ysfs", nullable = true, length = 20)
 	public String getYsfs() {
 		return ysfs;
 	}
@@ -225,7 +225,7 @@ public class TFydDet implements java.io.Serializable {
 		this.ysfs = ysfs;
 	}
 
-	@Column(name = "pname", nullable = false, length = 50)
+	@Column(name = "pname", nullable = true, length = 50)
 	public String getPname() {
 		return pname;
 	}
@@ -234,7 +234,7 @@ public class TFydDet implements java.io.Serializable {
 		this.pname = pname;
 	}
 
-	@Column(name = "clbz", nullable = false, length = 20)
+	@Column(name = "clbz", nullable = true, length = 20)
 	public String getClbz() {
 		return clbz;
 	}
@@ -243,7 +243,7 @@ public class TFydDet implements java.io.Serializable {
 		this.clbz = clbz;
 	}
 
-	@Column(name = "clkq", nullable = false, length = 20)
+	@Column(name = "clkq", nullable = true, length = 20)
 	public String getClkq() {
 		return clkq;
 	}
@@ -252,7 +252,7 @@ public class TFydDet implements java.io.Serializable {
 		this.clkq = clkq;
 	}
 
-	@Column(name = "cldm", nullable = false, length = 20)
+	@Column(name = "cldm", nullable = true, length = 20)
 	public String getCldm() {
 		return cldm;
 	}
@@ -261,7 +261,7 @@ public class TFydDet implements java.io.Serializable {
 		this.cldm = cldm;
 	}
 
-	@Column(name = "zzmc", nullable = false, length = 50)
+	@Column(name = "zzmc", nullable = true, length = 50)
 	public String getZzmc() {
 		return zzmc;
 	}
@@ -270,7 +270,7 @@ public class TFydDet implements java.io.Serializable {
 		this.zzmc = zzmc;
 	}
 
-	@Column(name = "zzgg", nullable = false, length = 20)
+	@Column(name = "zzgg", nullable = true, length = 20)
 	public String getZzgg() {
 		return zzgg;
 	}
@@ -279,7 +279,7 @@ public class TFydDet implements java.io.Serializable {
 		this.zzgg = zzgg;
 	}
 
-	@Column(name = "cllb", nullable = false, length = 20)
+	@Column(name = "cllb", nullable = true, length = 20)
 	public String getCllb() {
 		return cllb;
 	}
@@ -288,7 +288,7 @@ public class TFydDet implements java.io.Serializable {
 		this.cllb = cllb;
 	}
 
-	@Column(name = "clweight", nullable = false, length = 20)
+	@Column(name = "clweight", nullable = true, length = 20)
 	public String getClweight() {
 		return clweight;
 	}
@@ -297,7 +297,7 @@ public class TFydDet implements java.io.Serializable {
 		this.clweight = clweight;
 	}
 
-	@Column(name = "danjiadw", nullable = false, length = 20)
+	@Column(name = "danjiadw", nullable = true, length = 20)
 	public String getDanjiadw() {
 		return danjiadw;
 	}
@@ -315,7 +315,7 @@ public class TFydDet implements java.io.Serializable {
 		this.sjyzl = sjyzl;
 	}
 
-	@Column(name = "jfl", nullable = false)
+	@Column(name = "jfl", nullable = true)
 	public int getJfl() {
 		return jfl;
 	}
@@ -333,7 +333,7 @@ public class TFydDet implements java.io.Serializable {
 		this.jfyzl = jfyzl;
 	}
 
-	@Column(name = "tiaojfs", nullable = false)
+	@Column(name = "tiaojfs", nullable = true)
 	public int getTiaojfs() {
 		return tiaojfs;
 	}
@@ -369,7 +369,7 @@ public class TFydDet implements java.io.Serializable {
 		this.gongj = gongj;
 	}
 
-	@Column(name = "czl", nullable = false)
+	@Column(name = "czl", nullable = true)
 	public int getCzl() {
 		return czl;
 	}

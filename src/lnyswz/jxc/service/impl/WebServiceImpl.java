@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.parsers.DocumentBuilder;
@@ -75,9 +76,12 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			"zzhjl", "czl", "clton"};*/
 
 	@Override
+	@WebMethod
 	public String lg2pr(@WebParam(name="xml")String xml) {
 		headMap = new HashMap<String, Object>();
 		details = new ArrayList<Map<String, Object>>();
+		
+		System.out.println(xml);
 			
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
@@ -107,24 +111,27 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 			System.out.println("FileNotFoundException");
 			System.out.println(e.getMessage());
 			System.out.println(e.getMessage());
+			return result("", "1", e.getMessage());
 		} catch (ParserConfigurationException e) {
 			System.out.println("ParserConfigurationException");
 			System.out.println(e.getMessage());
 			System.out.println(e.getMessage());
+			return result("", "1", e.getMessage());
 		} catch (SAXParseException e) {
 			System.out.println("SAXParseException");
 			System.out.println(e.getMessage());
-			//return result("", "1", e.getMessage());
+			return result("", "1", e.getMessage());
 		} catch (SAXException e) {
 			System.out.println("SAXException");
 			System.out.println(e.getMessage());
-			//return result("", "1", "文件读取错误！");
+			return result("", "1", "文件读取错误！");
 		} catch (IOException e) {
 			System.out.println("IOException");
 			System.out.println(e.getMessage());
 			System.out.println(e.getMessage());
+			
 		}
-		return null;
+		return result("", "1", "失败");
 	}	
 	
 	/**
