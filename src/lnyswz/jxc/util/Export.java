@@ -1,16 +1,34 @@
 package lnyswz.jxc.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.struts2.ServletActionContext;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRExporter;
@@ -151,5 +169,70 @@ public class Export {
 		}else{
 			return "pdf";
 		}
+	}
+	
+	/**
+	 * 访问远程(WebService)xml数据后返回的xml格式字符串并生成为本地文件
+	 * 
+	 */
+	public static void saveFile(Document document, String savaFileURL){
+		TransformerFactory transF = TransformerFactory.newInstance();
+		try{
+			DOMSource source = new DOMSource(document);
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			Transformer transformer = transF.newTransformer();
+			StreamResult result = new StreamResult(bytes);
+			
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.INDENT, "YES");
+			transformer.transform(source, result);
+		 
+			FileOutputStream fos = new FileOutputStream(savaFileURL);
+			fos.write(bytes.toByteArray());
+			fos.close();
+			
+			
+			System.out.println("生成xml文件成功!");
+		}catch(TransformerConfigurationException e){
+			System.out.println(e.getMessage());
+		}catch(IllegalArgumentException e){
+			System.out.println(e.getMessage());
+		}catch(FileNotFoundException e){
+			System.out.println(e.getMessage());
+		}catch(TransformerException e){
+			System.out.println(e.getMessage());
+		}catch(IOException e){
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static Document createDoc(String str){
+		try {
+			StringReader read = new StringReader(str);
+			// 创建新的输入源SAX 解析器将使用 InputSource 对象来确定如何读取 XML 输入
+			InputSource source = new InputSource(read);
+			// 创建一个新的SAXBuilder
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document document = db.parse(source);
+			
+			return document;
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException");
+			System.out.println(e.getMessage());
+		} catch (ParserConfigurationException e) {
+			System.out.println("ParserConfigurationException");
+			System.out.println(e.getMessage());
+		} catch (SAXParseException e) {
+			System.out.println("SAXParseException");
+			System.out.println(e.getMessage());
+		} catch (SAXException e) {
+			System.out.println("SAXException");
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IOException");
+			System.out.println(e.getMessage());
+		}
+		return null;
 	}
 }

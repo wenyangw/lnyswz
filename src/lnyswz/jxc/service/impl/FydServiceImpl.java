@@ -5,44 +5,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-
 import lnyswz.common.bean.DataGrid;
-import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.KfrkDet;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.bean.Fyd;
 import lnyswz.jxc.bean.FydDet;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSpDet;
-import lnyswz.jxc.model.TXskp;
-import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TFyd;
 import lnyswz.jxc.model.TFydDet;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.FydServiceI;
-import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 import lnyswz.jxc.util.Util;
 
 /**
@@ -52,16 +31,8 @@ import lnyswz.jxc.util.Util;
  */
 @Service("fydService")
 public class FydServiceImpl implements FydServiceI {
-	private Logger logger = Logger.getLogger(FydServiceImpl.class);
 	private BaseDaoI<TFyd> fydDao;
 	private BaseDaoI<TFydDet> detDao;
-	private BaseDaoI<TLsh> lshDao;
-	private BaseDaoI<TSpDet> spDetDao;
-	private BaseDaoI<TDepartment> depDao;
-
-
-	private BaseDaoI<TSp> spDao;
-	private BaseDaoI<TOperalog> operalogDao;
 	
 	@Override
 	public DataGrid datagrid(Fyd fyd) {
@@ -133,7 +104,15 @@ public class FydServiceImpl implements FydServiceI {
 		tFydDet.setDanjia(fyd.getDanjia());
 		tFydDet.setGongj(fyd.getDanjia().multiply(tFydDet.getZzhjl()));
 		
-		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
+	}
+	
+	@Override
+	public void updateFydSended(Fyd fyd) {
+		TFyd tFyd = fydDao.load(TFyd.class, fyd.getFydlsh());
+		tFyd.setSended("1");
+		tFyd.setSendId(fyd.getSendId());
+		tFyd.setSendName(fyd.getSendName());
+		tFyd.setSendTime(new Date());
 	}
 	
 	@Override
@@ -155,7 +134,7 @@ public class FydServiceImpl implements FydServiceI {
 		sb.append(tFyd.getCheckCode());
 		sb.append("</checkCode>");  
 		sb.append("</head>");  
-		sb.append("<deal id='16041514580031492' type='cbyztz' operation='0'>");
+		sb.append("<deal id='" + tFyd.getFydlsh() + "' type='cbyztz' operation='0'>");
 		sb.append("<tzdbh>");
 		sb.append(tFyd.getTzdbh());
 		sb.append("</tzdbh>");
@@ -212,7 +191,7 @@ public class FydServiceImpl implements FydServiceI {
 		sb.append("</deal>");  
 		sb.append("</root>");
 
-		
+		Export.saveFile(Export.createDoc(sb.toString()), Export.getRootPath() + "/xml/fyd_" + fyd.getFydlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".xml");
 		//OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),	"修改提货数量", operalogDao);
 		return sb.toString();
 	}
@@ -227,28 +206,4 @@ public class FydServiceImpl implements FydServiceI {
 		this.detDao = detDao;
 	}
 
-	@Autowired
-	public void setLshDao(BaseDaoI<TLsh> lshDao) {
-		this.lshDao = lshDao;
-	}
-
-	@Autowired
-	public void setDepDao(BaseDaoI<TDepartment> depDao) {
-		this.depDao = depDao;
-	}
-
-	@Autowired
-	public void setSpDao(BaseDaoI<TSp> spDao) {
-		this.spDao = spDao;
-	}
-	
-	@Autowired
-	public void setSpDetDao(BaseDaoI<TSpDet> spDetDao) {
-		this.spDetDao = spDetDao;
-	}
-
-	@Autowired
-	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {
-		this.operalogDao = operalogDao;
-	}
 }

@@ -69,19 +69,13 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	private Map<String, Object> headMap;
 	private List<Map<String, Object>> details;
 	
-	/*private String[] headFields = {"publisher", "publishercn", "checkCode", "tzdbh", "cbsydsno", "bsno", "bname", "isbn", "tzrq", 
-			"yc", "price", "tzdys", "yangshu", "zongym", "cbzs", "kbgg", "cpgg", "dwyz", "zdr", "zdfs", "zzfs"};
-	private String[] detailFields = {"tzdbh", "cbsydsno", "sno", "xmdm", "xmmc", "xmys", "amount", "zzks", "jsyz", "seshu", "seshu2",
-			"ysfs", "pname", "clbz", "clkq", "cldm", "zzmc", "zzgg", "cllb", "clweight", "danjiadw", "sjyzl", "jfl", "jfyzl", "tiaojfs", 
-			"zzhjl", "czl", "clton"};*/
-
 	@Override
 	@WebMethod
 	public String lg2pr(@WebParam(name="xml")String xml) {
 		headMap = new HashMap<String, Object>();
 		details = new ArrayList<Map<String, Object>>();
 		
-		System.out.println(xml);
+		//System.out.println(xml);
 			
 		//转换xml，并返回验证结果xml
 		return parserXml(xml);
@@ -227,7 +221,7 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 		tFyd.setTFydDets(tDets);
 		
 		fydDao.save(tFyd);
-		saveFile(document, Export.getRootPath() + "/xml/" + fyd.getTzdbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".xml");
+		Export.saveFile(document, Export.getRootPath() + "/xml/tzd_" + fyd.getTzdbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + ".xml");
 		
 		return result("", "0", "");
 	}
@@ -326,40 +320,6 @@ public class WebServiceImpl extends SpringBeanAutowiringSupport implements WebSe
 	    return object;
 	}
 	
-	/**
-	 * 访问远程(WebService)xml数据后返回的xml格式字符串并生成为本地文件
-	 * 
-	 */
-	public void saveFile(Document document, String savaFileURL){
-		TransformerFactory transF = TransformerFactory.newInstance();
-		try{
-			DOMSource source = new DOMSource(document);
-			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-			Transformer transformer = transF.newTransformer();
-			StreamResult result = new StreamResult(bytes);
-			
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			transformer.setOutputProperty(OutputKeys.INDENT, "YES");
-			transformer.transform(source, result);
-		 
-			FileOutputStream fos = new FileOutputStream(savaFileURL);
-			fos.write(bytes.toByteArray());
-			fos.close();
-			
-			
-			System.out.println("生成xml文件成功!");
-		}catch(TransformerConfigurationException e){
-			System.out.println(e.getMessage());
-		}catch(IllegalArgumentException e){
-			System.out.println(e.getMessage());
-		}catch(FileNotFoundException e){
-			System.out.println(e.getMessage());
-		}catch(TransformerException e){
-			System.out.println(e.getMessage());
-		}catch(IOException e){
-			System.out.println(e.getMessage());
-		}
-	}
 
 	@Autowired
 	public void setFydDao(BaseDaoI<TFyd> fydDao) {
