@@ -78,6 +78,7 @@ public class TXsth implements java.io.Serializable {
 	private String isAudit;
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
+	private int payDays;
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
 	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
@@ -619,6 +620,14 @@ public class TXsth implements java.io.Serializable {
 
 	public void setYysfy(BigDecimal yysfy) {
 		this.yysfy = yysfy;
+	}
+
+	public int getPayDays() {
+		return payDays;
+	}
+
+	public void setPayDays(int payDays) {
+		this.payDays = payDays;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)

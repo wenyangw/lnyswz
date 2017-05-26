@@ -231,6 +231,7 @@ $(function(){
         			return lnyw.memo(value, 15);
         		}},
         	{field:'shbz',title:'审批说明',align:'center'},
+        	{field:'payDays',title:'付款天数',align:'center'},
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
@@ -1125,6 +1126,7 @@ function saveXsth(){
 		effectRow['jsfsmc'] = jxc_xsth_jsfsCombo.combobox('getText');
 		
 		effectRow['thr'] = $('input[name=thr]').val();
+		effectRow['payDays'] = $('input[name=payDays]').val();
 		if($('input#thfs_sh').is(':checked')){
 			effectRow['thfs'] = '0';
 			effectRow['shdz'] = $('input[name=jxc_xsth_shdz]').val();
@@ -2608,6 +2610,8 @@ function searchFydInXsth(){
 					<span><input name="thr" size="10"></span>
 					<span class="isSh form_label" style="display:none">送货地址</span>
 					<span class="isSh" style="display:none"><input name="jxc_xsth_shdz" size="12"></span>
+					<span class="form_label">付款天数</span>
+					<span><input name="payDays" size="10"></span>
 				</div>
 				<div class='jxc_xsth_bookmc form_line'>
 						<span class="form_label">书名</span>

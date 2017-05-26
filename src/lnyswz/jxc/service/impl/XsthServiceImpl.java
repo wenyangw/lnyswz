@@ -682,16 +682,20 @@ public class XsthServiceImpl implements XsthServiceI {
 		sqlParams.put("2", tXsth.getYwyId());
 		
 		Object[] khDet = detDao.getMBySQL(sqlKh, sqlParams);
+		
 		//付款天数，默认现款10天，月结(03)30天，授信按授信期
-		int payDays = 10;
 		
-		
-		if(khDet != null){
-			if(((String)khDet[0]).equals("03")){
-				payDays = 30;
-			}
-			if(((String)khDet[0]).equals("02")){
-				payDays = Integer.valueOf(khDet[1].toString());
+		int payDays = 1;
+		if(tXsth.getPayDays() != 0){
+			payDays = tXsth.getPayDays(); 
+		}else{
+			if(khDet != null){
+				if(((String)khDet[0]).equals("03")){
+					payDays = 30;
+				}
+				if(((String)khDet[0]).equals("02")){
+					payDays = Integer.valueOf(khDet[1].toString());
+				}
 			}
 		}
 				
