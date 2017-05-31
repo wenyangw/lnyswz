@@ -1311,27 +1311,8 @@ function setEditing(){
      		return false;
      	}
     	
-    	checkKc();
-    	//判断提货数量是否大于业务数量-临时数量
-    	//分户提货不判断，因卷的数量不固定，所以不做判断
-    	//从已开票生成提货单不做判断,
-//     	if($('input[name=xskpDetIds]').val().trim().length == 0 && !$('input[name=isFhth]').is(':checked')){
-// 			var kcRow = $('#show_spkc').propertygrid("getRows");
-		    
-// 	    	var kxssl = undefined;
-// 	    	if(kcRow == undefined){
-// 	    		kxssl = Number(0);
-// 	    	}else{
-// 	    		kxssl = Number(kcRow[0].value);
-// 	    	}
-// 	    	var zsl = Number($(zslEditor.target).val());
-// 	    	if(zsl > kxssl){
-// 	    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
-// 	    		$(zslEditor.target).numberbox('setValue', 0);
-// 	    		zslEditor.target.focus();
-// 	    		return false;
-// 	    	}
-//     	}
+    	//checkSl(zslEditor.target);
+    	checkKc(zslEditor.target);
     	
     	var wtsl = 0;
     	
@@ -1356,7 +1337,6 @@ function setEditing(){
      	}
     });
     
-        
     zdjEditor.target.bind('keyup', function(event){
     	if(event.keyCode == 9){
      		return false;
@@ -1396,6 +1376,7 @@ function setEditing(){
     	//if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
     		if($(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    			checkKc(cslEditor.target);
     		}
     		calForZ();
      	//}else{
@@ -1493,7 +1474,7 @@ function setEditing(){
     	checkKc();
     }
     
-    function checkKc(){
+    function checkKc(target){
     	//非直送业务要判断库存
     	if(!$('input[name=jxc_xsth_isZs]').is(':checked') || !jxc.notInExcludeZsKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val())){
     	//if(!$('input[name=isZs]').is(':checked')){
@@ -1513,7 +1494,8 @@ function setEditing(){
 		    	if(zsl > kxssl){
 		    		$.messager.alert("提示", "提货数量不能大于可提货数量，请重新输入！");
 		    		$(zslEditor.target).numberbox('setValue', 0);
-		    		zslEditor.target.focus();
+		    		$(cslEditor.target).numberbox('setValue', 0);
+		    		$(target).focus();
 		    		return false;
 		    	}
 	    	}
