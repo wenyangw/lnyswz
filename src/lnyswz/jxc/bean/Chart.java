@@ -14,8 +14,13 @@ public class Chart{
 	private List<Serie> series;
 	
 	private String bmbh;
+	private String khbh;
 	private String field;
+	private int year;
 	private String includeNb;
+	private String search;
+	private int page;
+	private int rows;
 	
 	public String getTitle() {
 		return title;
@@ -49,6 +54,14 @@ public class Chart{
 		this.bmbh = bmbh;
 	}
 
+	public String getKhbh() {
+		return khbh;
+	}
+
+	public void setKhbh(String khbh) {
+		this.khbh = khbh;
+	}
+
 	public String getField() {
 		return field;
 	}
@@ -57,12 +70,44 @@ public class Chart{
 		this.field = field;
 	}
 
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
 	public String getIncludeNb() {
 		return includeNb;
 	}
 
 	public void setIncludeNb(String includeNb) {
 		this.includeNb = includeNb;
+	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
 	}
 
 }

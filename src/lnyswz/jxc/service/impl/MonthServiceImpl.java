@@ -54,6 +54,10 @@ public class MonthServiceImpl implements MonthServiceI {
 				+ " where jzsj = convert(char(6), GETDATE(), 112) and qcsl + rksl - cksl <> 0";
 		ywzzDao.updateBySQL(kfzz_sql);
 		
+		//商品总数量已为0，但各分类仍然存在，并且正负相抵
+		//String kfzz_delete = "delete from t_kfzz where jzsj = convert(char(6), dateadd(m, 1, GETDATE()), 112) and ckId is not null and spbh not in (select spbh from t_kfzz where jzsj = convert(char(6), dateadd(m, 1, GETDATE()), 112) and bmbh = t_kfzz.bmbh and spbh = t_kfzz.spbh and ckId is null)";
+		//ywzzDao.updateBySQL(kfzz_delete);
+		
 		//处理t_fhzz;
 		String fhzz_sql = "insert into t_fhzz"
 				+ " select bmbh,bmmc,fhId,fhmc,convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj,spbh,spmc,spcd,sppp,spbz,zjldwId,zjldwmc,cjldwId,cjldwmc,zhxs,"

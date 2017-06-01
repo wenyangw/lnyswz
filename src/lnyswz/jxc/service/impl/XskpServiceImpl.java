@@ -17,12 +17,10 @@ import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Kh;
-import lnyswz.jxc.bean.Serie;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Xskp;
@@ -35,7 +33,6 @@ import lnyswz.jxc.model.TKhlx;
 import lnyswz.jxc.model.TLsh;
 import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TXskp;
 import lnyswz.jxc.model.TXskpDet;
 import lnyswz.jxc.model.TXsth;
@@ -47,7 +44,6 @@ import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,13 +52,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
 /**
- * 采购需求实现类
+ * 销售开票实现类
  * @author 王文阳
  *
  */
 @Service("xskpService")
 public class XskpServiceImpl implements XskpServiceI {
-	private Logger logger = Logger.getLogger(XskpServiceImpl.class);
 	private BaseDaoI<TXskp> xskpDao;
 	private BaseDaoI<TXskpDet> detDao;
 	private BaseDaoI<TXsth> xsthDao;
@@ -74,7 +69,6 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
-	//private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TOperalog> operalogDao;
@@ -114,12 +108,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		tXskp.setNeedAudit("0");
 		tXskp.setIsAudit("0");
-		//if(tXskp.getNeedAudit().equals("1")){
-		//	tXskp.setIsAudit("0");
-		//}else{
-		//	tXskp.setIsAudit("1");
-		//}
-		
+	
 		Set<TXsthDet> xsthDets = null;
 		Set<String> thdlshs = null;
 		int[] intDetIds = null;
@@ -129,17 +118,13 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			String[] strDetIds = xsthDetIds.split(",");
 			intDetIds = new int[strDetIds.length];
-//			Set<TXsthDet> tXsthDets = new HashSet<TXsthDet>();
 			thdlshs = new HashSet<String>();
 			xsthDets = new HashSet<TXsthDet>();
 			int i = 0;
 			for(String detId : strDetIds){
 				intDetIds[i] = Integer.valueOf(detId);
-//				TXsthDet tXsthDet = xsthDetDao.load(TXsthDet.class, Integer.valueOf(detId));
-//				tXsthDets.add(tXsthDet);
 				i++;
 			}
-//			tXskp.setTXsths(tXsthDets);
 			Arrays.sort(intDetIds);
 		}else{
 			tXskp.setFromTh("0");
@@ -682,13 +667,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		for(TXskpDet yTDet : yTXskpDets){
 			tDet = new TXskpDet();
 			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
-			//tDet.setZdwsl(yTDet.getZdwsl().negate());
-			//if(yTDet.getCdwsl() != null){
-			//	tDet.setCdwsl(yTDet.getCdwsl().negate());
-			//}
 			tDet.setSpje(yTDet.getSpje().negate());
 			tDet.setSpse(yTDet.getSpse().negate());
-			//tDet.setXscb(yTDet.getXscb().negate());
 			tDet.setTXskp(tXskp);
 			tDets.add(tDet);
 
@@ -733,41 +713,59 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(i == xskplshs.length - 1){
 				TXskp t = xskpDao.load(TXskp.class, xskplshs[i]);
 				bmbh = t.getBmbh();
-				String head = "";
-				String bz = "";
-				bz += xskplsh.trim();
+				//String head = "";
+				StringBuilder head = new StringBuilder("");
+				//String bz = "";
+				StringBuilder bz = new StringBuilder("");
+				//bz += xskplsh.trim();
+				bz.append(xskplsh.trim());
 				if(!Constant.XSKP_JSFS_QK.equals(t.getJsfsId())){
-					bz += "/" + t.getJsfsmc().trim();
+					//bz += "/" + t.getJsfsmc().trim();
+					bz.append("/" + t.getJsfsmc().trim());
 				}
-				bz += "/" + t.getYwyId();
-				bz += "/" + t.getCkmc().trim();
+				//bz += "/" + t.getYwyId();
+				bz.append("/" + t.getYwyId());
+				//bz += "/" + t.getCkmc().trim();
+				bz.append("/" + t.getCkmc().trim());
 				if(t.getFhmc() != null && t.getFhmc().trim().length() > 0){
-					bz += "/" + t.getFhmc().trim();
+					//bz += "/" + t.getFhmc().trim();
+					bz.append("/" + t.getFhmc().trim());
 				}
 				if(t.getBookmc() != null && t.getBookmc().trim().length() > 0){
-					bz += "/" + t.getBookmc().trim();
+					//bz += "/" + t.getBookmc().trim();
+					bz.append("/" + t.getBookmc().trim());
 				}
 				if(t.getBz() != null && t.getBz().trim().length() > 0){
-					bz += "/" + t.getBz().trim();
+					//bz += "/" + t.getBz().trim();
+					bz.append("/" + t.getBz().trim());
 				}
-				head += "\"" + t.getXskplsh() + "\",";
-				head += "\"" + dets.size() + "\",";
-				head += "\"" + t.getKhmc().trim() + "\",";
+				//head += "\"" + t.getXskplsh() + "\",";
+				head.append("\"" + t.getXskplsh() + "\",");
+				//head += "\"" + dets.size() + "\",";
+				head.append("\"" + dets.size() + "\",");
+				//head += "\"" + t.getKhmc().trim() + "\",";
+				head.append("\"" + t.getKhmc().trim() + "\",");
 				//不进行发票类型的判断
 				if(t.getSh() != null){
-					head += "\"" + t.getSh().trim() + "\",";
+					//head += "\"" + t.getSh().trim() + "\",";
+					head.append("\"" + t.getSh().trim() + "\",");
 				}else{
-					head += "\"" + "\",";
+					//head += "\"" + "\",";
+					head.append("\"" + "\",");
 				}
 				if(t.getDzdh() != null){
-					head += "\"" + t.getDzdh().trim() + "\",";
+					//head += "\"" + t.getDzdh().trim() + "\",";
+					head.append("\"" + t.getDzdh().trim() + "\",");
 				}else{
-					head += "\"" + "\",";
+					//head += "\"" + "\",";
+					head.append("\"" + "\",");
 				}
 				if(t.getKhh() != null){
-					head += "\"" + t.getKhh().trim() + "\",";
+					//head += "\"" + t.getKhh().trim() + "\",";
+					head.append("\"" + t.getKhh().trim() + "\",");
 				}else{
-					head += "\"" + "\",";
+					//head += "\"" + "\",";
+					head.append("\"" + "\",");
 				}
 //				head += ("\"" + t.getSh() == null ? "\"," : t.getSh().trim() + "\",");
 //				head += ("\"" + t.getDzdh() == null ? "\"," : t.getDzdh().trim() + "\",");
@@ -783,34 +781,51 @@ public class XskpServiceImpl implements XskpServiceI {
 //				}
 				
 				
-				head += "\"" + bz + "\",";
-				head += "\"" + Constant.XSKP_FH.get(bmbh) + "\",";
-				head += "\"" + Constant.XSKP_SKR.get(bmbh) + "\"";
-				lists.add(head);
+				//head += "\"" + bz.toString() + "\",";
+				head.append("\"" + bz.toString() + "\",");
+				//head += "\"" + Constant.XSKP_FH.get(bmbh) + "\",";
+				head.append("\"" + Constant.XSKP_FH.get(bmbh) + "\",");
+				//head += "\"" + Constant.XSKP_SKR.get(bmbh) + "\"";
+				head.append("\"" + Constant.XSKP_SKR.get(bmbh) + "\"");
+				lists.add(head.toString());
 			}
 		}
 		
 		for(XskpDet det : dets){
-			String detail = "";
-			detail += "\"";
+			StringBuilder detail = new StringBuilder("");
+			//detail += "\"";
+			detail.append("\"");
 			if(Constant.XSKP_SPMC.get(bmbh).equals(Constant.XSKP_SPMC_WITHCD)){
-				detail += getSpmcWithCd(det.getSpbh(), det.getSpmc(), det.getSpcd());
+				//detail += getSpmcWithCd(det.getSpbh(), det.getSpmc(), det.getSpcd());
+				detail.append(getSpmcWithCd(det.getSpbh(), det.getSpmc(), det.getSpcd()));
 			}
 			if(Constant.XSKP_SPMC.get(bmbh).equals(Constant.XSKP_SPMC_WITHPP)){
-				detail += getSpmcWithPp(det.getSpbh(), det.getSpmc(), det.getSppp(), det.getSpbz());
+				//detail += getSpmcWithPp(det.getSpbh(), det.getSpmc(), det.getSppp(), det.getSpbz());
+				detail.append(getSpmcWithPp(det.getSpbh(), det.getSpmc(), det.getSppp(), det.getSpbz()));
 			}
-			detail += "\",";
-			detail += "\"" + det.getZjldwmc().trim() + "\",";
-			detail += "\"" + getSpgg(det.getSpmc()).trim() + "\",";
-			detail += "\"" + det.getZdwsl() + "\",";
-			detail += "\"" + det.getSpje() + "\",";
-			detail += "\"" + Constant.SHUILV + "\",";
-			detail += "\"" + Constant.FP_ONE + "\",";
-			detail += "\"" + "\",";
-			detail += "\"" + det.getSpse() + "\",";
-			detail += "\"" + "\",";
-			detail += "\"" + "\"";
-			lists.add(detail);
+			//detail += "\",";
+			detail.append("\",");
+			//detail += "\"" + det.getZjldwmc().trim() + "\",";
+			detail.append("\"" + det.getZjldwmc().trim() + "\",");
+			//detail += "\"" + getSpgg(det.getSpmc()).trim() + "\",";
+			detail.append("\"" + getSpgg(det.getSpmc()).trim() + "\",");
+			//detail += "\"" + det.getZdwsl() + "\",";
+			detail.append("\"" + det.getZdwsl() + "\",");
+			//detail += "\"" + det.getSpje() + "\",";
+			detail.append("\"" + det.getSpje() + "\",");
+			//detail += "\"" + Constant.SHUILV + "\",";
+			detail.append("\"" + Constant.SHUILV + "\",");
+			//detail += "\"" + Constant.FP_ONE + "\",";
+			detail.append("\"" + Constant.FP_ONE + "\",");
+			//detail += "\"" + "\",";
+			detail.append("\"" + "\",");
+			//detail += "\"" + det.getSpse() + "\",";
+			detail.append("\"" + det.getSpse() + "\",");
+			//detail += "\"" + "\",";
+			detail.append("\"" + "\",");
+			//detail += "\"" + "\"";
+			detail.append("\"" + "\"");
+			lists.add(detail.toString());
 		}
 		return lists;
 	}
@@ -900,17 +915,21 @@ public class XskpServiceImpl implements XskpServiceI {
 	}
 	
 	private String getSpmcWithCd(String spbh, String spmc, String spcd){
-		String r = "";
-		r += spbh + "  ";
+		StringBuilder r = new StringBuilder("");
+		//r += spbh + "  ";
+		r.append(spbh + "  ");
 		if(spmc.indexOf(" ") > 0){
-			r += spmc.substring(0, spmc.indexOf(" "));
+			//r += spmc.substring(0, spmc.indexOf(" "));
+			r.append(spmc.substring(0, spmc.indexOf(" ")));
 		}else{
-			r += spmc;
+			//r += spmc;
+			r.append(spmc);
 		}
 		if(spcd != null){	
-			r += "(" + spcd + ")";
+			//r += "(" + spcd + ")";
+			r.append("(" + spcd + ")");
 		}
-		return r.trim();
+		return r.toString().trim();
 	}
 	
 	private String getSpmcWithCdPp(String spbh, String spmc, String spcd, String sppp, String spbz){
@@ -935,21 +954,26 @@ public class XskpServiceImpl implements XskpServiceI {
 	}
 	
 	private String getSpmcWithPp(String spbh, String spmc, String sppp, String spbz){
-		String r = "";
-		r += spbh + " ";
+		StringBuilder r = new StringBuilder("");
+		//r += spbh + " ";
+		r.append(spbh + " ");
 		if(spmc.indexOf(" ") > 0){
-			r += spmc.substring(0, spmc.indexOf(" "));
+			//r += spmc.substring(0, spmc.indexOf(" "));
+			r.append(spmc.substring(0, spmc.indexOf(" ")));
 		}else{
-			r += spmc;
+			//r += spmc;
+			r.append(spmc);
 		}
 		if(sppp != null && sppp.length() > 0){	
-			r += "(" + sppp + ")";
+			//r += "(" + sppp + ")";
+			r.append("(" + sppp + ")");
 		}
 		if(spbz != null && spbz.length() > 0){
-			r += " " + spbz;
+			//r += " " + spbz;
+			r.append(" " + spbz);
 		}
 		
-		return r.trim();
+		return r.toString().trim();
 	}
 	
 	private String getSpgg(String spmc){
@@ -1053,8 +1077,8 @@ public class XskpServiceImpl implements XskpServiceI {
 	 */
 	@Override
 	public DataGrid toXsth(String xskpDetIds){
-		String sql = "select spbh, isnull(zdwsl, 0) kpsl, isnull(thsl, 0) thsl from t_xskp_det where zdwsl <> thsl";
-		sql += " and id in (" + xskpDetIds + ")";
+		//String sql = "select spbh, isnull(zdwsl, 0) kpsl, isnull(thsl, 0) thsl from t_xskp_det where zdwsl <> thsl";
+		//sql += " and id in (" + xskpDetIds + ")";
 		
 		String hql = "from TXskpDet t where t.zdwsl <> t.thsl and t.id in (" + xskpDetIds + ")";
 		List<TXskpDet> ll = detDao.find(hql);
@@ -1111,14 +1135,19 @@ public class XskpServiceImpl implements XskpServiceI {
 	@Override
 	public DataGrid datagrid(Xskp xskp) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TXskp t where t.xslxId = '01' and t.bmbh = :bmbh and t.createTime > :createTime";
+		StringBuilder hql = new StringBuilder(); 
+		hql.append(" from TXskp t where t.xslxId = '01' and t.bmbh = :bmbh and t.createTime > :createTime");
+		
+		//String hql = " from TXskp t where t.xslxId = '01' and t.bmbh = :bmbh and t.createTime > :createTime";
 		if(xskp.getFromOther() != null){
-			hql += " and t.isCj = '0'";
+			//hql += " and t.isCj = '0'";
+			hql.append(" and t.isCj = '0'");
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		if(xskp.getOtherBm() != null){
 			params.put("bmbh", xskp.getOtherBm());
-			hql += " and t.khbh = :khbhs and t.TYwrk is null";
+			//hql += " and t.khbh = :khbhs and t.TYwrk is null";
+			hql.append(" and t.khbh = :khbhs and t.TYwrk is null");
 			params.put("khbhs", Constant.XSKP_NB.get(xskp.getBmbh()));
 		}else{
 			params.put("bmbh", xskp.getBmbh());
@@ -1132,17 +1161,22 @@ public class XskpServiceImpl implements XskpServiceI {
 		if(xskp.getSearch() != null){
 			//hql += " and (t.xskplsh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.khbh like :search or t.bookmc like :search)"; 
 			//params.put("search", "%" + xskp.getSearch() + "%");
-			hql += " and (" + 
-				Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc"}, params)
-				+ ")";
+			//hql += " and (" +	Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc", "t.fhmc"}, params) + ")";
+			
+			hql.append(" and (" + 
+					Util.getQueryWhere(xskp.getSearch(), new String[]{"t.xskplsh", "t.khmc", "t.bz", "t.ywymc", "t.khbh", "t.bookmc", "t.fhmc"}, params)
+					+ ")");
 		}
 		
-		String countHql = " select count(*)" + hql;
-		hql += " order by t.createTime desc";
-		List<TXskp> l = xskpDao.find(hql, params, xskp.getPage(), xskp.getRows());
-		List<Xskp> nl = new ArrayList<Xskp>();
+		StringBuilder countHql = new StringBuilder("select count(xskplsh)").append(hql.toString());
+		//hql += " order by t.createTime desc";
+		hql.append(" order by t.createTime desc");
+		//List<TXskp> l = xskpDao.find(hql, params, xskp.getPage(), xskp.getRows());
+		List<TXskp> l = xskpDao.find(hql.toString(), params, xskp.getPage(), xskp.getRows());
+		List<Xskp> nl = new ArrayList<Xskp>(l.size());
+		Xskp c = null;
 		for(TXskp t : l){
-			Xskp c = new Xskp();
+			c = new Xskp();
 			BeanUtils.copyProperties(t, c);
 			
 			//关联的销售提货单
@@ -1161,8 +1195,11 @@ public class XskpServiceImpl implements XskpServiceI {
 				c.setYwrklsh(t.getTYwrk().getYwrklsh());
 			}
 			nl.add(c);
+			c = null;
 		}
-		datagrid.setTotal(xskpDao.count(countHql, params));
+		l.clear();
+		l = null;
+		datagrid.setTotal(xskpDao.count(countHql.toString(), params));
 		datagrid.setRows(nl);
 		return datagrid;
 	}
@@ -1197,6 +1234,8 @@ public class XskpServiceImpl implements XskpServiceI {
 						
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(xskpDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1225,10 +1264,15 @@ public class XskpServiceImpl implements XskpServiceI {
 //			}
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setRows(nl);
 		return datagrid;
 	}
 	
+	/*
+	 * 销售提货的销售开票列表 
+	 */
 	@Override
 	public DataGrid datagridDet(Xskp xskp) {
 		DataGrid datagrid = new DataGrid();
@@ -1250,7 +1294,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		
 		if(xskp.getFromOther() != null){
-			hql += " and t.TXskp.isCj = '0' and t.TXskp.isZs = '0' and t.TXskp.fromTh = '0' and t.zdwsl <> t.thsl";
+			hql += " and t.TXskp.isCj = '0' and t.TXskp.isZs = '0' and t.TXskp.fromTh = '0' and t.zdwsl <> t.thsl and t.TXskp.fhId is null";
 		}
 		
 		String countHql = "select count(*) " + hql;
@@ -1265,6 +1309,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			BeanUtils.copyProperties(tXskp, c);
 			nl.add(c);
 		}
+		l.clear();
+		l = null;
 		datagrid.setTotal(detDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
@@ -1315,6 +1361,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			
 			nl.add(det);
 		}
+		tDets.clear();
+		tDets = null;
 		nl.add(new XskpDet());
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
@@ -1352,6 +1400,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			x.setHkje(BigDecimal.ZERO);
 			xskps.add(x);
 		}
+		tXskps.clear();
+		tXskps = null;
 		dg.setObj(kh);
 		dg.setRows(xskps);
 		return dg;
@@ -1459,6 +1509,8 @@ public class XskpServiceImpl implements XskpServiceI {
 				x.setFyr(o.toString());
 				xskps.add(x);
 			}
+			fyrs.clear();
+			fyrs = null;
 			return xskps;
 		}
 		return null;

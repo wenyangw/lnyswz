@@ -555,16 +555,16 @@ public class KhServiceImpl implements KhServiceI {
 //			
 //			khs.add(k);
 //		}
-		for(Kh k : khs){
+		/*for(Kh k : khs){
 			Kh kk = new Kh();
 			kk.setKhbh(k.getKhbh());
 			kk.setKhmc(k.getKhmc());
 			
 			ks.add(kk);
-		}
+		}*/
 		
 		DataGrid dg = new DataGrid();
-		dg.setRows(ks);
+		dg.setRows(khs);
 		return dg;
 	}
 	

@@ -59,6 +59,7 @@
 		<url-pattern>*.action</url-pattern>
 	</filter-mapping>
 	
+
 	<!-- spring监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -78,7 +79,19 @@
 		<servlet-name>druidStatView</servlet-name>
 		<url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
-
+	
+	<!-- Web Service声明开始 -->
+	<servlet>
+    	<servlet-name>cxf</servlet-name>
+    	<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+    	<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>cxf</servlet-name>
+    	<url-pattern>/ws/*</url-pattern>
+	</servlet-mapping>
+	<!-- Web Service声明结束 -->
+	
 	<!-- 配置session超时时间，单位分钟 -->
 	<session-config>
 		<session-timeout>360</session-timeout>

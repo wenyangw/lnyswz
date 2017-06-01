@@ -4,5 +4,5 @@
 	<div id='jxc_spQuery_dg'></div>
 </div>
 <div id="jxc_spQuery_tb" style="padding:5px;height:auto">
-	<div>请输入商品编号或名称进行查询:<input type="text" name="query" style="width:80px"></div>
+	<div>请输入商品编号、名称、产地<span style="color:red;">（可用空格分隔多项条件）</span>进行查询:<input type="text" name="query" style="width:80px"></div>
 </div>

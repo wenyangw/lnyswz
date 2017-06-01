@@ -90,7 +90,8 @@ $(function(){
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},
-        	{field:'payTime',title:'回款时间',width:100,align:'center',
+	        {field:'createName',title:'创建人',width:100,align:'center'},
+	        {field:'payTime',title:'回款时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},	

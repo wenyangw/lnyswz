@@ -31,15 +31,20 @@ public interface Constant {
 	//金穗接口文本通用标识文件
 	public static final String FP_ONE = "10590";
 	
+	//客户类型
 	public static final String KHLX_XK = "01";
 	public static final String KHLX_XK_NAME = "现款";
 	public static final String KHLX_SX = "02";
 	public static final String KHLX_YJ = "03";
 	public static final String KHLX_HT = "04";
 
+	//部门编号
+	public static final String BM_CB = "04";
 	public static final String BM_DL = "08";
 	
+	//业务单据类型
 	public static final String YWLX_XSTH = "05";
+	public static final String YWLX_FYD = "16";
 	
 	//操作人员为业务员
 	public static final String USER_POSTID = "12";
@@ -294,5 +299,5 @@ public interface Constant {
 	
 	public static final String XSKP_JSFS_QK = "06";
 	
-	
+		
 }

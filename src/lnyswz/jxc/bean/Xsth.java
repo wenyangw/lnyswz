@@ -60,6 +60,7 @@ public class Xsth {
 	private String isAudit;
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
+	private int payDays;
 		
 	private int id;
 	private String spbh;
@@ -441,6 +442,12 @@ public class Xsth {
 	}
 	public void setYysfy(BigDecimal yysfy) {
 		this.yysfy = yysfy;
+	}
+	public int getPayDays() {
+		return payDays;
+	}
+	public void setPayDays(int payDays) {
+		this.payDays = payDays;
 	}
 	public int getId() {
 		return id;

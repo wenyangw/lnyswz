@@ -44,6 +44,8 @@ public interface BaseDaoI<T> {
 	
 	public int updateBySQL(String sql);
 	
+	public int updateBySQL(String sql, Map<String, Object> params);
+	
 	public Object[] getMBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params, Map<String, Object> returns);

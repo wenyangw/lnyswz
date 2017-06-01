@@ -749,6 +749,8 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagrid.action',
 					queryParams: {
 						bmbh: cgjh_did,
+						isZs: $('input#jxc_cgjhDg_isZs').is(':checked') ? '1' : '0',
+						isNotZs: $('input#jxc_cgjhDg_isNotZs').is(':checked') ? '1' : '0',
 					},
 				});
 			}
@@ -909,6 +911,9 @@ function init(){
 	$('input').val('');
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
+	$('input:checkbox#jxc_cgjhDg_isNotZs').prop('checked', true);
+	$('input:checkbox#jxc_cgjhDg_isZs').prop('checked', true);
+	
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_cgjh_layout');
@@ -1085,6 +1090,7 @@ function saveAll(){
 	
 	effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
 	effectRow['isHt'] = $('input[name=isHt]').is(':checked') ? '1' : '0';
+	effectRow['isNb'] = $('input[name=isNb]').is(':checked') ? '1' : '0';
 	effectRow['gysbh'] = $('input[name=jxc_cgjh_gysbh]').val();
 	effectRow['gysmc'] = $('input[name=jxc_cgjh_gysmc]').val();
 	effectRow['ckId'] = jxc_cgjh_ckCombo.combobox('getValue');
@@ -1299,6 +1305,9 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
+    	if(event.keyCode == 9){
+    		return false;
+    	}
     	if($(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
@@ -1309,7 +1318,7 @@ function setEditing(){
      		return false;
      	}
     });
-        
+    
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
@@ -1320,6 +1329,10 @@ function setEditing(){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
      	}
+    }).bind('focus', function(event){
+    	if($(cdjEditor.target).val() == 0){
+    		$(cdjEditor.target).val('');
+    	}
     });
     
   	//输入商品金额后，计算单价
@@ -1840,6 +1853,8 @@ function searchCgjh(){
 		bmbh: cgjh_did,
 		createTime: $('input[name=createTimeCgjh]').val(),
 		search: $('input[name=searchCgjh]').val(),
+		isZs: $('input#jxc_cgjhDg_isZs').is(':checked') ? '1' : '0',
+		isNotZs: $('input#jxc_cgjhDg_isNotZs').is(':checked') ? '1' : '0',
 	});
 }
 
@@ -2127,7 +2142,11 @@ function createCgjhFromCgjh(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
 				<table class="tinfo">
 					<tr>
-						<td colspan="4">合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs"></td>
+						<td colspan="4">
+							合同<input type="checkbox" name="isHt" id="isHt">&nbsp;&nbsp;&nbsp;&nbsp;
+							直送<input type="checkbox" id='jxc_cgjh_isZs' name="isZs">&nbsp;&nbsp;&nbsp;&nbsp;
+							内部<input type="checkbox" id='jxc_cgjh_isNb' name="isNb">
+							</td>
 <!-- 						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" /> -->
 						<th class="read"></th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="cgjhLsh" class="read"></div></td>
@@ -2182,6 +2201,8 @@ function createCgjhFromCgjh(){
 <div id="jxc_cgjh_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	输入流水号、供应商编号、名称、备注：<input type="text" name="searchCgjh" style="width:100px">
+	直送<input type="checkbox" id='jxc_cgjhDg_isZs'>
+	非直送<input type="checkbox" id='jxc_cgjhDg_isNotZs'>
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjh();">查询</a>
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="expandRows();">展开</a>
 	

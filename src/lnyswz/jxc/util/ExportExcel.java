@@ -115,8 +115,8 @@ public class ExportExcel<T> {
 		for (short i = 0; i < headers.length; i++) {
 			HSSFCell cell = row.createCell(i);
 			//cell.setCellStyle(style);
-			HSSFRichTextString text = new HSSFRichTextString(headers[i]);
-			cell.setCellValue(text);
+			//HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+			cell.setCellValue(headers[i]);
 		}
 		// 遍历集合数据，产生数据行
 		
@@ -204,12 +204,11 @@ public class ExportExcel<T> {
 					textValue=textValue.substring(textValue.indexOf(">")+1,textValue.indexOf("<",(textValue.indexOf(">"))));				
 				
 				}
-				HSSFRichTextString richString = new HSSFRichTextString(
-						textValue);
+				//HSSFRichTextString richString = new HSSFRichTextString(textValue);
 				//HSSFFont font3 = workbook.createFont();
 				//font3.setColor(HSSFColor.BLACK.index);						
 				//richString.applyFont(font3);
-				cell.setCellValue(richString);
+				cell.setCellValue(textValue);
 			}
 		}
 		
