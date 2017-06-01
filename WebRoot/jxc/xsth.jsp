@@ -2099,6 +2099,7 @@ function exportShd(){
 										xsthDetIds : xsthDetIds.join(','),
 										cgjhlsh: detRows[0].cgjhlsh,
 										bmbh: xsth_did,
+										xsthlsh: xsthRow.xsthlsh
 										//type: 'rtf'
 									};
 									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
@@ -2465,6 +2466,7 @@ function searchYwrkInXsth(){
 function confirmXsdj(){
 	if(fydDetDg != undefined){
 		var detRow = fydDetDg.datagrid('getSelected');
+		var detIndex = fydDetDg.datagrid('getRowIndex', detRow);
 		if(detRow != null){
 			if(fydRow.status == '1' || fydRow.status == '0'){
 				$.messager.prompt('请确认', '是否要确认销售单价？请输入', function(danjia){
@@ -2480,9 +2482,31 @@ function confirmXsdj(){
 							},
 							dataType : 'json',
 							success : function(d) {
-								xsth_fydDg.datagrid('reload');
-								fydDetDg.datagrid('reload');
-								fydDetDg.datagrid('unselectAll');
+								fydDetDg.datagrid('updateRow', {
+									index: detIndex,
+									row: {
+										danjia: danjia,
+										gongj: d.obj.gongj
+									}
+								});
+								fydDetDg.datagrid('unselectRow', detIndex);
+								
+								var edited = '1';
+								var detRows = fydDetDg.datagrid('getRows'); 
+								$.each(detRows, function(index){
+									if(detRows[index].danjia == 0){
+										edited = '0';
+									}
+								});
+								if(fydRow.edited != edited){
+									xsth_fydDg.datagrid('updateRow', {
+										index: xsth_fydDg.datagrid('getRowIndex', fydRow),
+										row: {
+											edited: edited
+										}
+									});
+								}
+								
 								$.messager.show({
 									title : '提示',
 									msg : d.msg

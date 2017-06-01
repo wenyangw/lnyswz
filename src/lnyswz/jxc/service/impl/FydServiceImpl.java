@@ -98,12 +98,14 @@ public class FydServiceImpl implements FydServiceI {
 	}
 	
 	@Override
-	public void updateXsdj(Fyd fyd) {
+	public Fyd updateXsdj(Fyd fyd) {
 		TFydDet tFydDet = detDao.load(TFydDet.class, fyd.getId());
 		
 		tFydDet.setDanjia(fyd.getDanjia());
 		tFydDet.setGongj(fyd.getDanjia().multiply(tFydDet.getZzhjl()));
 		
+		fyd.setGongj(tFydDet.getGongj());
+		return fyd;
 	}
 	
 	@Override

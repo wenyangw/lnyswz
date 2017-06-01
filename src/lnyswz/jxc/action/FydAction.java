@@ -55,7 +55,7 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 	public void updateXsdj() {
 		Json j = new Json();
 		try{
-			fydService.updateXsdj(fyd);
+			j.setObj(fydService.updateXsdj(fyd));
 			j.setSuccess(true);
 			j.setMsg("修改付印单单价成功！");
 		}catch(Exception e){
