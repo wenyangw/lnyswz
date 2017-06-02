@@ -28,7 +28,7 @@ public class MessageServiceImpl implements MessageServiceI {
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
-	 * 发送信息
+	 * 保存信息
 	 */
 	@Override
 	public Message add(Message message) {
@@ -51,7 +51,7 @@ public class MessageServiceImpl implements MessageServiceI {
 		}
 		
 		message.setId(t.getId());
-		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "发送信息", opeDao);
+		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "保存信息", opeDao);
 		return message;
 	}
 
@@ -62,8 +62,7 @@ public class MessageServiceImpl implements MessageServiceI {
 	public void edit(Message message) {
 		TMessage g = messageDao.load(TMessage.class, message.getId());
 		BeanUtils.copyProperties(message, g);
-		OperalogServiceImpl.addOperalog(message.getUserId(), message.getDepId(), message
-				.getMenuId(), message.getId(), "编辑仓库信息", opeDao);
+		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "编辑信息属性", opeDao);
 	}
 
 	/**
@@ -73,8 +72,7 @@ public class MessageServiceImpl implements MessageServiceI {
 	public boolean delete(Message message) {
 		boolean isOk = false;
 		TMessage t = messageDao.load(TMessage.class, message.getId());
-		OperalogServiceImpl.addOperalog(message.getUserId(), message.getDepId(), message
-				.getMenuId(), message.getId(), "删除仓库信息", opeDao);
+		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "删除仓库信息", opeDao);
 		return isOk;
 	}
 

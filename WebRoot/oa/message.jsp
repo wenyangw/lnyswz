@@ -299,7 +299,7 @@
 		contact_to = [];
 	}
 
-	//-------------------------------------列表管理
+	//-------------------------------------发送列表管理
 	
 	var message_sendDg = $('#oa_messageS_dg');
 	message_sendDg.datagrid({
@@ -319,6 +319,10 @@
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(0, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
+	
+	//-------------------------------------接收列表管理
+	
+	
 	
 </script>
 
