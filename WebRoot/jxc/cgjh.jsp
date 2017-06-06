@@ -518,6 +518,7 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'id',title:'记录号',align:'center',checkbox:true},
+			{field:'needAudit',title:'等级',align:'center'},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
 			{field:'spbh',title:'商品编号',align:'center'},
