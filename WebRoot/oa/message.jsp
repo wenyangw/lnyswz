@@ -318,9 +318,20 @@
 	    ]],
 	});
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
+	lnyw.toolbar(1, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 	
 	//-------------------------------------接收列表管理
+	
+	
+	//-------------------------------------信息显示
+	function addTab(){
+		$('#oa_message_tabs').tabs('add',{
+			title: 'new tab',
+			selected: true,
+			closable: true,
+			href: '${pageContext.request.contextPath}/oa/message_show.jsp',
+		});
+	}
 	
 	
 	
@@ -351,6 +362,7 @@
 	 	</form>
 		<input type="button" value="提交" onclick="message_submit()"></input>
 		<input type="button" value="重置" onclick="message_reset()"></input>
+		<input type="button" value="add" onclick="addTab()"></input>
 	</div>
 	<div title="已发送列表" data-options="closable:false">
 		<div id='oa_messageS_dg'></div>
