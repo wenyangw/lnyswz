@@ -312,10 +312,20 @@
 		pageSize : pageSize,
 		pageList : pageList,
 	    columns:[[    	
-	        {field:'id',title:'编号',width:100},	       
+	        {field:'id',title:'编号',width:100,hidden:true},	       
+	        {field:'subject',title:'主题',width:100,
+	        	styler: function(value, rowData){
+					return 'color:blue;';
+				}
+	        },
 	        {field:'createTime',title:'时间',width:100},
-	        {field:'subject',title:'主题',width:100,},
+	        {field:'receivers',title:'接收人',width:100},
 	    ]],
+	    onClickRow: function(index,row){
+	    	console.info('index:' + index);
+	    	console.info('subject:' + row.subject);
+	    	addTab(row);
+	    }
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(1, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
@@ -324,12 +334,17 @@
 	
 	
 	//-------------------------------------信息显示
-	function addTab(){
+	function addTab(row){
 		$('#oa_message_tabs').tabs('add',{
-			title: 'new tab',
+			title: row.subject,
 			selected: true,
 			closable: true,
 			href: '${pageContext.request.contextPath}/oa/message_show.jsp',
+			onLoad: function(){
+				$('input[name=subject').val(row.subject);
+				$('input[name=createTime').val(row.createTime);
+				$('input[name=memo').val(row.memo);
+			}
 		});
 	}
 	
@@ -344,10 +359,9 @@
 	<div title="新增记录" data-options="closable:false">
  		<form id="message_send" method="post">
 			<div>
-				<span class="input_label"><a href="javascript:void(0)"
-					onclick="showContacts()">收件人</a></span>
+				<span class="input_label">收件人</span>
 					<input class="cont" type="text" readOnly="readOnly"
-					name="receiverNames" id="receiverNames"></input>
+					name="receiverNames" id="receiverNames"></input><input type="button" value="添加收件人" onclick="showContacts()"></input>
 				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
 			</div>
 			<div>
@@ -362,7 +376,6 @@
 	 	</form>
 		<input type="button" value="提交" onclick="message_submit()"></input>
 		<input type="button" value="重置" onclick="message_reset()"></input>
-		<input type="button" value="add" onclick="addTab()"></input>
 	</div>
 	<div title="已发送列表" data-options="closable:false">
 		<div id='oa_messageS_dg'></div>

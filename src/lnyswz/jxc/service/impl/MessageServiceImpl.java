@@ -37,7 +37,6 @@ public class MessageServiceImpl implements MessageServiceI {
 		t.setCreateTime(new Date());
 		TUser tUser = userDao.load(TUser.class, message.getCreateId());
 		t.setCreateName(tUser.getRealName());
-		t.setIsCancel("0");
 		messageDao.save(t);
 		
 		String[] receiverIds = message.getReceiverIds().split(",");

@@ -58,4 +58,10 @@ table th.queryOpe{
 	font-weight:bold;
 }
 
+span.input_label{
+	width:100;
+	text-align:right;
+	display:inline-block;
+}
+
 

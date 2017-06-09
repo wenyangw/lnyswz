@@ -8,10 +8,6 @@
 		<td><input name="subject" style="width: 220px;"></td>
 	</tr>
 	<tr>
-		<th><label for="createName">发送人</label></th>
-		<td><input name="createName" style="width: 220px;"></td>
-	</tr>
-	<tr>
 		<th><label for="receivers">收件人</label></th>
 		<td><input name="receivers" style="width: 224px;"></td>
 			
