@@ -75,6 +75,7 @@ public class FydAction extends BaseAction implements ModelDriven<Fyd> {
 		String result = factory.getPr2LgCfc().wsCargo(fydService.sendFyd(fyd));
 		// 调用WebService的sayHello方法
 		// String resResult = wsImpl.sayHello("孤傲苍狼");
+		//System.out.println(result);
 		
 		int pos = result.indexOf("<result code=\"0\">");
 		
