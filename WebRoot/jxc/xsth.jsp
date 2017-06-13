@@ -1686,7 +1686,7 @@ function loadKh(khbh){
 //					$('input[name=isSx]').prop('checked', 'ckecked');
 //				}
 			}else{
-				$.messager.alert('提示', '供应商信息不存在！', 'error');
+				$.messager.alert('提示', '客户信息不存在！', 'error');
 			}
 		}
 	});
