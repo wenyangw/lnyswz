@@ -17,14 +17,15 @@ $(function(){
 	    "text": "折线图"
 	},];
 
-	var fields = [{
-	    "id": 'kcje',
-	    "text": "库存金额"
-	},
-// 	{
-// 	    "id": 'xscb',
-// 	    "text": "销售成本"
-// 	},
+	var fields = [
+		{
+	    	"id": 'kcje',
+	    	"text": "库存金额"
+		},
+		{
+	    	"id": 'kcsl',
+	    	"text": "库存数量"
+		},
 	];
 	
 	if(kctj_did >= '10'){
@@ -67,6 +68,11 @@ $(function(){
 	    panelHeight: 'auto',
 	    onSelect: function(rec){
 	    	kctj_options.title.text = $(this).combobox('getText') + '对比分析';
+	    	if(rec.id == 'kcje'){
+	    		kctj_options.yAxis.title.text = '金额(万元)';
+	    	}else if(rec.id == 'kcsl'){
+	    		kctj_options.yAxis.title.text = '数量(吨)';
+	    	}
 	    }
 	}).combobox('selectedIndex', 0);
 	
@@ -163,23 +169,28 @@ function kctj_setColumnLabel(){
 }
 
 function kctj_getData(){
-	lnyw.MaskUtil.mask('正在刷新，请等待……');
-	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/chartAction!getKctj.action',
-		data: {
-			bmbh: kctj_bmbh,
-			field: $('#jxc_kctj_tjlx').combobox('getValue'),
-		},
-		cache: false,
-		async: false,
-		dataType: 'json',
-		success: function(data){
-			kctj_drawChart(data);
-		},
-		complete: function(){
-			lnyw.MaskUtil.unmask();
-		}
-	});
+	if($('#jxc_kctj_tjlx').combobox('getValue') === 'kcje' || ($('#jxc_kctj_tjlx').combobox('getValue') === 'kcsl' && (kctj_bmbh == '04' || kctj_bmbh == '05' || kctj_bmbh == '08'))){
+		lnyw.MaskUtil.mask('正在刷新，请等待……');
+		$.ajax({
+			url: '${pageContext.request.contextPath}/jxc/chartAction!getKctj.action',
+			data: {
+				bmbh: kctj_bmbh,
+				field: $('#jxc_kctj_tjlx').combobox('getValue'),
+			},
+			cache: false,
+			async: false,
+			dataType: 'json',
+			success: function(data){
+				kctj_drawChart(data);
+			},
+			complete: function(){
+				lnyw.MaskUtil.unmask();
+			}
+		});
+	}
+	else{
+		$.messager.alert('警告', '选择的部门无法进行库存数量的统计，请重新选择！',  'info');
+	}
 }
 
 </script>
@@ -192,5 +203,5 @@ function kctj_getData(){
 </tr></table>
 <br>
 <div id="kctj_container" style="min-width:800px;height:400px"></div>
-<div style="margin:10px;">注：因系统切换、并行等原因，2014年1-4月的库存统计不十分准确。</div>
+<div style="margin:10px;">注：因商品计量单位不一致的因素，库存数量的统计仅包括教材、文达纸业、大连公公司的纸张。</div>
 

@@ -1,32 +1,21 @@
 package lnyswz.jxc.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.Chart;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Serie;
-import lnyswz.jxc.bean.Xskp;
-import lnyswz.jxc.model.TCatalog;
 import lnyswz.jxc.model.TXskp;
-import lnyswz.jxc.service.CatalogServiceI;
 import lnyswz.jxc.service.ChartServiceI;
-import lnyswz.jxc.util.CatalogComparator;
 
 /**
  * 图表实现类
@@ -35,7 +24,6 @@ import lnyswz.jxc.util.CatalogComparator;
  */
 @Service("chartService")
 public class ChartServiceImpl implements ChartServiceI {
-	private final static Logger logger = Logger.getLogger(ChartServiceImpl.class);
 	private BaseDaoI<TXskp> xskpDao;
 	
 	@Override
@@ -45,8 +33,10 @@ public class ChartServiceImpl implements ChartServiceI {
 			sql = "select jzsj, round(xsje / 10000, 2)";
 		}else if(chart.getField().equals("xsml")){
 			sql = "select jzsj, round((xsje - xscb) / 10000, 2)";
+		}else if(chart.getField().equals("xssl")){
+			sql = "select jzsj, xssl";
 		}
-		if(chart.getIncludeNb().equals("1")){
+		if(chart.getIncludeNb().equals("1")){ 
 			sql += " from v_xstj";
 		}else{
 			sql += " from v_xstj_nonb";
@@ -61,8 +51,8 @@ public class ChartServiceImpl implements ChartServiceI {
 		String sql = "";
 		if(chart.getField().equals("kcje")){
 			sql = "select jzsj, round(kcje / 10000, 2)";
-		}else if(chart.getField().equals("xscb")){
-			sql = "select jzsj, round(xscb / 10000, 2)";
+		}else if(chart.getField().equals("kcsl")){
+			sql = "select jzsj, kcsl";
 		}
 		
 		sql += " from v_kctj where bmbh = ? and substring(jzsj, 1, 4) = ? order by jzsj";
@@ -93,13 +83,9 @@ public class ChartServiceImpl implements ChartServiceI {
 		String sql = null;
 		if(chart.getField().equals("xsje")){
 			sql = "exec p_tj_khxs ?, ?";
-			//sql = "select top 20 ywymc, khmc, round(xsje / 10000, 2) xsje, round(bxsje / 10000, 2) bxsje";
 		}else if(chart.getField().equals("xsml")){
 			sql = "";
 		}
-		//sql += " from v_xskhtj";
-		
-		//sql += " where bmbh = ? and jzsj = ? order by xsje desc";
 		
 		return getChartByColumn(chart, sql);
 	}
@@ -113,11 +99,6 @@ public class ChartServiceImpl implements ChartServiceI {
 		}else if(chart.getField().equals("xsml")){
 			sql = "";
 		}
-		//sql += " from v_xskhtj";
-		
-		//sql += " where bmbh = ? and jzsj = ? order by xsje desc";
-		
-		//return getXskhfltjChart(chart, sql);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", chart.getBmbh());
@@ -154,7 +135,6 @@ public class ChartServiceImpl implements ChartServiceI {
 			
 			if(lists != null && lists.size() > 0){
 				for(Object[] o : lists){
-					//data1.add(new BigDecimal(o[1].toString()));
 					cate.add(o[0]);
 					data.add(o[1]);
 				}
