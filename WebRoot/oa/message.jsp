@@ -322,8 +322,6 @@
 	        {field:'receivers',title:'接收人',width:100},
 	    ]],
 	    onClickRow: function(index,row){
-	    	console.info('index:' + index);
-	    	console.info('subject:' + row.subject);
 	    	addTab(row);
 	    }
 	});
@@ -342,6 +340,7 @@
 			href: '${pageContext.request.contextPath}/oa/message_show.jsp',
 			onLoad: function(){
 				$('input[name=subject').val(row.subject);
+				$('span#subject').text(row.subject);
 				$('input[name=createTime').val(row.createTime);
 				$('input[name=memo').val(row.memo);
 			}

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <div align="center">
+<span id="subject" style="width: 220px;">Hello</span>
 	<form id="oa_message_show" method="post">
 	<table>
 	<tr>
