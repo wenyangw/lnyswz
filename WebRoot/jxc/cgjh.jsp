@@ -557,7 +557,7 @@ $(function(){
 					}},
 			{field:'spje',title:'销售金额',align:'center',
 			    formatter: function(value){
-			    	return value == 0 ? '' : lnyw.formatNumberRgx(value);
+			    	return value === 0 ? '' : lnyw.formatNumberRgx(value);
 					}},      
 	        {field:'khbh',title:'客户编号',align:'center', hidden:true},
 	        {field:'khmc',title:'客户名称',align:'center'},
@@ -575,7 +575,7 @@ $(function(){
         	{field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
-        		}},
+        		}}
 //         	{field:'isLs',title:'*临时',align:'center',sortable:true,
 //         		formatter : function(value) {
 // 					if (value == '1') {
@@ -616,7 +616,7 @@ $(function(){
 // 						return (a-b);  
 // 				}},
 	    ]],
-	    toolbar:'#jxc_cgjh_xsthTb',
+	    toolbar:'#jxc_cgjh_xsthTb'
 	});
 	lnyw.toolbar(4, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
@@ -778,7 +778,7 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
 					queryParams:{
 						bmbh: cgjh_did,
-						fromOther: 'fromCgjh',
+						fromOther: 'fromCgjh'
 					}
 				});
 			}
