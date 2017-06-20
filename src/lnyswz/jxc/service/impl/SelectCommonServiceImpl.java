@@ -27,6 +27,8 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon d) {
 		DataGrid dg = new DataGrid();
 		String condition = "";
+		String conditionCount = "";
+		
 		// '00' 变量 , '01' 字段，'02' 表, '03' 视图‘04’存储过程
 		String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 				+ d.getQuery() + "'";
@@ -68,7 +70,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			if (dicts.getInGroupBy() != null) {
 				sql += " " + dicts.getInGroupBy();
 			}
-			if (dicts.getIsHj() != null) {
+			if (dicts.getIsHj() != null ) {
 				if (dicts.getOutGroupBy() != null
 						&& dicts.getOutGroupBy().trim().length() > 0) {
 					sql = "select * from (" + sql;
@@ -79,18 +81,20 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 					}
 				}
 			}
+			conditionCount +=sql;
+			
 			if (dicts.getOrderBy().trim().length() > 0) {
 				sql += " " + dicts.getOrderBy();
 			}
-			String totalHql = "select count(*) from " + dicts.getTname()
-					+ condition;
+			String totalHql = "select count(*) from ("+conditionCount+") as count";
 			List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
 					d.getRows());
 			dg.setRows(list);
 			dg.setTotal(selectCommonDao.countSQL(totalHql));
 			dg.setObj(d.getHqls());
+			
 		}
-
+		
 		return dg;
 	}
 
@@ -107,9 +111,12 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			execHql = spellFor(d.getExec(), execHql);
 			execHql += "," + d.getPage() + "," + d.getRows() + ",5";
 			execHql = spellFor(d.getTreeExec(), execHql);
+			
 			List<Object[]> list = selectCommonDao.findBySQL(execHql);
 			dg.setRows(list);
+			
 			String exec = execHql ;
+			
 			dg.setObj(exec);
 		} else {
 			String sql = "select distinct  " + d.getCon() + " from "
@@ -133,6 +140,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 				}
 			}		
 			List<Object[]> list = selectCommonDao.findBySQL(sql);
+			
 			dg.setRows(list);
 			dg.setObj(sql);
 		}
@@ -145,6 +153,7 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 		String dictSql = "from TDict t where t.genre >= '03' and ename= '"
 				+ d.getQuery() + "'";
 		TDict dicts = dictDao.get(dictSql);
+		
 		// 判断是执行sql语句还是存储过程
 		if (dicts.getGenre().equals("04")) {
 			

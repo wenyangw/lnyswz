@@ -51,8 +51,6 @@ $(function(){
 		border : false,
 	});
 
-	//测试git
-	
 	cgjh_dg = $('#jxc_cgjh_dg').datagrid({
 		//url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagrid.action',
 		fit : true,
