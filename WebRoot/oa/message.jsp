@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/themes/default/default.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/kindeditor-all-min.js"></script>
+	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/kindeditor-all.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/lang/zh-CN.js"></script>
 
@@ -19,6 +19,8 @@
 	var target;
 
 	var memoEditor;
+	var uploadlist = [];
+    var savelist = [];
 	
 	$(function(){
 		//装载联系人
@@ -60,8 +62,16 @@
 	 					//'textarea[name="memo"]',
 	 					'#memo_editor',
 	 					{
-	 						items : editor_items,
-	 						uploadJson : '${pageContext.request.contextPath}/js/kindeditor/upload_json.jsp',
+	 						items: editor_items,
+                            allowImageRemote: false,
+                            formatUploadUrl: false,
+	 						uploadJson : "${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/jsp/upload_json.jsp",
+                            afterUpload: function(url, data){
+								uploadlist.push({filepath: url, filename: data.title});
+                            },
+                            afterChange: function() {
+                                this.sync();
+                            },
 	 					});
 				}
 			},
@@ -200,7 +210,6 @@
 					break;
 				}
 			}
-			
 			//增加到目标数组
 			trans(par, array_to);
 		} else {
@@ -208,7 +217,6 @@
 				if (array_from[i].id == node.id) {
 					//处理目标数组，中间代码已处理源数组
 					trans(array_from.splice(i, 1), array_to);
-
 					break;
 				}
 			}
@@ -252,23 +260,24 @@
 	
 	//信息提交
 	function message_submit() {
-		var form = $('#message_send');
-		form.form('submit', {
-			url : '${pageContext.request.contextPath}/oa/messageAction!add.action',
-			onSubmit : function() {
-				var error = [];
-				if(!$.trim($('#receiverIds').val())){
-					error.push('收件人');
-				}
-				if(!$.trim($('#subject').val())){
-					error.push('主题');
-				}
-				if(error.length > 0 ){
-					$.messager.alert('提示', '请录入' + error.join('，') + '！', 'error');
-					return false;
-				}
-				
-				$('#memo_editor').val(memoEditor.html());
+        console.info(memoEditor.html());
+	    var form = $('#message_send');
+        form.form('submit', {
+        	url : '${pageContext.request.contextPath}/oa/messageAction!add.action',
+        	onSubmit : function() {
+                var error = [];
+                if(!$.trim($('#receiverIds').val())){
+                    error.push('收件人');
+                }
+                if(!$.trim($('#subject').val())){
+                    error.push('主题');
+                }
+                if(error.length > 0 ){
+                    $.messager.alert('提示', '请录入' + error.join('，') + '！', 'error');
+                    return false;
+                }
+                unusedUpload(memoEditor.html());
+                $('input[name="datagrid"]').val(JSON.stringify(savelist));
 			},
 			success : function(data) {
 				var json = $.parseJSON(data);
@@ -285,8 +294,10 @@
 	
 	//信息重置
 	function message_reset(){
+	    uploadlist = [];
+	    savelist = [];
 		$('input.cont').val('');
-		memoEditor.html('');
+        KindEditor.html('#memo_editor', '');
 		contact_reset();
 	}
 	
@@ -297,6 +308,22 @@
 			contact_from[contact_from.length] = $.extend(true, {}, contact_source[i]);
 		}
 		contact_to = [];
+	}
+
+	//删除已上传但保存之前已删除的文件
+	function unusedUpload(content){
+	    $.each(uploadlist, function(){
+	       	if(content.indexOf(this.filepath) < 0){
+				$.ajax({
+					url: '${pageContext.request.contextPath}/oa/paperAction!deleteFile.action',
+					data: {
+						filepath: this.filepath
+					}
+				});
+            }else{
+	       	    savelist.push(this);
+            }
+		});
 	}
 
 	//-------------------------------------发送列表管理
@@ -339,16 +366,15 @@
 			closable: true,
 			href: '${pageContext.request.contextPath}/oa/message_show.jsp',
 			onLoad: function(){
-				$('input[name=subject').val(row.subject);
+				$('input[name=subject]').val(row.subject);
 				$('span#subject').text(row.subject);
-				$('input[name=createTime').val(row.createTime);
-				$('input[name=memo').val(row.memo);
+				$('input[name=createTime]').val(row.createTime);
+                $('span#createTime').text(row.createTime);
+				$('input[name=memo]').val(row.memo);
 			}
 		});
 	}
-	
-	
-	
+
 </script>
 
 <div id="oa_message_tabs" class="easyui-tabs"
@@ -372,6 +398,8 @@
 				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;"></textarea>
 			</div>
 			<input type='hidden' name='menuId' />
+			<input type='hidden' name='datagrid' />
+
 	 	</form>
 		<input type="button" value="提交" onclick="message_submit()"></input>
 		<input type="button" value="重置" onclick="message_reset()"></input>

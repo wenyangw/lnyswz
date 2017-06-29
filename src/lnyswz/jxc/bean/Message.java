@@ -18,12 +18,15 @@ public class Message {
 	private Date cancelTime;
 	
 	private String menuId;
+	private String filepaths;
+	private String files;
 	private String receiverIds;
 	private String receiverNames;
 	
 	
 	private int page;
 	private int rows;
+	private String datagrid;
 	public int getId() {
 		return id;
 	}
@@ -78,6 +81,22 @@ public class Message {
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+	public String getFilepaths() {
+		return filepaths;
+	}
+
+	public void setFilepaths(String filepaths) {
+		this.filepaths = filepaths;
+	}
+
+	public String getFiles() {
+		return files;
+	}
+
+	public void setFiles(String files) {
+		this.files = files;
+	}
+
 	public String getReceiverIds() {
 		return receiverIds;
 	}
@@ -102,6 +121,12 @@ public class Message {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-	
-	
+
+	public String getDatagrid() {
+		return datagrid;
+	}
+
+	public void setDatagrid(String datagrid) {
+		this.datagrid = datagrid;
+	}
 }

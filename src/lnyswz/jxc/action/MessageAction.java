@@ -23,12 +23,12 @@ public class MessageAction extends BaseAction implements ModelDriven<Message> {
 	public void add() {
 		User u = (User) session.get("user");
 		message.setCreateId(u.getId());
-		Message m = messageService.add(message);
 		Json j = new Json();
 		try {
+			messageService.add(message);
 			j.setSuccess(true);
 			j.setMsg("发送信息成功");
-			j.setObj(m);
+			//j.setObj(m);
 		} catch (Exception e) {
 			j.setMsg("发送信息失败");
 			e.printStackTrace();

@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import lnyswz.jxc.bean.Paper;
+import lnyswz.jxc.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +17,13 @@ import org.springframework.stereotype.Service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.Message;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TMessage;
-import lnyswz.jxc.model.TMessageRec;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.MessageServiceI;
 
 @Service("messageService")
 public class MessageServiceImpl implements MessageServiceI {
 	private BaseDaoI<TMessage> messageDao;
 	private BaseDaoI<TMessageRec> mesRecDao;
+	private BaseDaoI<TPaper> paperDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TOperalog> opeDao;
 
@@ -31,12 +31,13 @@ public class MessageServiceImpl implements MessageServiceI {
 	 * 保存信息
 	 */
 	@Override
-	public Message add(Message message) {
+	public void add(Message message) {
 		TMessage t = new TMessage();
 		BeanUtils.copyProperties(message, t);
 		t.setCreateTime(new Date());
 		TUser tUser = userDao.load(TUser.class, message.getCreateId());
 		t.setCreateName(tUser.getRealName());
+		t.setOpened("0");
 		messageDao.save(t);
 		
 		String[] receiverIds = message.getReceiverIds().split(",");
@@ -48,10 +49,21 @@ public class MessageServiceImpl implements MessageServiceI {
 			tMesRec.setIsCancel("0");
 			mesRecDao.save(tMesRec);
 		}
+
+		TPaper tPaper = null;
+		ArrayList<Paper> papers = JSON.parseObject(message.getDatagrid(), new TypeReference<ArrayList<Paper>>(){});
+		for(Paper p : papers){
+			tPaper = new TPaper();
+			tPaper.setFilename(p.getFilename());
+			tPaper.setFilepath(p.getFilepath());
+			tPaper.setTMessage(t);
+			paperDao.save(tPaper);
+		}
 		
 		message.setId(t.getId());
 		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "保存信息", opeDao);
-		return message;
+
+		//return message;
 	}
 
 	/**
@@ -144,6 +156,11 @@ public class MessageServiceImpl implements MessageServiceI {
 	@Autowired
 	public void setMesRecDao(BaseDaoI<TMessageRec> mesRecDao) {
 		this.mesRecDao = mesRecDao;
+	}
+
+	@Autowired
+	public void setPaperDao(BaseDaoI<TPaper> paperDao) {
+		this.paperDao = paperDao;
 	}
 
 	@Autowired

@@ -108,6 +108,7 @@ while (itr.hasNext()) {
 		JSONObject obj = new JSONObject();
 		obj.put("error", 0);
 		obj.put("url", saveUrl + newFileName);
+		obj.put("title", fileName);
 		out.println(obj.toJSONString());
 	}
 }

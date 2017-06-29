@@ -104,6 +104,7 @@ Response.AddHeader "Content-Type", "text/html; charset=UTF-8"
 Set hash = jsObject()
 hash("error") = 0
 hash("url") = fileUrl
+
 hash.Flush
 Response.End
 
