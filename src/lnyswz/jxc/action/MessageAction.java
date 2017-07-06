@@ -69,13 +69,22 @@ public class MessageAction extends BaseAction implements ModelDriven<Message> {
 		writeJson(j);
 	}
 
+	public void getMessage(){
+		Json j = new Json();
+		Message m = messageService.getMessage(message);
+		j.setObj(m);
+		writeJson(j);
+	}
+
 	public void sendDg() {
 		User u = (User) session.get("user");
 		message.setCreateId(u.getId());
 		super.writeJson(messageService.sendDg(message));
 	}
 	
-	public void receiveDg() {
+	public void receiveDg()	{
+		User u = (User) session.get("user");
+		message.setCreateId(u.getId());
 		super.writeJson(messageService.receiveDg(message));
 	}
 	

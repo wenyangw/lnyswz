@@ -59,7 +59,7 @@ table th.queryOpe{
 }
 
 span.input_label{
-	width:100;
+	width:100px;
 	text-align:right;
 	display:inline-block;
 }

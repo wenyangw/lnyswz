@@ -13,4 +13,6 @@ public interface MessageServiceI {
 	public DataGrid sendDg(Message message);
 	
 	public DataGrid receiveDg(Message message);
+
+    public Message getMessage(Message message);
 }

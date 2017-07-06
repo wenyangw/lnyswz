@@ -8,6 +8,25 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/lang/zh-CN.js"></script>
 
+<style type="text/css">
+	div.message_line{
+		margin-top: 10px;
+	}
+	.field_label{
+		width:60px;
+		text-align:right;
+		display:inline-block;
+	}
+	.field_value{
+		margin-left:10px;
+	}
+
+	.ke-container{
+		margin-left: 70px;
+		margin-top: 10px;
+	}
+
+</style>
 
 <script type="text/javascript">
 
@@ -340,37 +359,97 @@
 		pageList : pageList,
 	    columns:[[    	
 	        {field:'id',title:'编号',width:100,hidden:true},	       
-	        {field:'subject',title:'主题',width:100,
-	        	styler: function(value, rowData){
+	        {field:'subject',title:'主题',width:200,
+	        	styler: function(){
 					return 'color:blue;';
 				}
 	        },
-	        {field:'createTime',title:'时间',width:100},
-	        {field:'receivers',title:'接收人',width:100},
+	        {field:'createTime',title:'时间'},
+            {field:'opened',title:'公开',width:50,
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+	        {field:'receiverNames',title:'接收人'},
 	    ]],
-	    onClickRow: function(index,row){
-	    	addTab(row);
-	    }
+        onDblClickCell: function(index,field,value){
+		    if(field == 'subject'){
+                var row = $(this).datagrid('selectRow', index).datagrid('getSelected');
+                getMessage(row, 'send');
+            }
+
+        }
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(1, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 	
 	//-------------------------------------接收列表管理
-	
-	
+    var message_receiveDg = $('#oa_messageR_dg');
+    message_receiveDg.datagrid({
+        url:'${pageContext.request.contextPath}/oa/messageAction!receiveDg.action',
+        fit : true,
+        singleSelect:true,
+        border : false,
+        pagination : true,
+        pagePosition : 'bottom',
+        pageSize : pageSize,
+        pageList : pageList,
+        columns:[[
+            {field:'id',title:'编号',width:100,hidden:true},
+            {field:'subject',title:'主题',width:200,
+                styler: function(){
+                    return 'color:blue;';
+                }
+            },
+            {field:'createTime',title:'时间'},
+            {field:'createId',title:'发送人Id',hidden:true},
+            {field:'createName',title:'发送人'},
+        ]],
+        onDblClickCell: function(index,field){
+            if(field == 'subject'){
+                var row = $(this).datagrid('selectRow', index).datagrid('getSelected');
+                getMessage(row, 'receive');
+            }
+        }
+    });
+    //根据权限，动态加载功能按钮
+    lnyw.toolbar(2, message_receiveDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
+
+    function getMessage(row, source){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/oa/messageAction!getMessage.action',
+			data : {
+				id : row.id
+			},
+			dataType : 'json',
+			success : function(d) {
+				row.memo = d.obj.memo;
+				addTab(row, source);
+			}
+		});
+    }
+
 	//-------------------------------------信息显示
-	function addTab(row){
+	function addTab(row, source){
 		$('#oa_message_tabs').tabs('add',{
-			title: row.subject,
+			title: source + ':' + row.subject,
 			selected: true,
 			closable: true,
 			href: '${pageContext.request.contextPath}/oa/message_show.jsp',
 			onLoad: function(){
-				$('input[name=subject]').val(row.subject);
-				$('span#subject').text(row.subject);
-				$('input[name=createTime]').val(row.createTime);
+                $('span#subject').text(row.subject);
                 $('span#createTime').text(row.createTime);
-				$('input[name=memo]').val(row.memo);
+                if(source == 'send'){
+                    $('span#receivers').text(row.receiverNames);
+                    $('div.receive').css("display", "none");
+                }else if(source == 'receive'){
+                    $('span#sender').text(row.createName);
+                    $('div.send').css("display", "none");
+                }
+                $('div#memo').html(row.memo);
 			}
 		});
 	}
@@ -383,26 +462,28 @@
 
 	<div title="新增记录" data-options="closable:false">
  		<form id="message_send" method="post">
-			<div>
-				<span class="input_label">收件人</span>
-					<input class="cont" type="text" readOnly="readOnly"
-					name="receiverNames" id="receiverNames"></input><input type="button" value="添加收件人" onclick="showContacts()"></input>
-				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
+			<div class="message_line">
+				<span class="field_label">收件人</span>
+					<input class="cont field_value" type="text" readOnly="readOnly" name="receiverNames" id="receiverNames" style="width:400px;"></input>
+					<input type="button" value="添加收件人" onclick="showContacts()"></input>
+					<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
 			</div>
-			<div>
-				<span class="input_label">主题</span> <input class="cont"
-					type="text" name="subject" id="subject" data-options="required:true"></input>
+			<div class="message_line">
+				<span class="field_label">主题</span><input class="cont field_value"
+					type="text" name="subject" id="subject" data-options="required:true" style="width:400px;"></input>
 			</div>
-			<div>
-				<span class="input_label">内容</span>
-				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;"></textarea>
+			<div class="message_line">
+				<span class="field_label">内容</span>
+				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;margin-top: 10px; margin-left: 70px;"></textarea>
 			</div>
 			<input type='hidden' name='menuId' />
 			<input type='hidden' name='datagrid' />
 
 	 	</form>
-		<input type="button" value="提交" onclick="message_submit()"></input>
-		<input type="button" value="重置" onclick="message_reset()"></input>
+		<div class="message_line" style="margin-left: 70px;">
+			<input type="button" value="提交" onclick="message_submit()"></input>
+			<input type="button" value="重置" onclick="message_reset()"></input>
+		</div>
 	</div>
 	<div title="已发送列表" data-options="closable:false">
 		<div id='oa_messageS_dg'></div>

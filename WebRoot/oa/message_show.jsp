@@ -1,26 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<div align="center">
-	<form id="oa_message_show" method="post">
-		<table>
-	<tr>
-		<th><label for="subject">主题</label></th>
-		<td><input name="subject" style="width: 220px;"><span id="subject" style="width: 220px;">Hello</span>
-		</td>
-	</tr>
-	<tr>
-		<th><label for="receivers">收件人</label></th>
-		<td><input name="receivers" style="width: 224px;"></td>
-	</tr>
-	<tr>
-		<th><label for="createTime">时间</label></th>
-		<td><input name="createTime" style="width: 224px;"><span id="createTime" style="width: 220px;">Hello</span></td>
-	</tr>
-	<tr>
-		<th><label for="memo">内容</label></th>
-		<td><input class="easyui-textbox" name="memo" multiline="true" style="width: 224px;"></td>
-	</tr>
 
-	</table>
-	</form>
+
+<div style="margin-top: 20px;">
+		<div class="message_line">
+			<span class="field_label">主题：</span>
+			<span class="field_value" id="subject" style="width: 220px;"></span>
+		</div>
+		<div class="send message_line">
+			<span class="field_label">收件人：</span>
+			<span class="field_value" id="receivers" style="width: 220px;"></span>
+		</div>
+		<div class="receive message_line">
+			<span class="field_label">发件人：</span>
+			<span class="field_value" id="sender" style="width: 220px;"></span>
+		</div>
+		<div class="message_line">
+			<span class="field_label">时间：</span>
+			<span class="field_value" id="createTime" style="width: 220px;"></span>
+		</div>
+		<div class="message_line">
+			<span class="field_label">内容：</span>
+			<div id="memo" style="margin-left:70px; width:1000px;min-width: 1000px; height: 500px; min-height: 500px; border-style:solid; border-width: thin;border-color: black;"></div>
+		</div>
 </div>

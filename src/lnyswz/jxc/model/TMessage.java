@@ -26,12 +26,14 @@ public class TMessage implements java.io.Serializable {
 	private String subject;
 	private String memo;
 	private String opened;
+	private String isCancel;
+	private Date cancelTime;
 
 	public TMessage() {
 	}
 
 	public TMessage(int id, int createId, String createName, Date createTime,  
-			String subject, String memo, String opened, Date cancelTime) {
+			String subject, String memo, String opened, String isCancel, Date cancelTime) {
 		this.id = id;
 		this.createId = createId;
 		this.createName = createName;
@@ -39,6 +41,8 @@ public class TMessage implements java.io.Serializable {
 		this.subject = subject;
 		this.memo = memo;
 		this.opened = opened;
+		this.isCancel = isCancel;
+		this.cancelTime = cancelTime;
 	}
 
 	@Id
@@ -80,8 +84,6 @@ public class TMessage implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-
-
 	@Column(name = "subject", nullable = false, length = 100)
 	public String getSubject() {
 		return this.subject;
@@ -109,4 +111,22 @@ public class TMessage implements java.io.Serializable {
 		this.opened = opened;
 	}
 
+	@Column(name = "isCancel", nullable = false, length = 1)
+	public String getIsCancel() {
+		return isCancel;
+	}
+
+	public void setIsCancel(String isCancel) {
+		this.isCancel = isCancel;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "cancelTime", nullable = true, length = 23)
+	public Date getCancelTime() {
+		return cancelTime;
+	}
+
+	public void setCancelTime(Date cancelTime) {
+		this.cancelTime = cancelTime;
+	}
 }

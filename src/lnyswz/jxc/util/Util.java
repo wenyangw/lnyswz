@@ -43,7 +43,7 @@ public class Util {
 	}
 
 	public static String getRootPath() {
-		// 因为类名为"Export"，因此" Export.class"一定能找到
+		// 因为类名为"Util"，因此" Util.class"一定能找到
 		String result = Util.class.getResource("Util.class").toString();
 		int index = result.indexOf("WEB-INF");
 		if (index == -1) {

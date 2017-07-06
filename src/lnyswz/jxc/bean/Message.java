@@ -14,11 +14,11 @@ public class Message {
 	private Date createTime;
 	private String subject;
 	private String memo;
+	private String opened;
 	private String isCancel;
 	private Date cancelTime;
 	
 	private String menuId;
-	private String filepaths;
 	private String files;
 	private String receiverIds;
 	private String receiverNames;
@@ -63,6 +63,15 @@ public class Message {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
+
+	public String getOpened() {
+		return opened;
+	}
+
+	public void setOpened(String opened) {
+		this.opened = opened;
+	}
+
 	public String getIsCancel() {
 		return isCancel;
 	}
@@ -80,13 +89,6 @@ public class Message {
 	}
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
-	}
-	public String getFilepaths() {
-		return filepaths;
-	}
-
-	public void setFilepaths(String filepaths) {
-		this.filepaths = filepaths;
 	}
 
 	public String getFiles() {

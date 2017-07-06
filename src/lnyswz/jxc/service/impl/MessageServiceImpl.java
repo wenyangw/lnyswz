@@ -8,8 +8,10 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Paper;
 import lnyswz.jxc.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,8 @@ public class MessageServiceImpl implements MessageServiceI {
 		t.setCreateTime(new Date());
 		TUser tUser = userDao.load(TUser.class, message.getCreateId());
 		t.setCreateName(tUser.getRealName());
-		t.setOpened("0");
+		t.setOpened("1");
+		t.setIsCancel("0");
 		messageDao.save(t);
 		
 		String[] receiverIds = message.getReceiverIds().split(",");
@@ -87,6 +90,14 @@ public class MessageServiceImpl implements MessageServiceI {
 		return isOk;
 	}
 
+	@Override
+	public Message getMessage(Message message){
+		TMessage tMessage = messageDao.load(TMessage.class, message.getId());
+		Message m = new Message();
+		BeanUtils.copyProperties(tMessage, m);
+		return m;
+	}
+
 	/**
 	 * 数据转换
 	 * 
@@ -120,6 +131,12 @@ public class MessageServiceImpl implements MessageServiceI {
 		for (TMessage t : l) {
 			Message nc = new Message();
 			BeanUtils.copyProperties(t, nc, new String[]{"memo"});
+
+			String sqlMr = "select realName from t_message_rec mr left join t_user u on mr.receiverId = u.id where mr.messageId = ?";
+			Map<String, Object> paramsMr = new HashMap<String, Object>();
+			paramsMr.put("0", t.getId());
+			List<Object[]> list_mr = mesRecDao.findBySQL(sqlMr, paramsMr);
+			nc.setReceiverNames(StringUtils.join(list_mr.toArray(), ","));
 			nl.add(nc);
 		}
 		
@@ -129,21 +146,30 @@ public class MessageServiceImpl implements MessageServiceI {
 	}
 	
 	@Override
-	public DataGrid receiveDg(Message c) {
+	public DataGrid receiveDg(Message message) {
 		DataGrid dg = new DataGrid();
-		String hql = "from TMessage t ";
-		String totalHql = "select count(*) " + hql;
+		String sql = "select m.id, m.subject, m.createTime, m.createId, m.createName";
+		String sqlFrom = " from t_message_rec mr left join t_message m on mr.messageId = m.id where mr.receiverId = ? and m.opened = '1'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", message.getCreateId());
 		List<Message> nl = new ArrayList<Message>();
 		// 传入页码、每页条数
-		List<TMessage> l = messageDao.find(hql, c.getPage(), c.getRows());
+		List<Object[]> l = messageDao.findBySQL(sql + sqlFrom +  " order by m.createTime desc", params, message.getPage(), message.getRows());
 		// 处理返回信息
-		for (TMessage t : l) {
-			Message nc = new Message();
-			BeanUtils.copyProperties(t, nc);
-			nl.add(nc);
+		for (Object[] o : l) {
+			Message m = new Message();
+			m.setId(Integer.parseInt(o[0].toString()));
+			m.setSubject(o[1].toString());
+			m.setCreateTime(DateUtil.stringToDate(o[2].toString(), DateUtil.DATETIME_PATTERN));
+			m.setCreateId(Integer.parseInt(o[3].toString()));
+			m.setCreateName(o[4].toString());
+			nl.add(m);
 		}
-		dg.setTotal(messageDao.count(totalHql));
 		dg.setRows(nl);
+
+		String totalSql = "select count(*) " + sqlFrom;
+		dg.setTotal(messageDao.countSQL(totalSql, params));
+
 		return dg;
 	}
 
