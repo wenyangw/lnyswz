@@ -57,7 +57,7 @@ $(function(){
 	    border : false,
 	    singleSelect : true,
 	    remoteSort: false,
-	    fitColumns: true,
+	    //fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
@@ -234,6 +234,7 @@ $(function(){
                			return 'color:blue;';
                		}
     			}},
+            {field:'nbjhlsh',title:'内部计划流水号'}
 	    ]],
 	    toolbar:'#jxc_cgjh_tb',
 	});
@@ -336,7 +337,7 @@ $(function(){
            					} else {
            						return '';
            					}
-           				}},
+           				}}
                 ]],
                 onResize:function(){
                 	cgjh_dg.datagrid('fixDetailRowHeight',index);
@@ -1493,35 +1494,39 @@ function cancelCgjh(){
 	if (row != undefined) {
 		if(row.isKfrk != '1'){
 			if(row.isCancel != '1'){
-				if(row.isCompleted != '1'){
-					$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
-						if (r) {
-							//MaskUtil.mask('正在取消，请等待……');
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
-								data : {
-									cgjhlsh : row.cgjhlsh,
-									bmbh : cgjh_did,
-									menuId : cgjh_menuId,
-								},
-								dataType : 'json',
-								success : function(d) {
-									cgjh_dg.datagrid('reload');
-									cgjh_dg.datagrid('unselectAll');
-									$.messager.show({
-										title : '提示',
-										msg : d.msg
-									});
-								},
-								complete: function(){
-									//MaskUtil.unmask();
-								}
-							});
-						}
-					});
-				}else{
-					$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
-				}
+				if(row.nbjhlsh == undefined){
+					if(row.isCompleted != '1'){
+						$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
+							if (r) {
+								//MaskUtil.mask('正在取消，请等待……');
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
+									data : {
+										cgjhlsh : row.cgjhlsh,
+										bmbh : cgjh_did,
+										menuId : cgjh_menuId,
+									},
+									dataType : 'json',
+									success : function(d) {
+										cgjh_dg.datagrid('reload');
+										cgjh_dg.datagrid('unselectAll');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									},
+									complete: function(){
+										//MaskUtil.unmask();
+									}
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
+					}
+                }else{
+                    $.messager.alert('警告', '选中的采购计划已由' + row.gysmc + '进行处理，不能取消！',  'warning');
+                }
 			}else{
 				$.messager.alert('警告', '选中的采购计划已被取消，请重新选择！',  'warning');
 			}
@@ -2139,7 +2144,7 @@ function createCgjhFromCgjh(){
 <div id="jxc_cgjh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_cgjh_layout' style="height:100%;width=100%">
+        <div id='jxc_cgjh_layout' style="height:100%;width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
 				<table class="tinfo">
 					<tr>
