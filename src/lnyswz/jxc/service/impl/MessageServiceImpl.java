@@ -95,6 +95,17 @@ public class MessageServiceImpl implements MessageServiceI {
 		TMessage tMessage = messageDao.load(TMessage.class, message.getId());
 		Message m = new Message();
 		BeanUtils.copyProperties(tMessage, m);
+		if(message.getSource().equals("receive")){
+			String hql = "from TMessageRec t where t.messageId = :messageId and t.receiverId = :receiverId";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("messageId", message.getId());
+			params.put("receiverId", message.getCreateId());
+			TMessageRec tMessageRec = mesRecDao.get(hql, params);
+			if(tMessageRec.getReadTime() == null) {
+				tMessageRec.setReadTime(new Date());
+				mesRecDao.save(tMessageRec);
+			}
+		}
 		return m;
 	}
 
@@ -148,7 +159,7 @@ public class MessageServiceImpl implements MessageServiceI {
 	@Override
 	public DataGrid receiveDg(Message message) {
 		DataGrid dg = new DataGrid();
-		String sql = "select m.id, m.subject, m.createTime, m.createId, m.createName";
+		String sql = "select m.id, m.subject, m.createTime, m.createId, m.createName, mr.readTime";
 		String sqlFrom = " from t_message_rec mr left join t_message m on mr.messageId = m.id where mr.receiverId = ? and m.opened = '1'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", message.getCreateId());
@@ -163,6 +174,7 @@ public class MessageServiceImpl implements MessageServiceI {
 			m.setCreateTime(DateUtil.stringToDate(o[2].toString(), DateUtil.DATETIME_PATTERN));
 			m.setCreateId(Integer.parseInt(o[3].toString()));
 			m.setCreateName(o[4].toString());
+			m.setReadTime(DateUtil.stringToDate(o[5] == null ? "" : o[5].toString(), DateUtil.DATETIME_PATTERN));
 			nl.add(m);
 		}
 		dg.setRows(nl);

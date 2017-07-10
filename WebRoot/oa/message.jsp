@@ -93,6 +93,16 @@
                             },
 	 					});
 				}
+                if(index == 1){
+                    message_sendDg.datagrid({
+                        url: '${pageContext.request.contextPath}/oa/messageAction!sendDg.action',
+                    });
+                }
+                if(index == 2){
+                    message_receiveDg.datagrid({
+                        url: '${pageContext.request.contextPath}/oa/messageAction!reveiveDg.action'
+                    });
+                }
 			},
 			onBeforeClose: function(title, index){
 				if(index == 0){
@@ -407,6 +417,7 @@
             {field:'createTime',title:'时间'},
             {field:'createId',title:'发送人Id',hidden:true},
             {field:'createName',title:'发送人'},
+            {field:'readTime',title:'阅读'},
         ]],
         onDblClickCell: function(index,field){
             if(field == 'subject'){
@@ -422,7 +433,8 @@
 		$.ajax({
 			url : '${pageContext.request.contextPath}/oa/messageAction!getMessage.action',
 			data : {
-				id : row.id
+				id : row.id,
+				source: source
 			},
 			dataType : 'json',
 			success : function(d) {
@@ -485,7 +497,7 @@
 			<input type="button" value="重置" onclick="message_reset()"></input>
 		</div>
 	</div>
-	<div title="已发送列表" data-options="closable:false">
+	<div title="发送列表" data-options="closable:false">
 		<div id='oa_messageS_dg'></div>
 	</div>
 	<div title="接收列表" data-options="closable:false">

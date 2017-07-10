@@ -17,16 +17,20 @@ public class Message {
 	private String opened;
 	private String isCancel;
 	private Date cancelTime;
-	
+
 	private String menuId;
 	private String files;
 	private String receiverIds;
 	private String receiverNames;
-	
+
+	private Date readTime;
 	
 	private int page;
 	private int rows;
 	private String datagrid;
+	private String source;
+
+
 	public int getId() {
 		return id;
 	}
@@ -111,6 +115,15 @@ public class Message {
 	public void setReceiverNames(String receiverNames) {
 		this.receiverNames = receiverNames;
 	}
+
+	public Date getReadTime() {
+		return readTime;
+	}
+
+	public void setReadTime(Date readTime) {
+		this.readTime = readTime;
+	}
+
 	public int getPage() {
 		return page;
 	}
@@ -130,5 +143,13 @@ public class Message {
 
 	public void setDatagrid(String datagrid) {
 		this.datagrid = datagrid;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 }

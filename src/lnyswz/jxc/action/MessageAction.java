@@ -70,6 +70,8 @@ public class MessageAction extends BaseAction implements ModelDriven<Message> {
 	}
 
 	public void getMessage(){
+		User u = (User) session.get("user");
+		message.setCreateId(u.getId());
 		Json j = new Json();
 		Message m = messageService.getMessage(message);
 		j.setObj(m);
