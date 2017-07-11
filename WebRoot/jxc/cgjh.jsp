@@ -1494,7 +1494,7 @@ function cancelCgjh(){
 	if (row != undefined) {
 		if(row.isKfrk != '1'){
 			if(row.isCancel != '1'){
-				if(row.nbjhlsh == undefined){
+				if(!(row.nbjhlsh != undefined && row.isNb == '1')){
 					if(row.isCompleted != '1'){
 						$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
 							if (r) {

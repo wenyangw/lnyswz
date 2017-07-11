@@ -947,6 +947,9 @@ public class XsthServiceImpl implements XsthServiceI {
 					xskplshs.add(tXskp.getXskplsh());
 				}
 			}
+			if(tXsthDet.getTCgjh() != null){
+				c.setCgjhlsh(tXsthDet.getTCgjh().getCgjhlsh());
+			}
 			
 			String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
 			Map<String, Object> params_sh = new HashMap<String, Object>();

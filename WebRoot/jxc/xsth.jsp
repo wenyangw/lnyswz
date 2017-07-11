@@ -1834,41 +1834,45 @@ function cancelXsth(){
 				var row = d.obj;
 				if(row.isCancel != '1'){
 		 			if(row.locked == '0'){
-		 				if(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == ''){
-		 					if(row.isTh != '1'){
-		 						$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
-		 							if (r) {
-		 								//MaskUtil.mask('正在取消，请稍等……');
-		 								$.ajax({
-		 									url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
-		 									data : {
-		 										xsthlsh : row.xsthlsh,
-		 										fromOther: jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs',
-		 										bmbh : xsth_did,
-		 										menuId : xsth_menuId,
-		 										lxbh: xsth_lx,
-		 									},
-		 									dataType : 'json',
-		 									success : function(d) {
-		 										xsth_dg.datagrid('load');
-		 										xsth_dg.datagrid('unselectAll');
-		 										$.messager.show({
-		 											title : '提示',
-		 											msg : d.msg
-		 										});
-		 									},
-		 									complete: function(){
-		 										//MaskUtil.unmask();
-		 									}
-		 								});
-		 							}
-		 						});
-		 					}else{
-		 						$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
-		 					}
-		 				}else{
-		 					$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
-		 				}
+		 			    if(row.cgjhlsh == undefined){
+							if(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == ''){
+								if(row.isTh != '1'){
+									$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
+										if (r) {
+											//MaskUtil.mask('正在取消，请稍等……');
+											$.ajax({
+												url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
+												data : {
+													xsthlsh : row.xsthlsh,
+													fromOther: jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs',
+													bmbh : xsth_did,
+													menuId : xsth_menuId,
+													lxbh: xsth_lx,
+												},
+												dataType : 'json',
+												success : function(d) {
+													xsth_dg.datagrid('load');
+													xsth_dg.datagrid('unselectAll');
+													$.messager.show({
+														title : '提示',
+														msg : d.msg
+													});
+												},
+												complete: function(){
+													//MaskUtil.unmask();
+												}
+											});
+										}
+									});
+								}else{
+									$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
+								}
+							}else{
+								$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
+							}
+                        }else{
+                            $.messager.alert('警告', '选中的销售提货已由计划员进行处理，不能取消！',  'warning');
+                        }
 		 			}else{
 		 				$.messager.alert('警告', '选中的销售提货记录已被库房锁定，请重新选择！',  'warning');
 		 			}
