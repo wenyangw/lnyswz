@@ -1493,9 +1493,9 @@ public class XsthServiceImpl implements XsthServiceI {
 				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
 		}else{
 			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
-				+ " sum(spje) / isnull(sum(thDet.zdwsl - thDet.kpsl), 0) zdwdj,"
-				+ " case when isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) = 0 then 0 else sum(spje) / isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) end cdwdj,"
-				+ " sum(spje) spje,"
+				+ " convert(numeric(18,4), sum(spje) / sum(thDet.zdwsl)) zdwdj,"
+				+ " convert(numeric(18, 4), case when sum(isnull(thDet.cdwsl, 0)) = 0 then 0 else sum(spje) / sum(thDet.cdwsl) end) cdwdj,"
+				+ " convert(numeric(18, 2), sum(thDet.zdwsl - thDet.kpsl) * (sum(spje) / sum(thDet.zdwsl))) spje,"
 				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
 				+ " from t_xsth_det thDet"
 				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and"
