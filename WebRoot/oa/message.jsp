@@ -37,6 +37,9 @@
 	var source;
 	var target;
 
+    var message_sendDg;
+    var message_receiveDg;
+
 	var memoEditor;
 	var uploadlist = [];
     var savelist = [];
@@ -100,7 +103,7 @@
                 }
                 if(index == 2){
                     message_receiveDg.datagrid({
-                        url: '${pageContext.request.contextPath}/oa/messageAction!reveiveDg.action'
+                        url: '${pageContext.request.contextPath}/oa/messageAction!receiveDg.action'
                     });
                 }
 			},
@@ -357,8 +360,7 @@
 
 	//-------------------------------------发送列表管理
 	
-	var message_sendDg = $('#oa_messageS_dg');
-	message_sendDg.datagrid({
+	message_sendDg = $('#oa_messageS_dg').datagrid({
 		url:'${pageContext.request.contextPath}/oa/messageAction!sendDg.action',
 		fit : true,
 		singleSelect:true,
@@ -367,8 +369,8 @@
 		pagePosition : 'bottom',
 		pageSize : pageSize,
 		pageList : pageList,
-	    columns:[[    	
-	        {field:'id',title:'编号',width:100,hidden:true},	       
+	    columns:[[
+	        {field:'id',title:'编号',width:100,checkbox:true},
 	        {field:'subject',title:'主题',width:200,
 	        	styler: function(){
 					return 'color:blue;';
@@ -385,6 +387,7 @@
                 }},
 	        {field:'receiverNames',title:'接收人'},
 	    ]],
+        toolbar:'#oa_messageS_tb',
         onDblClickCell: function(index,field,value){
 		    if(field == 'subject'){
                 var row = $(this).datagrid('selectRow', index).datagrid('getSelected');
@@ -395,10 +398,18 @@
 	});
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(1, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
-	
+
+    function del_send(){
+	}
+
+    function status_send(){
+    }
+
+    function searchSend(){
+    }
+
 	//-------------------------------------接收列表管理
-    var message_receiveDg = $('#oa_messageR_dg');
-    message_receiveDg.datagrid({
+    message_receiveDg = $('#oa_messageR_dg').datagrid({
         url:'${pageContext.request.contextPath}/oa/messageAction!receiveDg.action',
         fit : true,
         singleSelect:true,
@@ -408,7 +419,7 @@
         pageSize : pageSize,
         pageList : pageList,
         columns:[[
-            {field:'id',title:'编号',width:100,hidden:true},
+            {field:'id',title:'编号',width:100,checkbox:true},
             {field:'subject',title:'主题',width:200,
                 styler: function(){
                     return 'color:blue;';
@@ -419,6 +430,7 @@
             {field:'createName',title:'发送人'},
             {field:'readTime',title:'阅读'},
         ]],
+        toolbar:'#oa_messageR_tb',
         onDblClickCell: function(index,field){
             if(field == 'subject'){
                 var row = $(this).datagrid('selectRow', index).datagrid('getSelected');
@@ -429,6 +441,15 @@
     //根据权限，动态加载功能按钮
     lnyw.toolbar(2, message_receiveDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 
+    function del_receive(){
+
+	}
+
+    function searchReceive(){
+
+    }
+
+    //-------------------------------------信息显示
     function getMessage(row, source){
 		$.ajax({
 			url : '${pageContext.request.contextPath}/oa/messageAction!getMessage.action',
@@ -444,7 +465,6 @@
 		});
     }
 
-	//-------------------------------------信息显示
 	function addTab(row, source){
 		$('#oa_message_tabs').tabs('add',{
 			title: source + ':' + row.subject,
@@ -505,4 +525,11 @@
 	</div>
 </div>
 <div id="message_contact_select"></div>
-
+<div id="oa_messageS_tb" style="padding:3px;height:auto">
+	输入主题、内容关键字、接收人：<input type="text" name="searchSend" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchSend();">查询</a>
+</div>
+<div id="oa_messageR_tb" style="padding:3px;height:auto">
+	输入主题、内容关键字、发送人：<input type="text" name="searchReceive" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchReceive();">查询</a>
+</div>
