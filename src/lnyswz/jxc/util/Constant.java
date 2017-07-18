@@ -200,9 +200,33 @@ public interface Constant {
 		put("04","沈阳市铁西区齐贤北街29号");
 		put("05","沈阳市铁西区齐贤北街29号");
 		put("07","沈阳市铁西区齐贤北街29号");
-		put("08","大连市西岗区香工街香海花园35号一楼公建");	
+		put("08","大连市西岗区香海园35号一层公建");
 	}};
-	
+
+	public static final Map<String, String> BMDH = new HashMap<String, String>(){{
+		put("01","024-25840693");
+		put("04","024-25610008");
+		put("05","024-25850560");
+		put("07","024-25610008");
+		put("08","0411-84440455");
+	}};
+
+	public static final Map<String, String> BMKHH = new HashMap<String, String>(){{
+		put("01","招商银行沈阳分行兴顺支行");
+		put("04","招商银行沈阳分行兴顺支行");
+		put("05","招商银行沈阳分行兴顺支行");
+		put("07","招商银行沈阳分行兴顺支行");
+		put("08","广发行大连沙河口支行");
+	}};
+
+	public static final Map<String, String> BMZH = new HashMap<String, String>(){{
+		put("01","124902659610503");
+		put("04","240885411110001");
+		put("05","124902099110602");
+		put("07","240885411110001");
+		put("08","133071516010005170");
+	}};
+
 	public static final Map<String, String> HTDZS = new HashMap<String, String>(){{
 		put("01","沈阳市铁西区");
 		put("04","沈阳市铁西区");

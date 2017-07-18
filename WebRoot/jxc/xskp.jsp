@@ -1826,6 +1826,6 @@ function searchXsthInXskp(){
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、书名、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
+	输入流水号、客户编号、名称、分户、业务员、书名、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInXskp();">查询</a>
 </div>
