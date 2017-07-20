@@ -11,6 +11,8 @@ import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Paper;
 import lnyswz.jxc.model.*;
+import lnyswz.jxc.util.Upload;
+import lnyswz.jxc.util.Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

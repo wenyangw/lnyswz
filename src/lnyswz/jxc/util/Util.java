@@ -1,13 +1,15 @@
 package lnyswz.jxc.util;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import lnyswz.common.util.Common;
+import org.apache.commons.lang3.StringUtils;
 
 public class Util {
 	public static String getReportName(String bmbh, String fileName){
@@ -45,21 +47,22 @@ public class Util {
 	public static String getQuerySQLWhere(String input, String[] fields, Map<String, Object> params, int start){
 		String str = "";
 		if(input.indexOf(" ") > 0 ){
+			List<String> s = new ArrayList<String>();
 			String[] in = input.split("\\s+");
 			for(int i = 0; i < in.length; i++){
 				String str1 = "";
-				for(int j = 0; j < fields.length; j++){
-					str1 = Common.joinString(fields[j] + " like ?" + i, str1, " OR ");
-					params.put("" + (start + i + j), "%" + in[i] + "%");
+				for (String field : fields) {
+					str1 = Common.joinString(field + " like ?", str1, " OR ");
+					params.put("" + params.size(), "%" + in[i] + "%");
 				}
-				str = Common.joinString("(" + str1 + ")", str, " AND ");
+				s.add("(" + str1 + ")");
 			}
+			str = StringUtils.join(s, " AND ");
 		}else{
-			for(int j = 0; j < fields.length; j++){
-				str = Common.joinString(fields[j] + " like ?", str, " OR ");
-				params.put("" + (start + j), "%" + input + "%");
+			for (String field : fields) {
+				str = Common.joinString(field + " like ?", str, " OR ");
+				params.put("" + params.size(), "%" + input + "%");
 			}
-
 		}
 		return str;
 	}
