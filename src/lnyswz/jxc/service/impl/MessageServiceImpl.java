@@ -62,32 +62,61 @@ public class MessageServiceImpl implements MessageServiceI {
 			tPaper.setTMessage(t);
 			paperDao.save(tPaper);
 		}
-		
+
 		message.setId(t.getId());
 		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "保存信息", opeDao);
-
-		//return message;
 	}
 
 	/**
-	 * 编辑仓库
+	 * 删除信息
 	 */
 	@Override
-	public void edit(Message message) {
-		TMessage g = messageDao.load(TMessage.class, message.getId());
-		BeanUtils.copyProperties(message, g);
-		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "编辑信息属性", opeDao);
-	}
-
-	/**
-	 * 删除仓库
-	 */
-	@Override
-	public boolean delete(Message message) {
-		boolean isOk = false;
+	public void deleteMessage(Message message) {
 		TMessage t = messageDao.load(TMessage.class, message.getId());
+
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", t.getId());
+
+		//删除附件
+		String fileSql = "select filepath from t_paper where messageId = ?";
+		List<Object[]> files = messageDao.findBySQL(fileSql, sqlParams);
+		for (Object file : files) {
+			Upload.deleteFile(file.toString());
+		}
+
+		//删除t_paper
+		String paperSql = "delete t_paper where messageId = ?";
+		messageDao.updateBySQL(paperSql, sqlParams);
+
+		//删除t_message_rec
+		String recSql = "delete t_message_rec where messageId = ?";
+		messageDao.updateBySQL(recSql, sqlParams);
+
+		//删除t_message
+		messageDao.delete(t);
+
 		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "删除仓库信息", opeDao);
-		return isOk;
+	}
+
+	/**
+	 * 取消已接收信息
+	 */
+	@Override
+	public void cancelReceive(Message message) {
+		TMessageRec t = mesRecDao.load(TMessageRec.class, message.getRecId());
+		t.setIsCancel("1");
+		t.setCancelTime(new Date());
+		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "取消已接收信息", opeDao);
+	}
+
+	/**
+	 * 更改信息状态
+	 */
+	@Override
+	public void updateStatus(Message message) {
+		TMessage t = messageDao.load(TMessage.class, message.getId());
+		t.setOpened(t.getOpened().equals("1") ? "0" : "1");
+		OperalogServiceImpl.addOperalog(message.getCreateId(), "", message.getMenuId(), Integer.toString(message.getId()), "更改已发送信息状态", opeDao);
 	}
 
 	@Override
@@ -111,7 +140,7 @@ public class MessageServiceImpl implements MessageServiceI {
 
 	/**
 	 * 数据转换
-	 * 
+	 *
 	 * @param l
 	 * @return
 	 */
@@ -131,12 +160,15 @@ public class MessageServiceImpl implements MessageServiceI {
 		String hql = "from TMessage t where t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("createId", message.getCreateId());
+		if(message.getSearch() != null && message.getSearch().length() > 0){
+			hql += " and (" + Util.getQueryWhere(message.getSearch(), new String[]{"t.subject", "t.memo"}, params) + ")";
+		}
 		List<Message> nl = new ArrayList<Message>();
 		// 传入页码、每页条数
-		
+
 		String totalHql = "select count(*) " + hql;
 		hql += " order by createTime desc";
-		
+
 		List<TMessage> l = messageDao.find(hql, params, message.getPage(), message.getRows());
 		// 处理返回信息
 		for (TMessage t : l) {
@@ -150,19 +182,22 @@ public class MessageServiceImpl implements MessageServiceI {
 			nc.setReceiverNames(StringUtils.join(list_mr.toArray(), ","));
 			nl.add(nc);
 		}
-		
+
 		dg.setTotal(messageDao.count(totalHql, params));
 		dg.setRows(nl);
 		return dg;
 	}
-	
+
 	@Override
 	public DataGrid receiveDg(Message message) {
 		DataGrid dg = new DataGrid();
-		String sql = "select m.id, m.subject, m.createTime, m.createId, m.createName, mr.readTime";
-		String sqlFrom = " from t_message_rec mr left join t_message m on mr.messageId = m.id where mr.receiverId = ? and m.opened = '1'";
+		String sql = "select m.id, m.subject, m.createTime, m.createId, m.createName, mr.readTime, mr.id recId";
+		String sqlFrom = " from t_message_rec mr left join t_message m on mr.messageId = m.id where mr.receiverId = ? and m.opened = '1' and mr.isCancel='0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", message.getCreateId());
+		if(message.getSearch() != null && message.getSearch().length() > 0){
+			sqlFrom += " and (" + Util.getQuerySQLWhere(message.getSearch(), new String[]{"m.subject", "m.memo", "m.createName"}, params, 1) + ")";
+		}
 		List<Message> nl = new ArrayList<Message>();
 		// 传入页码、每页条数
 		List<Object[]> l = messageDao.findBySQL(sql + sqlFrom +  " order by m.createTime desc", params, message.getPage(), message.getRows());
@@ -175,6 +210,7 @@ public class MessageServiceImpl implements MessageServiceI {
 			m.setCreateId(Integer.parseInt(o[3].toString()));
 			m.setCreateName(o[4].toString());
 			m.setReadTime(DateUtil.stringToDate(o[5] == null ? "" : o[5].toString(), DateUtil.DATETIME_PATTERN));
+			m.setRecId(Integer.parseInt(o[6].toString()));
 			nl.add(m);
 		}
 		dg.setRows(nl);

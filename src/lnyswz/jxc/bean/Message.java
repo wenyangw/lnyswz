@@ -22,12 +22,14 @@ public class Message {
 	private String files;
 	private String receiverIds;
 	private String receiverNames;
+	private int recId;
 
 	private Date readTime;
 	
 	private int page;
 	private int rows;
 	private String datagrid;
+	private String search;
 	private String source;
 
 
@@ -116,6 +118,14 @@ public class Message {
 		this.receiverNames = receiverNames;
 	}
 
+	public int getRecId() {
+		return recId;
+	}
+
+	public void setRecId(int recId) {
+		this.recId = recId;
+	}
+
 	public Date getReadTime() {
 		return readTime;
 	}
@@ -143,6 +153,14 @@ public class Message {
 
 	public void setDatagrid(String datagrid) {
 		this.datagrid = datagrid;
+	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
 	}
 
 	public String getSource() {

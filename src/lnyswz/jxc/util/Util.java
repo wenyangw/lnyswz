@@ -52,7 +52,7 @@ public class Util {
 					str1 = Common.joinString(fields[j] + " like ?" + i, str1, " OR ");
 					params.put("" + (start + i + j), "%" + in[i] + "%");
 				}
-				str = Common.joinString("(" + str1 + ")", str, " OR ");
+				str = Common.joinString("(" + str1 + ")", str, " AND ");
 			}
 		}else{
 			for(int j = 0; j < fields.length; j++){
