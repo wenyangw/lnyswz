@@ -28,10 +28,10 @@
 			<th><label for="khlxId">客户类型</label></th>
 			<td><input name="khlxId" style="width:160px;"></td>
 		</tr>
-<!-- 		<tr> -->
-<!-- 			<th><label for="isSx">授信客户</label></th> -->
-<!-- 			<td><input name="isSx" type="checkbox" value="1"></td> -->
-<!-- 		</tr> -->
+ 		<tr>
+ 			<th><label for="info">信息</label></th>
+ 			<td><input name="info" style="width:156px;"></td>
+ 		</tr>
 		<tr>
 			<th><label for="sxzq">授信账期</label></th>
 			<td><input name="sxzq" id="sxzq" class="easyui-validatebox sxbj"

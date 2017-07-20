@@ -50,14 +50,14 @@ $(function(){
 		fit : true,
 		border : false,
 	});
-	
+
 	cgjh_dg = $('#jxc_cgjh_dg').datagrid({
 		//url: '${pageContext.request.contextPath}/jxc/cgjhAction!datagrid.action',
 		fit : true,
 	    border : false,
 	    singleSelect : true,
 	    remoteSort: false,
-	    fitColumns: true,
+	    //fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
@@ -234,6 +234,7 @@ $(function(){
                			return 'color:blue;';
                		}
     			}},
+            {field:'nbjhlsh',title:'内部计划流水号'}
 	    ]],
 	    toolbar:'#jxc_cgjh_tb',
 	});
@@ -336,7 +337,7 @@ $(function(){
            					} else {
            						return '';
            					}
-           				}},
+           				}}
                 ]],
                 onResize:function(){
                 	cgjh_dg.datagrid('fixDetailRowHeight',index);
@@ -557,7 +558,7 @@ $(function(){
 					}},
 			{field:'spje',title:'销售金额',align:'center',
 			    formatter: function(value){
-			    	return value == 0 ? '' : lnyw.formatNumberRgx(value);
+			    	return value === 0 ? '' : lnyw.formatNumberRgx(value);
 					}},      
 	        {field:'khbh',title:'客户编号',align:'center', hidden:true},
 	        {field:'khmc',title:'客户名称',align:'center'},
@@ -575,7 +576,7 @@ $(function(){
         	{field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
-        		}},
+        		}}
 //         	{field:'isLs',title:'*临时',align:'center',sortable:true,
 //         		formatter : function(value) {
 // 					if (value == '1') {
@@ -616,7 +617,7 @@ $(function(){
 // 						return (a-b);  
 // 				}},
 	    ]],
-	    toolbar:'#jxc_cgjh_xsthTb',
+	    toolbar:'#jxc_cgjh_xsthTb'
 	});
 	lnyw.toolbar(4, cgjh_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', cgjh_did);
 	
@@ -778,7 +779,7 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
 					queryParams:{
 						bmbh: cgjh_did,
-						fromOther: 'fromCgjh',
+						fromOther: 'fromCgjh'
 					}
 				});
 			}
@@ -1493,35 +1494,39 @@ function cancelCgjh(){
 	if (row != undefined) {
 		if(row.isKfrk != '1'){
 			if(row.isCancel != '1'){
-				if(row.isCompleted != '1'){
-					$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
-						if (r) {
-							//MaskUtil.mask('正在取消，请等待……');
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
-								data : {
-									cgjhlsh : row.cgjhlsh,
-									bmbh : cgjh_did,
-									menuId : cgjh_menuId,
-								},
-								dataType : 'json',
-								success : function(d) {
-									cgjh_dg.datagrid('reload');
-									cgjh_dg.datagrid('unselectAll');
-									$.messager.show({
-										title : '提示',
-										msg : d.msg
-									});
-								},
-								complete: function(){
-									//MaskUtil.unmask();
-								}
-							});
-						}
-					});
-				}else{
-					$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
-				}
+				if(!(row.nbjhlsh != undefined && row.isNb == '1')){
+					if(row.isCompleted != '1'){
+						$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
+							if (r) {
+								//MaskUtil.mask('正在取消，请等待……');
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
+									data : {
+										cgjhlsh : row.cgjhlsh,
+										bmbh : cgjh_did,
+										menuId : cgjh_menuId,
+									},
+									dataType : 'json',
+									success : function(d) {
+										cgjh_dg.datagrid('reload');
+										cgjh_dg.datagrid('unselectAll');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									},
+									complete: function(){
+										//MaskUtil.unmask();
+									}
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
+					}
+                }else{
+                    $.messager.alert('警告', '选中的采购计划已由' + row.gysmc + '进行处理，不能取消！',  'warning');
+                }
 			}else{
 				$.messager.alert('警告', '选中的采购计划已被取消，请重新选择！',  'warning');
 			}
@@ -2139,7 +2144,7 @@ function createCgjhFromCgjh(){
 <div id="jxc_cgjh_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_cgjh_layout' style="height:100%;width=100%">
+        <div id='jxc_cgjh_layout' style="height:100%;width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:145px">		
 				<table class="tinfo">
 					<tr>

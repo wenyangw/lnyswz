@@ -705,6 +705,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bmmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("bmdz", Constant.BMDZS.get(tXsth.getBmbh()));
+		map.put("bmdh", Constant.BMDH.get(tXsth.getBmbh()));
+		map.put("bmkhh", Constant.BMKHH.get(tXsth.getBmbh()));
+		map.put("bmzh", Constant.BMZH.get(tXsth.getBmbh()));
 		map.put("htdz", Constant.HTDZS.get(tXsth.getBmbh()));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
@@ -713,7 +716,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("payDays", payDays);
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
-		
+		map.put("createTime", DateUtil.getYear(tXsth.getCreateTime()) + " 年 " +
+				DateUtil.getMonth(tXsth.getCreateTime()) + " 月 " +
+				DateUtil.getDay(tXsth.getCreateTime()) + " 日");
+
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		
@@ -947,6 +953,9 @@ public class XsthServiceImpl implements XsthServiceI {
 					xskplshs.add(tXskp.getXskplsh());
 				}
 			}
+			if(tXsthDet.getTCgjh() != null){
+				c.setCgjhlsh(tXsthDet.getTCgjh().getCgjhlsh());
+			}
 			
 			String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
 			Map<String, Object> params_sh = new HashMap<String, Object>();
@@ -1040,7 +1049,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			}else{
 				//hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 				//params.put("search", "%" + xsth.getSearch() + "%");
-				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.TXsth.xsthlsh", "t.TXsth.khbh", "t.TXsth.khmc", "t.TXsth.bookmc", "t.TXsth.bz", "t.TXsth.ywymc"}, params) + ")";
+				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.TXsth.xsthlsh", "t.TXsth.khbh", "t.TXsth.khmc", "t.TXsth.bookmc", "t.TXsth.bz", "t.TXsth.ywymc", "t.TXsth.fhmc"}, params) + ")";
 			}
 		}
 		
@@ -1221,13 +1230,6 @@ public class XsthServiceImpl implements XsthServiceI {
 				xd.setZhxs(sp.getZhxs());
 				xd.setCdwthsl(cdwthsl);
 				xd.setCdwytsl(cdwytsl);
-//				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
-//					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-//					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-//				}else{
-//					xd.setCdwthsl(Constant.BD_ZERO);
-//					xd.setCdwytsl(Constant.BD_ZERO);
-//				}
 			}
 			nl.add(xd);
 		}
@@ -1275,13 +1277,6 @@ public class XsthServiceImpl implements XsthServiceI {
 				xd.setCjldwmc(sp.getCjldw().getJldwmc());
 				xd.setZhxs(sp.getZhxs());
 				xd.setCdwsl(cdwsl);
-//				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
-//					xd.setCdwthsl(zdwthsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-//					xd.setCdwytsl(zdwytsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-//				}else{
-//					xd.setCdwthsl(Constant.BD_ZERO);
-//					xd.setCdwytsl(Constant.BD_ZERO);
-//				}
 			}
 			nl.add(xd);
 		}
@@ -1310,14 +1305,7 @@ public class XsthServiceImpl implements XsthServiceI {
 
 		//获取修改的商品记录
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
-				
-		
-		//检查是否已修改过,未改过的将原zdwsl保存到thsl
-//		if(tXsthDet.getThsl().compareTo(Constant.BD_ZERO) == 0){
-//			tXsthDet.setThsl(tXsthDet.getZdwsl());
-//			//tXsthDet.setZdwsl(BigDecimal.ZERO);
-//		}
-		
+
 		//记录每次确认的提货数量
 		TZsqr tZsqr = new TZsqr();
 		tZsqr.setXsthlsh(tXsthDet.getTXsth().getXsthlsh());
@@ -1505,9 +1493,9 @@ public class XsthServiceImpl implements XsthServiceI {
 				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
 		}else{
 			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
-				+ " sum(spje) / isnull(sum(thDet.zdwsl - thDet.kpsl), 0) zdwdj,"
-				+ " case when isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) = 0 then 0 else sum(spje) / isnull(sum(thDet.cdwsl - thDet.ckpsl), 0) end cdwdj,"
-				+ " sum(spje) spje,"
+				+ " convert(numeric(18,4), sum(spje) / sum(thDet.zdwsl)) zdwdj,"
+				+ " convert(numeric(18, 4), case when sum(isnull(thDet.cdwsl, 0)) = 0 then 0 else sum(spje) / sum(thDet.cdwsl) end) cdwdj,"
+				+ " convert(numeric(18, 2), sum(thDet.zdwsl - thDet.kpsl) * (sum(spje) / sum(thDet.zdwsl))) spje,"
 				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
 				+ " from t_xsth_det thDet"
 				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and"

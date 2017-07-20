@@ -34,13 +34,14 @@ public class TKhDet implements java.io.Serializable {
 	private BigDecimal limitJe;
 	private String isLocked;
 	private String isDef;
+	private String info;
 
 	public TKhDet() {
 	}
 
 	public TKhDet(String id, TKh TKh, TDepartment TDepartment, String lxr, Integer ywyId, String khlxId, 
 			String isSx, Integer sxzq, BigDecimal sxje, BigDecimal lsje, String isUp, int postponeDay, String isOther,
-			BigDecimal limitPer, BigDecimal limitJe, String isLocked, String isDef) {
+			BigDecimal limitPer, BigDecimal limitJe, String isLocked, String isDef, String info) {
 		this.id = id;
 		this.TKh = TKh;
 		this.TDepartment = TDepartment;
@@ -58,6 +59,7 @@ public class TKhDet implements java.io.Serializable {
 		this.limitJe = limitJe;
 		this.isLocked = isLocked;
 		this.isDef = isDef;
+		this.info = info;
 	}
 
 	@Id
@@ -216,4 +218,12 @@ public class TKhDet implements java.io.Serializable {
 		this.isDef = isDef;
 	}
 
+	@Column(name = "info", length = 50)
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
 }

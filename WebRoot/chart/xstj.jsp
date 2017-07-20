@@ -23,6 +23,9 @@ $(function(){
 	},{
 	    "id": 'xsml',
 	    "text": "销售毛利"
+	},{
+	    "id": 'xssl',
+	    "text": "销售数量"
 	},];
 	
 	if(xstj_did >= '10'){
@@ -64,8 +67,13 @@ $(function(){
 	    valueField: 'id',
 	    textField: 'text',
 	    panelHeight: 'auto',
-	    onSelect: function(){
+	    onSelect: function(rec){
 	    	xstj_options.title.text = $(this).combobox('getText') + '对比分析';
+	    	if(rec.id == 'xssl'){
+	    		xstj_options.yAxis.title.text = '数量(吨)';
+	    	}else{
+	    		xstj_options.yAxis.title.text = '金额(万元)';
+	    	}
 	    }
 	}).combobox('selectedIndex', 0);
 	
@@ -162,24 +170,28 @@ function xstj_setColumnLabel(){
 }
 
 function xstj_getData(){
-	lnyw.MaskUtil.mask('正在刷新，请等待……');
-	$.ajax({
-		url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
-		data: {
-			bmbh: xstj_bmbh,
-			field: $('#jxc_xstj_tjlx').combobox('getValue'),
-			includeNb: $('input#jxc_xstj_nb').is(':checked') ? '1' : '0',
-		},
-		cache: false,
-		async: false,
-		dataType: 'json',
-		success: function(data){
-			xstj_drawChart(data);
-		},
-		complete: function(){
-			lnyw.MaskUtil.unmask();
-		}
-	});
+	if($('#jxc_xstj_tjlx').combobox('getValue') === 'xssl' && (xstj_bmbh == '01' || xstj_bmbh == '08')){
+		$.messager.alert('警告', '选择的部门无法进行销售数量的统计，请重新选择！',  'info');
+	}else{
+		lnyw.MaskUtil.mask('正在刷新，请等待……');
+		$.ajax({
+			url: '${pageContext.request.contextPath}/jxc/chartAction!getXstj.action',
+			data: {
+				bmbh: xstj_bmbh,
+				field: $('#jxc_xstj_tjlx').combobox('getValue'),
+				includeNb: $('input#jxc_xstj_nb').is(':checked') ? '1' : '0',
+			},
+			cache: false,
+			async: false,
+			dataType: 'json',
+			success: function(data){
+				xstj_drawChart(data);
+			},
+			complete: function(){
+				lnyw.MaskUtil.unmask();
+			}
+		});
+	}
 }
 
 </script>
@@ -193,5 +205,5 @@ function xstj_getData(){
 </tr></table>
 <br>
 <div id="xstj_container" style="min-width:800px;height:400px"></div>
-<div style="margin:10px;">注：因系统切换、并行等原因，2014年1月的销售金额合并在2月，2014年1-4月的毛利统计不十分准确。</div>
+<div style="margin:10px;">注：因商品计量单位不一致的因素，销售数量的统计仅包括教材、文达纸业、大连公公司的纸张。</div>
 

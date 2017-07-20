@@ -39,6 +39,7 @@ public class Kh {
 	private BigDecimal limitJe;
 	private String isLocked;
 	private String isDef;
+	private String info;
 	
 	
 	private String detId;
@@ -348,4 +349,11 @@ public class Kh {
 		this.userId = userId;
 	}
 
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
 }

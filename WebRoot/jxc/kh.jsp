@@ -78,6 +78,7 @@ $(function(){
 				}},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
 	        {field:'khlxmc',width:55,title:'客户类型'},
+            {field:'info',width:100,title:'信息'},
 	        {field:'sxzq',title:'授信账期(天)',
 	        	formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
@@ -152,7 +153,7 @@ function appendKhDet() {
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 420,
+			height : 500,
 			modal : true,
 			buttons: [{
 	            text:'确定',
