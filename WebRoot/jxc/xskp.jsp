@@ -1756,7 +1756,7 @@ function searchXsthInXskp(){
 <div id="jxc_xskp_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_xskp_layout' style="height:100%;width=100%">
+        <div id='jxc_xskp_layout' style="height:100%;width:100%">
 			<div  class="tinfo" id="info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
 				<table>
 					<tr>

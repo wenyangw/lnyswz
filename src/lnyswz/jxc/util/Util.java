@@ -42,6 +42,28 @@ public class Util {
 		return str;
 	}
 
+	public static String getQuerySQLWhere(String input, String[] fields, Map<String, Object> params, int start){
+		String str = "";
+		if(input.indexOf(" ") > 0 ){
+			String[] in = input.split("\\s+");
+			for(int i = 0; i < in.length; i++){
+				String str1 = "";
+				for(int j = 0; j < fields.length; j++){
+					str1 = Common.joinString(fields[j] + " like ?" + i, str1, " OR ");
+					params.put("" + (start + i + j), "%" + in[i] + "%");
+				}
+				str = Common.joinString("(" + str1 + ")", str, " OR ");
+			}
+		}else{
+			for(int j = 0; j < fields.length; j++){
+				str = Common.joinString(fields[j] + " like ?", str, " OR ");
+				params.put("" + (start + j), "%" + input + "%");
+			}
+
+		}
+		return str;
+	}
+
 	public static String getRootPath() {
 		// 因为类名为"Util"，因此" Util.class"一定能找到
 		String result = Util.class.getResource("Util.class").toString();

@@ -6,13 +6,15 @@ import lnyswz.jxc.bean.Message;
 public interface MessageServiceI {
 	public void add(Message message);
 
-	public void edit(Message message);
-
-	public boolean delete(Message message);
+	public void deleteMessage(Message message);
 
 	public DataGrid sendDg(Message message);
 	
 	public DataGrid receiveDg(Message message);
+
+	public void cancelReceive(Message message);
+
+	public void updateStatus(Message message);
 
     public Message getMessage(Message message);
 }

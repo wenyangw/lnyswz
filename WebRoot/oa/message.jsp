@@ -30,6 +30,7 @@
 
 <script type="text/javascript">
 
+	var oa_message_menuId;
 	var contact_source;
 	var contact_from;
 	var contact_to;
@@ -45,6 +46,8 @@
     var savelist = [];
 	
 	$(function(){
+        oa_message_menuId = lnyw.tab_options().id;
+
 		//装载联系人
 		$.ajax({
 			url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
@@ -55,9 +58,7 @@
 				contact_reset();
 			}
 		});
-		
-		$('input[name="menuId"]').val(lnyw.tab_options().id);
-		
+
 		var editor_items = [  'undo', 'redo', '|', 'preview',
 				//'print', 'template', 'code', 
 				'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 'justifyleft',
@@ -292,11 +293,10 @@
 	
 	//信息提交
 	function message_submit() {
-        console.info(memoEditor.html());
 	    var form = $('#message_send');
         form.form('submit', {
         	url : '${pageContext.request.contextPath}/oa/messageAction!add.action',
-        	onSubmit : function() {
+        	onSubmit : function(param) {
                 var error = [];
                 if(!$.trim($('#receiverIds').val())){
                     error.push('收件人');
@@ -309,6 +309,7 @@
                     return false;
                 }
                 unusedUpload(memoEditor.html());
+                param.menuId = oa_message_menuId;
                 $('input[name="datagrid"]').val(JSON.stringify(savelist));
 			},
 			success : function(data) {
@@ -399,13 +400,74 @@
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(1, message_sendDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 
-    function del_send(){
+    function deleteMessage(){
+        var selected = message_sendDg.datagrid('getSelected');
+        if (selected != undefined) {
+            $.messager.confirm('请确认', '您要删除选中的信息，接收人也将不能再阅读此消息，此操作不可恢复，请确认？', function(r) {
+                if (r) {
+                    //MaskUtil.mask('正在取消，请稍等……');
+                    $.ajax({
+                        url : '${pageContext.request.contextPath}/oa/messageAction!deleteMessage.action',
+                        data : {
+                            id : selected.id,
+                            menuId: oa_message_menuId
+                        },
+                        dataType : 'json',
+                        success : function(d) {
+                            message_sendDg.datagrid('reload');
+                            message_sendDg.datagrid('unselectAll');
+                            $.messager.show({
+                                title : '提示',
+                                msg : d.msg
+                            });
+                        },
+                        complete: function(){
+                            //MaskUtil.unmask();
+                        }
+                    });
+                }
+            });
+        }else{
+            $.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+        }
 	}
 
-    function status_send(){
+    function updateStatus(){
+        var selected = message_sendDg.datagrid('getSelected');
+        if (selected != undefined) {
+            $.messager.confirm('请确认', '您要更改选中信息的状态，请确认？', function(r) {
+                if (r) {
+                    //MaskUtil.mask('正在取消，请稍等……');
+                    $.ajax({
+                        url : '${pageContext.request.contextPath}/oa/messageAction!updateStatus.action',
+                        data : {
+                            id : selected.id,
+							menuId: oa_message_menuId
+                        },
+                        dataType : 'json',
+                        success : function(d) {
+                            message_sendDg.datagrid('load');
+                            message_sendDg.datagrid('unselectAll');
+                            $.messager.show({
+                                title : '提示',
+                                msg : d.msg
+                            });
+                        },
+                        complete: function(){
+                            //MaskUtil.unmask();
+                        }
+                    });
+                }
+            });
+        }else{
+            $.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+        }
     }
 
     function searchSend(){
+        message_sendDg.datagrid('load',{
+            search: $('input[name=searchSend]').val()
+        });
     }
 
 	//-------------------------------------接收列表管理
@@ -429,6 +491,7 @@
             {field:'createId',title:'发送人Id',hidden:true},
             {field:'createName',title:'发送人'},
             {field:'readTime',title:'阅读'},
+            {field:'recId',title:'收件id',width:100,hidden:true},
         ]],
         toolbar:'#oa_messageR_tb',
         onDblClickCell: function(index,field){
@@ -441,12 +504,42 @@
     //根据权限，动态加载功能按钮
     lnyw.toolbar(2, message_receiveDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', lnyw.tab_options().did);
 
-    function del_receive(){
-
+    function cancelReceive(){
+        var selected = message_receiveDg.datagrid('getSelected');
+        if (selected != undefined) {
+			$.messager.confirm('请确认', '您要删除选中的信息，此操作不可恢复，请确认？', function(r) {
+				if (r) {
+					//MaskUtil.mask('正在取消，请稍等……');
+					$.ajax({
+						url : '${pageContext.request.contextPath}/oa/messageAction!cancelReceive.action',
+						data : {
+							recId : selected.recId,
+                            menuId: oa_message_menuId
+						},
+						dataType : 'json',
+						success : function(d) {
+                            message_receiveDg.datagrid('load');
+                            message_receiveDg.datagrid('unselectAll');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						},
+						complete: function(){
+							//MaskUtil.unmask();
+						}
+					});
+				}
+			});
+        }else{
+            $.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+        }
 	}
 
     function searchReceive(){
-
+        message_receiveDg.datagrid('load',{
+            search: $('input[name=searchReceive]').val()
+        });
     }
 
     //-------------------------------------信息显示
@@ -508,7 +601,6 @@
 				<span class="field_label">内容</span>
 				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;margin-top: 10px; margin-left: 70px;"></textarea>
 			</div>
-			<input type='hidden' name='menuId' />
 			<input type='hidden' name='datagrid' />
 
 	 	</form>
@@ -526,7 +618,7 @@
 </div>
 <div id="message_contact_select"></div>
 <div id="oa_messageS_tb" style="padding:3px;height:auto">
-	输入主题、内容关键字、接收人：<input type="text" name="searchSend" style="width:100px">
+	输入主题、内容关键字：<input type="text" name="searchSend" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchSend();">查询</a>
 </div>
 <div id="oa_messageR_tb" style="padding:3px;height:auto">

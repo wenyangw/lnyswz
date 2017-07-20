@@ -37,34 +37,55 @@ public class MessageAction extends BaseAction implements ModelDriven<Message> {
 	}
 
 	/**
-	 * 修改信息
+	 * 删除信息
 	 */
-	public void edit() {
+	public void deleteMessage() {
 		Json j = new Json();
 		User u = (User) session.get("user");
 		message.setCreateId(u.getId());
-		try {
-			messageService.edit(message);
+		try{
+			messageService.deleteMessage(message);
 			j.setSuccess(true);
-			j.setMsg("编辑信息成功！");
-		} catch (Exception e) {
+			j.setMsg("删除信息成功");
+		} catch (Exception e){
+			j.setMsg("删除信息失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
 	}
 
 	/**
-	 * 删除信息
+	 * 取消已接收的信息
 	 */
-	public void delete() {
+	public void cancelReceive() {
 		Json j = new Json();
 		User u = (User) session.get("user");
 		message.setCreateId(u.getId());
-		if (messageService.delete(message)) {
+		try{
+			messageService.cancelReceive(message);
 			j.setSuccess(true);
-			j.setMsg("删除信息成功");
-		} else {
-			j.setMsg("删除信息失败！");
+			j.setMsg("信息取消成功");
+		}catch (Exception e){
+			j.setMsg("信息取消失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
+	/**
+	 * 更改信息状态
+	 */
+	public void updateStatus() {
+		Json j = new Json();
+		User u = (User) session.get("user");
+		message.setCreateId(u.getId());
+		try {
+			messageService.updateStatus(message);
+			j.setSuccess(true);
+			j.setMsg("信息状态更改成功");
+		}catch (Exception e){
+			j.setMsg("信息状态更改失败！");
+			e.printStackTrace();
 		}
 		writeJson(j);
 	}
