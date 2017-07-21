@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
+<script type="text/javascript">
+    $(function(){
+        $('a.ke-insertfile').onclick
+    }
+</script>
 
 <div style="margin-top: 20px;">
 		<div class="message_line">
@@ -24,3 +29,4 @@
 			<div id="memo" style="margin-left:70px; width:1000px;min-width: 1000px; height: 500px; min-height: 500px; border-style:solid; border-width: thin;border-color: black;"></div>
 		</div>
 </div>
+
