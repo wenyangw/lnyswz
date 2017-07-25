@@ -30,7 +30,11 @@ $(function(){
 		</div>
 		<div class="message_line">
 			<span class="field_label">内容：</span>
-			<div id="memo" style="margin-left:70px; width:1000px;min-width: 1000px; height: 500px; min-height: 500px; border-style:solid; border-width: thin;border-color: black;"></div>
+			<div id="memo" class="easyui-panel" style="width: 1000px; height: 500px; padding: 20px; margin-top: 10px;"></div>
+		</div>
+		<div class="message_line">
+			<span class="field_label">附件：</span>
+			<div id="attached" style="margin-left: 25px;"></div>
 		</div>
 </div>
 

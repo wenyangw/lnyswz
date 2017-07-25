@@ -89,8 +89,8 @@
                             allowImageRemote: false,
                             formatUploadUrl: false,
 	 						uploadJson : "${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/jsp/upload_json.jsp",
-                            afterUpload: function(url, data){
-								uploadlist.push({filepath: url, filename: data.title});
+                            afterUpload: function(url, data, name){
+								uploadlist.push({filepath: url, filename: data.title, type: name});
                             },
                             afterChange: function() {
                                 this.sync();
@@ -581,18 +581,19 @@
                     url : '${pageContext.request.contextPath}/oa/paperAction!getPapers.action',
                     data : {
                         messageId : row.id,
+						type: 'insertfile'
                     },
                     dataType : 'json',
                     success : function(d) {
-                        console.info(d);
                         if(d.obj.rows.length > 0){
-                            var papers = ["附件："];
+                            var papers = [];
                             for(var i = 0; i < d.obj.rows.length; i++){
                                 papers.push("<a href='${pageContext.request.contextPath}/oa/paperAction!downloadFile.action?filename=" + d.obj.rows[i].filename + "&filepath=" + d.obj.rows[i].filepath + "'>" + d.obj.rows[i].filename + "</a>");
                             }
-                            row.memo = row.memo + papers.join("<br/>");
+                            //row.memo = row.memo + papers.join("<br/>");
                         }
                         $('div#memo').html(row.memo);
+                        $('div#attached').html(papers.join("<br/>"));
                     }
                 });
 

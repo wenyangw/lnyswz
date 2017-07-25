@@ -26,9 +26,10 @@ public class PaperServiceImpl implements PaperServiceI {
 	@Override
 	public DataGrid getPapers(Paper paper){
 		DataGrid dg = new DataGrid();
-		String hql = "from TPaper t where t.TMessage.id = :messageId";
+		String hql = "from TPaper t where t.TMessage.id = :messageId and t.type = :type";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("messageId", paper.getMessageId());
+		params.put("type", paper.getType());
 		List<TPaper> tPapers = paperDao.find(hql, params);
 		List<Paper> papers = null;
 		if(tPapers != null && tPapers.size() > 0 ){

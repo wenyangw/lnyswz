@@ -14,16 +14,18 @@ public class TPaper implements java.io.Serializable {
 	private int id;
 	private String filename;
 	private String filepath;
+	private String type;
 	private TMessage TMessage;
 
 
 	public TPaper() {
 	}
 
-	public TPaper(int id, String filename, String filepath, TMessage TMessage) {
+	public TPaper(int id, String filename, String filepath, String type, TMessage TMessage) {
 		this.id = id;
 		this.filename = filename;
 		this.filepath = filepath;
+		this.type = type;
 		this.TMessage = TMessage;
 	}
 
@@ -38,7 +40,7 @@ public class TPaper implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "filename", nullable = true, length = 50)
+	@Column(name = "filename", nullable = true, length = 200)
 	public String getFilename() {
 		return this.filename;
 	}
@@ -47,13 +49,22 @@ public class TPaper implements java.io.Serializable {
 		this.filename = filename;
 	}
 
-	@Column(name = "filepath", nullable = false, length = 100)
+	@Column(name = "filepath", nullable = false, length = 200)
 	public String getFilepath() {
 		return this.filepath;
 	}
 
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
+	}
+
+	@Column(name = "type", nullable = false, length = 20)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -63,6 +63,7 @@ public class MessageServiceImpl implements MessageServiceI {
 			tPaper = new TPaper();
 			tPaper.setFilename(p.getFilename());
 			tPaper.setFilepath(p.getFilepath());
+			tPaper.setType(p.getType());
 			tPaper.setTMessage(t);
 			paperDao.save(tPaper);
 		}

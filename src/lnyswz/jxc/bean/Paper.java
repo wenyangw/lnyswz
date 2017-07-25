@@ -7,6 +7,7 @@ public class Paper {
     private int id;
     private String filename;
     private String filepath;
+    private String type;
     private int messageId;
 
     public int getId() {
@@ -30,6 +31,14 @@ public class Paper {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getMessageId() {
