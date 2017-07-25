@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -125,7 +127,9 @@ public class MessageServiceImpl implements MessageServiceI {
 	public Message getMessage(Message message){
 		TMessage tMessage = messageDao.load(TMessage.class, message.getId());
 		Message m = new Message();
+
 		BeanUtils.copyProperties(tMessage, m);
+
 		if(message.getSource().equals("receive")){
 			String hql = "from TMessageRec t where t.messageId = :messageId and t.receiverId = :receiverId";
 			Map<String, Object> params = new HashMap<String, Object>();

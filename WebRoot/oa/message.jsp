@@ -114,6 +114,7 @@
 				}
 			}
 		});
+
 	});
 	
 	//数组的排序
@@ -310,7 +311,8 @@
                 }
                 unusedUpload(memoEditor.html());
                 param.menuId = oa_message_menuId;
-                $('input[name="datagrid"]').val(JSON.stringify(savelist));
+                param.datagrid = JSON.stringify(savelist);
+                //$('input[name="datagrid"]').val(JSON.stringify(savelist));
 			},
 			success : function(data) {
 				var json = $.parseJSON(data);
@@ -574,6 +576,26 @@
                     $('span#sender').text(row.createName);
                     $('div.send').css("display", "none");
                 }
+
+                $.ajax({
+                    url : '${pageContext.request.contextPath}/oa/paperAction!getPapers.action',
+                    data : {
+                        messageId : row.id,
+                    },
+                    dataType : 'json',
+                    success : function(d) {
+                        console.info(d);
+                        if(d.obj.rows.length > 0){
+                            var papers = ["附件："];
+                            for(var i = 0; i < d.obj.rows.length; i++){
+                                papers.push("<a href='${pageContext.request.contextPath}/oa/paperAction!downloadFile.action?filename=" + d.obj.rows[i].filename + "&filepath=" + d.obj.rows[i].filepath + "'>" + d.obj.rows[i].filename + "</a>");
+                            }
+                            row.memo = row.memo + papers.join("<br/>");
+                        }
+                        $('div#memo').html(row.memo);
+                    }
+                });
+
                 $('div#memo').html(row.memo);
 			}
 		});
@@ -601,7 +623,7 @@
 				<span class="field_label">内容</span>
 				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;margin-top: 10px; margin-left: 70px;"></textarea>
 			</div>
-			<input type='hidden' name='datagrid' />
+			<%--<input type='hidden' name='datagrid' />--%>
 
 	 	</form>
 		<div class="message_line" style="margin-left: 70px;">

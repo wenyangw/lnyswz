@@ -73,10 +73,10 @@ $(function(){
 // 	    	$(this).html(content);
 // 	    },
 	});
-		
+
 });
 
-</script>    
+</script>
 
 <style type="text/css">
 	a:link, a:visited, a:hover, a:active {color: #0000FF}
@@ -99,7 +99,6 @@ $(function(){
 			    		公司网站已正式开放运行，网站地址为<font style="color:blue;">http://www.lnyswz.cn</font>，请大家广泛宣传。<br>
 			    		内网请访问<a href="http://192.168.0.8" target="_blank">http://192.168.0.8</a>，<br>
 			    		外网请访问<a href="http://www.lnyswz.cn" target="_blank">http://www.lnyswz.cn</a>。
-						<a href="javascript:void(0)" onclick="open()">测试</a>
 			    	</div>
 			    </div>
 			</div>

@@ -2,9 +2,13 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
-    $(function(){
-        $('a.ke-insertfile').onclick
-    }
+$(function(){
+    $('div#memo a.ke-insertfile').on('click', function(evt){
+        evt.preventDefault();
+        alert(this.href);
+    });
+});
+
 </script>
 
 <div style="margin-top: 20px;">

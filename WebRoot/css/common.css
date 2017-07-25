@@ -64,4 +64,7 @@ span.input_label{
 	display:inline-block;
 }
 
+.ke-insertfile{
+	display: none;
+}
 
