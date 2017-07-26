@@ -9,23 +9,10 @@
 	src="${pageContext.request.contextPath}/plugins/kindeditor-4.1.11/lang/zh-CN.js"></script>
 
 <style type="text/css">
-	div.message_line{
-		margin-top: 10px;
-	}
-	.field_label{
-		width:60px;
-		text-align:right;
-		display:inline-block;
-	}
-	.field_value{
-		margin-left:10px;
-	}
-
 	.ke-container{
 		margin-left: 70px;
 		margin-top: 10px;
 	}
-
 </style>
 
 <script type="text/javascript">
@@ -585,15 +572,15 @@
                     },
                     dataType : 'json',
                     success : function(d) {
-                        if(d.obj.rows.length > 0){
+                        if(d.obj.rows){
                             var papers = [];
                             for(var i = 0; i < d.obj.rows.length; i++){
                                 papers.push("<a href='${pageContext.request.contextPath}/oa/paperAction!downloadFile.action?filename=" + d.obj.rows[i].filename + "&filepath=" + d.obj.rows[i].filepath + "'>" + d.obj.rows[i].filename + "</a>");
                             }
-                            //row.memo = row.memo + papers.join("<br/>");
+                            $('div#attached').html(papers.join("<br/>"));
+                        }else{
+                            $('div.attached').css("display", "none");
                         }
-                        $('div#memo').html(row.memo);
-                        $('div#attached').html(papers.join("<br/>"));
                     }
                 });
 

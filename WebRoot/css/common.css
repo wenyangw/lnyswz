@@ -68,3 +68,15 @@ span.input_label{
 	display: none;
 }
 
+div.message_line{
+	margin-top: 10px;
+}
+.field_label{
+	width:60px;
+	text-align:right;
+	display:inline-block;
+}
+.field_value{
+	margin-left:10px;
+}
+

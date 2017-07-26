@@ -1,16 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
-<script type="text/javascript">
-$(function(){
-    $('div#memo a.ke-insertfile').on('click', function(evt){
-        evt.preventDefault();
-        alert(this.href);
-    });
-});
-
-</script>
-
 <div style="margin-top: 20px;">
 		<div class="message_line">
 			<span class="field_label">主题：</span>
@@ -32,7 +22,7 @@ $(function(){
 			<span class="field_label">内容：</span>
 			<div id="memo" class="easyui-panel" style="width: 1000px; height: 500px; padding: 20px; margin-top: 10px;"></div>
 		</div>
-		<div class="message_line">
+		<div class="attached message_line">
 			<span class="field_label">附件：</span>
 			<div id="attached" style="margin-left: 25px;"></div>
 		</div>
