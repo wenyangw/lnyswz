@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -684,7 +686,6 @@ public class XsthServiceImpl implements XsthServiceI {
 		Object[] khDet = detDao.getMBySQL(sqlKh, sqlParams);
 		
 		//付款天数，默认现款10天，月结(03)30天，授信按授信期
-		
 		int payDays = 1;
 		if(tXsth.getPayDays() != 0){
 			payDays = tXsth.getPayDays(); 
@@ -698,19 +699,49 @@ public class XsthServiceImpl implements XsthServiceI {
 				}
 			}
 		}
-				
+
+		//客户基本信息
+		TKh tKh = khDao.load(TKh.class, tXsth.getKhbh());
+
+		String khkhh = "";
+		String khzh = "";
+
+		if(tKh.getKhh() != null && tKh.getKhh().trim().length() > 0) {
+			String pattern = "((\\d+-)*\\d+$)";
+			Pattern r = Pattern.compile(pattern);
+			// 现在创建 matcher 对象
+			Matcher m = r.matcher(tKh.getKhh());
+			if (m.find()) {
+				khzh = m.group(1);
+				khkhh = tKh.getKhh().substring(0, tKh.getKhh().indexOf(khzh)).trim();
+			}
+		}
+//		if(tKh.getDzdh() != null && tKh.getDzdh().trim().length() > 0) {
+//			// 现在创建 matcher 对象
+//			m = r.matcher(tKh.getDzdh());
+//			if (m.find()) {
+//				khdh = m.group(1);
+//				khdz = tKh.getDzdh().substring(0, tKh.getDzdh().indexOf(khdh)).trim();
+//				System.out.println("------------------------------" + khdz);
+//			}
+//		}
+
 		DecimalFormat df=new DecimalFormat("#,##0.00");
 		BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bmmc", Constant.BMMCS.get(tXsth.getBmbh()));
 		map.put("bmdz", Constant.BMDZS.get(tXsth.getBmbh()));
-		map.put("bmdh", Constant.BMDH.get(tXsth.getBmbh()));
+		//map.put("bmdh", Constant.BMDH.get(tXsth.getBmbh()));
 		map.put("bmkhh", Constant.BMKHH.get(tXsth.getBmbh()));
 		map.put("bmzh", Constant.BMZH.get(tXsth.getBmbh()));
 		map.put("htdz", Constant.HTDZS.get(tXsth.getBmbh()));
 		map.put("xsthlsh", tXsth.getXsthlsh());
 		map.put("khmc", tXsth.getKhmc());
+		map.put("khdz", tKh.getDzdh() == null ? "" : tKh.getDzdh());
+		//map.put("khdh", khdh);
+		map.put("khkhh", khkhh);
+		map.put("khzh", khzh);
 		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
 		map.put("thr", tXsth.getThr() == null ? "" : tXsth.getThr());
 		map.put("payDays", payDays);

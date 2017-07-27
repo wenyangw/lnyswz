@@ -196,11 +196,11 @@ public interface Constant {
 	}};
 	
 	public static final Map<String, String> BMDZS = new HashMap<String, String>(){{
-		put("01","沈阳市铁西区齐贤北街29号");
-		put("04","沈阳市铁西区齐贤北街29号");
-		put("05","沈阳市铁西区齐贤北街29号");
-		put("07","沈阳市铁西区齐贤北街29号");
-		put("08","大连市西岗区香海园35号一层公建");
+		put("01","沈阳市铁西区齐贤北街29号024-25840693");
+		put("04","沈阳市铁西区齐贤北街29号024-25610008");
+		put("05","沈阳市铁西区齐贤北街29号024-25850560");
+		put("07","沈阳市铁西区齐贤北街29号024-25610008");
+		put("08","大连市西岗区香海园35号一层公建0411-84440455");
 	}};
 
 	public static final Map<String, String> BMDH = new HashMap<String, String>(){{
