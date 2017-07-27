@@ -16,13 +16,14 @@ $(function(){
 			var content = '';
 			$.each(d.rows, function(){
 				console.info(this.readTime);
-			    var text = "<a href='javascript:void(0)' onclick='show_message(" + JSON.stringify(this) + ")'>" + moment(this.createTime).format('YYYY-MM-DD') + "&nbsp&nbsp" + this.subject + "&nbsp&nbsp" + this.createName + "</a>";
 				content += "<li>";
+				var read_class;
 				if(this.readTime){
-					content += "<font color='blue'>" + text + "</font>";
+                    read_class = 'readed_list';
 				}else{
-					content += "<font color='red'>" + text + "</font>";
+                    read_class = 'unread_list';
 				}
+                content += "<a href='javascript:void(0)' class='" + read_class + "' onclick='show_message(" + JSON.stringify(this) + ")'>" + moment(this.createTime).format('YYYY-MM-DD') + "&nbsp&nbsp" + this.subject + "&nbsp&nbsp" + this.createName + "</a>";
 				content += "</li>";
 			});
 			$('div#message_list').html(content);

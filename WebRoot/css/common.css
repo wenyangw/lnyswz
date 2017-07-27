@@ -80,3 +80,11 @@ div.message_line{
 	margin-left:10px;
 }
 
+a.unread_list:link, a.unread_list:visited, a.unread_list:hover, a.unread_list:active {
+	color: red;
+}
+
+a.readed_list:link, a.readed_list:visited, a.readed_list:hover, a.readed_list:active {
+	color: blue;
+}
+
