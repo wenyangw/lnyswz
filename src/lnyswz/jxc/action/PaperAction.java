@@ -26,14 +26,15 @@ public class PaperAction extends BaseAction implements ModelDriven<Paper> {
 	private PaperServiceI paperService;
 	private static final String CONTENTTYPE = "application/octet-stream";
 
-	public void downloadFile(){
+	public void downloadFile() throws UnsupportedEncodingException{
 		//获取网站部署路径(通过ServletContext对象)，用于确定下载文件位置，从而实现下载
 		String path = Util.getRootPath();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
 		//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
-		response.setHeader("Content-Disposition", "attachment;fileName="+paper.getFilename());
+		String filename = new String(paper.getFilename().getBytes("ISO-8859-1"),"UTF-8");
+		response.setHeader("Content-Disposition",	 "attachment;fileName=" + java.net.URLEncoder.encode(filename,"UTF-8"));
 		ServletOutputStream out;
 		//通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
 		File file = new File(path + paper.getFilepath());
