@@ -11,11 +11,8 @@ $(function(){
 		},
 		dataType : 'json',
 		success : function(d) {
-			console.info(d);
-			//var json = $.parseJSON(d);
 			var content = '';
 			$.each(d.rows, function(){
-				console.info(this.readTime);
 				content += "<li>";
 				var read_class;
 				if(this.readTime){
@@ -62,7 +59,6 @@ function show_message(data){
 						},
 						dataType : 'json',
 						success : function(d) {
-						    console.info(d.obj.rows);
 							if(d.obj.rows){
 								var papers = [];
 								for(var i = 0; i < d.obj.rows.length; i++){

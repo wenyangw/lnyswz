@@ -5,9 +5,9 @@
     <div data-options="region:'west',title:'通讯录',border:false, split:false, collapsible:false" style="width:200px;">
     	<ul id="contact_from"></ul>
     </div>
-    <div data-options="region:'center'," style="padding:5px;background:#eee;">
-    	<input type="button" value="全部>>" onclick="trans_toR()"></input>
-    	<input type="button" value="<<全部" onclick="trans_toL()"></input>
+    <div data-options="region:'center'," style="padding:5px;background:#eee;text-align: center;">
+    	<input type="button" value="全部>>" style="margin-top: 150px;" onclick="trans_toR()"></input>
+    	<input type="button" value="<<全部" style="margin-top: 15px;" onclick="trans_toL()"></input>
     </div>
     <div data-options="region:'east',title:'收件人',border:false,split:false, collapsible:false" style="width:200px;">
     	<ul id="contact_to"></ul>

@@ -375,7 +375,10 @@
                         return '';
                     }
                 }},
-	        {field:'receiverNames',title:'接收人'},
+	        {field:'receiverNames',title:'接收人',
+				formatter: function(value){
+	            	return lnyw.memo(value, 50);
+    			}},
 	    ]],
         toolbar:'#oa_messageS_tb',
         onDblClickCell: function(index,field,value){
@@ -479,7 +482,7 @@
             {field:'createTime',title:'时间'},
             {field:'createId',title:'发送人Id',hidden:true},
             {field:'createName',title:'发送人'},
-            {field:'readTime',title:'阅读'},
+            {field:'readTime',title:'已读'},
             {field:'recId',title:'收件id',width:100,hidden:true},
         ]],
         toolbar:'#oa_messageR_tb',
@@ -599,13 +602,13 @@
  		<form id="message_send" method="post">
 			<div class="message_line">
 				<span class="field_label">收件人</span>
-					<input class="cont field_value" type="text" readOnly="readOnly" name="receiverNames" id="receiverNames" style="width:400px;"></input>
-					<input type="button" value="添加收件人" onclick="showContacts()"></input>
-					<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
+				<input class="cont field_value" type="text" readOnly="readOnly" name="receiverNames" id="receiverNames" style="width:400px;"></input>
+				<input type="button" value="添加收件人" onclick="showContacts()"></input>
+				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
 			</div>
 			<div class="message_line">
-				<span class="field_label">主题</span><input class="cont field_value"
-					type="text" name="subject" id="subject" data-options="required:true" style="width:400px;"></input>
+				<span class="field_label">主题</span>
+				<input class="cont field_value"	type="text" name="subject" id="subject" data-options="required:true" style="width:400px;"></input>
 			</div>
 			<div class="message_line">
 				<span class="field_label">内容</span>
