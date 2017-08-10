@@ -39,8 +39,8 @@ function show_message(data){
 			data.memo = d.obj.memo;
 			var message_dialog = $("<div></div>").dialog({
 				title: '查看信息',
-				width: 1050,
-				height: 800,
+                width: $(window).width() * 0.66,
+                height: $(window).height() * 0.9,
 				closed: false,
 				cache: false,
 				href: '${pageContext.request.contextPath}/oa/message_show.jsp',

@@ -10,6 +10,7 @@ var pageSize = 18;
 var pageList = [ pageSize, pageSize + 5, pageSize + 10, pageSize + 15, pageSize + 20, pageSize + 30, pageSize + 50, pageSize + 80, pageSize + 120, pageSize + 170, pageSize + 230, pageSize + 300];
 
 var lnyw = $.extend({}, lnyw);/* 定义全局对象，类似于命名空间或包的作用 */
+
 //图标
 var iconData = [ {
 	value : '',
