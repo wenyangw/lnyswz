@@ -61,9 +61,9 @@ $(function(){
 
 </script>
 
-<style type="text/css">
-	a:link, a:visited, a:hover, a:active {color: #0000FF}
-</style>
+<%--<style type="text/css">--%>
+	<%--a:link, a:visited, a:hover, a:active {color: #0000FF}--%>
+<%--</style>--%>
 
 <div id='layout_center_tabs' >
 	<div title="首页">
