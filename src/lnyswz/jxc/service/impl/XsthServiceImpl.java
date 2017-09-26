@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,32 +27,6 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Fh;
-import lnyswz.jxc.bean.Kh;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.SpBgy;
-import lnyswz.jxc.bean.User;
-import lnyswz.jxc.bean.Xsth;
-import lnyswz.jxc.bean.XsthDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.TKh;
-import lnyswz.jxc.model.TLszz;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSpBgy;
-import lnyswz.jxc.model.TUser;
-import lnyswz.jxc.model.TXskp;
-import lnyswz.jxc.model.TXskpDet;
-import lnyswz.jxc.model.TXsth;
-import lnyswz.jxc.model.TXsthDet;
-import lnyswz.jxc.model.TYszz;
-import lnyswz.jxc.model.TYwrkDet;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TZsqr;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XsthServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
@@ -80,7 +56,8 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TUser> userDao;
-	
+	private BaseDaoI<TPrint> printDao;
+
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -860,6 +837,17 @@ public class XsthServiceImpl implements XsthServiceI {
 		datagrid.setRows(nl);
 		
 		tXsth = null;
+
+		Print print = new Print();
+		print.setLsh(xsth.getXsthlsh());
+		print.setPrintId(xsth.getCreateId());
+		print.setPrintName(xsth.getCreateName());
+		print.setPrintTime(new Date());
+		print.setType(xsth.getType());
+		print.setBgyId(xsth.getBgyId());
+
+		PrintServiceImpl.save(print, printDao);
+
 		return datagrid;
 	}
 	
@@ -1080,7 +1068,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			}else{
 				//hql += " and (t.TXsth.xsthlsh like :search or t.TXsth.khbh like :search or t.TXsth.khmc like :search or t.TXsth.bookmc like :search or t.TXsth.bz like :search or t.TXsth.ywymc like :search)"; 
 				//params.put("search", "%" + xsth.getSearch() + "%");
-				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.TXsth.xsthlsh", "t.TXsth.khbh", "t.TXsth.khmc", "t.TXsth.bookmc", "t.TXsth.bz", "t.TXsth.ywymc", "t.TXsth.fhmc"}, params) + ")";
+				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.TXsth.xsthlsh", "t.TXsth.khbh", "t.TXsth.khmc", "t.TXsth.bookmc", "t.TXsth.bz", "t.TXsth.ywymc", "t.TXsth.fhmc", "t.spbh"}, params) + ")";
 			}
 		}
 		
@@ -1197,8 +1185,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		Map<String, Object> detParams = new HashMap<String, Object>();
 		detParams.put("0", xsthlsh);
 		detParams.put("1", spbh);
-		BigDecimal yrsl = new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
-		return yrsl;
+		return new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
 	}
 	
 	private BigDecimal getYksl(String xsthlsh, String spbh) {
@@ -1209,8 +1196,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		Map<String, Object> detParams = new HashMap<String, Object>();
 		detParams.put("0", xsthlsh);
 		detParams.put("1", spbh);
-		BigDecimal yksl = new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
-		return yksl;
+		return new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
 	}
 	
 		
@@ -1269,8 +1255,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		dg.setRows(nl);
 		
 		l.clear();
-		l = null;
-		
+
 		return dg;
 		
 	}
@@ -1316,8 +1301,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		dg.setRows(nl);
 		
 		l.clear();
-		l = null;
-		
+
 		return dg;
 	}
 	
@@ -1330,9 +1314,9 @@ public class XsthServiceImpl implements XsthServiceI {
 	 */
 	@Override
 	public void updateThsl(Xsth xsth) {
-		BigDecimal sl = BigDecimal.ZERO;
+		BigDecimal sl;
 		BigDecimal csl = BigDecimal.ZERO;
-		BigDecimal lsje = BigDecimal.ZERO;
+		BigDecimal lsje;
 
 		//获取修改的商品记录
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
@@ -1728,6 +1712,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setUserDao(BaseDaoI<TUser> userDao) {
 		this.userDao = userDao;
+	}
+
+	@Autowired
+	public void setPrintDao(BaseDaoI<TPrint> printDao) {
+		this.printDao = printDao;
 	}
 
 	@Autowired

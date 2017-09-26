@@ -41,8 +41,8 @@ $(function(){
 	jxc_kfck_menuId = lnyw.tab_options().id;
 
 	$('#jxc_kfck_layout').layout({
-		fit : true,
-		border : false,
+		fit: true,
+		border: false
 	});
 	
 	kfck_dg = $('#jxc_kfck_dg').datagrid({
@@ -1087,7 +1087,7 @@ function printThd(){
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
+				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + '&bmbh=' + jxc_kfck_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
@@ -1106,7 +1106,7 @@ function printXsthByBgy(){
 					url:'${pageContext.request.contextPath}/jxc/xsthAction!getSpBgys.action',
 					async: false,
 					data:{
-						xsthlsh: row.xsthlsh,
+						xsthlsh: row.xsthlsh
 					},
 					dataType:'json',
 					success:function(data){
@@ -1120,12 +1120,25 @@ function printXsthByBgy(){
 				});
 			
 				$.each(bgyIds, function(index){
-					$.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ this.bgyName + '</font>)？', function(r) {
-						if (r) {
-							var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-						}
-					});
+                    $.ajax({
+                        url:'${pageContext.request.contextPath}/jxc/printAction!getCounts.action',
+                        async: false,
+                        data:{
+                            lsh: row.xsthlsh,
+							bgyId: this.bgyId,
+							type: PRINT_TYPE_XSTH_BGY
+                        },
+                        dataType:'json',
+                        success:function(dd){
+                            $.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ bgyIds[index].bgyName + '</font>)？<br />这是第' + (dd.obj + 1) + '次。', function(r) {
+                                if (r) {
+                                    var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId + '&type=' + PRINT_TYPE_XSTH_BGY;
+                                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                                }
+                            });
+                        }
+                    });
+
 				});
 			}
 		});
@@ -1257,7 +1270,7 @@ function searchXsthInKfck(){
 <div id="jxc_kfck_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_kfck_layout' style="height:100%;width=100%">
+        <div id='jxc_kfck_layout' style="height:100%;width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
@@ -1308,6 +1321,6 @@ function searchXsthInKfck(){
 </div>
 <div id="jxc_kfck_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsthInKfck" style="width:100px">
+	输入流水号、客户编号、名称、业务员、商品编号、备注：<input type="text" name="searchXsthInKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInKfck();">查询</a>
 </div>

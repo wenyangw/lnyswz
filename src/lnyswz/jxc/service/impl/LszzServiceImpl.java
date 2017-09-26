@@ -8,26 +8,16 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.CgjhDet;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywzz;
-import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLszz;
-import lnyswz.jxc.model.TSpDet;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.LszzServiceI;
-import lnyswz.jxc.service.YwzzServiceI;
 import lnyswz.jxc.util.Constant;
 
 /**

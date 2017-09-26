@@ -52,8 +52,8 @@ $(function(){
 	xskp_menuId = lnyw.tab_options().id;
 	
 	$('#jxc_xskp_layout').layout({
-		fit : true,
-		border : false,
+		fit: true,
+		border: false
 	});
 	
 	xskp_dg = $('#jxc_xskp_dg').datagrid({
@@ -535,7 +535,7 @@ function init(){
 	});
 	
 	//清空全部字段
-	$('input#thfs_zt').attr('ckecked', 'checked');
+	$('input#thfs_zt').attr('checked', 'checked');
 	$('.isSh').css('display','none');
 	$('#info input').val('');
 // 	$('input').val('');
@@ -1090,7 +1090,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
     	}
-    	calculate();
+    	calculate('zdj');
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
 //         	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
@@ -1174,7 +1174,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / $(zhxsEditor.target).val() / (1 + SL));
     	}
-    	calculate();
+    	calculate('cdj');
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		sphjEditor.target.focus();
@@ -1821,7 +1821,7 @@ function searchXsthInXskp(){
 
 <div id="jxc_xskp_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、分户、备注：<input type="text" name="searchXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、分户、备注：<input type="text" name="searchXskp" style="xwidth:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXskp();">查询</a>
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">

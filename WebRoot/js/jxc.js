@@ -12,6 +12,9 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
+//记录打印记录类型
+var PRINT_TYPE_XSTH_BGY = '81';
+
 jxc.cbs = function(bmbh){
 	switch(bmbh){
 	case '04':
@@ -40,7 +43,7 @@ jxc.cbs = function(bmbh){
 		return '';
 		break;
 	}
-}
+};
 
 jxc.getCkByKhbh = function(bmbh, khbh, isZs){
 	var ck = Object.create(Object.prototype);
@@ -103,7 +106,7 @@ jxc.getZfCk = function(bmbh){
 	default:
 		break;
 	}
-}
+};
 
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
@@ -309,6 +312,7 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 		            '21010608',  //辽宁票据印务有限公司
 		            '21010183',  //辽宁北方出版物配送有限公司
 		            '21028400',  //大连分公司
+					'21010288',  //辽宁鼎籍数码科技有限公司
 		            ];
 		if(kh01.indexOf(khbh) >= 0){
 			return false;
@@ -598,9 +602,6 @@ jxc.getKhDet = function(url, depId, khbh, ywyId){
 };
 
 jxc.getYf = function(bmbh, spbh, dist, hjsl){
-	console.info('spbh:' + spbh);
-	console.info('dist:' + dist);
-	console.info('hjsl:' + hjsl);
 	var je = 0;
 	switch(bmbh){
 	case '05':
@@ -997,6 +998,7 @@ jxc.queryAddr = function(title, target1, target2, urlJsp, urlAction){
 };
 
 jxc.print = function(url, isPrint, showPrint){
+	console.info(url);
 	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +    
 		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
 		' <PARAM NAME="scriptable" VALUE="false">' +   

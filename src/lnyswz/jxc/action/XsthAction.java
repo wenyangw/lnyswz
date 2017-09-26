@@ -293,6 +293,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printThd() {
 		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_kf.json"));
@@ -301,6 +302,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printXsthByBgy() {
 		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsthByBgy(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_bgy.json"));

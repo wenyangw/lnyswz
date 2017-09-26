@@ -810,7 +810,7 @@ function init(){
 	$('input:checkbox').prop('checked', false);
 	$('input:checkbox[name=toFp]').prop('checked', 'checked');
 	
-	$('input#thfs_zt').attr('ckecked', 'checked');
+	$('input#thfs_zt').attr('checked', 'checked');
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
  	$('.isFhth').css('display','none');
@@ -1096,7 +1096,7 @@ function saveXsth(){
 		//将表头内容传入后台
 	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 		effectRow['isSx'] = '0';
-		effectRow['isZs'] = $('input[name=jxc_xsth_isZs]').is(':checked') ? '1' : '0';
+		effectRow['isZs'] =
 		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
 		if($('input[name=isFh]').is(':checked')){
 			effectRow['isFh'] = '1';
@@ -2544,7 +2544,7 @@ function sendFyd(){
 						url : '${pageContext.request.contextPath}/jxc/fydAction!sendFyd.action',
 						data : {
 							fydlsh : selected.fydlsh,
-							bmbh : xsth_did,
+							bmbh : xsth_did
 						},
 						dataType : 'json',
 						success : function(d) {
@@ -2584,7 +2584,7 @@ function searchFydInXsth(){
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_xsth_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_xsth_layout' style="height:100%;width=100%">
+        <div id='jxc_xsth_layout' style="height:100%;width:100%">
 			<div id="jxc_xsth_info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">
 				<div class="form_line">
 					<span class="form_label">直发<input id="zsCheck" type="checkbox" name="jxc_xsth_isZs"></span>
