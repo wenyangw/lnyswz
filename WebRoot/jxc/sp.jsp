@@ -242,6 +242,27 @@ function editSp(){
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
 }
+
+function exportToJs(){
+    $.messager.confirm('请确认', '是否要导出所有代码？', function(r) {
+        if (r) {
+            $.ajax({
+                url : '${pageContext.request.contextPath}/jxc/spAction!exportToJs.action',
+                data : {
+                    depId : did
+                },
+                dataType : 'json',
+                success : function(d) {
+                    $.messager.show({
+                        title : '提示',
+                        msg : d.msg
+                    });
+                }
+            });
+        }
+    });
+}
+
 function removeSp(){
 	var rows = sp_dg.datagrid('getSelections');
 	if (rows.length == 1) {
@@ -358,9 +379,9 @@ function removeSpDet(){
 	}
 }
 </script>
-<div id='jxc_sp_layout' style="height:100%;width=100%">
+<div id='jxc_sp_layout' style="height:100%;width:100%">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:250px">
-		<div id='jxc_sp_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%;width=100%">
+		<div id='jxc_sp_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%;width:100%">
 			<div data-options="region:'north',title:'商品分类',split:true,collapsible:false" style="height:180px">		
 				<ul id="jxc_sp_spfl"></ul>
 			</div>

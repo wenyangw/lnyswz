@@ -87,7 +87,29 @@ public class SpServiceImpl implements SpServiceI {
 		spDao.delete(t);
 		OperalogServiceImpl.addOperalog(sp.getUserId(), sp.getDepId(), sp.getMenuId(), t.getSpbh(), "删除商品记录", operalogDao);
 	}
-	
+
+	@Override
+	public List<Sp> exportToJs(Sp sp) {
+		String sql = "select spbh + '~~\"' + spbh + ' ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(sppp) > 0 then '(' + sppp + ')' else '' end + case when len(spbz) > 0 then ' ' + spbz else '' end\n" +
+				"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~106010502~~否~~纸制文具及办公用品~~~~~~10.0'\n" +
+				"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
+
+		List<Object[]> lists = spDao.findBySQL(sql);
+
+		List<Sp> results = null;
+		if(lists.size() > 0){
+			results = new ArrayList<Sp>();
+			Sp s = null;
+			for (Object o : lists) {
+				s = new Sp();
+				s.setSpmc(o.toString());
+				results.add(s);
+			}
+		}
+
+		return results;
+	}
+
 	/**
 	 * 维护专属信息
 	 */

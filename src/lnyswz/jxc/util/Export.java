@@ -1,13 +1,6 @@
 package lnyswz.jxc.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -170,7 +163,29 @@ public class Export {
 			return "pdf";
 		}
 	}
-	
+
+	public static void WriteToFile(String fileName, String content) {
+		try {
+			File dir = new File(Constant.JS_FILEPATH);
+			if(dir.exists() == false){
+				dir.mkdirs();
+			}
+			File outputFile = new File(Constant.JS_FILEPATH + fileName);
+
+			FileWriter fw = new FileWriter(outputFile);
+			BufferedWriter bw = new BufferedWriter(fw);
+			//bw.append("在已有的基础上添加字符串");
+			bw.write(content);// 往已有的文件上添加字符串
+
+			bw.close();
+			fw.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 访问远程(WebService)xml数据后返回的xml格式字符串并生成为本地文件
 	 * 
