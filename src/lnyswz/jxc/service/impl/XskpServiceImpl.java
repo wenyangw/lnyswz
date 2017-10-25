@@ -1091,7 +1091,11 @@ public class XskpServiceImpl implements XskpServiceI {
 					new String[]{"cdwsl", "spje", "spse", "xscb"});
 			
 			kd.setKpsl(kd.getZdwsl());
-			kd.setZdwsl(null);
+			//kd.setZdwsl(null);
+			kd.setZdwsl(kd.getKpsl().subtract(kd.getThsl()));
+			if(kd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
+				kd.setCdwsl(kd.getZdwsl().divide(kd.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+			}
 			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			//kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			

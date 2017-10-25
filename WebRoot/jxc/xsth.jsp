@@ -1352,7 +1352,9 @@ function setEditing(){
       	}
      }).bind('focusout', function(event){
    		//验证成本
-     	checkCb();
+		if(!$('input[name=xskpDetIds]').val()) {
+            checkCb();
+        }
      	return false;
      	
     });
@@ -1404,7 +1406,9 @@ function setEditing(){
      	}
     }).bind('focusout', function(event){
  		//验证成本
- 		checkCb();
+        if(!$('input[name=xskpDetIds]').val()) {
+            checkCb();
+        }
  		return false;
 	});
     
