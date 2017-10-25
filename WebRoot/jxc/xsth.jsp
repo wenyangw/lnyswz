@@ -1096,7 +1096,7 @@ function saveXsth(){
 		//将表头内容传入后台
 	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 		effectRow['isSx'] = '0';
-		effectRow['isZs'] =
+		effectRow['isZs'] = $('input[name=isZs]').is(':checked') ? '1' : '0';
 		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
 		if($('input[name=isFh]').is(':checked')){
 			effectRow['isFh'] = '1';
