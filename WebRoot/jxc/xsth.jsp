@@ -2358,6 +2358,7 @@ function toXsth(){
 	if(rows.length > 0){
 		var preRow = undefined;
 		var flag = true;
+		var spbhs = []
 	    $.each(rows, function(index){
 	    	xskpDetIds.push(rows[index].id);
 	    	if(index != 0){
@@ -2365,10 +2366,14 @@ function toXsth(){
 	    			$.messager.alert('提示', '请选择同一客户的销售发票进行提货！', 'error');
 					flag = false;
 					//return false;
-	    		}else{
-	    			preRow = this;
 	    		}
 	    	}
+	    	if(spbhs.indexOf(this.spbh) >= 0){
+                $.messager.alert('提示', '同一商品不能出现2次，请重新选择！', 'error');
+                flag = false;
+			}else {
+                spbhs.push(this.spbh);
+            }
 	    	preRow = this;
 	    });
 	    if(flag){

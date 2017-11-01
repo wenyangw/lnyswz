@@ -246,6 +246,8 @@ public class XsthServiceImpl implements XsthServiceI {
 					TXskpDet xskpDet = xskpDetDao.load(TXskpDet.class, detId);
 					if(xsthDet.getSpbh().equals(xskpDet.getSpbh())){
 						xskpDet.setThsl(xskpDet.getThsl().add(xsthDet.getZdwsl()));
+						//xskpDet.getTXskp().getTXsths().addAll(tDets);
+						xskpDet.getTXskp().getTXsths().add(tDet);
 						break;
 //						BigDecimal wksl = xsthDet.getZdwsl().subtract(xsthDet.getKpsl());
 //						xsthDets.add(xsthDet);
@@ -294,9 +296,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		tXsth.setTYwrks(ywrkDets);
 
-		if(intDetIds != null){
-			xskp.getTXsths().addAll(tDets);
-		}
+//		if(intDetIds != null){
+//			xskp.getTXsths().addAll(tDets);
+//		}
 				
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getXsthlsh(), 
 				"生成销售提货单", operalogDao);
