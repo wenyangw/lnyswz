@@ -1029,35 +1029,39 @@ function generateKfck(){
 						},
 						dataType : 'json',
 						success : function(d) {
-							kfck_spdg.datagrid('loadData', d.rows);
-							updateFooter();
-							$('input[name=xsthDetIds]').val(xsthDetIdsStr);
+						    if(d.success == false) {
+                                $.messager.alert('提示', d.msg, 'error');
+                            }else{
+                                kfck_spdg.datagrid('loadData', d.rows);
+                                updateFooter();
+                                $('input[name=xsthDetIds]').val(xsthDetIdsStr);
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
-							$('input[name=khbh]').val(rows[0].khbh);
-							$('input[name=khmc]').val(rows[0].khmc);
-							jxc_kfck_ckCombo.combobox('setValue', (jxc_kfck_did == '04') ? jxc.getCkByKhbh(jxc_kfck_did, '00000000') : rows[0].ckId);
-							if(rows[0].isFh == '1'){
-								
-								$('#jxc_kfck_isFh').prop('checked', 'checked');
-								$('.jxc_kfck_isFh').css('display', 'table-cell');
-								jxc_kfck_fhCombo.combobox('setValue', rows[0].fhId);
-							}
-							if(rows[0].thfs == '1'){
-								$('input#thfs_zt').attr('checked', 'checked');
-								$('.thfs_zt').css('display', 'table-cell');
-								$('.thfs_sh').css('display', 'none');
-								$('input[name=thr]').val(rows[0].thr);
-								$('input[name=ch]').val(rows[0].ch);
-							}else{
-								$('input#thfs_sh').attr('checked', 'checked');
-								$('input[name=shdz]').val(rows[0].shdz);
-								$('.thfs_zt').css('display', 'none');
-								$('.thfs_sh').css('display', 'table-cell');
-							}
-							$('input[name=jxc_kfck_bz]').val(rows[0].bz + '//' + rows[0].bookmc);
-						
-							
-							kfck_tabs.tabs('select', 0);
+                                $('input[name=khbh]').val(rows[0].khbh);
+                                $('input[name=khmc]').val(rows[0].khmc);
+                                jxc_kfck_ckCombo.combobox('setValue', (jxc_kfck_did == '04') ? jxc.getCkByKhbh(jxc_kfck_did, '00000000') : rows[0].ckId);
+                                if (rows[0].isFh == '1') {
+
+                                    $('#jxc_kfck_isFh').prop('checked', 'checked');
+                                    $('.jxc_kfck_isFh').css('display', 'table-cell');
+                                    jxc_kfck_fhCombo.combobox('setValue', rows[0].fhId);
+                                }
+                                if (rows[0].thfs == '1') {
+                                    $('input#thfs_zt').attr('checked', 'checked');
+                                    $('.thfs_zt').css('display', 'table-cell');
+                                    $('.thfs_sh').css('display', 'none');
+                                    $('input[name=thr]').val(rows[0].thr);
+                                    $('input[name=ch]').val(rows[0].ch);
+                                } else {
+                                    $('input#thfs_sh').attr('checked', 'checked');
+                                    $('input[name=shdz]').val(rows[0].shdz);
+                                    $('.thfs_zt').css('display', 'none');
+                                    $('.thfs_sh').css('display', 'table-cell');
+                                }
+                                $('input[name=jxc_kfck_bz]').val(rows[0].bz + '//' + rows[0].bookmc);
+
+
+                                kfck_tabs.tabs('select', 0);
+                            }
 						}
 					});
 				}

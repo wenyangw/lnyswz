@@ -457,7 +457,7 @@ public class KfckServiceImpl implements KfckServiceI {
 		}
 		String bz = "";
 		if(tXsth != null){
-		bz = tXsth.getXsthlsh() + "/";
+		bz = tXsth.getXsthlsh() + "/" + tKfck.getBz() + "/";
 		if(tXsth.getYwymc() != null){
 			bz += tXsth.getYwymc().trim();
 		}

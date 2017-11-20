@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1209,7 +1210,27 @@ public class XsthServiceImpl implements XsthServiceI {
 		detParams.put("1", spbh);
 		return new BigDecimal(detDao.getBySQL(detHql, detParams).toString());
 	}
-	
+
+	@Override
+	public boolean isLocked(Xsth xsth){
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		if("1".equals(tXsth.getLocked())){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isCancel(Xsth xsth){
+		String[] ids = xsth.getXsthDetIds().split(",");
+		for (String id : ids) {
+			TXsthDet tDet = detDao.load(TXsthDet.class, Integer.parseInt(id));
+			if("1".equals(tDet.getTXsth().getIsCancel())){
+				return true;
+			}
+		}
+		return false;
+	}
 		
 	@Override
 	public DataGrid toKfck(Xsth xsth){

@@ -31,4 +31,6 @@ public interface XsthServiceI {
 	public DataGrid refreshXsth(Xsth xsth);
 	public void updateZsComplete(Xsth xsth);
 	public void updateYf(Xsth xsth);
+	public boolean isCancel(Xsth xsth);
+	public boolean isLocked(Xsth xsth);
 }
