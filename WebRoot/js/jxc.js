@@ -15,6 +15,19 @@ var AUDIT_REFUSE = '9';
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';
 
+var JS_PATH = 'C:/lnyswz/';
+
+jxc.getJsFile = function(type){
+    switch(type){
+		case '0':
+			return 'billpt.txt';
+			break;
+		case '1':
+			return 'bill.txt';
+			break;
+    }
+};
+
 jxc.cbs = function(bmbh){
 	switch(bmbh){
 	case '04':
@@ -107,6 +120,21 @@ jxc.getZfCk = function(bmbh){
 		break;
 	}
 };
+
+jxc.spJs = function(bmbh){
+    switch (bmbh) {
+        case '01':
+            return {jsbh: '109022206', jsmc: '印刷、装订机械零件'};
+            break;
+        case '04':
+        case '05':
+        case '07':
+        case '08':
+        default:
+        	return {jsbh: '', jsmc: ''};
+            break;
+    }
+}
 
 jxc.auditLevel = function(bmbh){
 	var level = Object.create(Object.prototype);
@@ -212,7 +240,6 @@ jxc.auditLevelCgjh = function(bmbh){
 		break;
 	}
 };
-
 
 jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	var payTime = undefined;
@@ -1020,8 +1047,7 @@ jxc.print = function(url, isPrint, showPrint){
 			height:50,
 		}
 	});
-	
-	
+
 	
 //	document.write('<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT>');   
 //	document.write('<PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">');   
@@ -1030,12 +1056,12 @@ jxc.print = function(url, isPrint, showPrint){
 //	document.write('</APPLET>');
 };
 
-jxc.toJs = function(url, isZzs){
-	var appletStr = '<APPLET ID="JrFile" NAME="JrFile" CODE="lnyswz/common/applet/FileApplet.class" CODEBASE="applets" ARCHIVE="file.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +    
+jxc.toJs1 = function(url, isZzs){
+	var appletStr = '<APPLET ID="JrFile" NAME="JrFile" CODE="lnyswz/common/applet/FileApplet.class" CODEBASE="applets" ARCHIVE="file.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +
 		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
 		' <PARAM NAME="scriptable" VALUE="false">' +   
 		' <PARAM NAME="DATA_URL" VALUE="'+url+'">' +
-		' <PARAM NAME="FP_ZZS" VALUE="'+isZzs+'">' +
+        ' <PARAM NAME="FP_ZZS" VALUE="'+isZzs+'">' +
 		' </APPLET>';
 
 	$('#fileDialog').html(appletStr);
@@ -1051,12 +1077,31 @@ jxc.toJs = function(url, isZzs){
 			height:50,
 		}
 	});
-	
-//	document.write('<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT>');   
-//	document.write('<PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">');   
-//	document.write('<PARAM NAME="scriptable" VALUE="false">');   
-//	document.write('<PARAM NAME="REPORT_URL" VALUE="'+url+'">');   
-//	document.write('</APPLET>');
+};
+
+jxc.toJs = function(url, path, name, needCreate){
+    var appletStr = '<APPLET ID="JrFile" NAME="JrFile" CODE="lnyswz/common/applet/FileApplet.class" CODEBASE="applets" ARCHIVE="file.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +
+        ' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +
+        ' <PARAM NAME="scriptable" VALUE="false">' +
+        ' <PARAM NAME="DATA_URL" VALUE="'+url+'">' +
+        ' <PARAM NAME="FILE_PATH" VALUE="'+path+'">' +
+        ' <PARAM NAME="FILE_NAME" VALUE="'+name+'">' +
+        ' <PARAM NAME="NEED_CREATE" VALUE="'+needCreate+'">' +
+        ' </APPLET>';
+
+    $('#fileDialog').html(appletStr);
+    $.messager.show({
+        title:'提示',
+        msg:'导出数据到金穗接口，请稍候……',
+        timeout:2000,
+        showType:'slide',
+        style:{
+            right:'',
+            //top:document.body.scrollTop+document.documentElement.scrollTop,
+            bottom:'',
+            height:50,
+        }
+    });
 };
 
 

@@ -55,6 +55,14 @@
 			<th><label for="yxq">有效期</label></th>
 			<td><input name="yxq" style="width: 156px;"></td>
 		</tr>
+		<tr>
+			<th><label for="jsbh">金税编号</label></th>
+			<td><input name="jsbh" style="width: 156px;"></td>
+		</tr>
+		<tr>
+		<th><label for="jsmc">金税名称</label></th>
+		<td><input name="jsmc" style="width: 156px;"></td>
+	</tr>
 	</table>
 	<input name="depId" type="hidden">
 	<input name="menuId" type="hidden">

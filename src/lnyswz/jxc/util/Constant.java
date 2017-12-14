@@ -22,7 +22,7 @@ public interface Constant {
 	public static final BigDecimal SHUILV = new BigDecimal("0.17");
 	
 	//金穗接口文本存储路径
-	public static final String JS_FILEPATH = "C:/Lnyswz/";
+	public static final String JS_FILEPATH = "C:/lnyswz/";
 	//金穗接口文本增值税文件
 	public static final String JS_ZZS_FILENAME = "bill.txt";
 	//金穗接口文本普通文件
@@ -272,7 +272,15 @@ public interface Constant {
 		put("07",XSKP_SPMC_WITHCD);
 		put("08",XSKP_SPMC_WITHCD);
 	}};
-	
+
+	public static final Map<String, String> SP_JS = new HashMap<String, String>(){{
+		put("01","('1', '3', '5', '6')");
+		put("04","('4')");
+		put("05","('4')");
+		put("07","('8')");
+		put("08","('1', '3', '4', '5', '6', '8')");
+	}};
+
 	public static final Map<String, String> XSTH_HEAD = new HashMap<String, String>(){{
 		put("04","白：总账  粉：运输  蓝：客户  黄：业务");
 		put("05","白：总账  粉：运输  蓝：客户  黄：业务");

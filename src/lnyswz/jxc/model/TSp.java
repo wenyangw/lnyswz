@@ -32,13 +32,16 @@ public class TSp implements java.io.Serializable {
 	private TJldw cjldw;
 	private BigDecimal zhxs;
 	private int yxq;
+	private String jsbh;
+	private String jsmc;
 	private Set<TSpDet> TSpDets = new HashSet<TSpDet>(0);
 
 	public TSp() {
 	}
 
 
-	public TSp(String spbh, String spmc, TSpdw TSpdw, String spcd, String sppp, String spbz, TJldw zjldw, TJldw cjldw, BigDecimal zhxs, int yxq, Set<TSpDet> TSpDets) {
+	public TSp(String spbh, String spmc, TSpdw TSpdw, String spcd, String sppp, String spbz, TJldw zjldw, TJldw cjldw,
+			   BigDecimal zhxs, int yxq, String jsbh, String jsmc, Set<TSpDet> TSpDets) {
 		this.spbh = spbh;
 		this.spmc = spmc;
 		this.TSpdw = TSpdw;
@@ -49,6 +52,8 @@ public class TSp implements java.io.Serializable {
 		this.cjldw = cjldw;
 		this.zhxs = zhxs;
 		this.yxq = yxq;
+		this.jsbh = jsbh;
+		this.jsmc = jsmc;
 		this.TSpDets = TSpDets;
 	}
 
@@ -146,7 +151,24 @@ public class TSp implements java.io.Serializable {
 	public void setYxq(int yxq) {
 		this.yxq = yxq;
 	}
-	
+
+	@Column(name = "jsbh", nullable = true)
+	public String getJsbh() {
+		return jsbh;
+	}
+
+	public void setJsbh(String jsbh) {
+		this.jsbh = jsbh;
+	}
+	@Column(name = "jsmc", nullable = true)
+	public String getJsmc() {
+		return jsmc;
+	}
+
+	public void setJsmc(String jsmc) {
+		this.jsmc = jsmc;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TSp",cascade=CascadeType.ALL)
 	public Set<TSpDet> getTSpDets() {
 		return TSpDets;

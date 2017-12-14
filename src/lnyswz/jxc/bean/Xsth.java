@@ -61,6 +61,7 @@ public class Xsth {
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
 	private int payDays;
+	private String verifyCode;
 		
 	private int id;
 	private String spbh;
@@ -449,6 +450,15 @@ public class Xsth {
 	public void setPayDays(int payDays) {
 		this.payDays = payDays;
 	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
 	public int getId() {
 		return id;
 	}

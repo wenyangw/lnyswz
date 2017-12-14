@@ -90,26 +90,7 @@ public class SpAction extends BaseAction implements ModelDriven<Sp>{
 	 * 导出商品代码到金穗
 	 */
 	public void exportToJs(){
-		Json j = new Json();
-		try{
-			List<Sp> sps = spService.exportToJs(sp);
-			if(sps != null){
-				StringBuilder sb = new StringBuilder();
-				sb.append("{商品编码}[分隔符]\"~~\"" + "\r\n");
-				sb.append("// 每行格式 :" + "\r\n");
-				sb.append("// 编码~~名称~~简码~~商品税目~~税率~~规格型号~~计量单位~~单价~~含税价标志~~隐藏标志~~中外合作油气田~~税收分类编码~~是否享受优惠政策~~税收分类编码名称~~优惠政策类型~~零税率标识~~编码版本号" + "\r\n");
-				for (Sp s : sps) {
-					sb.append(s.getSpmc() + "\r\n");
-				}
-				Export.WriteToFile("sp.txt", sb.toString());
-			}
-			j.setSuccess(true);
-			j.setMsg("导出商品代码成功!");
-		}catch(Exception e){
-			j.setMsg("导出商品代码失败!");
-			e.printStackTrace();
-		}
-		super.writeJson(j);
+		Export.toJs(spService.exportToJs(sp));
 	}
 		
 	/**

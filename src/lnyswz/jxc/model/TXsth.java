@@ -79,6 +79,7 @@ public class TXsth implements java.io.Serializable {
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
 	private int payDays;
+	private String verifyCode;
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
 	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
@@ -92,7 +93,8 @@ public class TXsth implements java.io.Serializable {
 			BigDecimal hjje, BigDecimal hjsl, String isLs, String bookmc, String bz, String isZs, String isCancel, 
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
-			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, BigDecimal yysfy, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, BigDecimal yysfy,
+				 int payDays, String verifyCode, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -143,6 +145,8 @@ public class TXsth implements java.io.Serializable {
 		this.isAudit = isAudit;
 		this.ysfy = ysfy;
 		this.yysfy = yysfy;
+		this.payDays = payDays;
+		this.verifyCode = verifyCode;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
 	}
@@ -622,12 +626,22 @@ public class TXsth implements java.io.Serializable {
 		this.yysfy = yysfy;
 	}
 
+	@Column(name = "payDays")
 	public int getPayDays() {
 		return payDays;
 	}
 
 	public void setPayDays(int payDays) {
 		this.payDays = payDays;
+	}
+
+	@Column(name = "verifyCode")
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)

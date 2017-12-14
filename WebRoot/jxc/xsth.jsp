@@ -850,9 +850,12 @@ function init(){
 		success: function(d){
 			if(d.success){
 				$('#xsthLsh').html(d.obj);
+                $('input#jxc_xsth_code').val(d.obj + moment().format('YYYYMMDDHHmmssSSS'));
 			}  
 		},
 	});
+
+
 	
 	//根据权限，动态加载功能按钮
 	lnyw.toolbar(0, xsth_spdg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', xsth_did);
@@ -1142,9 +1145,9 @@ function saveXsth(){
 		effectRow['bz'] = $('input[name=jxc_xsth_bz]').val();
 		effectRow['xskpDetIds'] = $('input[name=xskpDetIds]').val();
 		effectRow['ywrkDetIds'] = $('input[name=ywrkDetIds]').val();
-		
-		
-		
+
+		effectRow['verifyCode'] = $('input#jxc_xsth_code').val();
+
 		effectRow['bmbh'] = xsth_did;
 		effectRow['lxbh'] = xsth_lx;
 		effectRow['menuId'] = xsth_menuId;
@@ -1160,7 +1163,6 @@ function saveXsth(){
 			dataType: 'json',
 			success: function(rsp){
 				if(rsp.success){
-					
 			    	$.messager.show({
 						title : '提示',
 						msg : '提交成功！'
@@ -1184,7 +1186,9 @@ function saveXsth(){
 						});
 			    	}
 			    	
-				}  
+				}else{
+                    $.messager.alert('提示', rsp.msg, 'error');
+                }
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
@@ -2644,6 +2648,7 @@ function searchFydInXsth(){
 				<input name="ywrkDetIds" type="hidden">
 				<input name="jxc_xsth_shkhbh" type="hidden">
 				<input name="jxc_xsth_dist" type="hidden">
+				<input name="verifyCode" id="jxc_xsth_code" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xsth_spdg'></table>

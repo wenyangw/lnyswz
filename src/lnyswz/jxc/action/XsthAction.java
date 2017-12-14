@@ -48,14 +48,19 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());
 		Json j = new Json();
-		try{
-			j.setObj(xsthService.save(xsth));		
-			//添加成功
-			j.setSuccess(true);
-			j.setMsg("保存销售提货成功！");
-		}catch(Exception e){
-			j.setMsg("保存销售提货失败！");
-			e.printStackTrace();
+		if(xsthService.isSaved(xsth)){
+			j.setSuccess(false);
+			j.setMsg("本单据已保存，请核对后操作！");
+		}else {
+			try {
+				j.setObj(xsthService.save(xsth));
+				//添加成功
+				j.setSuccess(true);
+				j.setMsg("保存销售提货成功！");
+			} catch (Exception e) {
+				j.setMsg("保存销售提货失败！");
+				e.printStackTrace();
+			}
 		}
 		writeJson(j);
 	}

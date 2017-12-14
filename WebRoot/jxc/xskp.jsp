@@ -588,7 +588,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0 ){
+		if(zslEditor.target.val() != 0 ){
 			return true;
 		}
 	}
@@ -894,7 +894,8 @@ function saveAll(){
 				$.messager.confirm('请确认', '是否导出销售单据到金穗？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/xskpAction!toJs.action?xskplsh=' + rsp.obj.xskplsh;
-						jxc.toJs(url, rsp.obj.fplxId);
+						//jxc.toJs(url, rsp.obj.fplxId);
+                        jxc.toJs(url, JS_PATH, jxc.getJsFile(rsp.obj.fplxId), '0');
 					}
 				});
 			},
@@ -1518,7 +1519,8 @@ function toJs(){
 				if (r) {
 					var xskplshStr = xskplshs.join(',');
 					var url = lnyw.bp() + '/jxc/xskpAction!toJs.action?xskplsh=' + xskplshStr;
-					jxc.toJs(url, rows[0].fplxId);
+					//jxc.toJs(url, rows[0].fplxId);
+					jxc.toJs(url, JS_PATH, jxc.getJsFile(rows[0].fplxId), '0');
 				}
 			});
 	    }

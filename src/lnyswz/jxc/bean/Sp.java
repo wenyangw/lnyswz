@@ -17,6 +17,8 @@ public class Sp {
 	private String cjldwId;
 	private BigDecimal zhxs;
 	private int yxq;
+	private String jsbh;
+	private String jsmc;
 	private String zjldwmc;
 	private String cjldwmc;
 	private String spdwId;
@@ -111,6 +113,23 @@ public class Sp {
 	public void setYxq(int yxq) {
 		this.yxq = yxq;
 	}
+
+	public String getJsbh() {
+		return jsbh;
+	}
+
+	public void setJsbh(String jsbh) {
+		this.jsbh = jsbh;
+	}
+
+	public String getJsmc() {
+		return jsmc;
+	}
+
+	public void setJsmc(String jsmc) {
+		this.jsmc = jsmc;
+	}
+
 	public String getZjldwmc() {
 		return zjldwmc;
 	}

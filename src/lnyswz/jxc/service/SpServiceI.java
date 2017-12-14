@@ -11,7 +11,7 @@ public interface SpServiceI {
 	public Sp add(Sp sp);
 	public void edit(Sp sp);
 	public void delete(Sp sp);
-	public List<Sp> exportToJs(Sp sp);
+	public List<String> exportToJs(Sp sp);
 	public DataGrid datagrid(Sp sp);
 	public boolean existSp(Sp sp);
 	public void editSpDet(Sp sp);

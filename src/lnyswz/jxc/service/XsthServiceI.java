@@ -33,4 +33,5 @@ public interface XsthServiceI {
 	public void updateYf(Xsth xsth);
 	public boolean isCancel(Xsth xsth);
 	public boolean isLocked(Xsth xsth);
+	public boolean isSaved(Xsth xsth);
 }

@@ -1212,6 +1212,18 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Override
+	public boolean isSaved(Xsth xsth){
+		String hql = "from TXsth t where t.verifyCode = :verifyCode";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("verifyCode", xsth.getVerifyCode());
+		TXsth tXsth = xsthDao.get(hql, params);
+		if(tXsth != null){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public boolean isLocked(Xsth xsth){
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 		if("1".equals(tXsth.getLocked())){
