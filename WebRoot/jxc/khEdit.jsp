@@ -13,7 +13,7 @@
 		<tr>
 			<th><label for="khmc">客户名称</label></th>
 			<td><input name="khmc" class="easyui-validatebox"
-				data-options="required:true,missingMessage:'请输入客户名称',validType:'chinese'"
+				data-options="required:true,missingMessage:'请输入客户名称'"
 				style="width: 220px;"></td>
 		</tr>
 		<tr>
