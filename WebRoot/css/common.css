@@ -88,3 +88,12 @@ a.readed_list:link, a.readed_list:visited, a.readed_list:hover, a.readed_list:ac
 	color: blue;
 }
 
+div#memo img{
+	max-width: 800px;
+	max-height: 600px;
+}
+
+body.ke-content img{
+	max-width: 800px;
+	max-height: 600px;
+}

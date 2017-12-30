@@ -20,7 +20,7 @@ $(function(){
 				}else{
                     read_class = 'unread_list';
 				}
-                content += "<a href='javascript:void(0)' class='" + read_class + "' onclick='show_message(" + JSON.stringify(this) + ")'>" + moment(this.createTime).format('YYYY-MM-DD') + "&nbsp&nbsp" + this.subject + "&nbsp&nbsp" + this.createName + "</a>";
+                content += "<a href='javascript:void(0)' class='" + read_class + "' onclick='show_message(" + JSON.stringify(this) + ")'>" + moment(this.createTime).format('YYYY-MM-DD') + "&nbsp&nbsp" + this.createName + "&nbsp&nbsp" + this.subject + "</a>";
 				content += "</li>";
 			});
 			$('div#message_list').html(content);

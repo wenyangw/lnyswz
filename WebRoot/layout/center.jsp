@@ -68,12 +68,8 @@ $(function(){
 <div id='layout_center_tabs' >
 	<div title="首页">
 <!-- 		<div id="pp" style="position:fixed"> -->
-		<div id="pp" style="width:800px;height:500px;">
-			<div style="width:50%;">
-				<div title="更新日志" collapsible="true" closable="true" style="width:500px;height:300px; padding:15px;">
-			    	<div id="updateLog"></div>
-			    </div>
-			</div>
+		<div id="pp" style="width:1000px;height:500px;">
+
 			<div style="width:50%;">
 				<div title="通知" style="width:500px;height:300px; padding:15px;" data-options="columnIndex: 0, tools: [{
 					iconCls:'icon-reload',
@@ -84,6 +80,11 @@ $(function(){
 			    	<div id="message_panel">
 			    	</div>
 			    </div>
+			</div>
+			<div style="width:50%;">
+				<div title="更新日志" collapsible="true" closable="true" style="width:500px;height:300px; padding:15px;">
+					<div id="updateLog"></div>
+				</div>
 			</div>
 		</div>
 	</div>

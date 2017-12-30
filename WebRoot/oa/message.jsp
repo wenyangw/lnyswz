@@ -35,6 +35,7 @@
 	$(function(){
         oa_message_menuId = lnyw.tab_options().id;
 
+
 		//装载联系人
 		$.ajax({
 			url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
@@ -119,6 +120,7 @@
 	}
 	
 	function showContacts() {
+	    console.info("hello");
 		var dialog = $('#message_contact_select');
 		dialog
 				.dialog({
@@ -361,7 +363,7 @@
 		pageList : pageList,
 	    columns:[[
 	        {field:'id',title:'编号',width:100,checkbox:true},
-	        {field:'subject',title:'主题',width:200,
+	        {field:'subject',title:'主题',width:300,
 	        	styler: function(){
 					return 'color:blue;';
 				}
@@ -474,7 +476,7 @@
         pageList : pageList,
         columns:[[
             {field:'id',title:'编号',width:100,checkbox:true},
-            {field:'subject',title:'主题',width:200,
+            {field:'subject',title:'主题',width:300,
                 styler: function(){
                     return 'color:blue;';
                 }
@@ -602,13 +604,14 @@
  		<form id="message_send" method="post">
 			<div class="message_line">
 				<span class="field_label">收件人</span>
-				<input class="cont field_value" type="text" readOnly="readOnly" name="receiverNames" id="receiverNames" style="width:400px;"></input>
+				<input class="cont field_value" type="text" readOnly="readOnly" name="receiverNames" id="receiverNames" style="width:600px;"></input>
 				<input type="button" value="添加收件人" onclick="showContacts()"></input>
 				<input type="hidden" class="cont" name="receiverIds" id="receiverIds"></input>
 			</div>
 			<div class="message_line">
 				<span class="field_label">主题</span>
-				<input class="cont field_value"	type="text" name="subject" id="subject" data-options="required:true" style="width:400px;"></input>
+				<input class="cont field_value"	type="text" name="subject" id="subject" data-options="required:true" style="width:600px;"></input>
+				<span style="color: red;">(必填)</span>
 			</div>
 			<div class="message_line">
 				<span class="field_label">内容</span>

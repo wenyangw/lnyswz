@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/themes/icon.css">
 
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css?v=20171230">
 <%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/portal.css"> --%>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-2.0.0/jquery.min.js" charset="utf-8"></script>
