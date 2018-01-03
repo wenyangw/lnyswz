@@ -22,8 +22,8 @@
 	var contact_from;
 	var contact_to;
 	
-	var source;
-	var target;
+	var tree_source;
+	var tree_target;
 
     var message_sendDg;
     var message_receiveDg;
@@ -40,6 +40,7 @@
 		$.ajax({
 			url : '${pageContext.request.contextPath}/admin/userAction!getContacts.action',
 			dataType : 'json',
+			async: false,
 			success : function(d) {
 				contact_source = d;
 				array_sort(contact_source);
@@ -120,73 +121,71 @@
 	}
 	
 	function showContacts() {
-	    console.info("hello");
 		var dialog = $('#message_contact_select');
-		dialog
-				.dialog({
-					title : '选择收件人',
-					href : '${pageContext.request.contextPath}/oa/selectContact.jsp',
-					width : 515,
-					height : 471,
-					closable: false,
-				    cache: false,
-				    modal: true,
-					buttons : [ {
-						text : '确定',
-						handler : function() {
-							var names = [];
-							var ids = [];
+		dialog.dialog({
+			title : '选择收件人',
+			href : '${pageContext.request.contextPath}/oa/selectContact.jsp',
+			width : 515,
+			height : 471,
+			closable: false,
+			cache: false,
+			modal: true,
+			buttons : [ {
+				text : '确定',
+				handler : function() {
+					var names = [];
+					var ids = [];
 
-							for (var i = 0, len = contact_to.length; i < len; i++) {
-								for (var j = 0, lenc = contact_to[i].children.length; j < lenc; j++) {
-									ids.push(contact_to[i].children[j].id);
-									names.push(contact_to[i].children[j].text);
-								}
-							}
-
-							$('input#receiverIds').val(ids.join(','));
-							$('input#receiverNames').val(names.join(','));
-							dialog.dialog('close');
+					for (var i = 0, len = contact_to.length; i < len; i++) {
+						for (var j = 0, lenc = contact_to[i].children.length; j < lenc; j++) {
+							ids.push(contact_to[i].children[j].id);
+							names.push(contact_to[i].children[j].text);
 						}
-					} ],
-					onLoad : function() {
-						source = $('#contact_from');
-						target = $('#contact_to');
-						
-						source.tree({
-							data : contact_from,
-							onDblClick : function(node) {
-								contactTrans(node, source, target, contact_from, contact_to);
-							},
-						});
-						target.tree({
-							data : contact_to,
-							onDblClick : function(node) {
-								contactTrans(node, target, source, contact_to, contact_from);
-							},
-						});
-					},
+					}
 
+					$('input#receiverIds').val(ids.join(','));
+					$('input#receiverNames').val(names.join(','));
+					dialog.dialog('close');
+				}
+			} ],
+			onLoad : function() {
+			    tree_source = $('#contact_from');
+                tree_target = $('#contact_to');
+
+                tree_source.tree({
+					data : contact_from,
+					onDblClick : function(node) {
+						contactTrans(node, tree_source, tree_target, contact_from, contact_to);
+					},
 				});
+                tree_target.tree({
+					data : contact_to,
+					onDblClick : function(node) {
+						contactTrans(node, tree_target, tree_source, contact_to, contact_from);
+					},
+				});
+			},
+
+		});
 	}
 	
 	//更新后，排序、刷新树
 	function reload_tree(){
 		array_sort(contact_from);
 		array_sort(contact_to);
-		
-		source.tree('loadData', contact_from);
-		target.tree('loadData', contact_to);
+
+        tree_source.tree('loadData', contact_from);
+        tree_target.tree('loadData', contact_to);
 	}
 	
-	//全部命中
+	//全部选中
 	function trans_toR(){
-		trans_all(source, target, contact_from, contact_to);
+		trans_all(tree_source, tree_target, contact_from, contact_to);
 	}
 	
 	//全部移除
 	function trans_toL(){
-		trans_all(target, source, contact_to, contact_from);
+		trans_all(tree_target, tree_source, contact_to, contact_from);
 	}
 	
 	//全部操作时将源删除、目标增加
@@ -615,7 +614,7 @@
 			</div>
 			<div class="message_line">
 				<span class="field_label">内容</span>
-				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:400px;margin-top: 10px; margin-left: 70px;"></textarea>
+				<textarea name="memo" id="memo_editor" class="cont" style="width:800px;height:500px;margin-top: 10px; margin-left: 70px;"></textarea>
 			</div>
 			<%--<input type='hidden' name='datagrid' />--%>
 

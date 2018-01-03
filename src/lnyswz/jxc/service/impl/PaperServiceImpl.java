@@ -38,6 +38,7 @@ public class PaperServiceImpl implements PaperServiceI {
 			for (TPaper tPaper : tPapers) {
 				p = new Paper();
 				BeanUtils.copyProperties(tPaper, p);
+				p.setFilepath(p.getFilepath().replace("/lnyswz", ""));
 				papers.add(p);
 			}
 			dg.setRows(papers);

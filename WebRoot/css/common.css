@@ -74,6 +74,7 @@ div.message_line{
 .field_label{
 	width:60px;
 	text-align:right;
+	font-weight:bold;
 	display:inline-block;
 }
 .field_value{
