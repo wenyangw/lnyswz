@@ -241,6 +241,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printXsth() {
 		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		

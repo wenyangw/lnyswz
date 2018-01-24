@@ -2,8 +2,7 @@
 <beans 
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
@@ -16,7 +15,7 @@
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<!-- 自动扫描dao和service包(自动注入) -->
-	<context:component-scan base-package="lnyswz.jxc.dao,lnyswz.jxc.service,lnyswz.common.dao" />
+	<context:component-scan base-package="lnyswz.jxc.service,lnyswz.common.dao" />
 	
 
 </beans>

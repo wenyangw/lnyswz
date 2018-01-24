@@ -96,11 +96,20 @@ public class SpServiceImpl implements SpServiceI {
 		result.add("// 每行格式 :");
 		result.add("// 编码~~名称~~简码~~商品税目~~税率~~规格型号~~计量单位~~单价~~含税价标志~~隐藏标志~~中外合作油气田~~税收分类编码~~是否享受优惠政策~~税收分类编码名称~~优惠政策类型~~零税率标识~~编码版本号");
 
-		String sql = "select spbh + '~~\"' + spbh + ' ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(sppp) > 0 then '(' + sppp + ')' else '' end + case when len(spbz) > 0 then ' ' + spbz else '' end\n" +
-				//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
-				"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
-				//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
-				"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
+		String sql = null;
+		if(sp.getDepId().equals("01")) {
+			sql = "select spbh + '~~\"' + spbh + ' ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(sppp) > 0 then '(' + sppp + ')' else '' end + case when len(spbz) > 0 then ' ' + spbz else '' end\n" +
+					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
+					"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
+					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
+		}else{
+			sql = "select spbh + '~~\"' + spbh + '  ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(spcd) > 0 then '(' + spcd + ')' else '' end\n" +
+					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
+					"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
+					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
+		}
 
 		List<Object[]> lists = spDao.findBySQL(sql);
 

@@ -14,6 +14,8 @@ var AUDIT_REFUSE = '9';
 
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';
+var PRINT_TYPE_XSTH = '82';
+var PRINT_TYPE_XSTH_YW = '83';
 
 var JS_PATH = 'C:/lnyswz/';
 

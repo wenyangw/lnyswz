@@ -1910,7 +1910,7 @@ function printXsth(){
 				if(row.needAudit == row.isAudit){
 					$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 						if (r) {
-							var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did;
+							var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did + '&type=' + PRINT_TYPE_XSTH_YW;
 							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 						}
 					});

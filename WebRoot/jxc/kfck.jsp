@@ -1089,12 +1089,23 @@ function printKfck(){
 function printThd(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if (row != undefined) {
-		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
-			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + '&bmbh=' + jxc_kfck_did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-			}
-		});
+        $.ajax({
+            url:'${pageContext.request.contextPath}/jxc/printAction!getCounts.action',
+            async: false,
+            data:{
+                lsh: row.xsthlsh,
+                type: PRINT_TYPE_XSTH
+            },
+            dataType:'json',
+            success:function(dd){
+                $.messager.confirm('请确认', '是否打印销售提货单？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
+                    if (r) {
+                        var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + '&bmbh=' + jxc_kfck_did + '&type=' + PRINT_TYPE_XSTH;
+                        jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                    }
+                });
+            }
+        });
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
@@ -1134,7 +1145,7 @@ function printXsthByBgy(){
                         },
                         dataType:'json',
                         success:function(dd){
-                            $.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ bgyIds[index].bgyName + '</font>)？<br />这是第' + (dd.obj + 1) + '次。', function(r) {
+                            $.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ bgyIds[index].bgyName + '</font>)？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
                                 if (r) {
                                     var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId + '&type=' + PRINT_TYPE_XSTH_BGY;
                                     jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);

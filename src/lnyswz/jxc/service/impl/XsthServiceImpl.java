@@ -586,6 +586,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("printTime", DateUtil.dateToString(new Date()));
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
+
+		savePrintRecord(xsth);
+
 		return datagrid;
 	}
 	
@@ -847,9 +850,23 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("bgyName", userDao.load(TUser.class, xsth.getBgyId()).getRealName());
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
-		
-		tXsth = null;
 
+		savePrintRecord(xsth);
+//
+//		Print print = new Print();
+//		print.setLsh(xsth.getXsthlsh());
+//		print.setPrintId(xsth.getCreateId());
+//		print.setPrintName(xsth.getCreateName());
+//		print.setPrintTime(new Date());
+//		print.setType(xsth.getType());
+//		print.setBgyId(xsth.getBgyId());
+//
+//		PrintServiceImpl.save(print, printDao);
+
+		return datagrid;
+	}
+
+	private void savePrintRecord(Xsth xsth){
 		Print print = new Print();
 		print.setLsh(xsth.getXsthlsh());
 		print.setPrintId(xsth.getCreateId());
@@ -859,8 +876,6 @@ public class XsthServiceImpl implements XsthServiceI {
 		print.setBgyId(xsth.getBgyId());
 
 		PrintServiceImpl.save(print, printDao);
-
-		return datagrid;
 	}
 	
 	@Override
