@@ -1,13 +1,7 @@
 package lnyswz.jxc.action;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Scanner;
 
+import java.util.Date;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +11,10 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
-import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Xsth;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XsthServiceI;
-import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
 import lnyswz.jxc.util.Util;
 /**

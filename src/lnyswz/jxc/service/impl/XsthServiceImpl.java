@@ -1,6 +1,7 @@
 package lnyswz.jxc.service.impl;
 
 
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
+import lnyswz.jxc.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,6 @@ import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.service.XsthServiceI;
-import lnyswz.jxc.util.AmountToChinese;
-import lnyswz.jxc.util.Constant;
-import lnyswz.jxc.util.Util;
 
 /**
  * 销售提货实现类
@@ -312,9 +311,17 @@ public class XsthServiceImpl implements XsthServiceI {
 				
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getXsthlsh(), 
 				"生成销售提货单", operalogDao);
-		
+
+		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
+		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
+
+		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
+		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
+
 		Xsth rXsth = new Xsth();
 		rXsth.setXsthlsh(lsh);
+
+
 		return rXsth;
 		
 	}
@@ -500,8 +507,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid printXsth(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
-		
-		
+
 		List<XsthDet> nl = new ArrayList<XsthDet>();
 		int j = 0;
 		Set<TXskp> xskps = null;
@@ -584,6 +590,10 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("memo", tXsth.getBz() + " " + bz.trim());
 		map.put("printName", xsth.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
+		String codePath = Util.getRootPath() + Constant.CODE_PATH + tXsth.getXsthlsh() + ".png";
+		//map.put("codeFile", codePath.replace("/","\\"));
+		map.put("codeFile", codePath);
+
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 

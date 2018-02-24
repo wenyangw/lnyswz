@@ -114,11 +114,11 @@ function appendKh() {
 								dataType : 'json',
 								success : function(d) {
 									var j = $.parseJSON(jxc.toJson(d));
-									if(!j.success){								
+									if(!j.success){
 										flag=false;
 									}
-									
-								}								
+
+								}
 							});	
 							if(!flag){
 	            				$.messager.alert('提示', '客户编号已存在！', 'error');

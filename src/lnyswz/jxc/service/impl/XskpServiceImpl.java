@@ -1096,7 +1096,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(kd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
 				kd.setCdwsl(kd.getZdwsl().divide(kd.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 			}
-			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(4,BigDecimal.ROUND_HALF_UP));
 			//kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			
 			nl.add(kd);

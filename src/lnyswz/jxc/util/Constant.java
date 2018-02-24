@@ -29,6 +29,8 @@ public interface Constant {
 	public static final String JS_PT_FILENAME = "billpt.txt";
 	//金穗接口文本通用标识文件
 	public static final String FP_ONE = "10590";
+
+	public static final String CODE_PATH = "/qrcode/";
 	
 	//客户类型
 	public static final String KHLX_XK = "01";
