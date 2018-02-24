@@ -104,26 +104,7 @@ function appendKh() {
 					url : '${pageContext.request.contextPath}/jxc/khAction!add.action',
 					onSubmit: function(){	
 						if($(this).form('validate')){
-							var flag=true;
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/khAction!existKh.action',
-								async: false,
-								data : {
-									khbh :$('input[name=khbh]').val()
-								},
-								dataType : 'json',
-								success : function(d) {
-									var j = $.parseJSON(jxc.toJson(d));
-									if(!j.success){
-										flag=false;
-									}
-
-								}
-							});	
-							if(!flag){
-	            				$.messager.alert('提示', '客户编号已存在！', 'error');
-	            			}
-	            			return flag;
+	            			return existKh($('input[name=khmc]').val(), $('input[name=khbh]').val());
 	            		}else{
 	            			return false;
 	            		}
@@ -132,6 +113,7 @@ function appendKh() {
 						var json = $.parseJSON(jxc.toJson(d));
 						if (json.success) {
 							khgl_dg.datagrid('appendRow', json.obj);
+							clearKh();
 							p.dialog('close');
 						}
 						$.messager.show({
@@ -150,7 +132,7 @@ function appendKh() {
 				depId:did,
 				menuId:mid,		
 			});			
-			f.find('input[name=khbh]').focus();
+// 			f.find('input[name=khbh]').focus();
 
 // 			initNsr($('form input[name=isNsr]'));
 // 			$('form input[name=isNsr]').click(function(){
@@ -172,12 +154,18 @@ function editKh(){
 			buttons : [ {
 				text : '编辑',
 				handler : function() {
+					
 					var f = p.find('form');
 					f.form('submit', {
 						url : '${pageContext.request.contextPath}/jxc/khAction!edit.action',
-						onSubmit: function(){	
-							if($(this).form('validate')){
-								return true;
+						onSubmit: function(){
+							if($(this).form('validate')){						
+								if((row["khmc"] == $('input[name=khmc]').val())){
+									return true;
+								}else{
+									return existKh($('input[name=khmc]').val());	
+								}
+								
 							}else{
 	            				return false;
 	            			}
@@ -186,6 +174,7 @@ function editKh(){
 							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
 								khgl_dg.datagrid('reload');
+								clearKh();
 								p.dialog('close');
 							}
 							$.messager.show({
@@ -197,6 +186,7 @@ function editKh(){
 				}
 			} ],
 			onLoad : function() {
+				$('input[name=khbh]').attr("readonly","readonly");
 				var f = p.find('form');
 				row["depId"] = did;
 				row["menuId"] = mid;
@@ -214,7 +204,7 @@ function editKh(){
 // 				});
 // 				initNsr($('form input[name=isNsr]'));
 								
-				f.find('input[name=khbh]').focus();
+// 				f.find('input[name=khbh]').focus();
 // 				$('form input[name=isNsr]').click(function(){
 // 					initNsr(this);
 // 				});
@@ -224,6 +214,30 @@ function editKh(){
 		$.messager.alert('警告', '请选择一条记录进行修改！',  'warning');
 	}
 }
+
+function existKh(mc, bh){
+	var flag = false;
+	if(($('input[name=khbh]').val() != "") && ($('input[name=khmc]').val() != "")){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/jxc/khAction!existKh.action',
+			async: false,
+			data : {
+				khbh :bh,
+				khmc :mc
+			},
+			dataType : 'json',
+			type: 'POST',
+			success : function(d) {		
+				flag = d.success;
+			}
+		});		
+	}
+	if(flag){
+		$.messager.alert('提示', '客户编号或客户名称已存在！', 'error');
+	}
+	return !flag;
+}
+
 
 function initNsr(target){
 	if($(target).is(':checked')){
@@ -318,20 +332,6 @@ function editKhDet(){
 				row["depId"] = did;
 				row["menuId"] = mid;
 				f.form('load', row);
-// 				f.form('load', {
-// 					khbh : rows[0].khbh,
-// 					khmc: rows[0].khmc,
-// 					ywyId: rows[0].ywyId,
-// 					isSx: rows[0].isSx,
-// 					lxr :rows[0].lxr,
-// 					sxzq :rows[0].sxzq,
-// 					sxje :rows[0].sxje,
-// 					yfje :rows[0].yfje,
-// 					//sxje :sxje,
-// 					detId: rows[0].detId,
-// 					depId:did,
-// 					menuId:mid,		
-// 				});
 				initForm($('form input[name=isSx]'));
 				
 				f.find('input[name=lxr]').focus();
@@ -395,10 +395,13 @@ function searchFunKh(){
 		depId:did,
 	});	
 }
-
+function clearKh(){
+	$('input').val("");
+// 	$('input[name=khmc]').val("");
+}
 function clearFunKh(){
 	$('#jxc_kh_selet input[name=khcs]').val("");
-	$('#jxc_khgl_dg').datagrid('load',{depId:did,});
+	$('#jxc_khgl_dg').datagrid('load',{depId:did});
 }
 </script>
 <div id="jxc_kh_selet" class="easyui-layout" data-options="fit:true">

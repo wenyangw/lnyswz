@@ -89,8 +89,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	public void existKh() {
 		Json j = new Json();
 		if (khService.existKh(kh)) {
-			j.setMsg("对不起！此客户编号已存在！");
-		} else {
 			j.setSuccess(true);
 		}
 		writeJson(j);

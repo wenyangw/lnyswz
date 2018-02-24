@@ -6,10 +6,9 @@
 		<tr>
 			<th><label for="khbh">客户编号</label></th>
 			<td><input name="khbh" class="easyui-validatebox" id="khbh"
-				data-options="validType:['mustLength[8]']" readonly="readonly"
-				style="width: 220px;"></td>
+				data-options="required:true,missingMessage:'请输入客户编号',validType:['mustLength[8]','integer']"
+				readonly="readonly" style="width: 220px;"></td>
 		</tr>
-		
 		<tr>
 			<th><label for="khmc">客户名称</label></th>
 			<td><input name="khmc" class="easyui-validatebox"
@@ -17,22 +16,34 @@
 				style="width: 220px;"></td>
 		</tr>
 		<tr>
-			<th><label for="dzdh">地址/电话</label></th>
-			<td><input name="dzdh"style="width: 220px;"></td>
+			<th><label for="fr">法人</label></th>
+			<td><input name="fr" style="width: 220px;"></td>
 		</tr>
 		<tr>
-			<th><label for="khh">开户行</label></th>
-			<td><input name="khh"style="width: 220px;"></td>
+			<th><label for="dzdh">地址/电话</label></th>
+			<td><input name="dzdh" style="width: 220px;"></td>
+		</tr>
+		<tr>
+			<th><label for="address">送货地址</label></th>
+			<td><input name="address" style="width: 220px;"></td>
+		</tr>
+		<tr>
+			<th><label for="dist">距离</label></th>
+			<td><input name="dist" style="width: 150px;">公里</td>
+		</tr>
+		<tr>
+			<th><label for="isNsr">一般纳税人</label></th>
+			<td><input name="isNsr" type="checkbox" value="1"></td>
 		</tr>
 		<tr>
 			<th><label for="sh">税号</label></th>
 			<td><input name="sh" class="easyui-validatebox"
-				data-options="validType:['mustLength[8]']"
-				style="width: 220px;" ></td>
+				data-options="validType:['length[15, 20]']"
+				style="width: 220px;"></td>
 		</tr>
 		<tr>
-			<th><label for="fr">法人</label></th>
-			<td><input name="fr" style="width: 220px;"></td>
+			<th><label for="khh">开户行</label></th>
+			<td><input name="khh" style="width: 220px;"></td>
 		</tr>
 		
 	</table>

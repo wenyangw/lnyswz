@@ -213,13 +213,16 @@ public class KhServiceImpl implements KhServiceI {
 	}
 
 	/**
-	 * 判断客户编号是否重复
+	 * 判断客户编号或客户名称是否重复
 	 */
 	@Override
 	public boolean existKh(Kh kh) {
 		boolean isOK = false;
-		String hql = "from TKh t where t.khbh=" + kh.getKhbh();
-		List<TKh> list = khDao.find(hql);
+		String hql = "from TKh t where t.khbh = :khbh or t.khmc = :khmc";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("khbh", kh.getKhbh());
+		params.put("khmc", kh.getKhmc());
+		List<TKh> list = khDao.find(hql,params);
 		if (list.size() != 0) {
 			isOK = true;
 		}
