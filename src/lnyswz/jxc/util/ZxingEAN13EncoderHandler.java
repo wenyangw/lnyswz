@@ -60,7 +60,7 @@ public class ZxingEAN13EncoderHandler {
             sum += digit;
         }
 
-        int checkCode = 10 - sum % 10;
+        int checkCode = sum % 10 > 0 ? 10 - sum % 10 : 0;
 
         return s + String.valueOf(checkCode);
     }
