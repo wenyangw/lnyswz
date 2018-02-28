@@ -21,6 +21,10 @@ public class ShowAction extends BaseAction implements
 	private Show show = new Show();
 	private ShowServiceI showService;
 
+	public void showXsth() {
+		super.writeJson(showService.showXsth(show));
+	}
+
 	@Override
 	public Show getModel() {
 		return show;
