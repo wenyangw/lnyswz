@@ -317,7 +317,7 @@ function checkedShow(name){
         'field': ['ywymc', 'khmc', 'xsthlsh', 'createTime', 'status', 'delayTime'],
         'fieldTitle': ['业务员', '客户', '流水号', '创建时间', '状态', '持续时间'],
         'align': ['left', 'center', 'right', '', '', '', ''],
-        'width': [0.1, 0.5, 0.1, 0.1, 0.14, 0.15, 0.05],
+        'width': [0.1, 0.3, 0.15, 0.15, 0.1, 0.2],
         'actionUrl': '/jxc/showAction!showXsth.action'
     }
 

@@ -32,7 +32,7 @@ public class ShowServiceImpl implements ShowServiceI {
             s.setXsthlsh(result[2].toString());
             s.setCreateTime(DateUtil.stringToDate(result[3].toString(), DateUtil.DATETIME_PATTERN));
             s.setStatus(result[4].toString());
-            s.setDelayTime(DateUtil.stringToDate(result[5].toString(), DateUtil.DATETIME_PATTERN));
+            s.setDelayTime(result[5].toString());
 
             lists.add(s);
         }

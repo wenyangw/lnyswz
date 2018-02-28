@@ -8,7 +8,7 @@ public class Show {
 	private String xsthlsh;
 	private Date createTime;
 	private String status;
-	private Date delayTime;
+	private String delayTime;
 
 	private int page;
 	private int rows;
@@ -54,11 +54,11 @@ public class Show {
 		this.status = status;
 	}
 
-	public Date getDelayTime() {
+	public String getDelayTime() {
 		return delayTime;
 	}
 
-	public void setDelayTime(Date delayTime) {
+	public void setDelayTime(String delayTime) {
 		this.delayTime = delayTime;
 	}
 
