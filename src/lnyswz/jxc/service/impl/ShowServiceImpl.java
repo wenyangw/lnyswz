@@ -20,10 +20,11 @@ public class ShowServiceImpl implements ShowServiceI {
     @Override
     public DataGrid showXsth(Show show) {
 
-        String sql = "select ywymc, khmc, xsthlsh, createTime, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime";
-        String where = " from t_xsth where bmbh = '05' and isCancel = '0' and YEAR(createTime) = 2018";
+        String sql = "select ywymc, khmc, xsthlsh, createTime, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime, dbo.getXsthStatus(xsthlsh) statusId";
+        String where = " from t_xsth where bmbh = '05' and isCancel = '0' and isZs = '0' and YEAR(createTime) = 2018 and needAudit <> '0'";
+        String orderBy = " order by createTime desc";
         List<Show> lists = new ArrayList<Show>();
-        List<Object[]> results = dao.findBySQL(sql + where, show.getPage(), show.getRows());
+        List<Object[]> results = dao.findBySQL(sql + where + orderBy, show.getPage(), show.getRows());
         Show s = null;
         for (Object[] result : results) {
             s = new Show();
@@ -33,6 +34,7 @@ public class ShowServiceImpl implements ShowServiceI {
             s.setCreateTime(DateUtil.stringToDate(result[3].toString(), DateUtil.DATETIME_PATTERN));
             s.setStatus(result[4].toString());
             s.setDelayTime(result[5].toString());
+            s.setStatusId(result[6].toString());
 
             lists.add(s);
         }

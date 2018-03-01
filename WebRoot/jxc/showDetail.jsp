@@ -86,22 +86,26 @@ function getShowName(){
 function showData(name){
  	var show_dg;	
 	var columns = [];
-	var datas=checkedShow(name);
+	var datas = checkedShow(name);
 	$('#title').html(datas.title);
 
 	var height = getHeight();
 	for(var i = 0; i < datas.field.length; i++){
-		var onlyTitle = Object.create(Object.prototype);
-		onlyTitle["field"] = datas.field[i];
-		onlyTitle["title"] = datas.fieldTitle[i];
-		onlyTitle["width"] = window.screen.availWidth * datas.width[i];
-		onlyTitle["align"] = datas.align[i];
-		onlyTitle["formatter"] = function(value,row,index){
+		var data = Object.create(Object.prototype);
+        data["field"] = datas.field[i];
+        data["title"] = datas.fieldTitle[i];
+        data["width"] = window.screen.availWidth * datas.width[i];
+        data["align"] = datas.align[i];
+        data["formatter"] = function(value,row,index){
 			if(value){
 				 return '<span style = "font-size:' + fontHeaderHeight(height) + 'px; line-height:' + lineDataHeight(height) + 'px; ">' + value + '</span>';//改变表格中内容字体的大小
 			}          
         } ;
-		columns.push(onlyTitle);
+        data["styler"] = function(value, row){
+		    return getStyler(row.statusId);
+        } ;
+
+		columns.push(data);
 	}
 	
 
@@ -190,7 +194,9 @@ function setTitleStyle(height){
 	/******************标题高度**************begin**************/
 	$('.show_top').css( 'height' , height + 'px' );
 	/******************标题高度**************end**************/
-	
+
+    $('.show_top').css( 'background-color' , '#e0ecff' );
+
 	/******************标题字体**************begin**************/
 	$('.showTopLeft').css( 'font-size' ,fontTitleHeight(height) + 'px' ); 			
 	$('.showTopRight').css('font-size' , fontPageHeight(height) + 'px' ); 
@@ -227,6 +233,38 @@ function setPageStyle(height){
 	$('.pagination-page-list').css('font-size' , fontPageHeight(height) + 'px' ); 
 	$('.pagination span').css('font-size' , fontPageHeight(height) + 'px' ); 
 	/******************分页字体**************end**************/  
+}
+
+function getStyler(statusId){
+    switch(statusId){
+        case '01':
+            //return 'background-color:#ffeeff;';
+            break;
+        case '02':
+            //return 'background-color:#ffee00;';
+            break;
+        case '03':
+            return 'background-color:#ffee00;';
+            break;
+        case '04':
+            //return 'background-color:#ffee00;';
+            break;
+        case '05':
+            //return 'background-color:#ffee00;';
+            break;
+        case '06':
+            //return 'background-color:#ffee00;';
+            break;
+        case '07':
+            //return 'background-color:#ffee00;';
+            break;
+        case '08':
+            return 'background-color:green;';
+            break;
+        case '09':
+            return 'background-color:red;';
+            break;
+    }
 }
 
 

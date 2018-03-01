@@ -9,6 +9,7 @@ public class Show {
 	private Date createTime;
 	private String status;
 	private String delayTime;
+	private String statusId;
 
 	private int page;
 	private int rows;
@@ -60,6 +61,14 @@ public class Show {
 
 	public void setDelayTime(String delayTime) {
 		this.delayTime = delayTime;
+	}
+
+	public String getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(String statusId) {
+		this.statusId = statusId;
 	}
 
 	public int getPage() {
