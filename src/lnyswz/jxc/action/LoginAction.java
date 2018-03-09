@@ -1,6 +1,7 @@
 package lnyswz.jxc.action;
 
 import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 			@Result(name = SUCCESS, location = "/layout/index.jsp"),
 			@Result(name = "SUCCESS_M", location = "/m/index.jsp"),
 			@Result(name = LOGIN, location = "/login.jsp"),
-			@Result(name = "LOGIN_M", location = "/m/login.jsp") })
-	
+			@Result(name = "LOGIN_M", location = "/m/login.jsp")})
+
 	public String login() {
 		String source = "";
 		if(user.getSource() != null){
@@ -51,6 +52,7 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 				if(source.equals("mobile")){
 					return "SUCCESS_M";
 				}
+
 				return SUCCESS;
 			}
 		}

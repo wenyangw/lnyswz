@@ -45,11 +45,8 @@
 <script type="text/javascript">
 
 var intervalId;
-var actionUrl;
 var field;
-var fieldTitle;
 var width;
-var data;
 var changeTime="";
 var showName;
 
@@ -144,6 +141,38 @@ function showData(name){
 	window.onresize = function(){
 		setTimeout(domresize, 300);
 	};
+
+    function getStyler(statusId){
+        switch(statusId){
+            case '01':
+                //return 'background-color:#ffeeff;';
+                break;
+            case '02':
+                //return 'background-color:#ffee00;';
+                break;
+            case '03':
+                return 'background-color:#ffee00;';
+                break;
+            case '04':
+                //return 'background-color:#ffee00;';
+                break;
+            case '05':
+                //return 'background-color:#ffee00;';
+                break;
+            case '06':
+                //return 'background-color:#ffee00;';
+                break;
+            case '07':
+                //return 'background-color:#ffee00;';
+                break;
+            case '08':
+                return 'background-color:green;';
+                break;
+            case '09':
+                return 'background-color:red;';
+                break;
+        }
+    }
 }
 
 
@@ -235,37 +264,7 @@ function setPageStyle(height){
 	/******************分页字体**************end**************/  
 }
 
-function getStyler(statusId){
-    switch(statusId){
-        case '01':
-            //return 'background-color:#ffeeff;';
-            break;
-        case '02':
-            //return 'background-color:#ffee00;';
-            break;
-        case '03':
-            return 'background-color:#ffee00;';
-            break;
-        case '04':
-            //return 'background-color:#ffee00;';
-            break;
-        case '05':
-            //return 'background-color:#ffee00;';
-            break;
-        case '06':
-            //return 'background-color:#ffee00;';
-            break;
-        case '07':
-            //return 'background-color:#ffee00;';
-            break;
-        case '08':
-            return 'background-color:green;';
-            break;
-        case '09':
-            return 'background-color:red;';
-            break;
-    }
-}
+
 
 
 

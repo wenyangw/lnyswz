@@ -80,7 +80,7 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
 	 * 主页菜单
 	 */
 	public void menuTree(){
-		List<Menu> l = new ArrayList<Menu>();
+		List<Menu> l;
 		User u = (User)session.get("user");
 		//超级管理员获得全部菜单
 		if(u.getUserName().equals("admin")){
@@ -93,7 +93,26 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
 			writeJson(l);
 		}
 	}
-	
+
+	/**
+	 * Android主页菜单
+	 */
+	public void menuTreeM(){
+		List<Menu> l;
+		User u = new User();
+		u.setId(menu.getUserId());
+		u.setUserName(menu.getUserName());
+		//超级管理员获得全部菜单
+		if(u.getUserName().equals("admin")){
+			l = menuService.noAuthTree(menu.getCid());
+		}else{
+			l = menuService.authTree(u, menu.getCid());
+		}
+		if(l != null && l.size() > 0){
+			writeJson(l);
+		}
+	}
+
 	/**
 	 * 功能按钮管理页面左侧列表
 	 * 增加按钮时选择菜单
