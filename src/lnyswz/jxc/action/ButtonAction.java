@@ -82,6 +82,13 @@ public class ButtonAction extends BaseAction implements ModelDriven<Button>{
 	 */
 	public void buttons(){
 		User user = (User)session.get("user");
+		//移动端无session
+		if(user == null){
+			user = new User();
+			user.setId(button.getUserId());
+			user.setUserName(button.getUserName());
+			user.setDid(button.getDid());
+		}
 		//超级管理员-全部功能按钮
 		if(user.getUserName().equals("admin")){
 			writeJson(buttonService.noAuthBtns(button.getMid(), button.getTabId()));
@@ -89,7 +96,7 @@ public class ButtonAction extends BaseAction implements ModelDriven<Button>{
 			writeJson(buttonService.authBtns(user, button.getMid(), button.getTabId(), button.getDid()));
 		}
 	}
-	
+
 	/**
 	 * 返回所有功能按钮，供管理用，有分页
 	 */

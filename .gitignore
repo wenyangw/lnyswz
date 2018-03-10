@@ -1,5 +1,5 @@
 /.settings
 /WebRoot/WEB-INF/classes/*
-/resources/config.properties
 /.classpath
 /.project
+/out/

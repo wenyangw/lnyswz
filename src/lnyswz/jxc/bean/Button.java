@@ -16,6 +16,10 @@ public class Button {
 	private String mname;
 	private String did;
 	private String ids;
+
+	//android
+	private int userId;
+	private String userName;
 	
 	private int page;
 	private int rows;
@@ -83,6 +87,23 @@ public class Button {
 	public void setIds(String ids) {
 		this.ids = ids;
 	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public int getPage() {
 		return page;
 	}
