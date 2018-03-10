@@ -82,31 +82,18 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
 	public void menuTree(){
 		List<Menu> l;
 		User u = (User)session.get("user");
+		//android
+		if(u == null){
+			u = new User();
+			u.setId(menu.getUserId());
+			u.setUserName(menu.getUserName());
+		}
 		//超级管理员获得全部菜单
 		if(u.getUserName().equals("admin")){
 			l = menuService.noAuthTree(menu.getCid());
 		}else{
 			l = menuService.authTree(u, menu.getCid());
 			
-		}
-		if(l != null && l.size() > 0){
-			writeJson(l);
-		}
-	}
-
-	/**
-	 * Android主页菜单
-	 */
-	public void menuTreeM(){
-		List<Menu> l;
-		User u = new User();
-		u.setId(menu.getUserId());
-		u.setUserName(menu.getUserName());
-		//超级管理员获得全部菜单
-		if(u.getUserName().equals("admin")){
-			l = menuService.noAuthTree(menu.getCid());
-		}else{
-			l = menuService.authTree(u, menu.getCid());
 		}
 		if(l != null && l.size() > 0){
 			writeJson(l);
