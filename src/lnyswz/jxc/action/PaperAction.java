@@ -37,6 +37,7 @@ public class PaperAction extends BaseAction implements ModelDriven<Paper> {
 		//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
 		//String filename = new String(paper.getFilename().getBytes("ISO8859-1"), "utf-8");
 		response.setHeader("Content-Disposition",	 "attachment;fileName=" + java.net.URLEncoder.encode(paper.getFilename(),"UTF-8"));
+		//response.setHeader("Content-Disposition",	 "attachment;fileName=" + paper.getFilename());
 		ServletOutputStream out;
 		//通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
 		File file = new File(path + paper.getFilepath());

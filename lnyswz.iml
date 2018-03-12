@@ -19,6 +19,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/WebRoot" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
   </component>
@@ -32,7 +33,7 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library name="servlet-api.jar">
+      <library>
         <CLASSES>
           <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
         </CLASSES>
@@ -41,7 +42,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="jsp-api.jar">
+      <library>
         <CLASSES>
           <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar!/" />
         </CLASSES>
@@ -50,7 +51,7 @@
       </library>
     </orderEntry>
     <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="file://$MODULE_DIR$/WebRoot/WEB-INF/lib" />

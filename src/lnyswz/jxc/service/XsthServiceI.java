@@ -34,4 +34,5 @@ public interface XsthServiceI {
 	public boolean isCancel(Xsth xsth);
 	public boolean isLocked(Xsth xsth);
 	public boolean isSaved(Xsth xsth);
+	public DataGrid getXsth(Xsth xsth);
 }

@@ -319,6 +319,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_bgy.json"));
 		//Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
 	}
+
+	public void getXsth(){
+		writeJson(xsthService.getXsth(xsth));
+	}
 	
 	public void getSpkc(){
 		writeJson(xsthService.getSpkc(xsth));

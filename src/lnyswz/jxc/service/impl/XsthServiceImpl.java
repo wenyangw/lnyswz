@@ -502,7 +502,28 @@ public class XsthServiceImpl implements XsthServiceI {
 			"取消销售提货单", operalogDao);
 		
 	}
-	
+
+	@Override
+	public DataGrid getXsth(Xsth xsth) {
+		DataGrid dg = null;
+		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		if(tXsth != null){
+			dg = new DataGrid();
+			Xsth t = new Xsth();
+			BeanUtils.copyProperties(tXsth, t);
+			List<XsthDet> dets = new ArrayList<XsthDet>();
+			XsthDet det = null;
+			for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
+				det = new XsthDet();
+				BeanUtils.copyProperties(tXsthDet, det);
+				dets.add(det);
+			}
+			dg.setObj(t);
+			dg.setRows(dets);
+		}
+		return dg;
+	}
+
 	@Override
 	public DataGrid printXsth(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
