@@ -84,9 +84,11 @@ public class MessageServiceImpl implements MessageServiceI {
 
 		//删除附件
 		String fileSql = "select filepath from t_paper where messageId = ?";
-		List<Object[]> files = messageDao.findBySQL(fileSql, sqlParams);
-		for (Object file : files) {
-			Upload.deleteFile(file.toString());
+		List<Object> files = messageDao.findOneBySQL(fileSql, sqlParams);
+		if(files != null && files.size() > 0) {
+			for (Object file : files) {
+				Upload.deleteFile(file.toString());
+			}
 		}
 
 		//删除t_paper

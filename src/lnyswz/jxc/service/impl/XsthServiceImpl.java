@@ -1034,15 +1034,16 @@ public class XsthServiceImpl implements XsthServiceI {
 				c.setCgjhlsh(tXsthDet.getTCgjh().getCgjhlsh());
 			}
 			
-			String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ?";
+			String sql_sh = "select isnull(bz, '') bz from t_ywsh t where t.lsh = ? and t.bz <> ''";
 			Map<String, Object> params_sh = new HashMap<String, Object>();
 			params_sh.put("0", t.getXsthlsh());
 			
-			List<Object[]> os = xsthDao.findBySQL(sql_sh, params_sh);
+			List<Object> os = xsthDao.findOneBySQL(sql_sh, params_sh);
+
 			if(os != null && os.size() > 0){
 				String bzs = "";
 				for(Object o : os){
-					String sbz = o.toString().trim();
+					String sbz = o.toString();
 					if(!sbz.equals("")){
 						bzs += sbz + ",";
 					}

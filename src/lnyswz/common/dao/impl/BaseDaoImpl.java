@@ -234,6 +234,16 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
     }
 
     @Override
+    public List<Object> findOneBySQL(String sql, Map<String, Object> params) {
+        SQLQuery query = getQueryBySQL(sql, params);
+        List<Object> q = query.list();
+        if (q != null && q.size() > 0) {
+            return q;
+        }
+        return null;
+    }
+
+    @Override
     public List<Object[]> findBySQL(String sql, Map<String, Object> params) {
         SQLQuery query = getQueryBySQL(sql, params);
         List<Object[]> q = query.list();
