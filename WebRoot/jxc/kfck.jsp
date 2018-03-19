@@ -1268,6 +1268,10 @@ function unlockXsth(){
 	}
 }
 
+function selectCar(){
+
+}
+
 function searchXsthInKfck(){
 	kfck_xsthDg.datagrid('load',{
 		bmbh: jxc_kfck_did,
@@ -1277,7 +1281,7 @@ function searchXsthInKfck(){
 	});
 }
 
-//////////////////////////////////////////////以上为采购计划列表处理代码
+//////////////////////////////////////////////以上为销售提货列表处理代码
 
 </script>
 
@@ -1339,3 +1343,5 @@ function searchXsthInKfck(){
 	输入流水号、客户编号、名称、业务员、商品编号、备注：<input type="text" name="searchXsthInKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInKfck();">查询</a>
 </div>
+
+<div id="jxc_kfck_car"></div>
