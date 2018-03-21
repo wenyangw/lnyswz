@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.util.Export;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,7 +182,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		kfckDao.save(tKfck);		
 		
 		OperalogServiceImpl.addOperalog(kfck.getCreateId(), kfck.getBmbh(), kfck.getMenuId(), tKfck.getKfcklsh(), "生成库房出库", operalogDao);
-		
+
+		Export.createDoc(lsh);
+
 		Kfck rKfck = new Kfck();
 		rKfck.setKfcklsh(lsh);
 		return rKfck;
@@ -493,6 +496,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		map.put("ckmc", tKfck.getCkmc());
 		map.put("hjsl", hj);
 		map.put("bz", bz);
+		String codePath = Util.getRootPath() + Constant.CODE_PATH + kfck.getKfcklsh() + ".png";
+		//map.put("codeFile", codePath.replace("/","\\"));
+		map.put("codeFile", codePath);
 		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);

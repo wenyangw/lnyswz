@@ -9,6 +9,7 @@ var jxc_kfck_menuId;
 var kfck_spdg;
 var kfck_dg;
 var kfck_xsthDg;
+var kfck_carDg;
 var editIndex = undefined;
 var kfck_tabs;
 
@@ -255,50 +256,46 @@ $(function(){
 	    toolbar:'#jxc_kfck_xsthTb',
 	});
 	lnyw.toolbar(2, kfck_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
-	
-	
-// 	kfck_xsthDg.datagrid({
-//         view: detailview,
-//         detailFormatter:function(index,row){
-//             return '<div style="padding:2px"><table id="ddv-' + index + '"></table></div>';
-//         },
-//         onExpandRow: function(index,row){
-//             $('#ddv-'+index).datagrid({
-//                 url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
-//                 fitColumns:true,
-//                 singleSelect:true,
-//                 rownumbers:true,
-//                 loadMsg:'',
-//                 height:'auto',
-//                 queryParams: {
-//         			xsthlsh: row.xsthlsh,
-//         		},
-//                 columns:[[
-//                     {field:'spbh',title:'商品编号',width:200,align:'center'},
-//                     {field:'spmc',title:'名称',width:100,align:'center'},
-//                     {field:'spcd',title:'产地',width:100,align:'center'},
-//                     {field:'sppp',title:'品牌',width:100,align:'center'},
-//                     {field:'spbz',title:'包装',width:100,align:'center'},
-//                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-//                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
-//                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-//                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
-//                 ]],
-//                 onResize:function(){
-//                 	kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//                 },
-//                 onLoadSuccess:function(){
-//                     setTimeout(function(){
-//                     	kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//                     },0);
-//                 }
-//             });
-//             kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//         }
-//     });
-	
 
-	//选中列表标签后，装载数据
+    kfck_carDg = $('#jxc_kfck_carDg').datagrid({
+        fit : true,
+        border : false,
+        remoteSort: false,
+// 	    fitColumns: true,
+        pagination : true,
+        pagePosition : 'bottom',
+        pageSize : pageSize,
+        pageList : pageList,
+        columns:[[
+            {field:'xsthlsh',title:'流水号',align:'center'},
+            {field:'createTime',title:'时间',align:'center'},
+            {field:'khbh',title:'客户编号',align:'center',hidden:true},
+            {field:'khmc',title:'客户名称',align:'center'},
+            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
+            {field:'ywymc',title:'业务员',align:'center'},
+            {field:'thfs',title:'到货方式',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '自提';
+                    } else {
+                        return '送货';
+                    }
+                }},
+            {field:'thr',title:'提货人',align:'center'},
+            {field:'ch',title:'车号',align:'center'},
+            {field:'shdz',title:'送货地址',align:'center'},
+            {field:'bz',title:'备注',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+        ]],
+        toolbar:'#jxc_kfck_carTb',
+    });
+    lnyw.toolbar(3, kfck_carDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
+
+
+
+    //选中列表标签后，装载数据
 	kfck_tabs = $('#jxc_kfck_tabs').tabs({
 		onSelect: function(title, index){
 			if(index == 1){
@@ -319,6 +316,16 @@ $(function(){
 						},
 				});
 			}
+            if(index == 3){
+                kfck_carDg.datagrid({
+                    url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
+                    queryParams: {
+                        bmbh: jxc_kfck_did,
+                        fromOther: 'fromKfck',
+                        ckId: jxc_kfck_ckCombo.combobox('getValue'),
+                    },
+                });
+            }
 		},
 	});
 	
@@ -605,6 +612,8 @@ function saveAll(){
 	effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 	effectRow['xsthlsh'] = $('input[name=xsthlsh]').val();
 // 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
+
+    effectRow['isFp'] = $('#jxc_kfck_isFp').is(':checked') ? '1' : '0';
 	
 	effectRow['bmbh'] = jxc_kfck_did;
 	effectRow['lxbh'] = jxc_kfck_lx;
@@ -1269,7 +1278,46 @@ function unlockXsth(){
 }
 
 function selectCar(){
+    var p = $('#jxc_kfck_car').dialog({
+        title : '选择车辆',
+        href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
+        width : 340,
+        height : 200,
+        modal : true,
+        buttons: [{
+            text:'确定',
+            iconCls:'icon-ok',
+            handler:function(){
+                $('#jxc_kfck_car_form').form('submit', {
+                    url : '${pageContext.request.contextPath}/jxc/carAction!complete.action',
+                    success : function(d) {
+                        var json = $.parseJSON(d);
+                        if (json.success) {
 
+                            p.dialog('close');
+                        }
+                        $.messager.show({
+                            title : "提示",
+                            msg : json.msg
+                        });
+                    }
+                });
+            }
+        }],
+        onLoad : function() {
+            var f = p.find('form');
+            f.form('load', {
+                menuId:mid,
+            });
+            var did = f.find('input[name=did]');
+            var dnamedepCombo = did.combobox({
+                url:'${pageContext.request.contextPath}/admin/departmentAction!listDeps.action',
+                valueField:'id',
+                textField:'depName'
+            });
+            f.find('input[name=id]').focus();
+        }
+    });
 }
 
 function searchXsthInKfck(){
@@ -1283,6 +1331,26 @@ function searchXsthInKfck(){
 
 //////////////////////////////////////////////以上为销售提货列表处理代码
 
+//////////////////////////////////////////////以下为车辆安排列表处理代码
+
+function selectCar(){
+
+}
+
+function editCar(){
+
+}
+
+function searchCarInKfck(){
+    kfck_carDg.datagrid('load',{
+        bmbh: jxc_kfck_did,
+        createTime: $('input[name=createTimeCarInKfck]').val(),
+        search: $('input[name=searchCarInKfck]').val(),
+        fromOther: 'fromKfck'
+    });
+}
+//////////////////////////////////////////////以上为车辆安排列表处理代码
+
 </script>
 
 <!-- tabPosition:'left', headerWidth:'35' -->
@@ -1293,7 +1361,8 @@ function searchXsthInKfck(){
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
-						<th class="read">分户</th><td class="read" colspan="5"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></td>
+						<th class="read">分户</th><td class="read"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></td>
+						<th class="read">分批</th><td class="read" colspan="3"><input type="checkbox" id="jxc_kfck_isFp" name="isFp"></td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="kfckLsh" class="read"></div></td>
 					</tr>
@@ -1331,6 +1400,9 @@ function searchXsthInKfck(){
 	<div title="销售提货列表" data-options="closable:false" >
 		<table id='jxc_kfck_xsthDg'></table>
 	</div>
+	<div title="送货车辆安排" data-options="closable:false" >
+		<table id='jxc_kfck_carDg'></table>
+	</div>
 </div>
 
 <div id="jxc_kfck_tb" style="padding:3px;height:auto">
@@ -1343,5 +1415,10 @@ function searchXsthInKfck(){
 	输入流水号、客户编号、名称、业务员、商品编号、备注：<input type="text" name="searchXsthInKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInKfck();">查询</a>
 </div>
+<div id="jxc_kfck_carTb" style="padding:3px;height:auto">
+	请输入查询起始日期:<input type="text" name="createTimeCarInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchCarInKfck" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCarInKfck();">查询</a>
+</div>
 
-<div id="jxc_kfck_car"></div>
+<div id="jxc_kfck_car_select"></div>

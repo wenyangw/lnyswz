@@ -1,5 +1,6 @@
 package lnyswz.jxc.util;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -251,5 +252,12 @@ public class Export {
 		return null;
 	}
 
+	public void createCode(String lsh){
+		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
+		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
+
+		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
+		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
+	}
 
 }

@@ -59,6 +59,7 @@ public interface BaseDaoI<T> {
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params);
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params, int page, int rows);
 
+	public List<Object> findOneBySQL(String sql);
 	public List<Object> findOneBySQL(String sql, Map<String, Object> params);
 	
 	public List<T> findBySQL(String sql, Map<String, Object> returns, T o);

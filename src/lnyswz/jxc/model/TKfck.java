@@ -46,6 +46,7 @@ public class TKfck implements java.io.Serializable {
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String isFp;
 	private Set<TKfckDet> TKfckDets = new HashSet<TKfckDet>(0);
 	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
 //	private TXsth TXsth; 
@@ -55,7 +56,7 @@ public class TKfck implements java.io.Serializable {
 
 	public TKfck(String kfcklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh, String khmc,
 			String ckId, String ckmc, String isFh, String fhId, String fhmc, String thr, String ch, String bz, String cjKfcklsh,
-			String isCj, Date cjTime, Integer cjId, String cjName, Set<TKfckDet> TKfckDets, Set<TXsthDet> TXsths) {
+			String isCj, Date cjTime, Integer cjId, String cjName, String isFp, Set<TKfckDet> TKfckDets, Set<TXsthDet> TXsths) {
 		this.kfcklsh = kfcklsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -77,6 +78,7 @@ public class TKfck implements java.io.Serializable {
 		this.cjTime = cjTime;
 		this.cjId = cjId;
 		this.cjName = cjName;
+		this.isFp = isFp;
 		this.TKfckDets = TKfckDets;
 		this.TXsths = TXsths;
 	}
@@ -271,6 +273,15 @@ public class TKfck implements java.io.Serializable {
 
 	public void setCjName(String cjName) {
 		this.cjName = cjName;
+	}
+
+	@Column(name = "isFp", length = 1)
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TKfck", cascade=CascadeType.ALL)

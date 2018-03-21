@@ -505,10 +505,9 @@ public class XsthServiceImpl implements XsthServiceI {
 
 	@Override
 	public DataGrid getXsth(Xsth xsth) {
-		DataGrid dg = null;
-		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+		DataGrid dg = new DataGrid();
+		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
 		if(tXsth != null){
-			dg = new DataGrid();
 			Xsth t = new Xsth();
 			BeanUtils.copyProperties(tXsth, t);
 			List<XsthDet> dets = new ArrayList<XsthDet>();
@@ -520,7 +519,10 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			dg.setObj(t);
 			dg.setRows(dets);
+		}else{
+			dg.setTotal(0l);
 		}
+
 		return dg;
 	}
 

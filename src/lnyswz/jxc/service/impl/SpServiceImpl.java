@@ -111,7 +111,7 @@ public class SpServiceImpl implements SpServiceI {
 					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
 		}
 
-		List<Object[]> lists = spDao.findBySQL(sql);
+		List<Object> lists = spDao.findOneBySQL(sql);
 
 		if(lists.size() > 0){
 			for (Object o : lists) {

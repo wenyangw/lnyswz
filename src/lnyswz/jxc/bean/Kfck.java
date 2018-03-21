@@ -26,6 +26,7 @@ public class Kfck{
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String isFp;
 	
 	private String search;
 	
@@ -174,6 +175,15 @@ public class Kfck{
 	public void setCjName(String cjName) {
 		this.cjName = cjName;
 	}
+
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
+	}
+
 	public String getSearch() {
 		return search;
 	}
