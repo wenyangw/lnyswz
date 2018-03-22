@@ -1277,49 +1277,6 @@ function unlockXsth(){
 	}
 }
 
-function selectCar(){
-    var p = $('#jxc_kfck_car').dialog({
-        title : '选择车辆',
-        href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
-        width : 340,
-        height : 200,
-        modal : true,
-        buttons: [{
-            text:'确定',
-            iconCls:'icon-ok',
-            handler:function(){
-                $('#jxc_kfck_car_form').form('submit', {
-                    url : '${pageContext.request.contextPath}/jxc/carAction!complete.action',
-                    success : function(d) {
-                        var json = $.parseJSON(d);
-                        if (json.success) {
-
-                            p.dialog('close');
-                        }
-                        $.messager.show({
-                            title : "提示",
-                            msg : json.msg
-                        });
-                    }
-                });
-            }
-        }],
-        onLoad : function() {
-            var f = p.find('form');
-            f.form('load', {
-                menuId:mid,
-            });
-            var did = f.find('input[name=did]');
-            var dnamedepCombo = did.combobox({
-                url:'${pageContext.request.contextPath}/admin/departmentAction!listDeps.action',
-                valueField:'id',
-                textField:'depName'
-            });
-            f.find('input[name=id]').focus();
-        }
-    });
-}
-
 function searchXsthInKfck(){
 	kfck_xsthDg.datagrid('load',{
 		bmbh: jxc_kfck_did,
@@ -1334,7 +1291,58 @@ function searchXsthInKfck(){
 //////////////////////////////////////////////以下为车辆安排列表处理代码
 
 function selectCar(){
+    var rows = kfck_carDg.datagrid("getSelections");
+    if(rows.length){
 
+		var p = $('#jxc_kfck_car_select').dialog({
+			title : '选择车辆',
+			href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
+			width : 340,
+			height : 200,
+			modal : true,
+			buttons: [{
+				text:'确定',
+				iconCls:'icon-ok',
+				handler:function(){
+					$('#jxc_kfck_car_form').form('submit', {
+						url : '${pageContext.request.contextPath}/jxc/carAction!complete.action',
+						success : function(d) {
+							var json = $.parseJSON(d);
+							if (json.success) {
+
+								p.dialog('close');
+							}
+							$.messager.show({
+								title : "提示",
+								msg : json.msg
+							});
+						}
+					});
+				}
+			}],
+			onLoad : function() {
+				var f = p.find('form');
+	//            f.form('load', {
+	//                menuId:mid,
+	//            });
+	//            var did = f.find('input[name=did]');
+
+				var carCombo = $('input[name=carNum]').datalist({
+					url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
+					//width: 200,
+					//height: 50,
+					checkbox: true,
+                    lines: true,
+					//multiline: true,
+					//multiple: true,
+					//valueField: 'id',
+					//textField: 'carNum'
+				});
+			}
+		});
+	}else{
+        $.messager.alert('警告', '请至少选择一条记录进行车辆安排！！',  'warning');
+    }
 }
 
 function editCar(){

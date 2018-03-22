@@ -518,6 +518,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				dets.add(det);
 			}
 			dg.setObj(t);
+			dg.setTotal((long) dets.size());
 			dg.setRows(dets);
 		}else{
 			dg.setTotal(0l);

@@ -11,19 +11,31 @@ import java.util.Set;
 @Table(name = "t_car")
 public class TCar implements java.io.Serializable {
 
+	private int id;
 	private String carNum;
 	private String driver;
 
 	public TCar() {
 	}
 
-	public TCar(String carNum, String driver) {
+	public TCar(int id, String carNum, String driver) {
 		this.carNum = carNum;
 		this.driver = driver;
 	}
 
 	@Id
-	@Column(name = "carNum", unique = true, nullable = false, length = 14)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	@Column(name = "carNum", nullable = false, length = 20)
 	public String getCarNum() {
 		return this.carNum;
 	}
