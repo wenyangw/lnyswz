@@ -17,6 +17,9 @@ public class CarAction extends BaseAction implements ModelDriven<Car> {
 	private Car car = new Car();
 	private CarServiceI carService;
 
+	public void updateCar(){
+		carService.updateCar(car);
+	}
 	public void listCar() {
 		writeJson(carService.listCar(car));
 	}

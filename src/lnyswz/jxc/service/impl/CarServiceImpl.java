@@ -18,6 +18,12 @@ public class CarServiceImpl implements CarServiceI {
 	private BaseDaoI<TCar> carDao;
 
 	@Override
+	public void updateCar(Car car) {
+		String lsh = car.getLsh();
+		String carIds = car.getCarIds();
+	}
+
+	@Override
 	public List<Car> listCar(Car car) {
 		String hql = "from TCar t";
 		Map<String, Object> params = new HashMap<String, Object>();

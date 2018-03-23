@@ -18,7 +18,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/jquery.easyui.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/datagridview/datagrid-detailview.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-plugins/jquery.datalist.js"></script>
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js" charset="utf-8"></script> --%>
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js" charset="utf-8"></script> --%>
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui-lang-zh_CN.js" charset="utf-8"></script> --%>

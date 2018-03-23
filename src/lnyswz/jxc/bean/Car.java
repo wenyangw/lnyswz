@@ -8,6 +8,9 @@ public class Car {
     private String carNum;
     private String driver;
 
+    private String lsh;
+    private String carIds;
+
     public int getId() {
         return id;
     }
@@ -30,5 +33,21 @@ public class Car {
 
     public void setDriver(String driver) {
         this.driver = driver;
+    }
+
+    public String getLsh() {
+        return lsh;
+    }
+
+    public void setLsh(String lsh) {
+        this.lsh = lsh;
+    }
+
+    public String getCarIds() {
+        return carIds;
+    }
+
+    public void setCarIds(String carIds) {
+        this.carIds = carIds;
     }
 }

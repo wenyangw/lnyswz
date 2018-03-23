@@ -1293,56 +1293,57 @@ function searchXsthInKfck(){
 function selectCar(){
     var rows = kfck_carDg.datagrid("getSelections");
     if(rows.length){
-
-		var p = $('#jxc_kfck_car_select').dialog({
-			title : '选择车辆',
-			href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
-			width : 340,
-			height : 200,
-			modal : true,
-			buttons: [{
-				text:'确定',
-				iconCls:'icon-ok',
-				handler:function(){
-					$('#jxc_kfck_car_form').form('submit', {
-						url : '${pageContext.request.contextPath}/jxc/carAction!complete.action',
-						success : function(d) {
-							var json = $.parseJSON(d);
-							if (json.success) {
-
-								p.dialog('close');
-							}
-							$.messager.show({
-								title : "提示",
-								msg : json.msg
-							});
-						}
-					});
+        var lsh;
+        if(rows.length == 1){
+            lsh = rows[0].xsthlsh
+		}else{
+            $.each(rows, function () {
+				if(lsh != undefined){
+				    lsh = lnyw.fs('{0}, {1}', lsh, this.xsthlsh)
+				}else{
+				    lsh = this.xsthlsh
 				}
-			}],
-			onLoad : function() {
-				var f = p.find('form');
-	//            f.form('load', {
-	//                menuId:mid,
-	//            });
-	//            var did = f.find('input[name=did]');
-
-				var carCombo = $('input[name=carNum]').datalist({
-					url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
-					//width: 200,
-					//height: 50,
-					checkbox: true,
-                    lines: true,
-					//multiline: true,
-					//multiple: true,
-					//valueField: 'id',
-					//textField: 'carNum'
-				});
-			}
-		});
+            });
+		}
+        setCar(lsh)
 	}else{
         $.messager.alert('警告', '请至少选择一条记录进行车辆安排！！',  'warning');
     }
+}
+
+function setCar(lsh){
+    var car_dg = $('#kfck_car_dg');
+    var p = $('#jxc_kfck_car_select').dialog({
+        title : '选择车辆',
+        href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
+        width : 200,
+        height : 300,
+        modal : true,
+        buttons: [{
+            text:'确定',
+            iconCls:'icon-ok',
+            handler:function(){
+				var rows = car_dg.datagrid("getSelections");
+				if(rows.length){
+
+				}else{
+
+				}
+            }
+        }],
+        onLoad : function() {
+            car_dg.datagrid({
+                url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
+                fit : true,
+                border : false,
+                fitColumns: true,
+                columns:[[
+                    {field:'id',title:'Id',align:'center',checkbox:true},
+                    {field:'carNum',title:'车号',align:'center'},
+                ]],
+            });
+        }
+    });
 }
 
 function editCar(){
