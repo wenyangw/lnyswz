@@ -18,11 +18,16 @@ public class CarAction extends BaseAction implements ModelDriven<Car> {
 	private CarServiceI carService;
 
 	public void updateCar(){
+		User user = (User)session.get("user");
+		car.setCreateId(user.getId());
+		car.setCreateName(user.getRealName());
 		carService.updateCar(car);
 	}
 	public void listCar() {
 		writeJson(carService.listCar(car));
 	}
+
+	public void getSelectCar(){writeJson(carService.getSelectCar(car));};
 
 	public Car getModel() {
 		return car;

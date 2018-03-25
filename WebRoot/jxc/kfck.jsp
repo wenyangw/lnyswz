@@ -637,6 +637,14 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	//如果为送货，保存后询问是否安排车辆
+                if($('#thfs_sh').is(':checked')) {
+                    $.messager.confirm('请确认', '是否安排送货车辆？', function (r) {
+                        if (r) {
+                            setCar(rsp.obj.kfcklsh);
+                        }
+                    });
+                }
 		    	$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + rsp.obj.kfcklsh + '&bmbh=' + jxc_kfck_did;
@@ -1299,7 +1307,7 @@ function selectCar(){
 		}else{
             $.each(rows, function () {
 				if(lsh != undefined){
-				    lsh = lnyw.fs('{0}, {1}', lsh, this.xsthlsh)
+				    lsh = lnyw.fs('{0},{1}', lsh, this.xsthlsh)
 				}else{
 				    lsh = this.xsthlsh
 				}
@@ -1312,7 +1320,7 @@ function selectCar(){
 }
 
 function setCar(lsh){
-    var car_dg = $('#kfck_car_dg');
+    var car_dg;
     var p = $('#jxc_kfck_car_select').dialog({
         title : '选择车辆',
         href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
@@ -1325,14 +1333,50 @@ function setCar(lsh){
             handler:function(){
 				var rows = car_dg.datagrid("getSelections");
 				if(rows.length){
-
-				}else{
-
+				    var carIds;
+					if(rows.length == 1){
+					    carIds = rows[0].id;
+					}else{
+                        $.each(rows, function () {
+                            if(carIds != undefined){
+                                carIds = lnyw.fs('{0},{1}', carIds, this.id);
+                            }else{
+                                carIds = this.id;
+                            }
+                        });
+					}
+                    $.ajax({
+                        url : '${pageContext.request.contextPath}/jxc/carAction!updateCar.action',
+                        data : {
+                            lsh : lsh,
+                            carIds : carIds,
+                        },
+                        dataType : 'json',
+                        success : function(d) {
+                            $.messager.show({
+                                title : '提示',
+                                msg : d.msg
+                            });
+                        }
+                    });
 				}
+				p.dialog("close")
             }
         }],
         onLoad : function() {
-            car_dg.datagrid({
+            var cars;
+            $.ajax({
+                url : '${pageContext.request.contextPath}/jxc/carAction!getSelectCar.action',
+                data : {
+                    lsh : lsh
+                },
+                dataType : 'json',
+                async: 'false',
+                success : function(d) {
+                    cars = d;
+                }
+            });
+            car_dg = $('#kfck_car_dg').datagrid({
                 url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
                 fit : true,
                 border : false,
@@ -1341,14 +1385,22 @@ function setCar(lsh){
                     {field:'id',title:'Id',align:'center',checkbox:true},
                     {field:'carNum',title:'车号',align:'center'},
                 ]],
+                onLoadSuccess: function(){
+					$.each($(this).datagrid('getRows'), function(){
+					    var row = this;
+					    $.each(cars, function(){
+					        if(this.id == row.id){
+					            car_dg.datagrid('checkRow', car_dg.datagrid('getRowIndex', row));
+							}
+						});
+					});
+
+                },
             });
         }
     });
 }
 
-function editCar(){
-
-}
 
 function searchCarInKfck(){
     kfck_carDg.datagrid('load',{

@@ -11,6 +11,9 @@ public class Car {
     private String lsh;
     private String carIds;
 
+    private int createId;
+    private String createName;
+
     public int getId() {
         return id;
     }
@@ -49,5 +52,21 @@ public class Car {
 
     public void setCarIds(String carIds) {
         this.carIds = carIds;
+    }
+
+    public int getCreateId() {
+        return createId;
+    }
+
+    public void setCreateId(int createId) {
+        this.createId = createId;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
     }
 }
