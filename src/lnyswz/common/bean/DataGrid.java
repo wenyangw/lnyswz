@@ -10,10 +10,19 @@ import java.util.List;
  */
 public class DataGrid implements java.io.Serializable {
 
+	private String msg;
 	private Long total;// 总记录数
 	private Object obj;
 	private List rows;// 每行记录
 	private List footer;
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
 	public Long getTotal() {
 		return total;

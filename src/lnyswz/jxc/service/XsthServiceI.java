@@ -3,6 +3,8 @@ package lnyswz.jxc.service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Xsth;
 
+import java.util.List;
+
 /**
  * 
  * @author Wangwy
@@ -26,6 +28,7 @@ public interface XsthServiceI {
 	public void updateThsl(Xsth xsth);
 	public void updateLock(Xsth xsth);
 	public void updateUnlock(Xsth xsth);
+	public void updateXsthOut(Xsth xsth);
 	public DataGrid getSpBgys(Xsth xsth);
 	public DataGrid getYsje(Xsth xsth);
 	public DataGrid refreshXsth(Xsth xsth);
@@ -35,4 +38,6 @@ public interface XsthServiceI {
 	public boolean isLocked(Xsth xsth);
 	public boolean isSaved(Xsth xsth);
 	public DataGrid getXsth(Xsth xsth);
+	public List<Xsth> getXsthOutList(Xsth xsth);
+	public List<Xsth> getXsthOutDetail(Xsth xsth);
 }

@@ -45,6 +45,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TXsthDet> detDao;
 	private BaseDaoI<TXskpDet> xskpDetDao;
 	private BaseDaoI<TYwrkDet> ywrkDetDao;
+	private BaseDaoI<TKfck> kfckDao;
 	private BaseDaoI<TZsqr> zsqrDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -506,25 +507,148 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public DataGrid getXsth(Xsth xsth) {
 		DataGrid dg = new DataGrid();
-		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
-		if(tXsth != null){
-			Xsth t = new Xsth();
-			BeanUtils.copyProperties(tXsth, t);
-			List<XsthDet> dets = new ArrayList<XsthDet>();
-			XsthDet det = null;
-			for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
-				det = new XsthDet();
-				BeanUtils.copyProperties(tXsthDet, det);
-				dets.add(det);
+		StringBuilder msg = new StringBuilder("");
+		String thlb = xsth.getXsthlsh().substring(6, 8);
+		boolean flag = true;
+
+		if(thlb.equals("05")) {
+			TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
+			if (tXsth != null) {
+				if(tXsth.getIsCancel().equals("0")) {
+					if(xsth.getType().equals("out") && tXsth.getOut().equals("1")) {
+						flag = false;
+						msg.append("单据已确认，请核对输入的流水号！！");
+					}
+					if(xsth.getType().equals("send")){
+						if(tXsth.getOut().equals("0")) {
+							flag = false;
+							msg.append("单据还未出库复核，请核对输入的流水号！！");
+						}
+						if(tXsth.getSended().equals("1")) {
+							flag = false;
+							msg.append("单据已确认，请核对输入的流水号！！");
+						}
+					}
+					if(flag){
+						Xsth t = new Xsth();
+						BeanUtils.copyProperties(tXsth, t);
+						List<XsthDet> dets = new ArrayList<XsthDet>();
+						XsthDet det = null;
+						for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
+							det = new XsthDet();
+							BeanUtils.copyProperties(tXsthDet, det);
+							dets.add(det);
+						}
+						dg.setObj(t);
+						dg.setRows(dets);
+					}
+				}else {
+					msg.append("单据已被冲减，请核对输入的流水号！！");
+				}
+			} else {
+				msg.append("未找到记录，请核对输入的流水号！！");
 			}
-			dg.setObj(t);
-			dg.setTotal((long) dets.size());
-			dg.setRows(dets);
-		}else{
-			dg.setTotal(0l);
+		}else if(thlb.equals("11")){
+			TKfck tKfck = kfckDao.get(TKfck.class, xsth.getXsthlsh());
+			if (tKfck != null) {
+				if(tKfck.getIsFp().equals("1")) {
+					if (tKfck.getIsCj().equals("0")) {
+						if(xsth.getType().equals("out") && tKfck.getOut().equals("1")) {
+							flag = false;
+							msg.append("单据已确认，请核对输入的流水号！！");
+						}
+						if(xsth.getType().equals("send")){
+							if(tKfck.getOut().equals("0")) {
+								flag = false;
+								msg.append("单据还未出库复核，请核对输入的流水号！！");
+							}
+							if(tKfck.getSended().equals("1")) {
+								flag = false;
+								msg.append("单据已确认，请核对输入的流水号！！");
+							}
+						}
+						if (flag) {
+							Xsth t = new Xsth();
+							BeanUtils.copyProperties(tKfck, t);
+							List<XsthDet> dets = new ArrayList<XsthDet>();
+							XsthDet det = null;
+							for (TKfckDet tKfckDet : tKfck.getTKfckDets()) {
+								det = new XsthDet();
+								BeanUtils.copyProperties(tKfckDet, det);
+								dets.add(det);
+							}
+							dg.setObj(t);
+							dg.setRows(dets);
+						}
+					} else {
+						msg.append("单据已被冲减，请核对输入的流水号！！");
+					}
+				}else{
+					msg.append("此单据不是出库提货单，请核对输入的流水号！！");
+				}
+			} else {
+				msg.append("未找到记录，请核对输入的流水号！！");
+			}
+		}
+		dg.setMsg(msg.toString());
+		return dg;
+	}
+
+	@Override
+	public List<Xsth> getXsthOutList(Xsth xsth) {
+		StringBuilder hqlXsth = new StringBuilder("from TXsth t");
+		StringBuilder hqlKfck = new StringBuilder("from TKfck t");
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(xsth.getType().equals("out")){
+			hqlXsth.append(" where t.outId = :createId and t.outTime >= :createTime and t.outTime <= :endTime");
+			hqlKfck.append(" where t.outId = :createId and t.outTime >= :createTime and t.outTime <= :endTime");
+		}
+		if(xsth.getType().equals("send")){
+			hqlXsth.append(" where t.sendId = :createId and t.sendTime >= :createTime and t.sendTime <= :endTime");
+			hqlKfck.append(" where t.sendId = :createId and t.sendTime >= :createTime and t.sendTime <= :endTime");
+		}
+		params.put("createId", xsth.getCreateId());
+		params.put("createTime", xsth.getCreateTime());
+		params.put("endTime", xsth.getEndTime());
+
+		if(xsth.getKhmc() != null){
+			hqlXsth.append(" and t.khmc like :khmc");
+			hqlKfck.append(" and t.khmc like :khmc");
+			params.put("khmc", "%" + xsth.getKhmc() + "%");
 		}
 
-		return dg;
+		List<Xsth> results = new ArrayList<Xsth>();
+		Xsth t;
+		List<TXsth> tXsths = xsthDao.find(hqlXsth.toString(), params);
+		if (tXsths != null && tXsths.size() > 0){
+			for (TXsth tXsth : tXsths) {
+				t = new Xsth();
+				t.setXsthlsh(tXsth.getXsthlsh());
+				t.setCreateTime(xsth.getType().equals("out") ? tXsth.getOutTime() : tXsth.getSendTime());
+				t.setKhbh(tXsth.getKhbh());
+				t.setKhmc(tXsth.getKhmc());
+				t.setThfs(tXsth.getThfs());
+				results.add(t);
+			}
+		}
+		List<TKfck> tKfcks = kfckDao.find(hqlKfck.toString(), params);
+		if (tKfcks != null && tKfcks.size() > 0){
+			for (TKfck tKfck : tKfcks) {
+				t = new Xsth();
+				t.setXsthlsh(tKfck.getKfcklsh());
+				t.setCreateTime(xsth.getType().equals("out") ? tKfck.getOutTime() : tKfck.getSendTime());
+				t.setKhbh(tKfck.getKhbh());
+				t.setKhmc(tKfck.getKhmc());
+				//t.setThfs(tKfck.getThfs());
+				results.add(t);
+			}
+		}
+		return results;
+	}
+
+	@Override
+	public List<Xsth> getXsthOutDetail(Xsth xsth) {
+		return null;
 	}
 
 	@Override
@@ -1564,8 +1688,43 @@ public class XsthServiceImpl implements XsthServiceI {
 		OperalogServiceImpl.addOperalog(xsth.getLockId(), xsth.getBmbh(), xsth.getMenuId(), xsth.getXsthlsh(), 
 				"解锁销售提货", operalogDao);
 	}
-	
-	
+
+	@Override
+	public void updateXsthOut(Xsth xsth) {
+		String thlb = xsth.getXsthlsh().substring(6, 8);
+		TUser tUser = userDao.get(TUser.class, xsth.getCreateId());
+		if(thlb.equals("05")) {
+			TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
+			if(xsth.getType().equals("out")) {
+				tXsth.setOut("1");
+				tXsth.setOutId(xsth.getCreateId());
+				tXsth.setOutName(tUser.getRealName());
+				tXsth.setOutTime(new Date());
+			}
+			if(xsth.getType().equals("send")) {
+				tXsth.setSended("1");
+				tXsth.setSendId(xsth.getCreateId());
+				tXsth.setSendName(tUser.getRealName());
+				tXsth.setSendTime(new Date());
+			}
+		}
+		if(thlb.equals("11")){
+			TKfck tKfck = kfckDao.get(TKfck.class, xsth.getXsthlsh());
+			if(xsth.getType().equals("out")) {
+				tKfck.setOut("1");
+				tKfck.setOutId(xsth.getCreateId());
+				tKfck.setOutName(tUser.getRealName());
+				tKfck.setOutTime(new Date());
+			}
+			if(xsth.getType().equals("send")) {
+				tKfck.setSended("1");
+				tKfck.setSendId(xsth.getCreateId());
+				tKfck.setSendName(tUser.getRealName());
+				tKfck.setSendTime(new Date());
+			}
+		}
+	}
+
 	@Override
 	public void updateYf(Xsth xsth) {
 		
@@ -1776,6 +1935,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
+	}
+
+	@Autowired
+	public void setKfckDao(BaseDaoI<TKfck> kfckDao) {
+		this.kfckDao = kfckDao;
 	}
 
 	@Autowired

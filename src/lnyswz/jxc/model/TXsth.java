@@ -80,6 +80,15 @@ public class TXsth implements java.io.Serializable {
 	private BigDecimal yysfy;
 	private int payDays;
 	private String verifyCode;
+	private String out;
+	private Integer outId;
+	private String outName;
+	private Date outTime;
+	private String sended;
+	private Integer sendId;
+	private String sendName;
+	private Date sendTime;
+
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
 	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
@@ -94,7 +103,8 @@ public class TXsth implements java.io.Serializable {
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
 			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, BigDecimal yysfy,
-				 int payDays, String verifyCode, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
+			Date sendTime, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -147,6 +157,14 @@ public class TXsth implements java.io.Serializable {
 		this.yysfy = yysfy;
 		this.payDays = payDays;
 		this.verifyCode = verifyCode;
+		this.out = out;
+		this.outId = outId;
+		this.outName = outName;
+		this.outTime = outTime;
+		this.sended = sended;
+		this.sendId = sendId;
+		this.sendName = sendName;
+		this.sendTime = sendTime;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
 	}
@@ -642,6 +660,80 @@ public class TXsth implements java.io.Serializable {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	@Column(name = "out", nullable = false, length = 1)
+	public String getOut() {
+		return out;
+	}
+
+	public void setOut(String out) {
+		this.out = out;
+	}
+
+	@Column(name = "outId")
+	public Integer getOutId() {
+		return outId;
+	}
+
+	public void setOutId(Integer outId) {
+		this.outId = outId;
+	}
+
+	@Column(name = "outName", length = 20)
+	public String getOutName() {
+		return outName;
+	}
+
+	public void setOutName(String outName) {
+		this.outName = outName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "outTime", length = 23)
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	@Column(name = "sended", nullable = false, length = 1)
+	public String getSended() {
+		return sended;
+	}
+
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	@Column(name = "sendId")
+	public Integer getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+
+	@Column(name = "sendName", length = 20)
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "sendTime", length = 23)
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)

@@ -31,7 +31,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	private static final long serialVersionUID = 1L;
 	private Xsth xsth = new Xsth();
 	private XsthServiceI xsthService;
-	
+
 	/**
 	 * 保存数据
 	 */
@@ -319,6 +319,29 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_bgy.json"));
 		//Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
 	}
+
+	public void updateXsthOut(){
+		Json j = new Json();
+		try{
+			xsthService.updateXsthOut(xsth);
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("确认成功！");
+		}catch(Exception e){
+			j.setMsg("确认失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
+	public void getXsthOutList(){
+		writeJson(xsthService.getXsthOutList(xsth));
+	}
+
+	public void getXsthOutDetail(){
+		writeJson(xsthService.getXsthOutDetail(xsth));
+	}
+
 
 	public void getXsth(){
 		writeJson(xsthService.getXsth(xsth));
