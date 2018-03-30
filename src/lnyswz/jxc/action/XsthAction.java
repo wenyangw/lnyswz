@@ -342,6 +342,11 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		writeJson(xsthService.getXsthOutDetail(xsth));
 	}
 
+	public void xsthCarDg(){
+		writeJson(xsthService.xsthCarDg(xsth));
+	}
+
+
 
 	public void getXsth(){
 		writeJson(xsthService.getXsth(xsth));

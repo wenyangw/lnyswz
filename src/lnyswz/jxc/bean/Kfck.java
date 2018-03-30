@@ -26,14 +26,22 @@ public class Kfck{
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String thfs;
 	private String isFp;
-	
+	private String out;
+	private Integer outId;
+	private String outName;
+	private Date outTime;
+	private String sended;
+	private Integer sendId;
+	private String sendName;
+	private Date sendTime;
+
 	private String search;
-	
+
 	private String xsthDetIds;
 	private String xsthlshs;
-	
-	private String thfs;
+
 	private String fromOther;
 	private String datagrid;
 	private String lxbh;
@@ -178,6 +186,70 @@ public class Kfck{
 
 	public String getIsFp() {
 		return isFp;
+	}
+
+	public String getOut() {
+		return out;
+	}
+
+	public void setOut(String out) {
+		this.out = out;
+	}
+
+	public Integer getOutId() {
+		return outId;
+	}
+
+	public void setOutId(Integer outId) {
+		this.outId = outId;
+	}
+
+	public String getOutName() {
+		return outName;
+	}
+
+	public void setOutName(String outName) {
+		this.outName = outName;
+	}
+
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	public String getSended() {
+		return sended;
+	}
+
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	public Integer getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	public void setIsFp(String isFp) {

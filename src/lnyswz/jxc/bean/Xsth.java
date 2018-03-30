@@ -98,7 +98,8 @@ public class Xsth {
 	private Date endTime;
 	
 	private String type;
-	
+
+	private String carNum;
 	private String xskplsh;
 	private String cgjhlsh;
 	private String ywrklsh;
@@ -791,5 +792,13 @@ public class Xsth {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(String carNum) {
+		this.carNum = carNum;
 	}
 }

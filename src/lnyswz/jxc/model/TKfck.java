@@ -46,6 +46,7 @@ public class TKfck implements java.io.Serializable {
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String thfs;
 	private String isFp;
 	private String out;
 	private Integer outId;
@@ -64,7 +65,7 @@ public class TKfck implements java.io.Serializable {
 
 	public TKfck(String kfcklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh, String khmc,
 			String ckId, String ckmc, String isFh, String fhId, String fhmc, String thr, String ch, String bz, String cjKfcklsh,
-			String isCj, Date cjTime, Integer cjId, String cjName, String isFp, String out, Integer outId, String outName, Date outTime,
+			String isCj, Date cjTime, Integer cjId, String cjName, String thfs, String isFp, String out, Integer outId, String outName, Date outTime,
 			String sended, Integer sendId, String sendName, Date sendTime, Set<TKfckDet> TKfckDets, Set<TXsthDet> TXsths) {
 		this.kfcklsh = kfcklsh;
 		this.createTime = createTime;
@@ -87,6 +88,7 @@ public class TKfck implements java.io.Serializable {
 		this.cjTime = cjTime;
 		this.cjId = cjId;
 		this.cjName = cjName;
+		this.thfs = thfs;
 		this.isFp = isFp;
 		this.out = out;
 		this.outId = outId;
@@ -290,6 +292,15 @@ public class TKfck implements java.io.Serializable {
 
 	public void setCjName(String cjName) {
 		this.cjName = cjName;
+	}
+
+	@Column(name = "thfs", length = 1)
+	public String getThfs() {
+		return thfs;
+	}
+
+	public void setThfs(String thfs) {
+		this.thfs = thfs;
 	}
 
 	@Column(name = "isFp", length = 1)

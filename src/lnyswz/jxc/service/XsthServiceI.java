@@ -2,6 +2,7 @@ package lnyswz.jxc.service;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
 
 import java.util.List;
 
@@ -40,4 +41,5 @@ public interface XsthServiceI {
 	public DataGrid getXsth(Xsth xsth);
 	public List<Xsth> getXsthOutList(Xsth xsth);
 	public List<Xsth> getXsthOutDetail(Xsth xsth);
+	public DataGrid xsthCarDg(Xsth xsth);
 }

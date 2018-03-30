@@ -78,6 +78,8 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setIsKp("0");
 		tXsth.setLocked("0");
 		tXsth.setFromFp("0");
+		tXsth.setOut("0");
+		tXsth.setSended("0");
 		tXsth.setYysfy(BigDecimal.ZERO);
 
 		//最后一笔未还款销售
@@ -639,7 +641,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				t.setCreateTime(xsth.getType().equals("out") ? tKfck.getOutTime() : tKfck.getSendTime());
 				t.setKhbh(tKfck.getKhbh());
 				t.setKhmc(tKfck.getKhmc());
-				//t.setThfs(tKfck.getThfs());
+				t.setThfs(tKfck.getThfs());
 				results.add(t);
 			}
 		}
@@ -648,7 +650,68 @@ public class XsthServiceImpl implements XsthServiceI {
 
 	@Override
 	public List<Xsth> getXsthOutDetail(Xsth xsth) {
-		return null;
+		List<Xsth> results = new ArrayList<Xsth>();
+		String thlb = xsth.getXsthlsh().substring(6, 8);
+		Xsth t = null;
+		if(thlb.equals("05")){
+			Set<TXsthDet> tXsthDets = xsthDao.get(TXsth.class, xsth.getXsthlsh()).getTXsthDets();
+			for (TXsthDet tXsthDet : tXsthDets) {
+				t = new Xsth();
+				BeanUtils.copyProperties(tXsthDet, t);
+				results.add(t);
+			}
+		}
+		if(thlb.equals("11")){
+			Set<TKfckDet> tKfckDets = kfckDao.get(TKfck.class, xsth.getXsthlsh()).getTKfckDets();
+			for (TKfckDet tKfckDet : tKfckDets) {
+				t = new Xsth();
+				BeanUtils.copyProperties(tKfckDet, t);
+				results.add(t);
+			}
+		}
+		return results;
+	}
+
+	@Override
+	public DataGrid xsthCarDg(Xsth xsth) {
+		StringBuilder sqlCount = new StringBuilder("select count(*)");
+		StringBuilder sql = new StringBuilder("select w.bmbh, w.bmmc, w.xsthlsh, w.createTime, w.khbh, w.khmc, w.ywymc, w.shdz, w.bz, w.hjsl, isnull(s.carNum, '') carNum");
+		String sqlWhere = " from v_wait_car w  left join v_set_car s on w.xsthlsh = s.lsh where w.bmbh = ?";
+		sqlCount.append(sqlWhere);
+		sql.append(sqlWhere);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", xsth.getBmbh());
+
+		if(xsth.getSearch() != null){
+			sql.append(" and w.khmc like ?");
+			sqlCount.append(" and w.khmc like ?");
+			params.put(String.valueOf(params.size()), "%" + xsth.getSearch() + "%");
+		}
+
+		List<Xsth> results = new ArrayList<Xsth>();
+		Xsth t;
+		List<Object[]> tXsths = xsthDao.findBySQL(sql.toString(), params, xsth.getPage(), xsth.getRows());
+		if (tXsths != null && tXsths.size() > 0){
+			for (Object[] tXsth : tXsths) {
+				t = new Xsth();
+				t.setXsthlsh(tXsth[2].toString());
+				t.setCreateTime(DateUtil.stringToDate(tXsth[3].toString(), DateUtil.DATETIME_PATTERN));
+				t.setKhbh(tXsth[4].toString());
+				t.setKhmc(tXsth[5].toString());
+				t.setYwymc(tXsth[6].toString());
+				t.setShdz(tXsth[7].toString());
+				t.setBz(tXsth[8].toString());
+				t.setHjsl(new BigDecimal(tXsth[9].toString()));
+				t.setCarNum(tXsth[10].toString());
+				results.add(t);
+			}
+		}
+
+		DataGrid dg = new DataGrid();
+		dg.setTotal(xsthDao.countSQL(sqlCount.toString(), params));
+		dg.setRows(results);
+
+		return dg;
 	}
 
 	@Override

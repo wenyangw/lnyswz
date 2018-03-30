@@ -252,7 +252,7 @@ public class Export {
 		return null;
 	}
 
-	public void createCode(String lsh){
+	public static void createCode(String lsh){
 		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
 		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
 

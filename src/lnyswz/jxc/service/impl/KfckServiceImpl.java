@@ -79,6 +79,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		tKfck.setKfcklsh(lsh);
 		tKfck.setBmmc(depDao.load(TDepartment.class, kfck.getBmbh()).getDepName());
 		tKfck.setIsCj("0");
+		tKfck.setOut("0");
+		tKfck.setSended("0");
+
 		
 		Department dep = new Department();
 		dep.setId(kfck.getBmbh());
@@ -183,7 +186,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		
 		OperalogServiceImpl.addOperalog(kfck.getCreateId(), kfck.getBmbh(), kfck.getMenuId(), tKfck.getKfcklsh(), "生成库房出库", operalogDao);
 
-		Export.createDoc(lsh);
+		if(kfck.getIsFp().equals("1")) {
+			Export.createCode(lsh);
+		}
 
 		Kfck rKfck = new Kfck();
 		rKfck.setKfcklsh(lsh);

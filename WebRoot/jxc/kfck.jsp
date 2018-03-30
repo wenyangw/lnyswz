@@ -271,23 +271,11 @@ $(function(){
             {field:'createTime',title:'时间',align:'center'},
             {field:'khbh',title:'客户编号',align:'center',hidden:true},
             {field:'khmc',title:'客户名称',align:'center'},
-            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
             {field:'ywymc',title:'业务员',align:'center'},
-            {field:'thfs',title:'到货方式',align:'center',
-                formatter : function(value) {
-                    if (value == '1') {
-                        return '自提';
-                    } else {
-                        return '送货';
-                    }
-                }},
-            {field:'thr',title:'提货人',align:'center'},
-            {field:'ch',title:'车号',align:'center'},
             {field:'shdz',title:'送货地址',align:'center'},
-            {field:'bz',title:'备注',align:'center',
-                formatter: function(value){
-                    return lnyw.memo(value, 15);
-                }},
+            {field:'bz',title:'备注',align:'center'},
+            {field:'hjsl',title:'数量',align:'center'},
+            {field:'carNum',title:'车号',align:'center'},
         ]],
         toolbar:'#jxc_kfck_carTb',
     });
@@ -318,10 +306,9 @@ $(function(){
 			}
             if(index == 3){
                 kfck_carDg.datagrid({
-                    url: '${pageContext.request.contextPath}/jxc/xsthAction!datagridDet.action',
+                    url: '${pageContext.request.contextPath}/jxc/xsthAction!xsthCarDg.action',
                     queryParams: {
                         bmbh: jxc_kfck_did,
-                        fromOther: 'fromKfck',
                         ckId: jxc_kfck_ckCombo.combobox('getValue'),
                     },
                 });

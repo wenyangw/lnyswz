@@ -209,6 +209,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			//tXsth.setThfs("1");
 			tXsth.setIsLs("0");
 			tXsth.setFromRk("0");
+			tXsth.setOut("0");
+			tXsth.setSended("0");
 			tXsth.setHjje(hjje);
 			
 			tXsthDets = new HashSet<TXsthDet>();
@@ -1011,6 +1013,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setIsFhth("1");
 		tXsth.setIsLs("0");
 		tXsth.setFromRk("0");
+		tXsth.setOut("0");
+		tXsth.setSended("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
 		//默认均为0
