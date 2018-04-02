@@ -688,6 +688,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			params.put(String.valueOf(params.size()), "%" + xsth.getSearch() + "%");
 		}
 
+		sql.append(" order by w.createTime desc");
 		List<Xsth> results = new ArrayList<Xsth>();
 		Xsth t;
 		List<Object[]> tXsths = xsthDao.findBySQL(sql.toString(), params, xsth.getPage(), xsth.getRows());

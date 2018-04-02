@@ -1321,7 +1321,8 @@ function setCar(lsh){
 				var rows = car_dg.datagrid("getSelections");
 				if(rows.length){
 				    var carIds;
-					if(rows.length == 1){
+
+				    if(rows.length == 1){
 					    carIds = rows[0].id;
 					}else{
                         $.each(rows, function () {
@@ -1332,6 +1333,7 @@ function setCar(lsh){
                             }
                         });
 					}
+					console.info(carIds);
                     $.ajax({
                         url : '${pageContext.request.contextPath}/jxc/carAction!updateCar.action',
                         data : {
@@ -1340,14 +1342,16 @@ function setCar(lsh){
                         },
                         dataType : 'json',
                         success : function(d) {
+                            console.info(d);
                             $.messager.show({
                                 title : '提示',
                                 msg : d.msg
                             });
+                            p.dialog("close");
                         }
                     });
 				}
-				p.dialog("close")
+
             }
         }],
         onLoad : function() {
@@ -1361,28 +1365,31 @@ function setCar(lsh){
                 async: 'false',
                 success : function(d) {
                     cars = d;
+                    car_dg = $('#kfck_car_dg').datagrid({
+                        url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
+                        fit : true,
+                        border : false,
+                        fitColumns: true,
+                        columns:[[
+                            {field:'id',title:'Id',align:'center',checkbox:true},
+                            {field:'carNum',title:'车号',align:'center'},
+                        ]],
+                        onLoadSuccess: function(){
+                            $.each(car_dg.datagrid('getRows'), function(){
+                                var row = this;
+                                if(cars != null) {
+                                    $.each(cars, function () {
+                                        if (this.id == row.id) {
+                                            car_dg.datagrid('checkRow', car_dg.datagrid('getRowIndex', row));
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                    });
                 }
             });
-            car_dg = $('#kfck_car_dg').datagrid({
-                url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
-                fit : true,
-                border : false,
-                fitColumns: true,
-                columns:[[
-                    {field:'id',title:'Id',align:'center',checkbox:true},
-                    {field:'carNum',title:'车号',align:'center'},
-                ]],
-                onLoadSuccess: function(){
-					$.each($(this).datagrid('getRows'), function(){
-					    var row = this;
-					    $.each(cars, function(){
-					        if(this.id == row.id){
-					            car_dg.datagrid('checkRow', car_dg.datagrid('getRowIndex', row));
-							}
-						});
-					});
-                },
-            });
+
         }
     });
 }
