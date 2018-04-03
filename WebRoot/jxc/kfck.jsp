@@ -1292,27 +1292,39 @@ function selectCar(){
         if(rows.length == 1){
             lsh = rows[0].xsthlsh
 		}else{
-            $.each(rows, function () {
-				if(lsh != undefined){
-				    lsh = lnyw.fs('{0},{1}', lsh, this.xsthlsh)
-				}else{
-				    lsh = this.xsthlsh
-				}
+            flag = true;
+            $.each(rows, function(){
+                if(this.carNum != ''){
+                    flag = false;
+                }
             });
+            if(flag){
+				$.each(rows, function () {
+					if(lsh != undefined){
+						lsh = lnyw.fs('{0},{1}', lsh, this.xsthlsh)
+					}else{
+						lsh = this.xsthlsh
+					}
+				});
+            }else{
+                $.messager.alert('警告', '选择多张单据时，必须为未安排车辆！！',  'warning');
+                return;
+            }
 		}
-        setCar(lsh)
+        setCar(lsh, 'datagrid');
+
 	}else{
         $.messager.alert('警告', '请至少选择一条记录进行车辆安排！！',  'warning');
     }
 }
 
-function setCar(lsh){
+function setCar(lsh, source){
     var car_dg;
     var p = $('#jxc_kfck_car_select').dialog({
         title : '选择车辆',
         href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
-        width : 200,
-        height : 300,
+        width : 300,
+        height : 400,
         modal : true,
         buttons: [{
             text:'确定',
@@ -1321,7 +1333,6 @@ function setCar(lsh){
 				var rows = car_dg.datagrid("getSelections");
 				if(rows.length){
 				    var carIds;
-
 				    if(rows.length == 1){
 					    carIds = rows[0].id;
 					}else{
@@ -1333,7 +1344,6 @@ function setCar(lsh){
                             }
                         });
 					}
-					console.info(carIds);
                     $.ajax({
                         url : '${pageContext.request.contextPath}/jxc/carAction!updateCar.action',
                         data : {
@@ -1342,11 +1352,13 @@ function setCar(lsh){
                         },
                         dataType : 'json',
                         success : function(d) {
-                            console.info(d);
                             $.messager.show({
                                 title : '提示',
                                 msg : d.msg
                             });
+                            if(source == 'datagrid'){
+                                kfck_carDg.datagrid('reload');
+                            }
                             p.dialog("close");
                         }
                     });
