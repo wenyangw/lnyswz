@@ -2029,6 +2029,36 @@ function exportXsht(){
 	}
 }
 
+function updateShdz(){
+    var row = xsth_dg.datagrid('getSelected');
+    if(row != undefined){
+		$.messager.prompt('请确认', '是否要修改送货地址？请输入新的送货地址', function(shdz){
+			if (shdz != undefined){
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/xsthAction!updateShdz.action',
+					data : {
+						xsthlsh : row.xsthlsh,
+						shdz: shdz,
+						bmbh : xsth_did,
+						menuId : xsth_menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						xsth_dg.datagrid('reload');
+						xsth_dg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
 
 function printShd(){
 	if(detDg != undefined){
