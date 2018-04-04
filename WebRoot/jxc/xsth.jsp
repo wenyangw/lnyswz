@@ -2044,8 +2044,13 @@ function updateShdz(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						xsth_dg.datagrid('reload');
-						xsth_dg.datagrid('unselectAll');
+						xsth_dg.datagrid('updateRow', {
+						    index: xsth_dg.datagrid('getRowIndex', row),
+							row: {
+						        shdz: shdz
+							}
+						});
+						//xsth_dg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg

@@ -1754,6 +1754,14 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Override
+	public void updateShdz(Xsth xsth) {
+		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
+		tXsth.setShdz(xsth.getShdz());
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), xsth.getXsthlsh(),
+				"修改送货地址", operalogDao);
+	}
+
+	@Override
 	public void updateXsthOut(Xsth xsth) {
 		String thlb = xsth.getXsthlsh().substring(6, 8);
 		TUser tUser = userDao.get(TUser.class, xsth.getCreateId());

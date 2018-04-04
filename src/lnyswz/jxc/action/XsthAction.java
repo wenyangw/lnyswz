@@ -201,6 +201,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		}
 		writeJson(j);
 	}
+
+	/**
+	 * 修改送货地址
+	 */
+	public void updateShdz(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		//xsth.setLockName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateShdz(xsth);
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("修改送货地址成功！");
+		}catch(Exception e){
+			j.setMsg("修改送货地址失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
 	
 	public void toXskp(){
 		writeJson(xsthService.toXskp(xsth));
