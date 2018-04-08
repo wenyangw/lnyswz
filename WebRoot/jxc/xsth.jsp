@@ -2043,6 +2043,7 @@ function updateShdz(){
 						menuId : xsth_menuId,
 					},
 					dataType : 'json',
+					method: 'post',
 					success : function(d) {
 						xsth_dg.datagrid('updateRow', {
 						    index: xsth_dg.datagrid('getRowIndex', row),

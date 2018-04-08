@@ -175,13 +175,20 @@ $(function(){
         		sorter: function(a,b){
         			a = a == undefined ? 0 : a;
         			b = b == undefined ? 0 : b;
-					return (a-b);  
+					return (a-b);
 				}},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'createName',title:'创建人',align:'center'},
-	        {field:'khbh',title:'供应商编号',align:'center',hidden:true},
-	        {field:'khmc',title:'供应商名称',align:'center'},
+	        {field:'thfs',title:'到货方式',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '自提';
+					} else {
+						return '送货';
+					}
+				}},
+	        {field:'khbh',title:'客户编号',align:'center',hidden:true},
+	        {field:'khmc',title:'客户名称',align:'center'},
 	        {field:'ywyId',title:'业务员id',align:'center',hidden:true},
 	        {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
@@ -225,17 +232,10 @@ $(function(){
             	styler:function(){
             		return 'color:red;';
             	}},
-	        {field:'thfs',title:'到货方式',align:'center',
-	        	formatter : function(value) {
-					if (value == '1') {
-						return '自提';
-					} else {
-						return '送货';
-					}
-				}},
 	        {field:'thr',title:'提货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+	        {field:'createName',title:'创建人',align:'center'},
         	{field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -1410,9 +1410,9 @@ function setCar(lsh, source){
 function searchCarInKfck(){
     kfck_carDg.datagrid('load',{
         bmbh: jxc_kfck_did,
-        createTime: $('input[name=createTimeCarInKfck]').val(),
-        search: $('input[name=searchCarInKfck]').val(),
-        fromOther: 'fromKfck'
+        //createTime: $('input[name=createTimeCarInKfck]').val(),
+        search: $('input[name=searchCarInKfck]').val()
+        //fromOther: 'fromKfck'
     });
 }
 //////////////////////////////////////////////以上为车辆安排列表处理代码
@@ -1482,8 +1482,8 @@ function searchCarInKfck(){
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInKfck();">查询</a>
 </div>
 <div id="jxc_kfck_carTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCarInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchCarInKfck" style="width:100px">
+	<%--请输入查询起始日期:<input type="text" name="createTimeCarInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">--%>
+	输入流水号、客户名称：<input type="text" name="searchCarInKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCarInKfck();">查询</a>
 </div>
 

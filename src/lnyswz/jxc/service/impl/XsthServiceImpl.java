@@ -533,12 +533,21 @@ public class XsthServiceImpl implements XsthServiceI {
 					}
 					if(flag){
 						Xsth t = new Xsth();
-						BeanUtils.copyProperties(tXsth, t);
+						t.setXsthlsh(tXsth.getXsthlsh());
+						t.setCreateTime(tXsth.getCreateTime());
+						t.setKhbh(tXsth.getKhbh());
+						t.setKhmc(tXsth.getKhmc());
+						t.setThfs(tXsth.getThfs());
 						List<XsthDet> dets = new ArrayList<XsthDet>();
 						XsthDet det = null;
 						for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
 							det = new XsthDet();
-							BeanUtils.copyProperties(tXsthDet, det);
+							det.setSpbh(tXsthDet.getSpbh());
+							det.setSpmc(tXsthDet.getSpmc());
+							det.setSpcd(tXsthDet.getSpcd());
+							det.setSppp(tXsthDet.getSppp());
+							det.setZjldwmc(tXsthDet.getZjldwmc());
+							det.setZdwsl(tXsthDet.getZdwsl());
 							dets.add(det);
 						}
 						dg.setObj(t);
@@ -571,12 +580,21 @@ public class XsthServiceImpl implements XsthServiceI {
 						}
 						if (flag) {
 							Xsth t = new Xsth();
-							BeanUtils.copyProperties(tKfck, t);
+							t.setXsthlsh(tKfck.getKfcklsh());
+							t.setCreateTime(tKfck.getCreateTime());
+							t.setKhbh(tKfck.getKhbh());
+							t.setKhmc(tKfck.getKhmc());
+							t.setThfs(tKfck.getThfs());
 							List<XsthDet> dets = new ArrayList<XsthDet>();
 							XsthDet det = null;
 							for (TKfckDet tKfckDet : tKfck.getTKfckDets()) {
 								det = new XsthDet();
-								BeanUtils.copyProperties(tKfckDet, det);
+								det.setSpbh(tKfckDet.getSpbh());
+								det.setSpmc(tKfckDet.getSpmc());
+								det.setSpcd(tKfckDet.getSpcd());
+								det.setSppp(tKfckDet.getSppp());
+								det.setZjldwmc(tKfckDet.getZjldwmc());
+								det.setZdwsl(tKfckDet.getZdwsl());
 								dets.add(det);
 							}
 							dg.setObj(t);
@@ -602,20 +620,23 @@ public class XsthServiceImpl implements XsthServiceI {
 		StringBuilder hqlKfck = new StringBuilder("from TKfck t");
 		Map<String, Object> params = new HashMap<String, Object>();
 		if(xsth.getType().equals("out")){
-			hqlXsth.append(" where t.outId = :createId and t.outTime >= :createTime and t.outTime <= :endTime");
-			hqlKfck.append(" where t.outId = :createId and t.outTime >= :createTime and t.outTime <= :endTime");
+			String outHql = " where t.outId = :createId and t.outTime >= :createTime and t.outTime <= :endTime";
+			hqlXsth.append(outHql);
+			hqlKfck.append(outHql);
 		}
 		if(xsth.getType().equals("send")){
-			hqlXsth.append(" where t.sendId = :createId and t.sendTime >= :createTime and t.sendTime <= :endTime");
-			hqlKfck.append(" where t.sendId = :createId and t.sendTime >= :createTime and t.sendTime <= :endTime");
+			String sendHql = " where t.sendId = :createId and t.sendTime >= :createTime and t.sendTime <= :endTime";
+			hqlXsth.append(sendHql);
+			hqlKfck.append(sendHql);
 		}
 		params.put("createId", xsth.getCreateId());
 		params.put("createTime", xsth.getCreateTime());
 		params.put("endTime", xsth.getEndTime());
 
 		if(xsth.getKhmc() != null){
-			hqlXsth.append(" and t.khmc like :khmc");
-			hqlKfck.append(" and t.khmc like :khmc");
+			String khmcHql = " and t.khmc like :khmc";
+			hqlXsth.append(khmcHql);
+			hqlKfck.append(khmcHql);
 			params.put("khmc", "%" + xsth.getKhmc() + "%");
 		}
 
@@ -657,7 +678,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			Set<TXsthDet> tXsthDets = xsthDao.get(TXsth.class, xsth.getXsthlsh()).getTXsthDets();
 			for (TXsthDet tXsthDet : tXsthDets) {
 				t = new Xsth();
-				BeanUtils.copyProperties(tXsthDet, t);
+				t.setSpbh(tXsthDet.getSpbh());
+				t.setSpmc(tXsthDet.getSpmc());
+				t.setSpcd(tXsthDet.getSpcd());
+				t.setSppp(tXsthDet.getSppp());
+				t.setZjldwmc(tXsthDet.getZjldwmc());
+				t.setZdwsl(tXsthDet.getZdwsl());
 				results.add(t);
 			}
 		}
@@ -665,7 +691,12 @@ public class XsthServiceImpl implements XsthServiceI {
 			Set<TKfckDet> tKfckDets = kfckDao.get(TKfck.class, xsth.getXsthlsh()).getTKfckDets();
 			for (TKfckDet tKfckDet : tKfckDets) {
 				t = new Xsth();
-				BeanUtils.copyProperties(tKfckDet, t);
+				t.setSpbh(tKfckDet.getSpbh());
+				t.setSpmc(tKfckDet.getSpmc());
+				t.setSpcd(tKfckDet.getSpcd());
+				t.setSppp(tKfckDet.getSppp());
+				t.setZjldwmc(tKfckDet.getZjldwmc());
+				t.setZdwsl(tKfckDet.getZdwsl());
 				results.add(t);
 			}
 		}
@@ -683,9 +714,11 @@ public class XsthServiceImpl implements XsthServiceI {
 		params.put("0", xsth.getBmbh());
 
 		if(xsth.getSearch() != null){
-			sql.append(" and w.khmc like ?");
-			sqlCount.append(" and w.khmc like ?");
-			params.put(String.valueOf(params.size()), "%" + xsth.getSearch() + "%");
+			String searchStr = " and (w.khmc like ? or w.xsthlsh like ?)";
+			sql.append(searchStr);
+			sqlCount.append(searchStr);
+			params.put("1", "%" + xsth.getSearch() + "%");
+			params.put("2", "%" + xsth.getSearch() + "%");
 		}
 
 		sql.append(" order by w.createTime desc");
