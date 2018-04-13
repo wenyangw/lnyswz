@@ -80,6 +80,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		tXsth.setFromFp("0");
 		tXsth.setOut("0");
 		tXsth.setSended("0");
+		tXsth.setIsFp("0");
 		tXsth.setYysfy(BigDecimal.ZERO);
 
 		//最后一笔未还款销售
@@ -315,11 +316,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getXsthlsh(), 
 				"生成销售提货单", operalogDao);
 
-		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
-		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
+//		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
+//		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
+//
+//		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
+//		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
 
-		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
-		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
+		Export.createCode(lsh);
 
 		Xsth rXsth = new Xsth();
 		rXsth.setXsthlsh(lsh);
@@ -535,6 +538,7 @@ public class XsthServiceImpl implements XsthServiceI {
 						Xsth t = new Xsth();
 						t.setXsthlsh(tXsth.getXsthlsh());
 						t.setCreateTime(tXsth.getCreateTime());
+						t.setBmmc(tXsth.getBmmc());
 						t.setKhbh(tXsth.getKhbh());
 						t.setKhmc(tXsth.getKhmc());
 						t.setThfs(tXsth.getThfs());
@@ -582,6 +586,7 @@ public class XsthServiceImpl implements XsthServiceI {
 							Xsth t = new Xsth();
 							t.setXsthlsh(tKfck.getKfcklsh());
 							t.setCreateTime(tKfck.getCreateTime());
+							t.setBmmc(tKfck.getBmmc());
 							t.setKhbh(tKfck.getKhbh());
 							t.setKhmc(tKfck.getKhmc());
 							t.setThfs(tKfck.getThfs());
@@ -701,6 +706,34 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 		}
 		return results;
+	}
+
+	@Override
+	public DataGrid xsthSpDg(Xsth xsth) {
+		DataGrid datagrid = new DataGrid();
+		String hql = " from TXsth t where t.isCancel = '0' and t.isFh = '0' and t.isZs = '0' and t.bmbh = :bmbh and t.needAudit <> t.isAudit and t.isAudit <> '9'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", xsth.getBmbh());
+
+		String countHql = " select count(*)" + hql;
+		hql += " order by t.createTime desc";
+
+		List<TXsth> l = xsthDao.find(hql, params, xsth.getPage(), xsth.getRows());
+		List<Xsth> nl = new ArrayList<Xsth>();
+		Xsth c = null;
+		for(TXsth t : l){
+			c = new Xsth();
+			BeanUtils.copyProperties(t, c);
+
+			nl.add(c);
+		}
+		datagrid.setTotal(xsthDao.count(countHql, params));
+		datagrid.setRows(nl);
+
+		l.clear();
+		l = null;
+
+		return datagrid;
 	}
 
 	@Override
@@ -1805,6 +1838,13 @@ public class XsthServiceImpl implements XsthServiceI {
 				tXsth.setOutId(xsth.getCreateId());
 				tXsth.setOutName(tUser.getRealName());
 				tXsth.setOutTime(new Date());
+				//自提时，同步更新send
+				if(tXsth.getThfs().equals("1")){
+					tXsth.setSended("1");
+					tXsth.setSendId(xsth.getCreateId());
+					tXsth.setSendName(tUser.getRealName());
+					tXsth.setSendTime(new Date());
+				}
 			}
 			if(xsth.getType().equals("send")) {
 				tXsth.setSended("1");
@@ -1820,6 +1860,12 @@ public class XsthServiceImpl implements XsthServiceI {
 				tKfck.setOutId(xsth.getCreateId());
 				tKfck.setOutName(tUser.getRealName());
 				tKfck.setOutTime(new Date());
+				if(tKfck.getThfs().equals("1")){
+					tKfck.setSended("1");
+					tKfck.setSendId(xsth.getCreateId());
+					tKfck.setSendName(tUser.getRealName());
+					tKfck.setSendTime(new Date());
+				}
 			}
 			if(xsth.getType().equals("send")) {
 				tKfck.setSended("1");

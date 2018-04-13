@@ -88,6 +88,7 @@ public class TXsth implements java.io.Serializable {
 	private Integer sendId;
 	private String sendName;
 	private Date sendTime;
+	private String isFp;
 
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
@@ -104,7 +105,7 @@ public class TXsth implements java.io.Serializable {
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
 			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, BigDecimal yysfy,
 			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
-			Date sendTime, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			Date sendTime, String isFp, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -164,6 +165,7 @@ public class TXsth implements java.io.Serializable {
 		this.sended = sended;
 		this.sendId = sendId;
 		this.sendName = sendName;
+		this.isFp = isFp;
 		this.sendTime = sendTime;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
@@ -734,6 +736,15 @@ public class TXsth implements java.io.Serializable {
 
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
+	}
+
+	@Column(name = "isFp", length = 1)
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)

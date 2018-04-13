@@ -16,6 +16,7 @@ public interface XsthServiceI {
 	public Xsth save(Xsth xsth);
 	public void cancelXsth(Xsth xsth);
 	public DataGrid datagrid(Xsth xsth);
+	public DataGrid xsthSpDg(Xsth xsth);
 	public DataGrid detDatagrid(Xsth xsth);
 	public DataGrid toKfck(Xsth xsth);
 	public DataGrid toCgjh(Xsth xsth);

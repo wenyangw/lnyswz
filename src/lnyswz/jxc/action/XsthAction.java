@@ -237,6 +237,12 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		}
 		writeJson(xsthService.datagrid(xsth));
 	}
+
+	public void xsthSpDg(){
+		writeJson(xsthService.xsthSpDg(xsth));
+	}
+
+
 	
 	public void detDatagrid(){
 		writeJson(xsthService.detDatagrid(xsth));

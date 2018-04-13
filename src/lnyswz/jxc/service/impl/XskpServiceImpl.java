@@ -42,6 +42,7 @@ import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.XskpServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
 import lnyswz.jxc.util.Util;
 
 import org.springframework.beans.BeanUtils;
@@ -1015,6 +1016,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setFromRk("0");
 		tXsth.setOut("0");
 		tXsth.setSended("0");
+		tXsth.setIsFp("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
 		//默认均为0
@@ -1074,6 +1076,8 @@ public class XskpServiceImpl implements XskpServiceI {
 	
 		OperalogServiceImpl.addOperalog(xskp.getCreateId(), xskp.getBmbh(), xskp.getMenuId(), tXsth.getXsthlsh(), 
 				"生成销售提货单", operalogDao);
+
+		Export.createCode(tXsth.getXsthlsh());
 	}
 	
 	/**

@@ -10,6 +10,7 @@ var kfck_spdg;
 var kfck_dg;
 var kfck_xsthDg;
 var kfck_carDg;
+var kfck_xsthSpDg;
 var editIndex = undefined;
 var kfck_tabs;
 
@@ -189,12 +190,14 @@ $(function(){
 				}},
 	        {field:'khbh',title:'客户编号',align:'center',hidden:true},
 	        {field:'khmc',title:'客户名称',align:'center'},
-	        {field:'ywyId',title:'业务员id',align:'center',hidden:true},
-	        {field:'ywymc',title:'业务员',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-	        {field:'ckmc',title:'仓库',align:'center'},
-	        {field:'fhId',title:'分户id',align:'center',hidden:true},
-	        {field:'fhmc',title:'分户',align:'center'},
+            {field:'bz',title:'备注',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+            {field:'bookmc',title:'书名',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
     		{field:'spbh',title:'商品编号',align:'center'},
             {field:'spmc',title:'名称',align:'center'},
             {field:'spcd',title:'产地',align:'center'},
@@ -235,15 +238,13 @@ $(function(){
 	        {field:'thr',title:'提货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
+            {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'createName',title:'创建人',align:'center'},
-        	{field:'bz',title:'备注',align:'center',
-        		formatter: function(value){
-        			return lnyw.memo(value, 15);
-        		}},
-       		{field:'bookmc',title:'书名',align:'center',
-           		formatter: function(value){
-           			return lnyw.memo(value, 15);
-           		}},
+        	{field:'ckId',title:'仓库id',align:'center',hidden:true},
+            {field:'ckmc',title:'仓库',align:'center'},
+            {field:'fhId',title:'分户id',align:'center',hidden:true},
+            {field:'fhmc',title:'分户',align:'center'},
         	{field:'isKp',title:'已开票',align:'center',
         		formatter: function(value){
             		return value == '1' ? '是' : '';
@@ -282,6 +283,108 @@ $(function(){
     lnyw.toolbar(3, kfck_carDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
 
 
+    kfck_xsthSpDg = $('#jxc_kfck_xsthSpDg').datagrid({
+        fit : true,
+        border : false,
+        remoteSort: false,
+// 	    fitColumns: true,
+        pagination : true,
+        pagePosition : 'bottom',
+        pageSize : pageSize,
+        pageList : pageList,
+        columns:[[
+            {field:'needAudit',title:'等级',align:'center',
+                styler: function(value, rowData){
+                    if(rowData.needAudit == rowData.isAudit){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAudit == '9'){
+                        return 'color:red;';
+                    }
+                }},
+            {field:'isAudit',title:'进度',align:'center',
+                styler: function(value, rowData){
+                    if(rowData.needAudit == rowData.isAudit){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAudit == '9'){
+                        return 'color:red;';
+                    }
+                }},
+            {field:'xsthlsh',title:'流水号',align:'center'},
+            {field:'createTime',title:'时间',align:'center'},
+            {field:'thfs',title:'到货方式',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '自提';
+                    } else {
+                        return '送货';
+                    }
+                }},
+            {field:'khbh',title:'客户编号',align:'center',hidden:true},
+            {field:'khmc',title:'客户名称',align:'center'},
+            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
+            {field:'ywymc',title:'业务员',align:'center'},
+            {field:'ckId',title:'仓库id',align:'center',hidden:true},
+            {field:'ckmc',title:'仓库',align:'center'},
+            {field:'fhId',title:'分户id',align:'center',hidden:true},
+            {field:'fhmc',title:'分户',align:'center'},
+            {field:'thr',title:'提货人',align:'center'},
+            {field:'ch',title:'车号',align:'center'},
+            {field:'shdz',title:'送货地址',align:'center'},
+            {field:'createName',title:'创建人',align:'center'},
+            {field:'bz',title:'备注',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+            {field:'bookmc',title:'书名',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+        ]],
+        //toolbar:'#jxc_kfck_xsthTb',
+    });
+    //lnyw.toolbar(2, kfck_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
+
+    kfck_xsthSpDg.datagrid({
+        view: detailview,
+        detailFormatter:function(index, row){
+            return '<div style="padding:2px"><table id="kfck-ddv-' + index + '"></table></div>';
+        },
+        onExpandRow: function(index,row){
+            $('#kfck-ddv-'+index).datagrid({
+                url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
+                fitColumns:true,
+                singleSelect:true,
+                rownumbers:true,
+                loadMsg:'',
+                height:'auto',
+                queryParams: {
+                    xsthlsh: row.xsthlsh,
+                },
+                columns:[[
+                    {field:'spbh',title:'商品编号',width:200,align:'center'},
+                    {field:'spmc',title:'名称',width:100,align:'center'},
+                    {field:'spcd',title:'产地',width:100,align:'center'},
+                    {field:'sppp',title:'品牌',width:100,align:'center'},
+                    {field:'spbz',title:'包装',width:100,align:'center'},
+                    {field:'zjldwmc',title:'单位1',width:100,align:'center'},
+                    {field:'zdwsl',title:'数量1',width:100,align:'center'},
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center'},
+                    {field:'cdwsl',title:'数量2',width:100,align:'center'},
+                ]],
+                onResize:function(){
+                    kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+                },
+                onLoadSuccess:function(){
+                    setTimeout(function(){
+                        kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+                    },0);
+                }
+            });
+            kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+        }
+    });
 
     //选中列表标签后，装载数据
 	kfck_tabs = $('#jxc_kfck_tabs').tabs({
@@ -310,6 +413,15 @@ $(function(){
                     queryParams: {
                         bmbh: jxc_kfck_did,
                         ckId: jxc_kfck_ckCombo.combobox('getValue'),
+                    },
+                });
+            }
+            if(index == 4){
+                kfck_xsthSpDg.datagrid({
+                    url: '${pageContext.request.contextPath}/jxc/xsthAction!xsthSpDg.action',
+                    queryParams: {
+                        bmbh: jxc_kfck_did,
+                        //ckId: jxc_kfck_ckCombo.combobox('getValue'),
                     },
                 });
             }
@@ -1468,6 +1580,9 @@ function searchCarInKfck(){
 	</div>
 	<div title="送货车辆安排" data-options="closable:false" >
 		<table id='jxc_kfck_carDg'></table>
+	</div>
+	<div title="未审批提货列表" data-options="closable:false" >
+		<table id='jxc_kfck_xsthSpDg'></table>
 	</div>
 </div>
 

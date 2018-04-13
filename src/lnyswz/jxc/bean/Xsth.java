@@ -70,6 +70,7 @@ public class Xsth {
 	private Integer sendId;
 	private String sendName;
 	private Date sendTime;
+	private String isFp;
 		
 	private int id;
 	private String spbh;
@@ -531,6 +532,14 @@ public class Xsth {
 
 	public void setSendTime(Date sendTime) {
 		this.sendTime = sendTime;
+	}
+
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
 	}
 
 	public int getId() {

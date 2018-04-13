@@ -158,6 +158,9 @@ public class KfckServiceImpl implements KfckServiceI {
 				}
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
+					if(kfck.getIsFp().equals("1")){
+						xsthDet.getTXsth().setIsFp("1");
+					}
 					if(kfckDet.getSpbh().equals(xsthDet.getSpbh())){
 						BigDecimal wcsl = xsthDet.getZdwsl().subtract(xsthDet.getCksl());
 						BigDecimal cwcsl = xsthDet.getCdwsl().subtract(xsthDet.getCcksl());
