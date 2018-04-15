@@ -165,6 +165,7 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'id',title:'销售提货DetId',align:'center',checkbox:true},
+            {field:'type',title:'状态',align:'center'},
 			{field:'locked',title:'锁定',align:'center',
 				formatter : function(value) {
 					if (value == '1') {

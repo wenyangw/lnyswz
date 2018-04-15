@@ -737,7 +737,8 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Override
-	public DataGrid xsthCarDg(Xsth xsth) {
+	public DataGrid
+	xsthCarDg(Xsth xsth) {
 		StringBuilder sqlCount = new StringBuilder("select count(*)");
 		StringBuilder sql = new StringBuilder("select w.bmbh, w.bmmc, w.xsthlsh, w.createTime, w.khbh, w.khmc, w.ywymc, w.shdz, w.bz, w.hjsl, isnull(s.carNum, '') carNum");
 		String sqlWhere = " from v_wait_car w  left join v_set_car s on w.xsthlsh = s.lsh where w.bmbh = ?";
@@ -1401,9 +1402,6 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263', '21010608') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05'))))))";
 		}
 		
-		
-		
-		
 		if(xsth.getFromOther().equals("fromCgjh")){
 			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0' and t.completed = '0'" ;
 			if(xsth.getBmbh().equals("04")){
@@ -1453,7 +1451,15 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			TXsth tXsth = t.getTXsth();
 			BeanUtils.copyProperties(tXsth, c);
-			
+
+
+			if(xsth.getFromOther().equals("fromKfck")){
+				String sqlStatus = "select dbo.getXsthStatusInfo(xsthlsh) from t_xsth where xsthlsh = ?";
+				Map<String, Object> paramsStatus = new HashMap<String, Object>();
+				paramsStatus.put("0", tXsth.getXsthlsh());
+				c.setType(detDao.getBySQL(sqlStatus, paramsStatus).toString());
+
+			}
 			if(t.getTXskps() != null && t.getTXskps().size() > 0){
 				c.setIsKp("1");
 			}
