@@ -41,7 +41,7 @@ public interface XsthServiceI {
 	public boolean isLocked(Xsth xsth);
 	public boolean isSaved(Xsth xsth);
 	public DataGrid getXsth(Xsth xsth);
-	public List<Xsth> getXsthOutList(Xsth xsth);
-	public List<Xsth> getXsthOutDetail(Xsth xsth);
+	public DataGrid getXsthOutList(Xsth xsth);
+	public DataGrid getXsthOutDetail(Xsth xsth);
 	public DataGrid xsthCarDg(Xsth xsth);
 }

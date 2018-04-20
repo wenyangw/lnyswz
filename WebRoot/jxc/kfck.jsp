@@ -1089,10 +1089,10 @@ function cjKfck(){
 					}
 					});
 			}else{
-				$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
+				$.messager.alert('警告', '选中的库房出库记录已被冲减，请重新选择！',  'warning');
 			}
 		}else{
-			$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+			$.messager.alert('警告', '选中的库房出库已进行业务入库，不能被冲减，请重新选择！',  'warning');
 		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
@@ -1383,6 +1383,40 @@ function unlockXsth(){
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
+}
+
+function updateOut(){
+    var row = kfck_dg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.out != '1'){
+			$.messager.confirm('请确认', '是否要对选中的提货单进行出库复核？', function(r) {
+				if (r) {
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+						data : {
+							xsthlsh : row.xsthlsh,
+							bmbh: jxc_kfck_did,
+							menuId: jxc_kfck_menuId,
+							type: 'out'
+						},
+						dataType : 'json',
+						success : function(d) {
+							kfck_dg.datagrid('load');
+							kfck_dg.datagrid('unselectAll');
+							$.messager.show({
+								title : '提示',
+								msg : d.msg
+							});
+						},
+					});
+				}
+			});
+        }else{
+            $.messager.alert('警告', '选中的销售提货已进行复核操作，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
 }
 
 function searchXsthInKfck(){

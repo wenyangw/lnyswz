@@ -468,25 +468,29 @@ public class KfckServiceImpl implements KfckServiceI {
 		}
 		String bz = "";
 		if(tXsth != null){
-		bz = tXsth.getXsthlsh() + "/" + tKfck.getBz() + "/";
-		if(tXsth.getYwymc() != null){
-			bz += tXsth.getYwymc().trim();
-		}
-		
-		if("0".equals(tXsth.getThfs())){
-			bz += " 送货：";
-		}else{
-			bz += " 自提：";
-		}
-		if(tXsth.getShdz() != null){
-			bz += " " + tXsth.getShdz();
-		}
-		if(tXsth.getThr() != null){
-			bz += " " + tXsth.getThr();
-		}
-		if(tXsth.getCh() != null){
-			bz += " " + tXsth.getCh();
-		}
+			bz = tXsth.getXsthlsh();
+			if(tKfck.getBz() != null && tKfck.getBz().trim().length() > 0){
+				bz += "/" + tKfck.getBz();
+			}
+
+			if(tXsth.getYwymc() != null){
+				bz += "/" + tXsth.getYwymc().trim();
+			}
+
+			if("0".equals(tXsth.getThfs())){
+				bz += " 送货：";
+			}else{
+				bz += " 自提：";
+			}
+			if(tXsth.getShdz() != null){
+				bz += " " + tXsth.getShdz();
+			}
+			if(tXsth.getThr() != null){
+				bz += " " + tXsth.getThr();
+			}
+			if(tXsth.getCh() != null){
+				bz += " " + tXsth.getCh();
+			}
 		}
 		
 		//Kfrk kfrk = new Kfrk();

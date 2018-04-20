@@ -361,6 +361,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 
 	public void getXsthOutList(){
+
 		writeJson(xsthService.getXsthOutList(xsth));
 	}
 

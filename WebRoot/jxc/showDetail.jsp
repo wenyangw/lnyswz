@@ -104,7 +104,6 @@ function showData(name){
 
 		columns.push(data);
 	}
-	
 
 	show_dg = $('#show_datagrid');
 	show_dg.datagrid({
@@ -174,7 +173,6 @@ function showData(name){
         }
     }
 }
-
 
 function getHeight(){
 	return Math.ceil(($(window).height()) / (12+3) );
@@ -264,10 +262,6 @@ function setPageStyle(height){
 	/******************分页字体**************end**************/  
 }
 
-
-
-
-
 //选择显示时间间隔
 function selectTime(height){
 	var selectTime =  new Array('&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:' + fontPageHeight(height) + 'px;"	>刷新时间</span><select id="selectTime" style="font-size:' + fontPageHeight(height) + 'px;">');
@@ -340,8 +334,6 @@ function reloadJsp(time){
 
 		}
 	}
-	
-	
 }
 
 function checkedShow(name){

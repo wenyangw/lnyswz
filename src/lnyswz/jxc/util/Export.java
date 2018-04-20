@@ -253,9 +253,11 @@ public class Export {
 	}
 
 	public static void createCode(String lsh){
-		BufferedImage qrCode = QrCode.QrcodeImage(lsh);
-		QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
+		//生成二维码
+		//BufferedImage qrCode = QrCode.QrcodeImage(lsh);
+		//QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
 
+		//生成条形码
 		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
 		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
 	}

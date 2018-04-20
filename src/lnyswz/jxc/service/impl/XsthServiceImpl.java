@@ -1,7 +1,6 @@
 package lnyswz.jxc.service.impl;
 
 
-import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
 import lnyswz.jxc.util.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -620,7 +618,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Override
-	public List<Xsth> getXsthOutList(Xsth xsth) {
+	public DataGrid getXsthOutList(Xsth xsth) {
 		StringBuilder hqlXsth = new StringBuilder("from TXsth t");
 		StringBuilder hqlKfck = new StringBuilder("from TKfck t");
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -671,11 +669,20 @@ public class XsthServiceImpl implements XsthServiceI {
 				results.add(t);
 			}
 		}
-		return results;
+
+		DataGrid dg = new DataGrid();
+		if(results.size() > 0){
+			dg.setMsg("");
+			dg.setRows(results);
+		}else{
+			dg.setMsg("没有符合条件的记录");
+		}
+
+		return dg;
 	}
 
 	@Override
-	public List<Xsth> getXsthOutDetail(Xsth xsth) {
+	public DataGrid getXsthOutDetail(Xsth xsth) {
 		List<Xsth> results = new ArrayList<Xsth>();
 		String thlb = xsth.getXsthlsh().substring(6, 8);
 		Xsth t = null;
@@ -705,7 +712,15 @@ public class XsthServiceImpl implements XsthServiceI {
 				results.add(t);
 			}
 		}
-		return results;
+
+		DataGrid dg = new DataGrid();
+		if(results.size() > 0){
+			dg.setMsg("");
+			dg.setRows(results);
+		}else{
+			dg.setMsg("没有符合条件的记录");
+		}
+		return dg;
 	}
 
 	@Override
@@ -740,7 +755,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public DataGrid
 	xsthCarDg(Xsth xsth) {
 		StringBuilder sqlCount = new StringBuilder("select count(*)");
-		StringBuilder sql = new StringBuilder("select w.bmbh, w.bmmc, w.xsthlsh, w.createTime, w.khbh, w.khmc, w.ywymc, w.shdz, w.bz, w.hjsl, isnull(s.carNum, '') carNum");
+		StringBuilder sql = new StringBuilder("select w.bmbh, w.bmmc, w.xsthlsh, w.createTime, w.khbh, w.khmc, w.ywymc, isnull(w.shdz, '') shdz, w.bz, w.hjsl, isnull(s.carNum, '') carNum");
 		String sqlWhere = " from v_wait_car w  left join v_set_car s on w.xsthlsh = s.lsh where w.bmbh = ?";
 		sqlCount.append(sqlWhere);
 		sql.append(sqlWhere);
@@ -1460,6 +1475,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				c.setType(detDao.getBySQL(sqlStatus, paramsStatus).toString());
 
 			}
+
 			if(t.getTXskps() != null && t.getTXskps().size() > 0){
 				c.setIsKp("1");
 			}
