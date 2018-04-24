@@ -179,6 +179,22 @@ $(function(){
         			b = b == undefined ? 0 : b;
 					return (a-b);
 				}},
+            {field:'out',title:'出库',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'sended',title:'收货',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'thfs',title:'到货方式',align:'center',
@@ -1099,6 +1115,95 @@ function cjKfck(){
 	}
 }
 
+function updateKfckOut(){
+    //是否isFp，isCj
+    var row = kfck_dg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.locked == '1'){
+            if(row.out != '1'){
+                $.messager.confirm('请确认', '是否要对选中的出库单进行出库复核？', function(r) {
+                    if (r) {
+                        $.ajax({
+                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+                            data : {
+                                xsthlsh : row.kfcklsh,
+                                bmbh: jxc_kfck_did,
+                                menuId: jxc_kfck_menuId,
+                                type: 'out'
+                            },
+                            dataType : 'json',
+                            success : function(d) {
+                                var updateRow = undefined;
+                                if(row.thfs == '0'){
+                                    updateRow = {out: '1'};
+                                }else{
+                                    updateRow = {out: '1', sended: '1'};
+                                }
+                                kfck_dg.datagrid('updateRow', {
+                                    index: kfck_dg.datagrid('getRowIndex', row),
+                                    row: updateRow
+                                });
+                                $.messager.show({
+                                    title : '提示',
+                                    msg : d.msg
+                                });
+                            },
+                        });
+                    }
+                });
+            }else{
+                $.messager.alert('警告', '选中的出库单已进行复核操作，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的销售提货未锁定，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
+function updateKfckSend(){
+    var row = kfck_dg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.out == '1'){
+            if(row.sended == '0'){
+                $.messager.confirm('请确认', '是否要对选中的出库单进行收货确认？', function(r) {
+                    if (r) {
+                        $.ajax({
+                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+                            data : {
+                                xsthlsh : row.kfcklsh,
+                                bmbh: jxc_kfck_did,
+                                menuId: jxc_kfck_menuId,
+                                type: 'send'
+                            },
+                            dataType : 'json',
+                            success : function(d) {
+                                kfck_dg.datagrid('updateRow', {
+                                    index: kfck_dg.datagrid('getRowIndex', row),
+                                    row: {
+                                        sended: '1'
+                                    }
+                                });
+                                $.messager.show({
+                                    title : '提示',
+                                    msg : d.msg
+                                });
+                            },
+                        });
+                    }
+                });
+            }else{
+                $.messager.alert('警告', '选中的销售提货已进行收货确认操作，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的销售提货未进行出库复核，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
 function searchKfck(){
 	kfck_dg.datagrid('load',{
 		bmbh: jxc_kfck_did,
@@ -1385,34 +1490,88 @@ function unlockXsth(){
 	}
 }
 
-function updateOut(){
-    var row = kfck_dg.datagrid('getSelected');
+function updateXsthOut(){
+    var row = kfck_xsthDg.datagrid('getSelected');
     if (row != undefined) {
-        if(row.out != '1'){
-			$.messager.confirm('请确认', '是否要对选中的提货单进行出库复核？', function(r) {
-				if (r) {
-					$.ajax({
-						url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
-						data : {
-							xsthlsh : row.xsthlsh,
-							bmbh: jxc_kfck_did,
-							menuId: jxc_kfck_menuId,
-							type: 'out'
-						},
-						dataType : 'json',
-						success : function(d) {
-							kfck_dg.datagrid('load');
-							kfck_dg.datagrid('unselectAll');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
-							});
-						},
-					});
-				}
-			});
+        if(row.locked == '1'){
+			if(row.out != '1'){
+				$.messager.confirm('请确认', '是否要对选中的提货单进行出库复核？', function(r) {
+					if (r) {
+						$.ajax({
+							url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+							data : {
+								xsthlsh : row.xsthlsh,
+								bmbh: jxc_kfck_did,
+								menuId: jxc_kfck_menuId,
+								type: 'out'
+							},
+							dataType : 'json',
+							success : function(d) {
+							    var updateRow = undefined;
+							    if(row.thfs == '0'){
+                                    updateRow = {out: '1'};
+                                }else{
+                                    updateRow = {out: '1', sended: '1'};
+                                }
+                                kfck_xsthDg.datagrid('updateRow', {
+                                    index: kfck_xsthDg.datagrid('getRowIndex', row),
+                                    row: updateRow
+                                });
+								$.messager.show({
+									title : '提示',
+									msg : d.msg
+								});
+							},
+						});
+					}
+				});
+			}else{
+				$.messager.alert('警告', '选中的销售提货已进行复核操作，请重新选择！',  'warning');
+			}
         }else{
-            $.messager.alert('警告', '选中的销售提货已进行复核操作，请重新选择！',  'warning');
+            $.messager.alert('警告', '选中的销售提货未锁定，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
+function updateXsthSend(){
+    var row = kfck_xsthDg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.out == '1'){
+            if(row.sended == '0'){
+                $.messager.confirm('请确认', '是否要对选中的提货单进行收货确认？', function(r) {
+                    if (r) {
+                        $.ajax({
+                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+                            data : {
+                                xsthlsh : row.xsthlsh,
+                                bmbh: jxc_kfck_did,
+                                menuId: jxc_kfck_menuId,
+                                type: 'send'
+                            },
+                            dataType : 'json',
+                            success : function(d) {
+                                kfck_xsthDg.datagrid('updateRow', {
+                                    index: kfck_xsthDg.datagrid('getRowIndex', row),
+                                    row: {
+                                        sended: '1'
+                                    }
+                                });
+                                $.messager.show({
+                                    title : '提示',
+                                    msg : d.msg
+                                });
+                            },
+                        });
+                    }
+                });
+            }else{
+                $.messager.alert('警告', '选中的销售提货已进行收货确认操作，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的销售提货未进行出库复核，请重新选择！',  'warning');
         }
     }else{
         $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');

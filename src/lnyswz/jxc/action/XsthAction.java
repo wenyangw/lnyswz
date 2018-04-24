@@ -348,6 +348,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 
 	public void updateXsthOut(){
 		Json j = new Json();
+		User user = (User)session.get("user");
+		if(user != null) {
+			xsth.setCreateId(user.getId());
+		}
 		try{
 			xsthService.updateXsthOut(xsth);
 			//添加成功

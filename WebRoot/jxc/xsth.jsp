@@ -2147,8 +2147,8 @@ function exportShd(){
 										xsthDetIds : xsthDetIds.join(','),
 										cgjhlsh: detRows[0].cgjhlsh,
 										bmbh: xsth_did,
-										xsthlsh: xsthRow.xsthlsh
-										//type: 'rtf'
+										xsthlsh: xsthRow.xsthlsh,
+										type: 'rtf'
 									};
 									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
 								
