@@ -241,7 +241,7 @@ public interface Constant {
 		put("04","");
 		put("05","");
 		put("07","");
-		put("08","");
+		put("08","刘晓川");
 	}};
 	
 	public static final Map<String, String> XSKP_SKR = new HashMap<String, String>(){{

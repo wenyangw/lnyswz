@@ -14,13 +14,15 @@ public class TCar implements java.io.Serializable {
 	private int id;
 	private String carNum;
 	private String driver;
+	private String bmbh;
 
 	public TCar() {
 	}
 
-	public TCar(int id, String carNum, String driver) {
+	public TCar(int id, String carNum, String driver, String bmbh) {
 		this.carNum = carNum;
 		this.driver = driver;
+		this.bmbh = bmbh;
 	}
 
 	@Id
@@ -51,5 +53,14 @@ public class TCar implements java.io.Serializable {
 
 	public void setDriver(String driver) {
 		this.driver = driver;
+	}
+
+	@Column(name = "bmbh", nullable = false, length = 2)
+	public String getBmbh() {
+		return bmbh;
+	}
+
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
 	}
 }

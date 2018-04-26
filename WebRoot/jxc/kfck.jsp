@@ -68,6 +68,30 @@ $(function(){
 	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'fhId',title:'分户id',align:'center',hidden:true},
 	        {field:'fhmc',title:'分户',align:'center'},
+            {field:'isFp',title:'分批',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'out',title:'出库',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'sended',title:'收货',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
 	        {field:'thfs',title:'提货方式',align:'center',
 	        	formatter : function(value) {
 					if (value == '1') {
@@ -79,6 +103,7 @@ $(function(){
 	        {field:'thr',title:'送货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+            {field:'carNum',title:'送货车',align:'center'},
         	{field:'bz',title:'备注',align:'center'},
 //         	{field:'xsthlsh',title:'销售提货流水号',align:'center'},
         	{field:'xsthlshs',title:'销售提货',align:'center',
@@ -255,6 +280,7 @@ $(function(){
 	        {field:'thr',title:'提货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+            {field:'carNum',title:'送货车',align:'center'},
             {field:'ywyId',title:'业务员id',align:'center',hidden:true},
             {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'createName',title:'创建人',align:'center'},
@@ -1119,43 +1145,47 @@ function updateKfckOut(){
     //是否isFp，isCj
     var row = kfck_dg.datagrid('getSelected');
     if (row != undefined) {
-        if(row.locked == '1'){
-            if(row.out != '1'){
-                $.messager.confirm('请确认', '是否要对选中的出库单进行出库复核？', function(r) {
-                    if (r) {
-                        $.ajax({
-                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
-                            data : {
-                                xsthlsh : row.kfcklsh,
-                                bmbh: jxc_kfck_did,
-                                menuId: jxc_kfck_menuId,
-                                type: 'out'
-                            },
-                            dataType : 'json',
-                            success : function(d) {
-                                var updateRow = undefined;
-                                if(row.thfs == '0'){
-                                    updateRow = {out: '1'};
-                                }else{
-                                    updateRow = {out: '1', sended: '1'};
-                                }
-                                kfck_dg.datagrid('updateRow', {
-                                    index: kfck_dg.datagrid('getRowIndex', row),
-                                    row: updateRow
-                                });
-                                $.messager.show({
-                                    title : '提示',
-                                    msg : d.msg
-                                });
-                            },
-                        });
-                    }
-                });
+        if(row.isCj == '0'){
+            if(row.isFp == '1'){
+				if(row.out == '0'){
+					$.messager.confirm('请确认', '是否要对选中的出库单进行出库复核？', function(r) {
+						if (r) {
+							$.ajax({
+								url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+								data : {
+									xsthlsh : row.kfcklsh,
+									bmbh: jxc_kfck_did,
+									menuId: jxc_kfck_menuId,
+									type: 'out'
+								},
+								dataType : 'json',
+								success : function(d) {
+									var updateRow = undefined;
+									if(row.thfs == '0'){
+										updateRow = {out: '1'};
+									}else{
+										updateRow = {out: '1', sended: '1'};
+									}
+									kfck_dg.datagrid('updateRow', {
+										index: kfck_dg.datagrid('getRowIndex', row),
+										row: updateRow
+									});
+									$.messager.show({
+										title : '提示',
+										msg : d.msg
+									});
+								},
+							});
+						}
+					});
+				}else{
+					$.messager.alert('警告', '选中的出库单已进行复核操作，请重新选择！',  'warning');
+				}
             }else{
-                $.messager.alert('警告', '选中的出库单已进行复核操作，请重新选择！',  'warning');
+                $.messager.alert('警告', '选中的出库单不是分批出库单，请重新选择！',  'warning');
             }
         }else{
-            $.messager.alert('警告', '选中的销售提货未锁定，请重新选择！',  'warning');
+            $.messager.alert('警告', '选中的出库单已冲减，请重新选择！',  'warning');
         }
     }else{
         $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
@@ -1165,39 +1195,47 @@ function updateKfckOut(){
 function updateKfckSend(){
     var row = kfck_dg.datagrid('getSelected');
     if (row != undefined) {
-        if(row.out == '1'){
-            if(row.sended == '0'){
-                $.messager.confirm('请确认', '是否要对选中的出库单进行收货确认？', function(r) {
-                    if (r) {
-                        $.ajax({
-                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
-                            data : {
-                                xsthlsh : row.kfcklsh,
-                                bmbh: jxc_kfck_did,
-                                menuId: jxc_kfck_menuId,
-                                type: 'send'
-                            },
-                            dataType : 'json',
-                            success : function(d) {
-                                kfck_dg.datagrid('updateRow', {
-                                    index: kfck_dg.datagrid('getRowIndex', row),
-                                    row: {
-                                        sended: '1'
-                                    }
-                                });
-                                $.messager.show({
-                                    title : '提示',
-                                    msg : d.msg
-                                });
-                            },
-                        });
-                    }
-                });
+        if(row.isCj	== '0'){
+            if(row.isFp	== '1'){
+				if(row.out == '1'){
+					if(row.sended == '0'){
+						$.messager.confirm('请确认', '是否要对选中的出库单进行收货确认？', function(r) {
+							if (r) {
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+									data : {
+										xsthlsh : row.kfcklsh,
+										bmbh: jxc_kfck_did,
+										menuId: jxc_kfck_menuId,
+										type: 'send'
+									},
+									dataType : 'json',
+									success : function(d) {
+										kfck_dg.datagrid('updateRow', {
+											index: kfck_dg.datagrid('getRowIndex', row),
+											row: {
+												sended: '1'
+											}
+										});
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									},
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选中的出库单已进行收货确认操作，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选中的出库单还未进行出库复核，请重新选择！',  'warning');
+				}
             }else{
-                $.messager.alert('警告', '选中的销售提货已进行收货确认操作，请重新选择！',  'warning');
+                $.messager.alert('警告', '选中的出库单不是分批出库单，请重新选择！',  'warning');
             }
         }else{
-            $.messager.alert('警告', '选中的销售提货未进行出库复核，请重新选择！',  'warning');
+            $.messager.alert('警告', '选中的出库单已冲减，请重新选择！',  'warning');
         }
     }else{
         $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
@@ -1688,6 +1726,9 @@ function setCar(lsh, source){
                         fit : true,
                         border : false,
                         fitColumns: true,
+                        queryParams: {
+                            bmbh: jxc_kfck_did
+                        },
                         columns:[[
                             {field:'id',title:'Id',align:'center',checkbox:true},
                             {field:'carNum',title:'车号',align:'center'},

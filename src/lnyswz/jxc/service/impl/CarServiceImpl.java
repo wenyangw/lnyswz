@@ -62,9 +62,10 @@ public class CarServiceImpl implements CarServiceI {
 
 	@Override
 	public List<Car> listCar(Car car) {
-		String hql = "from TCar t";
+		String hql = "from TCar t where t.bmbh = :bmbh";
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<TCar> l = carDao.find(hql);
+		params.put("bmbh", car.getBmbh());
+		List<TCar> l = carDao.find(hql, params);
 		return changeCar(l);
 	}
 

@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.dao.impl.BaseDaoImpl;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Show;
 import lnyswz.jxc.model.TSp;
@@ -9,9 +10,7 @@ import lnyswz.jxc.service.ShowServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service("showService")
 public class ShowServiceImpl implements ShowServiceI {
@@ -19,12 +18,27 @@ public class ShowServiceImpl implements ShowServiceI {
 
     @Override
     public DataGrid showXsth(Show show) {
+        StringBuilder sqlSb = new StringBuilder();
+        StringBuilder sqlCountSb = new StringBuilder();
+        Map<String, Object> params = new HashMap<String, Object>();
+        sqlSb.append("select ywymc, khmc, xsthlsh, createTime, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime, dbo.getXsthStatus(xsthlsh) statusId");
+        sqlCountSb.append("select count(*)");
+        String where = " from t_xsth where isCancel = '0' and isZs = '0' and needAudit <> '0'";
+        sqlSb.append(where);
+        sqlCountSb.append(where);
+        String bmWhere = null;
+        if(show.getBmbh().equals("01") || show.getBmbh().equals("05")){
+            bmWhere = " and bmbh = ?";
+            params.put("0", show.getBmbh());
+        }else{
+            bmWhere = " and bmbh in ('05', '01')";
+        }
+        sqlSb.append(bmWhere);
+        sqlCountSb.append(bmWhere);
+        sqlSb.append(" order by createTime desc");
 
-        String sql = "select ywymc, khmc, xsthlsh, createTime, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime, dbo.getXsthStatus(xsthlsh) statusId";
-        String where = " from t_xsth where bmbh = '05' and isCancel = '0' and isZs = '0' and YEAR(createTime) = 2018 and needAudit <> '0'";
-        String orderBy = " order by createTime desc";
         List<Show> lists = new ArrayList<Show>();
-        List<Object[]> results = dao.findBySQL(sql + where + orderBy, show.getPage(), show.getRows());
+        List<Object[]> results = dao.findBySQL(sqlSb.toString(), params, show.getPage(), show.getRows());
         Show s = null;
         for (Object[] result : results) {
             s = new Show();
@@ -41,7 +55,7 @@ public class ShowServiceImpl implements ShowServiceI {
 
         DataGrid dg = new DataGrid();
         dg.setRows(lists);
-        dg.setTotal(dao.countBySQL("select count(*)" + where));
+        dg.setTotal(dao.countSQL(sqlCountSb.toString(), params));
 
         return dg;
     }

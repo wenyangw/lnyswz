@@ -38,6 +38,7 @@ public class Kfck{
 	private Date sendTime;
 
 	private String search;
+	private String carNum;
 
 	private String xsthDetIds;
 	private String xsthlshs;
@@ -262,6 +263,15 @@ public class Kfck{
 	public void setSearch(String search) {
 		this.search = search;
 	}
+
+	public String getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(String carNum) {
+		this.carNum = carNum;
+	}
+
 	public String getThfs() {
 		return thfs;
 	}

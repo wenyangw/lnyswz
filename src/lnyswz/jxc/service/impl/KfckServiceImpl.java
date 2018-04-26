@@ -370,6 +370,15 @@ public class KfckServiceImpl implements KfckServiceI {
 				c.setXsthlshs(xsthlshs);
 				
 			}
+
+			if(t.getIsFp().equals("1") && t.getThfs().equals("0")){
+				String sqlCar = "select dbo.getCarNum(?)";
+				Map<String, Object> paramsCar = new HashMap<String, Object>();
+				paramsCar.put("0", t.getKfcklsh());
+
+				Object o = kfckDao.getBySQL(sqlCar, paramsCar);
+				c.setCarNum(o.toString());
+			}
 			
 			nl.add(c);
 			

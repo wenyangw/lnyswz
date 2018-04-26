@@ -7,6 +7,7 @@ public class Car {
     private int id;
     private String carNum;
     private String driver;
+    private String bmbh;
 
     private String lsh;
     private String carIds;
@@ -36,6 +37,14 @@ public class Car {
 
     public void setDriver(String driver) {
         this.driver = driver;
+    }
+
+    public String getBmbh() {
+        return bmbh;
+    }
+
+    public void setBmbh(String bmbh) {
+        this.bmbh = bmbh;
     }
 
     public String getLsh() {

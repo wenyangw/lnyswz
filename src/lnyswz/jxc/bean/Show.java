@@ -10,6 +10,7 @@ public class Show {
 	private String status;
 	private String delayTime;
 	private String statusId;
+	private String bmbh;
 
 	private int page;
 	private int rows;
@@ -69,6 +70,14 @@ public class Show {
 
 	public void setStatusId(String statusId) {
 		this.statusId = statusId;
+	}
+
+	public String getBmbh() {
+		return bmbh;
+	}
+
+	public void setBmbh(String bmbh) {
+		this.bmbh = bmbh;
 	}
 
 	public int getPage() {

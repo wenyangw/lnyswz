@@ -520,16 +520,16 @@ public class XsthServiceImpl implements XsthServiceI {
 				if(tXsth.getIsCancel().equals("0")) {
 					if(xsth.getType().equals("out") && tXsth.getOut().equals("1")) {
 						flag = false;
-						msg.append("单据已确认，请核对输入的流水号！！");
+						msg.append("单据已确认，\n请核对输入的流水号！！");
 					}
 					if(xsth.getType().equals("send")){
 						if(tXsth.getOut().equals("0")) {
 							flag = false;
-							msg.append("单据还未出库复核，请核对输入的流水号！！");
+							msg.append("单据还未出库复核，\n请核对输入的流水号！！");
 						}
 						if(tXsth.getSended().equals("1")) {
 							flag = false;
-							msg.append("单据已确认，请核对输入的流水号！！");
+							msg.append("单据已确认，\n请核对输入的流水号！！");
 						}
 					}
 					if(flag){
@@ -556,10 +556,10 @@ public class XsthServiceImpl implements XsthServiceI {
 						dg.setRows(dets);
 					}
 				}else {
-					msg.append("单据已被冲减，请核对输入的流水号！！");
+					msg.append("单据已被冲减，\n请核对输入的流水号！！");
 				}
 			} else {
-				msg.append("未找到记录，请核对输入的流水号！！");
+				msg.append("未找到记录，\n请核对输入的流水号！！");
 			}
 		}else if(thlb.equals("11")){
 			TKfck tKfck = kfckDao.get(TKfck.class, xsth.getXsthlsh());
@@ -568,16 +568,16 @@ public class XsthServiceImpl implements XsthServiceI {
 					if (tKfck.getIsCj().equals("0")) {
 						if(xsth.getType().equals("out") && tKfck.getOut().equals("1")) {
 							flag = false;
-							msg.append("单据已确认，请核对输入的流水号！！");
+							msg.append("单据已确认，\n请核对输入的流水号！！");
 						}
 						if(xsth.getType().equals("send")){
 							if(tKfck.getOut().equals("0")) {
 								flag = false;
-								msg.append("单据还未出库复核，请核对输入的流水号！！");
+								msg.append("单据还未出库复核，\n请核对输入的流水号！！");
 							}
 							if(tKfck.getSended().equals("1")) {
 								flag = false;
-								msg.append("单据已确认，请核对输入的流水号！！");
+								msg.append("单据已确认，\n请核对输入的流水号！！");
 							}
 						}
 						if (flag) {
@@ -604,13 +604,13 @@ public class XsthServiceImpl implements XsthServiceI {
 							dg.setRows(dets);
 						}
 					} else {
-						msg.append("单据已被冲减，请核对输入的流水号！！");
+						msg.append("单据已被冲减，\n请核对输入的流水号！！");
 					}
 				}else{
-					msg.append("此单据不是出库提货单，请核对输入的流水号！！");
+					msg.append("此单据不是出库提货单，\n请核对输入的流水号！！");
 				}
 			} else {
-				msg.append("未找到记录，请核对输入的流水号！！");
+				msg.append("未找到记录，\n请核对输入的流水号！！");
 			}
 		}
 		dg.setMsg(msg.toString());
@@ -1469,11 +1469,13 @@ public class XsthServiceImpl implements XsthServiceI {
 
 
 			if(xsth.getFromOther().equals("fromKfck")){
-				String sqlStatus = "select dbo.getXsthStatusInfo(xsthlsh) from t_xsth where xsthlsh = ?";
+				String sqlStatus = "select dbo.getXsthStatusInfo(xsthlsh) statusInfo, dbo.getCarNum(xsthlsh) carNum from t_xsth where xsthlsh = ?";
 				Map<String, Object> paramsStatus = new HashMap<String, Object>();
 				paramsStatus.put("0", tXsth.getXsthlsh());
-				c.setType(detDao.getBySQL(sqlStatus, paramsStatus).toString());
-
+				List<Object[]> o = detDao.findBySQL(sqlStatus, paramsStatus);
+				//c.setType(detDao.getBySQL(sqlStatus, paramsStatus).toString());
+				c.setType(o.get(0)[0].toString());
+				c.setCarNum(o.get(0)[1].toString());
 			}
 
 			if(t.getTXskps() != null && t.getTXskps().size() > 0){
