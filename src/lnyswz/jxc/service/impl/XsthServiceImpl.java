@@ -518,42 +518,50 @@ public class XsthServiceImpl implements XsthServiceI {
 			TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
 			if (tXsth != null) {
 				if(tXsth.getIsCancel().equals("0")) {
-					if(xsth.getType().equals("out") && tXsth.getOut().equals("1")) {
-						flag = false;
-						msg.append("单据已确认，\n请核对输入的流水号！！");
-					}
-					if(xsth.getType().equals("send")){
-						if(tXsth.getOut().equals("0")) {
-							flag = false;
-							msg.append("单据还未出库复核，\n请核对输入的流水号！！");
+					if(tXsth.getIsZs().equals("0")) {
+						if(tXsth.getIsFp().equals("0")){
+							if(xsth.getType().equals("out") && tXsth.getOut().equals("1")) {
+								flag = false;
+								msg.append("单据已确认，\n请核对输入的流水号！！");
+							}
+							if(xsth.getType().equals("send")){
+								if(tXsth.getOut().equals("0")) {
+									flag = false;
+									msg.append("单据还未出库复核，\n请核对输入的流水号！！");
+								}
+								if(tXsth.getSended().equals("1")) {
+									flag = false;
+									msg.append("单据已确认，\n请核对输入的流水号！！");
+								}
+							}
+							if(flag){
+								Xsth t = new Xsth();
+								t.setXsthlsh(tXsth.getXsthlsh());
+								t.setCreateTime(tXsth.getCreateTime());
+								t.setBmmc(tXsth.getBmmc());
+								t.setKhbh(tXsth.getKhbh());
+								t.setKhmc(tXsth.getKhmc());
+								t.setThfs(tXsth.getThfs());
+								List<XsthDet> dets = new ArrayList<XsthDet>();
+								XsthDet det = null;
+								for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
+									det = new XsthDet();
+									det.setSpbh(tXsthDet.getSpbh());
+									det.setSpmc(tXsthDet.getSpmc());
+									det.setSpcd(tXsthDet.getSpcd());
+									det.setSppp(tXsthDet.getSppp());
+									det.setZjldwmc(tXsthDet.getZjldwmc());
+									det.setZdwsl(tXsthDet.getZdwsl());
+									dets.add(det);
+								}
+								dg.setObj(t);
+								dg.setRows(dets);
+							}
+						}else {
+							msg.append("单据为分批出库，\n请输入出库单流水号！！");
 						}
-						if(tXsth.getSended().equals("1")) {
-							flag = false;
-							msg.append("单据已确认，\n请核对输入的流水号！！");
-						}
-					}
-					if(flag){
-						Xsth t = new Xsth();
-						t.setXsthlsh(tXsth.getXsthlsh());
-						t.setCreateTime(tXsth.getCreateTime());
-						t.setBmmc(tXsth.getBmmc());
-						t.setKhbh(tXsth.getKhbh());
-						t.setKhmc(tXsth.getKhmc());
-						t.setThfs(tXsth.getThfs());
-						List<XsthDet> dets = new ArrayList<XsthDet>();
-						XsthDet det = null;
-						for (TXsthDet tXsthDet : tXsth.getTXsthDets()) {
-							det = new XsthDet();
-							det.setSpbh(tXsthDet.getSpbh());
-							det.setSpmc(tXsthDet.getSpmc());
-							det.setSpcd(tXsthDet.getSpcd());
-							det.setSppp(tXsthDet.getSppp());
-							det.setZjldwmc(tXsthDet.getZjldwmc());
-							det.setZdwsl(tXsthDet.getZdwsl());
-							dets.add(det);
-						}
-						dg.setObj(t);
-						dg.setRows(dets);
+					}else {
+						msg.append("单据为直送单，\n请核对输入的流水号！！");
 					}
 				}else {
 					msg.append("单据已被冲减，\n请核对输入的流水号！！");
@@ -1890,12 +1898,43 @@ public class XsthServiceImpl implements XsthServiceI {
 					tKfck.setSendName(tUser.getRealName());
 					tKfck.setSendTime(new Date());
 				}
+				//最后一张分批出库后，同步更新对应t_xsth的out，自提要更新send
+				String xsthlsh = tKfck.getTXsths().iterator().next().getTXsth().getXsthlsh();
+				String sqlXsth = "select count(*) from v_xsth_det where out = '0' and zdwsl = cksl and xsthlsh = ?";
+				Map<String, Object> paramsXsth = new HashMap<String, Object>();
+				paramsXsth.put("0", xsthlsh);
+				if(kfckDao.countSQL(sqlXsth, paramsXsth) > 0l){
+					TXsth t = xsthDao.get(TXsth.class, xsthlsh);
+					t.setOut("1");
+					t.setOutId(xsth.getCreateId());
+					t.setOutName(tUser.getRealName());
+					t.setOutTime(new Date());
+					if(t.getThfs().equals("1")){
+						t.setSended("1");
+						t.setSendId(xsth.getCreateId());
+						t.setSendName(tUser.getRealName());
+						t.setSendTime(new Date());
+					}
+				}
 			}
 			if(xsth.getType().equals("send")) {
 				tKfck.setSended("1");
 				tKfck.setSendId(xsth.getCreateId());
 				tKfck.setSendName(tUser.getRealName());
 				tKfck.setSendTime(new Date());
+
+				//最后一张分批到货后，同步更新对应t_xsth的send
+				String xsthlsh = tKfck.getTXsths().iterator().next().getTXsth().getXsthlsh();
+				String sqlXsth = "select count(*) from v_xsth_det where sended = '0' and zdwsl = cksl and xsthlsh = ?";
+				Map<String, Object> paramsXsth = new HashMap<String, Object>();
+				paramsXsth.put("0", xsthlsh);
+				if(kfckDao.countSQL(sqlXsth, paramsXsth) > 0l){
+					TXsth t = xsthDao.get(TXsth.class, xsthlsh);
+					t.setSended("1");
+					t.setSendId(xsth.getCreateId());
+					t.setSendName(tUser.getRealName());
+					t.setSendTime(new Date());
+				}
 			}
 		}
 	}

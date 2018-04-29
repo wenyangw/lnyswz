@@ -19,7 +19,7 @@ public interface Constant {
 	public static final int KHLX_YJ_INC = 30;
 	
 	//发票税率
-	public static final BigDecimal SHUILV = new BigDecimal("0.17");
+	public static final BigDecimal SHUILV = new BigDecimal("0.16");
 	
 	//金穗接口文本存储路径
 	public static final String JS_FILEPATH = "C:/lnyswz/";

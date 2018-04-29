@@ -721,11 +721,15 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	//var hjzdwsl = 0;
+	//var hjzdwthsl = 0;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
+        //hjzdwsl += this.zdwsl;
+        //hjzdwthsl += this.zdwthsl;
 	});
 	var footerRows = kfck_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
@@ -756,7 +760,8 @@ function saveAll(){
 // 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 
     effectRow['isFp'] = $('#jxc_kfck_isFp').is(':checked') ? '1' : '0';
-	
+    //effectRow['isFp'] = hjzdwsl != hjzdwthsl ? '1' : '0';
+
 	effectRow['bmbh'] = jxc_kfck_did;
 	effectRow['lxbh'] = jxc_kfck_lx;
 	effectRow['menuId'] = jxc_kfck_menuId;

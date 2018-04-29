@@ -100,13 +100,13 @@ public class SpServiceImpl implements SpServiceI {
 		if(sp.getDepId().equals("01")) {
 			sql = "select spbh + '~~\"' + spbh + ' ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(sppp) > 0 then '(' + sppp + ')' else '' end + case when len(spbz) > 0 then ' ' + spbz else '' end\n" +
 					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
-					"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					"+ '\"~~~~~~" + Constant.SHUILV + "~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
 					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
 					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
 		}else{
 			sql = "select spbh + '~~\"' + spbh + '  ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(spcd) > 0 then '(' + spcd + ')' else '' end\n" +
 					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
-					"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					"+ '\"~~~~~~" + Constant.SHUILV + "~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
 					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
 					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
 		}

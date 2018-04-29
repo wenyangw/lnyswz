@@ -30,5 +30,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/highcharts-4.1.10/exporting.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/json/json.js"></script>
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20170113"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20180124"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20180428"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20180428"></script>
