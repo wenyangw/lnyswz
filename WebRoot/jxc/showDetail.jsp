@@ -157,7 +157,7 @@ function showData(name){
                 return 'background-color:#ffee00;';
                 break;
             case '04':
-                //return 'background-color:#ffee00;';
+                return 'background-color:red;';
                 break;
             case '05':
                 //return 'background-color:#ffee00;';
@@ -165,14 +165,20 @@ function showData(name){
             case '06':
                 //return 'background-color:#ffee00;';
                 break;
-            case '07':
+            case '31':
                 //return 'background-color:#ffee00;';
                 break;
-            case '08':
+            case '32':
                 return 'background-color:green;';
                 break;
-            case '09':
-                return 'background-color:red;';
+            case '33':
+                return 'background-color:blue;';
+                break;
+            case '38':
+                return 'background-color:green;';
+                break;
+            case '39':
+                return 'background-color:blue;';
                 break;
         }
     }
@@ -341,11 +347,11 @@ function checkedShow(name){
 
     data["showXsth"]= {
         'title': "销售跟踪",
-        'field': ['ywymc', 'khmc', 'xsthlsh', 'createTime', 'status', 'delayTime'],
-        'fieldTitle': ['业务员', '客户', '流水号', '创建时间', '状态', '持续时间'],
+        'field': ['ywymc', 'khmc', 'xsthlsh', 'createTime', 'thfs', 'status', 'delayTime'],
+        'fieldTitle': ['业务员', '客户', '流水号', '创建时间', '方式', '状态', '持续时间'],
         //'halign': ['center', 'center', 'center', 'center', 'center', 'center'],
-        'align': ['', 'center', 'center', '', 'center', ''],
-        'width': [0.1, 0.3, 0.15, 0.18, 0.1, 0.12],
+        'align': ['', 'center', 'center', '', 'center', 'center', ''],
+        'width': [0.1, 0.3, 0.15, 0.15, 0.05, 0.1, 0.10],
         'actionUrl': '/jxc/showAction!showXsth.action'
     }
 

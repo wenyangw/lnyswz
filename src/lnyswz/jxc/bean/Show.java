@@ -7,6 +7,7 @@ public class Show {
 	private String khmc;
 	private String xsthlsh;
 	private Date createTime;
+	private String thfs;
 	private String status;
 	private String delayTime;
 	private String statusId;
@@ -46,6 +47,14 @@ public class Show {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getThfs() {
+		return thfs;
+	}
+
+	public void setThfs(String thfs) {
+		this.thfs = thfs;
 	}
 
 	public String getStatus() {

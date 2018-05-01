@@ -21,17 +21,17 @@ public class ShowServiceImpl implements ShowServiceI {
         StringBuilder sqlSb = new StringBuilder();
         StringBuilder sqlCountSb = new StringBuilder();
         Map<String, Object> params = new HashMap<String, Object>();
-        sqlSb.append("select ywymc, khmc, xsthlsh, createTime, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime, dbo.getXsthStatus(xsthlsh) statusId");
+        sqlSb.append("select ywymc, khmc, xsthlsh, createTime, thfs, dbo.getXsthStatusInfo(xsthlsh) status, dbo.getXsthStatusTime(xsthlsh) delayTime, dbo.getXsthStatus(xsthlsh) statusId");
         sqlCountSb.append("select count(*)");
-        String where = " from t_xsth where isCancel = '0' and isZs = '0' and needAudit <> '0'";
+        String where = " from v_show_xsth";
         sqlSb.append(where);
         sqlCountSb.append(where);
         String bmWhere = null;
         if(show.getBmbh().equals("01") || show.getBmbh().equals("05")){
-            bmWhere = " and bmbh = ?";
+            bmWhere = " where bmbh = ?";
             params.put("0", show.getBmbh());
         }else{
-            bmWhere = " and bmbh in ('05', '01')";
+            bmWhere = " where bmbh in ('05', '01')";
         }
         sqlSb.append(bmWhere);
         sqlCountSb.append(bmWhere);
@@ -45,10 +45,11 @@ public class ShowServiceImpl implements ShowServiceI {
             s.setYwymc(result[0].toString());
             s.setKhmc(result[1].toString());
             s.setXsthlsh(result[2].toString());
-            s.setCreateTime(DateUtil.stringToDate(result[3].toString(), DateUtil.DATETIME_PATTERN));
-            s.setStatus(result[4].toString());
-            s.setDelayTime(result[5].toString());
-            s.setStatusId(result[6].toString());
+            s.setCreateTime(DateUtil.stringToDate(result[3].toString(), DateUtil.DATETIME_NOSECOND_PATTERN));
+            s.setThfs(result[4].toString().equals("0") ? "送货" : "自提");
+            s.setStatus(result[5].toString());
+            s.setDelayTime(result[6].toString());
+            s.setStatusId(result[7].toString());
 
             lists.add(s);
         }
