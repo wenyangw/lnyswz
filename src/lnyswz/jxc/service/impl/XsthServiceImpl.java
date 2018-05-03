@@ -1447,6 +1447,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getFromOther().equals("fromKfck")){
+			if(xsth.getBmbh().equals("05")){
+				hql += " and ckId <> '13'";
+			}
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
 			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			if(!"fh".equals(xsth.getSearch())){
@@ -1473,7 +1476,6 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			TXsth tXsth = t.getTXsth();
 			BeanUtils.copyProperties(tXsth, c);
-
 
 			if(xsth.getFromOther().equals("fromKfck")){
 				String sqlStatus = "select dbo.getXsthStatusInfo(xsthlsh) statusInfo, dbo.getCarNum(xsthlsh) carNum from t_xsth where xsthlsh = ?";

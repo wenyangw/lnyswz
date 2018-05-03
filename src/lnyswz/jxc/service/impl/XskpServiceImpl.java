@@ -212,8 +212,9 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setFromRk("0");
 			tXsth.setOut("0");
 			tXsth.setSended("0");
+			tXsth.setIsFp("0");
 			tXsth.setHjje(hjje);
-			
+
 			tXsthDets = new HashSet<TXsthDet>();
 		}else{
 			tXskp.setIsTh("0");
