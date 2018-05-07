@@ -849,7 +849,17 @@ public class XsthServiceImpl implements XsthServiceI {
 			bz += " " + tXsth.getYwymc().trim();
 		}
 		if("0".equals(tXsth.getThfs())){
-			bz += " 送货：";
+			//已安排车辆
+			String carSql = "select dbo.getCarNum(?)";
+			Map<String, Object> carParams = new HashMap<String, Object>();
+			carParams.put("0", tXsth.getXsthlsh());
+
+			Object carNum = xsthDao.getBySQL(carSql, carParams);
+			if(carNum != null){
+				bz += " 送货：" + carNum.toString();
+			}else{
+				bz += " 送货：";
+			}
 		}else{
 			bz += " 自提：";
 		}
@@ -1267,7 +1277,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			hql += " and (t.createId = :ywyId or t.ywyId = :ywyId)";
 			params.put("ywyId", xsth.getYwyId());
 		}
-		
+
+
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
 		
@@ -1290,6 +1301,16 @@ public class XsthServiceImpl implements XsthServiceI {
 	private Xsth getXsthRow(TXsth t) {
 		Xsth c = new Xsth();
 		BeanUtils.copyProperties(t, c);
+
+		//显示已安排车辆
+		String carSql = "select dbo.getCarNum(?)";
+		Map<String, Object> carParams = new HashMap<String, Object>();
+		carParams.put("0", t.getXsthlsh());
+
+		Object carNum = xsthDao.getBySQL(carSql, carParams);
+		if(carNum != null){
+			c.setCh(carNum.toString());
+		}
 		
 		//默认置0
 		c.setIsTh("0");

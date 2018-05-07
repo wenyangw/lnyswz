@@ -487,7 +487,17 @@ public class KfckServiceImpl implements KfckServiceI {
 			}
 
 			if("0".equals(tXsth.getThfs())){
-				bz += " 送货：";
+				//已安排车辆
+				String carSql = "select dbo.getCarNum(?)";
+				Map<String, Object> carParams = new HashMap<String, Object>();
+				carParams.put("0", tKfck.getKfcklsh());
+
+				Object carNum = kfckDao.getBySQL(carSql, carParams);
+				if(carNum != null){
+					bz += " 送货：" + carNum.toString();
+				}else{
+					bz += " 送货：";
+				}
 			}else{
 				bz += " 自提：";
 			}

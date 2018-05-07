@@ -151,34 +151,36 @@ function showData(name){
                 //return 'background-color:#ffeeff;';
                 break;
             case '02':
-                //return 'background-color:#ffee00;';
+                return 'background-color:#ffffff;';
                 break;
             case '03':
-                return 'background-color:#ffee00;';
+                return 'background-color:#ff66cc;';
+                //return 'background-color:#ffc000;';
                 break;
             case '04':
-                return 'background-color:red;';
+                return 'background-color:#ff0000;color:white;';
                 break;
             case '05':
-                //return 'background-color:#ffee00;';
+                return 'background-color:#bf8f00;';
                 break;
             case '06':
-                //return 'background-color:#ffee00;';
+                return 'background-color:#ffff00;';
                 break;
             case '31':
-                //return 'background-color:#ffee00;';
+                return 'background-color:#ffff00;';
+                //return 'background-color:#f4b084;';
                 break;
             case '32':
-                return 'background-color:green;';
+                return 'background-color:#92D050;';
                 break;
             case '33':
-                return 'background-color:blue;';
+                return 'background-color:#00B0F0;color:white;';
                 break;
             case '38':
-                return 'background-color:green;';
+                return 'background-color:#00B050;color:white;';
                 break;
             case '39':
-                return 'background-color:blue;';
+                return 'background-color:#2F75B5;color:white;';
                 break;
         }
     }
