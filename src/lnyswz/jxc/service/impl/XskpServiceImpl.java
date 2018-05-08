@@ -206,7 +206,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setLocked("0");
 			tXsth.setIsCancel("0");
 			tXsth.setIsFh("1".equals(xskp.getIsFh()) ? "1" : "0");
-			tXsth.setIsFhth("1");
+			tXsth.setIsFhth("0");
 			//tXsth.setThfs("1");
 			tXsth.setIsLs("0");
 			tXsth.setFromRk("0");
@@ -336,6 +336,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setHjsl(hjsl);
 			tXsth.setTXsthDets(tXsthDets);
 			xsthDao.save(tXsth);
+
+			Export.createCode(tXsth.getXsthlsh());
 		}
 		
 		//保存单据

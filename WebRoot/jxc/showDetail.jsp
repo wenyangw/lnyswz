@@ -91,9 +91,10 @@ function showData(name){
         data["title"] = datas.fieldTitle[i];
         data["width"] = window.screen.availWidth * datas.width[i];
         if(datas.align[i] != ''){
-            data["align"] = datas.align[i];
-		}
-        data["halign"] = 'center';
+             data["align"] = datas.align[i]; 
+       
+		}  
+        
         data["formatter"] = function(value, row, index){
 			if(value){
                 //改变表格中内容字体的大小
@@ -126,6 +127,9 @@ function showData(name){
             return 'height:' + height + 'px;';
         },
 	    columns: [columns],
+	    onLoadSuccess:function(data){   
+	    	$('.datagrid-htable').css('text-align', 'center');//标题居中
+	    }
 	});
 	
 	setDatagridHeaderStyle(height);
@@ -238,6 +242,7 @@ function setTitleStyle(height){
 	/******************标题字体**************begin**************/
 	$('.showTopLeft').css('font-size', fontTitleHeight(height) + 'px');
 	$('.showTopRight').css('font-size', fontPageHeight(height) + 'px');
+	$('.showTopRight').css('line-height', height + 'px');
 	/******************标题字体**************end**************/
 }
 
@@ -347,6 +352,18 @@ function reloadJsp(time){
 function checkedShow(name){
 	var data = Object.create(Object.prototype);
 
+	/**
+    data["show"]={
+        'title' : "标题",
+        'field' : ['id', 'ckmc', 'dname' ],  //datagrid列属性
+        'fieldTitle' : ['编号', '仓库名称', '所属部门'],  //datagrid列属性名称
+        'align' : ['left', 'center', ''],  //datagrid每列属性对齐方式，''为默认
+        'width' : [0.1, 0.5, 0.1],  //datagrid每列宽度
+        'actionUrl' : '/jxc/ckAction!datagrid.action',//datagrid数据地址
+        'time' : '13-10-07' //数据开始更换时间，时-分-秒。
+    }
+	 **/
+
     data["showXsth"]= {
         'title': "销售跟踪",
         'field': ['ywymc', 'khmc', 'xsthlsh', 'createTime', 'thfs', 'status', 'delayTime'],
@@ -356,35 +373,6 @@ function checkedShow(name){
         'width': [0.1, 0.3, 0.15, 0.15, 0.05, 0.1, 0.10],
         'actionUrl': '/jxc/showAction!showXsth.action'
     }
-
-	data["ckShow"]={
-		'title' : "销售日报",
-		'field' : ['id', 'ckmc', 'dname', 'ff', 'sdfs', 'fttf', 'sduufs'],
-		'fieldTitle' : ['编号', '仓库名称', '所属部门', 'fff称', '所属dddd部门', 'yyy称', '所uu部门'],
-		'align' : ['left', 'center', 'right', '', '', '', ''],
-		'width' : [0.1, 0.5, 0.1, 0.1, 0.14, 0.15, 0.05],
-		'actionUrl' : '/jxc/ckAction!datagrid.action',
-		'time' : '13-10-07'
-						
-	}
-	data["test"]={
-		'title' : "测试",
-		'field' : ['id', 'ckmc', 'dname', 'test4', 'test3', 'test2', 'test1'],
-		'fieldTitle' : ['编号', '仓库名称', '所属部门', '测试1', '测试2', '测试3', '测试4'],
-		'align' : ['left', 'center', 'right', '', '', '', ''],
-		'width' : [0.1, 0.5, 0.1, 0.1, 0.14, 0.15, 0.05],
-		'actionUrl' : '/jxc/ckAction!datagrid.action',
-		'time':'13-37-07'
-	};
-	data["cc"]={
-		'title' : "cc",
-		'field' : ['id', 'ckmc', 'dname', 'test4', 'test3', 'test2', 'test1'],
-		'fieldTitle' : ['编号', '仓库名称', '所属部门', 'cc1', 'cc2', 'cc3', 'cc4'],
-		'align' : ['left', 'center', 'right', '', '', '', ''],
-		'width' : [0.1, 0.5, 0.1, 0.1, 0.14, 0.15, 0.05],
-		'actionUrl' : '/jxc/ckAction!datagrid.action',
-		'time':'13-37-27'
-	};
 
 	return data[name];
 }
