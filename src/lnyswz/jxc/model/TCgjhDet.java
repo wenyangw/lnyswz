@@ -1,5 +1,8 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_cgjh_det")
+@DynamicUpdate(true)
 public class TCgjhDet implements java.io.Serializable {
 
 	private int id;

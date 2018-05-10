@@ -2217,8 +2217,14 @@ function changeYf(){
 						},
 						dataType : 'json',
 						success : function(d) {
-							xsth_dg.datagrid('reload');
-							xsth_dg.datagrid('unselectAll');
+                            xsth_dg.datagrid('updateRow', {
+                                index: xsth_dg.datagrid('getRowIndex', selected),
+                                row: {
+                                    ysfy: yfje
+                                }
+                            });
+							//xsth_dg.datagrid('reload');
+							//xsth_dg.datagrid('unselectAll');
 							$.messager.show({
 								title : '提示',
 								msg : d.msg
@@ -2260,8 +2266,14 @@ function confirmThsl(){
 												},
 												dataType : 'json',
 												success : function(d) {
-													detDg.datagrid('reload');
-													detDg.datagrid('unselectAll');
+                                                    detDg.datagrid('updateRow', {
+                                                        index: detDg.datagrid('getRowIndex', detRow),
+                                                        row: {
+                                                            thsl: thsl
+                                                        }
+                                                    });
+													//detDg.datagrid('reload');
+													//detDg.datagrid('unselectAll');
 													$.messager.show({
 														title : '提示',
 														msg : d.msg
@@ -2323,8 +2335,14 @@ function completeXsth(){
 													},
 													dataType : 'json',
 													success : function(d) {
-														detDg.datagrid('reload');
-														detDg.datagrid('unselectAll');
+                                                        detDg.datagrid('updateRow', {
+                                                            index: detDg.datagrid('getRowIndex', detRow),
+                                                            row: {
+                                                                completed: '1'
+                                                            }
+                                                        });
+														//detDg.datagrid('reload');
+														//detDg.datagrid('unselectAll');
 														$.messager.show({
 															title : '提示',
 															msg : d.msg

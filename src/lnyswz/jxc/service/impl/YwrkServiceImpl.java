@@ -787,7 +787,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				//xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
 			if(xsdj.compareTo(BigDecimal.ZERO) != 0){
-				xd.setZdwdj(xsdj.multiply(new BigDecimal(1.17)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				xd.setZdwdj(xsdj.multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP));
 				xd.setSpje(xd.getZdwdj().multiply(xd.getZdwsl()).setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
 			

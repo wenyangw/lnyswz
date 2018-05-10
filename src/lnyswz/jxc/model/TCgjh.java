@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,6 +24,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_cgjh")
+@DynamicUpdate(true)
 public class TCgjh implements java.io.Serializable {
 
 	private String cgjhlsh;

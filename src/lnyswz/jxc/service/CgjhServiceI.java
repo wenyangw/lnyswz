@@ -11,6 +11,7 @@ public interface CgjhServiceI {
 	public void updateUnComplete(Cgjh cgjh);
 	public void updateIsHt(Cgjh cgjh);
 	public void updateHt(Cgjh cgjh);
+	void updateShdz(Cgjh cgjh);
 	public void updateLockSpInCgjh(Cgjh cgjh);
 	public void updateBackSpInCgjh(Cgjh cgjh);
 	public DataGrid datagrid(Cgjh cgjh);

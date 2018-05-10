@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_kfck")
+@DynamicUpdate(true)
 public class TKfck implements java.io.Serializable {
 
 	private String kfcklsh;

@@ -1617,8 +1617,14 @@ function completeCgjh(){
 								},
 								dataType : 'json',
 								success : function(d) {
-									cgjh_dg.datagrid('reload');
-									cgjh_dg.datagrid('unselectAll');
+                                    cgjh_dg.datagrid('updateRow', {
+                                        index: cgjh_dg.datagrid('getRowIndex', row),
+                                        row: {
+                                            isCompleted: '1'
+                                        }
+                                    });
+									//cgjh_dg.datagrid('reload');
+									//cgjh_dg.datagrid('unselectAll');
 									$.messager.show({
 										title : '提示',
 										msg : d.msg
@@ -1656,8 +1662,14 @@ function unComplete(){
 						},
 						dataType : 'json',
 						success : function(d) {
-							cgjh_dg.datagrid('reload');
-							cgjh_dg.datagrid('unselectAll');
+                            cgjh_dg.datagrid('updateRow', {
+                                index: cgjh_dg.datagrid('getRowIndex', row),
+                                row: {
+                                    isCompleted: '0'
+                                }
+                            });
+							//cgjh_dg.datagrid('reload');
+							//cgjh_dg.datagrid('unselectAll');
 							$.messager.show({
 								title : '提示',
 								msg : d.msg
@@ -1692,8 +1704,14 @@ function changeHt(){
 								},
 								dataType : 'json',
 								success : function(d) {
-									cgjh_dg.datagrid('reload');
-									cgjh_dg.datagrid('unselectAll');
+                                    cgjh_dg.datagrid('updateRow', {
+                                        index: cgjh_dg.datagrid('getRowIndex', row),
+                                        row: {
+                                            isHt: row.isHt == '1' ? '0' : '1'
+                                        }
+                                    });
+									//cgjh_dg.datagrid('reload');
+									//cgjh_dg.datagrid('unselectAll');
 									$.messager.show({
 										title : '提示',
 										msg : d.msg
@@ -1734,8 +1752,14 @@ function htCgjh(){
 								},
 								dataType : 'json',
 								success : function(d) {
-									cgjh_dg.datagrid('reload');
-									cgjh_dg.datagrid('unselectAll');
+                                    cgjh_dg.datagrid('updateRow', {
+                                        index: cgjh_dg.datagrid('getRowIndex', row),
+                                        row: {
+                                            returnHt: '1'
+                                        }
+                                    });
+								    //cgjh_dg.datagrid('reload');
+									//cgjh_dg.datagrid('unselectAll');
 									$.messager.show({
 										title : '提示',
 										msg : d.msg
@@ -1758,6 +1782,54 @@ function htCgjh(){
 	}
 }
 
+//要判断处理的单据有效性（冲减、开票、直送）
+function updateShdz(){
+    if(cgjh_detDg != undefined){
+        var detRow = cgjh_detDg.datagrid('getSelected');
+        if(detRow != null){
+            if(cgjhRow.isCancel == '0'){
+				$.messager.prompt('请确认', '是否要修改送货地址？请输入', function(shdz){
+					if (shdz != undefined){
+						$.ajax({
+							url : '${pageContext.request.contextPath}/jxc/cgjhAction!updateShdz.action',
+							data : {
+								id : detRow.id,
+								shdz: shdz,
+								bmbh : cgjh_did,
+								menuId : cgjh_menuId
+							},
+							dataType : 'json',
+							method: 'post',
+							success : function(d) {
+								cgjh_detDg.datagrid('updateRow', {
+                                    index: cgjh_detDg.datagrid('getRowIndex', detRow),
+                                    row: {
+                                        shdz: shdz
+                                    }
+								});
+								//cgjh_detDg.datagrid('unselectAll');
+								$.messager.show({
+									title : '提示',
+									msg : d.msg
+								});
+							}
+						});
+					}
+                });
+			}else{
+				$.messager.alert('警告', '选择的采购计划已经取消，请重新选择！',  'warning');
+			}
+        }else{
+            $.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+            return false;
+        }
+    }else{
+        $.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+        return false;
+    }
+
+}
+
 function lockSpInCgjh(){
 	if(cgjh_detDg != undefined){
 		var cgjh_detRow = cgjh_detDg.datagrid('getSelected');
@@ -1777,8 +1849,14 @@ function lockSpInCgjh(){
 									},
 									dataType : 'json',
 									success : function(d) {
-										cgjh_detDg.datagrid('reload');
-										cgjh_detDg.datagrid('unselectAll');
+                                        cgjh_detDg.datagrid('updateRow', {
+                                            index: cgjh_detDg.datagrid('getRowIndex', cgjh_detRow),
+                                            row: {
+                                                isLock: '1'
+                                            }
+                                        });
+										//cgjh_detDg.datagrid('reload');
+										//cgjh_detDg.datagrid('unselectAll');
 										$.messager.show({
 											title : '提示',
 											msg : d.msg
@@ -1825,8 +1903,14 @@ function backSpInCgjh(){
 									},
 									dataType : 'json',
 									success : function(d) {
-										cgjh_detDg.datagrid('reload');
-										cgjh_detDg.datagrid('unselectAll');
+                                        cgjh_detDg.datagrid('updateRow', {
+                                            index: cgjh_detDg.datagrid('getRowIndex', cgjh_detRow),
+                                            row: {
+                                                isBack: '0'
+                                            }
+                                        });
+										//cgjh_detDg.datagrid('reload');
+										//cgjh_detDg.datagrid('unselectAll');
 										$.messager.show({
 											title : '提示',
 											msg : d.msg
@@ -1937,8 +2021,14 @@ function refuseCgxq(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						cgjh_cgxqDg.datagrid('reload');
-						cgjh_cgxqDg.datagrid('unselectAll');
+                        cgjh_cgxqDg.datagrid('updateRow', {
+                            index: cgjh_cgxqDg.datagrid('getRowIndex', row),
+                            row: {
+                                isRefuse: '1'
+                            }
+                        });
+						//cgjh_cgxqDg.datagrid('reload');
+						//cgjh_cgxqDg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg
@@ -1966,8 +2056,14 @@ function completeCgxq(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						cgjh_cgxqDg.datagrid('reload');
-						cgjh_cgxqDg.datagrid('unselectAll');
+                        cgjh_cgxqDg.datagrid('updateRow', {
+                            index: cgjh_cgxqDg.datagrid('getRowIndex', row),
+                            row: {
+                                isComplete: '1'
+                            }
+                        });
+						//cgjh_cgxqDg.datagrid('reload');
+						//cgjh_cgxqDg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',
 							msg : d.msg

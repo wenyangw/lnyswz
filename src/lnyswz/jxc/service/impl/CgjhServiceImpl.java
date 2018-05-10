@@ -281,6 +281,14 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		OperalogServiceImpl.addOperalog(cgjh.getHtId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(), 
 				"采购计划单标记合同收回", operalogDao);
 	}
+
+	@Override
+	public void updateShdz(Cgjh cgjh) {
+		TCgjhDet tCgjhDet = detDao.get(TCgjhDet.class, cgjh.getId());
+		tCgjhDet.setShdz(cgjh.getShdz());
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), String.valueOf(cgjh.getId()),
+				"采购计划修改送货地址", operalogDao);
+	}
 	
 	@Override
 	public void updateLockSpInCgjh(Cgjh cgjh) {

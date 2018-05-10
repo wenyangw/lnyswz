@@ -2110,7 +2110,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		slBean.setName("数量");
 		slBean.setValue(sl.toString());
 		
-		slBean.setXscb(YwzzServiceImpl.getDwcb(xsth.getBmbh(), xsth.getSpbh(), ywzzDao).multiply(new BigDecimal(1.17)).setScale(4, BigDecimal.ROUND_HALF_UP));
+		slBean.setXscb(YwzzServiceImpl.getDwcb(xsth.getBmbh(), xsth.getSpbh(), ywzzDao).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(4, BigDecimal.ROUND_HALF_UP));
 		
 		lists.add(0, slBean);
 		
