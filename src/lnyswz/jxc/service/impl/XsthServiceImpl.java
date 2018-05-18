@@ -1821,34 +1821,40 @@ public class XsthServiceImpl implements XsthServiceI {
 		BigDecimal lsje = BigDecimal.ZERO;
 		
 		TXsthDet tXsthDet = detDao.get(TXsthDet.class, xsth.getId());
-		tXsthDet.setCompleted("1");
-		
-		lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
-		if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
-			csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
+		if(tXsthDet.getCompleted().equals("0")) {
+			tXsthDet.setCompleted("1");
+
+			lsje = tXsthDet.getZdwsl().subtract(tXsthDet.getThsl()).multiply(tXsthDet.getZdwdj());
+			if (tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0) {
+				csl = tXsthDet.getCdwsl().subtract(tXsthDet.getThsl()).divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
+			}
+
+			TXsth tXsth = tXsthDet.getTXsth();
+
+			//只在直送确认完成时有数量更新，不需要进行判断
+			tXsth.setHjje(tXsth.getHjje().add(lsje));
+			tXsth.setHjsl(tXsth.getHjsl().add(csl));
+
+			Department dep = new Department();
+			dep.setId(tXsth.getBmbh());
+			dep.setDepName(tXsth.getBmmc());
+			Kh kh = new Kh();
+			kh.setKhbh(tXsth.getKhbh());
+			kh.setKhmc(tXsth.getKhmc());
+			User ywy = new User();
+			ywy.setId(tXsth.getYwyId());
+			ywy.setRealName(tXsth.getYwymc());
+
+			//更新授信客户应付金额
+			YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
+			OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),
+					"确认直送完成", operalogDao);
+		}else{
+			tXsthDet.setCompleted("0");
+			OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()),
+				"取消直送完成", operalogDao);
 		}
-		
-		TXsth tXsth = tXsthDet.getTXsth();
-		
-		//只在直送确认完成时有数量更新，不需要进行判断
-		tXsth.setHjje(tXsth.getHjje().add(lsje));
-		tXsth.setHjsl(tXsth.getHjsl().add(csl));
-		
-		Department dep = new Department();
-		dep.setId(tXsth.getBmbh());
-		dep.setDepName(tXsth.getBmmc());
-		Kh kh = new Kh();
-		kh.setKhbh(tXsth.getKhbh());
-		kh.setKhmc(tXsth.getKhmc());
-		User ywy = new User();
-		ywy.setId(tXsth.getYwyId());
-		ywy.setRealName(tXsth.getYwymc());
-			
-		//更新授信客户应付金额
-		YszzServiceImpl.updateYszzJe(dep, kh, ywy, lsje, Constant.UPDATE_YS_TH, yszzDao);
-				
-		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), String.valueOf(xsth.getId()), 
-			"确认直送完成", operalogDao);
+
 	}
 	 
 	@Override

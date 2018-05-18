@@ -2317,28 +2317,28 @@ function completeXsth(){
 	if(detDg != undefined){
 		var detRow = detDg.datagrid('getSelected');
 		if(detRow != null){
-			if(detRow.completed == '0'){
+			//if(detRow.completed == '0'){
 				if(xsthRow.isZs == '1'){
 					if(xsthRow.isCancel == '0'){
 						if(xsthRow.needAudit == xsthRow.isAudit){
 							if(xsthRow.isKp == '0'){
 								//if(detRow.cgjhlsh != undefined){
 									if(detRow.thsl != undefined){
-										$.messager.confirm('请确认', '是否要确认直送完成？', function(r) {
+										$.messager.confirm('请确认', detRow.completed == '0' ? '是否要确认直送完成？' : '是否要取消直送完成？', function(r) {
 											if (r) {
 												$.ajax({
 													url : '${pageContext.request.contextPath}/jxc/xsthAction!updateZsComplete.action',
 													data : {
 														id : detRow.id,
 														bmbh : xsth_did,
-														menuId : xsth_menuId,
+														menuId : xsth_menuId
 													},
 													dataType : 'json',
 													success : function(d) {
                                                         detDg.datagrid('updateRow', {
                                                             index: detDg.datagrid('getRowIndex', detRow),
                                                             row: {
-                                                                completed: '1'
+                                                                completed: detRow.completed == '0' ? '1' : '0'
                                                             }
                                                         });
 														//detDg.datagrid('reload');
@@ -2370,9 +2370,9 @@ function completeXsth(){
 				}else{
 					$.messager.alert('警告', '选择的销售提货记录不是直送业务，请重新选择！',  'warning');
 				}
-			}else{
-				$.messager.alert('警告', '选择的销售提货记录已完成，请重新选择！',  'warning');
-			}
+			//}else{
+			//	$.messager.alert('警告', '选择的销售提货记录已完成，请重新选择！',  'warning');
+			//}
 		}else{
 			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 			return false;
