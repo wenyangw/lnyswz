@@ -319,7 +319,7 @@ $(function(){
             {field:'shdz',title:'送货地址',align:'center'},
             {field:'bz',title:'备注',align:'center'},
             {field:'hjsl',title:'数量',align:'center'},
-            {field:'carNum',title:'车号',align:'center'},
+            {field:'carNum',title:'车号',align:'center'}
         ]],
         toolbar:'#jxc_kfck_carTb',
     });
