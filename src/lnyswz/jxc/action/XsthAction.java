@@ -320,7 +320,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		String type = Export.getExportType(xsth.getType());
 		String location = "/export/shqrd_" + xsth.getXsthlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
 		DataGrid dg = xsthService.printShd(xsth);
-		Export.export(dg, Util.getReportName(xsth.getBmbh(), "report_shqr.json"), location, type);
+		Export.export(dg, Util.getReportName(xsth.getBmbh(), "report_shqr_export.json"), location, type);
 		//Export.export(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()), location, type);
 		j.setSuccess(true);
 		j.setObj(location);
