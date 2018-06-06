@@ -1308,7 +1308,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		carParams.put("0", t.getXsthlsh());
 
 		Object carNum = xsthDao.getBySQL(carSql, carParams);
-		if(carNum != null){
+		if(carNum != null && !carNum.equals("")){
 			c.setCh(carNum.toString());
 		}
 		
