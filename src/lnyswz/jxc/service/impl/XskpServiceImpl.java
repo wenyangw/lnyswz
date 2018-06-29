@@ -790,7 +790,11 @@ public class XskpServiceImpl implements XskpServiceI {
 				//head += "\"" + bz.toString() + "\",";
 				head.append("\"" + bz.toString() + "\",");
 				//head += "\"" + Constant.XSKP_FH.get(bmbh) + "\",";
-				head.append("\"" + Constant.XSKP_FH.get(bmbh) + "\",");
+				if(t.getBmbh().equals("04")){
+					head.append("\"" + t.getYwymc() + "\",");
+				}else {
+					head.append("\"" + Constant.XSKP_FH.get(bmbh) + "\",");
+				}
 				//head += "\"" + Constant.XSKP_SKR.get(bmbh) + "\"";
 				head.append("\"" + Constant.XSKP_SKR.get(bmbh) + "\"");
 				lists.add(head.toString());
@@ -1107,7 +1111,11 @@ public class XskpServiceImpl implements XskpServiceI {
 			if(kd.getZhxs().compareTo(BigDecimal.ZERO) != 0){
 				kd.setCdwsl(kd.getZdwsl().divide(kd.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 			}
-			kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(4,BigDecimal.ROUND_HALF_UP));
+			if(tDet.getTXskp().getCreateTime().before(DateUtil.stringToDate("2018-05-01"))){
+				kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1.17")).setScale(4, BigDecimal.ROUND_HALF_UP));
+			}else {
+				kd.setZdwdj(kd.getZdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(4, BigDecimal.ROUND_HALF_UP));
+			}
 			//kd.setCdwdj(kd.getCdwdj().multiply(new BigDecimal("1").add(Constant.SHUILV)).setScale(2,BigDecimal.ROUND_HALF_UP));
 			
 			nl.add(kd);
