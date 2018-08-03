@@ -56,7 +56,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TPrint> printDao;
-
+	private BaseDaoI<TEdited> editedDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -1888,6 +1888,27 @@ public class XsthServiceImpl implements XsthServiceI {
 	}
 
 	@Override
+	public void updateBz(Xsth xsth) {
+		TXsth tXsth = xsthDao.get(TXsth.class, xsth.getXsthlsh());
+
+		Edited edited = new Edited();
+		edited.setCreateId(xsth.getCreateId());
+		edited.setCreateName(userDao.load(TUser.class, xsth.getCreateId()).getRealName());
+		edited.setCreateTime(new Date());
+		edited.setLsh(tXsth.getXsthlsh());
+		edited.setFieldName("bz");
+		edited.setOldValue(tXsth.getBz());
+		edited.setNewValue(xsth.getBz());
+
+		tXsth.setBz(xsth.getBz());
+
+		EditedServiceImpl.addEdited(edited, editedDao);
+
+		OperalogServiceImpl.addOperalog(xsth.getCreateId(), xsth.getBmbh(), xsth.getMenuId(), xsth.getXsthlsh(),
+				"修改备注", operalogDao);
+	}
+
+	@Override
 	public void updateXsthOut(Xsth xsth) {
 		String thlb = xsth.getXsthlsh().substring(6, 8);
 		TUser tUser = userDao.get(TUser.class, xsth.getCreateId());
@@ -2217,6 +2238,11 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Autowired
 	public void setPrintDao(BaseDaoI<TPrint> printDao) {
 		this.printDao = printDao;
+	}
+
+	@Autowired
+	public void setEditedDao(BaseDaoI<TEdited> editedDao) {
+		this.editedDao = editedDao;
 	}
 
 	@Autowired

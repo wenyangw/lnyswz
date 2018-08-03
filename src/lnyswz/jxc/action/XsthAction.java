@@ -221,7 +221,27 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		}
 		writeJson(j);
 	}
-	
+
+
+	/**
+	 * 修改备注
+	 */
+	public void updateBz(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		Json j = new Json();
+		try{
+			xsthService.updateBz(xsth);
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("修改备注成功！");
+		}catch(Exception e){
+			j.setMsg("修改备注失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
 	public void toXskp(){
 		writeJson(xsthService.toXskp(xsth));
 	}

@@ -1017,6 +1017,7 @@ function searchKfrk(){
 	kfrk_dg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeKfrk]').val(),
+        search: $('input[name=searchKfrk]').val()
 	});
 }
 
@@ -1118,7 +1119,7 @@ function searchYwrkInKfrk(){
 <div id="jxc_kfrk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_kfrk_layout' style="height:100%;width=100%">
+        <div id='jxc_kfrk_layout' style="height:100%; width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
@@ -1165,6 +1166,7 @@ function searchYwrkInKfrk(){
 
 <div id="jxc_kfrk_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商名称、备注：<input type="text" name="searchKfrk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfrk();">查询</a>
 </div>
 <div id="jxc_kfrk_cgjhTb" style="padding:3px;height:auto">

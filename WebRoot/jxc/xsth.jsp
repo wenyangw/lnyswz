@@ -2065,6 +2065,42 @@ function updateShdz(){
     }
 }
 
+function updateBz(){
+    var row = xsth_dg.datagrid('getSelected');
+    if(row != undefined){
+        $.messager.prompt('请确认', '是否要修改备注？请输入新的备注', function(bz){
+            if (bz != undefined){
+                $.ajax({
+                    url : '${pageContext.request.contextPath}/jxc/xsthAction!updateBz.action',
+                    data : {
+                        xsthlsh : row.xsthlsh,
+                        bz: bz,
+                        bmbh : xsth_did,
+                        menuId : xsth_menuId,
+                    },
+                    dataType : 'json',
+                    method: 'post',
+                    success : function(d) {
+                        xsth_dg.datagrid('updateRow', {
+                            index: xsth_dg.datagrid('getRowIndex', row),
+                            row: {
+                                bz: bz
+                            }
+                        });
+                        $.messager.show({
+                            title : '提示',
+                            msg : d.msg
+                        });
+                    }
+                });
+            }
+        });
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
+
 
 function printShd(){
 	if(detDg != undefined){
