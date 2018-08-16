@@ -454,6 +454,7 @@ public class KfckServiceImpl implements KfckServiceI {
 	@Override
 	public DataGrid printKfck(Kfck kfck) {
 		DataGrid datagrid = new DataGrid();
+		Export.createCode(kfck.getKfcklsh());
 		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
 		
 		TXsth tXsth = null;

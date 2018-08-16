@@ -1,6 +1,7 @@
 package lnyswz.jxc.service.impl;
 
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -807,6 +808,9 @@ public class XsthServiceImpl implements XsthServiceI {
 	@Override
 	public DataGrid printXsth(Xsth xsth) {
 		DataGrid datagrid = new DataGrid();
+
+		Export.createCode(xsth.getXsthlsh());
+
 		TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
 
 		List<XsthDet> nl = new ArrayList<XsthDet>();

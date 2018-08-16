@@ -2100,8 +2100,6 @@ function updateBz(){
     }
 }
 
-
-
 function printShd(){
 	if(detDg != undefined){
 		var detRows = detDg.datagrid('getSelections');

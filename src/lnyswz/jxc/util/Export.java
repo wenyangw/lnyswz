@@ -258,8 +258,13 @@ public class Export {
 		//QrCode.writeImage(qrCode, Util.getRootPath() + Constant.CODE_PATH + lsh + "z.png");
 
 		//生成条形码
-		ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
-		handler.encode(handler.getEAN13Code(lsh), 210, 60, Util.getRootPath() + Constant.CODE_PATH + lsh + ".png");
+		String fileName = Util.getRootPath() + Constant.CODE_PATH + lsh + ".png";
+
+		File outputFile = new File(fileName);
+		if(!outputFile.exists()){
+			ZxingEAN13EncoderHandler handler = new ZxingEAN13EncoderHandler();
+			handler.encode(handler.getEAN13Code(lsh), 210, 60, fileName);
+		}
 	}
 
 }
