@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,32 +26,6 @@ import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Cgjh;
-import lnyswz.jxc.bean.CgjhDet;
-import lnyswz.jxc.bean.Cgxq;
-import lnyswz.jxc.bean.CgxqDet;
-import lnyswz.jxc.bean.Ywhs;
-import lnyswz.jxc.bean.YwhsDet;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCgxq;
-import lnyswz.jxc.model.TCgxqDet;
-import lnyswz.jxc.model.TCk;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TGys;
-import lnyswz.jxc.model.TJsfs;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TLszz;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TRole;
-import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TUser;
-import lnyswz.jxc.model.TXsthDet;
-import lnyswz.jxc.model.TYwhs;
-import lnyswz.jxc.model.TYwhsDet;
-import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.CgjhServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
@@ -71,6 +47,8 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TLszz> lszzDao;
+	private BaseDaoI<TUser> userDao;
+	private BaseDaoI<TEdited> editedDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -280,6 +258,29 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		tCgjh.setReturnHt("1");
 		OperalogServiceImpl.addOperalog(cgjh.getHtId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(), 
 				"采购计划单标记合同收回", operalogDao);
+	}
+
+	@Override
+	public void updateGys(Cgjh cgjh) {
+		TCgjh tCgjh = cgjhDao.get(TCgjh.class, cgjh.getCgjhlsh());
+
+		Edited edited = new Edited();
+		edited.setCreateId(cgjh.getCreateId());
+		edited.setCreateName(userDao.load(TUser.class, cgjh.getCreateId()).getRealName());
+		edited.setCreateTime(new Date());
+		edited.setLsh(tCgjh.getCgjhlsh());
+		edited.setFieldName("gysbh");
+		edited.setOldValue(tCgjh.getGysbh());
+		edited.setNewValue(cgjh.getGysbh());
+
+		tCgjh.setGysbh(cgjh.getGysbh());
+		tCgjh.setGysmc(cgjh.getGysmc());
+
+		EditedServiceImpl.addEdited(edited, editedDao);
+
+		OperalogServiceImpl.addOperalog(cgjh.getCreateId(), cgjh.getBmbh(), cgjh.getMenuId(), cgjh.getCgjhlsh(),
+				"修改供应商编号", operalogDao);
+
 	}
 
 	@Override
@@ -956,6 +957,16 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Autowired
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
+	}
+
+	@Autowired
+	public void setUserDao(BaseDaoI<TUser> userDao) {
+		this.userDao = userDao;
+	}
+
+	@Autowired
+	public void setEditedDao(BaseDaoI<TEdited> editedDao) {
+		this.editedDao = editedDao;
 	}
 
 	@Autowired

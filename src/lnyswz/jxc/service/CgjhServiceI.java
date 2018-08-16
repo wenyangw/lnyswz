@@ -5,22 +5,23 @@ import lnyswz.jxc.bean.Cgjh;
 
 
 public interface CgjhServiceI {
-	public Cgjh save(Cgjh cgjh);
-	public void updateCancel(Cgjh cgjh);
-	public void updateComplete(Cgjh cgjh);
-	public void updateUnComplete(Cgjh cgjh);
-	public void updateIsHt(Cgjh cgjh);
-	public void updateHt(Cgjh cgjh);
+	Cgjh save(Cgjh cgjh);
+	void updateCancel(Cgjh cgjh);
+	void updateComplete(Cgjh cgjh);
+	void updateUnComplete(Cgjh cgjh);
+	void updateIsHt(Cgjh cgjh);
+	void updateHt(Cgjh cgjh);
+	void updateGys(Cgjh cgjh);
 	void updateShdz(Cgjh cgjh);
-	public void updateLockSpInCgjh(Cgjh cgjh);
-	public void updateBackSpInCgjh(Cgjh cgjh);
-	public DataGrid datagrid(Cgjh cgjh);
-	public DataGrid detDatagrid(Cgjh cgjh);
-	public DataGrid datagridDet(Cgjh cgjh);
-	public DataGrid toKfrk(String cgjhDetIds);
-	public DataGrid getSpkc(Cgjh cgjh);
-	public DataGrid toYwrk(String cgjhDetIds);
-	public DataGrid printCgjh(Cgjh cgjh);
-	public DataGrid detDg(Cgjh cgjh);
-	public DataGrid toCgjhFromCgjh(Cgjh cgjh);
+	void updateLockSpInCgjh(Cgjh cgjh);
+	void updateBackSpInCgjh(Cgjh cgjh);
+	DataGrid datagrid(Cgjh cgjh);
+	DataGrid detDatagrid(Cgjh cgjh);
+	DataGrid datagridDet(Cgjh cgjh);
+	DataGrid toKfrk(String cgjhDetIds);
+	DataGrid getSpkc(Cgjh cgjh);
+	DataGrid toYwrk(String cgjhDetIds);
+	DataGrid printCgjh(Cgjh cgjh);
+	DataGrid detDg(Cgjh cgjh);
+	DataGrid toCgjhFromCgjh(Cgjh cgjh);
 }

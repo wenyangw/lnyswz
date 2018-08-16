@@ -154,6 +154,24 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 	}
 
 	/**
+	 * 采购计划修改供应商信息
+	 */
+	public void updateGys(){
+		User user = (User)session.get("user");
+		cgjh.setCreateId(user.getId());
+		Json j = new Json();
+		try{
+			cgjhService.updateGys(cgjh);
+			j.setSuccess(true);
+			j.setMsg("采购计划修改供应商成功！");
+		}catch(Exception e){
+			j.setMsg("采购计划修改供应商失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
+	/**
 	 * 采购计划修改单品种送货地址
 	 */
 	public void updateShdz(){

@@ -1740,7 +1740,6 @@ function htCgjh(){
 		if(row.isCancel != '1'){
 			if(row.isHt == '1'){
 				if(row.returnHt == '0'){
-				
 					$.messager.confirm('请确认', '您是否要标记选中的采购计划合同标志？', function(r) {
 						if (r) {
 							$.ajax({
@@ -1781,6 +1780,64 @@ function htCgjh(){
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
 	}
 }
+
+function updateGys(){
+    var selected = cgjh_dg.datagrid('getSelected');
+	if(selected != null){
+		if(selected.isCancel == '0'){
+			$.messager.prompt('请确认', '是否要修改供应商？请输入供应商编号：', function(gysbh){
+				if (gysbh != undefined){
+                    $.ajax({
+                        url : '${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
+                        data : {
+                            gysbh: gysbh,
+                        },
+                        dataType : 'json',
+                        method: 'post',
+                        success : function(gys) {
+                            if(gys.success){
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/cgjhAction!updateGys.action',
+									data : {
+										cgjhlsh : selected.cgjhlsh,
+										gysbh: gysbh,
+										gysmc: gys.obj.gysmc,
+										bmbh : cgjh_did,
+										menuId : cgjh_menuId
+									},
+									dataType : 'json',
+									method: 'post',
+									success : function(d) {
+                                        cgjh_dg.datagrid('updateRow', {
+											index: cgjh_dg.datagrid('getRowIndex', selected),
+											row: {
+												gysbh: gysbh,
+												gysmc: gys.obj.gysmc
+											}
+										});
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}
+								});
+							}else{
+                                $.messager.alert('警告', '没有找到对应的供应商名称，请重新录入！',  'warning');
+                                return;
+                            }
+						}
+					});
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选择的采购计划已经取消，请重新选择！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条采购计划进行操作！',  'warning');
+		return false;
+	}
+}
+
 
 //要判断处理的单据有效性（冲减、开票、直送）
 function updateShdz(){
