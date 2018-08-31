@@ -1,6 +1,8 @@
 package lnyswz.jxc.model;
 // Generated 2013-8-14 10:42:53 by Hibernate Tools 4.0.0
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_user")
+@DynamicUpdate(true)
 public class TUser implements java.io.Serializable {
 
 	private int id;

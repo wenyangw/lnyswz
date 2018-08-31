@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_yszz")
+@DynamicUpdate(true)
 public class TYszz implements java.io.Serializable {
 
 	private int id;

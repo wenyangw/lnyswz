@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_message_rec")
+@DynamicUpdate(true)
 public class TMessageRec implements java.io.Serializable {
 
 	private int id;

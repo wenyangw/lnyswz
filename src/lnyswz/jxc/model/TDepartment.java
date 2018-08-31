@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_department")
+@DynamicUpdate(true)
 public class TDepartment implements java.io.Serializable {
 
 	private String id;

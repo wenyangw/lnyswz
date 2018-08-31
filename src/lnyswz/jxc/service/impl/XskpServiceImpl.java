@@ -81,7 +81,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		//获取前台传递的销售提货记录号
 		String xsthDetIds = xskp.getXsthDetIds();
 		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
-		
 
 		//是否需要生成销售提货
 		boolean needXsth = "1".equals(xskp.getNeedXsth());
@@ -95,21 +94,18 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setYfje(BigDecimal.ZERO);
 		tXskp.setXslxId("01");
 		tXskp.setXslxmc("销售");
-		
-		
-		
+		tXskp.setNeedAudit("0");
+		tXskp.setIsAudit("0");
+
 		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
 			tXskp.setHkje(BigDecimal.ZERO);
 		}else{
 			tXskp.setHkje(hjje);
 		}
 		
-		String bmmc = depDao.load(TDepartment.class, xskp.getBmbh()).getDepName();
+		String bmmc = depDao.get(TDepartment.class, xskp.getBmbh()).getDepName();
 		tXskp.setBmmc(bmmc);
 		
-		tXskp.setNeedAudit("0");
-		tXskp.setIsAudit("0");
-	
 		Set<TXsthDet> xsthDets = null;
 		Set<String> thdlshs = null;
 		int[] intDetIds = null;
@@ -918,7 +914,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		map.put("memo", xskplsh);
 		map.put("printName", xskp.getCreateName());
 		map.put("printTime", DateUtil.dateToString(new Date()));
-		map.put("createTime", DateUtil.dateToString(new Date()));
+		map.put("createTime", DateUtil.dateToString(x.getCreateTime()));
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;

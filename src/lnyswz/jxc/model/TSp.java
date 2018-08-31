@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_sp")
+@DynamicUpdate(true)
 public class TSp implements java.io.Serializable {
 
 	private String spbh;
