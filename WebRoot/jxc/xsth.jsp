@@ -1930,7 +1930,7 @@ function exportXsth(){
  		var data = {
  				xsthlsh : selected.xsthlsh,
 				bmbh: xsth_did,
-				//type: 'rtf'
+				type: 'rtf'
 			};
 		jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsth.action', data);
 

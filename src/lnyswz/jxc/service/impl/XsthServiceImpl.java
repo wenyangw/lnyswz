@@ -1198,6 +1198,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		print.setPrintName(xsth.getCreateName());
 		print.setPrintTime(new Date());
 		print.setType(xsth.getType());
+
 		print.setBgyId(xsth.getBgyId());
 
 		PrintServiceImpl.save(print, printDao);
