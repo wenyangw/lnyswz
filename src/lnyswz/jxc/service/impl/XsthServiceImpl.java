@@ -2023,19 +2023,25 @@ public class XsthServiceImpl implements XsthServiceI {
 			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
 				+ " max(thDet.zdwdj) zdwdj, max(thDet.cdwdj) cdwdj,"
 				+ " cast(round(sum(thDet.zdwsl - thDet.kpsl) * max(thDet.zdwdj), 2) as numeric(12, 2))  spje,"
-				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
+				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb,"
+				+ " max(isnull(zzsl.qcsl, 0) + isnull(zzsl.rksl, 0) - isnull(zzsl.xssl, 0)) zmsl"
 				+ " from t_xsth_det thDet "
 				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and "
-				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
+				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null"
+				+ " left join t_ywzz zzsl on thDet.spbh = zzsl.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zzsl.bmbh and "
+				+ " zzsl.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zzsl.ckId = '" + xsth.getCkId() + "'";
 		}else{
 			sql = "select thDet.spbh, isnull(sum(thDet.zdwsl), 0) zdwthsl, isnull(sum(thDet.kpsl), 0) zdwytsl,"
 				+ " convert(numeric(18,4), sum(spje) / sum(thDet.zdwsl)) zdwdj,"
 				+ " convert(numeric(18, 4), case when sum(isnull(thDet.cdwsl, 0)) = 0 then 0 else sum(spje) / sum(thDet.cdwsl) end) cdwdj,"
 				+ " convert(numeric(18, 2), sum(thDet.zdwsl - thDet.kpsl) * (sum(spje) / sum(thDet.zdwsl))) spje,"
-				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb"
+				+ " isnull(sum(thDet.cdwsl), 0) cdwthsl, isnull(sum(thDet.ckpsl), 0) cdwytsl, max(zz.dwcb) dwcb,"
+				+ " max(isnull(zzsl.qcsl, 0) + isnull(zzsl.rksl, 0) - isnull(zzsl.xssl, 0)) zmsl"
 				+ " from t_xsth_det thDet"
 				+ " left join t_ywzz zz on thDet.spbh = zz.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zz.bmbh and"
-				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null";
+				+ " zz.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zz.ckId is null"
+				+ " left join t_ywzz zzsl on thDet.spbh = zzsl.spbh and SUBSTRING(thDet.xsthlsh, 5, 2) = zzsl.bmbh and "
+				+ " zzsl.jzsj = '" + DateUtil.getCurrentDateString("yyyyMM") + "' and zzsl.ckId = '" + xsth.getCkId() + "'";
 		}
 				
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -2061,7 +2067,8 @@ public class XsthServiceImpl implements XsthServiceI {
 			BigDecimal cdwthsl = new BigDecimal(os[6].toString());
 			BigDecimal cdwytsl = new BigDecimal(os[7].toString());
 			BigDecimal dwcb = new BigDecimal(os[8].toString());
-			
+			BigDecimal zmsl = new BigDecimal(os[9].toString());
+
 			BigDecimal spje = sphj.divide(shui, 2, BigDecimal.ROUND_HALF_UP); 
 			
 			TSp sp = spDao.get(TSp.class, spbh);
@@ -2072,6 +2079,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			xd.setZdwthsl(zdwthsl);
 			xd.setZdwytsl(zdwytsl);
 			xd.setDwcb(dwcb);
+			xd.setZmsl(zmsl);
 			if(sp.getCjldw() != null){
 				xd.setCjldwId(sp.getCjldw().getId());
 				xd.setCjldwmc(sp.getCjldw().getJldwmc());
@@ -2100,7 +2108,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		nl.add(new XsthDet());
+
+		TKh tKh = khDao.get(TKh.class, xsth.getKhbh());
+		Kh kh = new Kh();
+		BeanUtils.copyProperties(tKh, kh);
+
 		DataGrid dg = new DataGrid();
+		dg.setObj(kh);
 		dg.setRows(nl);
 		
 		l.clear();

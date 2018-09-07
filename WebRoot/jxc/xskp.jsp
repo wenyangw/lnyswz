@@ -449,6 +449,7 @@ $(function(){
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'dwcb',title:'成本',width:25,align:'center',editor:'text', hidden:true},
+        	{field:'zmsl',title:'账面数量',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -757,12 +758,21 @@ function saveAll(){
 	}
 	var spbhs = undefined;
 	var spbhsZero = undefined;
+	var spbhsBigger = undefined;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
-		
+
+		if(this.zdwsl > this.zmsl){
+            if(spbhsBigger == undefined){
+                spbhsBigger = '' + this.spbh;
+            }else{
+                spbhsBigger += ',' + this.spbh;
+            }
+		}
+
 		if(Number(this.dwcb) == 0){
 			if(spbhsZero == undefined){
 				spbhsZero = '' + this.spbh;
@@ -778,7 +788,13 @@ function saveAll(){
 				spbhs += ',' + this.spbh;
 			}
 		}
+
 	});
+
+    if(spbhsBigger != undefined){
+        $.messager.alert('错误',  '商品(' + spbhsBigger + ')的销售数量大于库存数量，请确认！', 'error');
+        return false;
+    }
 	
  	if(spbhs != undefined || spbhsZero != undefined){
 		var messZero = '';
@@ -788,8 +804,7 @@ function saveAll(){
 		if(spbhsZero != undefined){
 			messZero += '<br>请确认商品(' + spbhsZero + ')库存不为零！';
 		}
-		
-		
+
  		$.messager.confirm('提示', messZero + '<br>是-继续， 否-返回', function(data){
  			if(data){
  				save();	
@@ -1693,14 +1708,19 @@ function generateXskp(){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/xsthAction!toXskp.action',
 						data : {
-							bmbh: xskp_did,							
+							bmbh: xskp_did,
+							ckId: rows[0].ckId,
+							khbh: rows[0].khbh,
 							xsthDetIds : xsthDetStr
 						},
 						dataType : 'json',
 						success : function(d) {
 							$('input[name=khbh]').val(rows[0].khbh);
 							$('input[name=khmc]').val(rows[0].khmc);
-							$('input[name=jxc_xskp_bookmc]').val(rows[rows.length - 1].bookmc);
+                            $('input[name=xskp_sh]').val(d.obj.sh);
+                            $('input[name=xskp_khh]').val(d.obj.khh);
+                            $('input[name=xskp_dzdh]').val(d.obj.dzdh);
+                            $('input[name=jxc_xskp_bookmc]').val(rows[rows.length - 1].bookmc);
 							$('input[name=jxc_xskp_bz]').val(rows[rows.length - 1].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
 							if(rows[0].isFh == '1'){

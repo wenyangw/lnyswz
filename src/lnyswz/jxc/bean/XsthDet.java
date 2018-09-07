@@ -51,8 +51,8 @@ public class XsthDet{
 	private String Shdz;
 	private String Lxr;
 	private BigDecimal dwcb;
+	private BigDecimal zmsl;
 
-	
 	public int getId() {
 		return id;
 	}
@@ -267,6 +267,11 @@ public class XsthDet{
 		this.dwcb = dwcb;
 	}
 
-	
+	public BigDecimal getZmsl() {
+		return zmsl;
+	}
 
+	public void setZmsl(BigDecimal zmsl) {
+		this.zmsl = zmsl;
+	}
 }
