@@ -353,6 +353,16 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		
 		if(ywrk.getFromOther() != null){
+			if(ywrk.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", ywrk.getCreateId());
+				Object cks = ywrkDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0'";
 			if(Constant.YWRK_FROM_YWBT.equals(ywrk.getFromOther())){
 				hql += " and t.rklxId = :rklxId and t.TYwbt is null";
@@ -361,6 +371,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				hql += " and t.isZs = '0' and t.TKfrks is empty";
 			}
 		}else{
+			hql += " and t.createId = :createId";
+			params.put("createId", ywrk.getCreateId());
 			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
 				//hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
 				//params.put("search", "%" + ywrk.getSearch() + "%");

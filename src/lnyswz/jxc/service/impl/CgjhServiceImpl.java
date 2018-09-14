@@ -551,6 +551,17 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		
 		//采购计划流程只查询未完成的有效数据
 		if(cgjh.getFromOther() != null){
+			if(cgjh.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", cgjh.getCreateId());
+				Object cks = cgjhDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.TCgjh.ckId in " + cks.toString();
+				}
+			}
+
 			hql += " and t.TCgjh.isCancel = '0' and t.TCgjh.isCompleted = '0' and needAudit = isAudit";
 			
 			if(cgjh.getFromOther().equals("fromKfrk")){
@@ -568,8 +579,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				hql += " and t.TCgjh.isZs = '0'";
 			}
 		}
-		
-		
+
 		String countHql = "select count(*) " + hql;
 		if(cgjh.getFromOther().equals("fromKfrk")){
 			hql += " order by t.TCgjh.createTime";

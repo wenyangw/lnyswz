@@ -71,6 +71,8 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		kfck.setCreateId(user.getId());
 		writeJson(kfckService.datagrid(kfck));
 	}
 	

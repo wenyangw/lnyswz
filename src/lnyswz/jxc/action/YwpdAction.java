@@ -86,6 +86,8 @@ public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
 	}
 
 	public void datagrid() {
+		User user = (User) session.get("user");
+		ywpd.setCreateId(user.getId());
 		writeJson(ywpdService.datagrid(ywpd));
 	}
 

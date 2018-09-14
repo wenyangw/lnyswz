@@ -398,7 +398,20 @@ public class YwhsServiceImpl implements YwhsServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywhs.getFromOther() != null){
+		if(ywhs.getFromOther() == null) {
+			hql += " and t.createId = :createId";
+			params.put("createId", ywhs.getCreateId());
+		}else{
+			if(ywhs.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", ywhs.getCreateId());
+				Object cks = ywhsDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TKfhs = null and t.fhId = null";
 		}
 		String countHql = " select count(*)" + hql;

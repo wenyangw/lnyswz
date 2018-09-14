@@ -444,7 +444,7 @@ $(function(){
 					queryParams: {
 						bmbh: jxc_kfck_did,
 						fromOther: 'fromKfck',
-						ckId: jxc_kfck_ckCombo.combobox('getValue'),
+						//ckId: jxc_kfck_ckCombo.combobox('getValue'),
 						},
 				});
 			}

@@ -70,6 +70,8 @@ public class KfpdAction extends BaseAction implements ModelDriven<Kfpd> {
 	}
 	
 	public void datagrid() {
+		User user = (User) session.get("user");
+		kfpd.setCreateId(user.getId());
 		writeJson(kfpdService.datagrid(kfpd));
 	}
 

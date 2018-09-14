@@ -155,10 +155,11 @@ public class YwbtServiceImpl implements YwbtServiceI {
 	@Override
 	public DataGrid datagrid(Ywbt ywbt) {
 		DataGrid datagrid = new DataGrid();
-		StringBuilder hql = new StringBuilder(" from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime");
+		StringBuilder hql = new StringBuilder(" from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId");
 		//String hql = " from TYwbt t where t.bmbh = :bmbh and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywbt.getBmbh());
+		params.put("createId", ywbt.getCreateId());
 		if(ywbt.getCreateTime() != null){
 			params.put("createTime", ywbt.getCreateTime()); 
 		}else{

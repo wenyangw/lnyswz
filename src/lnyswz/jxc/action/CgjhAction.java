@@ -262,6 +262,8 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 	}
 	
 	public void datagridDet(){
+		User user = (User)session.get("user");
+		cgjh.setCreateId(user.getId());
 		writeJson(cgjhService.datagridDet(cgjh));
 	}
 	

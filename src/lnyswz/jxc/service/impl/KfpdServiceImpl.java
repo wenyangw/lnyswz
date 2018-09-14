@@ -190,9 +190,10 @@ public class KfpdServiceImpl implements KfpdServiceI {
 	@Override
 	public DataGrid datagrid(Kfpd kfpd) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKfpd t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TKfpd t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", kfpd.getBmbh());
+		params.put("createId", kfpd.getCreateId());
 		if(kfpd.getCreateTime() != null){
 			params.put("createTime", kfpd.getCreateTime()); 
 		}else{

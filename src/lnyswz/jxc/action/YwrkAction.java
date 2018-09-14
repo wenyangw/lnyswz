@@ -129,6 +129,8 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 	}
 	
 	public void datagrid() {
+		User user = (User) session.get("user");
+		ywrk.setCreateId(user.getId());
 		writeJson(ywrkService.datagrid(ywrk));
 	}
 

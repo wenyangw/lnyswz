@@ -276,9 +276,10 @@ public class KfhsServiceImpl implements KfhsServiceI {
 	@Override
 	public DataGrid datagrid(Kfhs kfhs) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKfhs t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TKfhs t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", kfhs.getBmbh());
+		params.put("createId", kfhs.getCreateId());
 		if(kfhs.getCreateTime() != null){
 			params.put("createTime", kfhs.getCreateTime()); 
 		}else{

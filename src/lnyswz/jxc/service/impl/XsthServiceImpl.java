@@ -739,6 +739,17 @@ public class XsthServiceImpl implements XsthServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", xsth.getBmbh());
 
+		if(xsth.getBmbh().equals("05")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", xsth.getCreateId());
+			Object cks = xsthDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				hql += " and t.ckId in " + cks.toString();
+			}
+		}
+
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
 
@@ -765,6 +776,16 @@ public class XsthServiceImpl implements XsthServiceI {
 		StringBuilder sqlCount = new StringBuilder("select count(*)");
 		StringBuilder sql = new StringBuilder("select w.bmbh, w.bmmc, w.xsthlsh, w.createTime, w.khbh, w.khmc, w.ywymc, isnull(w.shdz, '') shdz, w.bz, w.hjsl, isnull(s.carNum, '') carNum");
 		String sqlWhere = " from v_wait_car w  left join v_set_car s on w.xsthlsh = s.lsh where w.bmbh = ?";
+		if(xsth.getBmbh().equals("05")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", xsth.getCreateId());
+			Object cks = xsthDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				sqlWhere += " and w.ckId in " + cks.toString();
+			}
+		}
 		sqlCount.append(sqlWhere);
 		sql.append(sqlWhere);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -1444,12 +1465,23 @@ public class XsthServiceImpl implements XsthServiceI {
 				hql += " and t.TXsth.isAudit = t.TXsth.needAudit";
 			}
 		}
-		
+
+		if(xsth.getBmbh().equals("05") && xsth.getFromOther() != null && !xsth.getFromOther().equals("fromXskp")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", xsth.getCreateId());
+			Object cks = xsthDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				hql += " and t.TXsth.ckId in " + cks.toString();
+			}
+		}
+
 		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
 			//内部销售的不受限制
 			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263', '21010608') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05'))))))";
 		}
-		
+
 		if(xsth.getFromOther().equals("fromCgjh")){
 			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0' and t.completed = '0'" ;
 			if(xsth.getBmbh().equals("04")){
@@ -1473,9 +1505,16 @@ public class XsthServiceImpl implements XsthServiceI {
 		}
 		
 		if(xsth.getFromOther().equals("fromKfck")){
-			if(xsth.getBmbh().equals("05")){
-				hql += " and ckId <> '13'";
-			}
+//			if(xsth.getBmbh().equals("05")){
+//				String ckSql = "select cks from v_zy_cks where createId = ?";
+//				Map<String, Object> ckParams = new HashMap<String, Object>();
+//				ckParams.put("0", xsth.getCreateId());
+//				Object cks = xsthDao.getBySQL(ckSql, ckParams);
+//
+//				if(cks != null){
+//					hql += " and t.TXsth.ckId in " + cks.toString();
+//				}
+//			}
 			//hql += " and t.TXsth.isZs = '0' and ((t.TXsth.isFh = '0' and t.TXsth.isFhth = '0') or (t.TXsth.isFh = '1' and t.TXsth.isFhth = '1'))";
 			hql += " and t.TXsth.isZs = '0' and (t.TXsth.isLs = '1' or t.TXsth.isFhth = '1' or (t.TXsth.isLs = '0' and t.TXsth.isFhth = '0'))";
 			if(!"fh".equals(xsth.getSearch())){

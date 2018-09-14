@@ -69,6 +69,8 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		kfrk.setCreateId(user.getId());
 		writeJson(kfrkService.datagrid(kfrk));
 	}
 	

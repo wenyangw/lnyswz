@@ -262,11 +262,24 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywpd.getBmbh());
 		if(ywpd.getCreateTime() != null){
-			params.put("createTime", ywpd.getCreateTime()); 
+			params.put("createTime", ywpd.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywpd.getFromOther() != null){
+		if(ywpd.getFromOther() == null) {
+			hql += " and t.createId = :createId";
+			params.put("createId", ywpd.getCreateId());
+		}else{
+			if(ywpd.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", ywpd.getCreateId());
+				Object cks = ywpdDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TKfpd = null";
 		}
 		String countHql = " select count(*)" + hql;

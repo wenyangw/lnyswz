@@ -261,6 +261,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
+
 		if(kfrk.getSearch() != null){
 			//hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
 			//params.put("search", "%" + kfrk.getSearch() + "%");
@@ -268,7 +269,20 @@ public class KfrkServiceImpl implements KfrkServiceI {
 					Util.getQueryWhere(kfrk.getSearch(), new String[]{"t.kfrklsh", "t.gysmc", "t.bz"}, params)
 					+ ")";
 		}
-		if(kfrk.getFromOther() != null){
+		if(kfrk.getFromOther() == null) {
+			hql += " and t.createId = :createId";
+			params.put("createId", kfrk.getCreateId());
+		}else{
+			if(kfrk.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", kfrk.getCreateId());
+				Object cks = kfrkDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TYwrk = null";
 		}
 		String countHql = " select count(*)" + hql;

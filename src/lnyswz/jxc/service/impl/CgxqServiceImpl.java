@@ -233,6 +233,17 @@ public class CgxqServiceImpl implements CgxqServiceI {
 		if(cgxq.getFromOther() != null){
 			if(cgxq.getFromOther().equals("fromCgjh")){
 				hql += " and t.isCancel = '0' and t.isRefuse = '0' and cgjhlsh is null and needAudit = isAudit and t.isComplete = '0'";
+				if(cgxq.getBmbh().equals("05")){
+					String ywyStr = "select ywys from v_zy_operators where createId = ?";
+					Map<String, Object> ywyParams = new HashMap<String, Object>();
+					ywyParams.put("0", cgxq.getCreateId());
+					Object ywy = cgxqDao.getBySQL(ywyStr, ywyParams);
+					if(ywy != null) {
+						String ywys = ywy.toString();
+						hql += " and t.TCgxq.createId in " + ywys;
+					}
+				}
+
 			}else if(cgxq.getFromOther().equals("fromYwdb")){
 				hql += " and t.isCancel = '0' and t.isRefuse = '0' and needAudit = isAudit and (t.isDb = '0' and t.zdwsl <> t.dbsl)";
 			}

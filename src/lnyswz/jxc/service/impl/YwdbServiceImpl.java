@@ -222,9 +222,10 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	@Override
 	public DataGrid datagrid(Ywdb ywdb) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywdb.getBmbh());
+		params.put("createId", ywdb.getCreateId());
 		if(ywdb.getCreateTime() != null){
 			params.put("createTime", ywdb.getCreateTime()); 
 		}else{

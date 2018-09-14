@@ -79,6 +79,8 @@ public class KfhsAction extends BaseAction implements ModelDriven<Kfhs> {
 	}
 	
 	public void datagrid() {
+		User user = (User) session.get("user");
+		kfhs.setCreateId(user.getId());
 		writeJson(kfhsService.datagrid(kfhs));
 	}
 

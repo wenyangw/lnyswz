@@ -259,6 +259,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 
 	public void xsthSpDg(){
+		User u = (User)session.get("user");
+		xsth.setCreateId(u.getId());
 		writeJson(xsthService.xsthSpDg(xsth));
 	}
 
@@ -270,7 +272,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void datagridDet(){
 		User u = (User)session.get("user");
-		
+		xsth.setCreateId(u.getId());
 		if("1".equals(u.getIsBgy())){
 			xsth.setBgyId(u.getId());
 		}
@@ -282,8 +284,12 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		xsth.setCreateId(user.getId());
 		xsth.setCreateName(user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
-		
-		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));
+
+		if(xsth.getBmbh().equals("05") && (user.getId() == 19 || user.getId() == 46)){
+			Export.print(dg, Util.getReportName("07", "report_xsth.json"));
+		}else {
+			Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));
+		}
 		//Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
 	}
 	
@@ -395,6 +401,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 
 	public void xsthCarDg(){
+		User u = (User)session.get("user");
+		xsth.setCreateId(u.getId());
 		writeJson(xsthService.xsthCarDg(xsth));
 	}
 

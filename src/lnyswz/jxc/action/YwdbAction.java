@@ -65,6 +65,8 @@ public class YwdbAction extends BaseAction implements ModelDriven<Ywdb>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		ywdb.setCreateId(user.getId());
 		writeJson(ywdbService.datagrid(ywdb));
 	}
 	
