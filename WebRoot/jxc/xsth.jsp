@@ -760,7 +760,7 @@ $(function(){
 		}
 	});
 	
- 	$('input[name=khmc]').change(function(){
+ 	$('input[name=xsth_khmc]').change(function(){
  		loadKh($('input[name=jxc_xsth_khbh]').val().trim());
  		jxc_xsth_ckCombo.combobox('setValue', ($('input#zsCheck').is(':checked') && jxc.cbs(xsth_did).indexOf($('input[name=jxc_xsth_khbh]').val()) < 0) ? jxc.getZfCk(xsth_did) : jxc.getCkByKhbh(xsth_did, $('input[name=jxc_xsth_khbh]').val()));
  		updateJsfs();
@@ -1120,7 +1120,7 @@ function saveXsth(){
 		}
 		
 		effectRow['khbh'] = $('input[name=jxc_xsth_khbh]').val();
-		effectRow['khmc'] = $('input[name=khmc]').val();
+		effectRow['khmc'] = $('input[name=xsth_khmc]').val();
 		effectRow['ckId'] = jxc_xsth_ckCombo.combobox('getValue');
 		effectRow['ckmc'] = jxc_xsth_ckCombo.combobox('getText');
 		effectRow['ywyId'] = jxc_xsth_ywyCombo.combobox('getValue');
@@ -1662,7 +1662,7 @@ function checkKh(){
 			if(!data.success){
 				$.messager.alert('提示', data.msg, 'error');
 				$('input[name=jxc_xsth_khbh]').val('');
-				$('input[name=khmc]').val('');
+				$('input[name=xsth_khmc]').val('');
 				$('input[name=jxc_xsth_khbh]').focus();
 			}
 		}
@@ -1685,7 +1685,7 @@ function loadKh(khbh){
 		success:function(data){
 			if(data.success){
 				//设置信息字段值
-				$('input[name=khmc]').val(data.obj.khmc);
+				$('input[name=xsth_khmc]').val(data.obj.khmc);
 //				$('input[name=sh]').val(data.obj.sh);
 //				$('input[name=khh]').val(data.obj.khh);
 //				$('input[name=dzdh]').val(data.obj.dzdh);
@@ -1704,7 +1704,7 @@ function loadKh(khbh){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', $('input[name=jxc_xsth_khbh]'), $('input[name=khmc]'), $('input[name=jxc_xsth_dist]'), 
+		jxc.query('客户检索', $('input[name=jxc_xsth_khbh]'), $('input[name=xsth_khmc]'), $('input[name=jxc_xsth_dist]'),
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + xsth_did);
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action?isSx=' + isSx + "&depId=" + xsth_did);
@@ -1713,7 +1713,7 @@ function khLoad(){
 		break;
 	default:
 		if($('input[name=jxc_xsth_khbh]').val().trim().length == 0){
-			$('input[name=khmc]').val('');
+			$('input[name=xsth_khmc]').val('');
 		}
 		if($('input[name=jxc_xsth_khbh]').val().trim().length == 8){
 			loadKh($('input[name=jxc_xsth_khbh]').val().trim());
@@ -1764,7 +1764,7 @@ function khShLoad(){
 		break;
 	default:
 		if($('input[name=jxc_xsth_khbh]').val().trim().length == 0){
-			$('input[name=khmc]').val('');
+			$('input[name=xsth_khmc]').val('');
 		}
 		if($('input[name=khbh]').val().trim().length == 8){
 			loadKh($('input[name=jxc_xsth_khbh]').val().trim());
@@ -2481,7 +2481,7 @@ function toXsth(){
 						success : function(d) {
 							xsth_spdg.datagrid('loadData', d.rows);
 							$('input[name=jxc_xsth_khbh]').val(rows[0].khbh);
-							$('input[name=khmc]').val(rows[0].khmc);
+							$('input[name=xsth_khmc]').val(rows[0].khmc);
 							jxc_xsth_ckCombo.combobox("setValue", rows[0].ckId);
 							jxc_xsth_ywyCombo.combobox("setValue", rows[0].ywyId);
 							jxc_xsth_jsfsCombo.combobox("setValue", rows[0].jsfsId);
@@ -2701,7 +2701,7 @@ function searchFydInXsth(){
 					<span class="form_label">客户编号</span>
 					<span><input name="jxc_xsth_khbh" class="easyui-validatebox" data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()" size="6"></span>
 					<span class="form_label">客户名称</span>
-					<span><input name="khmc" readonly="readonly" size="30"></span>
+					<span><input name="xsth_khmc" readonly="readonly" size="30"></span>
 					<span class="form_label">仓库</span>
 					<span><input id="jxc_xsth_ckId" name="jxc_xsth_ckId" size="10"></span>
 					<span class="isFh form_label" style="display:none">分户</span>

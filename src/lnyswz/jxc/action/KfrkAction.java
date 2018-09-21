@@ -70,7 +70,13 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 	
 	public void datagrid(){
 		User user = (User)session.get("user");
-		kfrk.setCreateId(user.getId());
+		//文达纸业鄂姹查看库房入库列表时按胡叶权限查看
+		if(kfrk.getFromOther() == null && kfrk.getBmbh().equals("05") && user.getId() == 79){
+			kfrk.setCreateId(50);
+		}else {
+			kfrk.setCreateId(user.getId());
+		}
+
 		writeJson(kfrkService.datagrid(kfrk));
 	}
 	

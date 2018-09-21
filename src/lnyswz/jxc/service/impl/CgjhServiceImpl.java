@@ -313,6 +313,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Override
 	public DataGrid datagrid(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
+		String cksStr = "";
 		String hql = "from TCgjh t where t.bmbh = :bmbh and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", cgjh.getBmbh());
@@ -320,6 +321,18 @@ public class CgjhServiceImpl implements CgjhServiceI {
 			params.put("createTime", cgjh.getCreateTime()); 
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+
+		if(cgjh.getBmbh().equals("05")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", cgjh.getCreateId());
+			Object cks = cgjhDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				cksStr = " and t.ckId in " + cks.toString();
+				hql += cksStr;
+			}
 		}
 		if(cgjh.getFromOther() != null){
 			hql += " and t.isCancel = '0' and t.isCompleted = '0'";
@@ -354,13 +367,13 @@ public class CgjhServiceImpl implements CgjhServiceI {
 						|| (cgjh.getIsZs().equals("0") && cgjh.getIsNotZs().equals("0"))
 						)){
 					if(cgjh.getIsZs().equals("1")){
-						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1')";
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '1'" + cksStr + ")";
 					}else{
-						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '0')";
+						hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0' and t.isZs = '0'" + cksStr + ")";
 					}
 					
 				}else{
-					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0')";
+					hql += " and t.isCancel = '0' or (t.bmbh = :bmbh and (t.isCompleted = '0' or (t.isHt = '1' and t.returnHt = '0')) and t.isCancel = '0'" + cksStr + ")";
 				}
 			}
 		}

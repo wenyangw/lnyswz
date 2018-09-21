@@ -275,8 +275,18 @@ public class YwshServiceImpl implements YwshServiceI {
 		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
-				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and a.ywlxId = SUBSTRING(th.xsthlsh, 7, 2)"
-				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and a.ywlxId = SUBSTRING(th.xsthlsh, 7, 2)";
+		if(ywsh.getBmbh().equals("05")){
+			String ywyStr = "select ywys from v_zy_operators where createId = ?";
+			Map<String, Object> ywyParams = new HashMap<String, Object>();
+			ywyParams.put("0", ywsh.getCreateId());
+			Object ywy = ywshDao.getBySQL(ywyStr, ywyParams);
+			if(ywy != null) {
+				String ywys = ywy.toString();
+				fromWhere += " and th.createId in " + ywys;
+			}
+		}
+		fromWhere += " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
 				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 		
