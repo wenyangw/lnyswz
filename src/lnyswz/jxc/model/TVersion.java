@@ -9,13 +9,15 @@ public class TVersion implements java.io.Serializable {
 	private int id;
 	private int versionCode;
 	private String versionName;
+	private String appName;
 
 	public TVersion() {
 	}
 
-	public TVersion(int id, int versionCode, String versionName) {
+	public TVersion(int id, int versionCode, String versionName,String appName) {
 		this.versionCode = versionCode;
 		this.versionName = versionName;
+		this.appName = appName;
 	}
 
 	@Id
@@ -47,4 +49,14 @@ public class TVersion implements java.io.Serializable {
 	public void setVersionName(String versionName) {
 		this.versionName = versionName;
 	}
+	@Column(name = "appName", nullable = false, length = 20)
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+	
+	
 }

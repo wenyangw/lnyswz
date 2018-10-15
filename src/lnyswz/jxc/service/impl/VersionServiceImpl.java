@@ -1,5 +1,8 @@
 package lnyswz.jxc.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.Version;
 import lnyswz.jxc.model.TVersion;
@@ -13,12 +16,21 @@ public class VersionServiceImpl implements VersionServiceI {
 
     @Override
     public Version getVersion(Version version) {
-        String hql = "from TVersion t order by versionCode desc";
-        TVersion tVersion = versionDao.get(hql);
+  
+        String hql = "from TVersion t where appName = :appName order by versionCode desc";
+        Map<String, Object> params = new HashMap<String, Object>();
+		String appName = version.getAppName();
+        if( appName == null ){
+        	appName = "lwt";
+		}
+        params.put("appName",appName);
+        TVersion tVersion = versionDao.get(hql, params);
+
         if(tVersion != null){
             version.setVersionCode(tVersion.getVersionCode());
             version.setVersionName(tVersion.getVersionName());
         }
+        
         return version;
     }
 

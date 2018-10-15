@@ -247,7 +247,7 @@ public interface Constant {
 	public static final Map<String, String> XSKP_SKR = new HashMap<String, String>(){{
 		put("01","胡秀颖");
 		put("04","刘金艳");
-		put("05","");
+		put("05","任晓楠");
 		put("07","");
 		put("08","");
 	}};
@@ -296,6 +296,7 @@ public interface Constant {
 	public static final String UPDATE_RK = "1";
 	public static final String UPDATE_BT = "2";
 	public static final String UPDATE_DB = "3";
+	public static final String UPDATE_XZ = "9";//新增
 	
 
 	public static final String UPDATE_YS_LS = "0";

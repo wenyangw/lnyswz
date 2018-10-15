@@ -26,7 +26,7 @@ public class SpBgy{
 	private String spbhsSel;
 	private int page;
 	private int rows;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -129,5 +129,4 @@ public class SpBgy{
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-
 }

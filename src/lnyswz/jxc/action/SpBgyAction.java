@@ -75,8 +75,11 @@ public class SpBgyAction extends BaseAction implements ModelDriven<SpBgy>{
 			j.setMsg("您不是保管员，无法进行此项操作！");
 		}
 	}
-	
-	
+
+	public void datagridBgySp(){
+		writeJson(spBgyService.datagridBgySp(spBgy));
+	}
+	 
 	@Override
 	public SpBgy getModel() {
 		return spBgy;

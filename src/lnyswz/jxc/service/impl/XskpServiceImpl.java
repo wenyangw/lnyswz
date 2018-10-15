@@ -786,7 +786,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				//head += "\"" + bz.toString() + "\",";
 				head.append("\"" + bz.toString() + "\",");
 				//head += "\"" + Constant.XSKP_FH.get(bmbh) + "\",";
-				if(t.getBmbh().equals("04")){
+				if(t.getBmbh().equals("04") || t.getBmbh().equals("05")){
 					head.append("\"" + t.getYwymc() + "\",");
 				}else {
 					head.append("\"" + Constant.XSKP_FH.get(bmbh) + "\",");
@@ -1168,6 +1168,16 @@ public class XskpServiceImpl implements XskpServiceI {
 			//hql += " and t.khbh = :khbhs and t.TYwrk is null";
 			hql.append(" and t.khbh = :khbhs and t.TYwrk is null");
 			params.put("khbhs", Constant.XSKP_NB.get(xskp.getBmbh()));
+			if(xskp.getBmbh().equals("04") && xskp.getOtherBm().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", xskp.getCreateId());
+				Object cks = xskpDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql.append(" and t.ckId in " + cks.toString());
+				}
+			}
 		}else{
 			params.put("bmbh", xskp.getBmbh());
 		}

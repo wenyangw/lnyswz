@@ -142,6 +142,8 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		xskp.setCreateId(user.getId());
 		writeJson(xskpService.datagrid(xskp));
 	}
 	
