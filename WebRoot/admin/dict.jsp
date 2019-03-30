@@ -127,6 +127,7 @@ $(function(){
 	       	{field:'sqlWhere',title:'合计筛选',width:80},
 	       	{field:'inGroupBy',title:'求和',width:80},
 	       	{field:'outGroupBy',title:'合计求和',width:80},
+	    	{field:'filterWhere',title:'结果筛选条件',width:80},
 	    ]],
 		 toolbar:'#admin_dict_tb',
 	});
@@ -259,6 +260,7 @@ function editDict(){
 					orderByTree:rows[0].orderByTree,
 					isShow:rows[0].isShow,
 					bz:rows[0].bz,
+					filterWhere:rows[0].filterWhere,
 				});
 			
 			}

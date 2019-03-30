@@ -8,5 +8,8 @@ import lnyswz.jxc.bean.SelectCommon;
 public interface SelectCommonServiceI {
 	public DataGrid selectCommonList(SelectCommon selectCommon);
 	public DataGrid selectCommonTree(SelectCommon selectCommon);
-	public List<Object[]> Exprot(SelectCommon d);	
+	public List<Object[]> Exprot(SelectCommon selectCommon);	
+	public DataGrid selectCommonByFreeSpell(SelectCommon selectCommon);
+	public DataGrid listKhByYwy(SelectCommon selectCommon);
+	public DataGrid listKhByYwyXsth(SelectCommon selectCommon);
 }

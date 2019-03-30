@@ -47,11 +47,15 @@ public class Ywrk {
 	private String sppp;
 	private String spbz;
 	private String zjldwmc;
+	private String cjldwId;
 	private String cjldwmc;
 	private BigDecimal zdwsl;
 	private BigDecimal cdwsl;
 	private BigDecimal thsl;
 	private BigDecimal cthsl;
+	private BigDecimal zdwdj;
+	private BigDecimal cdwdj;
+	private BigDecimal spje;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -354,6 +358,14 @@ public class Ywrk {
 		this.zjldwmc = zjldwmc;
 	}
 
+	public String getCjldwId() {
+		return cjldwId;
+	}
+
+	public void setCjldwId(String cjldwId) {
+		this.cjldwId = cjldwId;
+	}
+
 	public String getCjldwmc() {
 		return cjldwmc;
 	}
@@ -392,6 +404,30 @@ public class Ywrk {
 
 	public void setCthsl(BigDecimal cthsl) {
 		this.cthsl = cthsl;
+	}
+
+	public BigDecimal getZdwdj() {
+		return zdwdj;
+	}
+
+	public void setZdwdj(BigDecimal zdwdj) {
+		this.zdwdj = zdwdj;
+	}
+
+	public BigDecimal getCdwdj() {
+		return cdwdj;
+	}
+
+	public void setCdwdj(BigDecimal cdwdj) {
+		this.cdwdj = cdwdj;
+	}
+
+	public BigDecimal getSpje() {
+		return spje;
+	}
+
+	public void setSpje(BigDecimal spje) {
+		this.spje = spje;
 	}
 
 	public String getDatagrid() {

@@ -58,6 +58,8 @@ public class Xsth {
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
+	private String needAuditXsjj;
+	private String isAuditXsjj;
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
 	private int payDays;
@@ -443,6 +445,23 @@ public class Xsth {
 	public void setIsAudit(String isAudit) {
 		this.isAudit = isAudit;
 	}
+
+	public String getNeedAuditXsjj() {
+		return needAuditXsjj;
+	}
+
+	public void setNeedAuditXsjj(String needAuditXsjj) {
+		this.needAuditXsjj = needAuditXsjj;
+	}
+
+	public String getIsAuditXsjj() {
+		return isAuditXsjj;
+	}
+
+	public void setIsAuditXsjj(String isAuditXsjj) {
+		this.isAuditXsjj = isAuditXsjj;
+	}
+
 	public BigDecimal getYsfy() {
 		return ysfy;
 	}

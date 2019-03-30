@@ -36,6 +36,8 @@ public class TDict implements java.io.Serializable {
 	private String treeSql;
 	private String bz;
 	
+	private String filterWhere;
+	
 	public TDict() {
 	}
 
@@ -45,7 +47,7 @@ public class TDict implements java.io.Serializable {
 		this.cname = cname;
 	}
 	public TDict(String id,String ename,String cname,String tname,String genre,String display,String description,int orderNum,String frozen,String specialValues,String show,String tree,String orderBy,
-				String isHj,String sqlWhere,String outGroupBy,String inGroupBy,String isDepName,String orderByTree,String isShow,String treeShow,String treeSql,String bz){
+				String isHj,String sqlWhere,String outGroupBy,String inGroupBy,String isDepName,String orderByTree,String isShow,String treeShow,String treeSql,String bz,String filterWhere){
 		this.id=id;
 		this.ename=ename;
 		this.cname=cname;
@@ -69,6 +71,7 @@ public class TDict implements java.io.Serializable {
 		this.treeShow=treeShow;
 		this.treeSql=treeSql;
 		this.bz=bz;
+		this.filterWhere=filterWhere;
 	}
 	@Id
 	@Column(name = "id", unique = true, nullable = false, length = 36) 
@@ -259,4 +262,18 @@ public class TDict implements java.io.Serializable {
 	public void setBz(String bz) {
 		this.bz = bz;
 	}
+	
+	@Column(name = "filterWhere", nullable = true, length = 200)
+	public String getFilterWhere() {
+		return filterWhere;
+	}
+
+	public void setFilterWhere(String filterWhere) {
+		this.filterWhere = filterWhere;
+	}
+	
+	
+	
+	
+	
 }

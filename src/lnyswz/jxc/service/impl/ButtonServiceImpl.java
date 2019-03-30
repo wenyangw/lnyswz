@@ -25,6 +25,7 @@ import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.ButtonServiceI;
 import lnyswz.jxc.util.ButtonComparator;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 功能按钮实现类

@@ -1,24 +1,31 @@
 package lnyswz.jxc.service.impl;
 
-import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.jxc.bean.KhCx;
 import lnyswz.jxc.bean.SelectCommon;
+import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.model.TDict;
+import lnyswz.jxc.model.TXsth;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.service.SelectCommonServiceI;
 
 @Service("selectCommonService")
 public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	private BaseDaoI<Object> selectCommonDao;
 	private BaseDaoI<TDict> dictDao;
+	private BaseDaoI<TXsth> xsthDao;
+	private BaseDaoI<TXsthDet> xsthDetDao;
 
 	/**
 	 * DataGrid 显示
@@ -49,7 +56,8 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 			}
 
 			dg.setRows(list);
-			String exec = execHql + "," + 1 + "," + dg.getTotal() + ",0"+treeExec;
+			String exec = execHql + "," + 1 + "," + dg.getTotal() + ",0"
+					+ treeExec;
 			dg.setObj(exec);
 		} else {
 			String sql = "select " + d.getCon() + " from " + dicts.getTname()
@@ -81,20 +89,26 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 					}
 				}
 			}
-			conditionCount +=sql;
-			
+
+			if (d.getIsFilter().equals("01")) {
+				sql = "select * from ( " + sql + ")as fil "
+						+ dicts.getFilterWhere();
+			}
+			conditionCount += sql;
+
 			if (dicts.getOrderBy().trim().length() > 0) {
 				sql += " " + dicts.getOrderBy();
 			}
-			String totalHql = "select count(*) from ("+conditionCount+") as count";
+			String totalHql = "select count(*) from (" + conditionCount
+					+ ") as count";
 			List<Object[]> list = selectCommonDao.findBySQL(sql, d.getPage(),
 					d.getRows());
 			dg.setRows(list);
 			dg.setTotal(selectCommonDao.countSQL(totalHql));
 			dg.setObj(d.getHqls());
-			
+
 		}
-		
+
 		return dg;
 	}
 
@@ -194,8 +208,12 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 							&& dict.getSqlWhere().trim().length() > 0) {
 						sql += " " + dict.getSqlWhere();
 					}
-
 				}
+			}
+
+			if (d.getIsFilter().equals("01")) {
+				sql = "select * from ( " + sql + ")as fil "
+						+ dict.getFilterWhere();
 			}
 			if (dict.getOrderBy().trim().length() > 0) {
 				sql += " " + dicts.getOrderBy();
@@ -218,6 +236,103 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 
 	}
 
+	@Override
+	public DataGrid selectCommonByFreeSpell(SelectCommon sel) {
+		DataGrid dg = new DataGrid();
+		StringBuffer strBuffer = new StringBuffer("select ");
+		strBuffer.append(sel.getField());
+		strBuffer.append(" from ");
+		strBuffer.append(sel.getTable());
+		strBuffer.append(" " + sel.getWhere());
+
+		// String sql = "select " + sel.getField() + " from " + sel.getTable() +
+		// " " + sel.getWhere();
+		// String totalHql =
+		// "select count(*) from ("+conditionCount+") as count";
+		List<Object[]> list = selectCommonDao.findBySQL(strBuffer.toString(),
+				sel.getPage(), sel.getRows());
+
+		dg.setRows(list);
+		dg.setTotal((long) list.size());
+
+		return dg;
+	}
+	
+	
+	@Override
+	public DataGrid listKhByYwy(SelectCommon d) {
+		DataGrid dg = new DataGrid();
+		//execute m_kh '部门ide','ywyId'
+		String execHql = "execute m_ywy_kh '" + d.getDid() + "','" + d.getUserId() + "','" + d.getSearch().trim() + "','" + d.getPage() + "','" + d.getRows() + "'";
+		List<KhCx> l = new ArrayList<KhCx>();
+		List<Object[]> list = selectCommonDao.findBySQL(execHql);
+		for(Object[] o : list){
+			KhCx k = getKhByYwy(o);
+			l.add(k);
+		}
+		String countexecHql = "execute m_ywy_kh '" + d.getDid() + "','" + d.getUserId() + "','" + d.getSearch().trim() + "','0','0'";
+		dg.setTotal(selectCommonDao.countSQL(countexecHql));
+		
+		dg.setRows(l);
+		return dg;
+	}
+	
+	@Override
+	public DataGrid listKhByYwyXsth(SelectCommon d) {
+		// TODO Auto-generated method stub
+		DataGrid dg = new DataGrid();
+		
+		String sql = "select distinct xsthlsh, hjje, hjsl, ckmc, bz from v_xsth_det  where bmbh = '" + d.getDid() + "' and ywyId = '" + d.getUserId() + "' and khbh = '" + d.getKhbh() + "' and zdwsl = cksl and isCancel = '0'  and SUBSTRING(xsthlsh,1,2) > 16  "; 
+		String sqlOrder = " order by xsthlsh desc";
+		List<Xsth> l = new ArrayList<Xsth>();
+		List<Object[]> list = xsthDao.findBySQL(sql+sqlOrder, d.getPage(), d.getRows());
+		for(Object[] o : list){
+			Xsth x = getKhByYwyXsth(o);
+
+			l.add(x);
+		}
+		String totalHql = "select count(*)  from (" + sql + ")as count";
+		dg.setTotal(selectCommonDao.countSQL(totalHql));
+		dg.setRows(l);
+		return dg;
+	}
+	
+	
+	
+	private Xsth getKhByYwyXsth(Object[] o) {
+		Xsth x = new Xsth();
+		String xsthlsh = (String)o[0];
+		BigDecimal hjje = new BigDecimal(o[1].toString());
+		BigDecimal hjsl = new BigDecimal(o[2].toString());
+		String ckmc = (String)o[3];
+		String bz = (String)o[4];
+		
+		x.setXsthlsh(xsthlsh);
+		x.setHjje(hjje);
+		x.setHjsl(hjsl);
+		x.setCkmc(ckmc);
+		x.setBz(bz);
+		return x;
+	}
+	
+	private KhCx getKhByYwy(Object[] o) {
+		KhCx k = new KhCx();
+		String khbh = (String)o[0];
+		String khmc = (String)o[1];
+		BigDecimal sxje = new BigDecimal(o[2].toString());
+		int sxzq = (Integer)o[3];
+		BigDecimal ysje = new BigDecimal(o[4].toString());
+		BigDecimal thje = new BigDecimal(o[5].toString());
+		
+		k.setKhbh(khbh);
+		k.setKhmc(khmc);
+		k.setSxje(sxje);
+		k.setSxzq(sxzq);
+		k.setThje(thje);
+		k.setYsje(ysje);
+		return k;
+	}
+
 	@Autowired
 	public void setSelectCommonDao(BaseDaoI<Object> selectCommonDao) {
 		this.selectCommonDao = selectCommonDao;
@@ -226,6 +341,14 @@ public class SelectCommonServiceImpl implements SelectCommonServiceI {
 	@Autowired
 	public void setDictDao(BaseDaoI<TDict> dictDao) {
 		this.dictDao = dictDao;
+	}
+	@Autowired
+	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
+		this.xsthDao = xsthDao;
+	}
+	@Autowired
+	public void setXsthDetDao(BaseDaoI<TXsthDet> xsthDetDao) {
+		this.xsthDetDao = xsthDetDao;
 	}
 
 }

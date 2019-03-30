@@ -169,6 +169,13 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			if(yTDet.getCdwsl() != null){
 				tDet.setCdwsl(yTDet.getCdwsl().negate());
 			}
+
+			if (!("05".equals(tKfpd.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
+
 			tDet.setTKfpd(tKfpd);
 			tDets.add(tDet);
 			

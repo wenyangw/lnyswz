@@ -350,19 +350,19 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		
-		
-		if(ywrk.getFromOther() != null){
-			if(ywrk.getBmbh().equals("05")) {
-				String ckSql = "select cks from v_zy_cks where createId = ?";
-				Map<String, Object> ckParams = new HashMap<String, Object>();
-				ckParams.put("0", ywrk.getCreateId());
-				Object cks = ywrkDao.getBySQL(ckSql, ckParams);
 
-				if(cks != null){
-					hql += " and t.ckId in " + cks.toString();
-				}
+		if(ywrk.getBmbh().equals("05")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", ywrk.getCreateId());
+			Object cks = ywrkDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				hql += " and t.ckId in " + cks.toString();
 			}
+		}
+		if(ywrk.getFromOther() != null){
+
 			hql += " and t.isCj = '0'";
 			if(Constant.YWRK_FROM_YWBT.equals(ywrk.getFromOther())){
 				hql += " and t.rklxId = :rklxId and t.TYwbt is null";
@@ -371,8 +371,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				hql += " and t.isZs = '0' and t.TKfrks is empty";
 			}
 		}else{
-			hql += " and t.createId = :createId";
-			params.put("createId", ywrk.getCreateId());
+			//hql += " and t.createId = :createId";
+			//params.put("createId", ywrk.getCreateId());
 			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
 				//hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
 				//params.put("search", "%" + ywrk.getSearch() + "%");
@@ -498,6 +498,52 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 		}
 		
+		datagrid.setRows(nl);
+		datagrid.setTotal(ywrkDao.count(countHql, params));
+		return datagrid;
+	}
+
+	@Override
+	public DataGrid ywrkmx(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TYwrkDet t where t.TYwrk.bmbh = :bmbh and t.TYwrk.createTime > :createTime and t.TYwrk.rklxId = '01' and t.TYwrk.isCj = '0'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", ywrk.getBmbh());
+		if(ywrk.getCreateTime() != null){
+			params.put("createTime", ywrk.getCreateTime());
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+		if(ywrk.getSearch() != null){
+			//hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)";
+			//params.put("search", "%" + ywrk.getSearch() + "%");
+			hql += " and (" +
+					Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.TYwrk.ywrklsh", "t.TYwrk.gysbh", "t.TYwrk.gysmc", "t.TYwrk.bz"}, params)
+					+ ")";
+
+		}
+
+		String countHql = "select count(*) " + hql;
+		hql += " order by t.TYwrk.createTime desc ";
+
+		List<TYwrkDet> l = detDao.find(hql, params);
+		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
+		for(TYwrkDet t : l){
+			c = new Ywrk();
+			BeanUtils.copyProperties(t, c);
+			c.setYwrklsh(t.getTYwrk().getYwrklsh());
+			c.setCreateTime(t.getTYwrk().getCreateTime());
+			c.setGysmc(t.getTYwrk().getGysmc());
+//			if (t.getSpbh().substring(1, 2).equals("4") && t.getCjldwId().equals("07")){
+//				c.setZjldwmc(t.getCjldwmc());
+//				c.setZdwsl(t.getCdwsl());
+//				c.setZdwdj(t.getCdwdj());
+//			}
+
+			nl.add(c);
+		}
+
 		datagrid.setRows(nl);
 		datagrid.setTotal(ywrkDao.count(countHql, params));
 		return datagrid;

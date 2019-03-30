@@ -77,7 +77,7 @@ $(function(){
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'fhId',title:'分户 id',align:'center',hidden:true},
-	        {field:'fhmc',title:'分户',align:'center'},
+	        {field:'fhmc',title:'分户',align:'center', hidden: xskp_did != '04'},
 	        {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'hjje',title:'金额',align:'center',
 	        	formatter: function(value){
@@ -123,7 +123,7 @@ $(function(){
 				}},
 			{field:'cjTime',title:'冲减时间',align:'center'},
         	{field:'cjXskplsh',title:'原销售流水号',align:'center'},
-	        {field:'bookmc',title:'书名',align:'center'},
+	        {field:'bookmc',title:'书名',align:'center', hidden: xskp_did != '04'},
 	        {field:'kpr',title:'制单人',align:'center'},
         	{field:'ywrklsh',title:'内部入库',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
@@ -1738,7 +1738,7 @@ function generateXskp(){
  								if(jxc_xskp_fhCombo == undefined){
 									jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
 								}
-								jxc_xskp_fhCombo.combobox('setValue', rows[0].fhId);
+                                jxc_xskp_fhCombo.combobox('setValue', rows[0].fhId);
  							}else{
  								$('input[name=isFh]').prop('checked', false);
  								$('.fh').css('display','none');
@@ -1748,6 +1748,12 @@ function generateXskp(){
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
 							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
 							jxc_xskp_jsfsCombo.combobox('readonly', true);
+
+                            if(xskp_did == '04'){
+                                if(jxc_xskp_fyrCombo == undefined){
+                                    jxc_xskp_fyrCombo = lnyw.initCombo($("#jxc_xskp_fyr"), 'fyr', 'fyr', '${pageContext.request.contextPath}/jxc/xskpAction!listFyrs.action?bmbh=' + xskp_did + '&khbh=' + rows[0].khbh);
+								}
+                            }
 							
 // 							if(rows[0].isSx == '1'){
 // 								$('input[name=isSx]').attr('checked', 'ckecked');

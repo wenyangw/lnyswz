@@ -20,7 +20,18 @@ public class SelectCommon {
 	private int total;
 	private String hid;
 	
+	
 	private String treeExec;
+	private String isFilter;
+	
+	private String field;
+	private String table;
+	private String where;
+	
+	private String search;
+	
+	private String khbh;
+	private String xsthlsh;
 	
 	
 	public String getSqls() {
@@ -175,4 +186,61 @@ public class SelectCommon {
 		this.hid = hid;
 	}
 
+	public String getIsFilter() {
+		return isFilter;
+	}
+
+	public void setIsFilter(String isFilter) {
+		this.isFilter = isFilter;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
+
+	public String getWhere() {
+		return where;
+	}
+
+	public void setWhere(String where) {
+		this.where = where;
+	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public String getKhbh() {
+		return khbh;
+	}
+
+	public void setKhbh(String khbh) {
+		this.khbh = khbh;
+	}
+
+	public String getXsthlsh() {
+		return xsthlsh;
+	}
+
+	public void setXsthlsh(String xsthlsh) {
+		this.xsthlsh = xsthlsh;
+	}
+
+	
 }

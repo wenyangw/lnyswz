@@ -84,11 +84,7 @@
 			<td><input name="orderByTree" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>	
-		<tr>
-			<th><label for="orderBy">排序条件</label></th>
-			<td><input name="orderBy" class="easyui-validatebox"
-				style="width: 156px;"></td>
-		</tr>
+		
 		<tr>
 			<th><label for="isHj">是否合计</label></th>
 			<td><input type="checkbox" checked=true value="01"  name="isHj"/> 
@@ -107,6 +103,16 @@
 		<tr>
 			<th><label for="outGroupBy">合计求和</label></th>
 			<td><input name="outGroupBy" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="filterWhere">结果筛选条件</label></th>
+			<td><input name="filterWhere" class="easyui-validatebox"
+				style="width: 156px;"></td>
+		</tr>
+		<tr>
+			<th><label for="orderBy">排序条件</label></th>
+			<td><input name="orderBy" class="easyui-validatebox"
 				style="width: 156px;"></td>
 		</tr>
 	</table>

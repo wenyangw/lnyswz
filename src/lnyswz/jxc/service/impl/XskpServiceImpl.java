@@ -210,6 +210,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setSended("0");
 			tXsth.setIsFp("0");
 			tXsth.setHjje(hjje);
+			tXsth.setNeedAuditXsjj("0");
+			tXsth.setIsAuditXsjj("0");
 
 			tXsthDets = new HashSet<TXsthDet>();
 		}else{
@@ -264,6 +266,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				//提货单只有金额字段，要将发票中金额与税额相加
 				tXsthDet.setSpje(tDet.getSpje().add(tDet.getSpse()));
+				tXsthDet.setDwcb(dwcb.multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				tXsthDet.setQrsl(BigDecimal.ZERO);
 				tXsthDet.setCompleted("0");
 				tXsthDets.add(tXsthDet);
@@ -1013,7 +1016,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setLocked("0");
 		tXsth.setIsCancel("0");
 		tXsth.setIsFh(tXskp.getFhId() != null ? "1" : "0");
-		//TODO
 		tXsth.setIsFhth("1");
 		tXsth.setIsLs("0");
 		tXsth.setFromRk("0");
@@ -1025,6 +1027,8 @@ public class XskpServiceImpl implements XskpServiceI {
 		//默认均为0
 		tXsth.setNeedAudit("0");
 		tXsth.setIsAudit("0");
+		tXsth.setNeedAuditXsjj("0");
+		tXsth.setIsAuditXsjj("0");
 //		if(tXsth.getNeedAudit().equals("1")){
 //			tXsth.setIsAudit("0");
 //		}else{
@@ -1053,6 +1057,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tDet.setSpje(xskpDet.getSpje().add(xskpDet.getSpse()));
 			tDet.setThsl(BigDecimal.ZERO);
 			tDet.setQrsl(BigDecimal.ZERO);
+			tDet.setDwcb(BigDecimal.ZERO);
 			tDet.setCompleted("0");
 			//tDet.setLastRksl(BigDecimal.ZERO);
 			tDet.setTXsth(tXsth);

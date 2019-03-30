@@ -11,12 +11,16 @@ var ywsh_toDg;
 var ywsh_dg;
 var ywsh_tabs;
 
+var ywsh_tab_index;
+
 var xsthlsh;
 
 $(function(){
 	ywsh_did = lnyw.tab_options().did;
 	ywsh_lx = lnyw.tab_options().lx;
 	ywsh_menuId = lnyw.tab_options().id;
+
+    ywsh_tab_index = 0;
 	
 	$('#jxc_ywsh_layout').layout({
 		fit : true,
@@ -295,14 +299,8 @@ $(function(){
 	//选中列表标签后，装载数据
 	ywsh_tabs = $('#jxc_ywsh_tabs').tabs({
 		onSelect: function(title, index){
-			if(index == 0){
+			if(index == 0 && ywsh_tab_index != index){
  				ywsh_toDg.datagrid('reload');
-// 				ywsh_toDg.datagrid({
-// 					url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
-// 					queryParams: {
-// 						bmbh: ywsh_did,
-// 					},
-// 				});
 			}
 			if(index == 1){
 				ywsh_dg.datagrid({
@@ -312,6 +310,7 @@ $(function(){
 					}
 				});
 			}
+            ywsh_tab_index = index;
 		},
 	});
 	

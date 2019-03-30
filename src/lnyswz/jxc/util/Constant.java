@@ -19,8 +19,12 @@ public interface Constant {
 	public static final int KHLX_YJ_INC = 30;
 	
 	//发票税率
-	public static final BigDecimal SHUILV = new BigDecimal("0.16");
-	
+	public static final BigDecimal SHUILV = new BigDecimal("0.13");
+//	2019.04.01之前
+//	public static final BigDecimal SHUILV = new BigDecimal("0.16");
+//	2018.05.01之前
+//	public static final BigDecimal SHUILV = new BigDecimal("0.17");
+
 	//金穗接口文本存储路径
 	public static final String JS_FILEPATH = "C:/lnyswz/";
 	//金穗接口文本增值税文件
@@ -46,7 +50,8 @@ public interface Constant {
 	//业务单据类型
 	public static final String YWLX_XSTH = "05";
 	public static final String YWLX_FYD = "16";
-	
+	public static final String YWLX_XSJJ = "21";
+
 	//操作人员为业务员
 	public static final String USER_POSTID = "12";
 	

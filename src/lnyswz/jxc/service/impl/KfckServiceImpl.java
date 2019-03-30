@@ -259,6 +259,13 @@ public class KfckServiceImpl implements KfckServiceI {
 			if(yTDet.getCdwsl() != null){
 				tDet.setCdwsl(yTDet.getCdwsl().negate());
 			}
+
+			if (!("05".equals(tKfck.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
+
 			tDet.setTKfck(tKfck);
 			tDets.add(tDet);
 			
@@ -341,10 +348,10 @@ public class KfckServiceImpl implements KfckServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(kfck.getBmbh().equals("05")){
-			hql += " and t.createId = :createId";
-			params.put("createId", kfck.getCreateId());
-		}
+//		if(kfck.getBmbh().equals("05")){
+//			hql += " and t.createId = :createId";
+//			params.put("createId", kfck.getCreateId());
+//		}
 		if(kfck.getSearch() != null){
 			//hql += " and (t.kfcklsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search)"; 
 			//params.put("search", "%" + kfck.getSearch() + "%");

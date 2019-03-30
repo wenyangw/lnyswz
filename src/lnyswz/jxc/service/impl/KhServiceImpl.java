@@ -637,9 +637,11 @@ public class KhServiceImpl implements KhServiceI {
 			BeanUtils.copyProperties(tYszz, yszz);
 		}
 		//客户的临时出库金额以明细为准
-		String sql = "select cast(SUM((zdwsl - kpsl) * zdwdj) as numeric(18, 2)) thje from v_xsth_without_xskp "
-				+ " where bmbh = ? and khbh = ? and ywyId = ?"
-				+ " group by bmbh, khbh, ywyId";
+//		String sql = "select cast(SUM((zdwsl - kpsl) * zdwdj) as numeric(18, 2)) thje from v_xsth_without_xskp "
+//				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+//				+ " group by bmbh, khbh, ywyId";
+
+		String sql = "select spje as thje from v_xsth_all_tj where bmbh = ? and khbh = ? and ywyId = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", khbh);
@@ -648,8 +650,9 @@ public class KhServiceImpl implements KhServiceI {
 		Object thjeO = yszzDao.getBySQL(sql, params);
 		if(thjeO != null){
 			yszz.setThje(new BigDecimal(thjeO.toString()));
+		}else {
+			yszz.setThje(BigDecimal.ZERO);
 		}
-				
 		return yszz;
 	}
 	

@@ -388,7 +388,14 @@ function setEditing(){
 	});
   	
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    if (did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
     
 	//loadEditor();

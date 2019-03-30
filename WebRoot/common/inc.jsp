@@ -14,6 +14,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css?v=20171231">
 <%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/portal.css"> --%>
 
+<%--<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/vue-2.5.21/vue.min.js" charset="utf-8"></script>--%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-2.0.0/jquery.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/jquery.easyui.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
@@ -31,4 +32,4 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/plugins/json/json.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/utils.js?v=20180428"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20180428"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jxc.js?v=20190330"></script>

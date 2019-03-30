@@ -176,12 +176,21 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		for(TYwbt t : l){
 			c = new Ywbt();
 			BeanUtils.copyProperties(t, c);
-			
-			c.setGysmc(t.getTYwrk().getGysmc());
-			
-			if(t.getTYwrk() != null){
-				c.setYwrklsh(t.getTYwrk().getYwrklsh());
+
+			String ywrkSql = "select ywrklsh, gysmc from t_ywrk where ywbtlsh = ?";
+			Map<String, Object> ywrkParams = new HashMap<String, Object>();
+			ywrkParams.put("0", t.getYwbtlsh());
+
+			Object[] tYwrk = ywrkDao.getMBySQL(ywrkSql, ywrkParams);
+			if(tYwrk != null) {
+				c.setYwrklsh(tYwrk[0].toString());
+				c.setGysmc(tYwrk[1].toString());
+//				c.setGysmc(t.getTYwrk().getGysmc());
 			}
+			
+//			if(t.getTYwrk() != null){
+//				c.setYwrklsh(t.getTYwrk().getYwrklsh());
+//			}
 			
 			nl.add(c);
 		}

@@ -116,6 +116,17 @@ $(function(){
 					star += '<td class="query_int">&#12288;<input id="s_'+this.ename+query+'"';
 					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
 					star += '  name='+this.ename+' size="12"></td>';	
+			   }else if(this.specials=="filter"){
+				   	star += '<td></td>&#12288;<td align="center">';
+					star += '<input type="checkbox"  name="ft_'+query+'" id="ft_'+query+'" ';
+					//去checkeds对象属性值 实现默认是否被选中
+					star += checkeds[this.ename] == '' ? ' ' : ' checked="checked" ';
+					star += 'value="'+this.ename+'"><b></td>';
+
+					/* star += '<td class="query_ope" align="right">查询日期</td>';
+					star += '<td class="query_int">&#12288;<input id="s_'+this.ename+query+'"';
+					star += 'class="inputval'+query+' easyui-my97" readonly="readonly" value="'+moment().format('YYYY-MM-DD')+'"';
+					star += '  name='+this.ename+' size="12"></td>'; */	
 				}else{
 					if(this.specialValues != null && this.specialValues.trim("").length > 0 ){
 						star += '<td class="query_ope">&#12288;<input id="ope_'+this.ename+query+'" name="ope_'+this.ename+query+'" style="width:70px;"value="=" ></td>';
@@ -485,7 +496,11 @@ function step1Ok(cons,allFields,exec) {
 
 function getData(page, rows,cons,allFields,exec) { 
 	query = lnyw.tab_options().query;
-
+	var isFilter = "00";
+	/* console.info($('#ft_' + query).is(':checked')); */
+	if($('#ft_' + query).is(':checked')){
+		isFilter = "01";
+	}
 	resultDg = $('#result_' + query);
 	$.ajax({ 
    		async: false,
@@ -502,6 +517,7 @@ function getData(page, rows,cons,allFields,exec) {
 			userId  :userId,	
 			page :page,
 			rows :rows,
+			isFilter:isFilter,
 			total :$('#total_' + query).val(),
 		},
         error: function (XMLHttpRequest, textStatus, errorThrown) { 
@@ -564,6 +580,10 @@ function exportExcel(){
 	var fields=[];
 	query = lnyw.tab_options().query;
 	resultDg = $('#result_' + query);
+	var isFilter = "00";
+	if($('#ft_' + query).is(':checked')){
+		isFilter = "01";
+	}
 	var hh =resultDg.datagrid('options').columns[0];
 	var ss =resultDg.datagrid('options').frozenColumns[0];
 	var dd;
@@ -605,6 +625,7 @@ function exportExcel(){
 			sqls: $('#exportExcel_sql' + query).val(),
 			con :fields.join(','),
 			titles:titles.join(','),
+			isFilter:isFilter,
 		},
 		success:function(data){
 		

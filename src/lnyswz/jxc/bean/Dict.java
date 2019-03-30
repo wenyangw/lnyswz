@@ -41,6 +41,11 @@ public class Dict {
 	private String treeSql;
 	private String bz;
 	
+
+	private String filterWhere;
+	
+	
+
 	
 	// 条件筛选参数
 	private String tjsx;
@@ -327,5 +332,14 @@ public class Dict {
 	}
 
 	
+
+	public String getFilterWhere() {
+		return filterWhere;
+	}
+
+	public void setFilterWhere(String filterWhere) {
+		this.filterWhere = filterWhere;
+	}
+
 	
 }

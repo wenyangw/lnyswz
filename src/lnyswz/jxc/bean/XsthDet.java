@@ -32,6 +32,7 @@ public class XsthDet{
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal dwcb;
 	private BigDecimal spse;
 	private BigDecimal sphj;
 	private BigDecimal cksl;
@@ -50,7 +51,6 @@ public class XsthDet{
 	private BigDecimal cdwrksl;
 	private String Shdz;
 	private String Lxr;
-	private BigDecimal dwcb;
 	private BigDecimal zmsl;
 
 	public int getId() {
@@ -154,6 +154,12 @@ public class XsthDet{
 	}
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
 	}
 	public BigDecimal getSpse() {
 		return spse;
@@ -260,12 +266,7 @@ public class XsthDet{
 		Lxr = lxr;
 	}
 	
-	public BigDecimal getDwcb() {
-		return dwcb;
-	}
-	public void setDwcb(BigDecimal dwcb) {
-		this.dwcb = dwcb;
-	}
+
 
 	public BigDecimal getZmsl() {
 		return zmsl;

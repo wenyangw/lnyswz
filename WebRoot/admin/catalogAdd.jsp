@@ -19,6 +19,10 @@
 			<th><label for="iconCls">图标</label></th>
 			<td><input name="iconCls" style="width: 160px;"></td>
 		</tr>
+		<tr>
+			<th><label for="type">类型</label></th>
+			<td><input name="type" style="width: 160px;"></td>
+		</tr>
 	</table>
 		<input name="id" type="hidden">
 	</form>

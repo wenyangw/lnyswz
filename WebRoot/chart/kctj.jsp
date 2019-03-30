@@ -175,7 +175,7 @@ function kctj_getData(){
 			url: '${pageContext.request.contextPath}/jxc/chartAction!getKctj.action',
 			data: {
 				bmbh: kctj_bmbh,
-				field: $('#jxc_kctj_tjlx').combobox('getValue'),
+				field: $('#jxc_kctj_tjlx').combobox('getValue')
 			},
 			cache: false,
 			async: false,
@@ -203,5 +203,5 @@ function kctj_getData(){
 </tr></table>
 <br>
 <div id="kctj_container" style="min-width:800px;height:400px"></div>
-<div style="margin:10px;">注：因商品计量单位不一致的因素，库存数量的统计仅包括教材、文达纸业、大连公公司的纸张。</div>
+<div style="margin:10px;">注：因商品计量单位不一致的因素，库存数量的统计仅包括教材、文达纸业、大连公公司的纸张(不包括易货)。</div>
 

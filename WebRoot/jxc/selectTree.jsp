@@ -528,6 +528,7 @@ function selectClickTree(){
 }
 //显示datagrid数据
 function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
+	var isFilter = "00";
 	query = lnyw.tab_options().query;
 // 	did = lnyw.tab_options().did;
 	resultDg=$('#jsd_' + query);
@@ -543,6 +544,7 @@ function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 				//拼写显示名称
 				con  :allFields.join(','),
 				did  :did,	
+				isFilter:isFilter,
 				},
 		dataType : 'json',
 		success : function(data) {
@@ -723,6 +725,7 @@ function exportExcelTree(){
 	var hid=[];
 	query = lnyw.tab_options().query;
 	var dd;
+	var isFilter = "00";
 	if(openTreeSelectDid=='y'){
 		dd=$('#select_tree_dep_' + query).combobox('getValue');
 		eval("var did_"+query+"=dd");
@@ -765,6 +768,7 @@ function exportExcelTree(){
 			sqls:$('#exportExcelTree_sql' + query).val(),
 			titles:titles.join(','),
 			hid:hid.join(','),
+			isFilter:isFilter,
 		},
 		success:function(data){	
 			var json = $.parseJSON(data);
@@ -794,6 +798,7 @@ function exportExcelAll(){
 	lnyw.MaskUtil.mask('正在导出，请等待……');
 	var titles=[];
 	var fields=[];
+	var isFilter = "00";
 	query = lnyw.tab_options().query;
 	var dd;
 	if(openTreeSelectDid=='y'){
@@ -831,6 +836,7 @@ function exportExcelAll(){
 			sqls:$('#exportExcelTree_sql' + query).val().replace(/,5,/, ",0,"),
 // 			sqls:treeHql,
 			titles:titles.join(','),
+			isFilter:isFilter,
 		},
 		success:function(data){	
 			var json = $.parseJSON(data);
@@ -859,6 +865,7 @@ function exportExcel(){
 	lnyw.MaskUtil.mask('正在导出，请等待……');
 	var titles=[];
 	var fields=[];
+	var isFilter = "00";
 	query = lnyw.tab_options().query;
 	var dd;
 	if(openTreeSelectDid=='y'){
@@ -896,6 +903,7 @@ function exportExcel(){
 			sqls:$('#exportExcel_sql' + query).val(),
 // 			sqls:treeHql,
 			titles:titles.join(','),
+			isFilter:isFilter,
 		},
 		success:function(data){	
 			var json = $.parseJSON(data);

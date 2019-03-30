@@ -142,6 +142,10 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		writeJson(ywrkService.datagridDet(ywrk));
 	}
 
+	public void ywrkmx() {
+		writeJson(ywrkService.ywrkmx(ywrk));
+	}
+
 	public void printYwrk() {
 		User user = (User) session.get("user");
 		ywrk.setCreateName(user.getRealName());
@@ -157,6 +161,8 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		Export.print(dg, Util.getReportName(ywrk.getBmbh(), "report_kfrk.json"));
 		//Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
 	}
+
+
 	
 	@Override
 	public Ywrk getModel() {

@@ -12,6 +12,9 @@ var jxc = $.extend({}, jxc);/* 定义全局对象，类似于命名空间或包�
 var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
+//销售加价率
+var NEED_AUDIT_XSJJ = '0'
+
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';
 var PRINT_TYPE_XSTH = '82';
@@ -158,7 +161,7 @@ jxc.auditLevel = function(bmbh){
 		break;
 	case '07':
 		level['first'] = '1';
-		level['second'] = '3';
+		level['second'] = '2';
 		return level;
 		break;
 	case '08':
@@ -229,7 +232,7 @@ jxc.auditLevelCgjh = function(bmbh){
 		return level;
 		break;
 	case '07':
-		level['first'] = '2';
+		level['first'] = '1';
 		level['second'] = '0';
 		return level;
 		break;
@@ -436,7 +439,13 @@ var JSFS_QK = '06';
 var KHLX_XK = '01';
 var LENGTH_JE = 4;
 var LENGTH_SL = 3;
-var SL = 0.16;
+
+var SL = 0.13;
+// 2019.04.01之前
+// var SL = 0.16;
+// 2018.05.01之前
+// var SL = 0.17;
+
 var PRINT_REPORT = '1';
 var PREVIEW_REPORT = '0';
 var SHOW_PRINT_WINDOW = '1';
@@ -574,7 +583,7 @@ jxc.isExcess = function(url, depId, khbh, ywyId){
 		success:function(data){
 			if(data.success){
 				//qkje = data.obj.limitJe;
-				sxkh.qkje = (data.obj.qcje + data.obj.kpje - data.obj.hkje + (data.obj.qcthje + data.obj.thje)).toFixed(2);
+				sxkh.qkje = (data.obj.qcje + data.obj.kpje - data.obj.hkje + data.obj.thje).toFixed(2);
 			}
 		}
 	});

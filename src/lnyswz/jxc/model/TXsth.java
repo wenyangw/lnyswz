@@ -79,6 +79,8 @@ public class TXsth implements java.io.Serializable {
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
+	private String needAuditXsjj;
+	private String isAuditXsjj;
 	private BigDecimal ysfy;
 	private BigDecimal yysfy;
 	private int payDays;
@@ -106,7 +108,7 @@ public class TXsth implements java.io.Serializable {
 			BigDecimal hjje, BigDecimal hjsl, String isLs, String bookmc, String bz, String isZs, String isCancel, 
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
-			Integer hkId, Date hkTime, String needAudit, String isAudit, BigDecimal ysfy, BigDecimal yysfy,
+			Integer hkId, Date hkTime, String needAudit, String isAudit, String needAuditXsjj, String isAuditXsjj, BigDecimal ysfy, BigDecimal yysfy,
 			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
 			Date sendTime, String isFp, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
@@ -157,6 +159,8 @@ public class TXsth implements java.io.Serializable {
 		this.hkTime = hkTime;
 		this.needAudit = needAudit;
 		this.isAudit = isAudit;
+		this.needAuditXsjj = needAuditXsjj;
+		this.isAuditXsjj = isAuditXsjj;
 		this.ysfy = ysfy;
 		this.yysfy = yysfy;
 		this.payDays = payDays;
@@ -630,7 +634,25 @@ public class TXsth implements java.io.Serializable {
 	public void setIsAudit(String isAudit) {
 		this.isAudit = isAudit;
 	}
-	
+
+	@Column(name = "needAuditXsjj", nullable = false, length = 1)
+	public String getNeedAuditXsjj() {
+		return needAuditXsjj;
+	}
+
+	public void setNeedAuditXsjj(String needAuditXsjj) {
+		this.needAuditXsjj = needAuditXsjj;
+	}
+
+	@Column(name = "isAuditXsjj", nullable = false, length = 1)
+	public String getIsAuditXsjj() {
+		return isAuditXsjj;
+	}
+
+	public void setIsAuditXsjj(String isAuditXsjj) {
+		this.isAuditXsjj = isAuditXsjj;
+	}
+
 	@Column(name = "ysfy", precision = 18, scale = 2)
 	public BigDecimal getYsfy() {
 		return ysfy;

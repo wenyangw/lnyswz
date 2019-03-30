@@ -108,7 +108,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			if(null == kfrkDet.getBzsl()){
 				tDet.setBzsl(Constant.BD_ZERO);
 			}
-			
+
 			tDet.setTKfrk(tKfrk);
 			tDets.add(tDet);
 
@@ -194,6 +194,13 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			if(yTDet.getCdwsl() != null){
 				tDet.setCdwsl(yTDet.getCdwsl().negate());
 			}
+
+			if (!("05".equals(tKfrk.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
+
 			tDet.setTKfrk(tKfrk);
 			tDets.add(tDet);
 			
@@ -269,10 +276,10 @@ public class KfrkServiceImpl implements KfrkServiceI {
 					Util.getQueryWhere(kfrk.getSearch(), new String[]{"t.kfrklsh", "t.gysmc", "t.bz"}, params)
 					+ ")";
 		}
-		if(kfrk.getFromOther() == null) {
-			hql += " and t.createId = :createId";
-			params.put("createId", kfrk.getCreateId());
-		}else{
+		if(kfrk.getFromOther() != null) {
+//			hql += " and t.createId = :createId";
+//			params.put("createId", kfrk.getCreateId());
+//		}else{
 			if(kfrk.getBmbh().equals("05")) {
 				String ckSql = "select cks from v_zy_cks where createId = ?";
 				Map<String, Object> ckParams = new HashMap<String, Object>();

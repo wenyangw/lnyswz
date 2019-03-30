@@ -18,15 +18,17 @@ public class TCatalog implements java.io.Serializable {
 	private String catName;
 	private int orderNum;
 	private String iconCls;// 前面的小图标样式
-	
+	private String type;
+
 	public TCatalog() {
 	}
 
-	public TCatalog(String id, String catName, int orderNum, String iconCls) {
+	public TCatalog(String id, String catName, int orderNum, String iconCls, String type) {
 		this.id = id;
 		this.catName = catName;
 		this.orderNum = orderNum;
 		this.iconCls = iconCls;
+		this.type = type;
 	}
 	
 
@@ -67,4 +69,12 @@ public class TCatalog implements java.io.Serializable {
 		this.iconCls = iconCls;
 	}
 
+	@Column(name = "type", nullable = false, length = 1)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

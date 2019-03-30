@@ -16,6 +16,7 @@ public class Chart{
 	private String bmbh;
 	private String khbh;
 	private String field;
+
 	private int year;
 	private String includeNb;
 	private String search;

@@ -43,7 +43,7 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 			
 			User u = userService.login(user);
 			// 获得模块信息
-			List<Catalog> top = catalogService.listCatas();
+			List<Catalog> top = catalogService.listCatas("p");
 			// 登录成功
 			if (u != null) {
 				session.put("user", u);

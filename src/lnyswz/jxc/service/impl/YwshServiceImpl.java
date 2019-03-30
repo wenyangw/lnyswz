@@ -64,6 +64,27 @@ public class YwshServiceImpl implements YwshServiceI {
 				"业务审批通过", operalogDao);
 		
 	}
+
+	@Override
+	public void updateXjshAudit(Ywsh ywsh) {
+		TYwsh tYwsh = new TYwsh();
+		BeanUtils.copyProperties(ywsh, tYwsh);
+
+		tYwsh.setCreateTime(new Date());
+		tYwsh.setCreateId(ywsh.getCreateId());
+		tYwsh.setCreateName(ywsh.getCreateName());
+		tYwsh.setIsAudit("1");
+		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
+
+		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
+		tXsth.setIsAuditXsjj(ywsh.getAuditLevel());
+
+		ywshDao.save(tYwsh);
+
+		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getLsh(),
+				"销售加价审批通过", operalogDao);
+
+	}
 	
 	@Override
 	public void updateXqshAudit(Ywsh ywsh) {
@@ -125,6 +146,27 @@ public class YwshServiceImpl implements YwshServiceI {
 		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getLsh(), 
 				"业务审批拒绝", operalogDao);
 		
+	}
+
+	@Override
+	public void updateXjshRefuse(Ywsh ywsh) {
+		TYwsh tYwsh = new TYwsh();
+		BeanUtils.copyProperties(ywsh, tYwsh);
+
+		tYwsh.setCreateTime(new Date());
+		tYwsh.setCreateId(ywsh.getCreateId());
+		tYwsh.setCreateName(ywsh.getCreateName());
+		tYwsh.setIsAudit("0");
+		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
+
+		TXsth tXsth = xsthDao.load(TXsth.class, ywsh.getLsh());
+		tXsth.setIsAuditXsjj(Constant.AUDIT_REFUSE);
+
+		ywshDao.save(tYwsh);
+
+		OperalogServiceImpl.addOperalog(ywsh.getCreateId(), ywsh.getBmbh(), ywsh.getMenuId(), tYwsh.getLsh(),
+				"业务审批拒绝", operalogDao);
+
 	}
 	
 	@Override
@@ -288,7 +330,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		}
 		fromWhere += " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAuditXsjj = th.isAuditXsjj and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
 		
 		if(userCon != null){
 			fromWhere += " and th." + userCon.toString();
@@ -359,6 +401,45 @@ public class YwshServiceImpl implements YwshServiceI {
 			ywhss.add(y);
 		}
 				
+		dg.setRows(ywhss);
+		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
+		return dg;
+	}
+
+	@Override
+	public DataGrid listXjshAudits(Ywsh ywsh){
+		DataGrid dg = new DataGrid();
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs, th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime";
+		String fromWhere = " from t_audit_set t "
+				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0' and SUBSTRING(th.xsthlsh, 7, 2) = '05'";
+		if(ywsh.getBmbh().equals("05")){
+			String ywyStr = "select ywys from v_zy_operators where createId = ?";
+			Map<String, Object> ywyParams = new HashMap<String, Object>();
+			ywyParams.put("0", ywsh.getCreateId());
+			Object ywy = ywshDao.getBySQL(ywyStr, ywyParams);
+			if(ywy != null) {
+				String ywys = ywy.toString();
+				fromWhere += " and th.createId in " + ywys;
+			}
+		}
+		fromWhere += " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_khlx lx on kh.khlxId = lx.id"
+				+ " where t.bmbh = ? and t.userId = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj and t.auditLevel = th.needAuditXsjj";
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", ywsh.getBmbh());
+		params.put("1", ywsh.getCreateId());
+
+		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
+
+		List<Ywsh> ywhss = new ArrayList<Ywsh>();
+		for(Object[] o : lists){
+			Ywsh y = getXjshRow(ywsh, o);
+
+			ywhss.add(y);
+		}
+
 		dg.setRows(ywhss);
 		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
 		return dg;
@@ -462,7 +543,67 @@ public class YwshServiceImpl implements YwshServiceI {
 		}
 		return y;
 	}
-	
+
+	private Ywsh getXjshRow(Ywsh ywsh, Object[] o) {
+		Ywsh y = new Ywsh();
+		String bmbh = (String)o[0];
+		String bmmc = (String)o[1];
+		String auditName = (String)o[2];
+		String lsh = (String)o[3];
+		int ywyId = (Integer)o[4];
+		String ywymc = (String)o[5];
+		String khbh = (String)o[6];
+		String khmc = (String)o[7];
+		String jsfsmc = (String)o[8];
+		BigDecimal hjje = new BigDecimal(o[9].toString());
+		String isZs = o[10] == null ? "0" : o[10].toString();
+		String bz = o[11].toString();
+		String auditLevel = o[12].toString();
+		String khlxmc = o[13].toString();
+		int sxzq = o[14] == null ? 0 : Integer.valueOf(o[14].toString());
+		BigDecimal sxje = o[15] == null ? Constant.BD_ZERO : new BigDecimal(o[15].toString());
+		String ywlxId = o[16].toString();
+		String isAudit = o[17].toString();
+		Date createTime = DateUtil.stringToDate(o[18].toString(), DateUtil.DATETIME_PATTERN);
+
+		y.setBmbh(bmbh);
+		y.setBmmc(bmmc);
+		y.setAuditName(auditName);
+		y.setLsh(lsh);
+		y.setYwymc(ywymc);
+		y.setKhmc(khmc);
+		y.setJsfsmc(jsfsmc);
+		y.setHjje(hjje);
+		y.setIsZs(isZs);
+		y.setBz(bz);
+		y.setAuditLevel(auditLevel);
+		y.setKhlxmc(khlxmc);
+		y.setSxzq(sxzq);
+		y.setSxje(sxje);
+		y.setIsAudit(isAudit);
+		y.setCreateTime(createTime);
+
+		y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
+
+		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
+				+ " from v_xs_latest AS mx"
+				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+				+ " order by bmbh, khbh, ywyId, createTime";
+
+		Map<String, Object> params_latest = new HashMap<String, Object>();
+		params_latest.put("0", ywsh.getBmbh());
+		params_latest.put("1", khbh);
+		params_latest.put("2", ywyId);
+
+		Object[] ola = yszzDao.getMBySQL(sql_latest, params_latest);
+		if(ola != null){
+			y.setTimeLatest(ola[0].toString());
+			y.setHjjeLatest(ola[1] == null ? Constant.BD_ZERO : new BigDecimal(ola[1].toString()));
+			y.setDelayDays(Integer.parseInt(ola[3].toString()));
+		}
+		return y;
+	}
+
 	private Ywsh getXqshRow(Ywsh ywsh, Object[] o) {
 		Ywsh y = new Ywsh();
 		String bmbh = (String)o[0];
@@ -674,6 +815,50 @@ public class YwshServiceImpl implements YwshServiceI {
 		
 		return dg;
 	}
+
+	public DataGrid refreshXjsh1(Ywsh ywsh) {
+		DataGrid dg = new DataGrid();
+		String sql = "select th.bmbh, th.bmmc, a.auditName, th.xsthlsh, th.ywyId, th.ywymc, th.khbh, th.khmc, th.jsfsmc, th.hjje, th.isZs,"
+				+ " th.bz, t.auditLevel, isnull(lx.khlxmc, '现款'), kh.sxzq, kh.sxje, a.ywlxId, th.isAudit, th.createTime"
+				+ " from t_audit_set t"
+				+ " left join t_xsth th on th.bmbh = t.bmbh and th.isCancel = '0'"
+				+ " left join t_audit a on t.auditId = a.id"
+				+ " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
+				+ " left join t_khlx lx on kh.khlxId = lx.id"
+				+ " where t.bmbh = ? and t.userId = ? and th.xsthlsh = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj and t.auditLevel = th.isAuditXsjj";
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", ywsh.getBmbh());
+		params.put("1", ywsh.getCreateId());
+		params.put("2", ywsh.getLsh());
+
+		Object[] o = ywshDao.getMBySQL(sql, params);
+		if(o != null){
+			Ywsh y = getXjshRow(ywsh, o);
+			dg.setObj(y);
+		}
+
+		return dg;
+	}
+
+    @Override
+    public DataGrid refreshXjsh(Ywsh ywsh) {
+        DataGrid dg = new DataGrid();
+        String sql = "select th.xsthlsh"
+                + " from t_xsth th"
+                + " where th.bmbh = ? and th.xsthlsh = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj";
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("0", ywsh.getBmbh());
+        params.put("1", ywsh.getLsh());
+
+        Object o = ywshDao.getBySQL(sql, params);
+        if(o != null){
+            Ywsh y = new Ywsh();
+            dg.setObj(y);
+        }
+        return dg;
+    }
 	
 	@Override
 	public DataGrid refreshXqsh(Ywsh ywsh) {

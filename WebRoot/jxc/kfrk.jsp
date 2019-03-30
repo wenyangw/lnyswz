@@ -281,6 +281,7 @@ $(function(){
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'rklxmc',title:'入库类型',align:'center'},
+            {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -723,7 +724,14 @@ function setEditing(){
 	});
     
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+	if (did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
 	//loadEditor();
 	//处理编辑行的换行事件

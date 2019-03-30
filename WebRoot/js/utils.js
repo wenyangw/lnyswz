@@ -337,16 +337,13 @@ lnyw.comboDefault = function(target, key){
 },
 
 //初始化combobox
-lnyw.initCombo = function(target, key, value, url){
+lnyw.initCombo = function(target, key, value, url, callback){
 	return target.combobox({
 	    url: url,
 	    width: 90,
 	    valueField: key,
 	    textField: value,
 	    //panelHeight: 'auto',
-//	    onLoadSuccess:function(){
-//	    	target.combobox('selectedIndex', 0);
-//	    }
 	});
 },
 

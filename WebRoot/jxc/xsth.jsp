@@ -53,7 +53,6 @@ var zjldwIdEditor;
 var cjldwIdEditor;
 var dwcbEditor;
 
-
 $(function(){
 	xsth_did = lnyw.tab_options().did;
 	xsth_lx = lnyw.tab_options().lx;
@@ -94,6 +93,24 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
+            {field:'needAuditXsjj',title:'销价审批',align:'center',hidden: (NEED_AUDIT_XSJJ === '0' || xsth_did === '01'),
+                styler: function(value, rowData){
+                    if(rowData.needAuditXsjj == rowData.isAuditXsjj){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAuditXsjj == '9'){
+                        return 'color:red;';
+                    }
+                }},
+            {field:'isAuditXsjj',title:'进度',align:'center',hidden: (NEED_AUDIT_XSJJ === '0' || xsth_did === '01'),
+                styler: function(value, rowData){
+                    if(rowData.needAuditXsjj == rowData.isAuditXsjj){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAuditXsjj == '9'){
+                        return 'color:red;';
+                    }
+                }},
 			{field:'xsthlsh',title:'流水号',align:'center',
 				styler: function(value, rowData){
 					if(rowData.isCancel == '1'){
@@ -113,7 +130,7 @@ $(function(){
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'fhId',title:'分户 id',align:'center',hidden:true},
-	        {field:'fhmc',title:'分户名称',align:'center'},
+	        {field:'fhmc',title:'分户名称',align:'center',hidden: xsth_did != '04'},
 	        {field:'ywyId',title:'业务员 id',align:'center',hidden:true},
 	        {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'jsfsId',title:'结算方式id',align:'center',hidden:true},
@@ -136,7 +153,7 @@ $(function(){
 	        {field:'hjsl',title:'数量',align:'center'},
 	        {field:'ysfy',title:'运费',align:'center'},
 	        {field:'yysfy',title:'原运费',align:'center'},
-	        {field:'bookmc',title:'书名',align:'center',
+	        {field:'bookmc',title:'书名',align:'center',hidden: xsth_did != '04'
 //         		formatter: function(value){
 //         			return lnyw.memo(value, 25);
 //         		}
@@ -1017,15 +1034,21 @@ function saveXsth(){
 	var effectRow = new Object();
 	
 	//销售是否超过限额
-	
-	var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=jxc_xsth_khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
-	if(sxkh.isLocked == '1'){
-		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
-		return false;
-	}
-	
+	<%--var sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=jxc_xsth_khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));--%>
+	<%--if(sxkh.isLocked == '1'){--%>
+		<%--$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');--%>
+		<%--return false;--%>
+	<%--}--%>
+
+    var sxkh = undefined;
+
 	if(jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) && jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=isFhth]').is(':checked')){
+            sxkh = jxc.isExcess('${pageContext.request.contextPath}', xsth_did, $('input[name=jxc_xsth_khbh]').val(), jxc_xsth_ywyCombo.combobox('getValue'));
+            if(sxkh.isLocked == '1'){
+                $.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+                return false;
+            }
 			if(sxkh.khlxId == '02'){
 				if((Number(sxkh.qkje) + Number(lnyw.delcommafy(footerRows[0].spje))) > Number(sxkh.sxje) * Number(sxkh.limitPer)){
 					$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
@@ -1039,39 +1062,51 @@ function saveXsth(){
 			}
 		}
 	}
-	
-	
-	save();
-// 	if($('input[name=isFh]').is(':checked')){
-// 		save();
-// 	}else{
-// 		var spbhs = undefined;
-// 		$.each(rows.slice(0, rows.length - 1), function(){
-// 			if(Number(this.zdwdj) - Number(this.dwcb) * (1 + SL) <= 0){
-// 				if(spbhs == undefined){
-// 					spbhs = '' + this.spbh;
-// 				}else{
-// 					spbhs += ',' + this.spbh;
-// 				}
-// 			}
-// 		});
-		
-// 		if(spbhs != undefined){
-// 			$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
-// 				if(data){
-// 					save();	
-// 				}else{
-// 					return false;
-// 				}
-// 			});
-// 		}else{
-// 			save();
-// 		}
-	
-// 	}
-	
+
+	var needAuditXsjj = 0;
+	var spbhXsjj = new Array();
+	var dwcb = 0;
+    if(!$('input[name=isFhth]').is(':checked')) {
+        $.each(rows, function () {
+            dwcb = this.dwcb * (1 + SL);
+            if (NEED_AUDIT_XSJJ == '1' && ('' + this.spbh).substring(0, 1) === '4' && ('' + this.spbh).substring(0, 3) !== '471') {
+                if (this.zdwdj <= (1 + 0.01) * dwcb) {
+                    needAuditXsjj = 3;
+                    spbhXsjj.push('商品' + this.spbh + '的销售加价率低于1%');
+                } else if (this.zdwdj <= (1 + 0.02) * dwcb) {
+                    needAuditXsjj = needAuditXsjj <= 2 ? 2 : needAuditXsjj;
+                    spbhXsjj.push('商品' + this.spbh + '的销售加价率低于2%');
+                } else if (this.zdwdj <= (1 + 0.03) * dwcb) {
+                    needAuditXsjj = needAuditXsjj <= 1 ? 1 : needAuditXsjj;
+                    spbhXsjj.push('商品' + this.spbh + '的销售加价率低于3%');
+                }
+            } else {
+                if (this.zdwdj <= dwcb) {
+                    spbhXsjj.push(this.spbh);
+                }
+            }
+        });
+    }
+
+	if(spbhXsjj.length > 0) {
+		if(needAuditXsjj > 0){
+			spbhXsjj.push('需要' + (needAuditXsjj == 3 ? '总经理' : (needAuditXsjj == 2 ? '副总经理' : '部门经理')) + '进行审批！');
+		}else{
+            spbhXsjj.push('销售价格低于成本，请确定后继续！');
+        }
+		$.messager.confirm('请确认', spbhXsjj.join(needAuditXsjj > 0 ? '<br>' : '，'), function (r) {
+			if (r) {
+				effectRow['needAuditXsjj'] = needAuditXsjj;
+				save();
+			}
+		});
+	}else {
+		effectRow['needAuditXsjj'] = needAuditXsjj;
+		save();
+	}
+
 	function save(){
-		if(NEED_AUDIT == "1" 
+		if(NEED_AUDIT == "1"
 				&& jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) 
 				&& $('input[name=xskpDetIds]').val().trim().length == 0
 				&& !$('input[name=isFhth]').is(':checked')){
@@ -1354,15 +1389,15 @@ function setEditing(){
       		cslEditor.target.focus();
       		return false;
       	}
-     }).bind('focusout', function(event){
-   		//验证成本
-		if(!$('input[name=xskpDetIds]').val()) {
-            checkCb();
-        }
-     	return false;
-     	
     });
-  	
+//	.bind('focusout', function(event){
+//   		//验证成本
+//		if(!$('input[name=xskpDetIds]').val()) {
+//            checkCb();
+//        }
+//     	return false;
+//    });
+
 //     cslEditor.target.bind('keyup', function(event){
 //     	if($(zhxsEditor.target).val() != 0){
 //     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
@@ -1408,13 +1443,14 @@ function setEditing(){
      	if(event.keyCode == 9){
       		spjeEditor.target.focus();
      	}
-    }).bind('focusout', function(event){
- 		//验证成本
-        if(!$('input[name=xskpDetIds]').val()) {
-            checkCb();
-        }
- 		return false;
-	});
+    });
+//    .bind('focusout', function(event){
+// 		//验证成本
+//        if(!$('input[name=xskpDetIds]').val()) {
+//            checkCb();
+//        }
+// 		return false;
+//	});
     
   	//输入金额计算单价
     spjeEditor.target.bind('keyup', function(event){
@@ -1434,16 +1470,7 @@ function setEditing(){
      	}
     });
   	
-  	function checkCb(){
-  		if($(zdjEditor.target).val() > 0){
-		    var kcRow = $('#show_spkc').propertygrid("getRows");
-		    if(kcRow != undefined){
-		   		if($(zdjEditor.target).val() <= Number(kcRow[0].xscb)){
-		   			$.messager.alert("提示", "销售单价小于成本，请确认后继续操作！");
-		   		}
-		    }
-  		}
-  	}
+
     
       	
     //计算金额
@@ -1511,7 +1538,25 @@ function setEditing(){
     }
 }
 
-
+function checkCb(){
+    if($(zdjEditor.target).val() > 0){
+        var kcRow = $('#show_spkc').propertygrid("getRows");
+        if(kcRow != undefined){
+//            if(NEED_AUDIT_XSJJ == "1" &&
+//                $(spbhEditor.target).val().substring(0, 1) == '4' &&
+//                $(spbhEditor.target).val().substring(0, 3) != '471'
+//            ){
+//                if ($(zdjEditor.target).val() < (1 + 0.03) * Number(kcRow[0].xscb)){
+//                    $.messager.alert("提示", "销售加价率低于3%，将进行审批！");
+//                }
+//            }else {
+                if ($(zdjEditor.target).val() <= Number(kcRow[0].xscb)) {
+                    $.messager.alert("提示", "销售单价小于成本，请确认后继续操作！");
+                }
+//            }
+        }
+    }
+}
 
 
 //求和
@@ -1801,7 +1846,6 @@ function khShLoad(){
 		break;
 	}
 }
-
 
 function updateJsfs(){
 	$.ajax({
@@ -2762,7 +2806,7 @@ function searchFydInXsth(){
 
 <div id="jxc_xsth_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsth" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注、书名：<input type="text" name="searchXsth" style="width:100px">
+	输入流水号、客户编号、名称、业务员、备注、书名、分户：<input type="text" name="searchXsth" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsth();">查询</a>
 </div>
 <div id="jxc_xsth_xskpTb" style="padding:3px;height:auto">

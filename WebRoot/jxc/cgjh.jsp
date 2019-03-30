@@ -1064,7 +1064,7 @@ function saveAll(){
 			cgjh_spdg.datagrid('endEdit', editIndex);
 		}else{ //编辑行未完成
 			if(keyOk()){
-				$.messager.alert('提示', '商品数据编辑未完成,请继续操作！', 'error');xsth
+				$.messager.alert('提示', '商品数据编辑未完成,请继续操作！', 'error');
 				return false;
 			}else{
 				removeRow();

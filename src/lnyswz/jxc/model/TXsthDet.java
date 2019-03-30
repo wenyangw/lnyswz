@@ -32,6 +32,7 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal dwcb;
 	private BigDecimal cksl;
 	private BigDecimal ccksl;
 	private BigDecimal kpsl;
@@ -50,7 +51,7 @@ public class TXsthDet implements java.io.Serializable {
 
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
-			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
+			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal dwcb, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
 			BigDecimal thsl, BigDecimal qrsl, String completed, Set<TKfck> TKfcks, Set<TXskp> TXskps, TCgjh TCgjh) {
 		this.id = id;
 		this.TXsth = TXsth;
@@ -69,6 +70,7 @@ public class TXsthDet implements java.io.Serializable {
 		this.zdwdj = zdwdj;
 		this.cdwdj = cdwdj;
 		this.spje = spje;
+		this.dwcb = dwcb;
 		this.cksl = cksl;
 		this.ccksl = ccksl;
 		this.kpsl = kpsl;
@@ -236,6 +238,15 @@ public class TXsthDet implements java.io.Serializable {
 
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
+	}
+
+	@Column(name = "dwcb", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
 	}
 
 	@Column(name = "cksl", nullable = false, precision = 18, scale = 3)

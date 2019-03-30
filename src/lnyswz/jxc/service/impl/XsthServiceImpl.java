@@ -100,6 +100,12 @@ public class XsthServiceImpl implements XsthServiceI {
 		}else{
 			tXsth.setNeedAudit("0");
 		}
+		tXsth.setIsAuditXsjj("0");
+		if(xsth.getNeedAuditXsjj() != null){
+			tXsth.setNeedAuditXsjj(xsth.getNeedAuditXsjj());
+		}else{
+			tXsth.setNeedAuditXsjj("0");
+		}
 		
 		String xskpDetIds= xsth.getXskpDetIds();
 		TXskp xskp = null;
@@ -180,7 +186,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		for(XsthDet xsthDet : xsthDets){
 			TXsthDet tDet = new TXsthDet();
 			BeanUtils.copyProperties(xsthDet, tDet, new String[]{"id"});
-			
+
+			if(xsthDet.getDwcb() == null) {
+				tDet.setDwcb(BigDecimal.ZERO);
+			}else{
+				tDet.setDwcb(xsthDet.getDwcb().multiply(new BigDecimal("1").add(Constant.SHUILV)));
+			}
+
 			//tDet.setLastRksl(Constant.BD_ZERO);
 			if(tDet.getCksl() == null){
 				tDet.setCksl(Constant.BD_ZERO);
@@ -200,7 +212,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			if(tDet.getSpje() == null){
 				tDet.setSpje(Constant.BD_ZERO);
 			}
-			
+
 			if(tDet.getZdwdj() == null){
 				tDet.setZdwdj(Constant.BD_ZERO);
 			}
@@ -1286,7 +1298,7 @@ public class XsthServiceImpl implements XsthServiceI {
 				hql += ")";
 			}else{
 				//hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
-				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.xsthlsh", "t.khbh", "t.khmc", "t.bz", "t.ywymc", "t.bookmc"}, params) + ")";
+				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.xsthlsh", "t.khbh", "t.khmc", "t.bz", "t.ywymc", "t.bookmc", "t.fhmc"}, params) + ")";
 				
 				//params.put("search", "%" + xsth.getSearch() + "%");
 			}
@@ -1408,13 +1420,17 @@ public class XsthServiceImpl implements XsthServiceI {
 		for(TXsthDet t : l){
 			XsthDet c = new XsthDet();
 			BeanUtils.copyProperties(t, c);
-			if(xsth.getFromOther() != null && xsth.getFromOther().equals("ywsh")){
+			if(xsth.getFromOther() != null && (xsth.getFromOther().equals("ywsh") || xsth.getFromOther().equals("xjsh"))){
 				//取得成本后加税
 				BigDecimal dwcb = YwzzServiceImpl.getDwcb(t.getTXsth().getBmbh(), t.getSpbh(), ywzzDao).multiply(new BigDecimal("1").add(Constant.SHUILV));
 				if(dwcb.compareTo(BigDecimal.ZERO) == 0){
 					c.setDwcb(BigDecimal.ZERO);
 				}else{
-					c.setDwcb(t.getZdwdj().subtract(dwcb).divide(t.getZdwdj(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP));
+					if(xsth.getFromOther().equals("ywsh")) {
+						c.setDwcb(t.getZdwdj().subtract(dwcb).divide(t.getZdwdj(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP));
+					}else{
+						c.setDwcb(t.getZdwdj().subtract(dwcb).divide(dwcb, 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(1, BigDecimal.ROUND_HALF_UP));
+					}
 				}
 			}
 			if(t.getTCgjh() != null){

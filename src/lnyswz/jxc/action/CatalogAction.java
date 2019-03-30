@@ -82,7 +82,7 @@ public class CatalogAction extends BaseAction implements ModelDriven<Catalog> {
 	 * 返回所有模块，供导航使用，无分页
 	 */
 	public void listCatas(){
-		writeJson(catalogService.listCatas());
+		writeJson(catalogService.listCatas(""));
 	}
 	
 	/**
