@@ -10,6 +10,4 @@ public interface SelectCommonServiceI {
 	public DataGrid selectCommonTree(SelectCommon selectCommon);
 	public List<Object[]> Exprot(SelectCommon selectCommon);	
 	public DataGrid selectCommonByFreeSpell(SelectCommon selectCommon);
-	public DataGrid listKhByYwy(SelectCommon selectCommon);
-	public DataGrid listKhByYwyXsth(SelectCommon selectCommon);
 }

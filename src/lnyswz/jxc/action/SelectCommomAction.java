@@ -14,7 +14,6 @@ import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.common.util.DateUtil;
-
 import lnyswz.jxc.bean.SelectCommon;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.SelectCommonServiceI;
@@ -57,26 +56,6 @@ public class SelectCommomAction extends BaseAction implements
 		}
 //		super.writeJson(selectCommonService.selectCommonList(selectCommon));
 		writeJson(j);
-	}
-	
-	/**
-	 *手机
-	 *根据业务员获取客户信息 
-	 */
-	public void listKhByYwy() {
-
-		// super.writeJson(selectCommonService.selectCommonList(selectCommon));
-		writeJson(selectCommonService.listKhByYwy(selectCommon));
-	}
-
-	/**
-	 *手机
-	 *根据业务员,客户获取销售提货信息 
-	 */
-	public void listKhByYwyXsth() {
-		
-		// super.writeJson(selectCommonService.selectCommonList(selectCommon));
-		writeJson(selectCommonService.listKhByYwyXsth(selectCommon));
 	}
 	
 
