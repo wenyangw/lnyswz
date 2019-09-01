@@ -120,7 +120,12 @@ public class UserAction extends BaseAction implements ModelDriven<User>{
 	public void listYwys(){
 		writeJson(userService.listYwys(user.getDid()));
 	}
-	
+	/**
+	 * 获取用户关联业务员账号
+	 */
+	public void listYwyByYwy(){
+		writeJson(userService.listYwyByYwy(user.getId()));
+	}
 	public void listBgys(){
 		User u = (User)session.get("user");
 		user.setIsYwy(u.getIsYwy());

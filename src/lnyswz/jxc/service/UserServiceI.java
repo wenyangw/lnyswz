@@ -18,6 +18,8 @@ public interface UserServiceI {
 	public DataGrid datagrid(User user);
 	
 	public List<User> listYwys(String depId);
+	
+	public List<User> listYwyByYwy(int i);
 
 	public void editPassword(User user);
 

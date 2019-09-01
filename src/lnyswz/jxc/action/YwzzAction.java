@@ -29,11 +29,11 @@ public class YwzzAction extends BaseAction implements ModelDriven<Ywzz>{
 	public void listLowSps(){
 		writeJson(ywzzService.listLowSps(ywzz));
 	}
-	
+
 	public void toCgjh(){
 		writeJson(ywzzService.toCgjh(ywzz));
 	}
-	
+
 	@Override
 	public Ywzz getModel() {
 		return ywzz;

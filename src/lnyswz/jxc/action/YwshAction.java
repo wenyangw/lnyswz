@@ -52,8 +52,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	 */
 	public void xjshAudit() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null) {
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateXjshAudit(ywsh);
@@ -72,8 +74,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	 */
 	public void xqshAudit() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null) {
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateXqshAudit(ywsh);
@@ -92,8 +96,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	 */
 	public void jhshAudit() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null) {
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateJhshAudit(ywsh);
@@ -128,8 +134,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 
 	public void xjshRefuse() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateXjshRefuse(ywsh);
@@ -145,8 +153,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 
 	public void xqshRefuse() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateXqshRefuse(ywsh);
@@ -162,8 +172,10 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	
 	public void jhshRefuse() {
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
-		ywsh.setCreateName(user.getRealName());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+			ywsh.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		try {
 			ywshService.updateJhshRefuse(ywsh);
@@ -235,21 +247,27 @@ public class YwshAction extends BaseAction implements ModelDriven<Ywsh> {
 	
 	public void listCgxqAudits(){
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+		}
 //		ywsh.setCreateName(user.getRealName());
 		writeJson(ywshService.listCgxqAudits(ywsh));
 	}
 	
 	public void listCgjhAudits(){
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+		}
 //		ywsh.setCreateName(user.getRealName());
 		writeJson(ywshService.listCgjhAudits(ywsh));
 	}
 
 	public void listXjshAudits(){
 		User user = (User) session.get("user");
-		ywsh.setCreateId(user.getId());
+		if(user != null){
+			ywsh.setCreateId(user.getId());
+		}
 		writeJson(ywshService.listXjshAudits(ywsh));
 	}
 

@@ -37,8 +37,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	 */
 	public void save(){
 		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+		if (user != null) {
+			xsth.setCreateId(user.getId());
+			xsth.setCreateName(user.getRealName());
+		}
 		Json j = new Json();
 		if(xsthService.isSaved(xsth)){
 			j.setSuccess(false);
@@ -68,8 +70,10 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 //			writeJson(j);
 //		}else {
 		User user = (User) session.get("user");
-		xsth.setCancelId(user.getId());
-		xsth.setCancelName(user.getRealName());
+		if(user != null) {
+			xsth.setCancelId(user.getId());
+			xsth.setCancelName(user.getRealName());
+		}
 		try {
 			xsthService.cancelXsth(xsth);
 			//添加成功
@@ -252,8 +256,11 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void datagrid(){
 		User u = (User)session.get("user");
-		if("1".equals(u.getIsYwy())){
-			xsth.setYwyId(u.getId());
+		if (u != null) {
+			xsth.setCreateId(u.getId());
+			if ("1".equals(u.getIsYwy())) {
+				xsth.setYwyId(u.getId());
+			}
 		}
 		writeJson(xsthService.datagrid(xsth));
 	}
@@ -265,7 +272,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 
 
-	
+
 	public void detDatagrid(){
 		writeJson(xsthService.detDatagrid(xsth));
 	}

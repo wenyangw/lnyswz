@@ -21,6 +21,7 @@ public class Menu {
 	private String state = "open";
 	private String cname;
 	private String uid;
+	private String type;
 
 	private int userId;
 	private String userName;
@@ -114,6 +115,12 @@ public class Menu {
 		this.userId = userId;
 	}
 
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getUserName() {
 		return userName;
 	}

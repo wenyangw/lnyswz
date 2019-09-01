@@ -474,7 +474,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 				
 				Object zzlo = YwzzServiceImpl.getZzl(bmbh, t.getSpbh(), ywzzDao);
 				BigDecimal zzl = zzlo == null ? BigDecimal.ZERO : new BigDecimal(zzlo.toString());
-				c.setZzl(zzl);
+				c.setZzl(zzl);;
 				
 				String xqs = "";
 				String hqlCgxq = "from TCgxqDet t where t.TCgjh.cgjhlsh = :cgjhlsh and t.spbh = :spbh";

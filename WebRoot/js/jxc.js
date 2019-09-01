@@ -272,7 +272,6 @@ jxc.getAuditLevel = function(url, bmbh, khbh, ywyId, jsfsId){
 	if(postponeDay > 0 && moment().diff(payTime, 'days') > postponeDay){
 		return undefined;
 	}else{
-		
 		//延期天数为0(非授信客户)或超期天数大于0的非优质客户，进行二级审批
 		if((postponeDay == 0 && khlxId == KHLX_XK) || (moment().diff(payTime, 'days') > 0 && isUp == '1')){
 			return jxc.auditLevel(bmbh)['second'];
@@ -377,6 +376,14 @@ jxc.notInExcludeKhs = function(bmbh, khbh){
 	default:
 		return true;
 		break;
+	}
+};
+
+jxc.setFh = function(khbh, target){
+    if (khbh === '21010017') {
+        target.combobox('setValue', '18');
+    } else {
+        target.combobox('setValue', '17');
 	}
 };
 

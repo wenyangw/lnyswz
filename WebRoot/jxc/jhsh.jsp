@@ -317,7 +317,7 @@ function jhsh_audit(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshJhsh.action',
 			data: {
-				bmbh: jhsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -332,7 +332,7 @@ function jhsh_audit(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: jhsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: jhsh_menuId,
 									bz: bz,
 								},
@@ -369,7 +369,7 @@ function jhsh_refuse(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshJhsh.action',
 			data: {
-				bmbh: jhsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -384,7 +384,7 @@ function jhsh_refuse(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: jhsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: jhsh_menuId,
 									bz: bz,
 								},

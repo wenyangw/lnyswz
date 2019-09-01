@@ -361,13 +361,13 @@ function init(){
 //////////////////////////////////////////////以下为业务审核处理代码
 function audit(){
 	var selected = ywsh_toDg.datagrid('getRows');
-	if(selected.length > 0){
+    if(selected.length > 0){
 		$.ajax({
 			type: "POST",
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
 			data: {
-				bmbh: ywsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -382,7 +382,7 @@ function audit(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: ywsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: ywsh_menuId,
 									bz: bz,
 								},
@@ -419,8 +419,8 @@ function refuse(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
 			data: {
-				bmbh: ywsh_did,
-				lsh: selected[0].lsh,
+				bmbh: selected[0].lsh.substr(4, 2),
+				lsh: selected[0].lsh
 			},
 			dataType: 'json',
 			success: function(d){
@@ -434,7 +434,7 @@ function refuse(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: ywsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: ywsh_menuId,
 									bz: bz,
 								},
@@ -478,7 +478,7 @@ function cjYwsh(){
 							url : '${pageContext.request.contextPath}/jxc/ywshAction!cjYwsh.action',
 							data : {
 								ywshlsh : row.ywshlsh,
-								bmbh: did,
+								bmbh: row.ywshlsh,
 								lxbh: lx,
 								menuId : menuId,
 								bz : bz

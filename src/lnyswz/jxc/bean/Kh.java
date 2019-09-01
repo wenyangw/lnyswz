@@ -1,6 +1,7 @@
 package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Kh {
 	private String khbh;
@@ -34,14 +35,15 @@ public class Kh {
 	private BigDecimal yszje;
 	private String isUp;
 	private int postponeDay;
+	private Date payTime;
+	private Integer cqDays;
 	private String isOther;
-	private BigDecimal limitPer;
-	private BigDecimal limitJe;
-	private String isLocked;
 	private String isDef;
 	private String info;
-	
-	
+	private String isLocked;
+	private BigDecimal limitPer;
+	private BigDecimal limitJe;
+
 	private String detId;
 	private String query;
 	
@@ -275,6 +277,22 @@ public class Kh {
 
 	public void setPostponeDay(int postponeDay) {
 		this.postponeDay = postponeDay;
+	}
+
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+
+	public Integer getCqDays() {
+		return cqDays;
+	}
+
+	public void setCqDays(Integer cqDays) {
+		this.cqDays = cqDays;
 	}
 
 	public String getIsOther() {

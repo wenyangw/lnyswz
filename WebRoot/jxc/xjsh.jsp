@@ -321,7 +321,7 @@ function xjsh_audit(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXjsh.action',
 			data: {
-				bmbh: xjsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -336,7 +336,7 @@ function xjsh_audit(){
 								data: {
 									lsh: selected[0].lsh,
 									auditLevel: selected[0].auditLevel,
-									bmbh: xjsh_did,
+									bmbh: selected[0].lsh.substr(4, 2),
 									menuId: xjsh_menuId,
 									bz: bz,
 								},
@@ -372,7 +372,7 @@ function xjsh_refuse(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXjsh.action',
 			data: {
-				bmbh: xjsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -387,7 +387,7 @@ function xjsh_refuse(){
 								data: {
 									lsh: selected[0].lsh,
 									auditLevel: selected[0].auditLevel,
-									bmbh: xjsh_did,
+									bmbh: selected[0].lsh.substr(4, 2),
 									menuId: xjsh_menuId,
 									bz: bz,
 								},

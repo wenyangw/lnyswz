@@ -313,7 +313,6 @@ public class KhServiceImpl implements KhServiceI {
 				Set<TKhDet> khdet = t.getTKhDets();
 				for (TKhDet m : khdet) {
 					if (m.getTDepartment().getId().trim().equals(c.getDepId())) {
-						
 						BeanUtils.copyProperties(m, nc);
 						nc.setDetId(m.getId());
 						if(m.getYwyId() > 0){
@@ -323,7 +322,6 @@ public class KhServiceImpl implements KhServiceI {
 						if(m.getKhlxId() != null){
 							nc.setKhlxmc(khlxDao.load(TKhlx.class, m.getKhlxId()).getKhlxmc());
 						}
-						
 					}
 				}
 			}
@@ -334,7 +332,7 @@ public class KhServiceImpl implements KhServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
-	
+
 	@Override
 	public DataGrid datagridDet(Kh kh) {
 		DataGrid dg = new DataGrid();

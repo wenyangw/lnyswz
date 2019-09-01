@@ -34,7 +34,6 @@ import lnyswz.jxc.util.Constant;
  */
 @Service("ywshService")
 public class YwshServiceImpl implements YwshServiceI {
-	private Logger logger = Logger.getLogger(YwshServiceImpl.class);
 	private BaseDaoI<TYwsh> ywshDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TXsth> xsthDao;
@@ -96,7 +95,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		tYwsh.setCreateName(ywsh.getCreateName());
 		tYwsh.setIsAudit("1");
 		tYwsh.setBmmc(depDao.load(TDepartment.class, ywsh.getBmbh()).getDepName());
-		
+
 		TCgxq tCgxq = cgxqDao.load(TCgxq.class, ywsh.getLsh());
 		tCgxq.setIsAudit(ywsh.getAuditLevel());
 		
@@ -330,15 +329,17 @@ public class YwshServiceImpl implements YwshServiceI {
 		}
 		fromWhere += " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAuditXsjj = th.isAuditXsjj and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
-		
+//				+ " where t.bmbh = ? and t.userId = ? and th.needAudit <> '0' and th.needAuditXsjj = th.isAuditXsjj and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+				+ " where t.bmbh in (select bmbh from t_audit_set where userId = ? and auditId in (select id from t_audit where ywlxid = '" + Constant.YWLX_XSTH + "')) and t.userId = ? and th.needAudit <> '0' and th.needAuditXsjj = th.isAuditXsjj and th.needAudit <> th.isAudit and t.auditLevel = 1 + th.isAudit";
+
 		if(userCon != null){
 			fromWhere += " and th." + userCon.toString();
 		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", ywsh.getBmbh());
+//		params.put("0", ywsh.getBmbh());
+		params.put("0", ywsh.getCreateId());
 		params.put("1", ywsh.getCreateId());
-		
+
 		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
@@ -347,8 +348,7 @@ public class YwshServiceImpl implements YwshServiceI {
 						
 			ywhss.add(y);
 		}
-		
-		
+
 		dg.setRows(ywhss);
 		dg.setTotal(ywshDao.countSQL("select count(*) " + fromWhere, params));
 		return dg;
@@ -362,11 +362,13 @@ public class YwshServiceImpl implements YwshServiceI {
 				+ " left join t_cgxq xq on xq.bmbh = t.bmbh and xq.isLs = '1' and a.ywlxId = SUBSTRING(xq.cgxqlsh, 7, 2)"
 				+ " left join t_kh_det kh on xq.bmbh = kh.depId and xq.khbh = kh.khbh and xq.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and xq.needAudit <> '0' and xq.needAudit <> xq.isAudit and t.auditLevel = 1 + xq.isAudit";
+//				+ " where t.bmbh = ? and t.userId = ? and xq.needAudit <> '0' and xq.needAudit <> xq.isAudit and t.auditLevel = 1 + xq.isAudit";
+				+ " where t.bmbh in (select bmbh from t_audit_set where userId = ? and auditId in (select id from t_audit where ywlxid = '08')) and t.userId = ? and xq.needAudit <> '0' and xq.needAudit <> xq.isAudit and t.auditLevel = 1 + xq.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", ywsh.getBmbh());
+//		params.put("0", ywsh.getBmbh());
+		params.put("0", ywsh.getCreateId());
 		params.put("1", ywsh.getCreateId());
-		
+
 		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by xq.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
@@ -387,11 +389,13 @@ public class YwshServiceImpl implements YwshServiceI {
 		String fromWhere = " from t_audit_set t "
 				+ " left join t_audit a on t.auditId = a.id"
 				+ " left join t_cgjh jh on jh.bmbh = t.bmbh and a.ywlxId = SUBSTRING(jh.cgjhlsh, 7, 2)"
-				+ " where t.bmbh = ? and t.userId = ? and jh.isCancel = '0' and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
+//				+ " where t.bmbh = ? and t.userId = ? and jh.isCancel = '0' and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
+				+ " where t.bmbh in (select bmbh from t_audit_set where userId = ? and auditId in (select id from t_audit where ywlxid = '09')) and t.userId = ? and jh.isCancel = '0' and jh.needAudit <> '0' and jh.needAudit <> jh.isAudit and t.auditLevel = 1 + jh.isAudit";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", ywsh.getBmbh());
+//		params.put("0", ywsh.getBmbh());
+		params.put("0", ywsh.getCreateId());
 		params.put("1", ywsh.getCreateId());
-		
+
 		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by jh.createTime", params, ywsh.getPage(), ywsh.getRows());
 		
 		List<Ywsh> ywhss = new ArrayList<Ywsh>();
@@ -425,10 +429,12 @@ public class YwshServiceImpl implements YwshServiceI {
 		}
 		fromWhere += " left join t_kh_det kh on th.bmbh = kh.depId and th.khbh = kh.khbh and th.ywyId = kh.ywyId"
 				+ " left join t_khlx lx on kh.khlxId = lx.id"
-				+ " where t.bmbh = ? and t.userId = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj and t.auditLevel = th.needAuditXsjj";
+//				+ " where t.bmbh = ? and t.userId = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj and t.auditLevel = th.needAuditXsjj";
+				+ " where t.bmbh in (select bmbh from t_audit_set where userId = ? and auditId in (select id from t_audit where ywlxid = '21')) and t.userId = ? and th.isAuditXsjj <> '9' and th.needAuditXsjj <> th.isAuditXsjj and t.auditLevel = th.needAuditXsjj";
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", ywsh.getBmbh());
+//		params.put("0", ywsh.getBmbh());
+		params.put("0", ywsh.getCreateId());
 		params.put("1", ywsh.getCreateId());
 
 		List<Object[]> lists = ywshDao.findBySQL(sql + fromWhere + " order by th.createTime", params, ywsh.getPage(), ywsh.getRows());
@@ -459,7 +465,7 @@ public class YwshServiceImpl implements YwshServiceI {
 		String jsfsmc = (String)o[8];
 		BigDecimal hjje = new BigDecimal(o[9].toString());
 		String isZs = o[10] == null ? "0" : o[10].toString();
-		String bz = o[11].toString();
+		String bz = o[11] == null ? "" : o[11].toString();
 		String auditLevel = o[12].toString();
 		String khlxmc = o[13].toString();
 		int sxzq = o[14] == null ? 0 : Integer.valueOf(o[14].toString());
@@ -500,7 +506,8 @@ public class YwshServiceImpl implements YwshServiceI {
 		Map<String, Object> params_levels = new HashMap<String, Object>();
 		params_levels.put("0", lsh);
 		params_levels.put("1", lsh);
-		params_levels.put("2", ywsh.getBmbh());
+		params_levels.put("2", bmbh);
+//		params_levels.put("2", ywsh.getBmbh());
 		//params_levels.put("3", ywlxId);
 		
 		List<Object[]> ols = yszzDao.findBySQL(sql_levels, params_levels);
@@ -531,7 +538,7 @@ public class YwshServiceImpl implements YwshServiceI {
 				+ " order by bmbh, khbh, ywyId, createTime";
 		
 		Map<String, Object> params_latest = new HashMap<String, Object>();
-		params_latest.put("0", ywsh.getBmbh());
+		params_latest.put("0", bmbh);
 		params_latest.put("1", khbh);
 		params_latest.put("2", ywyId);
 		
@@ -591,7 +598,8 @@ public class YwshServiceImpl implements YwshServiceI {
 				+ " order by bmbh, khbh, ywyId, createTime";
 
 		Map<String, Object> params_latest = new HashMap<String, Object>();
-		params_latest.put("0", ywsh.getBmbh());
+//		params_latest.put("0", ywsh.getBmbh());
+		params_latest.put("0", bmbh);
 		params_latest.put("1", khbh);
 		params_latest.put("2", ywyId);
 
@@ -656,7 +664,8 @@ public class YwshServiceImpl implements YwshServiceI {
 		Map<String, Object> params_levels = new HashMap<String, Object>();
 		params_levels.put("0", lsh);
 		params_levels.put("1", lsh);
-		params_levels.put("2", ywsh.getBmbh());
+//		params_levels.put("2", ywsh.getBmbh());
+		params_levels.put("2", bmbh);
 		//params_levels.put("3", ywlxId);
 		
 		List<Object[]> ols = yszzDao.findBySQL(sql_levels, params_levels);
@@ -687,7 +696,8 @@ public class YwshServiceImpl implements YwshServiceI {
 				+ " order by bmbh, khbh, ywyId, createTime";
 		
 		Map<String, Object> params_latest = new HashMap<String, Object>();
-		params_latest.put("0", ywsh.getBmbh());
+//		params_latest.put("0", ywsh.getBmbh());
+		params_latest.put("0", bmbh);
 		params_latest.put("1", khbh);
 		params_latest.put("2", ywyId);
 		
@@ -745,7 +755,8 @@ public class YwshServiceImpl implements YwshServiceI {
 		Map<String, Object> params_levels = new HashMap<String, Object>();
 		params_levels.put("0", lsh);
 		params_levels.put("1", lsh);
-		params_levels.put("2", ywsh.getBmbh());
+//		params_levels.put("2", ywsh.getBmbh());
+		params_levels.put("2", bmbh);
 		//params_levels.put("3", ywlxId);
 		
 		List<Object[]> ols = yszzDao.findBySQL(sql_levels, params_levels);

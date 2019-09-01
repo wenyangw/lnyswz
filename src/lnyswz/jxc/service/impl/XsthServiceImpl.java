@@ -66,7 +66,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsth tXsth = new TXsth();
 		//接收前台传入的数据
 		BeanUtils.copyProperties(xsth, tXsth);
-		//创建流水号
+		// 创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
 		tXsth.setCreateTime(new Date());
@@ -247,7 +247,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			//直送出版的
 			//计入临时总账
 			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) 
-					|| xsth.getFromOther().equals("cbs") 
+					|| "cbs".equals(xsth.getFromOther())
 					|| (ywrkDetIds != null && ywrkDetIds.trim().length() > 0))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
@@ -1021,11 +1021,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		
 		
 		int num = nl.size();
-		if (num < 4) {
-			for (int i = 0; i < (4 - num); i++) {
+		// 商品明细最后留2个空行
+//		if (num < 4) {
+//			for (int i = 0; i < (4 - num); i++) {
+			for (int i = 0; i < 2; i++) {
 				nl.add(new XsthDet());
 			}
-		}
+//		}
 		
 		String sqlKh = "select khlxId, sxzq from t_kh_det where depId = ? and khbh = ? and ywyId = ?";
 		Map<String, Object> sqlParams = new HashMap<String, Object>();
@@ -1296,8 +1298,18 @@ public class XsthServiceImpl implements XsthServiceI {
 					hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
 				}
 				hql += ")";
+				if(xsth.getBmbh().equals("05")) {
+					String ckSql = "select cks from v_zy_cks where createId = ?";
+					Map<String, Object> ckParams = new HashMap<String, Object>();
+					ckParams.put("0", xsth.getCreateId());
+					Object cks = xsthDao.getBySQL(ckSql, ckParams);
+
+					if(cks != null){
+						hql += " and t.ckId in " + cks.toString();
+					}
+				}
 			}else{
-				//hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)"; 
+				//hql += " and (t.xsthlsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search or t.ywymc like :search or t.bookmc like :search)";
 				hql += " and (" + Util.getQueryWhere(xsth.getSearch(), new String[]{"t.xsthlsh", "t.khbh", "t.khmc", "t.bz", "t.ywymc", "t.bookmc", "t.fhmc"}, params) + ")";
 				
 				//params.put("search", "%" + xsth.getSearch() + "%");
@@ -1458,7 +1470,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		if(xsth.getFromOther() == null || !xsth.getFromOther().equals("fromCgjh")){
 			hql += " and t.TXsth.createTime > :createTime";
 			if(xsth.getCreateTime() != null){
-				params.put("createTime", xsth.getCreateTime()); 
+				params.put("createTime", xsth.getCreateTime());
 			}else{
 				params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 			}
@@ -1495,13 +1507,15 @@ public class XsthServiceImpl implements XsthServiceI {
 
 		if(xsth.getFromOther() != null && xsth.getFromOther().equals("fromXskp")){
 			//内部销售的不受限制
-			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263', '21010608') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05'))))))";
+//			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and t.qrsl <> 0 or (t.qrsl = 0 and (t.TXsth.khbh in ('21010263', '21010608') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05')) or (t.TXsth.ywyId = 66 or t.TXsth.ywyId = 62)))))";
+			hql += " and (t.TXsth.isZs = '0' or (t.TXsth.isZs = '1' and (t.qrsl <> 0 or (t.qrsl = 0 and ((t.TXsth.khbh in ('21010263', '21010608') or (t.TXsth.fromRk='1' and (t.TXsth.bmbh ='01' or t.TXsth.bmbh='05')) or t.TXsth.ywyId = 66 or t.TXsth.ywyId = 62))))))";
 		}
 
 		if(xsth.getFromOther().equals("fromCgjh")){
 			hql += " and t.TXsth.isZs = '1' and t.TCgjh.cgjhlsh is null and t.TXsth.createTime > '2016-03-21' and t.TXsth.fromRk = '0' and t.completed = '0'" ;
 			if(xsth.getBmbh().equals("04")){
 				hql += " and t.TXsth.khbh not in (" + Constant.CBS_LIST + ")";
+				hql += " and t.TXsth.ywyId not in (62, 66)";
 			}
 		}
 		
@@ -1590,7 +1604,12 @@ public class XsthServiceImpl implements XsthServiceI {
 //					c.setZdwytsl(getYtsl(t.getTXsth().getXsthlsh(), t.getSpbh()));
 //				}
 //			}
-			if(xsth.getFromOther().equals("fromXskp") && tXsth.getJsfsId().equals("06") && tXsth.getIsZs().equals("1") && !(tXsth.getBmbh().equals("01") && (tXsth.getKhbh().equals("21010263") || tXsth.getKhbh().equals("21010608"))) && !(tXsth.getBmbh().equals("05") && tXsth.getFromRk().equals("1"))){
+			if(xsth.getFromOther().equals("fromXskp")
+					&& tXsth.getJsfsId().equals("06")
+					&& tXsth.getIsZs().equals("1")
+					&& !(tXsth.getBmbh().equals("01") && (tXsth.getKhbh().equals("21010263") || tXsth.getKhbh().equals("21010608")))
+					&& !(tXsth.getBmbh().equals("05") && tXsth.getFromRk().equals("1"))
+					&& !(tXsth.getBmbh().equals("04") && (tXsth.getYwyId() == 62 || tXsth.getYwyId() == 66))){
 				if(y != null){
 					nl.add(c);
 				}

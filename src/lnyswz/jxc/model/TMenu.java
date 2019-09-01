@@ -31,6 +31,7 @@ public class TMenu implements java.io.Serializable {
 	private String iconCls;// 前面的小图标样式
 	private String lx;
 	private String query;
+	private String type;
 	private Set<TButton> TButtons = new HashSet<TButton>(0);
 	private Set<TMenu> TMenus = new HashSet<TMenu>(0);
 
@@ -151,5 +152,14 @@ public class TMenu implements java.io.Serializable {
 	public void setTMenus(Set<TMenu> TMenus) {
 		this.TMenus = TMenus;
 	}
+	
+	@Column(name = "type", length = 1)
+	public String getType() {
+		return type;
+	}
 
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }

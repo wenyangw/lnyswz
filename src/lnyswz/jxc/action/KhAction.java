@@ -77,7 +77,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	public void datagrid() {
 		super.writeJson(khService.datagrid(kh));
 	}
-
 	
 	public void datagridDet() {
 		super.writeJson(khService.datagridDet(kh));
@@ -132,9 +131,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	 */
 	public void addDet() {
 		Json j = new Json();
-		try {
-			User u = (User)session.get("user");
+		User u = (User)session.get("user");
+		if (u != null) {
 			kh.setUserId(u.getId());
+		}
+		try {
 			Kh k = khService.addDet(kh);
 			j.setSuccess(true);
 			j.setMsg("客户授信维护成功!");
@@ -151,9 +152,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	 */
 	public void editDet() {
 		Json j = new Json();
-		try {
-			User u = (User)session.get("user");
+		User u = (User)session.get("user");
+		if (u != null) {
 			kh.setUserId(u.getId());
+		}
+		try {
 			khService.editDet(kh);
 			j.setSuccess(true);
 			j.setMsg("客户授信维护成功!");

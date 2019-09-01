@@ -14,7 +14,8 @@ public class Ywsh {
 	private String auditLevel;
 	private String isAudit;
 	private String bz;
-	
+	private String source;
+
 	private int page;
 	private int rows;
 	
@@ -87,6 +88,15 @@ public class Ywsh {
 	public void setBz(String bz) {
 		this.bz = bz;
 	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 	public int getPage() {
 		return page;
 	}

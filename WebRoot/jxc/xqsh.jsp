@@ -330,7 +330,7 @@ function xqsh_audit(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
 			data: {
-				bmbh: xqsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -345,7 +345,7 @@ function xqsh_audit(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: xqsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: xqsh_menuId,
 									bz: bz,
 								},
@@ -382,7 +382,7 @@ function xqsh_refuse(){
 			async: false,
 			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshXqsh.action',
 			data: {
-				bmbh: xqsh_did,
+				bmbh: selected[0].lsh.substr(4, 2),
 				lsh: selected[0].lsh,
 			},
 			dataType: 'json',
@@ -397,7 +397,7 @@ function xqsh_refuse(){
 								data: {
 									lsh: row.lsh,
 									auditLevel: row.auditLevel,
-									bmbh: xqsh_did,
+									bmbh: row.lsh.substr(4, 2),
 									menuId: xqsh_menuId,
 									bz: bz,
 								},

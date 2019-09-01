@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lnyswz.jxc.bean.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,7 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.CgjhDet;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Hw;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywzz;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.YwzzServiceI;
 import lnyswz.jxc.util.Constant;
 
@@ -82,7 +74,7 @@ public class YwzzServiceImpl implements YwzzServiceI {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public DataGrid toCgjh(Ywzz ywzz) {
 		if(ywzz.getSpbhs() != null && ywzz.getSpbhs().trim().length() > 0){

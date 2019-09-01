@@ -252,6 +252,16 @@ public class UserServiceImpl implements UserServiceI {
 		List<TUser> l = userDao.find(hql, params);
 		return changeUsers(l, false);
 	}
+	/**
+	 * 返回关联业务员列表
+	 */
+	@Override
+	public List<User> listYwyByYwy(int id) {
+		String sql = "select * from t_user t where id in (select ywyId from v_ywy_by_ywy where id = '"+ id +"')";
+		TUser u = new TUser();
+		List<TUser> l = userDao.findBySQL(sql, u);
+		return changeUsers(l, false);
+	}
 	
 	/**
 	 * 返回保管员列表

@@ -489,9 +489,11 @@ $(function(){
 			//初始化分户列表
 			if(jxc_xskp_fhCombo == undefined){
 				jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
-			}else{
-				jxc_xskp_fhCombo.combobox('selectedIndex', 0);
 			}
+//			else{
+//				jxc_xskp_fhCombo.combobox('selectedIndex', 0);
+//			}
+            jxc_xskp_fhCombo.combobox('selectedIndex', 0);
 		}else{
 			$('.fh').css('display','none');
 		}
@@ -711,15 +713,22 @@ function saveAll(){
 	
 	var footerRows_xskp = xskp_spdg.datagrid('getFooterRows');
 		
-	var sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=xskp_khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
-	if(sxkh_xskp.isLocked == '1'){
-		$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
-		return false;
-	}
-		
+	<%--var sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=xskp_khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));--%>
+	<%--if(sxkh_xskp.isLocked == '1'){--%>
+		<%--$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');--%>
+		<%--return false;--%>
+	<%--}--%>
+
+    var sxkh_xskp = undefined;
+
 	//直接填开发票时考察客户限额
 	if(jxc.notInExcludeKhs(xskp_did, $('input[name=xskp_khbh]').val()) && jxc_xskp_jsfsCombo.combobox('getValue') == JSFS_QK){
 		if(!$('input[name=xsthDetIds]').val()){
+            sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=xskp_khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
+            if(sxkh_xskp.isLocked == '1'){
+                $.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+                return false;
+            }
 			if(sxkh_xskp.khlxId == '02'){
 				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
 					$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
@@ -1450,6 +1459,9 @@ function khLoad(){
 			if($('input[name=xsthDetIds]').val() == ''){
 				jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=xskp_khbh]').val()));
 			}
+            if (xskp_did === '04' && $('input[name=isFh]').is(':checked')) {
+                jxc.setFh($('input[name=xskp_khbh]').val(), jxc_xskp_fhCombo)
+            }
 		}
 		break;
 	}

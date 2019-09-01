@@ -94,9 +94,9 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
 		}else{
 			l = menuService.authTree(u, menu.getCid());
 		}
-		if(l != null && l.size() > 0){
+//		if(l != null && l.size() > 0){
 			writeJson(l);
-		}
+//		}
 	}
 
 	/**
