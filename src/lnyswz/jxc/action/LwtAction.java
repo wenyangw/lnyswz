@@ -39,6 +39,8 @@ public class LwtAction extends BaseAction implements
 		writeJson(lwtService.listKhByYwyXsth(lwt));
 	}
 	
+	
+	
 	/**
 	 *手机
 	 *根据业务员,获取近三年销售统计 
@@ -46,6 +48,13 @@ public class LwtAction extends BaseAction implements
 	public void listXstjByYears() {
 		// super.writeJson(selectCommonService.selectCommonList(selectCommon));
 		writeJson(lwtService.listXstjByYears(lwt));
+	}
+	
+	public void listKcsps() {
+		writeJson(lwtService.listKcsps(lwt));
+	}
+	public void listKcspsBySpbh() {
+		writeJson(lwtService.listKcspsBySpbh(lwt));
 	}
 
 	/**

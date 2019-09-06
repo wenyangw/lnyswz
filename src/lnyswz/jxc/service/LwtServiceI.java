@@ -18,4 +18,6 @@ public interface LwtServiceI {
 	DataGrid getYwyByYwy(Lwt t);
 	DataGrid getXsths(Lwt lwt);
 	DataGrid listXstjByMonth(Lwt lwt);
+	DataGrid listKcsps(Lwt lwt);
+	DataGrid listKcspsBySpbh(Lwt lwt);
 }

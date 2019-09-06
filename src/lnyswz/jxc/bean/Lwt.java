@@ -1,7 +1,7 @@
 package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.*;
 
 public class Lwt {
 	private String spbh;
@@ -89,6 +89,7 @@ public class Lwt {
 
 	private int page;
 	private int rows;
+	private List<Lwt> mxs = new ArrayList<Lwt>(0);
 
 	public String getSpbh() {
 		return spbh;
@@ -696,5 +697,13 @@ public class Lwt {
 
 	public void setRows(int rows) {
 		this.rows = rows;
+	}
+
+	public List<Lwt> getMxs() {
+		return mxs;
+	}
+
+	public void setMxs(List<Lwt> mxs) {
+		this.mxs = mxs;
 	}
 }

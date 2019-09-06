@@ -458,6 +458,89 @@ public class LwtServiceImpl implements LwtServiceI {
 		return dg;
 	}
 
+	
+	@Override
+	public DataGrid listKcsps(Lwt lwt) {
+		String sql = "execute m_kccx '" + lwt.getBmbh() + "','" + lwt.getSpbh() + "','" + lwt.getSearch() + "',"+lwt.getPage() + "," + lwt.getRows();
+		DataGrid dg = new DataGrid();
+		
+		List<Lwt> nl = new ArrayList<Lwt>();
+		List<Object[]> lists = lwtDao.findBySQL(sql);
+		
+		for(Object[] o : lists){
+			Lwt l = new Lwt();
+			String spbh = (String)o[0];
+			String spmc = (String)o[1];
+			String spcd = (String)o[2];
+			String spbz = (String)o[3];
+			String sppp = (String)o[4];
+			String zjldwmc = (String)o[5];
+			BigDecimal kcsl =  new BigDecimal(o[6].toString());
+			
+			l.setSpbh(spbh);
+			l.setSpmc(spmc);
+			l.setSpcd(spcd);
+			l.setSppp(sppp);
+			l.setSpbz(spbz);
+			l.setZjldwmc(zjldwmc);
+			l.setKcsl(kcsl);
+			l.setMxs(listKcBySpbh(lwt.getBmbh(), spbh));
+			nl.add(l);
+		}
+		dg.setRows(nl);
+		String countexecHql ="execute m_kccx '" + lwt.getBmbh() + "', '"+ lwt.getSpbh() + "', '" + lwt.getSearch() +  "', 0, 0";
+		dg.setTotal(lwtDao.countSQL(countexecHql));
+		
+		return dg;
+	}
+
+	private List<Lwt> listKcBySpbh(String bmbh, String spbh1) {
+		String sql = "execute m_kccx '" + bmbh + "', '" + spbh1 + "', '', 0, 10";
+
+		List<Lwt> nl = new ArrayList<Lwt>();
+		List<Object[]> lists = lwtDao.findBySQL(sql);
+		for(Object[] o : lists){
+			Lwt l = new Lwt();
+			String spbh = (String)o[0];
+			String ckId = (String)o[1];
+			String ckmc = (String)o[2];
+			String zjldwmc = (String)o[3];
+			BigDecimal kcsl =  new BigDecimal(o[4].toString());
+			l.setSpbh(spbh);
+			l.setCkId(ckId);
+			l.setCkmc(ckmc);
+			l.setZjldwmc(zjldwmc);
+			l.setKcsl(kcsl);
+			nl.add(l);
+		}
+		return nl;
+	}
+
+	@Override
+	public DataGrid listKcspsBySpbh(Lwt lwt) {
+		String sql = "execute m_kccx '" + lwt.getBmbh() + "','" + lwt.getSpbh() + "','" + lwt.getSearch() + "'," + lwt.getPage() + "," + lwt.getRows();
+		DataGrid dg = new DataGrid();
+		
+		List<Lwt> nl = new ArrayList<Lwt>();
+		List<Object[]> lists = lwtDao.findBySQL(sql);
+		for(Object[] o : lists){
+			Lwt l = new Lwt();
+			String spbh = (String)o[0];
+			String ckId = (String)o[1];
+			String ckmc = (String)o[2];
+			String zjldwmc = (String)o[3];
+			BigDecimal kcsl =  new BigDecimal(o[4].toString());
+			l.setSpbh(spbh);
+			l.setCkId(ckId);
+			l.setCkmc(ckmc);
+			l.setZjldwmc(zjldwmc);
+			l.setKcsl(kcsl);
+			nl.add(l);
+		}
+		dg.setRows(nl);
+		return dg;
+	}
+	
 	private Lwt getKhByYwyXsth(Object[] o,String type) {
 		Lwt x = new Lwt();
 		if(type.equals("xskp_w_hk")){
