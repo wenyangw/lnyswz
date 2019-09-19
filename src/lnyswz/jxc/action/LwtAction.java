@@ -9,7 +9,6 @@ import lnyswz.common.action.BaseAction;
 import lnyswz.jxc.bean.Lwt;
 import lnyswz.jxc.service.LwtServiceI;
 
-
 @Namespace("/jxc")
 @Action("lwtAction")
 public class LwtAction extends BaseAction implements
@@ -18,7 +17,6 @@ public class LwtAction extends BaseAction implements
 	private Lwt lwt = new Lwt();
 	private LwtServiceI lwtService;
 
-	
 	/**
 	 *手机
 	 *根据业务员获取客户信息 
@@ -38,23 +36,17 @@ public class LwtAction extends BaseAction implements
 		// super.writeJson(selectCommonService.selectCommonList(selectCommon));
 		writeJson(lwtService.listKhByYwyXsth(lwt));
 	}
-	
-	
-	
+
 	/**
 	 *手机
 	 *根据业务员,获取近三年销售统计 
 	 */
 	public void listXstjByYears() {
-		// super.writeJson(selectCommonService.selectCommonList(selectCommon));
 		writeJson(lwtService.listXstjByYears(lwt));
 	}
 	
 	public void listKcsps() {
 		writeJson(lwtService.listKcsps(lwt));
-	}
-	public void listKcspsBySpbh() {
-		writeJson(lwtService.listKcspsBySpbh(lwt));
 	}
 
 	/**

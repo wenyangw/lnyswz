@@ -649,9 +649,9 @@ function searchXshk(){
 </script>
 <div id="jxc_xshk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
-		<div id='jxc_xshk_layout' style="height:100%;width=100%">
+		<div id='jxc_xshk_layout' style="height:100%;width:100%;">
 			<div data-options="region:'west',title:'业务员-客户',split:true" style="height:100%;width:300px">
-				<div id='jxc_xshk_khLayout' style="height:100%;width=100%">
+				<div id='jxc_xshk_khLayout' style="height:100%;width:100%;">
 					<div data-options="region:'north',title:'业务员',split:true" style="height:80px;width:100%">
 						请选择业务员：<input id="jxc_xshk_ywyId" name="ywyId" size="16">
 					</div>
@@ -661,7 +661,7 @@ function searchXshk(){
 				</div>
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
-		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
+		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width:100%;">
 					<div data-options="region:'north',title:'商品分类',split:true" style="height:140px;width:100%">
 						<table class="tinfo">
 							<tr>

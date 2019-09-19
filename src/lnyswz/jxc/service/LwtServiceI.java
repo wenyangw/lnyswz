@@ -19,5 +19,5 @@ public interface LwtServiceI {
 	DataGrid getXsths(Lwt lwt);
 	DataGrid listXstjByMonth(Lwt lwt);
 	DataGrid listKcsps(Lwt lwt);
-	DataGrid listKcspsBySpbh(Lwt lwt);
 }
+

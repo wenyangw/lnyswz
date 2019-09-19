@@ -50,6 +50,7 @@ $(function(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
 		async: false,
+		type: "POST",
 		cache: false,
 		context:this,	
 		data : {
@@ -70,6 +71,7 @@ $(function(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		type: "POST",
 		cache: false,
 		data : {
 			selectType :query,
@@ -183,6 +185,7 @@ function selectClick(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		type: "POST",
 		data : { 
 			selectType :query,
 			isShow:'1',
@@ -504,6 +507,7 @@ function getData(page, rows,cons,allFields,exec) {
 	resultDg = $('#result_' + query);
 	$.ajax({ 
    		async: false,
+		type: "POST",
    		cache: false,
    		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		dataType : 'json',
@@ -616,6 +620,7 @@ function exportExcel(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
+		type: "POST",
 		cache: false,
 		context:this,	
 		data : {

@@ -461,84 +461,52 @@ public class LwtServiceImpl implements LwtServiceI {
 	
 	@Override
 	public DataGrid listKcsps(Lwt lwt) {
-		String sql = "execute m_kccx '" + lwt.getBmbh() + "','" + lwt.getSpbh() + "','" + lwt.getSearch() + "',"+lwt.getPage() + "," + lwt.getRows();
+		String sql = "execute m_kccx '" + lwt.getBmbh() + "', '" + lwt.getSpbh() + "', '" + lwt.getSearch() + "', "+lwt.getPage() + ", " + lwt.getRows();
 		DataGrid dg = new DataGrid();
 		
 		List<Lwt> nl = new ArrayList<Lwt>();
 		List<Object[]> lists = lwtDao.findBySQL(sql);
-		
+		Lwt l;
 		for(Object[] o : lists){
-			Lwt l = new Lwt();
-			String spbh = (String)o[0];
-			String spmc = (String)o[1];
-			String spcd = (String)o[2];
-			String spbz = (String)o[3];
-			String sppp = (String)o[4];
-			String zjldwmc = (String)o[5];
-			BigDecimal kcsl =  new BigDecimal(o[6].toString());
-			
-			l.setSpbh(spbh);
-			l.setSpmc(spmc);
-			l.setSpcd(spcd);
-			l.setSppp(sppp);
-			l.setSpbz(spbz);
-			l.setZjldwmc(zjldwmc);
-			l.setKcsl(kcsl);
-			l.setMxs(listKcBySpbh(lwt.getBmbh(), spbh));
+			l = new Lwt();
+
+			l.setSpbh(o[0].toString());
+			l.setSpmc(o[1].toString());
+			l.setSpcd(o[2].toString());
+			l.setSpbz(o[3].toString());
+			l.setSppp(o[4].toString());
+			l.setZjldwmc(o[5].toString());
+			l.setKcsl(new BigDecimal(o[6].toString()));
+
+			lwt.setSpbh(o[0].toString());
+			l.setMxs(listKcBySp(lwt));
+
 			nl.add(l);
 		}
 		dg.setRows(nl);
-		String countexecHql ="execute m_kccx '" + lwt.getBmbh() + "', '"+ lwt.getSpbh() + "', '" + lwt.getSearch() +  "', 0, 0";
-		dg.setTotal(lwtDao.countSQL(countexecHql));
+		String countSql ="execute m_kccx '" + lwt.getBmbh() + "', '', '" + lwt.getSearch() +  "', 0, 0";
+		dg.setTotal(lwtDao.countSQL(countSql));
 		
 		return dg;
 	}
 
-	private List<Lwt> listKcBySpbh(String bmbh, String spbh1) {
-		String sql = "execute m_kccx '" + bmbh + "', '" + spbh1 + "', '', 0, 10";
+	private List<Lwt> listKcBySp(Lwt lwt) {
+		String sql = "execute m_kccx '" + lwt.getBmbh() + "', '" + lwt.getSpbh() + "', '" + lwt.getSearch() + "', " + lwt.getPage() + ", " + lwt.getRows();
 
 		List<Lwt> nl = new ArrayList<Lwt>();
 		List<Object[]> lists = lwtDao.findBySQL(sql);
+		Lwt l = null;
 		for(Object[] o : lists){
-			Lwt l = new Lwt();
-			String spbh = (String)o[0];
-			String ckId = (String)o[1];
-			String ckmc = (String)o[2];
-			String zjldwmc = (String)o[3];
-			BigDecimal kcsl =  new BigDecimal(o[4].toString());
-			l.setSpbh(spbh);
-			l.setCkId(ckId);
-			l.setCkmc(ckmc);
-			l.setZjldwmc(zjldwmc);
-			l.setKcsl(kcsl);
+			l = new Lwt();
+			l.setSpbh(o[0].toString());
+			l.setCkId(o[1].toString());
+			l.setCkmc(o[2].toString());
+			l.setZjldwmc(o[3].toString());
+			l.setKcsl(new BigDecimal(o[4].toString()));
+
 			nl.add(l);
 		}
 		return nl;
-	}
-
-	@Override
-	public DataGrid listKcspsBySpbh(Lwt lwt) {
-		String sql = "execute m_kccx '" + lwt.getBmbh() + "','" + lwt.getSpbh() + "','" + lwt.getSearch() + "'," + lwt.getPage() + "," + lwt.getRows();
-		DataGrid dg = new DataGrid();
-		
-		List<Lwt> nl = new ArrayList<Lwt>();
-		List<Object[]> lists = lwtDao.findBySQL(sql);
-		for(Object[] o : lists){
-			Lwt l = new Lwt();
-			String spbh = (String)o[0];
-			String ckId = (String)o[1];
-			String ckmc = (String)o[2];
-			String zjldwmc = (String)o[3];
-			BigDecimal kcsl =  new BigDecimal(o[4].toString());
-			l.setSpbh(spbh);
-			l.setCkId(ckId);
-			l.setCkmc(ckmc);
-			l.setZjldwmc(zjldwmc);
-			l.setKcsl(kcsl);
-			nl.add(l);
-		}
-		dg.setRows(nl);
-		return dg;
 	}
 	
 	private Lwt getKhByYwyXsth(Object[] o,String type) {

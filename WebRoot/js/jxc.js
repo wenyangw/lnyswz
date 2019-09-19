@@ -126,6 +126,25 @@ jxc.getZfCk = function(bmbh){
 	}
 };
 
+jxc.getFlCk = function(bmbh, mc){
+	switch (bmbh) {
+		case '01':
+			return mc ? '总公司' : '02';
+			break;
+		case '04':
+			return mc ? '于洪库' : '01';
+			break;
+		case '05':
+			return mc ? '于洪库' : '03';
+			break;
+		case '08':
+			return mc ? '辽艺库' : '04';
+			break;
+		default:
+			break;
+	}
+};
+
 jxc.spJs = function(bmbh){
     switch (bmbh) {
         case '01':

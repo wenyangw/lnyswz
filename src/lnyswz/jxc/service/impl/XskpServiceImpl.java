@@ -355,21 +355,16 @@ public class XskpServiceImpl implements XskpServiceI {
 	public Xskp saveXsfl(Xskp xskp) {
 		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
 
-		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
-		
 		TXskp tXskp = new TXskp();
 		BeanUtils.copyProperties(xskp, tXskp);
 		tXskp.setCreateTime(new Date());
 		tXskp.setCreateName(xskp.getCreateName());
 		tXskp.setXskplsh(lsh);
 		tXskp.setIsCj("0");
+        tXskp.setHkje(BigDecimal.ZERO);
 		tXskp.setYfje(BigDecimal.ZERO);
 		
-		tXskp.setHjje(tXskp.getHjje().negate());
-		tXskp.setHjse(tXskp.getHjse().negate());
-		
-		tXskp.setHkje(hjje.negate());
-		
+
 		String bmmc = depDao.load(TDepartment.class, xskp.getBmbh()).getDepName();
 		tXskp.setBmmc(bmmc);
 		
@@ -379,47 +374,53 @@ public class XskpServiceImpl implements XskpServiceI {
 		Department dep = new Department();
 		dep.setId(xskp.getBmbh());
 		dep.setDepName(bmmc);
-		
+
 		Ck ck = new Ck();
 		ck.setId(xskp.getCkId());
 		ck.setCkmc(xskp.getCkmc());
-		
-		Kh kh = new Kh();
-		kh.setKhbh(xskp.getKhbh());
-		kh.setKhmc(xskp.getKhmc());
+
+//		Kh kh = new Kh();
+//		kh.setKhbh(xskp.getKhbh());
+//		kh.setKhmc(xskp.getKhmc());
 
 		//处理商品明细
 		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
-		ArrayList<XskpDet> xskpDets = JSON.parseObject(xskp.getDatagrid(), new TypeReference<ArrayList<XskpDet>>(){});
-		for(XskpDet xskpDet : xskpDets){
-			TXskpDet tDet = new TXskpDet();
-			BeanUtils.copyProperties(xskpDet, tDet);
-			
-			tDet.setZdwdj(BigDecimal.ZERO);
-			tDet.setZdwsl(BigDecimal.ZERO);
-			tDet.setCdwdj(BigDecimal.ZERO);
-			tDet.setCdwsl(BigDecimal.ZERO);
-			
-			tDet.setLastThsl(BigDecimal.ZERO);
-			tDet.setcLastThsl(BigDecimal.ZERO);
-			tDet.setThsl(BigDecimal.ZERO);
-			
-			tDet.setSpje(tDet.getSpje().negate());
-			tDet.setSpse(tDet.getSpse().negate());
-			
-			tDet.setXscb(BigDecimal.ZERO);
-			
-			tDet.setTXskp(tXskp);
-			
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(xskpDet, sp);
+//		ArrayList<XskpDet> xskpDets = JSON.parseObject(xskp.getDatagrid(), new TypeReference<ArrayList<XskpDet>>(){});
+//		for(XskpDet xskpDet : xskpDets){
+		TXskpDet tDet = new TXskpDet();
+//			BeanUtils.copyProperties(xskpDet, tDet);
+//
+        tDet.setSpbh("0010101");
+        tDet.setSpmc("返利");
+        tDet.setSpcd("");
+        tDet.setZjldwId("41");
+        tDet.setZjldwmc("次");
 
-			tDets.add(tDet);
-			
-			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
-			
-		}
+		tDet.setZdwdj(BigDecimal.ZERO);
+		tDet.setZdwsl(BigDecimal.ZERO);
+		tDet.setCdwdj(BigDecimal.ZERO);
+		tDet.setCdwsl(BigDecimal.ZERO);
+
+		tDet.setLastThsl(BigDecimal.ZERO);
+		tDet.setcLastThsl(BigDecimal.ZERO);
+		tDet.setThsl(BigDecimal.ZERO);
+
+		tDet.setSpje(xskp.getHjje());
+		tDet.setSpse(xskp.getHjse());
+
+		tDet.setXscb(BigDecimal.ZERO);
+
+		tDet.setTXskp(tXskp);
+
+		Sp sp = new Sp();
+		BeanUtils.copyProperties(tDet, sp);
+
+		tDets.add(tDet);
+
+        //更新业务总账
+        YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+
+//		}
 	
 		tXskp.setTXskpDets(tDets);
 		
@@ -431,7 +432,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		
 		Xskp rXskp = new Xskp();
 		rXskp.setXskplsh(lsh);
-		rXskp.setFplxId(tXskp.getFplxId());
+//		rXskp.setFplxId(tXskp.getFplxId());
 		return rXskp;
 	}
 

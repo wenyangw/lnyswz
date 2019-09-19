@@ -245,9 +245,11 @@ public class XsthServiceImpl implements XsthServiceI {
 			//销售提货直接新生成且不是直送
 			//直送业务入库生成的
 			//直送出版的
+			//直送易货的
 			//计入临时总账
 			if("1".equals(xsth.getIsLs()) && (!"1".equals(xsth.getIsZs()) 
 					|| "cbs".equals(xsth.getFromOther())
+					|| ("1".equals(xsth.getIsZs()) && "47".equals(xsthDet.getSpbh().substring(0, 2)))
 					|| (ywrkDetIds != null && ywrkDetIds.trim().length() > 0))){
 				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), xsthDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 			}
@@ -495,7 +497,8 @@ public class XsthServiceImpl implements XsthServiceI {
 				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
 				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
 						|| (ywrks != null && ywrks.size() > 0)
-						|| xsth.getFromOther().equals("cbs")){
+						|| xsth.getFromOther().equals("cbs")
+						|| ("1".equals(yTXsth.getIsZs()) || "47".equals(yTDet.getSpbh().substring(0, 2)))){
 					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				}
 				

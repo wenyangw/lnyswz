@@ -57,6 +57,7 @@ $(function(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/admin/dictAction!getDict.action',
 		async: false,
+		type: "POST",
 		cache: false,
 		context:this,	
 		data : {
@@ -76,6 +77,7 @@ $(function(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,
+		type: "POST",
 		cache: false,		
 		data : {
 			selectType :query,
@@ -198,6 +200,7 @@ function selectClickTree(){
 	$.ajax({
 		url : '${pageContext.request.contextPath}/admin/dictAction!listFields.action',
 		async: false,	
+		type: "POST",
 		data : {
 			selectType :query,
 		},
@@ -360,6 +363,7 @@ function selectClickTree(){
 		$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
+			type: "POST",
 			cache: false,
 			data : {
 					selectType :query,
@@ -404,6 +408,7 @@ function selectClickTree(){
 		$.ajax({
 			url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonTree.action',
 			async: false,
+			type: "POST",
 			cache: false,
 			data : {
 					hqls :conditions.join(" and "),
@@ -448,6 +453,7 @@ function selectClickTree(){
 									$.ajax({
 										url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 										async: false,
+										type: "POST",
 										data : {
 												selectType :query,
 												},
@@ -536,6 +542,7 @@ function showDatagridTree(hqls,allFields,allTitle,exec,treeExec){
 		url : '${pageContext.request.contextPath}/jxc/selectCommonAction!selectCommonList.action',
 		async: false,
 		cache: false,
+		type: "POST",
 		data : {
 				hqls :hqls,
 				query:query,
@@ -735,6 +742,7 @@ function exportExcelTree(){
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
 			cache: false,
+			type: "POST",
 			data : {
 					selectType :query,
 					},
@@ -760,6 +768,7 @@ function exportExcelTree(){
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
 		cache: false,
+		type: "POST",
 		context:this,	
 		data : {
 			query:query,
@@ -810,6 +819,7 @@ function exportExcelAll(){
 	$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
+			type: "POST",
 			cache: false,
 			data : {
 					selectType :query,
@@ -828,6 +838,7 @@ function exportExcelAll(){
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
 		cache: false,
+		type: "POST",
 		context:this,	
 		data : {
 			query:query,
@@ -876,6 +887,7 @@ function exportExcel(){
 	$.ajax({
 			url:'${pageContext.request.contextPath}/admin/dictAction!selectTree.action',
 			async: false,
+			type: "POST",
 			cache: false,
 			data : {
 					selectType :query,
@@ -894,6 +906,7 @@ function exportExcel(){
 	$.ajax({	
 		url:'${pageContext.request.contextPath}/jxc/selectCommonAction!ExportExcel.action',
 		async: false,
+		type: "POST",
 		cache: false,
 		context:this,	
 		data : {
