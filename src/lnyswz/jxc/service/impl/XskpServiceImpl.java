@@ -625,7 +625,7 @@ public class XskpServiceImpl implements XskpServiceI {
 	public void cjXsfl(Xskp xskp) {
 		Date now = new Date();
 		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
-		//更新原单据信息
+		//获取原单据信息
 		TXskp yTXskp = xskpDao.get(TXskp.class, xskp.getXskplsh());
 		//新增冲减单据信息
 		TXskp tXskp = new TXskp();
@@ -637,12 +637,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		yTXskp.setCjName(xskp.getCjName());
 		yTXskp.setIsCj("1");
 
-		//??
-		//直送不需要生成销售提货
-		//if("0".equals(yTXskp.getIsTh())){
-		//	needXsth = false;
-		//}
-		
 		tXskp.setXskplsh(lsh);
 		tXskp.setCjXskplsh(yTXskp.getXskplsh());
 		tXskp.setCreateId(xskp.getCjId());
@@ -654,7 +648,6 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXskp.setCjTime(now);
 		tXskp.setHjje(tXskp.getHjje().negate());
 		tXskp.setHjse(tXskp.getHjse().negate());
-		tXskp.setHkje(tXskp.getHkje().negate());
 		tXskp.setBz(xskp.getBz());
 		
 		Department dep = new Department();
@@ -664,9 +657,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		Ck ck = new Ck();
 		ck.setId(tXskp.getCkId());
 		ck.setCkmc(tXskp.getCkmc());
-		
-		Kh khTh = null;
-		
+
 		Set<TXskpDet> yTXskpDets = yTXskp.getTXskpDets();
 		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
 		TXskpDet tDet = null;
@@ -681,8 +672,8 @@ public class XskpServiceImpl implements XskpServiceI {
 			//更新业务总账
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
 		}
 				
 		tXskp.setTXskpDets(tDets);

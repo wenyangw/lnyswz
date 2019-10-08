@@ -50,6 +50,7 @@ public class Lwt {
 	private BigDecimal sxje;
 	private BigDecimal lsje;
 	private BigDecimal hkje;
+	private BigDecimal byys;
 
 	private String id;
 	private String userId;
@@ -428,15 +429,15 @@ public class Lwt {
 		this.hkje = hkje;
 	}
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getUserId() {
+    public String getUserId() {
 		return userId;
 	}
 
@@ -706,5 +707,12 @@ public class Lwt {
 
 	public void setMxs(List<Lwt> mxs) {
 		this.mxs = mxs;
+	}
+public BigDecimal getByys() {
+		return byys;
+	}
+
+	public void setByys(BigDecimal byys) {
+		this.byys = byys;
 	}
 }

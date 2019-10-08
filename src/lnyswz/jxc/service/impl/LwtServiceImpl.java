@@ -548,6 +548,8 @@ public class LwtServiceImpl implements LwtServiceI {
 		int sxzq = (Integer)o[3];
 		BigDecimal ysje = new BigDecimal(o[4].toString());
 		BigDecimal wkpje = new BigDecimal(o[5].toString());
+		BigDecimal byys = new BigDecimal(o[6].toString());
+		Integer cqDays = new Integer(o[7].toString());
 		
 		k.setKhbh(khbh);
 		k.setKhmc(khmc);
@@ -555,6 +557,8 @@ public class LwtServiceImpl implements LwtServiceI {
 		k.setSxzq(sxzq);
 		k.setWkpje(wkpje);
 		k.setYsje(ysje);
+		k.setByys(byys);
+		k.setCqDays(cqDays);
 		return k;
 	}
 	
