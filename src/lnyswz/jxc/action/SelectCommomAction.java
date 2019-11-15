@@ -33,6 +33,8 @@ public class SelectCommomAction extends BaseAction implements
 	 */
 	public void selectCommonList() {
 		Json j = new Json();
+		User u = (User) session.get("user");
+		selectCommon.setUserId(u.getId());
 		try {
 			DataGrid r = selectCommonService.selectCommonList(selectCommon);
 			j.setSuccess(true);
@@ -46,6 +48,8 @@ public class SelectCommomAction extends BaseAction implements
 	}
 	public void selectCommonTree() {
 		Json j = new Json();
+		User u = (User) session.get("user");
+		selectCommon.setUserId(u.getId());
 		try {
 			DataGrid r = selectCommonService.selectCommonTree(selectCommon);
 			j.setSuccess(true);

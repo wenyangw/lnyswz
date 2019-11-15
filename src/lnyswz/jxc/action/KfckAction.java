@@ -95,7 +95,13 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 //	public void toYwrk(){
 //		writeJson(kfckService.toYwrk(kfck.getKfcklshs()));
 //	}
-	
+
+	public void loadKfck() {
+		User user = (User)session.get("user");
+		kfck.setCreateId(user.getId());
+		writeJson(kfckService.loadKfck(kfck));
+	}
+
 	@Override
 	public Kfck getModel() {
 		return kfck;

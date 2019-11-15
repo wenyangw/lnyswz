@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.model.*;
 import lnyswz.jxc.util.Export;
 import org.apache.log4j.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,20 +35,6 @@ import lnyswz.jxc.bean.KfckDet;
 import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCgxqDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TKfck;
-import lnyswz.jxc.model.TKfckDet;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TKfrkDet;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TXsth;
-import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.service.KfckServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
@@ -65,6 +53,7 @@ public class KfckServiceImpl implements KfckServiceI {
 	private BaseDaoI<TFhzz> fhzzDao;
 	private BaseDaoI<TXsthDet> xsthDetDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<THw> hwDao;
 	private BaseDaoI<TOperalog> operalogDao;
@@ -572,7 +561,47 @@ public class KfckServiceImpl implements KfckServiceI {
 		dg.setTotal((long)lists.size());
 		return dg;
 	}
-	
+
+	@Override
+	public DataGrid loadKfck(Kfck kfck) {
+		DataGrid datagrid = new DataGrid();
+		try {
+			TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+			if ("1".equals(tKfck.getIsCj())) {
+				datagrid.setMsg("对应的库房出库已冲减！请重新录入！");
+			} else {
+				kfck.setKhbh(tKfck.getKhbh());
+				kfck.setKhmc(tKfck.getKhmc());
+				kfck.setBz(tKfck.getBz());
+
+				List<KfckDet> nl = new ArrayList<KfckDet>();
+				KfckDet kfckDet;
+				String hql = "from TSpBgy t where t.depId = :bmbh and t.bgyId = :bgyId and spbh = :spbh";
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("bmbh", kfck.getKfcklsh().substring(4, 6));
+				params.put("bgyId", kfck.getCreateId());
+				for (TKfckDet td : tKfck.getTKfckDets()) {
+					params.put("spbh", td.getSpbh());
+					if (spBgyDao.get(hql, params) != null) {
+						kfckDet = new KfckDet();
+						BeanUtils.copyProperties(td, kfckDet);
+						kfckDet.setZdwcksl(td.getZdwsl());
+						nl.add(kfckDet);
+					}
+				}
+
+				if (nl.size() > 0) {
+					datagrid.setObj(kfck);
+					datagrid.setRows(nl);
+				} else {
+					datagrid.setMsg("录入的库房出库单不包含此保管员管理品种，请重新录入！");
+				}
+			}
+		}catch (ObjectNotFoundException e) {
+			datagrid.setMsg("对应的库房出库单据不存在！");
+		}
+		return datagrid;
+	}
 	
 	@Autowired
 	public void setKfckDao(BaseDaoI<TKfck> kfckDao) {
@@ -602,6 +631,11 @@ public class KfckServiceImpl implements KfckServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+		this.spBgyDao = spBgyDao;
 	}
 
 	@Autowired

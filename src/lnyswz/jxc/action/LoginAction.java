@@ -40,7 +40,6 @@ public class LoginAction extends BaseAction implements ModelDriven<User> {
 		}
 		// 获得登录用户信息
 		if (!user.getPassword().equals("")) {
-			
 			User u = userService.login(user);
 			// 获得模块信息
 			List<Catalog> top = catalogService.listCatas("p");

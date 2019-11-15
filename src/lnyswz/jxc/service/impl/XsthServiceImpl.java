@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
 import lnyswz.jxc.util.*;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -498,7 +499,8 @@ public class XsthServiceImpl implements XsthServiceI {
 				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
 						|| (ywrks != null && ywrks.size() > 0)
 						|| xsth.getFromOther().equals("cbs")
-						|| ("1".equals(yTXsth.getIsZs()) || "47".equals(yTDet.getSpbh().substring(0, 2)))){
+						|| ("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2)))){
+
 					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
 				}
 				
@@ -2249,7 +2251,47 @@ public class XsthServiceImpl implements XsthServiceI {
 		dg.setObj(ysje);
 		return dg;
 	}
-	
+
+    @Override
+    public DataGrid loadXsth(Xsth xsth) {
+        DataGrid datagrid = new DataGrid();
+        try {
+            TXsth tXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+            if ("1".equals(tXsth.getIsCancel())) {
+                datagrid.setMsg("对应的销售提货已冲减！请重新录入！");
+            } else {
+                xsth.setKhbh(tXsth.getKhbh());
+                xsth.setKhmc(tXsth.getKhmc());
+                xsth.setBz(tXsth.getBz());
+
+                List<XsthDet> nl = new ArrayList<XsthDet>();
+                XsthDet xsthDet;
+                String hql = "from TSpBgy t where t.depId = :bmbh and t.bgyId = :bgyId and spbh = :spbh";
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("bmbh", xsth.getXsthlsh().substring(4, 6));
+                params.put("bgyId", xsth.getCreateId());
+                for (TXsthDet td : tXsth.getTXsthDets()) {
+                    params.put("spbh", td.getSpbh());
+                    if (spBgyDao.get(hql, params) != null) {
+                        xsthDet = new XsthDet();
+                        BeanUtils.copyProperties(td, xsthDet);
+                        xsthDet.setZdwcksl(td.getZdwsl());
+                        nl.add(xsthDet);
+                    }
+                }
+
+                if (nl.size() > 0) {
+                    datagrid.setObj(xsth);
+                    datagrid.setRows(nl);
+                } else {
+                    datagrid.setMsg("录入的销售提货单不包含此保管员管理品种，请重新录入！");
+                }
+            }
+        }catch (ObjectNotFoundException e) {
+            datagrid.setMsg("对应的销售提货单据不存在！");
+        }
+        return datagrid;
+    }
 	
 	@Autowired
 	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {

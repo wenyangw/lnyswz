@@ -5,12 +5,13 @@ import lnyswz.jxc.bean.Kfck;
 
 
 public interface KfckServiceI {
-	public Kfck save(Kfck kfck);
-	public void cjKfck(Kfck kfck);
+	Kfck save(Kfck kfck);
+	void cjKfck(Kfck kfck);
 //	public void updateComplete(Kfck kfck);
-	public DataGrid datagrid(Kfck kfck);
-	public DataGrid detDatagrid(String kfcklsh);
+	DataGrid datagrid(Kfck kfck);
+	DataGrid detDatagrid(String kfcklsh);
 //	public DataGrid toYwrk(String kfcklshs);
-	public DataGrid getSpkc(Kfck kfck);
-	public DataGrid printKfck(Kfck kfck);
+	DataGrid getSpkc(Kfck kfck);
+	DataGrid printKfck(Kfck kfck);
+	DataGrid loadKfck(Kfck kfck);
 }

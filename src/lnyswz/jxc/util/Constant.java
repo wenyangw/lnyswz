@@ -245,7 +245,7 @@ public interface Constant {
 		put("01","白燕");
 		put("04","");
 		put("05","");
-		put("07","");
+		put("07","徐雅玲");
 		put("08","刘晓川");
 	}};
 	
@@ -253,7 +253,7 @@ public interface Constant {
 		put("01","胡秀颖");
 		put("04","刘金艳");
 		put("05","任晓楠");
-		put("07","");
+		put("07","刘金艳");
 		put("08","王鑫");
 	}};
 	

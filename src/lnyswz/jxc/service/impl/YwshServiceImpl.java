@@ -212,9 +212,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid datagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime and substring(t.lsh, 7, 2) = '05'";
+		String hql = " from TYwsh t where t.createId = :createId and t.createTime > :createTime and substring(t.lsh, 7, 2) = '05'";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", ywsh.getBmbh());
+		params.put("createId", ywsh.getCreateId());
 		if(ywsh.getCreateTime() != null){
 			params.put("createTime", ywsh.getCreateTime()); 
 		}else{
@@ -241,9 +241,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid xqshDatagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime and substring(t.lsh, 7, 2) = '08'";
+		String hql = " from TYwsh t where t.createId = :createId and t.createTime > :createTime and substring(t.lsh, 7, 2) = '08'";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", ywsh.getBmbh());
+		params.put("createId", ywsh.getCreateId());
 		if(ywsh.getCreateTime() != null){
 			params.put("createTime", ywsh.getCreateTime()); 
 		}else{
@@ -267,9 +267,9 @@ public class YwshServiceImpl implements YwshServiceI {
 	@Override
 	public DataGrid jhshDatagrid(Ywsh ywsh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwsh t where t.bmbh = :bmbh and t.createTime > :createTime and substring(t.lsh, 7, 2) = '09'";
+		String hql = " from TYwsh t where t.createId = :createId and t.createTime > :createTime and substring(t.lsh, 7, 2) = '09'";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bmbh", ywsh.getBmbh());
+		params.put("createId", ywsh.getCreateId());
 		if(ywsh.getCreateTime() != null){
 			params.put("createTime", ywsh.getCreateTime()); 
 		}else{

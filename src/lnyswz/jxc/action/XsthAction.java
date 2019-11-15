@@ -418,7 +418,13 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	public void getXsth(){
 		writeJson(xsthService.getXsth(xsth));
 	}
-	
+
+	public void loadXsth() {
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		writeJson(xsthService.loadXsth(xsth));
+	}
+
 	public void getSpkc(){
 		writeJson(xsthService.getSpkc(xsth));
 	}

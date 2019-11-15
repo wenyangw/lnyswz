@@ -48,7 +48,7 @@ public class KfzzServiceImpl implements KfzzServiceI {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 更新库房总账数量
 	 * @param sp
@@ -136,18 +136,20 @@ public class KfzzServiceImpl implements KfzzServiceI {
 		List<ProBean> resultList = new ArrayList<ProBean>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sql = "select ";
-//		if(hwId != null){
-//			sql += " hwmc, ";
-//		}
 		if(sppc != null){
 			sql += " sppc, hwmc, ";
 		}
-		sql += " qcsl + rksl - cksl from t_kfzz where bmbh = ? and spbh = ? and jzsj = ? and ckId = ? ";
+		sql += " qcsl + rksl - cksl from t_kfzz where bmbh = ? and spbh = ? and jzsj = ?";
 		params.put("0", bmbh);
 		params.put("1", spbh);
 		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
-		params.put("3", ckId);
-		
+		if(ckId != null) {
+			sql +=  "and ckId = ?";
+			params.put("3", ckId);
+		} else {
+			sql +=  "and ckId is null";
+		}
+
 		if(hwId == null && sppc == null){
 			sql += " and hwId is null and sppc is null ";
 		}
@@ -285,9 +287,9 @@ public class KfzzServiceImpl implements KfzzServiceI {
 //			
 //		}
 //	}
-//	
-//	
-//	
+//
+//
+//
 //	@Override
 //	public void update(Kfzz hfzz) {
 //		// TODO Auto-generated method stub

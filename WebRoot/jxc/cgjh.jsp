@@ -259,6 +259,14 @@ $(function(){
         			cgjhlsh: row.cgjhlsh,
         		},
                 columns:[[
+					{field:'isBack',title:'取消',align:'center',
+						formatter : function(value) {
+							if (value == '1') {
+								return '是';
+							} else {
+								return '';
+							}
+						}},
                     {field:'spbh',title:'商品编号',width:80,align:'center'},
                     {field:'spmc',title:'名称',width:250,align:'center'},
                     {field:'spcd',title:'产地',width:80,align:'center'},
@@ -330,14 +338,7 @@ $(function(){
            						return '';
            					}
            				}},
-       				{field:'isBack',title:'取消',align:'center',
-                   		formatter : function(value) {
-           					if (value == '1') {
-           						return '是';
-           					} else {
-           						return '';
-           					}
-           				}}
+
                 ]],
                 onResize:function(){
                 	cgjh_dg.datagrid('fixDetailRowHeight',index);

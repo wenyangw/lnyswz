@@ -83,17 +83,22 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 	public void detDatagrid(){
 		writeJson(kfrkService.detDatagrid(kfrk.getKfrklsh()));
 	}
-	
+
 	public void toYwrk(){
 		writeJson(kfrkService.toYwrk(kfrk.getKfrklshs()));
 	}
-	
+
 	public void printKfrk() {
 		User user = (User)session.get("user");
 		kfrk.setCreateName(user.getRealName());
 		DataGrid dg = kfrkService.printKfrk(kfrk);
 		Export.print(dg, Util.getReportName(kfrk.getBmbh(), "report_kfrk.json"));
-		//Export.print(dg, Constant.REPORT_KFRK.get(kfrk.getBmbh()));
+	}
+
+	public void loadKfrk() {
+        User user = (User)session.get("user");
+        kfrk.setCreateId(user.getId());
+		writeJson(kfrkService.loadKfrk(kfrk));
 	}
 	
 	@Override

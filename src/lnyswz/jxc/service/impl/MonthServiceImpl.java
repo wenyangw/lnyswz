@@ -72,9 +72,18 @@ public class MonthServiceImpl implements MonthServiceI {
 				+ " lsje, qcje + kpje - hkje qcje, qcthje, 0 kpje, thje, 0 hkje, convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj"
 				+ " from t_yszz where jzsj = convert(char(6), GETDATE(), 112) and (qcje + kpje - hkje <> 0 or thje <> 0)";
 		ywzzDao.updateBySQL(yszz_sql);
-		
+
+		//处理t_bgzz;
+		String bgzz_sql = "insert into t_bgzz"
+				+ " select bmbh,bmmc,spbh,spmc,spcd,sppp,spbz,zjldwId,zjldwmc,cjldwId,cjldwmc,zhxs,"
+				+ " qcsl + rksl - cksl qcsl, 0 rksl, 0 cksl,convert(char(6), dateadd(m, 1, GETDATE()), 112) jzsj"
+				+ "	from t_bgzz"
+				+ " where jzsj = convert(char(6), GETDATE(), 112) and qcsl + rksl - cksl <> 0";
+		ywzzDao.updateBySQL(bgzz_sql);
+
 		//库存平衡表处理
-		String kcphb_sql = "exec p_kcphb '', 1, '=', '" + DateUtil.getCurrentDateString("yyyyMM") + "', 1, 1, 2";
+		String kcphb_sql = "exec p_kcphb '', 1, '', '', '=', '" + DateUtil.getCurrentDateString("yyyyMM") + "', 1, 1, 2";
+
 		ywzzDao.updateBySQL(kcphb_sql);
 	}
 

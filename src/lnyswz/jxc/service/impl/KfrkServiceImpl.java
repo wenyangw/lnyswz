@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.model.*;
 import org.apache.log4j.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,17 +30,6 @@ import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TKfrkDet;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
@@ -60,6 +51,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<THw> hwDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -400,7 +392,48 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
-	
+
+	@Override
+	public DataGrid loadKfrk(Kfrk kfrk) {
+		DataGrid datagrid = new DataGrid();
+		try {
+            TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrk.getKfrklsh());
+            if ("1".equals(tKfrk.getIsCj())) {
+                datagrid.setMsg("对应的库房入库已冲减！请重新录入！");
+            } else {
+                kfrk.setGysbh(tKfrk.getGysbh());
+                kfrk.setGysmc(tKfrk.getGysmc());
+                kfrk.setBz(tKfrk.getBz());
+
+                List<KfrkDet> nl = new ArrayList<KfrkDet>();
+                KfrkDet kfrkDet;
+                String hql = "from TSpBgy t where t.depId = :bmbh and t.bgyId = :bgyId and spbh = :spbh";
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("bmbh", kfrk.getKfrklsh().substring(4, 6));
+                params.put("bgyId", kfrk.getCreateId());
+                for (TKfrkDet yd : tKfrk.getTKfrkDets()) {
+                    params.put("spbh", yd.getSpbh());
+                    if (spBgyDao.get(hql, params) != null) {
+                        kfrkDet = new KfrkDet();
+                        BeanUtils.copyProperties(yd, kfrkDet);
+                        kfrkDet.setZdwrksl(yd.getZdwsl());
+                        nl.add(kfrkDet);
+                    }
+                }
+
+                if (nl.size() > 0) {
+                    datagrid.setObj(kfrk);
+                    datagrid.setRows(nl);
+                } else {
+                    datagrid.setMsg("录入的库房入库单不包含此保管员管理品种，请重新录入！");
+                }
+            }
+        }catch (ObjectNotFoundException e) {
+            datagrid.setMsg("对应的库房入库单据不存在！");
+        }
+		return datagrid;
+	}
+
 	@Autowired
 	public void setKfrkDao(BaseDaoI<TKfrk> kfrkDao) {
 		this.kfrkDao = kfrkDao;
@@ -446,7 +479,12 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		this.hwDao = hwDao;
 	}
 
-	@Autowired
+    @Autowired
+    public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+        this.spBgyDao = spBgyDao;
+    }
+
+    @Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {
 		this.operalogDao = operalogDao;
 	}

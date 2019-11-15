@@ -1175,7 +1175,7 @@ function saveXsth(){
 			effectRow['isFh'] = '0';
 		}
 		//传入直送
-		effectRow['fromOther'] = jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) ? '' : 'cbs';
+		effectRow['fromOther'] = xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) ? '' : 'cbs') : '';
 		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
 		//effectRow['isFhth'] = '0';
 		
@@ -1927,7 +1927,7 @@ function cancelXsth(){
 												url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
 												data : {
 													xsthlsh : row.xsthlsh,
-													fromOther: jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs',
+													fromOther: xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs') : '',
 													bmbh : xsth_did,
 													menuId : xsth_menuId,
 													lxbh: xsth_lx,
