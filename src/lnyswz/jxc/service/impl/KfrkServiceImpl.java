@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.common.bean.Json;
 import lnyswz.jxc.model.*;
 import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
@@ -129,85 +130,96 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	}
 	
 	@Override
-	public void cjKfrk(Kfrk kfrk) {
-		Date now = new Date(); 
+	public Json cjKfrk(Kfrk kfrk) {
+		Json j = new Json();
 		//获取原单据信息
 		TKfrk yTKfrk = kfrkDao.get(TKfrk.class, kfrk.getKfrklsh());
-		//新增冲减单据信息
-		TKfrk tKfrk = new TKfrk();
-		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
-		//更新原单据冲减信息
-		yTKfrk.setCjId(kfrk.getCjId());
-		yTKfrk.setCjTime(now);
-		yTKfrk.setCjName(kfrk.getCjName());
-		yTKfrk.setIsCj("1");
-		
-		if(yTKfrk.getTCgjhs() != null){
-			
+		if("1".equals(yTKfrk.getIsCj())) {
+            j.setMsg("此单据已取消，请刷新后重新操作！");
+            return j;
+        }
+
+        Date now = new Date();
+
+        //新增冲减单据信息
+        TKfrk tKfrk = new TKfrk();
+        BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
+        //更新原单据冲减信息
+        yTKfrk.setCjId(kfrk.getCjId());
+        yTKfrk.setCjTime(now);
+        yTKfrk.setCjName(kfrk.getCjName());
+        yTKfrk.setIsCj("1");
+
+        if (yTKfrk.getTCgjhs() != null) {
+
 //			Set<TCgjhDet> tcs = new HashSet<TCgjhDet>();
 //			for(TCgjhDet tc : yTKfrk.getTCgjhs()){
 //				TCgjhDet ntc = cgjhDetDao.load(TCgjhDet.class, tc.getId());
 //				tcs.add(ntc);
 //			}
 //			tKfrk.setTCgjhs(tcs);
-			yTKfrk.setTCgjhs(null);
-		}
-		
-		if(yTKfrk.getTYwrk() != null){
-			yTKfrk.setTYwrk(null);
-		}
-		
-		//更新新单据信息
-		String lsh = LshServiceImpl.updateLsh(kfrk.getBmbh(), kfrk.getLxbh(), lshDao);
-		tKfrk.setKfrklsh(lsh);
-		tKfrk.setCreateTime(now);
-		tKfrk.setCreateId(kfrk.getCjId());
-		tKfrk.setCreateName(kfrk.getCjName());
-		tKfrk.setIsCj("1");
-		tKfrk.setCjTime(new Date());
-		tKfrk.setCjId(kfrk.getCjId());
-		tKfrk.setCjName(kfrk.getCjName());
-		tKfrk.setCjKfrklsh(yTKfrk.getKfrklsh());
-		tKfrk.setBz(kfrk.getBz());
-		
-		Department dep = new Department();
-		dep.setId(tKfrk.getBmbh());
-		dep.setDepName(tKfrk.getBmmc());
-		Ck ck = new Ck();
-		ck.setId(tKfrk.getCkId());
-		ck.setCkmc(tKfrk.getCkmc());
-		
-		Set<TKfrkDet> yTKfrkDets = yTKfrk.getTKfrkDets();
-		Set<TKfrkDet> tDets = new HashSet<TKfrkDet>();
-		for(TKfrkDet yTDet : yTKfrkDets){
-			TKfrkDet tDet = new TKfrkDet();
-			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
-			tDet.setZdwsl(yTDet.getZdwsl().negate());
-			if(yTDet.getCdwsl() != null){
-				tDet.setCdwsl(yTDet.getCdwsl().negate());
-			}
+            yTKfrk.setTCgjhs(null);
+        }
 
-			if (!("05".equals(tKfrk.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
-				if(!"2019-01-01".equals(tDet.getSppc())) {
-					tDet.setSppc("2019-01-01");
-				}
-			}
+        if (yTKfrk.getTYwrk() != null) {
+            yTKfrk.setTYwrk(null);
+        }
 
-			tDet.setTKfrk(tKfrk);
-			tDets.add(tDet);
-			
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(tDet, sp);
-			Hw hw = new Hw();
-			hw.setId(tDet.getHwId());
-			hw.setHwmc(tDet.getHwmc());
-			
-			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
-		}
-		tKfrk.setTKfrkDets(tDets);
-		kfrkDao.save(tKfrk);		
-		OperalogServiceImpl.addOperalog(kfrk.getCjId(), kfrk.getBmbh(), kfrk.getMenuId(), tKfrk.getCjKfrklsh() + "/" + tKfrk.getKfrklsh(), "冲减库房入库单", operalogDao);
+        //更新新单据信息
+        String lsh = LshServiceImpl.updateLsh(kfrk.getBmbh(), kfrk.getLxbh(), lshDao);
+        tKfrk.setKfrklsh(lsh);
+        tKfrk.setCreateTime(now);
+        tKfrk.setCreateId(kfrk.getCjId());
+        tKfrk.setCreateName(kfrk.getCjName());
+        tKfrk.setIsCj("1");
+        tKfrk.setCjTime(new Date());
+        tKfrk.setCjId(kfrk.getCjId());
+        tKfrk.setCjName(kfrk.getCjName());
+        tKfrk.setCjKfrklsh(yTKfrk.getKfrklsh());
+        tKfrk.setBz(kfrk.getBz());
+
+        Department dep = new Department();
+        dep.setId(tKfrk.getBmbh());
+        dep.setDepName(tKfrk.getBmmc());
+        Ck ck = new Ck();
+        ck.setId(tKfrk.getCkId());
+        ck.setCkmc(tKfrk.getCkmc());
+
+        Set<TKfrkDet> yTKfrkDets = yTKfrk.getTKfrkDets();
+        Set<TKfrkDet> tDets = new HashSet<TKfrkDet>();
+        for (TKfrkDet yTDet : yTKfrkDets) {
+            TKfrkDet tDet = new TKfrkDet();
+            BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
+            tDet.setZdwsl(yTDet.getZdwsl().negate());
+            if (yTDet.getCdwsl() != null) {
+                tDet.setCdwsl(yTDet.getCdwsl().negate());
+            }
+
+            if (!("05".equals(tKfrk.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+                if (!"2019-01-01".equals(tDet.getSppc())) {
+                    tDet.setSppc("2019-01-01");
+                }
+            }
+
+            tDet.setTKfrk(tKfrk);
+            tDets.add(tDet);
+
+            Sp sp = new Sp();
+            BeanUtils.copyProperties(tDet, sp);
+            Hw hw = new Hw();
+            hw.setId(tDet.getHwId());
+            hw.setHwmc(tDet.getHwmc());
+
+            //更新库房总账
+            KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
+        }
+        tKfrk.setTKfrkDets(tDets);
+        kfrkDao.save(tKfrk);
+        OperalogServiceImpl.addOperalog(kfrk.getCjId(), kfrk.getBmbh(), kfrk.getMenuId(), tKfrk.getCjKfrklsh() + "/" + tKfrk.getKfrklsh(), "冲减库房入库单", operalogDao);
+
+        j.setSuccess(true);
+        j.setMsg("库房入库取消成功！");
+		return j;
 	}
 	
 	@Override

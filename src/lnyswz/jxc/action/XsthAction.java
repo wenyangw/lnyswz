@@ -64,27 +64,27 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	 */
 	public void cancelXsth(){
 		Json j = new Json();
-//		if(xsthService.isLocked(xsth)){
-//			j.setSuccess(false);
-//			j.setMsg("选中的销售提货库房已锁定，请确认后重新操作！");
-//			writeJson(j);
-//		}else {
 		User user = (User) session.get("user");
 		if(user != null) {
 			xsth.setCancelId(user.getId());
 			xsth.setCancelName(user.getRealName());
 		}
+//		try {
+//			xsthService.cancelXsth(xsth);
+//			//添加成功
+//			j.setSuccess(true);
+//			j.setMsg("取消销售提货成功！");
+//		} catch (Exception e) {
+//			j.setMsg("取消销售提货失败！");
+//			e.printStackTrace();
+//		}
 		try {
-			xsthService.cancelXsth(xsth);
-			//添加成功
-			j.setSuccess(true);
-			j.setMsg("取消销售提货成功！");
+			j = xsthService.cancelXsth(xsth);
 		} catch (Exception e) {
 			j.setMsg("取消销售提货失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
-//		}
 	}
 	
 	public void toKfck(){

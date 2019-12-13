@@ -57,10 +57,10 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 		kfrk.setCjName(user.getRealName());
 		Json j = new Json();
 		try{
-			kfrkService.cjKfrk(kfrk);		
-			//添加成功
-			j.setSuccess(true);
-			j.setMsg("冲减库房入库单成功！");
+			j = kfrkService.cjKfrk(kfrk);
+//			//添加成功
+//			j.setSuccess(true);
+//			j.setMsg("冲减库房入库单成功！");
 		}catch(Exception e){
 			j.setMsg("冲减库房入库单失败！");
 			e.printStackTrace();

@@ -1,6 +1,7 @@
 package lnyswz.jxc.service;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Xsth;
 import lnyswz.jxc.bean.XsthDet;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface XsthServiceI {
 	Xsth save(Xsth xsth);
-	void cancelXsth(Xsth xsth);
+	Json cancelXsth(Xsth xsth);
 	DataGrid datagrid(Xsth xsth);
 	DataGrid xsthSpDg(Xsth xsth);
 	DataGrid detDatagrid(Xsth xsth);

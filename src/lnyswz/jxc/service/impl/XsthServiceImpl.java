@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
 import lnyswz.jxc.util.*;
@@ -356,120 +357,130 @@ public class XsthServiceImpl implements XsthServiceI {
 //	}
 	
 	@Override
-	public void cancelXsth(Xsth xsth) {
-		Date now = new Date();
-		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
-		
-		//获取原单据信息
-		TXsth yTXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
-		//新增冲减单据信息
-		TXsth tXsth = new TXsth();
-		BeanUtils.copyProperties(yTXsth, tXsth, new String[]{"TYwrks"});
+	public Json cancelXsth(Xsth xsth) {
+	    Json j = new Json();
+        //获取原单据信息
+        TXsth yTXsth = xsthDao.load(TXsth.class, xsth.getXsthlsh());
+        if ("1".equals(yTXsth.getIsCancel())) {
+            j.setMsg("此单据已取消，请刷新后重新操作！");
+            return j;
+        }
+        if ("1".equals(yTXsth.getLocked())) {
+            j.setMsg("此单据已锁定，请联系保管员后重新操作！");
+            return j;
+        }
 
-		//更新原单据信息
-		yTXsth.setIsCancel("1");
-		yTXsth.setCancelId(xsth.getCancelId());
-		yTXsth.setCancelName(xsth.getCancelName());
-		yTXsth.setCancelTime(now);
-		
-		tXsth.setXsthlsh(lsh);
-		tXsth.setCjXsthlsh(yTXsth.getXsthlsh());
-		tXsth.setCreateId(xsth.getCancelId());
-		tXsth.setCreateTime(now);
-		tXsth.setCreateName(xsth.getCancelName());
-		tXsth.setIsCancel("1");
-		tXsth.setCancelId(xsth.getCancelId());
-		tXsth.setCancelName(xsth.getCancelName());
-		tXsth.setCancelTime(now);
-		tXsth.setHjje(yTXsth.getHjje().negate());
-		if(yTXsth.getHjsl() != null){
-			tXsth.setHjsl(yTXsth.getHjsl().negate());
-		}
-		
-		Department dep = new Department();
-		dep.setId(tXsth.getBmbh());
-		dep.setDepName(tXsth.getBmmc());
-		
-		Ck ck = new Ck();
-		ck.setId(yTXsth.getCkId());
-		ck.setCkmc(yTXsth.getCkmc());
-		
-		Kh kh = new Kh();
-		kh.setKhbh(tXsth.getKhbh());
-		kh.setKhmc(tXsth.getKhmc());
-		
-		Fh fh= null;
-		if("1".equals(tXsth.getIsFh())){
-			fh = new Fh();
-			fh.setId(tXsth.getFhId());
-			fh.setFhmc(tXsth.getFhmc());
-		}
-		
-		if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())){
-		//if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
-		//if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
-			User ywy = new User();
-			ywy.setId(tXsth.getYwyId());
-			ywy.setRealName(tXsth.getYwymc());
-			//更新授信客户应付金额
-			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
-		}
-		//关联的直送业务入库
-		Set<TYwrkDet> ywrks = null;
-		int[] intYwrkDetIds = null;
-		if(yTXsth.getTYwrks() != null){
-			ywrks = yTXsth.getTYwrks();
-			intYwrkDetIds = new int[yTXsth.getTYwrks().size()];
-			int i = 0;
-			for(TYwrkDet t : yTXsth.getTYwrks()){
-				intYwrkDetIds[i] = t.getId();
-				i++;
-			}
-			Arrays.sort(intYwrkDetIds);
-		}
-		
-		Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
-		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
-		for(TXsthDet yTDet : yTXsthDets){
-			TXsthDet tDet = new TXsthDet();
-			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id", "TKfcks", "TXskps"});
-			tDet.setZdwsl(yTDet.getZdwsl().negate());
-			if(yTDet.getCdwsl() != null){
-				tDet.setCdwsl(yTDet.getCdwsl().negate());
-			}
-			tDet.setSpje(yTDet.getSpje().negate());
-			tDet.setTXsth(tXsth);
-			tDets.add(tDet);
-			
-			//关联的销售开票
-			Set<TXskp> xskps = yTDet.getTXskps();
-			if(xskps != null && xskps.size() > 0){
-				TXskp xskp = xskps.iterator().next();
-				xskp.getTXsths().remove(yTDet);
-				Set<TXskpDet> xskpDets = xskp.getTXskpDets();
-				for(TXskpDet xskpDet : xskpDets){
-					if(xskpDet.getSpbh().equals(yTDet.getSpbh())){
-						xskpDet.setThsl(xskpDet.getThsl().subtract(yTDet.getZdwsl()));
-						yTDet.setKpsl(Constant.BD_ZERO);
-						break;
-					}
-				}
-				tDet.setKpsl(Constant.BD_ZERO);
-				
-			}
-			
-			//关联的直送业务入库
-			if(ywrks != null && ywrks.size() > 0){
-				BigDecimal thsl = yTDet.getZdwsl();
-				BigDecimal cthsl = yTDet.getCdwsl();
-				//BigDecimal lastRksl = yTDet.getLastRksl();
-				
-				//int j = 0;
-				for(int i = intYwrkDetIds.length - 1; i >= 0 ; i--){
-					TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, intYwrkDetIds[i]);
-					if(yTDet.getSpbh().equals(ywrkDet.getSpbh())){
-						ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
-						ywrkDet.setCthsl(ywrkDet.getCthsl().subtract(cthsl));
+        Date now = new Date();
+        String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
+
+        //新增冲减单据信息
+        TXsth tXsth = new TXsth();
+        BeanUtils.copyProperties(yTXsth, tXsth, new String[]{"TYwrks"});
+
+        //更新原单据信息
+        yTXsth.setIsCancel("1");
+        yTXsth.setCancelId(xsth.getCancelId());
+        yTXsth.setCancelName(xsth.getCancelName());
+        yTXsth.setCancelTime(now);
+
+        tXsth.setXsthlsh(lsh);
+        tXsth.setCjXsthlsh(yTXsth.getXsthlsh());
+        tXsth.setCreateId(xsth.getCancelId());
+        tXsth.setCreateTime(now);
+        tXsth.setCreateName(xsth.getCancelName());
+        tXsth.setIsCancel("1");
+        tXsth.setCancelId(xsth.getCancelId());
+        tXsth.setCancelName(xsth.getCancelName());
+        tXsth.setCancelTime(now);
+        tXsth.setHjje(yTXsth.getHjje().negate());
+        if (yTXsth.getHjsl() != null) {
+            tXsth.setHjsl(yTXsth.getHjsl().negate());
+        }
+
+        Department dep = new Department();
+        dep.setId(tXsth.getBmbh());
+        dep.setDepName(tXsth.getBmmc());
+
+        Ck ck = new Ck();
+        ck.setId(yTXsth.getCkId());
+        ck.setCkmc(yTXsth.getCkmc());
+
+        Kh kh = new Kh();
+        kh.setKhbh(tXsth.getKhbh());
+        kh.setKhmc(tXsth.getKhmc());
+
+        Fh fh = null;
+        if ("1".equals(tXsth.getIsFh())) {
+            fh = new Fh();
+            fh.setId(tXsth.getFhId());
+            fh.setFhmc(tXsth.getFhmc());
+        }
+
+        if (tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK) && "0".equals(tXsth.getIsFhth())) {
+            //if(tXsth.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+            //if("1".equals(tXsth.getIsSx()) && "0".equals(tXsth.getIsFhth())){
+            User ywy = new User();
+            ywy.setId(tXsth.getYwyId());
+            ywy.setRealName(tXsth.getYwymc());
+            //更新授信客户应付金额
+            YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
+        }
+        //关联的直送业务入库
+        Set<TYwrkDet> ywrks = null;
+        int[] intYwrkDetIds = null;
+        if (yTXsth.getTYwrks() != null) {
+            ywrks = yTXsth.getTYwrks();
+            intYwrkDetIds = new int[yTXsth.getTYwrks().size()];
+            int i = 0;
+            for (TYwrkDet t : yTXsth.getTYwrks()) {
+                intYwrkDetIds[i] = t.getId();
+                i++;
+            }
+            Arrays.sort(intYwrkDetIds);
+        }
+
+        Set<TXsthDet> yTXsthDets = yTXsth.getTXsthDets();
+        Set<TXsthDet> tDets = new HashSet<TXsthDet>();
+        for (TXsthDet yTDet : yTXsthDets) {
+            TXsthDet tDet = new TXsthDet();
+            BeanUtils.copyProperties(yTDet, tDet, new String[]{"id", "TKfcks", "TXskps"});
+            tDet.setZdwsl(yTDet.getZdwsl().negate());
+            if (yTDet.getCdwsl() != null) {
+                tDet.setCdwsl(yTDet.getCdwsl().negate());
+            }
+            tDet.setSpje(yTDet.getSpje().negate());
+            tDet.setTXsth(tXsth);
+            tDets.add(tDet);
+
+            //关联的销售开票
+            Set<TXskp> xskps = yTDet.getTXskps();
+            if (xskps != null && xskps.size() > 0) {
+                TXskp xskp = xskps.iterator().next();
+                xskp.getTXsths().remove(yTDet);
+                Set<TXskpDet> xskpDets = xskp.getTXskpDets();
+                for (TXskpDet xskpDet : xskpDets) {
+                    if (xskpDet.getSpbh().equals(yTDet.getSpbh())) {
+                        xskpDet.setThsl(xskpDet.getThsl().subtract(yTDet.getZdwsl()));
+                        yTDet.setKpsl(Constant.BD_ZERO);
+                        break;
+                    }
+                }
+                tDet.setKpsl(Constant.BD_ZERO);
+
+            }
+
+            //关联的直送业务入库
+            if (ywrks != null && ywrks.size() > 0) {
+                BigDecimal thsl = yTDet.getZdwsl();
+                BigDecimal cthsl = yTDet.getCdwsl();
+                //BigDecimal lastRksl = yTDet.getLastRksl();
+
+                //int j = 0;
+                for (int i = intYwrkDetIds.length - 1; i >= 0; i--) {
+                    TYwrkDet ywrkDet = ywrkDetDao.load(TYwrkDet.class, intYwrkDetIds[i]);
+                    if (yTDet.getSpbh().equals(ywrkDet.getSpbh())) {
+                        ywrkDet.setThsl(ywrkDet.getThsl().subtract(thsl));
+                        ywrkDet.setCthsl(ywrkDet.getCthsl().subtract(cthsl));
 //						if(j == 0){
 //							ywrkDet.setThsl(ywrkDet.getThsl().subtract(lastRksl));
 //							if(thsl.compareTo(lastRksl) == 0){
@@ -487,42 +498,44 @@ public class XsthServiceImpl implements XsthServiceI {
 //							}
 //						}
 //						j++;
-					}
-				}
-			}
+                    }
+                }
+            }
 
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(yTDet, sp);
+            Sp sp = new Sp();
+            BeanUtils.copyProperties(yTDet, sp);
 
-			if("1".equals(yTXsth.getIsLs())){
-				//教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
-				if(!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
-						|| (ywrks != null && ywrks.size() > 0)
-						|| xsth.getFromOther().equals("cbs")
-						|| ("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2)))){
+            if ("1".equals(yTXsth.getIsLs())) {
+                //教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
+                if (!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
+                        || (ywrks != null && ywrks.size() > 0)
+                        || xsth.getFromOther().equals("cbs")
+                        || ("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2)))) {
 
-					LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
-				}
-				
-			}
-			if("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())){
-			//if("1".equals(yTXsth.getIsFh())){
-				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
-			}
-		}
-		yTXsthDets.clear();
-		yTXsthDets = null;
+                    LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
+                }
 
-		if(ywrks != null && ywrks.size() > 0){
-			yTXsth.setTYwrks(null);
-		}
-		
-		tXsth.setTXsthDets(tDets);
-		xsthDao.save(tXsth);
-		
-		OperalogServiceImpl.addOperalog(xsth.getCancelId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getCjXsthlsh() + "/" + tXsth.getXsthlsh(), 
-			"取消销售提货单", operalogDao);
-		
+            }
+            if ("1".equals(yTXsth.getIsFh()) && "0".equals(yTXsth.getIsFhth())) {
+                //if("1".equals(yTXsth.getIsFh())){
+                FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
+            }
+        }
+        yTXsthDets.clear();
+        yTXsthDets = null;
+
+        if (ywrks != null && ywrks.size() > 0) {
+            yTXsth.setTYwrks(null);
+        }
+
+        tXsth.setTXsthDets(tDets);
+        xsthDao.save(tXsth);
+
+        OperalogServiceImpl.addOperalog(xsth.getCancelId(), xsth.getBmbh(), xsth.getMenuId(), tXsth.getCjXsthlsh() + "/" + tXsth.getXsthlsh(),
+                "取消销售提货单", operalogDao);
+        j.setSuccess(true);
+        j.setMsg("销售提货取消成功！");
+        return j;
 	}
 
 	@Override
