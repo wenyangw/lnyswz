@@ -41,10 +41,6 @@ $(function(){
 	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
 	
 	xshk_khDg = $('#jxc_xshk_khDg').datagrid({
-// 		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
-// 		queryParams :{
-// 			depId : xshk_did,
-// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -73,10 +69,6 @@ $(function(){
 	});
 	
 	xshk_dg = $('#jxc_xshk_dg').datagrid({
-// 		url:'${pageContext.request.contextPath}/jxc/xshkAction!datagrid.action',
-// 		queryParams:{
-// 			bmbh:xshk_did,
-// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -179,10 +171,6 @@ $(function(){
 		fit : true,
 	    border : false,
 	    singleSelect : true,
-// 	    pagination : true,
-// 		pagePosition : 'bottom',
-// 		pageSize : pageSize,
-// 		pageList : pageList,
 		columns:[[
 	        {field:'xskplsh',title:'流水号',width:100,align:'center'},
 	        {field:'createTime',title:'发票时间',width:100,align:'center',
@@ -274,10 +262,6 @@ $(function(){
 		 			depId : xshk_did,
 		 			ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 		 		},
-
-// 				'load', {
-// 				depId: xshk_did,
-// 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
 			xshk_khDg.datagrid('enableFilter');
 		}
@@ -291,9 +275,6 @@ $(function(){
 		}
 		
 		countHk = 0;
-// 		if(rows == undefined){
-// 			rows = xshk_xskpDg.datagrid('getRows');
-// 		}
 		//本次回款金额
 		je = Number($('#hkje').val());
 		if(rows != undefined){
@@ -362,12 +343,8 @@ function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
 	
-	//$('input:checkbox').removeAttr('checked');
-	//$('input:checkbox').removeProp('checked');
 	$('input:checkbox').prop('checked', false);
-	
-	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
-	
+
 	rows = undefined;
 	
 	//初始化创建时间
@@ -392,8 +369,6 @@ function init(){
 }
 
 function selectKh(rowData){
-	//xshk_xskpDg.datagrid('clear');
-	//var row = xshk_khDg.datagrid('getSelected');
 	xshk_xskpDg.datagrid({
 		url:'${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHk.action',
 		queryParams:{
@@ -449,6 +424,7 @@ function saveAll(){
 	effectRow['payTime'] = $('input[name=payTime]').val();
 	effectRow['lastHkje'] = rows.size > 0 ? rows[countHk - 1].hkje : 0;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
+	effectRow['yfje'] = je.toFixed(2);
 	effectRow['isLs'] = $('input[name=isLs]').is(':checked') ? '1' : '0';
 	
 	effectRow['bmbh'] = xshk_did;

@@ -20,6 +20,7 @@ public class Xshk {
 	private String ywymc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
+	private BigDecimal yfje;
 	private Date payTime;
 	private String isLs;
 	private String isYf;
@@ -114,6 +115,15 @@ public class Xshk {
 	public void setLastHkje(BigDecimal lastHkje) {
 		this.lastHkje = lastHkje;
 	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
+	}
+
 	public Date getPayTime() {
 		return payTime;
 	}

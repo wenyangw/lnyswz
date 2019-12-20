@@ -17,28 +17,8 @@ import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Fh;
-import lnyswz.jxc.bean.Kh;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.User;
-import lnyswz.jxc.bean.Xskp;
-import lnyswz.jxc.bean.XskpDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.TKh;
-import lnyswz.jxc.model.TKhDet;
-import lnyswz.jxc.model.TKhlx;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TLszz;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TXskp;
-import lnyswz.jxc.model.TXskpDet;
-import lnyswz.jxc.model.TXsth;
-import lnyswz.jxc.model.TXsthDet;
-import lnyswz.jxc.model.TYszz;
-import lnyswz.jxc.model.TYwzz;
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
 import lnyswz.jxc.service.XskpServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
@@ -63,6 +43,8 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TXskpDet> detDao;
 	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TXsthDet> xsthDetDao;
+    private BaseDaoI<TXshk> xshkDao;
+    private BaseDaoI<THkKp> hkKpDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
@@ -150,14 +132,47 @@ public class XskpServiceImpl implements XskpServiceI {
 			BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
 			//有预付金额
 			if(ysje.compareTo(BigDecimal.ZERO) < 0){
-				BigDecimal hkje = BigDecimal.ZERO;
-				if(hjje.compareTo(ysje.abs()) > 0){
-					hkje = ysje.abs();
-				}else{
-					hkje = hjje;
-				}
-				tXskp.setHkje(hkje);
-				tXskp.setYfje(hkje);
+			    List<Xshk> xshks = getXshkWithYfje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId());
+//                Set<THkKp> tHkKps = new HashSet<THkKp>();
+                THkKp tHkKp = null;
+                TXshk tXshk = null;
+                BigDecimal hkje = hjje;
+				for(Xshk xshk : xshks) {
+				    if (hkje.compareTo(BigDecimal.ZERO) == 0) {
+				        break;
+                    }
+                    tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
+
+				    tHkKp = new THkKp();
+                    tHkKp.setXskplsh(lsh);
+                    tHkKp.setTXshk(tXshk);
+                    tHkKp.setIsYf("1");
+                    if(hkje.compareTo(xshk.getYfje()) > 0){
+                        tHkKp.setHkje(xshk.getYfje());
+                        tXshk.setYfje(BigDecimal.ZERO);
+                        hkje = hkje.subtract(xshk.getYfje());
+                    }else{
+                        tHkKp.setHkje(hkje);
+                        tXshk.setYfje(xshk.getYfje().subtract(hkje));
+                        hkje = BigDecimal.ZERO;
+                    }
+
+
+//                    tHkKps.add(tHkKp);
+                    hkKpDao.save(tHkKp);
+                }
+
+				tXskp.setHkje(hjje.subtract(hkje));
+				tXskp.setYfje(hjje.subtract(hkje));
+				tXskp.setIsHk("0");
+//				BigDecimal hkje = BigDecimal.ZERO;
+//				if(hjje.compareTo(ysje.abs()) > 0){
+//					hkje = ysje.abs();
+//				}else{
+//					hkje = hjje;
+//				}
+//				tXskp.setHkje(hkje);
+//				tXskp.setYfje(hkje);
 			}
 			if(xsthDetIds == null || xsthDetIds.equals("")){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
@@ -1416,10 +1431,13 @@ public class XskpServiceImpl implements XskpServiceI {
 		params.put("ywyId", xskp.getYwyId());
 		params.put("jsfsId", Constant.XSKP_JSFS_QK);
 		List<TXskp> tXskps = xskpDao.find(hql, params);
-		
+
+		Xskp x = null;
 		for(TXskp tXskp : tXskps){
-			Xskp x = new Xskp();
-			BeanUtils.copyProperties(tXskp, x);
+			x = new Xskp();
+			x.setXskplsh(tXskp.getXskplsh());
+			x.setCreateTime(tXskp.getCreateTime());
+//			BeanUtils.copyProperties(tXskp, x);
 			x.setPayTime(DateUtil.dateIncreaseByDay(tXskp.getCreateTime(), kh.getSxzq()));
 			x.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 			x.setHkedje(tXskp.getHkje());
@@ -1541,7 +1559,27 @@ public class XskpServiceImpl implements XskpServiceI {
 		}
 		return null;
 	}
-	
+
+    private List<Xshk> getXshkWithYfje(String bmbh, String khbh, int ywyId) {
+        String hql = "from TXshk t where t.bmbh = :bmbh and t.ywyId = :ywyId and t.khbh = :khbh and t.yfje > 0 and t.isCancel = '0' order by t.createTime";
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("bmbh", bmbh);
+        params.put("ywyId", ywyId);
+        params.put("khbh", khbh);
+        List<TXshk> tXshks = xshkDao.find(hql, params);
+
+        List<Xshk> xshks = new ArrayList<Xshk>();
+        Xshk hk = null;
+        for(TXshk t : tXshks){
+            hk = new Xshk();
+            hk.setXshklsh(t.getXshklsh());
+            hk.setYfje(t.getYfje());
+
+            xshks.add(hk);
+        }
+
+        return xshks;
+    }
 	
 	
 	@Autowired
@@ -1584,7 +1622,17 @@ public class XskpServiceImpl implements XskpServiceI {
 		this.xsthDetDao = xsthDetDao;
 	}
 
-	@Autowired
+    @Autowired
+    public void setXshkDao(BaseDaoI<TXshk> xshkDao) {
+        this.xshkDao = xshkDao;
+    }
+
+    @Autowired
+    public void setHkKpDao(BaseDaoI<THkKp> hkKpDao) {
+        this.hkKpDao = hkKpDao;
+    }
+
+    @Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
 	}
@@ -1598,11 +1646,6 @@ public class XskpServiceImpl implements XskpServiceI {
 	public void setKhDetDao(BaseDaoI<TKhDet> khDetDao) {
 		this.khDetDao = khDetDao;
 	}
-
-//	@Autowired
-//	public void setUserDao(BaseDaoI<TUser> userDao) {
-//		this.userDao = userDao;
-//	}
 
 	@Autowired
 	public void setKhlxDao(BaseDaoI<TKhlx> khlxDao) {
