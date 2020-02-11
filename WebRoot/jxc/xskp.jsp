@@ -774,14 +774,15 @@ function saveAll(){
 			return false;
 		}
 
-		if($('input[name=xsthDetIds]').val() != '' && !$('input[name=isZs]').is(':checked')){
-			if(this.zdwsl > this.zmsl){
-				if(spbhsBigger == undefined){
-					spbhsBigger = '' + this.spbh;
-				}else{
-					spbhsBigger += ',' + this.spbh;
-				}
-			}
+        // if($('input[name=xsthDetIds]').val() != '' && !$('input[name=isZs]').is(':checked')){
+		if($('input[name=xsthDetIds]').val() != ''){
+            if(this.zdwsl > this.zmsl){
+                if(spbhsBigger == undefined){
+                    spbhsBigger = '' + this.spbh;
+                }else{
+                    spbhsBigger += ',' + this.spbh;
+                }
+            }
         }
 
 		if(Number(this.dwcb) == 0){

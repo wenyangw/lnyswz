@@ -170,7 +170,7 @@ function xstj_setColumnLabel(){
 }
 
 function xstj_getData(){
-	if($('#jxc_xstj_tjlx').combobox('getValue') === 'xssl' && (xstj_bmbh == '01' || xstj_bmbh == '08')){
+	if($('#jxc_xstj_tjlx').combobox('getValue') === 'xssl' && (xstj_bmbh == '01')){
 		$.messager.alert('警告', '选择的部门无法进行销售数量的统计，请重新选择！',  'info');
 	}else{
 		lnyw.MaskUtil.mask('正在刷新，请等待……');

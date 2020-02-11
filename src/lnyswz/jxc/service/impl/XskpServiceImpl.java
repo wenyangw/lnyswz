@@ -3,14 +3,7 @@ package lnyswz.jxc.service.impl;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
@@ -628,7 +621,24 @@ public class XskpServiceImpl implements XskpServiceI {
 			}
 		}
 
-		if(yTXskp.getTXsths() != null){	
+		// 处理有预付记录的数据，增加t_xshk中的yfje
+		String hqlHkKp = "from THkKp t where t.xskplsh = :xskplsh and t.isYf = '1'";
+		Map<String, Object> paramsHkKp = new HashMap<String, Object>();
+		paramsHkKp.put("xskplsh", xskp.getXskplsh());
+		List<THkKp> tHkKps = hkKpDao.find(hqlHkKp, paramsHkKp);
+        for(THkKp tHkKp : tHkKps){
+            TXshk tXshk = tHkKp.getTXshk();
+            tXshk.setYfje(tXshk.getYfje().add(tHkKp.getHkje()));
+        }
+
+        // 处理有预付记录的数据，删除t_xshk_xskp中对应的记录
+        Iterator<THkKp> it = tHkKps.iterator();
+        while(it.hasNext()){
+            THkKp t = it.next();
+            hkKpDao.delete(t);
+        }
+
+        if(yTXskp.getTXsths() != null){
 			yTXskp.setTXsths(null);
 		}
 		

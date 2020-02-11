@@ -507,11 +507,18 @@ public class XsthServiceImpl implements XsthServiceI {
 
             if ("1".equals(yTXsth.getIsLs())) {
                 //教材所有临时及其他部门当直送提货并未确认收货数量，冲减时不更新lszz（此处用非进行处理）
-                if (!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
-                        || (ywrks != null && ywrks.size() > 0)
-                        || xsth.getFromOther().equals("cbs")
-                        || ("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2)))) {
-
+//                if (!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0)
+//                        || (ywrks != null && ywrks.size() > 0)
+//                        || xsth.getFromOther().equals("cbs")
+//                        || ("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2)))) {
+				if ("1".equals(yTXsth.getIsLs()) &&
+					(
+						!("1".equals(yTXsth.getIsZs()) && tDet.getThsl().compareTo(BigDecimal.ZERO) == 0) ||
+							("1".equals(yTXsth.getIsZs()) && "47".equals(yTDet.getSpbh().substring(0, 2))) ||
+							(ywrks != null && ywrks.size() > 0) ||
+							xsth.getFromOther().equals("cbs")
+					)
+				) {
                     LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), Constant.UPDATE_RK, lszzDao);
                 }
 
@@ -522,7 +529,6 @@ public class XsthServiceImpl implements XsthServiceI {
             }
         }
         yTXsthDets.clear();
-        yTXsthDets = null;
 
         if (ywrks != null && ywrks.size() > 0) {
             yTXsth.setTYwrks(null);
