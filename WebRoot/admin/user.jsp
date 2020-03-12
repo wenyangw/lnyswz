@@ -80,6 +80,33 @@ $(function(){
 });
 
 function appendUser() {
+	$.ajax({
+		url:'${pageContext.request.contextPath}/jxc/khUserAction!add.action',
+		async: false,
+		cache: false,
+		context: this,
+		data:{
+			userName: 'lil',
+			realName: '李雷',
+			weixin: 'wx7836624',
+			bmbh: '01',
+			khbh: '11010006',
+			ywyId: 84,
+			isValid: '1'
+		},
+		method: 'post',
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				console.info(data.obj)
+			}else{
+				$.messager.alert('提示', '客户信息不存在！', 'error');
+			}
+		}
+	});
+}
+
+function appendUser1() {
 	var p = $('#admin_user_addDialog');
 	p.dialog({
 		title : '增加用户',
