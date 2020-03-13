@@ -169,6 +169,7 @@ function appendKhDet() {
 	            					url: '${pageContext.request.contextPath}/jxc/khAction!existKhDet.action',
 	            					async: false,
 	            					data : {
+	            						depId: kh_did,
 	            						khbh : $('#khbh').val(),
 	            						ywyId: ywyId.combobox('getValue'),
 	            					},
@@ -374,9 +375,9 @@ function searchKh(){
 	});
 }
 </script>
-<div id='jxc_kh_layout' style="height:100%;width=100%">
+<div id='jxc_kh_layout' style="height:100%;width:100%;">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:320px">
-		<div id='jxc_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width=100%">
+		<div id='jxc_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width:100%;">
 			请输入查询内容
 			<div data-options="region:'center',title:'客户列表',split:true" style="height:100px;width:250px">		
 				<div id='jxc_kh_dg'></div>

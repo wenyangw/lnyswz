@@ -1114,12 +1114,17 @@ function saveXsth(){
                     effectRow['needAudit'] = '2';
                     $.messager.alert('提示', '本次提货需进入2级审批流程！', 'warning');
                 } else if (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val())) {
-                    var needA = jxc.getAuditLevel(
-                        '${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
-                        xsth_did,
-                        $('input[name=jxc_xsth_khbh]').val(),
-                        jxc_xsth_ywyCombo.combobox('getValue'),
-                        JSFS_QK);
+                    var needA = undefined
+					if ($('input[name=jxc_xsth_isZs]').is(':checked')) {
+						needA = jxc.auditLevel(xsth_did)['second']
+					} else {
+						needA =	jxc.getAuditLevel(
+							'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',
+							xsth_did,
+							$('input[name=jxc_xsth_khbh]').val(),
+							jxc_xsth_ywyCombo.combobox('getValue'),
+							JSFS_QK);
+					}
                     if(needA != undefined){
                         effectRow['needAudit'] = needA;
                         $.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');

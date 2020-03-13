@@ -235,8 +235,9 @@ public class KhServiceImpl implements KhServiceI {
 	@Override
 	public boolean existKhDet(Kh kh) {
 		boolean isOK = false;
-		String hql = "from TKhDet t where t.TKh.khbh = :khbh and t.ywyId = :ywyId";
+		String hql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", kh.getDepId());
 		params.put("khbh", kh.getKhbh());
 		params.put("ywyId", kh.getYwyId());
 		
