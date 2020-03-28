@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +37,9 @@ import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.Kfhs;
 import lnyswz.jxc.bean.KfhsDet;
+import lnyswz.jxc.bean.Xsth;
+import lnyswz.jxc.bean.XsthDet;
+import lnyswz.jxc.bean.YwhsDet;
 import lnyswz.jxc.model.TCgjh;
 import lnyswz.jxc.model.TCgjhDet;
 import lnyswz.jxc.model.TCk;
@@ -52,6 +56,9 @@ import lnyswz.jxc.model.TKfhsDet;
 import lnyswz.jxc.model.TCgxq;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TJsfs;
+import lnyswz.jxc.model.TXskp;
+import lnyswz.jxc.model.TXsth;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.model.TYwhs;
 import lnyswz.jxc.model.TYwhsDet;
 import lnyswz.jxc.model.TYwzz;
@@ -60,6 +67,7 @@ import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.KfhsServiceI;
+import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
 
 /**
@@ -73,6 +81,7 @@ public class KfhsServiceImpl implements KfhsServiceI {
 	private BaseDaoI<TKfhs> kfhsDao;
 	private BaseDaoI<TKfhsDet> detDao;
 	private BaseDaoI<TYwhs> ywhsDao;
+	private BaseDaoI<TYwhsDet> ywhsDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -132,9 +141,10 @@ public class KfhsServiceImpl implements KfhsServiceI {
 			if(null == tDet.getZhxs() || tDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);
-			}else{
-				tDet.setCdwsl(tDet.getZdwsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
+//			else{
+//				tDet.setCdwsl(tDet.getZdwsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//			}
 			
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(tDet, sp);
@@ -155,9 +165,9 @@ public class KfhsServiceImpl implements KfhsServiceI {
 
 				//更新库存总账
 				if("1".equals(kfhsDet.getIsZj())){
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 				}else{
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), kfhsDet.getZdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfhsDet.getSppc(), tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
 				}
 //			}
 			
@@ -230,6 +240,12 @@ public class KfhsServiceImpl implements KfhsServiceI {
 			
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
+
+			if (!("05".equals(tKfhs.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
 			
 //			if(null != yTKfhs.getFhId()){
 //				//更新分户总账
@@ -245,9 +261,9 @@ public class KfhsServiceImpl implements KfhsServiceI {
 				
 				//更新库房总账
 				if("1".equals(yTDet.getIsZj())){
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 				}else{
-					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
+					KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.UPDATE_RK, kfzzDao);
 				}
 //			}
 			
@@ -266,9 +282,10 @@ public class KfhsServiceImpl implements KfhsServiceI {
 	@Override
 	public DataGrid datagrid(Kfhs kfhs) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKfhs t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TKfhs t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", kfhs.getBmbh());
+		params.put("createId", kfhs.getCreateId());
 		if(kfhs.getCreateTime() != null){
 			params.put("createTime", kfhs.getCreateTime()); 
 		}else{
@@ -313,7 +330,71 @@ public class KfhsServiceImpl implements KfhsServiceI {
 		return datagrid;
 	}
 
+	
+	@Override
+	public DataGrid printKfhs(Kfhs kfhs) {
+		DataGrid datagrid = new DataGrid();
+				
+		String sql = "select ywhslsh from t_ywhs where kfhslsh = ?";
+		Map<String, Object> sqlParams = new HashMap<String, Object>();
+		sqlParams.put("0", kfhs.getKfhslsh());
 		
+		String ywhslsh = kfhsDao.getBySQL(sql, sqlParams).toString();
+		
+		TYwhs tYwhs = ywhsDao.load(TYwhs.class, ywhslsh);
+		
+		String hql = "from TYwhsDet t where t.TYwhs.ywhslsh = :ywhslsh order by t.id";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ywhslsh", ywhslsh);
+		BigDecimal zzhj = BigDecimal.ZERO;
+		BigDecimal zchj = BigDecimal.ZERO;
+		BigDecimal jzhj = BigDecimal.ZERO;
+		BigDecimal jchj = BigDecimal.ZERO;
+		
+		List<TYwhsDet> dets = ywhsDetDao.find(hql, params);
+		List<YwhsDet> nl = new ArrayList<YwhsDet>();
+		for (TYwhsDet yd : dets) {
+			YwhsDet ywhsDet = new YwhsDet();
+			BeanUtils.copyProperties(yd, ywhsDet);
+			zzhj = zzhj.add(yd.getZzdwsl());
+			zchj = zchj.add(yd.getZcdwsl());
+			jzhj = jzhj.add(yd.getJzdwsl());
+			jchj = jchj.add(yd.getJcdwsl());
+			nl.add(ywhsDet);
+			
+		}
+						
+		int num = nl.size();
+		int numLimit = 5;
+		if (num < numLimit) {
+			for (int i = 0; i < (numLimit - num); i++) {
+				nl.add(new YwhsDet());
+			}
+		}
+				
+		DecimalFormat df=new DecimalFormat("#,##0.00");
+		//BigDecimal hjje_b=new BigDecimal(String.format("%.2f", tXsth.getHjje())); 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "膜   裁   切   单");
+		map.put("head", Constant.XSTH_HEAD.get(tYwhs.getBmbh()));
+		map.put("footer", Constant.XSTH_FOOT.get(tYwhs.getBmbh()));
+		map.put("gsmc", Constant.BMMCS.get(tYwhs.getBmbh()));
+		
+		map.put("createTime", DateUtil.dateToString(tYwhs.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("kfhslsh", kfhs.getKfhslsh());
+		//map.put("zzhj", df.format(zzhj));
+		map.put("zzhj", zzhj);
+		map.put("zchj", zchj);
+		map.put("jzhj", jzhj);
+		map.put("jchj", jchj);
+		map.put("bz", tYwhs.getBz() + " " + ywhslsh);
+		map.put("createName", tYwhs.getCreateName());
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
 	@Autowired
 	public void setKfhsDao(BaseDaoI<TKfhs> kfhsDao) {
 		this.kfhsDao = kfhsDao;
@@ -327,6 +408,11 @@ public class KfhsServiceImpl implements KfhsServiceI {
 	@Autowired
 	public void setYwhsDao(BaseDaoI<TYwhs> ywhsDao) {
 		this.ywhsDao = ywhsDao;
+	}
+
+	@Autowired
+	public void setYwhsDetDao(BaseDaoI<TYwhsDet> ywhsDetDao) {
+		this.ywhsDetDao = ywhsDetDao;
 	}
 
 	@Autowired

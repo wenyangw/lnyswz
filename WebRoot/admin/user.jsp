@@ -63,6 +63,14 @@ $(function(){
 	        {field:'createTime',title:'创建时间',width:100},
 	        {field:'modifyTime',title:'修改时间',width:100},
 	        {field:'lastTime',title:'最后登录时间',width:100},
+	        {field:'valid',title:'有效',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				}},
 	        {field:'roleNames',title:'拥有角色'},
 	    ]],
 	});
@@ -72,12 +80,39 @@ $(function(){
 });
 
 function appendUser() {
+	$.ajax({
+		url:'${pageContext.request.contextPath}/jxc/khUserAction!add.action',
+		async: false,
+		cache: false,
+		context: this,
+		data:{
+			userName: 'lil',
+			realName: '李雷',
+			weixin: 'wx7836624',
+			bmbh: '01',
+			khbh: '11010006',
+			ywyId: 84,
+			isValid: '1'
+		},
+		method: 'post',
+		dataType:'json',
+		success:function(data){
+			if(data.success){
+				console.info(data.obj)
+			}else{
+				$.messager.alert('提示', '客户信息不存在！', 'error');
+			}
+		}
+	});
+}
+
+function appendUser1() {
 	var p = $('#admin_user_addDialog');
 	p.dialog({
 		title : '增加用户',
 		href : '${pageContext.request.contextPath}/admin/userAdd.jsp',
 		width : 350,
-		height : 360,
+		height : 380,
 		modal : true,
 		buttons: [{
             text:'确定',
@@ -135,7 +170,7 @@ function editUser(){
 			title : '修改用户',
 			href : '${pageContext.request.contextPath}/admin/userEdit.jsp',
 			width : 350,
-			height : 360,
+			height : 380,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -196,6 +231,7 @@ function editUser(){
 					isBgy: rows[0].isBgy,
 					createTime : rows[0].createTime,
 					lastTime : rows[0].lastTime,
+					valid : rows[0].valid,
 					roleIds : lnyw.getList(rows[0].roleIds),
 					operaDepId : did,
 					menuId : menuId,

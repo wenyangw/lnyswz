@@ -7,6 +7,8 @@ public interface SpBgyServiceI {
 	public void updateSpBgy(SpBgy spBgy);
 
 	public DataGrid datagridBgy(SpBgy spBgy);
+	
+	public DataGrid datagridBgySp(SpBgy spBgy);
 
 	public void deleteSpBgy(SpBgy spBgy);
 }

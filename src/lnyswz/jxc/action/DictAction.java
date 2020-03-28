@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import lnyswz.jxc.service.DictServiceI;
 @Action("dictAction")
 public class DictAction extends BaseAction implements ModelDriven<Dict> {
 	private static final long serialVersionUID = 1L;
-	private Logger logger = Logger.getLogger(DictAction.class);
 	private Dict dict = new Dict();
 	private DictServiceI dictService;
 
@@ -75,6 +73,7 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 		}
 		super.writeJson(j);
 	}
+	
 
 	/**
 	 * 返回所有字典，供管理用，有分页
@@ -82,7 +81,12 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 	public void datagrid() {
 		writeJson(dictService.datagrid(dict));
 	}
-
+	/**
+	 * 判断是否需要部门
+	 */
+	public void getDict() {
+		writeJson(dictService.getDict(dict));
+	}
 	public void listDict() {
 		writeJson(dictService.listDict(dict));
 	}
@@ -90,7 +94,6 @@ public class DictAction extends BaseAction implements ModelDriven<Dict> {
 		writeJson(dictService.selectTree(dict));
 	}
 	public void listFields() {
-		logger.info(dict.getSelectType());
 		writeJson(dictService.listFields(dict));
 	}
 

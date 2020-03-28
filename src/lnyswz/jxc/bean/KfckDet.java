@@ -33,6 +33,7 @@ public class KfckDet{
 	private BigDecimal cdwsl;
 	private BigDecimal lastThsl;
 	private String kfcklsh;
+	private BigDecimal zdwcksl;
 	
 	public int getId() {
 		return id;
@@ -142,5 +143,12 @@ public class KfckDet{
 	public void setKfcklsh(String kfcklsh) {
 		this.kfcklsh = kfcklsh;
 	}
-	
+
+	public BigDecimal getZdwcksl() {
+		return zdwcksl;
+	}
+
+	public void setZdwcksl(BigDecimal zdwcksl) {
+		this.zdwcksl = zdwcksl;
+	}
 }

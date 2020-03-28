@@ -16,13 +16,16 @@ $(function(){
 	        {field:'text',title:'名称',width:180},
 	        {field:'url',title:'地址',width:180},
 	        {field:'orderNum',title:'排序',width:50},
-	        {field:'iconCls',title:'图标',width:50,
+	        {field:'iconCls',title:'图标',width:100,
 	        	formatter : function(value) {
 				if (!value) {
 					return '';
 				} else {
-					return lnyw.fs('<span class="{0}" style="display:inline-block;vertical-align:middle;width:16px;height:16px;"></span>', value);
-					
+				    if(value.indexOf('icon-t-') >= 0){
+				        return value;
+					}else {
+                        return lnyw.fs('<span class="{0}" style="display:inline-block;vertical-align:middle;width:16px;height:16px;"></span>', value);
+                    }
 				}
 			},},
 			{field:'lx',title:'单据类型',width:50},

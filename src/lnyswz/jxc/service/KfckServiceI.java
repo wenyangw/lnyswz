@@ -1,17 +1,17 @@
 package lnyswz.jxc.service;
 
-import java.util.List;
-
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Kfck;
 
 
 public interface KfckServiceI {
-	public void save(Kfck kfck);
-	public void cjKfck(Kfck kfck);
+	Kfck save(Kfck kfck);
+	void cjKfck(Kfck kfck);
 //	public void updateComplete(Kfck kfck);
-	public DataGrid datagrid(Kfck kfck);
-	public DataGrid detDatagrid(String kfcklsh);
+	DataGrid datagrid(Kfck kfck);
+	DataGrid detDatagrid(String kfcklsh);
 //	public DataGrid toYwrk(String kfcklshs);
-	public DataGrid getSpkc(Kfck kfck);
+	DataGrid getSpkc(Kfck kfck);
+	DataGrid printKfck(Kfck kfck);
+	DataGrid loadKfck(Kfck kfck);
 }

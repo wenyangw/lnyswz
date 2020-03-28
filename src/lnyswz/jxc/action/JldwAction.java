@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import com.opensymphony.xwork2.ModelDriven;
 @Action("jldwAction")
 public class JldwAction extends BaseAction implements ModelDriven<Jldw> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private Jldw jldw = new Jldw();
 	private JldwServiceI jldwService;
 

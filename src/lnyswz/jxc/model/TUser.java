@@ -1,6 +1,8 @@
 package lnyswz.jxc.model;
 // Generated 2013-8-14 10:42:53 by Hibernate Tools 4.0.0
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_user")
+@DynamicUpdate(true)
 public class TUser implements java.io.Serializable {
 
 	private int id;
@@ -40,6 +43,7 @@ public class TUser implements java.io.Serializable {
 	private Date createTime;
 	private Date modifyTime;
 	private Date lastTime;
+	private String valid;
 	private Set<TRole> TRoles = new HashSet<TRole>(0);
 
 	public TUser() {
@@ -47,7 +51,7 @@ public class TUser implements java.io.Serializable {
 
 	public TUser(int id, TDepartment TDepartment, String userName,
 			String password, String realName, String sex, int orderNum, Date createTime,
-			Date modifyTime, Date lastTime, Set<TRole> TRoles) {
+			Date modifyTime, Date lastTime, String valid, Set<TRole> TRoles) {
 		this.id = id;
 		this.TDepartment = TDepartment;
 		this.userName = userName;
@@ -58,6 +62,7 @@ public class TUser implements java.io.Serializable {
 		this.createTime = createTime;
 		this.modifyTime = modifyTime;
 		this.lastTime = lastTime;
+		this.valid = valid;
 		this.TRoles = TRoles;
 	}
 
@@ -183,6 +188,15 @@ public class TUser implements java.io.Serializable {
 
 	public void setLastTime(Date lastTime) {
 		this.lastTime = lastTime;
+	}
+
+	@Column(name = "valid")
+	public String getValid() {
+		return valid;
+	}
+
+	public void setValid(String valid) {
+		this.valid = valid;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)

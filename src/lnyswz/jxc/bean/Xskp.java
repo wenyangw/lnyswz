@@ -33,6 +33,8 @@ public class Xskp {
 	private String jsfsmc;
 	private String fplxId;
 	private String fplxmc;
+	private String xslxId;
+	private String xslxmc;
 	private String bookmc;
 	private String fyr;
 	private String thfs;
@@ -88,7 +90,12 @@ public class Xskp {
 	private Date payTime;
 	private BigDecimal hkedje;
 	private String isUp;
+	private String khlxId;
 	private int postponeDay;
+	
+	//第三方开票传入提货单客户
+	private String xsthKhbh;
+	//private int xsthYwyId;
 	
 	private String ywrklsh;
 	private String xsthlshs;
@@ -104,6 +111,7 @@ public class Xskp {
 
 	private String otherBm;
 	private String fromOther;
+	private String lens;
 
 	public String getXskplsh() {
 		return xskplsh;
@@ -255,6 +263,22 @@ public class Xskp {
 
 	public void setFplxmc(String fplxmc) {
 		this.fplxmc = fplxmc;
+	}
+
+	public String getXslxId() {
+		return xslxId;
+	}
+
+	public void setXslxId(String xslxId) {
+		this.xslxId = xslxId;
+	}
+
+	public String getXslxmc() {
+		return xslxmc;
+	}
+
+	public void setXslxmc(String xslxmc) {
+		this.xslxmc = xslxmc;
 	}
 
 	public String getBookmc() {
@@ -681,12 +705,28 @@ public class Xskp {
 		this.isUp = isUp;
 	}
 
+	public String getKhlxId() {
+		return khlxId;
+	}
+
+	public void setKhlxId(String khlxId) {
+		this.khlxId = khlxId;
+	}
+
 	public int getPostponeDay() {
 		return postponeDay;
 	}
 
 	public void setPostponeDay(int postponeDay) {
 		this.postponeDay = postponeDay;
+	}
+
+	public String getXsthKhbh() {
+		return xsthKhbh;
+	}
+
+	public void setXsthKhbh(String xsthKhbh) {
+		this.xsthKhbh = xsthKhbh;
 	}
 
 	public int getPage() {
@@ -719,6 +759,14 @@ public class Xskp {
 
 	public void setFromOther(String fromOther) {
 		this.fromOther = fromOther;
+	}
+
+	public String getLens() {
+		return lens;
+	}
+
+	public void setLens(String lens) {
+		this.lens = lens;
 	}
 
 	public String getSpbh() {

@@ -1,6 +1,7 @@
 package lnyswz.jxc.model;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
 import javax.persistence.Table;
 
 /**
@@ -38,6 +41,10 @@ public class TYwrkDet implements java.io.Serializable {
 	private BigDecimal spje;
 	private BigDecimal qdwcb;
 	private BigDecimal dwcb;
+	private BigDecimal thsl;
+	private BigDecimal cthsl;
+	
+	private Set<TXsth> TXsths;
 
 	public TYwrkDet() {
 	}
@@ -45,7 +52,7 @@ public class TYwrkDet implements java.io.Serializable {
 	public TYwrkDet(int id, TYwrk TYwrk, String spbh, String spmc, String spcd, String sppp, 
 			String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs,
 			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje,
-			BigDecimal qdwcb, BigDecimal dwcb) {
+			BigDecimal qdwcb, BigDecimal dwcb, BigDecimal thsl, BigDecimal cthsl, Set<TXsth> TXsths) {
 		this.id = id;
 		this.TYwrk = TYwrk;
 		this.spbh = spbh;
@@ -65,6 +72,9 @@ public class TYwrkDet implements java.io.Serializable {
 		this.spje = spje;
 		this.qdwcb = qdwcb;
 		this.dwcb = dwcb;
+		this.thsl = thsl;
+		this.thsl = cthsl;
+		this.TXsths = TXsths;
 	}
 
 	@Id
@@ -239,6 +249,33 @@ public class TYwrkDet implements java.io.Serializable {
 	
 	public void setDwcb(BigDecimal dwcb) {
 		this.dwcb = dwcb;
+	}
+
+	@Column(name = "thsl", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
+	}
+	
+	@Column(name = "cthsl", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getCthsl() {
+		return cthsl;
+	}
+
+	public void setCthsl(BigDecimal cthsl) {
+		this.cthsl = cthsl;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TYwrks")
+	public Set<TXsth> getTXsths() {
+		return this.TXsths;
+	}
+	
+	public void setTXsths(Set<TXsth> TXsths) {
+		this.TXsths = TXsths;
 	}
 
 }

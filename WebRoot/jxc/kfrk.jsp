@@ -1,4 +1,4 @@
-o<%@ page language="java" contentType="text/html; charset=utf-8"
+<%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
 
@@ -194,6 +194,13 @@ $(function(){
                	formatter: function(value){
                		return value == 0 ? '' : value;
            		}},
+         	{field:'cdwyrsl',title:'到货数量2',align:'center',
+               	formatter: function(value){
+               		return value == 0 ? '' : value;
+            	},
+            	styler: function(value,row){
+            		return 'color:red;';
+      		}},
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
@@ -274,6 +281,7 @@ $(function(){
 	        {field:'gysbh',title:'供应商编号',align:'center'},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
 	        {field:'rklxmc',title:'入库类型',align:'center'},
+            {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -492,7 +500,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0 ){
+		if(zslEditor.target.val() != 0 ){
 			return true;
 		}
 	}
@@ -635,6 +643,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfrkAction!save.action',
@@ -657,6 +666,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -712,8 +724,14 @@ function setEditing(){
 	});
     
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
-    
+	if (did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
 	//loadEditor();
 	//处理编辑行的换行事件
@@ -781,8 +799,10 @@ function setEditing(){
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+    	if($(spbhEditor.target).val().substring(0, 3) < '513' || $(spbhEditor.target).val().substring(0, 3) > '518'){
+    		if($(zhxsEditor.target).val() != 0){
+    			$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+    		}
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -871,7 +891,11 @@ function setValueBySpbh(rowData){
 	spbzEditor.target.val(rowData.spbz);
 	zjldwEditor.target.val(rowData.zjldwmc);
 	cjldwEditor.target.val(rowData.cjldwmc);
-	zhxsEditor.target.val(rowData.zhxs);
+	if(rowData.spbh.substring(0, 3) >= '513' && rowData.spbh.substring(0, 3) <= '518'){
+		zhxsEditor.target.val(0);
+	}else{
+		zhxsEditor.target.val(rowData.zhxs);
+	}
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
@@ -899,7 +923,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
@@ -938,11 +962,12 @@ function gysLoad(){
 function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
 	if (row != undefined) {
-		if(!row.cjKfrklsh || row.isCj != '1'){
+		if(row.isCj != '1' || !row.cjKfrklsh){
 			if(row.ywrklsh == null){
-// 				if(row.isCj != '1'){
+				if(row.isCj != '1'){
 					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
 						if (bz != undefined){
+							//MaskUtil.mask('正在冲减，请等待……');
 							$.ajax({
 								url : '${pageContext.request.contextPath}/jxc/kfrkAction!cjKfrk.action',
 								data : {
@@ -955,19 +980,24 @@ function cjKfrk(){
 								method: 'post',
 								dataType : 'json',
 								success : function(d) {
-									kfrk_dg.datagrid('load');
-									kfrk_dg.datagrid('unselectAll');
+									if(d.success) {
+										kfrk_dg.datagrid('reload');
+										kfrk_dg.datagrid('unselectAll');
+									}
 									$.messager.show({
 										title : '提示',
 										msg : d.msg
 									});
+								},
+								complete: function(){
+									//MaskUtil.unmask();
 								}
 							});
 						}
 						});
-// 				}else{
-// 					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
-// 				}
+				}else{
+					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
+				}
 			}else{
 				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
 			}
@@ -997,6 +1027,7 @@ function searchKfrk(){
 	kfrk_dg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeKfrk]').val(),
+        search: $('input[name=searchKfrk]').val()
 	});
 }
 
@@ -1022,6 +1053,9 @@ function generateKfrk(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						$('input[name=gysbh]').val(rows[0].gysbh);
+						$('input[name=gysmc]').val(rows[0].gysmc);
+						jxc_kfrk_ckCombo.combobox('setValue', rows[0].ckId);
 						kfrk_spdg.datagrid('loadData', d.rows);
 						updateFooter();
 						$('input[name=cgjhDetIds]').val(cgjhDetStr);
@@ -1039,6 +1073,7 @@ function searchCgjhInKfrk(){
 	kfrk_cgjhDg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeCgjhInKfrk]').val(),
+		search: $('input[name=searchCgjhInKfrk]').val(),
 		fromOther: 'fromKfrk'
 	});
 }
@@ -1094,7 +1129,7 @@ function searchYwrkInKfrk(){
 <div id="jxc_kfrk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_kfrk_layout' style="height:100%;width=100%">
+        <div id='jxc_kfrk_layout' style="height:100%; width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
@@ -1141,10 +1176,12 @@ function searchYwrkInKfrk(){
 
 <div id="jxc_kfrk_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商名称、备注：<input type="text" name="searchKfrk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfrk();">查询</a>
 </div>
 <div id="jxc_kfrk_cgjhTb" style="padding:3px;height:auto">
-	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgjhInKfrk" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+	输入流水号、供应商、商品编号、商品名称、备注：<input type="text" name="searchCgjhInKfrk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgjhInKfrk();">查询</a>
 </div>
 <div id="jxc_kfrk_ywrkTb" style="padding:3px;height:auto">

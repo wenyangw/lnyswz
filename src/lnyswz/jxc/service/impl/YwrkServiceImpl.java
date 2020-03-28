@@ -9,12 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-
-import javax.print.DocFlavor;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.components.Bean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,35 +22,28 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Cgjh;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
+import lnyswz.jxc.bean.XsthDet;
 import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TCgjh;
 import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCk;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TRklx;
 import lnyswz.jxc.model.TSpDet;
 import lnyswz.jxc.model.TXskp;
+import lnyswz.jxc.model.TXsth;
 import lnyswz.jxc.model.TYwrk;
 import lnyswz.jxc.model.TYwrkDet;
-import lnyswz.jxc.model.TCgxq;
-import lnyswz.jxc.model.TGys;
-import lnyswz.jxc.model.TJsfs;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.YwrkServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -69,6 +58,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TXskp> xskpDao;
+	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TSpDet> spDetDao;
@@ -81,15 +71,112 @@ public class YwrkServiceImpl implements YwrkServiceI {
 
 	@Override
 	public Ywrk save(Ywrk ywrk) {
-		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
 		TYwrk tYwrk = new TYwrk();
 		BeanUtils.copyProperties(ywrk, tYwrk);
-		tYwrk.setCreateTime(new Date());
-		tYwrk.setYwrklsh(ywrklsh);
+
+//		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
+//		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
 
 		tYwrk.setIsCj("0");
 		
+		
+		
+		Department dep = new Department();
+		dep.setId(ywrk.getBmbh());
+		dep.setDepName(tYwrk.getBmmc());
+		
+		Ck ck = new Ck();
+		ck.setId(ywrk.getCkId());
+		ck.setCkmc(tYwrk.getCkmc());
+		
+		
+		//从暂估入库传入
+		Set<TYwrk> zgYwrks = null;
+		Set<TCgjhDet> zCgjhDets = null;
+		Set<TKfrk> zKfrks = null;
+		//Set<TXsth> zXsths = null;
+		Map<String, Set<TXsth>> zXsths = null;
+		if (ywrk.getYwrklshs() != null && ywrk.getYwrklshs().length() > 0) {
+			String[] lshs = ywrk.getYwrklshs().split(",");
+			zgYwrks = new HashSet<TYwrk>();
+			zCgjhDets = new HashSet<TCgjhDet>();
+			zKfrks = new HashSet<TKfrk>();
+			zXsths = new HashMap<String, Set<TXsth>>();
+			for(String lsh : lshs){
+				TYwrk zYwrk = ywrkDao.get(TYwrk.class, lsh);
+				if (zYwrk.getTCgjhs() != null && zYwrk.getTCgjhs().size() > 0){
+					zCgjhDets.addAll(zYwrk.getTCgjhs());
+				}
+				if (zYwrk.getTKfrks() != null && zYwrk.getTKfrks().size() > 0){
+					zKfrks.addAll(zYwrk.getTKfrks());
+				}
+				zgYwrks.add(zYwrk);
+				//zYwrk.setBeYwrklsh(ywrklsh);
+				
+				for(TYwrkDet tt : zYwrk.getTYwrkDets()){
+					if(zXsths.containsKey(tt.getSpbh())){
+						zXsths.get(tt.getSpbh()).addAll(tt.getTXsths());
+					}else{
+						zXsths.put(tt.getSpbh(), tt.getTXsths());
+					}
+				}
+				
+				Ywrk zgYwrk = new Ywrk();
+				BeanUtils.copyProperties(zYwrk, zgYwrk);
+				zgYwrk.setLxbh("01");
+				zgYwrk.setCjId(ywrk.getCreateId());
+				zgYwrk.setCjName(ywrk.getCreateName());
+				zgYwrk.setMenuId(ywrk.getMenuId());
+				cjYwrk(zgYwrk);
+			}
+		}
+		
+		
+		//处理商品明细
+		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
+		ArrayList<YwrkDet> ywrkDets = JSON.parseObject(ywrk.getDatagrid(), new TypeReference<ArrayList<YwrkDet>>(){});
+		for(YwrkDet ywrkDet : ywrkDets){
+			TYwrkDet tDet = new TYwrkDet();
+			BeanUtils.copyProperties(ywrkDet, tDet);
+			if(tDet.getThsl() == null || tDet.getThsl().compareTo(BigDecimal.ZERO) == 0){
+				tDet.setThsl(Constant.BD_ZERO);
+				tDet.setCthsl(Constant.BD_ZERO);
+			}else{
+				if(ywrkDet.getCjldwId() != null && ywrkDet.getCjldwId() != "" && ywrkDet.getCjldwId().trim().length() != 0){
+					tDet.setCthsl(tDet.getThsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				}
+			}
+			
+			if("".equals(ywrkDet.getCjldwId()) || null == ywrkDet.getZhxs()){
+				tDet.setCdwdj(Constant.BD_ZERO);
+				tDet.setCdwsl(Constant.BD_ZERO);
+				tDet.setZhxs(Constant.BD_ZERO);
+			}else{
+				if(ywrkDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
+					tDet.setCdwdj(Constant.BD_ZERO);
+					tDet.setCdwsl(Constant.BD_ZERO);
+				}
+			}
+			
+			Sp sp = new Sp();
+			BeanUtils.copyProperties(ywrkDet, sp);
+
+			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
+
+			//更新业务总账
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywrkDet.getZdwsl(), tDet.getCdwsl(), ywrkDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
+			tDets.add(tDet);
+			tDet.setTYwrk(tYwrk);
+			
+		}
+		tYwrk.setTYwrkDets(tDets);
+		
+		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
+		tYwrk.setYwrklsh(ywrklsh);
+		tYwrk.setCreateTime(new Date());
+
 		//如果从库房入库生成的入库，进行关联
 		String kfrklshs = ywrk.getKfrklshs();
 		if(kfrklshs != null && kfrklshs.trim().length() > 0){
@@ -115,46 +202,38 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			tYwrk.setTCgjhs(tCgjhDets);
 		}
 		
-		Department dep = new Department();
-		dep.setId(ywrk.getBmbh());
-		dep.setDepName(tYwrk.getBmmc());
+		if(zCgjhDets != null && zCgjhDets.size() > 0){
+			tYwrk.setTCgjhs(zCgjhDets);
+		}
+		if(zKfrks != null && zKfrks.size() > 0){
+			for(TKfrk k : zKfrks){
+				TKfrk tK = kfrkDao.load(TKfrk.class, k.getKfrklsh());
+				tK.setTYwrk(tYwrk);
+			}
+		}
 		
-		Ck ck = new Ck();
-		ck.setId(ywrk.getCkId());
-		ck.setCkmc(tYwrk.getCkmc());
+		ywrkDao.save(tYwrk);		
 		
-		//处理商品明细
-		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
-		ArrayList<YwrkDet> ywrkDets = JSON.parseObject(ywrk.getDatagrid(), new TypeReference<ArrayList<YwrkDet>>(){});
-		for(YwrkDet ywrkDet : ywrkDets){
-			TYwrkDet tDet = new TYwrkDet();
-			BeanUtils.copyProperties(ywrkDet, tDet);
-			
-			if("".equals(ywrkDet.getCjldwId()) || null == ywrkDet.getZhxs()){
-				tDet.setCdwdj(Constant.BD_ZERO);
-				tDet.setCdwsl(Constant.BD_ZERO);
-				tDet.setZhxs(Constant.BD_ZERO);
-			}else{
-				if(ywrkDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
+		if(zXsths != null && zXsths.size() > 0){
+			for(TYwrkDet tD : tYwrk.getTYwrkDets()){
+				if(zXsths.containsKey(tD.getSpbh())){
+					for(TXsth tX : zXsths.get(tD.getSpbh())){
+						TXsth tXs = xsthDao.load(TXsth.class, tX.getXsthlsh());
+						Set<TYwrkDet> tts = new HashSet<TYwrkDet>();
+						tts.add(tD);
+						tXs.setTYwrks(tts);
+					}
 				}
 			}
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(ywrkDet, sp);
-
-			tDet.setQdwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
-
-			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywrkDet.getZdwsl(), ywrkDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
-			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywrk.getBmbh(), ywrkDet.getSpbh(), ywzzDao));
-			tDets.add(tDet);
-			tDet.setTYwrk(tYwrk);
-			
 		}
-		tYwrk.setTYwrkDets(tDets);
-		ywrkDao.save(tYwrk);		
-				
+		
+		
+		if(zgYwrks != null){
+			for(TYwrk zz : zgYwrks){ 
+				zz.setBeYwrklsh(ywrklsh);
+			}
+		}
+		
 		OperalogServiceImpl.addOperalog(ywrk.getCreateId(), ywrk.getBmbh(), ywrk.getMenuId(), ywrklsh, 
 				"生成业务入库单", operalogDao);
 		
@@ -216,10 +295,12 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		Set<TYwrkDet> yTYwrkDets = yTYwrk.getTYwrkDets();
 		Set<TYwrkDet> tDets = new HashSet<TYwrkDet>();
+		TYwrkDet tDet = null;
+		Sp sp = null;
 		for(TYwrkDet yTDet : yTYwrkDets){
-			TYwrkDet tDet = new TYwrkDet();
-			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
-			Sp sp = new Sp();
+			tDet = new TYwrkDet();
+			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id", "TXsths"});
+			sp = new Sp();
 			BeanUtils.copyProperties(yTDet, sp);
 			tDet.setZdwsl(yTDet.getZdwsl().negate());
 			if(yTDet.getCdwsl() != null){
@@ -230,7 +311,15 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(tYwrk.getBmbh(), tDet.getSpbh(), ywzzDao));
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			
+			//取消由直送入库生成的提货单关联
+			if(yTDet.getTXsths() != null && yTDet.getTXsths().size() > 0){
+				for(TXsth tX : yTDet.getTXsths()){
+					TXsth ttX = xsthDao.load(TXsth.class, tX.getXsthlsh());
+					ttX.setTYwrks(null);
+				}
+			}
 			
 			//更新冲减后dwcb
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(tYwrk.getBmbh(), tDet.getSpbh(), ywzzDao));
@@ -261,13 +350,19 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywrk.getSearch() != null){
-			hql += " and (t.ywrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + ywrk.getSearch() + "%");
-			
+
+		if(ywrk.getBmbh().equals("05")) {
+			String ckSql = "select cks from v_zy_cks where createId = ?";
+			Map<String, Object> ckParams = new HashMap<String, Object>();
+			ckParams.put("0", ywrk.getCreateId());
+			Object cks = ywrkDao.getBySQL(ckSql, ckParams);
+
+			if(cks != null){
+				hql += " and t.ckId in " + cks.toString();
+			}
 		}
-		
 		if(ywrk.getFromOther() != null){
+
 			hql += " and t.isCj = '0'";
 			if(Constant.YWRK_FROM_YWBT.equals(ywrk.getFromOther())){
 				hql += " and t.rklxId = :rklxId and t.TYwbt is null";
@@ -276,17 +371,30 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				hql += " and t.isZs = '0' and t.TKfrks is empty";
 			}
 		}else{
-			hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
-			params.put("rklxId", Constant.RKLX_ZG);
+			//hql += " and t.createId = :createId";
+			//params.put("createId", ywrk.getCreateId());
+			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
+				//hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
+				//params.put("search", "%" + ywrk.getSearch() + "%");
+				hql += " and (" + 
+						Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.ywrklsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+						+ ")";
+			}else{
+				hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
+				params.put("rklxId", Constant.RKLX_ZG);
+			}
 		}
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
 		List<TYwrk> l = ywrkDao.find(hql, params, ywrk.getPage(), ywrk.getRows());
 		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
+		Set<TKfrk> tKfrks = null;
+		Set<TCgjhDet> tCgjhs = null;
 		for(TYwrk t : l){
-			Ywrk c = new Ywrk();
+			c = new Ywrk();
 			BeanUtils.copyProperties(t, c);
-			Set<TKfrk> tKfrks = t.getTKfrks();
+			tKfrks = t.getTKfrks();
 			if(tKfrks != null && tKfrks.size() > 0){
 				String kfrklshs = "";
 				int i = 0;
@@ -299,7 +407,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				}
 				c.setKfrklshs(kfrklshs);
 			}
-			Set<TCgjhDet> tCgjhs = t.getTCgjhs();
+			tCgjhs = t.getTCgjhs();
 			if(tCgjhs != null && tCgjhs.size() > 0){
 				String cgjhlshs = "";
 				int i = 0;
@@ -330,12 +438,114 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		params.put("ywrklsh", ywrklsh);
 		List<TYwrkDet> l = detDao.find(hql, params);
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet c = null;
 		for(TYwrkDet t : l){
-			YwrkDet c = new YwrkDet();
+			c = new YwrkDet();
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
 		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
+	public DataGrid datagridDet(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TYwrkDet t where t.TYwrk.bmbh = :bmbh and t.TYwrk.createTime > :createTime";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", ywrk.getBmbh());
+		if(ywrk.getCreateTime() != null){
+			params.put("createTime", ywrk.getCreateTime()); 
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+		if(ywrk.getSearch() != null){
+			//hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)"; 
+			//params.put("search", "%" + ywrk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.TYwrk.ywrklsh", "t.TYwrk.gysbh", "t.TYwrk.gysmc", "t.TYwrk.bz"}, params)
+					+ ")";
+			
+		}
+		
+		//在销售提货中查看
+		if(ywrk.getFromOther() != null){
+			hql += " and t.TYwrk.isZs = '1' and t.TYwrk.isCj = '0' and t.zdwsl > t.thsl";
+		}
+		
+		String countHql = "select count(*) " + hql;
+		hql += " order by t.TYwrk.createTime desc ";
+		
+		List<TYwrkDet> l = detDao.find(hql, params);
+		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
+		for(TYwrkDet t : l){
+			//在销售提货流程中，由直送计划生成的入库不显示
+			if("fromXsth".equals(ywrk.getFromOther()) && t.getTYwrk().getTCgjhs().size() == 0){
+				c = new Ywrk();
+				BeanUtils.copyProperties(t, c);
+				c.setYwrklsh(t.getTYwrk().getYwrklsh());
+				c.setCreateTime(t.getTYwrk().getCreateTime());
+				c.setCreateName(t.getTYwrk().getCreateName());
+				c.setGysbh(t.getTYwrk().getGysbh());
+				c.setGysmc(t.getTYwrk().getGysmc());
+				c.setCkId(t.getTYwrk().getCkId());
+				c.setCkmc(t.getTYwrk().getCkmc());
+				c.setRklxId(t.getTYwrk().getRklxId());
+				c.setRklxmc(t.getTYwrk().getRklxmc());
+				
+				nl.add(c);
+			}
+		}
+		
+		datagrid.setRows(nl);
+		datagrid.setTotal(ywrkDao.count(countHql, params));
+		return datagrid;
+	}
+
+	@Override
+	public DataGrid ywrkmx(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		String hql = "from TYwrkDet t where t.TYwrk.bmbh = :bmbh and t.TYwrk.createTime > :createTime and t.TYwrk.rklxId = '01' and t.TYwrk.isCj = '0'";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", ywrk.getBmbh());
+		if(ywrk.getCreateTime() != null){
+			params.put("createTime", ywrk.getCreateTime());
+		}else{
+			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+		}
+		if(ywrk.getSearch() != null){
+			//hql += " and (t.TYwrk.ywrklsh like :search or t.TYwrk.gysbh like :search or t.TYwrk.gysmc like :search or t.TYwrk.bz like :search)";
+			//params.put("search", "%" + ywrk.getSearch() + "%");
+			hql += " and (" +
+					Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.TYwrk.ywrklsh", "t.TYwrk.gysbh", "t.TYwrk.gysmc", "t.TYwrk.bz"}, params)
+					+ ")";
+
+		}
+
+		String countHql = "select count(*) " + hql;
+		hql += " order by t.TYwrk.createTime desc ";
+
+		List<TYwrkDet> l = detDao.find(hql, params);
+		List<Ywrk> nl = new ArrayList<Ywrk>();
+		Ywrk c = null;
+		for(TYwrkDet t : l){
+			c = new Ywrk();
+			BeanUtils.copyProperties(t, c);
+			c.setYwrklsh(t.getTYwrk().getYwrklsh());
+			c.setCreateTime(t.getTYwrk().getCreateTime());
+			c.setGysmc(t.getTYwrk().getGysmc());
+//			if (t.getSpbh().substring(1, 2).equals("4") && t.getCjldwId().equals("07")){
+//				c.setZjldwmc(t.getCjldwmc());
+//				c.setZdwsl(t.getCdwsl());
+//				c.setZdwdj(t.getCdwdj());
+//			}
+
+			nl.add(c);
+		}
+
+		datagrid.setRows(nl);
+		datagrid.setTotal(ywrkDao.count(countHql, params));
 		return datagrid;
 	}
 
@@ -343,13 +553,23 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	public DataGrid printYwrk(Ywrk ywrk) {
 		DataGrid datagrid = new DataGrid();
 		String kfrklsh = "";
+		//String cgjhlsh = "";
+		
 		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
 		for (TKfrk y : tYwrk.getTKfrks()) {
 			kfrklsh += y.getKfrklsh() + ",";
 		}
+		if(tYwrk.getTCgjhs() != null && tYwrk.getTCgjhs().size() > 0){
+			for (TCgjhDet c : tYwrk.getTCgjhs()) {
+				if(kfrklsh.indexOf(c.getTCgjh().getCgjhlsh()) < 0){
+					kfrklsh += c.getTCgjh().getCgjhlsh() + ",";
+				}
+			}
+		}
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet ywrkDet = null;
 		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
-			YwrkDet ywrkDet = new YwrkDet();
+			ywrkDet = new YwrkDet();
 			BeanUtils.copyProperties(yd, ywrkDet);
 			nl.add(ywrkDet);
 		}
@@ -392,6 +612,46 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	}
 	
 	@Override
+	public DataGrid printKfrk(Ywrk ywrk) {
+		DataGrid datagrid = new DataGrid();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+				
+		List<KfrkDet> nl = new ArrayList<KfrkDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		KfrkDet kfrkDet = null;
+		for (TYwrkDet yd : tYwrk.getTYwrkDets()) {
+			kfrkDet = new KfrkDet();
+			BeanUtils.copyProperties(yd, kfrkDet);
+			nl.add(kfrkDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfrkDet());
+			}
+		}
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   入   库   单");
+		map.put("kfrklsh", ywrk.getYwrklsh());
+		map.put("bmmc", tYwrk.getBmmc());
+		map.put("printName", ywrk.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tYwrk.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("gysbh", tYwrk.getGysbh());
+		map.put("gysmc", tYwrk.getGysmc());
+		map.put("ckmc", tYwrk.getCkmc());
+		map.put("hj", hj);
+		map.put("bz", tYwrk.getBz());
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
 	public DataGrid getSpkc(Ywrk ywrk) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
@@ -421,13 +681,66 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	}
 	
 	@Override
+	public DataGrid changeYwrk(Ywrk ywrk) {
+		DataGrid dg = new DataGrid();
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(spje) spje, sum(thsl) thsl, sum(cdwsl) cdwsl, sum(cthsl) cthsl from t_ywrk_det t"
+				+ " where t.ywrklsh in (" + ywrk.getYwrklshs() + ")"
+				+ " group by t.spbh";
+		//Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("0", "(" + ywrk.getYwrklshs() + ")");
+		
+		List<Object[]> l = detDao.findBySQL(sql);
+		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal spje = new BigDecimal(os[2].toString());
+			BigDecimal thsl = new BigDecimal(os[3].toString());
+			BigDecimal cdwsl = new BigDecimal(os[4].toString());
+			BigDecimal cthsl = new BigDecimal(os[5].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			YwrkDet yd = new YwrkDet();
+			
+			yd.setSpbh(spbh);
+			yd.setSpmc(sp.getSpmc());
+			yd.setSpcd(sp.getSpcd());
+			yd.setSppp(sp.getSppp());
+			yd.setSpbz(sp.getSpbz());
+			
+			yd.setZdwsl(zdwsl);
+			yd.setZjldwId(sp.getZjldw().getId());
+			yd.setZjldwmc(sp.getZjldw().getJldwmc());
+			yd.setZdwdj(spje.divide(zdwsl, 4, BigDecimal.ROUND_HALF_UP));
+			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
+				yd.setCjldwmc(sp.getCjldw().getJldwmc());
+				yd.setZhxs(sp.getZhxs());
+				yd.setCdwsl(cdwsl);
+				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwdj(yd.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)).multiply(sp.getZhxs()).setScale(4, BigDecimal.ROUND_HALF_UP));
+			}
+			yd.setSpje(spje);
+			yd.setThsl(thsl);
+			yd.setCthsl(cthsl);
+			
+			nl.add(yd);
+		}
+		nl.add(new YwrkDet());
+		
+		dg.setRows(nl);
+		return dg;
+	}
+	
+	@Override
 	public DataGrid toKfrk(String ywrklsh){
 		//单据表头处理
 		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrklsh);
 		Ywrk ywrk = new Ywrk();
 		BeanUtils.copyProperties(tYwrk, ywrk);
 		//商品明细处理
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_ywrk_det t ";
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(cdwsl) cdwsl from t_ywrk_det t ";
 		
 		if(ywrklsh != null && ywrklsh.trim().length() > 0){
 			sql += "where ywrklsh = " + ywrklsh;
@@ -440,20 +753,20 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwrkDet yd = new YwrkDet();
-			yd.setSpbh(spbh);
-			yd.setSpmc(sp.getSpmc());
-			yd.setSpcd(sp.getSpcd());
-			yd.setSppp(sp.getSppp());
-			yd.setSpbz(sp.getSpbz());
+			BeanUtils.copyProperties(sp, yd);
 			yd.setZdwsl(zdwsl);
+			yd.setZjldwId(sp.getZjldw().getId());
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				//yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				yd.setCdwsl(cdwsl);
 			}
 			nl.add(yd);
 		}
@@ -473,8 +786,9 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		
 		List<TYwrkDet> l = detDao.find(hql, params);
 		List<YwrkDet> nl = new ArrayList<YwrkDet>();
+		YwrkDet ywrkDet = null;
 		for(TYwrkDet tYwrkDet : l){
-			YwrkDet ywrkDet = new YwrkDet();
+			ywrkDet = new YwrkDet();
 			BeanUtils.copyProperties(tYwrkDet, ywrkDet);
 			
 			nl.add(ywrkDet);
@@ -483,6 +797,74 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		DataGrid dg = new DataGrid();
 		dg.setRows(nl);
 		return dg;
+	}
+	
+	@Override
+	public DataGrid toXsth(Ywrk ywrk){
+		String ywrkDetIds= ywrk.getYwrkDetIds();
+		//String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
+		
+		String sql = "select det.spbh, zdwsl, thsl thsl, cdwsl, cthsl, isnull(xsdj, 0) xsdj"
+				+ " from v_ywrk det left join t_sp_det sp on sp.depId = det.bmbh and sp.spbh = det.spbh"
+				+ " where zdwsl <> thsl";
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
+			sql += " and det.id in (" + ywrkDetIds + ")";
+		}
+		//sql += " group by spbh";
+		
+		System.out.println(sql);
+		
+		List<Object[]> l = detDao.findBySQL(sql, params);
+		
+		List<XsthDet> nl = new ArrayList<XsthDet>();
+		
+		for(Object[] os : l){
+			String spbh = (String)os[0];
+			BigDecimal zdwrksl = new BigDecimal(os[1].toString());
+			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
+			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
+			BigDecimal xsdj = new BigDecimal(os[5].toString());
+			
+			TSp sp = spDao.get(TSp.class, spbh);
+			XsthDet xd = new XsthDet();
+			BeanUtils.copyProperties(sp, xd);
+			xd.setZjldwId(sp.getZjldw().getId());
+			xd.setZjldwmc(sp.getZjldw().getJldwmc());
+			xd.setKpsl(zdwrksl);
+			xd.setThsl(zdwthsl);
+			if(sp.getCjldw() != null){
+				xd.setCjldwId(sp.getCjldw().getId());
+				xd.setCjldwmc(sp.getCjldw().getJldwmc());
+				xd.setZhxs(sp.getZhxs());
+			}
+			xd.setZdwsl(zdwrksl.subtract(zdwthsl));
+			if(sp.getCjldw() != null){
+				xd.setCdwsl(cdwrksl);
+				//xd.setCdwsl(xd.getZdwsl().divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+			}
+			if(xsdj.compareTo(BigDecimal.ZERO) != 0){
+				xd.setZdwdj(xsdj.multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				xd.setSpje(xd.getZdwdj().multiply(xd.getZdwsl()).setScale(2, BigDecimal.ROUND_HALF_UP));
+			}
+			
+			nl.add(xd);
+		}
+		
+		nl.add(new XsthDet());
+		DataGrid dg = new DataGrid();
+		dg.setRows(nl);
+		return dg;
+		
+	}
+	
+	@Override
+	public Ywrk getYwrk(Ywrk ywrk){
+		Ywrk y = new Ywrk();
+		TYwrk tYwrk = ywrkDao.load(TYwrk.class, ywrk.getYwrklsh());
+		BeanUtils.copyProperties(tYwrk, y);
+		return y;
 	}
 	
 	@Autowired
@@ -508,6 +890,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Autowired
 	public void setXskpDao(BaseDaoI<TXskp> xskpDao) {
 		this.xskpDao = xskpDao;
+	}
+
+	@Autowired
+	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
+		this.xsthDao = xsthDao;
 	}
 
 	@Autowired

@@ -33,7 +33,8 @@ $(function(){
 						
 					}
 				},
-			}
+			},
+            {field:'type',title:'类型',width:100}
 	    ]],
 	});
 	//根据权限，动态加载功能按钮
@@ -127,6 +128,7 @@ function editCata(){
 					catName : rows[0].catName,
 					orderNum : rows[0].orderNum,
 					iconCls : rows[0].iconCls,
+                    type : rows[0].type
 				});
 				f.find('input[name=catName]').focus();
 			}

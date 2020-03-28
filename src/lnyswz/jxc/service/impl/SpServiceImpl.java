@@ -26,6 +26,7 @@ import lnyswz.jxc.model.TSpdw;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.SpServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 商品实现类
@@ -86,7 +87,41 @@ public class SpServiceImpl implements SpServiceI {
 		spDao.delete(t);
 		OperalogServiceImpl.addOperalog(sp.getUserId(), sp.getDepId(), sp.getMenuId(), t.getSpbh(), "删除商品记录", operalogDao);
 	}
-	
+
+	@Override
+	public List<String> exportToJs(Sp sp) {
+		List<String> result = new ArrayList<String>();
+		//result.add("{商品编码}[分隔符]\"~~\"" + "\r\n");
+		result.add("{商品编码}[分隔符]\"~~\"");
+		result.add("// 每行格式 :");
+		result.add("// 编码~~名称~~简码~~商品税目~~税率~~规格型号~~计量单位~~单价~~含税价标志~~隐藏标志~~中外合作油气田~~税收分类编码~~是否享受优惠政策~~税收分类编码名称~~优惠政策类型~~零税率标识~~编码版本号");
+
+		String sql = null;
+		if(sp.getDepId().equals("01")) {
+			sql = "select spbh + '~~\"' + spbh + ' ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(sppp) > 0 then '(' + sppp + ')' else '' end + case when len(spbz) > 0 then ' ' + spbz else '' end\n" +
+					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
+					"+ '\"~~~~~~" + Constant.SHUILV + "~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
+					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
+		}else{
+			sql = "select spbh + '~~\"' + spbh + '  ' + case when CHARINDEX(' ', spmc) > 0 then RTRIM(left(spmc, CHARINDEX(' ', spmc))) else RTRIM(spmc) end + case when len(spcd) > 0 then '(' + spcd + ')' else '' end\n" +
+					//"+ '\"~~~~~~0.17~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'\n" +
+					"+ '\"~~~~~~" + Constant.SHUILV + "~~~~~~0~~False~~0000000000~~False~~' + isnull(jsbh, '') + '~~否~~' + isnull(jsmc, '') + '~~~~~~10.0'" +
+					//"from t_sp where SUBSTRING(spbh, 1, 1) in ('1', '3', '5', '6')";
+					"from t_sp where SUBSTRING(spbh, 1, 1) in " + Constant.SP_JS.get(sp.getDepId());
+		}
+
+		List<Object> lists = spDao.findOneBySQL(sql);
+
+		if(lists.size() > 0){
+			for (Object o : lists) {
+				result.add(o.toString());
+			}
+		}
+
+		return result;
+	}
+
 	/**
 	 * 维护专属信息
 	 */
@@ -133,11 +168,12 @@ public class SpServiceImpl implements SpServiceI {
 		params.put("depId", sp.getDepId());
 		String countHql = "select count(spbh) " + hql;
 		if(sp.getQuery() != null && sp.getQuery().trim().length() > 0){
-			String where = " and (t.spbh like :spbh or t.spmc like :spmc)";
+			//String where = " and (t.spbh like :spbh or t.spmc like :spmc)";
+			String where = " and (" + Util.getQueryWhere(sp.getQuery(), new String[]{"t.spbh", "t.spmc", "t.spcd"}, params)	+ ")";
 			hql += where;
 			countHql += where;
-			params.put("spbh", sp.getQuery() + "%");
-			params.put("spmc", "%" + sp.getQuery() + "%");
+			//params.put("spbh", sp.getQuery() + "%");
+			//params.put("spmc", "%" + sp.getQuery() + "%");
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
@@ -162,7 +198,7 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		DataGrid dg = new DataGrid();
 		dg.setTotal(spDao.count(countHql, params));
-		dg.setRows(changeSps(spDao.find("select t " + hql, params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
+		dg.setRows(changeSps(spDao.find("select t " + hql + " order by t.spbh", params, sp.getPage(), sp.getRows()), sp.getDepId(), null));
 		return dg;
 	}
 	
@@ -280,14 +316,23 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		
 		s.setKcsl(Constant.BD_ZERO);
-		Object[] yw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, ywzzDao);
-		Object[] ls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, lszzDao);
+		s.setCkcsl(Constant.BD_ZERO);
+		Object[] yw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, "z", ywzzDao);
+		Object[] ls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, "z", lszzDao);
+		Object[] cyw = YwzzServiceImpl.getYwzzSl(depId, t.getSpbh(), ckId, "c", ywzzDao);
+		Object[] cls = LszzServiceImpl.getLszzSl(depId, t.getSpbh(), ckId, "c", lszzDao);
 		
 		if(yw != null){
 			s.setKcsl(new BigDecimal(yw[1].toString()));
 		}
 		if(ls != null){
 			s.setKcsl(s.getKcsl().subtract(new BigDecimal(ls[1].toString())));
+		}
+		if(cyw != null){
+			s.setCkcsl(new BigDecimal(cyw[1].toString()));
+		}
+		if(cls != null){
+			s.setCkcsl(s.getCkcsl().subtract(new BigDecimal(cls[1].toString())));
 		}
 		
 		BigDecimal dwcb = YwzzServiceImpl.getDwcb(depId, t.getSpbh(), ywzzDao);
@@ -306,6 +351,9 @@ public class SpServiceImpl implements SpServiceI {
 						s.setXsdjs(det.getXsdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
 					}else{
 						s.setXsdjs(Constant.BD_ZERO);
+					}
+					if(det.getSpecXsdj() != null){
+						s.setSpecXsdj(det.getSpecXsdj());
 					}
 					s.setLimitXsdj(det.getLimitXsdj());
 				}

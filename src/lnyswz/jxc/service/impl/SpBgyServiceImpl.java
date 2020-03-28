@@ -16,6 +16,7 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.SpBgy;
 import lnyswz.jxc.model.TCk;
 import lnyswz.jxc.model.TDepartment;
+import lnyswz.jxc.model.TKfbgSpZz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TSpBgy;
@@ -34,6 +35,8 @@ public class SpBgyServiceImpl implements SpBgyServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TCk> ckDao;
 	private BaseDaoI<TOperalog> operalogDao;
+	private BaseDaoI<TKfbgSpZz> bgzzDao;
+	
 	
 	@Override
 	public void updateSpBgy(SpBgy spBgy) {
@@ -145,6 +148,32 @@ public class SpBgyServiceImpl implements SpBgyServiceI {
 	}
 	
 	
+	@Override
+	public DataGrid datagridBgySp(SpBgy spBgy) {
+		// TODO Auto-generated method stub
+		String sql = "select distinct bgyName, spbh, spmc, spcd from t_sp_bgy where bgyId = ?  and (spbh like ? or spmc like ?)";
+		Map<String, Object> params = new HashMap<String, Object>(); 
+		params.put("0", spBgy.getBgyId());
+		params.put("1", "%" + spBgy.getSearch() + "%");
+		params.put("2", "%" + spBgy.getSearch() + "%");	
+		List<Object[]> li = spBgyDao.findBySQL(sql, params,spBgy.getPage(), spBgy.getRows());
+
+
+		if( li.size() == 0){
+			String spbgSql = "select 'bgy', spbh, spmc, spcd from t_kfbg_sp_zz where (spbh like ? or spmc like ?)";
+			Map<String, Object> spbgParams = new HashMap<String, Object>(); 
+			spbgParams.put("0", "%" + spBgy.getSearch() + "%");
+			spbgParams.put("1", "%" + spBgy.getSearch() + "%");
+			li = bgzzDao.findBySQL(spbgSql, spbgParams,spBgy.getPage(), spBgy.getRows());
+		}
+		
+		DataGrid dg = new DataGrid();
+		dg.setRows(li);
+		dg.setTotal((long) li.size());
+		return dg;
+	}
+	
+	
 	
 	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
@@ -171,6 +200,10 @@ public class SpBgyServiceImpl implements SpBgyServiceI {
 		this.operalogDao = operalogDao;
 	}
 
+	@Autowired
+	public void setBgzzDao(BaseDaoI<TKfbgSpZz> bgzzDao) {
+		this.bgzzDao = bgzzDao;
+	}
 
 
 }

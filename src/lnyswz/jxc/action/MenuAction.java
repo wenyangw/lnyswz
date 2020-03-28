@@ -3,10 +3,8 @@ package lnyswz.jxc.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
-import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lnyswz.common.action.BaseAction;
@@ -25,7 +23,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @Namespace("/admin")
 @Action("menuAction")
 public class MenuAction extends BaseAction implements ModelDriven<Menu> {
-	private final static Logger logger = Logger.getLogger(MenuAction.class);
+	private static final long serialVersionUID = 1L;
 	private Menu menu = new Menu();
 	private MenuServiceI menuService;
 	
@@ -82,20 +80,25 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
 	 * 主页菜单
 	 */
 	public void menuTree(){
-		List<Menu> l = new ArrayList<Menu>();
+		List<Menu> l;
 		User u = (User)session.get("user");
+		//android
+		if(u == null){
+			u = new User();
+			u.setId(menu.getUserId());
+			u.setUserName(menu.getUserName());
+		}
 		//超级管理员获得全部菜单
 		if(u.getUserName().equals("admin")){
 			l = menuService.noAuthTree(menu.getCid());
 		}else{
 			l = menuService.authTree(u, menu.getCid());
-			
 		}
-		if(l != null && l.size() > 0){
+//		if(l != null && l.size() > 0){
 			writeJson(l);
-		}
+//		}
 	}
-	
+
 	/**
 	 * 功能按钮管理页面左侧列表
 	 * 增加按钮时选择菜单

@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,11 +18,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_department")
+@DynamicUpdate(true)
 public class TDepartment implements java.io.Serializable {
 
 	private String id;
 	private String depName;
 	private int orderNum;
+	private String valid;
 	private Set<TUser> TUsers = new HashSet<TUser>(0);
 	private Set<TSpdl> TSpdls = new HashSet<TSpdl>(0);
 	
@@ -64,7 +68,15 @@ public class TDepartment implements java.io.Serializable {
 		this.orderNum = orderNum;
 	}
 
-	
+	@Column(name = "valid")
+	public String getValid() {
+		return valid;
+	}
+
+	public void setValid(String valid) {
+		this.valid = valid;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TDepartment")
 	public Set<TUser> getTUsers() {
 		return this.TUsers;

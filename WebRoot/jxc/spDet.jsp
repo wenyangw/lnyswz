@@ -17,6 +17,10 @@
 			<td><input name="xsdj" style="width:160px;"></td>
 		</tr>
 		<tr>
+			<th><label for="specXsdj">特定销价</label></th>
+			<td><input name="specXsdj" style="width:160px;"></td>
+		</tr>
+		<tr>
 			<th><label for="limitXsdj">最低销价</label></th>
 			<td><input name="limitXsdj" style="width:160px;"></td>
 		</tr>

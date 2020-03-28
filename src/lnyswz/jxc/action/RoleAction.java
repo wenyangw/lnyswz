@@ -1,17 +1,13 @@
 package lnyswz.jxc.action;
 
-import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Menu;
 import lnyswz.jxc.bean.Role;
-import lnyswz.jxc.service.MenuServiceI;
 import lnyswz.jxc.service.RoleServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -24,7 +20,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @Namespace("/admin")
 @Action("roleAction")
 public class RoleAction extends BaseAction implements ModelDriven<Role> {
-	private final static Logger logger = Logger.getLogger(RoleAction.class);
+	private static final long serialVersionUID = 1L;
 	private Role role = new Role();
 	private RoleServiceI roleService;
 	

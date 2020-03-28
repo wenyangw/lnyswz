@@ -14,7 +14,8 @@ public class Ywsh {
 	private String auditLevel;
 	private String isAudit;
 	private String bz;
-	
+	private String source;
+
 	private int page;
 	private int rows;
 	
@@ -24,7 +25,9 @@ public class Ywsh {
 	private String auditName;
 	private String ywymc;
 	private String khmc;
+	private String gysmc;
 	private String jsfsmc;
+	private String isZs;
 	private BigDecimal hjje;
 	private BigDecimal ysje;
 	private String khlxmc;
@@ -85,6 +88,15 @@ public class Ywsh {
 	public void setBz(String bz) {
 		this.bz = bz;
 	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 	public int getPage() {
 		return page;
 	}
@@ -127,6 +139,12 @@ public class Ywsh {
 	public void setYwymc(String ywymc) {
 		this.ywymc = ywymc;
 	}
+	public String getGysmc() {
+		return gysmc;
+	}
+	public void setGysmc(String gysmc) {
+		this.gysmc = gysmc;
+	}
 	public String getKhmc() {
 		return khmc;
 	}
@@ -138,6 +156,12 @@ public class Ywsh {
 	}
 	public void setJsfsmc(String jsfsmc) {
 		this.jsfsmc = jsfsmc;
+	}
+	public String getIsZs() {
+		return isZs;
+	}
+	public void setIsZs(String isZs) {
+		this.isZs = isZs;
 	}
 	public BigDecimal getHjje() {
 		return hjje;

@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.model.*;
+import lnyswz.jxc.util.Export;
 import org.apache.log4j.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,21 +32,12 @@ import lnyswz.jxc.bean.Fh;
 import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfck;
 import lnyswz.jxc.bean.KfckDet;
+import lnyswz.jxc.bean.Kfrk;
+import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCgxqDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TFhzz;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TKfck;
-import lnyswz.jxc.model.TKfckDet;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TXsth;
-import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.service.KfckServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 库房出库实现类
@@ -57,22 +51,26 @@ public class KfckServiceImpl implements KfckServiceI {
 	private BaseDaoI<TKfckDet> detDao;
 	private BaseDaoI<TKfzz> kfzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
-	private BaseDaoI<TXsth> xsthDao;
 	private BaseDaoI<TXsthDet> xsthDetDao;
 	private BaseDaoI<TLsh> lshDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<THw> hwDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
 	@Override
-	public void save(Kfck kfck) {
+	public Kfck save(Kfck kfck) {
 		TKfck tKfck = new TKfck();
 		BeanUtils.copyProperties(kfck, tKfck);
 		tKfck.setCreateTime(new Date());
-		tKfck.setKfcklsh(LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao));
+		String lsh = LshServiceImpl.updateLsh(kfck.getBmbh(), kfck.getLxbh(), lshDao);
+		tKfck.setKfcklsh(lsh);
 		tKfck.setBmmc(depDao.load(TDepartment.class, kfck.getBmbh()).getDepName());
 		tKfck.setIsCj("0");
+		tKfck.setOut("0");
+		tKfck.setSended("0");
+
 		
 		Department dep = new Department();
 		dep.setId(kfck.getBmbh());
@@ -133,26 +131,39 @@ public class KfckServiceImpl implements KfckServiceI {
 			
 			tDet.setTKfck(tKfck);
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfckDet.getSppc(), kfckDet.getZdwsl(), Constant.UPDATE_CK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfckDet.getSppc(), kfckDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_CK, kfzzDao);
 			
 			//更新分户
 			if("1".equals(kfck.getIsFh())){
 				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, kfckDet.getZdwsl(), Constant.UPDATE_CK, fhzzDao);
 			}
 			
+			//更新对应t_xsth_det中的cksl和ccksl
 			if(intDetIds != null){
 				BigDecimal cksl = kfckDet.getZdwsl();
+				BigDecimal ccksl = BigDecimal.ZERO;
+				if(kfckDet.getCdwsl() != null){
+					ccksl = kfckDet.getCdwsl();
+				}
 				for(int detId : intDetIds){
 					TXsthDet xsthDet = xsthDetDao.load(TXsthDet.class, detId);
+					if(kfck.getIsFp().equals("1")){
+						xsthDet.getTXsth().setIsFp("1");
+					}
 					if(kfckDet.getSpbh().equals(xsthDet.getSpbh())){
 						BigDecimal wcsl = xsthDet.getZdwsl().subtract(xsthDet.getCksl());
+						BigDecimal cwcsl = xsthDet.getCdwsl().subtract(xsthDet.getCcksl());
 						tXsths.add(xsthDet);
 						if(cksl.compareTo(wcsl) == 1){
 							xsthDet.setCksl(xsthDet.getCksl().add(wcsl));
+							xsthDet.setCcksl(xsthDet.getCcksl().add(cwcsl));
 							cksl = cksl.subtract(wcsl);
+							ccksl = ccksl.subtract(cwcsl);
 						}else{
 							xsthDet.setCksl(xsthDet.getCksl().add(cksl));
+							xsthDet.setCcksl(xsthDet.getCcksl().add(ccksl));
 							tDet.setLastThsl(cksl);
+							tDet.setcLastThsl(ccksl);
 							break;
 						}
 					}
@@ -166,7 +177,14 @@ public class KfckServiceImpl implements KfckServiceI {
 		kfckDao.save(tKfck);		
 		
 		OperalogServiceImpl.addOperalog(kfck.getCreateId(), kfck.getBmbh(), kfck.getMenuId(), tKfck.getKfcklsh(), "生成库房出库", operalogDao);
-		
+
+		if(kfck.getIsFp().equals("1")) {
+			Export.createCode(lsh);
+		}
+
+		Kfck rKfck = new Kfck();
+		rKfck.setKfcklsh(lsh);
+		return rKfck;
 	}
 	
 	@Override
@@ -230,6 +248,13 @@ public class KfckServiceImpl implements KfckServiceI {
 			if(yTDet.getCdwsl() != null){
 				tDet.setCdwsl(yTDet.getCdwsl().negate());
 			}
+
+			if (!("05".equals(tKfck.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
+
 			tDet.setTKfck(tKfck);
 			tDets.add(tDet);
 			
@@ -241,7 +266,7 @@ public class KfckServiceImpl implements KfckServiceI {
 			hw.setHwmc(tDet.getHwmc());
 			
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_CK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_CK, kfzzDao);
 			
 			//更新分户
 			if("1".equals(tKfck.getIsFh())){
@@ -252,7 +277,9 @@ public class KfckServiceImpl implements KfckServiceI {
 				
 				//冲减对应销售提货单中的cksl
 				BigDecimal cksl = yTDet.getZdwsl();
+				BigDecimal ccksl = yTDet.getCdwsl();
 				BigDecimal lastThsl = yTDet.getLastThsl();
+				BigDecimal cLastThsl = yTDet.getcLastThsl();
 			
 				int j = 0;
 				for(int i = intXsthDetIds.length - 1; i >= 0 ; i--){
@@ -260,17 +287,22 @@ public class KfckServiceImpl implements KfckServiceI {
 					if(yTDet.getSpbh().equals(xsthDet.getSpbh())){
 						if(j == 0){
 							xsthDet.setCksl(xsthDet.getCksl().subtract(lastThsl));
+							xsthDet.setCcksl(xsthDet.getCcksl().subtract(cLastThsl));
 							if(cksl.compareTo(lastThsl) == 0){
 								break;
 							}else{
 								cksl = cksl.subtract(lastThsl);
+								ccksl = ccksl.subtract(cLastThsl);
 							}
 						}else{
 							if(cksl.compareTo(xsthDet.getCksl()) == 1){
-								xsthDet.setKpsl(Constant.BD_ZERO);
+								xsthDet.setCksl(Constant.BD_ZERO);
+								xsthDet.setCcksl(Constant.BD_ZERO);
 								cksl = cksl.subtract(xsthDet.getCksl());
+								ccksl = ccksl.subtract(xsthDet.getCcksl());
 							}else{
 								xsthDet.setCksl(xsthDet.getCksl().subtract(cksl));
+								xsthDet.setCcksl(xsthDet.getCcksl().subtract(ccksl));
 								break;
 							}
 						}
@@ -305,10 +337,16 @@ public class KfckServiceImpl implements KfckServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
+//		if(kfck.getBmbh().equals("05")){
+//			hql += " and t.createId = :createId";
+//			params.put("createId", kfck.getCreateId());
+//		}
 		if(kfck.getSearch() != null){
-			hql += " and (t.kfcklsh like :search or t.khmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + kfck.getSearch() + "%");
-			
+			//hql += " and (t.kfcklsh like :search or t.khbh like :search or t.khmc like :search or t.bz like :search)"; 
+			//params.put("search", "%" + kfck.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(kfck.getSearch(), new String[]{"t.kfcklsh", "t.khbh", "t.khmc", "t.bz"}, params)
+					+ ")";
 		}
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
@@ -331,6 +369,15 @@ public class KfckServiceImpl implements KfckServiceI {
 				}
 				c.setXsthlshs(xsthlshs);
 				
+			}
+
+			if(t.getIsFp().equals("1") && t.getThfs().equals("0")){
+				String sqlCar = "select dbo.getCarNum(?)";
+				Map<String, Object> paramsCar = new HashMap<String, Object>();
+				paramsCar.put("0", t.getKfcklsh());
+
+				Object o = kfckDao.getBySQL(sqlCar, paramsCar);
+				c.setCarNum(o.toString());
 			}
 			
 			nl.add(c);
@@ -405,6 +452,92 @@ public class KfckServiceImpl implements KfckServiceI {
 //	}
 	
 	@Override
+	public DataGrid printKfck(Kfck kfck) {
+		DataGrid datagrid = new DataGrid();
+		Export.createCode(kfck.getKfcklsh());
+		TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+		
+		TXsth tXsth = null;
+		if(tKfck.getTXsths().size() > 0){
+			tXsth = ((TXsthDet)tKfck.getTXsths().iterator().next()).getTXsth();
+		}
+		
+		List<KfckDet> nl = new ArrayList<KfckDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		for (TKfckDet yd : tKfck.getTKfckDets()) {
+			KfckDet kfckDet = new KfckDet();
+			BeanUtils.copyProperties(yd, kfckDet);
+			nl.add(kfckDet);
+			hj = hj.add(yd.getCdwsl());
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new KfckDet());
+			}
+		}
+		String bz = "";
+		if(tXsth != null){
+			bz = tXsth.getXsthlsh();
+			if(tKfck.getBz() != null && tKfck.getBz().trim().length() > 0){
+				bz += "/" + tKfck.getBz();
+			}
+
+			if(tXsth.getYwymc() != null){
+				bz += "/" + tXsth.getYwymc().trim();
+			}
+
+			if("0".equals(tXsth.getThfs())){
+				//已安排车辆
+				String carSql = "select dbo.getCarNum(?)";
+				Map<String, Object> carParams = new HashMap<String, Object>();
+				carParams.put("0", tKfck.getKfcklsh());
+
+				Object carNum = kfckDao.getBySQL(carSql, carParams);
+				if(carNum != null){
+					bz += " 送货：" + carNum.toString();
+				}else{
+					bz += " 送货：";
+				}
+			}else{
+				bz += " 自提：";
+			}
+			if(tXsth.getShdz() != null){
+				bz += " " + tXsth.getShdz();
+			}
+			if(tXsth.getThr() != null){
+				bz += " " + tXsth.getThr();
+			}
+			if(tXsth.getCh() != null){
+				bz += " " + tXsth.getCh();
+			}
+		}
+		
+		//Kfrk kfrk = new Kfrk();
+		//BeanUtils.copyProperties(yk, kfrk);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "库   房   出   库   单");
+		map.put("kfcklsh", kfck.getKfcklsh());
+		map.put("bmmc", tKfck.getBmmc());
+		map.put("printName", kfck.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tKfck.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("khbh", tKfck.getKhbh());
+		map.put("khmc", tKfck.getKhmc());
+		map.put("fhmc", tKfck.getFhmc() != null ? tKfck.getFhmc() : "");
+		map.put("ckmc", tKfck.getCkmc());
+		map.put("hjsl", hj);
+		map.put("bz", bz);
+		String codePath = Util.getRootPath() + Constant.CODE_PATH + kfck.getKfcklsh() + ".png";
+		//map.put("codeFile", codePath.replace("/","\\"));
+		map.put("codeFile", codePath);
+		
+		datagrid.setObj(map);
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+	
+	@Override
 	public DataGrid getSpkc(Kfck kfck) {
 		DataGrid dg = new DataGrid();
 		List<ProBean> lists = new ArrayList<ProBean>();
@@ -428,7 +561,47 @@ public class KfckServiceImpl implements KfckServiceI {
 		dg.setTotal((long)lists.size());
 		return dg;
 	}
-	
+
+	@Override
+	public DataGrid loadKfck(Kfck kfck) {
+		DataGrid datagrid = new DataGrid();
+		try {
+			TKfck tKfck = kfckDao.load(TKfck.class, kfck.getKfcklsh());
+			if ("1".equals(tKfck.getIsCj())) {
+				datagrid.setMsg("对应的库房出库已冲减！请重新录入！");
+			} else {
+				kfck.setKhbh(tKfck.getKhbh());
+				kfck.setKhmc(tKfck.getKhmc());
+				kfck.setBz(tKfck.getBz());
+
+				List<KfckDet> nl = new ArrayList<KfckDet>();
+				KfckDet kfckDet;
+				String hql = "from TSpBgy t where t.depId = :bmbh and t.bgyId = :bgyId and spbh = :spbh";
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("bmbh", kfck.getKfcklsh().substring(4, 6));
+				params.put("bgyId", kfck.getCreateId());
+				for (TKfckDet td : tKfck.getTKfckDets()) {
+					params.put("spbh", td.getSpbh());
+					if (spBgyDao.get(hql, params) != null) {
+						kfckDet = new KfckDet();
+						BeanUtils.copyProperties(td, kfckDet);
+						kfckDet.setZdwcksl(td.getZdwsl());
+						nl.add(kfckDet);
+					}
+				}
+
+				if (nl.size() > 0) {
+					datagrid.setObj(kfck);
+					datagrid.setRows(nl);
+				} else {
+					datagrid.setMsg("录入的库房出库单不包含此保管员管理品种，请重新录入！");
+				}
+			}
+		}catch (ObjectNotFoundException e) {
+			datagrid.setMsg("对应的库房出库单据不存在！");
+		}
+		return datagrid;
+	}
 	
 	@Autowired
 	public void setKfckDao(BaseDaoI<TKfck> kfckDao) {
@@ -446,11 +619,6 @@ public class KfckServiceImpl implements KfckServiceI {
 	}
 	
 	@Autowired
-	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
-		this.xsthDao = xsthDao;
-	}
-	
-	@Autowired
 	public void setXsthDetDao(BaseDaoI<TXsthDet> xsthDetDao) {
 		this.xsthDetDao = xsthDetDao;
 	}
@@ -463,6 +631,11 @@ public class KfckServiceImpl implements KfckServiceI {
 	@Autowired
 	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
+	}
+
+	@Autowired
+	public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+		this.spBgyDao = spBgyDao;
 	}
 
 	@Autowired

@@ -1,7 +1,8 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
+import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,13 @@ import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
+import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Xshk;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XshkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 销售回款Action
  * @author 王文阳
@@ -24,7 +27,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("xshkAction")
 public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
-	private Logger logger = Logger.getLogger(XshkAction.class);
+	private static final long serialVersionUID = 1L;
 	private Xshk xshk = new Xshk();
 	private XshkServiceI xshkService;
 	
@@ -74,7 +77,24 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 		User user = (User)session.get("user");
 		xshk.setCreateName(user.getRealName());
 		DataGrid dg = xshkService.printXshk(xshk);
-		Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
+		Export.print(dg, Util.getReportName(xshk.getBmbh(), "report_xshk.json"));
+		//Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));
+	}
+	
+	
+	public void exportXshk() {
+		User user = (User)session.get("user");
+		xshk.setCreateName(user.getRealName());
+		Json j = new Json();
+		String type = Export.getExportType(xshk.getType());
+		String location = "/export/xshk_" + xshk.getKhbh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;
+		DataGrid dg = xshkService.printXshk(xshk);
+		Export.export(dg, Util.getReportName(xshk.getBmbh(), "report_xshk.json"), location, type);
+		//Export.export(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()), location, type);
+		j.setSuccess(true);
+		j.setObj(location);
+		j.setMsg("导出成功");
+		writeJson(j);
 	}
 	
 	/**

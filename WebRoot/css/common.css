@@ -27,6 +27,74 @@ table th{
 	text-align: right;
 }
 
+table th.query{
+	text-align: left;
+	padding-left:10px;
+}
+
+table th.queryField{
+	text-align: left;
+	width: 150px;
+	padding-left:10px;
+}
+
+table th.queryOpe{
+	text-align: right;
+	width: 50px;
+	padding-left:10px;
+}
+
 .read{
 	color: #8F5700;
+}
+
+.form_line{
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.form_label{
+	margin-left: 5px;
+	font-weight:bold;
+}
+
+span.input_label{
+	width:100px;
+	text-align:right;
+	display:inline-block;
+}
+
+.ke-insertfile{
+	display: none;
+}
+
+div.message_line{
+	margin-top: 10px;
+}
+.field_label{
+	width:60px;
+	text-align:right;
+	font-weight:bold;
+	display:inline-block;
+}
+.field_value{
+	margin-left:10px;
+}
+
+a.unread_list:link, a.unread_list:visited, a.unread_list:hover, a.unread_list:active {
+	color: red;
+}
+
+a.readed_list:link, a.readed_list:visited, a.readed_list:hover, a.readed_list:active {
+	color: blue;
+}
+
+div#memo img{
+	max-width: 800px;
+	max-height: 600px;
+}
+
+body.ke-content img{
+	max-width: 800px;
+	max-height: 600px;
 }

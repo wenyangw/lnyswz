@@ -1,21 +1,8 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -27,6 +14,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwhsServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务换算Action
@@ -37,7 +25,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywhsAction")
 public class YwhsAction extends BaseAction implements ModelDriven<Ywhs> {
-	private Logger logger = Logger.getLogger(YwhsAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywhs ywhs = new Ywhs();
 	private YwhsServiceI ywhsService;
 
@@ -90,6 +78,8 @@ public class YwhsAction extends BaseAction implements ModelDriven<Ywhs> {
 	}
 
 	public void datagrid() {
+		User user = (User) session.get("user");
+		ywhs.setCreateId(user.getId());
 		writeJson(ywhsService.datagrid(ywhs));
 	}
 
@@ -101,7 +91,8 @@ public class YwhsAction extends BaseAction implements ModelDriven<Ywhs> {
 		User user = (User) session.get("user");
 		ywhs.setCreateName(user.getRealName());
 		DataGrid dg = ywhsService.printYwhs(ywhs);
-		Export.print(dg, Constant.REPORT_YWHS.get(ywhs.getBmbh()));
+		Export.print(dg, Util.getReportName(ywhs.getBmbh(), "report_ywhs.json"));
+		//Export.print(dg, Constant.REPORT_YWHS.get(ywhs.getBmbh()));
 	}
 		
 	@Override

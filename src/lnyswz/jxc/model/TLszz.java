@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_lszz")
+@DynamicUpdate(true)
 public class TLszz implements java.io.Serializable {
 
 	private int id;
@@ -41,13 +44,17 @@ public class TLszz implements java.io.Serializable {
 	private BigDecimal lsje;
 	private BigDecimal kpsl;
 	private BigDecimal kpje;
+	private BigDecimal cqcsl;
+	private BigDecimal clssl;
+	private BigDecimal ckpsl;
 
 	public TLszz() {
 	}
 
 	public TLszz(int id, String jzsj, String bmbh, String bmmc, String ckId, String ckmc, String spbh, String spmc, 
 			String spcd, String sppp, String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc,
-			BigDecimal zhxs, BigDecimal qcsl, BigDecimal qcje, BigDecimal lssl, BigDecimal lsje, BigDecimal kpsl, BigDecimal kpje) {
+			BigDecimal zhxs, BigDecimal qcsl, BigDecimal qcje, BigDecimal lssl, BigDecimal lsje, BigDecimal kpsl, 
+			BigDecimal kpje, BigDecimal cqcsl, BigDecimal clssl, BigDecimal ckpsl) {
 		this.id = id;
 		this.jzsj = jzsj;
 		this.bmbh = bmbh;
@@ -70,6 +77,9 @@ public class TLszz implements java.io.Serializable {
 		this.lsje = lsje;
 		this.kpsl = kpsl;
 		this.kpje = kpje;
+		this.cqcsl = cqcsl;
+		this.clssl = clssl;
+		this.ckpsl = ckpsl;
 	}
 
 	@Id
@@ -271,5 +281,32 @@ public class TLszz implements java.io.Serializable {
 
 	public void setKpje(BigDecimal kpje) {
 		this.kpje = kpje;
+	}
+
+	@Column(name = "cqcsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCqcsl() {
+		return cqcsl;
+	}
+
+	public void setCqcsl(BigDecimal cqcsl) {
+		this.cqcsl = cqcsl;
+	}
+
+	@Column(name = "clssl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getClssl() {
+		return clssl;
+	}
+
+	public void setClssl(BigDecimal clssl) {
+		this.clssl = clssl;
+	}
+
+	@Column(name = "ckpsl", nullable = false, precision = 18, scale = 3)
+	public BigDecimal getCkpsl() {
+		return ckpsl;
+	}
+
+	public void setCkpsl(BigDecimal ckpsl) {
+		this.ckpsl = ckpsl;
 	}
 }

@@ -26,7 +26,11 @@ var hwIdEditor;
 var sppcEditor;
 var zjldwEditor;
 var zslEditor;
+var cjldwEditor;
+var cslEditor;
 var zjldwIdEditor;
+var cjldwIdEditor;
+var zhxsEditor;
 
 
 $(function(){
@@ -158,6 +162,24 @@ $(function(){
    	    	        		}
    	    	        	}
                     },
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
+                    {field:'cdwsl',title:'数量2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
                 ]],
                 onResize:function(){
                 	kfhs_dg.datagrid('fixDetailRowHeight',index);
@@ -281,6 +303,24 @@ $(function(){
    	    	        		}
    	    	        	}
                     },
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
+                    {field:'cdwsl',title:'数量2',width:100,align:'center',
+                       	styler:function(value, rowData,	rowIndex){
+   	    	        		if(rowData.isZj == '1'){
+   	    						return 'color:blue;';
+   	    	        		}else{
+   	    						return 'color:red;';
+   	    	        		}
+   	    	        	}
+                    },
 	    	    	{field:'isZs',title:'直送',width:100,align:'center',
 	                       	styler:function(value, rowData,	rowIndex){
 	   	    	        		if(rowData.isZj == '1'){
@@ -388,7 +428,7 @@ $(function(){
 	        		}
 	        	}},
 	        {field:'sppc',title:'商品批次',width:25,align:'center',editor:'datebox'},
-	        {field:'zjldwmc',title:'单位',width:25,align:'center',editor:'textRead',
+	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead',
 	        	styler:function(value, rowData){
 	        		if(rowData.isZj == 1){
 						return 'color:blue;';
@@ -396,7 +436,23 @@ $(function(){
 						return 'color:red;';
 	        		}
 				}},
-	        {field:'zdwsl',title:'数量',width:25,align:'center',editor:'textRead',
+	        {field:'zdwsl',title:'数量1',width:25,align:'center',editor:'textRead',
+	        	styler:function(value, rowData){
+	        		if(rowData.isZj == 1){
+						return 'color:blue;';
+	        		}else{
+						return 'color:red;';
+	        		}
+				}},
+			{field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead',
+	        	styler:function(value, rowData){
+	        		if(rowData.isZj == 1){
+						return 'color:blue;';
+	        		}else{
+						return 'color:red;';
+	        		}
+				}},
+	        {field:'cdwsl',title:'数量2',width:25,align:'center',editor:'textRead',
 	        	styler:function(value, rowData){
 	        		if(rowData.isZj == 1){
 						return 'color:blue;';
@@ -405,6 +461,8 @@ $(function(){
 	        		}
 				}},
    	        {field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'textRead', hidden:true},
+   	        {field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'textRead', hidden:true},
+   	        {field:'zhxs',title:'转换系数',width:25,align:'center',editor:'textRead', hidden:true},
 	    ]],
 	   	onClickRow: clickRow,
 	   	onAfterEdit: function (rowIndex, rowData, changes) {
@@ -520,7 +578,11 @@ function setEditing(){
     sppcEditor = editors[6];
     zjldwEditor = editors[7];
     zslEditor = editors[8];
-    zjldwIdEditor = editors[9];
+    cjldwEditor = editors[9];
+    cslEditor = editors[10];
+    zjldwIdEditor = editors[11];
+    cjldwIdEditor = editors[12];
+    zhxsEditor = editors[13];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_kfhs_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -544,9 +606,16 @@ function setEditing(){
 			$(hwIdEditor.target).combobox('selectedIndex', 0);
 		},
 	});
-    
-  	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
+
+    //初始化商品批次
+    if (did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
     
 	//loadEditor();
@@ -608,6 +677,7 @@ function saveAll(){
 	//将表格中的数据转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfhsAction!save.action',
@@ -624,6 +694,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -637,6 +710,7 @@ function cjKfhs(){
 		if(row.isCj != '1'){
 			$.messager.prompt('请确认', '是否要冲减选中的库房调号单？请填写备注', function(bz){
 				if(bz != undefined){
+					//MaskUtil.mask('正在冲减，请等待……');
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/kfhsAction!cjKfhs.action',
 						data : {
@@ -655,6 +729,9 @@ function cjKfhs(){
 								title : '提示',
 								msg : d.msg
 							});
+						},
+						complete: function(){
+							//MaskUtil.unmask();
 						}
 					});
 				}
@@ -662,6 +739,21 @@ function cjKfhs(){
 		}else{
 			$.messager.alert('警告', '选中的库房调号单已被冲减，请重新选择！',  'warning');
 		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function printKfhs(){
+	var selected = kfhs_dg.datagrid('getSelected');
+ 	//if (selected != undefined) {
+ 	if (selected) {
+	 	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/kfhsAction!printKfhs.action?kfhslsh=' + selected.kfhslsh + "&bmbh=" + did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+			}
+		});
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Role;
 import lnyswz.jxc.service.DepartmentServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -20,6 +19,7 @@ import com.opensymphony.xwork2.ModelDriven;
 @Action("departmentAction")
 public class DepartmentAction extends BaseAction implements
 		ModelDriven<Department> {
+	private static final long serialVersionUID = 1L;
 	private Department department = new Department();
 	private DepartmentServiceI departmentService;
 

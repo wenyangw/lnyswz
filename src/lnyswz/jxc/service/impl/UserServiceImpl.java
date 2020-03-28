@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -18,9 +17,9 @@ import org.springframework.stereotype.Service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.Encrypt;
+import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TMenu;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TPost;
 import lnyswz.jxc.model.TRole;
@@ -97,6 +96,9 @@ public class UserServiceImpl implements UserServiceI {
 		if(user.getPassword() != null && user.getPassword().trim().length() > 0){
 			t.setPassword(Encrypt.e(user.getPassword()));
 		}
+		/*if(user.getValid() == null){
+			t.setValid("0");
+		}*/
 		// 设置修改时间
 		t.setModifyTime(new Date());
 		t.setTDepartment(departmentDao.load(TDepartment.class, user.getDid()));
@@ -250,6 +252,16 @@ public class UserServiceImpl implements UserServiceI {
 		List<TUser> l = userDao.find(hql, params);
 		return changeUsers(l, false);
 	}
+	/**
+	 * 返回关联业务员列表
+	 */
+	@Override
+	public List<User> listYwyByYwy(int id) {
+		String sql = "select * from t_user t where id in (select ywyId from v_ywy_by_ywy where id = '"+ id +"')";
+		TUser u = new TUser();
+		List<TUser> l = userDao.findBySQL(sql, u);
+		return changeUsers(l, false);
+	}
 	
 	/**
 	 * 返回保管员列表
@@ -310,6 +322,45 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return nl;
 
+	}
+	
+	@Override
+	public List<Department> getContacts(User user) {
+		List<Department> contacts = new ArrayList<Department>();
+		
+		String depHql = "from TDepartment t where valid = '1'";
+		List<TDepartment> depLists = departmentDao.find(depHql);
+		
+		if(depLists != null && depLists.size() > 0){
+			Department department = null;
+			for(TDepartment tDep : depLists){
+				department = new Department();
+				department.setId(tDep.getId());
+				department.setText(tDep.getDepName());
+				department.setOrderNum(tDep.getOrderNum());
+				String userHql = "from TUser t where valid = '1' and t.TDepartment.id = :depId";
+				Map<String, Object> userParams = new HashMap<String, Object>();
+				userParams.put("depId", tDep.getId());
+				
+				List<TUser> userLists = userDao.find(userHql, userParams);
+				List<User> children = null;
+				if(userLists != null && userLists.size() > 0){
+					children = new ArrayList<User>();
+					User u = null;
+					for(TUser tUser : userLists){
+						u = new User();
+						u.setId(tUser.getId());
+						u.setText(tUser.getRealName());
+						u.setOrderNum(tUser.getOrderNum());
+						children.add(u);
+						department.setChildren(children);
+					}
+				contacts.add(department);
+				}
+			}
+		}
+		
+		return contacts;
 	}
 	
 	/**

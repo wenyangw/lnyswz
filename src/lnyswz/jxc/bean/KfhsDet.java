@@ -18,7 +18,11 @@ public class KfhsDet {
 	private String zspbz;
 	private String zzjldwId;
 	private String zzjldwmc;
+	private String zcjldwId;
+	private String zcjldwmc;
+	private BigDecimal zzhxs;
 	private BigDecimal zzdwsl;
+	private BigDecimal zcdwsl;
 	private String jspbh;
 	private String jspmc;
 	private String jspcd;
@@ -26,7 +30,11 @@ public class KfhsDet {
 	private String jspbz;
 	private String jzjldwId;
 	private String jzjldwmc;
+	private String jcjldwId;
+	private String jcjldwmc;
+	private BigDecimal jzhxs;
 	private BigDecimal jzdwsl;
+	private BigDecimal jcdwsl;
 	
 	private String spbh;
 	private String spmc;
@@ -101,11 +109,35 @@ public class KfhsDet {
 	public void setZzjldwmc(String zzjldwmc) {
 		this.zzjldwmc = zzjldwmc;
 	}
+	public String getZcjldwId() {
+		return zcjldwId;
+	}
+	public void setZcjldwId(String zcjldwId) {
+		this.zcjldwId = zcjldwId;
+	}
+	public String getZcjldwmc() {
+		return zcjldwmc;
+	}
+	public void setZcjldwmc(String zcjldwmc) {
+		this.zcjldwmc = zcjldwmc;
+	}
+	public BigDecimal getZzhxs() {
+		return zzhxs;
+	}
+	public void setZzhxs(BigDecimal zzhxs) {
+		this.zzhxs = zzhxs;
+	}
 	public BigDecimal getZzdwsl() {
 		return zzdwsl;
 	}
 	public void setZzdwsl(BigDecimal zzdwsl) {
 		this.zzdwsl = zzdwsl;
+	}
+	public BigDecimal getZcdwsl() {
+		return zcdwsl;
+	}
+	public void setZcdwsl(BigDecimal zcdwsl) {
+		this.zcdwsl = zcdwsl;
 	}
 	public String getJspbh() {
 		return jspbh;
@@ -149,11 +181,35 @@ public class KfhsDet {
 	public void setJzjldwmc(String jzjldwmc) {
 		this.jzjldwmc = jzjldwmc;
 	}
+	public String getJcjldwId() {
+		return jcjldwId;
+	}
+	public void setJcjldwId(String jcjldwId) {
+		this.jcjldwId = jcjldwId;
+	}
+	public String getJcjldwmc() {
+		return jcjldwmc;
+	}
+	public void setJcjldwmc(String jcjldwmc) {
+		this.jcjldwmc = jcjldwmc;
+	}
+	public BigDecimal getJzhxs() {
+		return jzhxs;
+	}
+	public void setJzhxs(BigDecimal jzhxs) {
+		this.jzhxs = jzhxs;
+	}
 	public BigDecimal getJzdwsl() {
 		return jzdwsl;
 	}
 	public void setJzdwsl(BigDecimal jzdwsl) {
 		this.jzdwsl = jzdwsl;
+	}
+	public BigDecimal getJcdwsl() {
+		return jcdwsl;
+	}
+	public void setJcdwsl(BigDecimal jcdwsl) {
+		this.jcdwsl = jcdwsl;
 	}
 	public String getSpbh() {
 		return spbh;

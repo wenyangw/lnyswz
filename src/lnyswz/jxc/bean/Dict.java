@@ -34,6 +34,19 @@ public class Dict {
 	private String sqlWhere;
 	private String outGroupBy;
 	private String inGroupBy;
+	private String isDepName;
+	private String orderByTree;
+	private String isShow;
+	private String treeShow;
+	private String treeSql;
+	private String bz;
+	
+
+	private String filterWhere;
+	
+	
+
+	
 	// 条件筛选参数
 	private String tjsx;
 	private Map<String, Object> attributes;
@@ -270,4 +283,63 @@ public class Dict {
 		this.inGroupBy = inGroupBy;
 	}
 
+	public String getIsDepName() {
+		return isDepName;
+	}
+
+	public void setIsDepName(String isDepName) {
+		this.isDepName = isDepName;
+	}
+
+	public String getOrderByTree() {
+		return orderByTree;
+	}
+
+	public void setOrderByTree(String orderByTree) {
+		this.orderByTree = orderByTree;
+	}
+
+	public String getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(String isShow) {
+		this.isShow = isShow;
+	}
+
+	public String getTreeShow() {
+		return treeShow;
+	}
+
+	public void setTreeShow(String treeShow) {
+		this.treeShow = treeShow;
+	}
+
+	public String getTreeSql() {
+		return treeSql;
+	}
+
+	public void setTreeSql(String treeSql) {
+		this.treeSql = treeSql;
+	}
+
+	public String getBz() {
+		return bz;
+	}
+
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+
+	
+
+	public String getFilterWhere() {
+		return filterWhere;
+	}
+
+	public void setFilterWhere(String filterWhere) {
+		this.filterWhere = filterWhere;
+	}
+
+	
 }

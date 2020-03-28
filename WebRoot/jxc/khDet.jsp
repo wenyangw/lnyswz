@@ -21,46 +21,72 @@
 			<td><input name="ywyId" style="width:160px;"></td>
 		</tr>
 		<tr>
+			<th><label for="isDef">关联业务员</label></th>
+			<td><input name="isDef" type="checkbox" value="1"></td>
+ 		</tr>
+		<tr>
 			<th><label for="khlxId">客户类型</label></th>
 			<td><input name="khlxId" style="width:160px;"></td>
 		</tr>
-<!-- 		<tr> -->
-<!-- 			<th><label for="isSx">授信客户</label></th> -->
-<!-- 			<td><input name="isSx" type="checkbox" value="1"></td> -->
-<!-- 		</tr> -->
+ 		<tr>
+ 			<th><label for="info">信息</label></th>
+ 			<td><input name="info" style="width:156px;"></td>
+ 		</tr>
 		<tr>
 			<th><label for="sxzq">授信账期</label></th>
-			<td><input name="sxzq" id="sxzq" class="easyui-validatebox"
+			<td><input name="sxzq" id="sxzq" class="easyui-validatebox sxbj"
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="sxje">授信金额</label></th>
-			<td><input name="sxje" class="easyui-validatebox"
+			<td><input name="sxje" class="easyui-validatebox sxbj"
 				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="lsje">历史金额</label></th>
-			<td><input name="lsje" class="easyui-validatebox"
+			<td><input name="lsje" class="easyui-validatebox sxbj"
 				data-options="validType:'floatOrInt'"
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
 		<tr>
 			<th><label for="isUp">二级审批</label></th>
-			<td><input name="isUp" type="checkbox" value="1" checked="checked" disabled="disabled"></td>
+			<td><input name="isUp" class = 'sxbj' type="checkbox" value="1" checked="checked" disabled="disabled"></td>
  		</tr>
 		<tr>
 			<th><label for="postponeDay">限制期</label></th>
-			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox"
+			<td><input name="postponeDay" id="postponeDay" class="easyui-validatebox sxbj"
 				value=60
 				data-options="validType:'integer'" 
 				style="width:156px;"
 				disabled="disabled"></td>
 		</tr>
+		<tr>
+			<th><label for="isOther">第三方</label></th>
+			<td><input name="isOther" type="checkbox" value="1"></td>
+ 		</tr>
+ 		<tr>
+			<th><label for="limitPer">限额比例</label></th>
+			<td><input name="limitPer" class="easyui-validatebox sxbj"
+				data-options="validType:'floatOrInt'"
+				style="width:156px;"
+				disabled="disabled"></td>
+		</tr>
+		<tr>
+			<th><label for="limitJe">销售限额</label></th>
+			<td><input name="limitJe" class="easyui-validatebox sxbj"
+				data-options="validType:'floatOrInt'"
+				style="width:156px;"
+				disabled="disabled"></td>
+		</tr>
+		<tr>
+			<th><label for="isLocked">锁定</label></th>
+			<td><input name="isLocked" type="checkbox" value="1"></td>
+ 		</tr>
 	</table>
 <!-- 	<input type="hidden" name="id"> -->
 	<input type="hidden" name="detId">

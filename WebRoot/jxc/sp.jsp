@@ -3,11 +3,11 @@
 
 <script type="text/javascript">
 var sp_dg;
-var did;
+var sp_did;
 var menuId;
 var spdwId;
 $(function(){
-	did = lnyw.tab_options().did;
+    sp_did = lnyw.tab_options().did;
 	menuId = lnyw.tab_options().id;
 	
 	$('#jxc_sp_layout').layout({
@@ -16,12 +16,12 @@ $(function(){
 	});
 	
 	$('#jxc_sp_spfl').tree({
-		url:'${pageContext.request.contextPath}/jxc/spdwAction!listSpfl.action?depId=' + did,
+		url:'${pageContext.request.contextPath}/jxc/spdwAction!listSpfl.action?depId=' + sp_did,
 		onClick : function(node) {
 			if(node.attributes){
 				$('#jxc_sp_spdwDg').datagrid('load', {
 					splbId : node.id,
-					depId : did,
+					depId : sp_did,
 				});
 			}
 		}
@@ -35,7 +35,7 @@ $(function(){
 	    singleSelect : true,
 	    fitColumns: true,
 	    queryParams: {
-	    	depId : did,
+	    	depId : sp_did,
 	    },
 		columns:[[
 	        {field:'id',title:'编号',width:100},
@@ -45,7 +45,7 @@ $(function(){
 	    	spdwId = rowData.id;
 	    	sp_dg.datagrid('load', {
 	    		spdwId : spdwId,
-	    		depId: did,
+	    		depId: sp_did,
 	    	});
 	    },
 	});
@@ -62,10 +62,10 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		queryParams: {
-			depId: did,
+			depId: sp_did,
 		},
 		columns:[[
-			{title:'通用信息',colspan:9},
+			{title:'通用信息',colspan:11},
 			{title:'专属信息',colspan:4},
 			],[
 	        {field:'spbh',title:'商品编号'},
@@ -81,7 +81,10 @@ $(function(){
 	        {field:'cjldwmc',title:'次计量单位'},
 	        {field:'zhxs',title:'系数'},
 	        {field:'yxq',title:'有效期'},
+	        {field:'jsbh',title:'金税编号'},
+	        {field:'jsmc',title:'金税名称'},
 	        {field:'xsdj',title:'销售单价'},
+	        {field:'specXsdj',title:'特定销价'},
 			{field:'limitXsdj',title:'最低销价'},
 			{field:'maxKc',title:'最大库存'},
 			{field:'minKc',title:'最小库存'},
@@ -91,7 +94,7 @@ $(function(){
 		
 	});
 	//根据权限，动态加载功能按钮
-	lnyw.toolbar(0, sp_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', did);
+	lnyw.toolbar(0, sp_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', sp_did);
 	
 	
 });
@@ -172,7 +175,9 @@ function appendSp() {
 					spbh : spdw_row[0].id,
 					zhxs : 0.00,
 					yxq : 0,
-					depId : did,
+					jsbh: jxc.spJs(sp_did).jsbh,
+					jsmc: jxc.spJs(sp_did).jsmc,
+					depId : sp_did,
 					menuId : menuId,
 				});
 				$('input[name=spbh]').focus();
@@ -230,7 +235,7 @@ function editSp(){
 				});
  				var row = rows[0];
  				row["menuId"] = menuId;
- 				row["depId"] = did;
+ 				row["depId"] = sp_did;
 				f.form('load', row);
 				$('input[name=spbh]').focus();
 			}
@@ -241,6 +246,16 @@ function editSp(){
 		$.messager.alert('提示', '请选择一条要编辑的记录！', 'error');
 	}
 }
+
+function exportToJs(){
+    $.messager.confirm('请确认', '是否要导出所有代码？', function(r) {
+        if (r) {
+            var url = lnyw.bp() + '/jxc/spAction!exportToJs.action?depId=' + sp_did;
+            jxc.toJs(url, JS_PATH, 'sp.txt', '1');
+        }
+    });
+}
+
 function removeSp(){
 	var rows = sp_dg.datagrid('getSelections');
 	if (rows.length == 1) {
@@ -250,7 +265,7 @@ function removeSp(){
 					url : '${pageContext.request.contextPath}/jxc/spAction!delete.action',
 					data : {
 						spbh : rows[0].spbh,
-						depId : did,
+						depId : sp_did,
 						menuId : menuId,
 					},
 					dataType : 'json',
@@ -279,7 +294,7 @@ function editSpDet(){
 			title : '修改商品专属信息',
 			href : '${pageContext.request.contextPath}/jxc/spDet.jsp',
 			width : 340,
-			height : 240,
+			height : 300,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -291,7 +306,7 @@ function editSpDet(){
 						success : function(d) {
 							var json = $.parseJSON(jxc.toJson(d));
 							if (json.success) {
-								sp_dg.datagrid('reload',{depId: did});
+								sp_dg.datagrid('reload');
 								detDialog.dialog('close');
 							}
 							$.messager.show({
@@ -311,8 +326,9 @@ function editSpDet(){
 					maxKc: rows[0].maxKc,
 					minKc: rows[0].minKc,
 					xsdj: rows[0].xsdj,
+					specXsdj: rows[0].specXsdj,
 					limitXsdj: rows[0].limitXsdj,
-					depId: did,
+					depId: sp_did,
 					menuId : menuId,
 				});
 				$('input[name=xsdj]').focus();
@@ -335,7 +351,7 @@ function removeSpDet(){
 						spbh : rows[0].spbh,
 						detId: rows[0].detId,
 						menuId: menuId,
-						depId: did,
+						depId: sp_did,
 					},
 					dataType : 'json',
 					success : function(d) {
@@ -356,9 +372,9 @@ function removeSpDet(){
 	}
 }
 </script>
-<div id='jxc_sp_layout' style="height:100%;width=100%">
+<div id='jxc_sp_layout' style="height:100%;width:100%">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:250px">
-		<div id='jxc_sp_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%;width=100%">
+		<div id='jxc_sp_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%;width:100%">
 			<div data-options="region:'north',title:'商品分类',split:true,collapsible:false" style="height:180px">		
 				<ul id="jxc_sp_spfl"></ul>
 			</div>

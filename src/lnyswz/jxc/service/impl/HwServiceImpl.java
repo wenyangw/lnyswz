@@ -35,8 +35,7 @@ public class HwServiceImpl implements HwServiceI {
 		BeanUtils.copyProperties(hw, h);
 		h.setCkmc(ck.getCkmc());
 		h.setCkId(hw.getCkId());
-		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw
-				.getMenuId(), hw.getId(), "添加货物信息", opeDao);
+		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw.getMenuId(), hw.getId(), "添加货物信息", opeDao);
 		return h;
 	}
 
@@ -49,8 +48,7 @@ public class HwServiceImpl implements HwServiceI {
 		BeanUtils.copyProperties(hw, g);
 		TCk ck = ckDao.load(TCk.class, hw.getCkId());
 		g.setTCk(ck);
-		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw
-				.getMenuId(), hw.getId(), "编辑货位信息", opeDao);
+		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw.getMenuId(), hw.getId(), "编辑货位信息", opeDao);
 	}
 
 	/**
@@ -60,8 +58,7 @@ public class HwServiceImpl implements HwServiceI {
 	public void delete(Hw hw) {
 		THw t = hwDao.load(THw.class, hw.getId());
 		hwDao.delete(t);
-		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw
-				.getMenuId(), hw.getId(), "删除货位信息", opeDao);
+		OperalogServiceImpl.addOperalog(hw.getUserId(), hw.getDepId(), hw.getMenuId(), hw.getId(), "删除货位信息", opeDao);
 	}
 
 	/**

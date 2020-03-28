@@ -17,6 +17,8 @@ public class Sp {
 	private String cjldwId;
 	private BigDecimal zhxs;
 	private int yxq;
+	private String jsbh;
+	private String jsmc;
 	private String zjldwmc;
 	private String cjldwmc;
 	private String spdwId;
@@ -28,12 +30,14 @@ public class Sp {
 	private BigDecimal maxKc;
 	private BigDecimal minKc;
 	private BigDecimal xsdj;
+	private BigDecimal specXsdj;
 	//含税单价
 	private BigDecimal xsdjs;
 	private BigDecimal limitXsdj;
 	private BigDecimal lastRkdj;
 	private String query;
 	private BigDecimal kcsl;
+	private BigDecimal ckcsl;
 	private BigDecimal dwcb;
 	private String ckId;
 	
@@ -109,6 +113,23 @@ public class Sp {
 	public void setYxq(int yxq) {
 		this.yxq = yxq;
 	}
+
+	public String getJsbh() {
+		return jsbh;
+	}
+
+	public void setJsbh(String jsbh) {
+		this.jsbh = jsbh;
+	}
+
+	public String getJsmc() {
+		return jsmc;
+	}
+
+	public void setJsmc(String jsmc) {
+		this.jsmc = jsmc;
+	}
+
 	public String getZjldwmc() {
 		return zjldwmc;
 	}
@@ -175,6 +196,12 @@ public class Sp {
 	public void setXsdj(BigDecimal xsdj) {
 		this.xsdj = xsdj;
 	}
+	public BigDecimal getSpecXsdj() {
+		return specXsdj;
+	}
+	public void setSpecXsdj(BigDecimal specXsdj) {
+		this.specXsdj = specXsdj;
+	}
 	public BigDecimal getXsdjs() {
 		return xsdjs;
 	}
@@ -204,6 +231,12 @@ public class Sp {
 	}
 	public void setKcsl(BigDecimal kcsl) {
 		this.kcsl = kcsl;
+	}
+	public BigDecimal getCkcsl() {
+		return ckcsl;
+	}
+	public void setCkcsl(BigDecimal ckcsl) {
+		this.ckcsl = ckcsl;
 	}
 	public BigDecimal getDwcb() {
 		return dwcb;

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import lnyswz.jxc.util.ExportExcel;
 public class SelectCommomAction extends BaseAction implements
 		ModelDriven<SelectCommon> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private SelectCommon selectCommon = new SelectCommon();
 	private SelectCommonServiceI selectCommonService;
 
@@ -35,6 +33,8 @@ public class SelectCommomAction extends BaseAction implements
 	 */
 	public void selectCommonList() {
 		Json j = new Json();
+		User u = (User) session.get("user");
+		selectCommon.setUserId(u.getId());
 		try {
 			DataGrid r = selectCommonService.selectCommonList(selectCommon);
 			j.setSuccess(true);
@@ -48,6 +48,8 @@ public class SelectCommomAction extends BaseAction implements
 	}
 	public void selectCommonTree() {
 		Json j = new Json();
+		User u = (User) session.get("user");
+		selectCommon.setUserId(u.getId());
 		try {
 			DataGrid r = selectCommonService.selectCommonTree(selectCommon);
 			j.setSuccess(true);
@@ -59,6 +61,7 @@ public class SelectCommomAction extends BaseAction implements
 //		super.writeJson(selectCommonService.selectCommonList(selectCommon));
 		writeJson(j);
 	}
+	
 
 	/**
 	 * 导出excel
@@ -68,6 +71,10 @@ public class SelectCommomAction extends BaseAction implements
 		String location = null;
 		ExportExcel<Object[]> ex = new ExportExcel<Object[]>();
 		String[] headers = selectCommon.getTitles().split(",");
+		if(selectCommon.getHid() == null){
+			selectCommon.setHid("");
+		}
+		String hidNum = selectCommon.getHid();
 		OutputStream out;
 		List<Object[]> dataset = selectCommonService.Exprot(selectCommon);
 		try {
@@ -78,8 +85,10 @@ public class SelectCommomAction extends BaseAction implements
 							"yyyyMMddHHmmss") + ".xls";
 			String address = Export.getRootPath() + location;
 			out = new FileOutputStream(address);
-			ex.exportExcel(headers, dataset, out);
+			ex.exportExcel(headers, dataset, out,hidNum);
 			out.close();
+			dataset.clear();
+			dataset = null;
 			j.setSuccess(true);
 			j.setObj(location);
 			j.setMsg("导出成功");
@@ -92,6 +101,12 @@ public class SelectCommomAction extends BaseAction implements
 		writeJson(j);
 	}
 
+	/**
+	 * 查询 拼写（传 ：字段， 表， where条件）
+	 */
+	public void selectCommonByFreeSpell() {
+		writeJson(selectCommonService.selectCommonByFreeSpell(selectCommon));
+	}
 
 	public SelectCommon getModel() {
 		return selectCommon;

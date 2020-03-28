@@ -1,9 +1,6 @@
 package lnyswz.jxc.action;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +9,7 @@ import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Button;
 import lnyswz.jxc.bean.Spdw;
-import lnyswz.jxc.bean.Splb;
-import lnyswz.jxc.bean.User;
-import lnyswz.jxc.service.ButtonServiceI;
 import lnyswz.jxc.service.SpdwServiceI;
 /**
  * 商品段位Action
@@ -26,7 +19,7 @@ import lnyswz.jxc.service.SpdwServiceI;
 @Namespace("/jxc")
 @Action("spdwAction")
 public class SpdwAction extends BaseAction implements ModelDriven<Spdw>{
-	private Logger logger = Logger.getLogger(SpdwAction.class);
+	private static final long serialVersionUID = 1L;
 	private Spdw spdw = new Spdw();
 	private SpdwServiceI spdwService;
 	

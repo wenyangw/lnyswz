@@ -1,24 +1,17 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-
-
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Ywdb;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwdbServiceI;
-import lnyswz.jxc.util.Constant;
-import lnyswz.jxc.util.Export;
 /**
  * 业务调拨Action
  * @author 王文阳
@@ -27,7 +20,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywdbAction")
 public class YwdbAction extends BaseAction implements ModelDriven<Ywdb>{
-	private Logger logger = Logger.getLogger(YwdbAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywdb ywdb = new Ywdb();
 	private YwdbServiceI ywdbService;
 	
@@ -72,6 +65,8 @@ public class YwdbAction extends BaseAction implements ModelDriven<Ywdb>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		ywdb.setCreateId(user.getId());
 		writeJson(ywdbService.datagrid(ywdb));
 	}
 	

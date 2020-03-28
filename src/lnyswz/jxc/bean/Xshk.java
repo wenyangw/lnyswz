@@ -20,6 +20,7 @@ public class Xshk {
 	private String ywymc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
+	private BigDecimal yfje;
 	private Date payTime;
 	private String isLs;
 	private String isYf;
@@ -34,6 +35,7 @@ public class Xshk {
 	private int rows;
 	
 	private String search;
+	private String type;
 	private Date selectTime;
 
 	private String datagrid;
@@ -113,6 +115,15 @@ public class Xshk {
 	public void setLastHkje(BigDecimal lastHkje) {
 		this.lastHkje = lastHkje;
 	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
+	}
+
 	public Date getPayTime() {
 		return payTime;
 	}
@@ -190,6 +201,12 @@ public class Xshk {
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	public Date getSelectTime() {
 		return selectTime;

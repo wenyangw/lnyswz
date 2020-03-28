@@ -105,18 +105,20 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			TYwpdDet tDet = new TYwpdDet();
 			BeanUtils.copyProperties(ywpdDet, tDet);
 			
-			if("".equals(ywpdDet.getCjldwId()) || null == ywpdDet.getZhxs()){
+			if("".equals(ywpdDet.getCjldwId()) || null == ywpdDet.getZhxs() || ywpdDet.getZhxs().compareTo(BigDecimal.ZERO) == 0){
 				tDet.setCdwdj(Constant.BD_ZERO);
 				tDet.setCdwsl(Constant.BD_ZERO);
 				tDet.setZhxs(Constant.BD_ZERO);
 			}else{
-				if(ywpdDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
-					tDet.setCdwdj(Constant.BD_ZERO);
-					tDet.setCdwsl(Constant.BD_ZERO);
-				}else{
-					tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
-					tDet.setCdwsl(ywpdDet.getZdwsl().divide(ywpdDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-				}
+				tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
+				tDet.setCdwsl(ywpdDet.getCdwsl());
+//				if(ywpdDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
+//					tDet.setCdwdj(Constant.BD_ZERO);
+//					tDet.setCdwsl(Constant.BD_ZERO);
+//				}else{
+//					tDet.setCdwdj(ywpdDet.getZdwdj().multiply(ywpdDet.getZhxs()).multiply(Constant.SHUILV));
+//					tDet.setCdwsl(ywpdDet.getZdwsl().divide(ywpdDet.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+//				}
 			}
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(ywpdDet, sp);
@@ -125,7 +127,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			tDet.setTYwpd(tYwpd);
 
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywpdDet.getZdwsl(), ywpdDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, ywpdDet.getZdwsl(), tDet.getCdwsl(), ywpdDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(ywpd.getBmbh(), ywpdDet.getSpbh(), ywzzDao));
 			tDets.add(tDet);
 			
@@ -192,7 +194,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			tDet.setQdwcb(YwzzServiceImpl.getDwcb(tYwpd.getBmbh(), tDet.getSpbh(), ywzzDao));
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新冲减后dwcb
 			tDet.setDwcb(YwzzServiceImpl.getDwcb(tYwpd.getBmbh(), tDet.getSpbh(), ywzzDao));
@@ -238,7 +240,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			lsh += tYwpd.getCjYwpdlsh() + " - ";
 		}
 		lsh += tYwpd.getYwpdlsh();
-		map.put("title", "商   品   盘   点   单");
+		map.put("title", Constant.YWPD_TITLE.get(tYwpd.getPdlxId()));
 		map.put("bmmc", tYwpd.getBmmc());
 		map.put("createTime", DateUtil.dateToString(tYwpd.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
 		map.put("ywpdlsh", lsh);
@@ -260,11 +262,24 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywpd.getBmbh());
 		if(ywpd.getCreateTime() != null){
-			params.put("createTime", ywpd.getCreateTime()); 
+			params.put("createTime", ywpd.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywpd.getFromOther() != null){
+		if(ywpd.getFromOther() == null) {
+			hql += " and t.createId = :createId";
+			params.put("createId", ywpd.getCreateId());
+		}else{
+			if(ywpd.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", ywpd.getCreateId());
+				Object cks = ywpdDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TKfpd = null";
 		}
 		String countHql = " select count(*)" + hql;
@@ -337,7 +352,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		Ywpd ywpd = new Ywpd();
 		BeanUtils.copyProperties(tYwpd, ywpd);
 		//商品明细处理
-		String sql = "select spbh, sum(zdwsl) zdwsl from t_ywpd_det t ";
+		String sql = "select spbh, sum(zdwsl) zdwsl, sum(cdwsl) cdwsl from t_ywpd_det t ";
 		
 		if(ywpdlsh != null && ywpdlsh.trim().length() > 0){
 			sql += "where ywpdlsh = " + ywpdlsh;
@@ -350,6 +365,7 @@ public class YwpdServiceImpl implements YwpdServiceI {
 		for(Object[] os : l){
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
+			BigDecimal cdwsl = new BigDecimal(os[2].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			YwpdDet yd = new YwpdDet();
@@ -361,9 +377,11 @@ public class YwpdServiceImpl implements YwpdServiceI {
 			yd.setZdwsl(zdwsl);
 			yd.setZjldwmc(sp.getZjldw().getJldwmc());
 			if(sp.getCjldw() != null){
+				yd.setCjldwId(sp.getCjldw().getId());
 				yd.setCjldwmc(sp.getCjldw().getJldwmc());
 				yd.setZhxs(sp.getZhxs());
-				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+				yd.setCdwsl(cdwsl);
+//				yd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
 			}
 			nl.add(yd);
 		}

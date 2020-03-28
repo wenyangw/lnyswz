@@ -23,15 +23,17 @@ public class THkKp implements java.io.Serializable {
 	private int id;
 	private String xskplsh;
 	private BigDecimal hkje;
+	private String isYf;
 	private TXshk TXshk;
 	
 	public THkKp() {
 	}
 
-	public THkKp(int id, String xskplsh, BigDecimal hkje, TXshk TXshk) {
+	public THkKp(int id, String xskplsh, BigDecimal hkje, String isYf, TXshk TXshk) {
 		this.id = id;
 		this.xskplsh = xskplsh;
 		this.hkje = hkje;
+		this.isYf = isYf;
 		this.TXshk = TXshk;
 	}
 
@@ -45,7 +47,6 @@ public class THkKp implements java.io.Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	@Column(name = "xskplsh", nullable = false, length = 12)
 	public String getXskplsh() {
@@ -63,6 +64,15 @@ public class THkKp implements java.io.Serializable {
 
 	public void setHkje(BigDecimal hkje) {
 		this.hkje = hkje;
+	}
+
+	@Column(name = "isYf", nullable = false, length = 1)
+	public String getIsYf() {
+		return this.isYf;
+	}
+
+	public void setIsYf(String isYf) {
+		this.isYf = isYf;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

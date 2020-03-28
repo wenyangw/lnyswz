@@ -33,13 +33,19 @@ public interface BaseDaoI<T> {
 	public List<T> find(String hql, Map<String, Object> params, int page, int rows);
 
 	public Long count(String hql);
+	
+	public Long countBySQL(String sql);
 
 	public Long count(String hql, Map<String, Object> params);
-
+	
 	public int executeHql(String hql);
 
 	public int executeHql(String hql, Map<String, Object> params);
-
+	
+	public int updateBySQL(String sql);
+	
+	public int updateBySQL(String sql, Map<String, Object> params);
+	
 	public Object[] getMBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params);
 	public Object getBySQL(String sql, Map<String, Object> params, Map<String, Object> returns);
@@ -52,6 +58,9 @@ public interface BaseDaoI<T> {
 
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params);
 	public List<Object[]> findBySQL(String sql, Map<String, Object> params, int page, int rows);
+
+	public List<Object> findOneBySQL(String sql);
+	public List<Object> findOneBySQL(String sql, Map<String, Object> params);
 	
 	public List<T> findBySQL(String sql, Map<String, Object> returns, T o);
 	public List<T> findBySQL(String sql, Map<String, Object> returns, T o, int page, int rows);

@@ -49,6 +49,8 @@ public class TXskp implements java.io.Serializable {
 	private String jsfsmc;
 	private String fplxId;
 	private String fplxmc;
+	private String xslxId;
+	private String xslxmc;
 	private String bookmc;
 	private String fyr;
 	private String thfs;
@@ -88,7 +90,7 @@ public class TXskp implements java.io.Serializable {
 
 	public TXskp(String xskplsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
 			String khmc, String dzdh, String khh, String sh, String ckId, String ckmc, String fhId, String fhmc, String jsfsId,
-			String jsfsmc, String fplxId, String fplxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
+			String jsfsmc, String fplxId, String fplxmc, String xslxId, String xslxmc, String bookmc,	String fyr, String thfs, String shdz, String thr, String ch, int ywyId, String ywymc, BigDecimal hjje,
 			BigDecimal hjse, BigDecimal hkje, BigDecimal yfje, String bz, String fromTh, String isZs, String isSx, String isCj, Integer cjId,	String cjName, Date cjTime, String cjXskplsh, 
 			String isTh, Date thTime, String xsthlsh, String isHk, Date hkTime, String needAudit, String isAudit, 
 			Set<TXskpDet> TXskpDets, Set<TXsthDet> TXsths, TYwrk TYwrk) {
@@ -111,6 +113,8 @@ public class TXskp implements java.io.Serializable {
 		this.jsfsmc = jsfsmc;
 		this.fplxId = fplxId;
 		this.fplxmc = fplxmc;
+		this.xslxId = xslxId;
+		this.xslxmc = xslxmc;
 		this.bookmc = bookmc;
 		this.fyr = fyr;
 		this.thfs = thfs;
@@ -316,6 +320,24 @@ public class TXskp implements java.io.Serializable {
 
 	public void setFplxmc(String fplxmc) {
 		this.fplxmc = fplxmc;
+	}
+	
+	@Column(name = "xslxId", nullable = false, length = 2)
+	public String getXslxId() {
+		return this.xslxId;
+	}
+
+	public void setXslxId(String xslxId) {
+		this.xslxId = xslxId;
+	}
+
+	@Column(name = "xslxmc", nullable = false, length = 20)
+	public String getXslxmc() {
+		return xslxmc;
+	}
+
+	public void setXslxmc(String xslxmc) {
+		this.xslxmc = xslxmc;
 	}
 
 	@Column(name = "bookmc", length = 100)

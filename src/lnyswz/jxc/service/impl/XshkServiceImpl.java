@@ -47,6 +47,7 @@ import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.XshkServiceI;
 import lnyswz.jxc.util.AmountToChinese;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 销售回款实现类
@@ -63,6 +64,7 @@ public class XshkServiceImpl implements XshkServiceI {
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TYszz> yszzDao;
+	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TKhDet> khDetDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TOperalog> operalogDao;
@@ -101,16 +103,18 @@ public class XshkServiceImpl implements XshkServiceI {
 			//预付没有销售记录的
 			if(xskps != null && xskps.size() > 0){
 				Set<THkKp> tHkKps = new HashSet<THkKp>();
+				THkKp tHkKp = null;
+				TXskp tXskp = null;
 				for(Xskp x : xskps){
-					THkKp tHkKp = new THkKp();
+					tHkKp = new THkKp();
 					tHkKp.setXskplsh(x.getXskplsh());
 					tHkKp.setHkje(x.getHkje());
 					tHkKp.setTXshk(tXshk);
+					tHkKp.setIsYf("0");
 					tHkKps.add(tHkKp);
-					//tXshk.getTHkKps().add(tHkKp);
 					hkKpDao.save(tHkKp);
 					
-					TXskp tXskp= xskpDao.load(TXskp.class, x.getXskplsh());
+					tXskp = xskpDao.load(TXskp.class, x.getXskplsh());
 					tXskp.setHkje(tXskp.getHkje().add(x.getHkje()));
 					//更新销售开票回款标志
 					tXskp.setIsHk("1");
@@ -172,6 +176,40 @@ public class XshkServiceImpl implements XshkServiceI {
 		ywy.setRealName(yTXshk.getYwymc());
 		
 		if(yTXshk.getIsLs().equals("0")){
+//			if(yTXshk.getIsYf().equals("1")){
+//				BigDecimal hkje = yTXshk.getHkje();
+//				//当前应收余额
+//				BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(yTXshk.getBmbh(), yTXshk.getKhbh(), yTXshk.getYwyId(), null, yszzDao);
+//				if(ysje.compareTo(BigDecimal.ZERO) < 0){
+//					if(hkje.add(ysje).compareTo(BigDecimal.ZERO) > 0){
+//						hkje = hkje.add(ysje);
+//					}else{
+//						hkje = BigDecimal.ZERO;
+//					}
+//				}
+//				while(hkje.compareTo(BigDecimal.ZERO) > 0){
+//					String hql = "from TXskp t where t.bmbh = :bmbh and t.khbh = :khbh and t.ywyId = :ywyId and t.isCj = '0' and t.yfje <> 0 order by t.createTime desc";
+//					Map<String, Object> params = new HashMap<String, Object>();
+//					params.put("bmbh", yTXshk.getBmbh());
+//					params.put("khbh", yTXshk.getKhbh());
+//					params.put("ywyId", yTXshk.getYwyId());
+//
+//					TXskp tXskp = xskpDao.get(hql, params);
+//					if(tXskp == null){
+//						break;
+//					}
+//					if(hkje.compareTo(tXskp.getYfje()) >= 0){
+//						hkje = hkje.subtract(tXskp.getYfje());
+//						tXskp.setHkje(tXskp.getHkje().subtract(tXskp.getYfje()));
+//						tXskp.setYfje(BigDecimal.ZERO);
+//					}else{
+//						hkje = BigDecimal.ZERO;
+//						tXskp.setHkje(tXskp.getHkje().subtract(hkje));
+//						tXskp.setYfje(tXskp.getYfje().subtract(hkje));
+//					}
+//				}
+//			}
+			
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK, yszzDao);
 			
@@ -183,6 +221,9 @@ public class XshkServiceImpl implements XshkServiceI {
 			for(THkKp tHkKp : tHkKps){
 				TXskp tXskp = xskpDao.load(TXskp.class, tHkKp.getXskplsh());
 				tXskp.setHkje(tXskp.getHkje().subtract(tHkKp.getHkje()));
+				if("1".equals(tHkKp.getIsYf())) {
+				    tXskp.setYfje(tXskp.getYfje().subtract(tHkKp.getHkje()));
+                }
 				if(tXskp.getHkje().compareTo(tXskp.getYfje()) == 0){
 					tXskp.setIsHk("0");
 				}
@@ -202,6 +243,7 @@ public class XshkServiceImpl implements XshkServiceI {
 				//it.remove();
 	        }  
 			
+	        
 			//yTXshk.setHkje(null);
 		}else{
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, tXshk.getHkje(), Constant.UPDATE_HK_LS, yszzDao);
@@ -217,7 +259,7 @@ public class XshkServiceImpl implements XshkServiceI {
 	public DataGrid printXshk(Xshk xshk) {
 		DataGrid dg = new DataGrid();
 		
-		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDetDao, khlxDao);
+		Kh kh = KhServiceImpl.getKhsx(xshk.getKhbh(), xshk.getBmbh(), xshk.getYwyId(), khDao, khDetDao, khlxDao);
 		
 		TUser u = userDao.load(TUser.class, xshk.getYwyId());
 		
@@ -297,9 +339,11 @@ public class XshkServiceImpl implements XshkServiceI {
 		}
 		
 		if(xshk.getSearch() != null){
-			hql += " and (t.xshklsh like :search or t.khmc like :search)"; 
-			params.put("search", "%" + xshk.getSearch() + "%");
-			
+			//hql += " and (t.xshklsh like :search or t.khmc like :search)"; 
+			//params.put("search", "%" + xshk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(xshk.getSearch(), new String[]{"t.xshklsh", "t.khmc"}, params)
+					+ ")";
 		}
 		
 		String countHql = "select count(*)" + hql;
@@ -335,7 +379,7 @@ public class XshkServiceImpl implements XshkServiceI {
 		datagrid.setRows(xskps);
 		return datagrid;
 	}
-	
+
 	@Autowired
 	public void setXshkDao(BaseDaoI<TXshk> xshkDao) {
 		this.xshkDao = xshkDao;
@@ -369,6 +413,11 @@ public class XshkServiceImpl implements XshkServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
+	}
+
+	@Autowired
+	public void setKhDao(BaseDaoI<TKh> khDao) {
+		this.khDao = khDao;
 	}
 
 	@Autowired

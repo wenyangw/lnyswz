@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "t_kh_det")
+@DynamicUpdate(true)
 public class TKhDet implements java.io.Serializable {
 
 	private String id;
@@ -29,12 +32,19 @@ public class TKhDet implements java.io.Serializable {
 	private BigDecimal lsje;
 	private String isUp;
 	private int postponeDay;
+	private String isOther;
+	private BigDecimal limitPer;
+	private BigDecimal limitJe;
+	private String isLocked;
+	private String isDef;
+	private String info;
 
 	public TKhDet() {
 	}
 
 	public TKhDet(String id, TKh TKh, TDepartment TDepartment, String lxr, Integer ywyId, String khlxId, 
-			String isSx, Integer sxzq, BigDecimal sxje, BigDecimal lsje, String isUp, int postponeDay) {
+			String isSx, Integer sxzq, BigDecimal sxje, BigDecimal lsje, String isUp, int postponeDay, String isOther,
+			BigDecimal limitPer, BigDecimal limitJe, String isLocked, String isDef, String info) {
 		this.id = id;
 		this.TKh = TKh;
 		this.TDepartment = TDepartment;
@@ -47,6 +57,12 @@ public class TKhDet implements java.io.Serializable {
 		this.lsje = lsje;
 		this.isUp = isUp;
 		this.postponeDay = postponeDay;
+		this.isOther = isOther;
+		this.limitPer = limitPer;
+		this.limitJe = limitJe;
+		this.isLocked = isLocked;
+		this.isDef = isDef;
+		this.info = info;
 	}
 
 	@Id
@@ -160,4 +176,57 @@ public class TKhDet implements java.io.Serializable {
 		this.postponeDay = postponeDay;
 	}
 
+	@Column(name = "isOther", length = 1)
+	public String getIsOther() {
+		return isOther;
+	}
+
+	public void setIsOther(String isOther) {
+		this.isOther = isOther;
+	}
+
+	@Column(name = "limitPer")
+	public BigDecimal getLimitPer() {
+		return limitPer;
+	}
+
+	public void setLimitPer(BigDecimal limitPer) {
+		this.limitPer = limitPer;
+	}
+
+	@Column(name = "limitJe")
+	public BigDecimal getLimitJe() {
+		return limitJe;
+	}
+
+	public void setLimitJe(BigDecimal limitJe) {
+		this.limitJe = limitJe;
+	}
+
+	@Column(name = "isLocked", length = 1)
+	public String getIsLocked() {
+		return isLocked;
+	}
+
+	public void setIsLocked(String isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	@Column(name = "isDef", length = 1)
+	public String getIsDef() {
+		return isDef;
+	}
+
+	public void setIsDef(String isDef) {
+		this.isDef = isDef;
+	}
+
+	@Column(name = "info", length = 50)
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
 }

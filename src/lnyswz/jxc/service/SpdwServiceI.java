@@ -5,7 +5,6 @@ import java.util.List;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.TreeNode;
 import lnyswz.jxc.bean.Spdw;
-import lnyswz.jxc.bean.Splb;
 
 public interface SpdwServiceI {
 	public Spdw add(Spdw spdw);

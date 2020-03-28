@@ -18,20 +18,25 @@ import lnyswz.jxc.util.Constant;
 public class FileApplet extends Applet {
 	
 	private URL url = null;
-	private String isZzs = "1";
+	//private String isZzs = "1";
+	private String filePath = null;
 	private String fileName = null;
+	private String needCreate = null;
 	
 	@Override
     public void init()
     {
-        super.init();
+		super.init();
         String strUrl = getParameter("DATA_URL");
-        isZzs = getParameter("FP_ZZS");
-        if("1".equals(isZzs)){
-        	fileName = Constant.JS_ZZS_FILENAME;
-        }else{
-        	fileName = Constant.JS_PT_FILENAME;
-        }
+        filePath = getParameter("FILE_PATH");
+        fileName = getParameter("FILE_NAME");
+        needCreate = getParameter("NEED_CREATE");
+        //isZzs = getParameter("FP_ZZS");
+//        if("1".equals(isZzs)){
+//        	fileName = Constant.JS_ZZS_FILENAME;
+//        }else{
+//        	fileName = Constant.JS_PT_FILENAME;
+//        }
         try {
 			url = new URL(strUrl);
 		} catch (Exception e) {
@@ -46,13 +51,20 @@ public class FileApplet extends Applet {
         {
         	boolean isExist = true;
         	FileWriter fw = null;
-        	File dir = new File(Constant.JS_FILEPATH);
+        	//File dir = new File(Constant.JS_FILEPATH);
+        	File dir = new File(filePath);
         	if(dir.exists() == false){
         		dir.mkdirs();
         	}
-        	File outputFile = new File(Constant.JS_FILEPATH + fileName);
+        	//File outputFile = new File(Constant.JS_FILEPATH + fileName);
+        	File outputFile = new File(filePath + fileName);
         	if(outputFile.exists()){
-        		fw = new FileWriter(outputFile, true);
+        		if("1".equals(needCreate)) {
+					fw = new FileWriter(outputFile);
+					isExist = false;
+				}else{
+					fw = new FileWriter(outputFile, true);
+				}
         	}else{
         		fw = new FileWriter(outputFile);
         		isExist = false;

@@ -41,6 +41,8 @@ public class TCgxqDet implements java.io.Serializable {
 	private BigDecimal zdwxsdj;
 	private BigDecimal cdwxsdj;
 	private BigDecimal spje;
+	private BigDecimal dbsl;
+	private BigDecimal cdbsl;
 	private String isCancel;
 	private Integer cancelId;
 	private Date cancelTime;
@@ -49,6 +51,8 @@ public class TCgxqDet implements java.io.Serializable {
 	private Integer refuseId;
 	private Date refuseTime;
 	private String refuseName;
+	private String isComplete;
+	private String isDb;
 	private TCgjh TCgjh;
 
 	public TCgxqDet() {
@@ -57,8 +61,8 @@ public class TCgxqDet implements java.io.Serializable {
 	public TCgxqDet(int id, TCgxq TCgxq, String spbh, String spmc, String spcd, String sppp, 
 			String spbz, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs,
 			BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal zdwxsdj,
-			BigDecimal cdwxsdj, BigDecimal spje, String isCancel, Integer cancelId, Date cancelTime,
-			String cancelName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName,
+			BigDecimal cdwxsdj, BigDecimal spje, BigDecimal dbsl, BigDecimal cdbsl, String isCancel, Integer cancelId, Date cancelTime,
+			String cancelName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName, String isComplete, String isDb,
 			TCgjh TCgjh) {
 		this.id = id;
 		this.TCgxq = TCgxq;
@@ -79,6 +83,8 @@ public class TCgxqDet implements java.io.Serializable {
 		this.zdwxsdj = zdwxsdj;
 		this.cdwxsdj = cdwxsdj;
 		this.spje = spje;
+		this.dbsl = dbsl;
+		this.cdbsl = cdbsl;
 		this.isCancel = isCancel;
 		this.cancelId = cancelId;
 		this.cancelTime = cancelTime;
@@ -87,6 +93,8 @@ public class TCgxqDet implements java.io.Serializable {
 		this.refuseId = refuseId;
 		this.refuseTime = refuseTime;
 		this.refuseName = refuseName;
+		this.isComplete = isComplete;
+		this.isDb = isDb;
 		this.TCgjh = TCgjh;
 	}
 
@@ -264,6 +272,24 @@ public class TCgxqDet implements java.io.Serializable {
 		this.spje = spje;
 	}
 	
+	@Column(name = "dbsl", nullable = true, precision = 18, scale = 3)
+	public BigDecimal getDbsl() {
+		return dbsl;
+	}
+
+	public void setDbsl(BigDecimal dbsl) {
+		this.dbsl = dbsl;
+	}
+
+	@Column(name = "cdbsl", nullable = true, precision = 18, scale = 3)
+	public BigDecimal getCdbsl() {
+		return cdbsl;
+	}
+
+	public void setCdbsl(BigDecimal cdbsl) {
+		this.cdbsl = cdbsl;
+	}
+
 	@Column(name = "isCancel", nullable = false, length = 1)
 	public String getIsCancel() {
 		return isCancel;
@@ -338,6 +364,24 @@ public class TCgxqDet implements java.io.Serializable {
 		this.refuseTime = refuseTime;
 	}
 	
+	@Column(name = "isComplete", nullable = false, length = 1)
+	public String getIsComplete() {
+		return isComplete;
+	}
+	
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
+	}
+	
+	@Column(name = "isDb", nullable = false, length = 1)
+	public String getIsDb() {
+		return isDb;
+	}
+
+	public void setIsDb(String isDb) {
+		this.isDb = isDb;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cgjhlsh")
 	public TCgjh getTCgjh() {

@@ -19,7 +19,11 @@ public class YwhsDet {
 	private String zspbz;
 	private String zzjldwId;
 	private String zzjldwmc;
+	private String zcjldwId;
+	private String zcjldwmc;
+	private BigDecimal zzhxs;
 	private BigDecimal zzdwsl;
+	private BigDecimal zcdwsl;
 	private BigDecimal zzdwdj;
 	private BigDecimal zspje;
 	private BigDecimal zqdwcb;
@@ -32,7 +36,11 @@ public class YwhsDet {
 	private String jspbz;
 	private String jzjldwId;
 	private String jzjldwmc;
+	private String jcjldwId;
+	private String jcjldwmc;
+	private BigDecimal jzhxs;
 	private BigDecimal jzdwsl;
+	private BigDecimal jcdwsl;
 	private BigDecimal jzdwdj;
 	private BigDecimal jspje;
 	private BigDecimal jqdwcb;
@@ -46,7 +54,11 @@ public class YwhsDet {
 	private String spbz;
 	private String zjldwId;
 	private String zjldwmc;
+	private String cjldwId;
+	private String cjldwmc;
+	private BigDecimal zhxs;
 	private BigDecimal zdwsl;
+	private BigDecimal cdwsl;
 	private BigDecimal zdwdj;
 	private BigDecimal spje;
 	private String isZs;
@@ -106,11 +118,41 @@ public class YwhsDet {
 	public void setZzjldwmc(String zzjldwmc) {
 		this.zzjldwmc = zzjldwmc;
 	}
+	public String getZcjldwId() {
+		return zcjldwId;
+	}
+	public void setZcjldwId(String zcjldwId) {
+		this.zcjldwId = zcjldwId;
+	}
+	public String getZcjldwmc() {
+		return zcjldwmc;
+	}
+	public void setZcjldwmc(String zcjldwmc) {
+		this.zcjldwmc = zcjldwmc;
+	}
+	public BigDecimal getZzhxs() {
+		return zzhxs;
+	}
+	public void setZzhxs(BigDecimal zzhxs) {
+		this.zzhxs = zzhxs;
+	}
+	public BigDecimal getZhxs() {
+		return zhxs;
+	}
+	public void setZhxs(BigDecimal zhxs) {
+		this.zhxs = zhxs;
+	}
 	public BigDecimal getZzdwsl() {
 		return zzdwsl;
 	}
 	public void setZzdwsl(BigDecimal zzdwsl) {
 		this.zzdwsl = zzdwsl;
+	}
+	public BigDecimal getZcdwsl() {
+		return zcdwsl;
+	}
+	public void setZcdwsl(BigDecimal zcdwsl) {
+		this.zcdwsl = zcdwsl;
 	}
 	public BigDecimal getZzdwdj() {
 		return zzdwdj;
@@ -184,11 +226,35 @@ public class YwhsDet {
 	public void setJzjldwmc(String jzjldwmc) {
 		this.jzjldwmc = jzjldwmc;
 	}
+	public String getJcjldwId() {
+		return jcjldwId;
+	}
+	public void setJcjldwId(String jcjldwId) {
+		this.jcjldwId = jcjldwId;
+	}
+	public String getJcjldwmc() {
+		return jcjldwmc;
+	}
+	public void setJcjldwmc(String jcjldwmc) {
+		this.jcjldwmc = jcjldwmc;
+	}
+	public BigDecimal getJzhxs() {
+		return jzhxs;
+	}
+	public void setJzhxs(BigDecimal jzhxs) {
+		this.jzhxs = jzhxs;
+	}
 	public BigDecimal getJzdwsl() {
 		return jzdwsl;
 	}
 	public void setJzdwsl(BigDecimal jzdwsl) {
 		this.jzdwsl = jzdwsl;
+	}
+	public BigDecimal getJcdwsl() {
+		return jcdwsl;
+	}
+	public void setJcdwsl(BigDecimal jcdwsl) {
+		this.jcdwsl = jcdwsl;
 	}
 	public BigDecimal getJzdwdj() {
 		return jzdwdj;
@@ -262,11 +328,29 @@ public class YwhsDet {
 	public void setZjldwmc(String zjldwmc) {
 		this.zjldwmc = zjldwmc;
 	}
+	public String getCjldwId() {
+		return cjldwId;
+	}
+	public void setCjldwId(String cjldwId) {
+		this.cjldwId = cjldwId;
+	}
+	public String getCjldwmc() {
+		return cjldwmc;
+	}
+	public void setCjldwmc(String cjldwmc) {
+		this.cjldwmc = cjldwmc;
+	}
 	public BigDecimal getZdwsl() {
 		return zdwsl;
 	}
 	public void setZdwsl(BigDecimal zdwsl) {
 		this.zdwsl = zdwsl;
+	}
+	public BigDecimal getCdwsl() {
+		return cdwsl;
+	}
+	public void setCdwsl(BigDecimal cdwsl) {
+		this.cdwsl = cdwsl;
 	}
 	public BigDecimal getZdwdj() {
 		return zdwdj;

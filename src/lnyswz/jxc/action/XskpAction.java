@@ -1,13 +1,9 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -19,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.XskpServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 销售开票Action
  * @author 王文阳
@@ -27,7 +24,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("xskpAction")
 public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
-	private Logger logger = Logger.getLogger(XskpAction.class);
+	private static final long serialVersionUID = 1L;
 	private Xskp xskp = new Xskp();
 	private XskpServiceI xskpService;
 	
@@ -50,6 +47,27 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		}
 		writeJson(j);
 	}
+
+	/**
+	 * 保存返利数据
+	 */
+	public void saveXsfl(){
+		User user = (User)session.get("user");
+		xskp.setCreateId(user.getId());
+		xskp.setCreateName(user.getRealName());
+		Json j = new Json();
+		try{
+			j.setObj(xskpService.saveXsfl(xskp));		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("保存销售返利成功！");
+		}catch(Exception e){
+			j.setMsg("保存销售返利失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
 	
 	/**
 	 * 冲减单据
@@ -66,6 +84,26 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 			j.setMsg("冲减销售开票成功！");
 		}catch(Exception e){
 			j.setMsg("冲减销售开票失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	
+	/**
+	 * 冲减返利单据
+	 */
+	public void cjXsfl(){
+		User user = (User)session.get("user");
+		xskp.setCjId(user.getId());
+		xskp.setCjName(user.getRealName());
+		Json j = new Json();
+		try{
+			xskpService.cjXsfl(xskp);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("冲减销售成功！");
+		}catch(Exception e){
+			j.setMsg("冲减销售失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -99,11 +137,18 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		User user = (User)session.get("user");
 		xskp.setCreateName(user.getRealName());
 		DataGrid dg = xskpService.printXsqk(xskp);
-		Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));
+		Export.print(dg, Util.getReportName(xskp.getBmbh(), "report_xsqk.json"));
+		//Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		xskp.setCreateId(user.getId());
 		writeJson(xskpService.datagrid(xskp));
+	}
+	
+	public void datagridXsfl(){
+		writeJson(xskpService.datagridXsfl(xskp));
 	}
 	
 	public void detDatagrid(){

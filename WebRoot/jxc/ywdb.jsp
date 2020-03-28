@@ -8,6 +8,7 @@ var ywdb_lx;
 var ywdb_menuId;
 var ywdb_spdg;
 var ywdb_dg;
+var ywdb_cgxqDg;
 var ywdb_tabs;
 var jxc_ywdb_ckComboF;
 var jxc_ywdb_ckComboT;
@@ -22,8 +23,12 @@ var spcdEditor;
 var spppEditor;
 var spbzEditor;
 var zjldwEditor;
+var xqslEditor;
+var dbslEditor;
 var zslEditor;
 var cjldwEditor;
+var cxqslEditor;
+var cdbslEditor;
 var cslEditor;
 var zhxsEditor;
 var zjldwIdEditor;
@@ -131,6 +136,120 @@ $(function(){
         }
     });
 	
+	ywdb_cgxqDg = $('#jxc_ywdb_cgxqDg').datagrid({
+		fit : true,
+	    border : false,
+	    remoteSort: false,
+	    pagination : true,
+		pagePosition : 'bottom',
+		pageSize : pageSize,
+		pageList : pageList,
+		columns:[[
+			{field:'id',title:'记录号',align:'center',checkbox:true},
+			{field:'cgxqlsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'时间',align:'center'},
+			{field:'khbh',title:'客户编号',align:'center', hidden:true},
+	        {field:'khmc',title:'*客户名称',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
+			{field:'spbh',title:'*商品编号',align:'center', sortable:true,
+	        	sorter: function(a, b){
+	        		return a.localeCompare(b);
+	        	}},
+			{field:'spmc',title:'名称',align:'center'},
+			{field:'spcd',title:'*产地',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		if(typeof(a) == "string"){ 
+	        			return a.localeCompare(b); 
+	        		}
+	        	}},
+			{field:'sppp',title:'品牌',align:'center'},
+			{field:'spbz',title:'包装',align:'center'},
+			{field:'zjldwmc',title:'单位1',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				}},
+			{field:'zdwsl',title:'数量1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'dbsl',title:'调拨数量1',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				}},
+			{field:'cdbsl',title:'调拨数量2',align:'center',
+			   	formatter: function(value){
+			   		return value == 0 ? '' : value;
+					}},
+	        {field:'gysbh',title:'供应商编号',align:'center', hidden:true},
+	        {field:'gysmc',title:'供应商名称',align:'center'},
+	        
+	        {field:'createId',title:'创建人id',align:'center',hidden:true},
+	        {field:'createName',title:'业务员',align:'center'},
+// 	        {field:'dhfs',title:'到货方式',align:'center'},
+	        {field:'lxr',title:'联系人',align:'center'},
+	        {field:'shdz',title:'送货地址',align:'center'},
+	        {field:'jsfsmc',title:'结算方式',align:'center'},
+	        {field:'dhsj',title:'到货时间',align:'center'},
+// 	        {field:'xqsj',title:'需求时间',align:'center'},
+	        {field:'hjje',title:'金额',align:'center'},
+        	{field:'bz',title:'备注',align:'center',
+        		formatter: function(value){
+        			return lnyw.memo(value, 15);
+        		}},
+        	{field:'cgjhlsh',title:'采购计划流水号',align:'center',
+           		formatter: function(value){
+           			return lnyw.memo(value, 15);
+           		}},
+        	{field:'isLs',title:'*临时',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				},
+        		sorter: function(a,b){
+        			a = a == undefined ? 0 : a;
+        			b = b == undefined ? 0 : b;
+					return (a-b);  
+				}},
+//         	{field:'isCancel',title:'状态',align:'center',sortable:true,
+//         		formatter : function(value) {
+// 					if (value == '1') {
+// 						return '取消';
+// 					} else {
+// 						return '正常';
+// 					}
+// 				},
+//         		sorter: function(a,b){
+//         			a = a == undefined ? 0 : a;
+//         			b = b == undefined ? 0 : b;
+// 					return (a-b);  
+// 				}},
+//         	{field:'isCompleted',title:'完成',align:'center',sortable:true,
+//         		formatter : function(value) {
+// 					if (value == '1') {
+// 						return '是';
+// 					} else {
+// 						return '否';
+// 					}
+// 				},
+// 				sorter: function(a,b){
+// 	        			a = a == undefined ? 0 : a;
+// 	        			b = b == undefined ? 0 : b;
+// 						return (a-b);  
+// 				}},
+	    ]],
+	    toolbar:'#jxc_ywdb_cgxqTb',
+	});
+	lnyw.toolbar(2, ywdb_cgxqDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywdb_did);
 	
 	//选中列表标签后，装载数据
 	ywdb_tabs = $('#jxc_ywdb_tabs').tabs({
@@ -140,6 +259,15 @@ $(function(){
 					url: '${pageContext.request.contextPath}/jxc/ywdbAction!datagrid.action',
 					queryParams:{
 						bmbh: ywdb_did,
+					}
+				});
+			}
+			if(index == 2){
+				ywdb_cgxqDg.datagrid({
+					url: '${pageContext.request.contextPath}/jxc/cgxqAction!datagrid.action',
+					queryParams:{
+						bmbh: ywdb_did,
+						fromOther: 'fromYwdb',
 					}
 				});
 			}
@@ -156,10 +284,12 @@ $(function(){
 		columns:[[
 	        {field:'spbh',title:'商品编号',width:25,align:'center',editor:'text'},
 	        {field:'spmc',title:'商品名称',width:100,align:'center',editor:'textRead'},
-	        {field:'spcd',title:'商品产地',width:25,align:'center',editor:'textRead'},
-	        {field:'sppp',title:'商品品牌',width:25,align:'center',editor:'text',hidden:true},
-	        {field:'spbz',title:'商品包装',width:25,align:'center',editor:'text',hidden:true},
-	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead'},
+	        {field:'spcd',title:'商品产地',width:20,align:'center',editor:'textRead'},
+	        {field:'sppp',title:'商品品牌',width:20,align:'center',editor:'text',hidden:true},
+	        {field:'spbz',title:'商品包装',width:20,align:'center',editor:'text',hidden:true},
+	        {field:'zjldwmc',title:'单位1',width:15,align:'center',editor:'textRead'},
+	        {field:'xqsl',title:'需求1',width:20,align:'center',editor:'textRead'},
+       		{field:'dbsl',title:'调拨1',width:20,align:'center',editor:'textRead'},
 	        {field:'zdwsl',title:'数量1',width:25,align:'center',
 	        	editor:{
 	        		type:'numberbox',
@@ -167,7 +297,9 @@ $(function(){
 	        			//精度
 	        			precision:3,
 	        		}}},
-	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead'},
+	        {field:'cjldwmc',title:'单位2',width:15,align:'center',editor:'textRead'},
+        	{field:'cxqsl',title:'需求2',width:20,align:'center',editor:'textRead'},
+        	{field:'cdbsl',title:'调拨2',width:20,align:'center',editor:'textRead'},
 	        {field:'cdwsl',title:'数量2',width:25,align:'center',
 	        		editor:{
         				type:'numberbox',
@@ -178,6 +310,7 @@ $(function(){
         	{field:'zhxs',title:'转换系数',width:25,align:'center',editor:'text', hidden:true},
         	{field:'zjldwId',title:'主计量单位id',align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次计量单位id',align:'center',editor:'text', hidden:true},
+        	{field:'cgxqDetId',title:'采购需求Id',align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -374,6 +507,7 @@ function saveYwdb(){
 	effectRow['ckIdT'] = jxc_ywdb_ckComboT.combobox('getValue');
 	effectRow['ckmcT'] = jxc_ywdb_ckComboT.combobox('getText');
 	effectRow['bz'] = $('input[name=jxc_ywdb_bz]').val();
+	effectRow['cgxqlsh'] = $('input[name=cgxqlsh]').val();
 	effectRow['bmbh'] = ywdb_did;
 	effectRow['lxbh'] = ywdb_lx;
 	effectRow['menuId'] = ywdb_menuId;
@@ -382,6 +516,7 @@ function saveYwdb(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywdbAction!save.action',
@@ -398,6 +533,9 @@ function saveYwdb(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -415,12 +553,16 @@ function setEditing(){
     spppEditor = editors[3];
     spbzEditor = editors[4];
     zjldwEditor = editors[5];
-    zslEditor = editors[6];
-    cjldwEditor = editors[7];
-    cslEditor = editors[8];
-    zhxsEditor = editors[9];
-    zjldwIdEditor = editors[10];
-    cjldwIdEditor = editors[11];
+    xqslEditor = editors[6];
+    dbslEditor = editors[7];
+    zslEditor = editors[8];
+    cjldwEditor = editors[9];
+    cxqslEditor = editors[10];
+    cdbslEditor = editors[11];
+    cslEditor = editors[12];
+    zhxsEditor = editors[13];
+    zjldwIdEditor = editors[14];
+    cjldwIdEditor = editors[15];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_ywdb_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -475,7 +617,7 @@ function setEditing(){
     							//设置信息字段值
     							setValueBySpbh(data.obj);
     							//spOk = true;
-    							hwIdEditor.target.focus();
+    							zslEditor.target.focus();
     						}else{
     							$.messager.alert('提示', '商品编号不存在！', 'error');
     						}
@@ -521,15 +663,18 @@ function setEditing(){
     		return false;
     	}
     	
+    	var wdsl = (Number($(xqslEditor.target).val()) - Number($(dbslEditor.target).val())).toFixed(LENGTH_SL);
+    	if(Number($(zslEditor.target).val()) > wdsl && wdsl > 0){
+    		$.messager.alert("提示", "调拨数量不能大于需求数量，请重新输入！");
+    		$(zslEditor.target).numberbox('setValue', 0);
+    		zslEditor.target.focus();
+    		return false;
+    	}
+    	
     	if($(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
-    }).bind('keydown', function(event){
-     	if(event.keyCode == 9){
-     		bzslEditor.target.focus();
-     		return false;
-     	}
     });
     
     //汇总计算
@@ -614,7 +759,7 @@ function setValueBySpbh(rowData){
 
 //////////////////////////////////////////////以上为商品列表处理代码
 
-//////////////////////////////////////////////以下为库房入库划列表处理代码
+//////////////////////////////////////////////以下为业务调拨列表处理代码
 function cjYwdb(){
 	var row = ywdb_dg.datagrid('getSelected');
 	if (row != undefined) {
@@ -622,6 +767,7 @@ function cjYwdb(){
 			if(row.kfdblsh == null){
 				$.messager.prompt('请确认', '是否要冲减选中的业务调拨？请填写备注', function(bz){
 					if (bz != undefined){
+						//MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/ywdbAction!cjYwdb.action',
 							data : {
@@ -640,6 +786,9 @@ function cjYwdb(){
 									title : '提示',
 									msg : d.msg
 								});
+							},
+							complete: function(){
+								//MaskUtil.unmask();
 							}
 						});
 					}
@@ -664,6 +813,88 @@ function searchYwdb(){
 
 //////////////////////////////////////////////以上为业务调拨列表处理代码
 
+//////////////////////////////////////////////以下为采购需求列表处理代码
+
+function createYwdb(){
+	var rows = ywdb_cgxqDg.datagrid('getSelections');
+	var cgxqDetIds = [];
+	if(rows.length > 0){
+		var preRow = undefined;
+		var flag = true;
+	    $.each(rows, function(index){
+			cgxqDetIds.push(rows[index].id);
+	    	if(index != 0){
+	    		if(this.cgxqlsh != preRow.cgxqlsh){
+	    			$.messager.alert('提示', '请选择同一需求单的商品进行提货！', 'error');
+					flag = false;
+					//return false;
+	    		}else{
+	    			preRow = this;
+	    		}
+	    	}
+	    	preRow = this;
+	    });
+	    if(flag){
+	    	$.messager.confirm('请确认', '是否要将选中记录生成业务调拨？', function(r) {
+				if (r) {
+					var cgxqDetStr = cgxqDetIds.join(',');
+					
+					$.ajax({
+						url : '${pageContext.request.contextPath}/jxc/cgxqAction!toYwdb.action',
+						data : {
+							cgxqDetIds : cgxqDetStr,
+							bmbh: ywdb_did,
+							khbh: rows[0].khbh
+						},
+						dataType : 'json',
+						success : function(d) {
+							ywdb_spdg.datagrid('loadData', d.rows);
+							
+							$('input[name=cgxqlsh]').val(rows[0].cgxqlsh);
+							$('input[name=jxc_ywdb_bz]').val(rows[0].bz);
+							jxc_ywdb_ckComboT.combobox('setValue', jxc.getCkByKhbh(ywdb_did, rows[0].khbh));
+							
+							ywdb_tabs.tabs('select', 0);
+						}
+					});
+				}
+			});
+	    }
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}	
+	
+function completeCgxq(){
+	var row = ywdb_cgxqDg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '您要调拨完成选中的采购需求单？', function(r) {
+			if (r) {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/cgxqAction!dbxq.action',
+					data : {
+						id : row.id,
+						bmbh : ywdb_did,
+						menuId : ywdb_menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						ywdb_cgxqDg.datagrid('reload');
+						ywdb_cgxqDg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
+						});
+					}
+				});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+	}
+}
+
+//////////////////////////////////////////////以上为采购需求列表处理代码
 
 </script>
 
@@ -686,6 +917,7 @@ function searchYwdb(){
 						<th>备注</th><td colspan="7"><input name="jxc_ywdb_bz" style="width:90%"></td>
 					</tr>
 				</table>
+				<input name="cgxqlsh" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_ywdb_spdg'></table>
@@ -698,9 +930,17 @@ function searchYwdb(){
     <div title="业务调拨列表" data-options="closable:false" >
     	<table id='jxc_ywdb_dg'></table>
     </div>
+    <div title="采购需求列表" data-options="closable:false" >
+			<table id='jxc_ywdb_cgxqDg'></table>
+	</div>
 </div>
 
 <div id="jxc_ywdb_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeYwdb" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwdb();">查询</a>
+</div>
+<div id="jxc_ywdb_cgxqTb" style="padding:3px;height:auto">
+<!-- 	请输入查询起始日期:<input type="text" name="createTimeCgxqInCgjh" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px"> -->
+	输入流水号、客户编号、名称、备注：<input type="text" name="searchCgxqInYwdb" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxqInYwdb();">查询</a>
 </div>

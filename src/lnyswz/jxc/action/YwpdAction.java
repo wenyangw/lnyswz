@@ -1,21 +1,8 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
-
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -27,6 +14,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwpdServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务盘点Action
@@ -37,7 +25,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywpdAction")
 public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
-	private Logger logger = Logger.getLogger(YwpdAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywpd ywpd = new Ywpd();
 	private YwpdServiceI ywpdService;
 
@@ -85,7 +73,8 @@ public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
 		User user = (User) session.get("user");
 		ywpd.setCreateName(user.getRealName());
 		DataGrid dg = ywpdService.printYwpd(ywpd);
-		Export.print(dg, Constant.REPORT_YWPD.get(ywpd.getBmbh()));
+		Export.print(dg, Util.getReportName(ywpd.getBmbh(), "report_ywpd.json"));
+		//Export.print(dg, Constant.REPORT_YWPD.get(ywpd.getBmbh()));
 	}
 	
 	public void getSpkc(){
@@ -97,6 +86,8 @@ public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
 	}
 
 	public void datagrid() {
+		User user = (User) session.get("user");
+		ywpd.setCreateId(user.getId());
 		writeJson(ywpdService.datagrid(ywpd));
 	}
 

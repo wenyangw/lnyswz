@@ -1,13 +1,9 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
-
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -19,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 /**
  * 采购需求Action
  * @author 王文阳
@@ -27,7 +24,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("kfrkAction")
 public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
-	private Logger logger = Logger.getLogger(KfrkAction.class);
+	private static final long serialVersionUID = 1L;
 	private Kfrk kfrk = new Kfrk();
 	private KfrkServiceI kfrkService;
 	
@@ -60,10 +57,10 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 		kfrk.setCjName(user.getRealName());
 		Json j = new Json();
 		try{
-			kfrkService.cjKfrk(kfrk);		
-			//添加成功
-			j.setSuccess(true);
-			j.setMsg("冲减库房入库单成功！");
+			j = kfrkService.cjKfrk(kfrk);
+//			//添加成功
+//			j.setSuccess(true);
+//			j.setMsg("冲减库房入库单成功！");
 		}catch(Exception e){
 			j.setMsg("冲减库房入库单失败！");
 			e.printStackTrace();
@@ -72,22 +69,36 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 	}
 	
 	public void datagrid(){
+		User user = (User)session.get("user");
+		//文达纸业鄂姹查看库房入库列表时按胡叶权限查看
+		if(kfrk.getFromOther() == null && kfrk.getBmbh().equals("05") && user.getId() == 79){
+			kfrk.setCreateId(50);
+		}else {
+			kfrk.setCreateId(user.getId());
+		}
+
 		writeJson(kfrkService.datagrid(kfrk));
 	}
 	
 	public void detDatagrid(){
 		writeJson(kfrkService.detDatagrid(kfrk.getKfrklsh()));
 	}
-	
+
 	public void toYwrk(){
 		writeJson(kfrkService.toYwrk(kfrk.getKfrklshs()));
 	}
-	
+
 	public void printKfrk() {
 		User user = (User)session.get("user");
 		kfrk.setCreateName(user.getRealName());
 		DataGrid dg = kfrkService.printKfrk(kfrk);
-		Export.print(dg, Constant.REPORT_KFRK.get(kfrk.getBmbh()));
+		Export.print(dg, Util.getReportName(kfrk.getBmbh(), "report_kfrk.json"));
+	}
+
+	public void loadKfrk() {
+        User user = (User)session.get("user");
+        kfrk.setCreateId(user.getId());
+		writeJson(kfrkService.loadKfrk(kfrk));
 	}
 	
 	@Override

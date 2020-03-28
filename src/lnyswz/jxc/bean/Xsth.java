@@ -58,7 +58,23 @@ public class Xsth {
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
-	
+	private String needAuditXsjj;
+	private String isAuditXsjj;
+	private BigDecimal ysfy;
+	private BigDecimal yysfy;
+	private int payDays;
+	private String verifyCode;
+	private String out;
+	private Integer outId;
+	private String outName;
+	private Date outTime;
+	private String sended;
+	private Integer sendId;
+	private String sendName;
+	private Date sendTime;
+	private String isFp;
+	private String source;
+		
 	private int id;
 	private String spbh;
 	private String spmc;
@@ -76,15 +92,26 @@ public class Xsth {
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
 	private BigDecimal cksl;
+	private BigDecimal ccksl;
 	private BigDecimal kpsl;
+	private BigDecimal ckpsl;
 	private BigDecimal thsl;
 	private String kfcklshs;
 	
 	private String search;
+	private Date endTime;
 	
+	private String type;
+
+	private String carNum;
 	private String xskplsh;
+	private String cgjhlsh;
+	private String ywrklsh;
 	private String xsthDetIds;
 	private String xskpDetIds;
+	
+	//接收直送业务入库传递的id
+	private String ywrkDetIds;
 	
 	private String shbz;
 	
@@ -419,6 +446,130 @@ public class Xsth {
 	public void setIsAudit(String isAudit) {
 		this.isAudit = isAudit;
 	}
+
+	public String getNeedAuditXsjj() {
+		return needAuditXsjj;
+	}
+
+	public void setNeedAuditXsjj(String needAuditXsjj) {
+		this.needAuditXsjj = needAuditXsjj;
+	}
+
+	public String getIsAuditXsjj() {
+		return isAuditXsjj;
+	}
+
+	public void setIsAuditXsjj(String isAuditXsjj) {
+		this.isAuditXsjj = isAuditXsjj;
+	}
+
+	public BigDecimal getYsfy() {
+		return ysfy;
+	}
+	public void setYsfy(BigDecimal ysfy) {
+		this.ysfy = ysfy;
+	}
+	public BigDecimal getYysfy() {
+		return yysfy;
+	}
+	public void setYysfy(BigDecimal yysfy) {
+		this.yysfy = yysfy;
+	}
+	public int getPayDays() {
+		return payDays;
+	}
+	public void setPayDays(int payDays) {
+		this.payDays = payDays;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	public String getOut() {
+		return out;
+	}
+
+	public void setOut(String out) {
+		this.out = out;
+	}
+
+	public Integer getOutId() {
+		return outId;
+	}
+
+	public void setOutId(Integer outId) {
+		this.outId = outId;
+	}
+
+	public String getOutName() {
+		return outName;
+	}
+
+	public void setOutName(String outName) {
+		this.outName = outName;
+	}
+
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	public String getSended() {
+		return sended;
+	}
+
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	public Integer getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -521,11 +672,23 @@ public class Xsth {
 	public void setCksl(BigDecimal cksl) {
 		this.cksl = cksl;
 	}
+	public BigDecimal getCcksl() {
+		return ccksl;
+	}
+	public void setCcksl(BigDecimal ccksl) {
+		this.ccksl = ccksl;
+	}
 	public BigDecimal getKpsl() {
 		return kpsl;
 	}
 	public void setKpsl(BigDecimal kpsl) {
 		this.kpsl = kpsl;
+	}
+	public BigDecimal getCkpsl() {
+		return ckpsl;
+	}
+	public void setCkpsl(BigDecimal ckpsl) {
+		this.ckpsl = ckpsl;
 	}
 	public BigDecimal getThsl() {
 		return thsl;
@@ -551,11 +714,29 @@ public class Xsth {
 	public void setSearch(String search) {
 		this.search = search;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getXskplsh() {
 		return xskplsh;
 	}
 	public void setXskplsh(String xskplsh) {
 		this.xskplsh = xskplsh;
+	}
+	public String getCgjhlsh() {
+		return cgjhlsh;
+	}
+	public void setCgjhlsh(String cgjhlsh) {
+		this.cgjhlsh = cgjhlsh;
+	}
+	public String getYwrklsh() {
+		return ywrklsh;
+	}
+	public void setYwrklsh(String ywrklsh) {
+		this.ywrklsh = ywrklsh;
 	}
 	public String getXsthDetIds() {
 		return xsthDetIds;
@@ -568,6 +749,12 @@ public class Xsth {
 	}
 	public void setXskpDetIds(String xskpDetIds) {
 		this.xskpDetIds = xskpDetIds;
+	}
+	public String getYwrkDetIds() {
+		return ywrkDetIds;
+	}
+	public void setYwrkDetIds(String ywrkDetIds) {
+		this.ywrkDetIds = ywrkDetIds;
 	}
 	public BigDecimal getZdwthsl() {
 		return zdwthsl;
@@ -635,7 +822,20 @@ public class Xsth {
 	public void setShbz(String shbz) {
 		this.shbz = shbz;
 	}
-	
-	
-	
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(String carNum) {
+		this.carNum = carNum;
+	}
 }

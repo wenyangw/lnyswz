@@ -9,4 +9,5 @@ public interface KfhsServiceI {
 	public void cjKfhs(Kfhs kfhs);
 	public DataGrid datagrid(Kfhs kfhs);
 	public DataGrid detDatagrid(String kfhslsh);
+	public DataGrid printKfhs(Kfhs kfhs);
 }

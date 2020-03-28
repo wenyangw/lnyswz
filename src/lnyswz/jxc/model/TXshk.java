@@ -38,6 +38,7 @@ public class TXshk implements java.io.Serializable {
 	private String ywymc;
 	private BigDecimal hkje;
 	private BigDecimal lastHkje;
+	private BigDecimal yfje;
 	private Date payTime;
 	private String isLs;
 	private String isYf;
@@ -52,7 +53,7 @@ public class TXshk implements java.io.Serializable {
 	}
 
 	public TXshk(String xshklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh,
-			String khmc, BigDecimal hkje, BigDecimal lastHkje, String isYf, String isCancel, Integer cancelId, String cancelName, Date cancelTime,
+			String khmc, BigDecimal hkje, BigDecimal lastHkje, BigDecimal yfje, String isYf, String isCancel, Integer cancelId, String cancelName, Date cancelTime,
 			String cancelXshklsh, Set<THkKp> THkKps) {
 		this.xshklsh = xshklsh;
 		this.createTime = createTime;
@@ -64,6 +65,7 @@ public class TXshk implements java.io.Serializable {
 		this.khmc = khmc;
 		this.hkje = hkje;
 		this.lastHkje = lastHkje;
+		this.yfje = yfje;
 		this.isYf = isYf;
 		this.isCancel = isCancel;
 		this.cancelId = cancelId;
@@ -182,6 +184,15 @@ public class TXshk implements java.io.Serializable {
 
 	public void setLastHkje(BigDecimal lastHkje) {
 		this.lastHkje = lastHkje;
+	}
+
+	@Column(name = "yfje", nullable = false, precision = 18, scale = 4)
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

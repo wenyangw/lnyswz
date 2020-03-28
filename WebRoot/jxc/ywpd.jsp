@@ -26,6 +26,7 @@ var zjldwEditor;
 var zslEditor;
 var zdjEditor;
 var cjldwEditor;
+var cslEditor;
 var spjeEditor;
 var zhxsEditor;
 var zjldwIdEditor;
@@ -257,14 +258,14 @@ $(function(){
     	        	options:{
     	        		precision: LENGTH_JE
     	        }}},		
-  	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead',hidden:true},
-// 	        {field:'cdwsl',title:'数量2',width:25,align:'center',
-// 	        		editor:{
-//         				type:'numberbox',
-//         				options:{
-//         					//精度
-//         					precision:LENGTH_SL,
-//         			}}},
+  	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead'},
+	        {field:'cdwsl',title:'数量2',width:25,align:'center',
+	        		editor:{
+        				type:'numberbox',
+        				options:{
+        					//精度
+        					precision:LENGTH_SL,
+        			}}},
 //    			{field:'cdwdj',title:'单价2',width:25,align:'center',
 //     	        editor:{
 //     	        	type:'numberbox',
@@ -494,6 +495,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywpdAction!save.action',
@@ -516,6 +518,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -534,10 +539,11 @@ function setEditing(){
     zslEditor = editors[6];
     zdjEditor = editors[7];
     cjldwEditor = editors[8];
-    spjeEditor = editors[9];
-    zhxsEditor = editors[10];
-    zjldwIdEditor = editors[11];
-    cjldwIdEditor = editors[12];
+    cslEditor = editors[9];
+    spjeEditor = editors[10];
+    zhxsEditor = editors[11];
+    zjldwIdEditor = editors[12];
+    cjldwIdEditor = editors[13];
     
     
     if($(spbhEditor.target).val() != ''){
@@ -620,14 +626,17 @@ function setEditing(){
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
-//     	if($(zhxsEditor.target).val() != 0){
-//     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
-//     	}
+    	
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
+    		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+    	}
     	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		zdjEditor.target.focus();
-//      		return false;
+//      	return false;
      	}
     });
     
@@ -643,17 +652,19 @@ function setEditing(){
      	}
     });
     
-//     cslEditor.target.bind('keyup', function(event){
-//     	if($(zhxsEditor.target).val() != 0){
-//     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
-//     	}
-//     	calculate();
-//     }).bind('keydown', function(event){
-//      	if(event.keyCode == 9){
-//      		cdjEditor.target.focus();
-//      		return false;
-//      	}
-//     });
+    cslEditor.target.bind('keyup', function(event){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
+    		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    	}
+    	calculate();
+    }).bind('keydown', function(event){
+     	if(event.keyCode == 9){
+     		cdjEditor.target.focus();
+     		return false;
+     	}
+    });
     
   	//输入次单位单价后，计算金额
 //     cdjEditor.target.bind('keyup', function(event){
@@ -820,6 +831,7 @@ function cjYwpd(){
 			if(row.kfpdlsh == undefined){
 				$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
 					if (bz != undefined){
+						//MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/ywpdAction!cjYwpd.action',
 							data : {
@@ -840,10 +852,13 @@ function cjYwpd(){
 								});
 								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 									if (r) {
-										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + d.obj.pdlxId;
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW); 
 									}
 								});
+							},
+							complete: function(){
+								//MaskUtil.unmask();
 							}
 						});
 					}
@@ -865,7 +880,7 @@ function printYwpd(){
 	if (row != undefined) {
 		$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + row.ywpdlsh + '&bmbh=' + did;
+				var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + row.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + row.pdlxId;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});

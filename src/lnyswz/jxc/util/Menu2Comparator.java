@@ -30,7 +30,13 @@ public class Menu2Comparator implements Comparator<Menu> {
 		}
 		//均为二级菜单
 		if(o1.getPid() != null && o2.getPid() != null){
-			i = o1.getOrderNum() - o2.getOrderNum();
+			if(o1.getText().compareTo(o2.getText()) < 0){
+				i = -1;
+			}else if(o1.getText().compareTo(o2.getText()) > 0){
+				i = 1;
+			}else{
+				i = o1.getOrderNum() - o2.getOrderNum();
+			}
 		}
 		return i;
 	}

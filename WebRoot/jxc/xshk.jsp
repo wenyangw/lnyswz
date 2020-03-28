@@ -41,10 +41,6 @@ $(function(){
 	jxc_xshk_ywyCombo = lnyw.initCombo($("#jxc_xshk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xshk_did);
 	
 	xshk_khDg = $('#jxc_xshk_khDg').datagrid({
-// 		url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',
-// 		queryParams :{
-// 			depId : xshk_did,
-// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -73,10 +69,6 @@ $(function(){
 	});
 	
 	xshk_dg = $('#jxc_xshk_dg').datagrid({
-// 		url:'${pageContext.request.contextPath}/jxc/xshkAction!datagrid.action',
-// 		queryParams:{
-// 			bmbh:xshk_did,
-// 		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -90,7 +82,8 @@ $(function(){
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},
-        	{field:'payTime',title:'回款时间',width:100,align:'center',
+	        {field:'createName',title:'创建人',width:100,align:'center'},
+	        {field:'payTime',title:'回款时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},	
@@ -178,10 +171,6 @@ $(function(){
 		fit : true,
 	    border : false,
 	    singleSelect : true,
-// 	    pagination : true,
-// 		pagePosition : 'bottom',
-// 		pageSize : pageSize,
-// 		pageList : pageList,
 		columns:[[
 	        {field:'xskplsh',title:'流水号',width:100,align:'center'},
 	        {field:'createTime',title:'发票时间',width:100,align:'center',
@@ -273,24 +262,19 @@ $(function(){
 		 			depId : xshk_did,
 		 			ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 		 		},
-
-// 				'load', {
-// 				depId: xshk_did,
-// 				ywyId: jxc_xshk_ywyCombo.combobox('getValue')
 			});
 			xshk_khDg.datagrid('enableFilter');
 		}
 	});
 	
 	$('#hkje').keyup(function() {
+		
+		//如回款为历史陈欠，不处理下面的代码
 		if($('input[name=isLs]').is(':checked')){
 			return false;
 		}
 		
 		countHk = 0;
-// 		if(rows == undefined){
-// 			rows = xshk_xskpDg.datagrid('getRows');
-// 		}
 		//本次回款金额
 		je = Number($('#hkje').val());
 		if(rows != undefined){
@@ -336,6 +320,7 @@ $(function(){
 				$('input[name=isLs]').removeProp('checked');
 				return false;
 			}
+			//清除已填写的销售发票明细数据
 			var rows = xshk_xskpDg.datagrid('getRows');
 			if(rows != undefined){
 				$.each(rows, function(index){
@@ -358,12 +343,8 @@ function init(){
 	//清空全部字段
 	$('input[name=hkje]').val('');
 	
-	//$('input:checkbox').removeAttr('checked');
-	//$('input:checkbox').removeProp('checked');
 	$('input:checkbox').prop('checked', false);
-	
-	//jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
-	
+
 	rows = undefined;
 	
 	//初始化创建时间
@@ -388,8 +369,6 @@ function init(){
 }
 
 function selectKh(rowData){
-	//xshk_xskpDg.datagrid('clear');
-	//var row = xshk_khDg.datagrid('getSelected');
 	xshk_xskpDg.datagrid({
 		url:'${pageContext.request.contextPath}/jxc/xskpAction!getXskpNoHk.action',
 		queryParams:{
@@ -445,6 +424,7 @@ function saveAll(){
 	effectRow['payTime'] = $('input[name=payTime]').val();
 	effectRow['lastHkje'] = rows.size > 0 ? rows[countHk - 1].hkje : 0;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
+	effectRow['yfje'] = je.toFixed(2);
 	effectRow['isLs'] = $('input[name=isLs]').is(':checked') ? '1' : '0';
 	
 	effectRow['bmbh'] = xshk_did;
@@ -521,6 +501,81 @@ function printXshk(){
 	}
 }
 
+function exportXshk(){
+	var khbh = $('#khbh').html();
+	if(khbh != ''){
+		var ywyId = jxc_xshk_ywyCombo.combobox('getValue');
+		
+		var dialog = $('#jxc_xshk_dateDialog');
+		dialog.dialog({
+			title : '请选择统计时间',
+			//href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
+			width : 240,
+			height : 120,
+			buttons : [{
+				text : '确定',
+				handler : function() {
+					var selectTime = $('input#selectTime').val();
+					if(selectTime != ''){
+						//var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
+						//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						var data = {
+								bmbh: xshk_did,
+								khbh: khbh,
+								ywyId: ywyId,
+								selectTime: selectTime,
+								//type: 'rtf'
+							};
+						jxc.export('${pageContext.request.contextPath}', '/jxc/xshkAction!exportXshk.action', data);
+						
+// 						$.ajax({	
+// 							url:'${pageContext.request.contextPath}/jxc/xshkAction!exportXshk.action',
+// 							async: false,
+// 							cache: false,
+// 							context:this,	
+// 							data : {
+// 								bmbh: xshk_did,
+// 								khbh: khbh,
+// 								ywyId: ywyId,
+// 								selectTime: selectTime
+// 							},
+// 							success:function(data){
+// 								var json = $.parseJSON(data);
+								
+// 								window.open("${pageContext.request.contextPath}/"+json.obj);
+								
+// 								$.messager.show({
+// 									title : "提示",
+// 									msg : json.msg
+// 								});
+// 							},
+// 							complete: function(){
+// 								//lnyw.MaskUtil.unmask();
+// 							}
+// 						});
+						
+						dialog.dialog('close');
+					}else{
+						$.messager.alert('提示', '请选择打印时间！', 'error');
+						return false;
+					}
+				},
+			},{
+				text : '取消',
+				handler : function() {
+					dialog.dialog('close');
+				},
+			}],
+			onLoad : function() {
+				
+			}
+		});
+	}else{
+		$.messager.alert('提示', '没有选中客户进行打印,请重新操作！', 'error');
+		return false;
+	}
+}
+
 //////////////////////////////////////////////以下为销售回款列表处理代码
 function cancelXshk(){
 	var row = xshk_dg.datagrid('getSelected');
@@ -570,9 +625,9 @@ function searchXshk(){
 </script>
 <div id="jxc_xshk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
-		<div id='jxc_xshk_layout' style="height:100%;width=100%">
+		<div id='jxc_xshk_layout' style="height:100%;width:100%;">
 			<div data-options="region:'west',title:'业务员-客户',split:true" style="height:100%;width:300px">
-				<div id='jxc_xshk_khLayout' style="height:100%;width=100%">
+				<div id='jxc_xshk_khLayout' style="height:100%;width:100%;">
 					<div data-options="region:'north',title:'业务员',split:true" style="height:80px;width:100%">
 						请选择业务员：<input id="jxc_xshk_ywyId" name="ywyId" size="16">
 					</div>
@@ -582,7 +637,7 @@ function searchXshk(){
 				</div>
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
-		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width=100%">
+		    	<div id='jxc_xshk_xskpLayout' style="height:100%;width:100%;">
 					<div data-options="region:'north',title:'商品分类',split:true" style="height:140px;width:100%">
 						<table class="tinfo">
 							<tr>

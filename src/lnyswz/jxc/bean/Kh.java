@@ -1,6 +1,7 @@
 package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Kh {
 	private String khbh;
@@ -10,6 +11,7 @@ public class Kh {
 	private String sh;
 	private String fr;
 	private String address;
+	private String dist;
 	private String isNsr;
 	private int page;
 	private int rows;
@@ -33,7 +35,15 @@ public class Kh {
 	private BigDecimal yszje;
 	private String isUp;
 	private int postponeDay;
-	
+	private Date payTime;
+	private Integer cqDays;
+	private String isOther;
+	private String isDef;
+	private String info;
+	private String isLocked;
+	private BigDecimal limitPer;
+	private BigDecimal limitJe;
+
 	private String detId;
 	private String query;
 	
@@ -91,6 +101,14 @@ public class Kh {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getDist() {
+		return dist;
+	}
+
+	public void setDist(String dist) {
+		this.dist = dist;
 	}
 
 	public String getIsNsr() {
@@ -261,6 +279,62 @@ public class Kh {
 		this.postponeDay = postponeDay;
 	}
 
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+
+	public Integer getCqDays() {
+		return cqDays;
+	}
+
+	public void setCqDays(Integer cqDays) {
+		this.cqDays = cqDays;
+	}
+
+	public String getIsOther() {
+		return isOther;
+	}
+
+	public void setIsOther(String isOther) {
+		this.isOther = isOther;
+	}
+
+	public BigDecimal getLimitPer() {
+		return limitPer;
+	}
+
+	public void setLimitPer(BigDecimal limitPer) {
+		this.limitPer = limitPer;
+	}
+
+	public BigDecimal getLimitJe() {
+		return limitJe;
+	}
+
+	public void setLimitJe(BigDecimal limitJe) {
+		this.limitJe = limitJe;
+	}
+
+	public String getIsLocked() {
+		return isLocked;
+	}
+
+	public void setIsLocked(String isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	public String getIsDef() {
+		return isDef;
+	}
+
+	public void setIsDef(String isDef) {
+		this.isDef = isDef;
+	}
+
 	public String getDetId() {
 		return detId;
 	}
@@ -293,4 +367,11 @@ public class Kh {
 		this.userId = userId;
 	}
 
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
 }

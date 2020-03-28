@@ -34,12 +34,29 @@ public class Ywrk {
 	private String isDep;
 	private String depId;
 	private String depName;
+	private String beYwrklsh;
 	private String menuId;
 	private String lxbh;
 	
 	private String search;
 	
+	private int id;
 	private String spbh;
+	private String spmc;
+	private String spcd;
+	private String sppp;
+	private String spbz;
+	private String zjldwmc;
+	private String cjldwId;
+	private String cjldwmc;
+	private BigDecimal zdwsl;
+	private BigDecimal cdwsl;
+	private BigDecimal thsl;
+	private BigDecimal cthsl;
+	private BigDecimal zdwdj;
+	private BigDecimal cdwdj;
+	private BigDecimal spje;
+	
 	//前台传入明细json
 	private String datagrid;
 	private int page;
@@ -52,6 +69,8 @@ public class Ywrk {
 	private String ywbtlsh;
 	//来自采购计划直送的明细id
 	private String cgjhDetIds;
+	//由直送业务入库生成提货单时传入的参数
+	private String ywrkDetIds;
 	
 	//--采购计划直送导入流水号
 	private String cgjhlshs;
@@ -251,6 +270,14 @@ public class Ywrk {
 		this.depName = depName;
 	}
 
+	public String getBeYwrklsh() {
+		return beYwrklsh;
+	}
+
+	public void setBeYwrklsh(String beYwrklsh) {
+		this.beYwrklsh = beYwrklsh;
+	}
+
 	public String getLxbh() {
 		return lxbh;
 	}
@@ -275,12 +302,132 @@ public class Ywrk {
 		this.menuId = menuId;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getSpbh() {
 		return spbh;
 	}
 
 	public void setSpbh(String spbh) {
 		this.spbh = spbh;
+	}
+
+	public String getSpmc() {
+		return spmc;
+	}
+
+	public void setSpmc(String spmc) {
+		this.spmc = spmc;
+	}
+
+	public String getSpcd() {
+		return spcd;
+	}
+
+	public void setSpcd(String spcd) {
+		this.spcd = spcd;
+	}
+
+	public String getSppp() {
+		return sppp;
+	}
+
+	public void setSppp(String sppp) {
+		this.sppp = sppp;
+	}
+
+	public String getSpbz() {
+		return spbz;
+	}
+
+	public void setSpbz(String spbz) {
+		this.spbz = spbz;
+	}
+
+	public String getZjldwmc() {
+		return zjldwmc;
+	}
+
+	public void setZjldwmc(String zjldwmc) {
+		this.zjldwmc = zjldwmc;
+	}
+
+	public String getCjldwId() {
+		return cjldwId;
+	}
+
+	public void setCjldwId(String cjldwId) {
+		this.cjldwId = cjldwId;
+	}
+
+	public String getCjldwmc() {
+		return cjldwmc;
+	}
+
+	public void setCjldwmc(String cjldwmc) {
+		this.cjldwmc = cjldwmc;
+	}
+
+	public BigDecimal getZdwsl() {
+		return zdwsl;
+	}
+
+	public void setZdwsl(BigDecimal zdwsl) {
+		this.zdwsl = zdwsl;
+	}
+
+	public BigDecimal getCdwsl() {
+		return cdwsl;
+	}
+
+	public void setCdwsl(BigDecimal cdwsl) {
+		this.cdwsl = cdwsl;
+	}
+
+	public BigDecimal getThsl() {
+		return thsl;
+	}
+
+	public void setThsl(BigDecimal thsl) {
+		this.thsl = thsl;
+	}
+
+	public BigDecimal getCthsl() {
+		return cthsl;
+	}
+
+	public void setCthsl(BigDecimal cthsl) {
+		this.cthsl = cthsl;
+	}
+
+	public BigDecimal getZdwdj() {
+		return zdwdj;
+	}
+
+	public void setZdwdj(BigDecimal zdwdj) {
+		this.zdwdj = zdwdj;
+	}
+
+	public BigDecimal getCdwdj() {
+		return cdwdj;
+	}
+
+	public void setCdwdj(BigDecimal cdwdj) {
+		this.cdwdj = cdwdj;
+	}
+
+	public BigDecimal getSpje() {
+		return spje;
+	}
+
+	public void setSpje(BigDecimal spje) {
+		this.spje = spje;
 	}
 
 	public String getDatagrid() {
@@ -337,6 +484,14 @@ public class Ywrk {
 
 	public void setCgjhDetIds(String cgjhDetIds) {
 		this.cgjhDetIds = cgjhDetIds;
+	}
+
+	public String getYwrkDetIds() {
+		return ywrkDetIds;
+	}
+
+	public void setYwrkDetIds(String ywrkDetIds) {
+		this.ywrkDetIds = ywrkDetIds;
 	}
 
 	public String getXskplsh() {

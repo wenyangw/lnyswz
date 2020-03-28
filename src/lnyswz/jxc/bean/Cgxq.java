@@ -27,7 +27,7 @@ public class Cgxq {
 	private String lxr;
 	private String shdz;
 	private Date dhsj;
-	private Integer xqsj;
+	private Date xqsj;
 	private String jsfsId;
 	private String jsfsmc;
 	private BigDecimal hjje;
@@ -40,6 +40,8 @@ public class Cgxq {
 	private Integer refuseId;
 	private Date refuseTime;
 	private String refuseName;
+	private String isComplete;
+	private String isDb;
 	private String spbh;
 	private String spmc;
 	private String spcd;
@@ -57,9 +59,15 @@ public class Cgxq {
 	private BigDecimal zdwxsdj;
 	private BigDecimal cdwxsdj;
 	private BigDecimal spje;
+	private BigDecimal dbsl;
+	private BigDecimal cdbsl;
 	private String cgjhlsh;
 	private String isLs;
+	private String isZs;
+	private String needAudit;
+	private String isAudit;
 	
+	private String ckId;
 	private String search;
 	private BigDecimal rksl;
 	
@@ -170,11 +178,11 @@ public class Cgxq {
 		this.dhsj = dhsj;
 	}
 
-	public Integer getXqsj() {
+	public Date getXqsj() {
 		return xqsj;
 	}
 
-	public void setXqsj(Integer xqsj) {
+	public void setXqsj(Date xqsj) {
 		this.xqsj = xqsj;
 	}
 
@@ -304,6 +312,22 @@ public class Cgxq {
 
 	public void setRefuseName(String refuseName) {
 		this.refuseName = refuseName;
+	}
+
+	public String getIsComplete() {
+		return isComplete;
+	}
+
+	public void setIsComplete(String isComplete) {
+		this.isComplete = isComplete;
+	}
+
+	public String getIsDb() {
+		return isDb;
+	}
+
+	public void setIsDb(String isDb) {
+		this.isDb = isDb;
 	}
 
 	public int getId() {
@@ -450,6 +474,22 @@ public class Cgxq {
 		this.spje = spje;
 	}
 
+	public BigDecimal getDbsl() {
+		return dbsl;
+	}
+
+	public void setDbsl(BigDecimal dbsl) {
+		this.dbsl = dbsl;
+	}
+
+	public BigDecimal getCdbsl() {
+		return cdbsl;
+	}
+
+	public void setCdbsl(BigDecimal cdbsl) {
+		this.cdbsl = cdbsl;
+	}
+
 	public String getSearch() {
 		return search;
 	}
@@ -464,6 +504,14 @@ public class Cgxq {
 
 	public void setRksl(BigDecimal rksl) {
 		this.rksl = rksl;
+	}
+
+	public String getCkId() {
+		return ckId;
+	}
+
+	public void setCkId(String ckId) {
+		this.ckId = ckId;
 	}
 
 	public String getMenuId() {
@@ -514,12 +562,36 @@ public class Cgxq {
 		this.fromOther = fromOther;
 	}
 
+	public String getIsZs() {
+		return isZs;
+	}
+
+	public void setIsZs(String isZs) {
+		this.isZs = isZs;
+	}
+
 	public String getIsLs() {
 		return isLs;
 	}
 
 	public void setIsLs(String isLs) {
 		this.isLs = isLs;
+	}
+
+	public String getNeedAudit() {
+		return needAudit;
+	}
+
+	public void setNeedAudit(String needAudit) {
+		this.needAudit = needAudit;
+	}
+
+	public String getIsAudit() {
+		return isAudit;
+	}
+
+	public void setIsAudit(String isAudit) {
+		this.isAudit = isAudit;
 	}
 
 	public int getPage() {

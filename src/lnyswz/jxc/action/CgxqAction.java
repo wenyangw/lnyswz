@@ -1,7 +1,6 @@
 package lnyswz.jxc.action;
 
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Cgxq;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.CgxqServiceI;
+import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求Action
@@ -23,7 +26,7 @@ import lnyswz.jxc.service.CgxqServiceI;
 @Namespace("/jxc")
 @Action("cgxqAction")
 public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
-	private Logger logger = Logger.getLogger(CgxqAction.class);
+	private static final long serialVersionUID = 1L;
 	private Cgxq cgxq = new Cgxq();
 	private CgxqServiceI cgxqService;
 	
@@ -36,7 +39,7 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		cgxq.setCreateName(user.getRealName());
 		Json j = new Json();
 		try{
-			cgxqService.save(cgxq);		
+			j.setObj(cgxqService.save(cgxq));		
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("保存采购需求成功！");
@@ -88,24 +91,51 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 	}
 	
 	/**
-	 * 完成采购需求
+	 * 完成采购需求，不再进行采购计划
 	 */
-//	public void complete(){
-//		User user = (User)session.get("user");
-//		cgxq.setCompleteId(user.getId());
-//		cgxq.setCompleteName(user.getRealName());
-//		Json j = new Json();
-//		try{
-//			cgxqService.updateComplete(cgxq);		
-//			//添加成功
-//			j.setSuccess(true);
-//			j.setMsg("完成采购需求成功！");
-//		}catch(Exception e){
-//			j.setMsg("完成采购需求失败！");
-//			e.printStackTrace();
-//		}
-//		writeJson(j);
-//	}
+	public void complete(){
+		User user = (User)session.get("user");
+		cgxq.setRefuseId(user.getId());
+		cgxq.setRefuseName(user.getRealName());
+		Json j = new Json();
+		try{
+			cgxqService.updateComplete(cgxq);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("完成采购需求成功！");
+		}catch(Exception e){
+			j.setMsg("完成采购需求失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+		
+	/**
+	 * 完成采购需求,不再进行调拨
+	 */
+	public void dbxq(){
+		User user = (User)session.get("user");
+		cgxq.setRefuseId(user.getId());
+		cgxq.setRefuseName(user.getRealName());
+		Json j = new Json();
+		try{
+			cgxqService.updateDbxq(cgxq);		
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("采购需求调拨完成成功！");
+		}catch(Exception e){
+			j.setMsg("采购需求调拨完成失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+	public void printCgxq() {
+		User user = (User) session.get("user");
+		cgxq.setCreateName(user.getRealName());
+		DataGrid dg = cgxqService.printCgxq(cgxq);
+		Export.print(dg, Util.getReportName(cgxq.getBmbh(), "report_cgxq.json"));
+		//Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));
+	}
 	
 	public void datagrid(){
 		//操作员
@@ -114,12 +144,16 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 		writeJson(cgxqService.datagrid(cgxq));
 	}
 	
-//	public void detDatagrid(){
-//		writeJson(cgxqService.detDatagrid(cgxq.getCgxqlsh()));
-//	}
-//	
+	public void detDatagrid(){
+		writeJson(cgxqService.detDatagrid(cgxq.getCgxqlsh()));
+	}
+	
 	public void toCgjh(){
 		writeJson(cgxqService.toCgjh(cgxq.getCgxqDetIds()));
+	}
+	
+	public void toYwdb(){
+		writeJson(cgxqService.toYwdb(cgxq));
 	}
 	
 	public void getSpkc(){

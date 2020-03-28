@@ -15,6 +15,25 @@ public class SelectCommon {
 	private String spmc;
 	private String a_time;
 	private String b_time;
+	private String exec;
+	private int userId;
+	private int total;
+	private String hid;
+	
+	
+	private String treeExec;
+	private String isFilter;
+	
+	private String field;
+	private String table;
+	private String where;
+	
+	private String search;
+	
+	private String khbh;
+	private String xsthlsh;
+	
+	
 	public String getSqls() {
 		return sqls;
 	}
@@ -127,4 +146,101 @@ public class SelectCommon {
 		this.b_time = b_time;
 	}
 
+	public String getExec() {
+		return exec;
+	}
+
+	public void setExec(String exec) {
+		this.exec = exec;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public String getTreeExec() {
+		return treeExec;
+	}
+
+	public void setTreeExec(String treeExec) {
+		this.treeExec = treeExec;
+	}
+
+	public String getHid() {
+		return hid;
+	}
+
+	public void setHid(String hid) {
+		this.hid = hid;
+	}
+
+	public String getIsFilter() {
+		return isFilter;
+	}
+
+	public void setIsFilter(String isFilter) {
+		this.isFilter = isFilter;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
+
+	public String getWhere() {
+		return where;
+	}
+
+	public void setWhere(String where) {
+		this.where = where;
+	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public String getKhbh() {
+		return khbh;
+	}
+
+	public void setKhbh(String khbh) {
+		this.khbh = khbh;
+	}
+
+	public String getXsthlsh() {
+		return xsthlsh;
+	}
+
+	public void setXsthlsh(String xsthlsh) {
+		this.xsthlsh = xsthlsh;
+	}
+
+	
 }

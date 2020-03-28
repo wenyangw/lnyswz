@@ -12,7 +12,7 @@
 		<tr>
 			<th><label for="khmc">客户名称</label></th>
 			<td><input name="khmc" class="easyui-validatebox"
-				data-options="required:true,missingMessage:'请输入客户名称',validType:'chinese'"
+				data-options="required:true,missingMessage:'请输入客户名称'"
 				style="width: 220px;"></td>
 		</tr>
 		<tr>
@@ -28,13 +28,17 @@
 			<td><input name="address" style="width: 220px;"></td>
 		</tr>
 		<tr>
+			<th><label for="dist">距离</label></th>
+			<td><input name="dist" style="width: 150px;">公里</td>
+		</tr>
+		<tr>
 			<th><label for="isNsr">一般纳税人</label></th>
 			<td><input name="isNsr" type="checkbox" value="1"></td>
 		</tr>
 		<tr>
 			<th><label for="sh">税号</label></th>
 			<td><input name="sh" class="easyui-validatebox"
-				data-options="validType:['length[15, 20]','startWith[\'khbh\',4,\'税号前4位必须与客户编号前4位一致！\']']"
+				data-options="validType:['length[15, 20]']"
 				style="width: 220px;"></td>
 		</tr>
 		<tr>

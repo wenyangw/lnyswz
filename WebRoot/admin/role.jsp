@@ -150,7 +150,7 @@ function removeRole(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						role_dg.datagrid('load');
+						role_dg.datagrid('reload');
 						role_dg.datagrid('unselectAll');
 						$.messager.show({
 							title : '提示',

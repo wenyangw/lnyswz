@@ -26,7 +26,10 @@ var hwIdEditor;
 var sppcEditor;
 var zjldwEditor;
 var zslEditor;
+var cjldwEditor;
+var cslEditor;
 var zjldwIdEditor;
+var cjldwIdEditor;
 
 
 $(function(){
@@ -106,6 +109,8 @@ $(function(){
                     {field:'sppc',title:'批次',width:100,align:'center'},
                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center'},
+                    {field:'cdwsl',title:'数量2',width:100,align:'center'},
                 ]],
                 onResize:function(){
                 	kfpd_dg.datagrid('fixDetailRowHeight',index);
@@ -132,14 +137,14 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-			{field:'ywpdlsh',title:'流水号',align:'center'},
-	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-	        {field:'ckmc',title:'仓库名称',align:'center'},
-	        {field:'pdlxId',title:'类型id',align:'center',hidden:true},
-	        {field:'pdlxmc',title:'类型',align:'center'},
-	        {field:'mc',title:'名称',align:'center'},
-	        {field:'bz',title:'备注',align:'center',
+			{field:'ywpdlsh',title:'流水号',width:200,align:'center'},
+	        {field:'createTime',title:'时间',width:200,align:'center'},
+	        {field:'ckId',title:'仓库id',width:200,align:'center',hidden:true},
+	        {field:'ckmc',title:'仓库名称',width:200,align:'center'},
+	        {field:'pdlxId',title:'类型id',width:200,align:'center',hidden:true},
+	        {field:'pdlxmc',title:'类型',width:200,align:'center'},
+	        {field:'mc',title:'名称',width:200,align:'center'},
+	        {field:'bz',title:'备注',width:200,align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
@@ -173,6 +178,8 @@ $(function(){
                     {field:'spbz',title:'包装',width:100,align:'center'},
                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center'},
+                    {field:'cdwsl',title:'数量2',width:100,align:'center'},
                 ]],
                 onResize:function(){
                 	kfpd_ywpdDg.datagrid('fixDetailRowHeight',index);
@@ -236,9 +243,12 @@ $(function(){
 	        		}
 	        	}},
 	        {field:'sppc',title:'商品批次',width:25,align:'center',editor:'datebox'},
-	        {field:'zjldwmc',title:'单位',width:25,align:'center',editor:'textRead'},
-	        {field:'zdwsl',title:'数量',width:25,align:'center',editor:'textRead'},
+	        {field:'zjldwmc',title:'单位1',width:25,align:'center',editor:'textRead'},
+	        {field:'zdwsl',title:'数量1',width:25,align:'center',editor:'textRead'},
+	        {field:'cjldwmc',title:'单位2',width:25,align:'center',editor:'textRead'},
+	        {field:'cdwsl',title:'数量2',width:25,align:'center',editor:'textRead'},
    	        {field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'textRead', hidden:true},
+   	        {field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'textRead', hidden:true},
 	    ]],
 	   	onClickRow: clickRow,
 	   	onAfterEdit: function (rowIndex, rowData, changes) {
@@ -349,7 +359,10 @@ function setEditing(){
     sppcEditor = editors[6];
     zjldwEditor = editors[7];
     zslEditor = editors[8];
-    zjldwIdEditor = editors[9];
+    cjldwEditor = editors[9];
+    cslEditor = editors[10];
+    zjldwIdEditor = editors[11];
+    cjldwIdEditor = editors[12];
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_kfpd_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
@@ -375,7 +388,14 @@ function setEditing(){
 	});
   	
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
+    if (did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
     
 	//loadEditor();
@@ -434,6 +454,7 @@ function saveAll(){
 	//将表格中的数据转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfpdAction!save.action',
@@ -450,6 +471,9 @@ function saveAll(){
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -462,6 +486,7 @@ function cjKfpd(){
 		if(row.isCj != '1'){
 			$.messager.prompt('请确认', '是否要冲减选中的库房盘点单？请填写备注', function(bz){
 				if(bz != undefined){
+					//MaskUtil.mask('正在冲减，请等待……');
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/kfpdAction!cjKfpd.action',
 						data : {
@@ -480,6 +505,9 @@ function cjKfpd(){
 								title : '提示',
 								msg : d.msg
 							});
+						},
+						complete: function(){
+							//MaskUtil.unmask();
 						}
 					});
 				}

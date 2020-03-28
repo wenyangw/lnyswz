@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.common.bean.Json;
+import lnyswz.jxc.model.*;
 import org.apache.log4j.Logger;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import com.alibaba.fastjson.TypeReference;
 
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
+import lnyswz.common.util.Common;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Ck;
 import lnyswz.jxc.bean.Department;
@@ -27,22 +31,9 @@ import lnyswz.jxc.bean.Hw;
 import lnyswz.jxc.bean.Kfrk;
 import lnyswz.jxc.bean.KfrkDet;
 import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TKfrkDet;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.service.KfrkServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -55,13 +46,13 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TKfrkDet> detDao;
 	private BaseDaoI<TKfzz> kfzzDao;
-	private BaseDaoI<TCgjh> cgjhDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TYwrk> ywrkDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<THw> hwDao;
+	private BaseDaoI<TSpBgy> spBgyDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
@@ -110,7 +101,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			if(null == kfrkDet.getBzsl()){
 				tDet.setBzsl(Constant.BD_ZERO);
 			}
-			
+
 			tDet.setTKfrk(tKfrk);
 			tDets.add(tDet);
 
@@ -126,7 +117,7 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			hw.setId(kfrkDet.getHwId());
 			hw.setHwmc(tDet.getHwmc());
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfrkDet.getSppc(), kfrkDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfrkDet.getSppc(), kfrkDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfrk.setTKfrkDets(tDets);
 		kfrkDao.save(tKfrk);		
@@ -139,78 +130,96 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	}
 	
 	@Override
-	public void cjKfrk(Kfrk kfrk) {
-		Date now = new Date(); 
+	public Json cjKfrk(Kfrk kfrk) {
+		Json j = new Json();
 		//获取原单据信息
 		TKfrk yTKfrk = kfrkDao.get(TKfrk.class, kfrk.getKfrklsh());
-		//新增冲减单据信息
-		TKfrk tKfrk = new TKfrk();
-		BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
-		//更新原单据冲减信息
-		yTKfrk.setCjId(kfrk.getCjId());
-		yTKfrk.setCjTime(now);
-		yTKfrk.setCjName(kfrk.getCjName());
-		yTKfrk.setIsCj("1");
-		
-		if(yTKfrk.getTCgjhs() != null){
-			
+		if("1".equals(yTKfrk.getIsCj())) {
+            j.setMsg("此单据已取消，请刷新后重新操作！");
+            return j;
+        }
+
+        Date now = new Date();
+
+        //新增冲减单据信息
+        TKfrk tKfrk = new TKfrk();
+        BeanUtils.copyProperties(yTKfrk, tKfrk, new String[]{"TCgjhs", "TYwrk"});
+        //更新原单据冲减信息
+        yTKfrk.setCjId(kfrk.getCjId());
+        yTKfrk.setCjTime(now);
+        yTKfrk.setCjName(kfrk.getCjName());
+        yTKfrk.setIsCj("1");
+
+        if (yTKfrk.getTCgjhs() != null) {
+
 //			Set<TCgjhDet> tcs = new HashSet<TCgjhDet>();
 //			for(TCgjhDet tc : yTKfrk.getTCgjhs()){
 //				TCgjhDet ntc = cgjhDetDao.load(TCgjhDet.class, tc.getId());
 //				tcs.add(ntc);
 //			}
 //			tKfrk.setTCgjhs(tcs);
-			yTKfrk.setTCgjhs(null);
-		}
-		
-		if(yTKfrk.getTYwrk() != null){
-			yTKfrk.setTYwrk(null);
-		}
-		
-		//更新新单据信息
-		String lsh = LshServiceImpl.updateLsh(kfrk.getBmbh(), kfrk.getLxbh(), lshDao);
-		tKfrk.setKfrklsh(lsh);
-		tKfrk.setCreateTime(now);
-		tKfrk.setCreateId(kfrk.getCjId());
-		tKfrk.setCreateName(kfrk.getCjName());
-		tKfrk.setIsCj("1");
-		tKfrk.setCjTime(new Date());
-		tKfrk.setCjId(kfrk.getCjId());
-		tKfrk.setCjName(kfrk.getCjName());
-		tKfrk.setCjKfrklsh(yTKfrk.getKfrklsh());
-		tKfrk.setBz(kfrk.getBz());
-		
-		Department dep = new Department();
-		dep.setId(tKfrk.getBmbh());
-		dep.setDepName(tKfrk.getBmmc());
-		Ck ck = new Ck();
-		ck.setId(tKfrk.getCkId());
-		ck.setCkmc(tKfrk.getCkmc());
-		
-		Set<TKfrkDet> yTKfrkDets = yTKfrk.getTKfrkDets();
-		Set<TKfrkDet> tDets = new HashSet<TKfrkDet>();
-		for(TKfrkDet yTDet : yTKfrkDets){
-			TKfrkDet tDet = new TKfrkDet();
-			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
-			tDet.setZdwsl(yTDet.getZdwsl().negate());
-			if(yTDet.getCdwsl() != null){
-				tDet.setCdwsl(yTDet.getCdwsl().negate());
-			}
-			tDet.setTKfrk(tKfrk);
-			tDets.add(tDet);
-			
-			Sp sp = new Sp();
-			BeanUtils.copyProperties(tDet, sp);
-			Hw hw = new Hw();
-			hw.setId(tDet.getHwId());
-			hw.setHwmc(tDet.getHwmc());
-			
-			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
-		}
-		tKfrk.setTKfrkDets(tDets);
-		kfrkDao.save(tKfrk);		
-		OperalogServiceImpl.addOperalog(kfrk.getCjId(), kfrk.getBmbh(), kfrk.getMenuId(), tKfrk.getCjKfrklsh() + "/" + tKfrk.getKfrklsh(), "冲减库房入库单", operalogDao);
+            yTKfrk.setTCgjhs(null);
+        }
+
+        if (yTKfrk.getTYwrk() != null) {
+            yTKfrk.setTYwrk(null);
+        }
+
+        //更新新单据信息
+        String lsh = LshServiceImpl.updateLsh(kfrk.getBmbh(), kfrk.getLxbh(), lshDao);
+        tKfrk.setKfrklsh(lsh);
+        tKfrk.setCreateTime(now);
+        tKfrk.setCreateId(kfrk.getCjId());
+        tKfrk.setCreateName(kfrk.getCjName());
+        tKfrk.setIsCj("1");
+        tKfrk.setCjTime(new Date());
+        tKfrk.setCjId(kfrk.getCjId());
+        tKfrk.setCjName(kfrk.getCjName());
+        tKfrk.setCjKfrklsh(yTKfrk.getKfrklsh());
+        tKfrk.setBz(kfrk.getBz());
+
+        Department dep = new Department();
+        dep.setId(tKfrk.getBmbh());
+        dep.setDepName(tKfrk.getBmmc());
+        Ck ck = new Ck();
+        ck.setId(tKfrk.getCkId());
+        ck.setCkmc(tKfrk.getCkmc());
+
+        Set<TKfrkDet> yTKfrkDets = yTKfrk.getTKfrkDets();
+        Set<TKfrkDet> tDets = new HashSet<TKfrkDet>();
+        for (TKfrkDet yTDet : yTKfrkDets) {
+            TKfrkDet tDet = new TKfrkDet();
+            BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
+            tDet.setZdwsl(yTDet.getZdwsl().negate());
+            if (yTDet.getCdwsl() != null) {
+                tDet.setCdwsl(yTDet.getCdwsl().negate());
+            }
+
+            if (!("05".equals(tKfrk.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+                if (!"2019-01-01".equals(tDet.getSppc())) {
+                    tDet.setSppc("2019-01-01");
+                }
+            }
+
+            tDet.setTKfrk(tKfrk);
+            tDets.add(tDet);
+
+            Sp sp = new Sp();
+            BeanUtils.copyProperties(tDet, sp);
+            Hw hw = new Hw();
+            hw.setId(tDet.getHwId());
+            hw.setHwmc(tDet.getHwmc());
+
+            //更新库房总账
+            KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
+        }
+        tKfrk.setTKfrkDets(tDets);
+        kfrkDao.save(tKfrk);
+        OperalogServiceImpl.addOperalog(kfrk.getCjId(), kfrk.getBmbh(), kfrk.getMenuId(), tKfrk.getCjKfrklsh() + "/" + tKfrk.getKfrklsh(), "冲减库房入库单", operalogDao);
+
+        j.setSuccess(true);
+        j.setMsg("库房入库取消成功！");
+		return j;
 	}
 	
 	@Override
@@ -263,12 +272,28 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
+
 		if(kfrk.getSearch() != null){
-			hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
-			params.put("search", "%" + kfrk.getSearch() + "%");
-			
+			//hql += " and (t.kfrklsh like :search or t.gysmc like :search or t.bz like :search)"; 
+			//params.put("search", "%" + kfrk.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(kfrk.getSearch(), new String[]{"t.kfrklsh", "t.gysmc", "t.bz"}, params)
+					+ ")";
 		}
-		if(kfrk.getFromOther() != null){
+		if(kfrk.getFromOther() != null) {
+//			hql += " and t.createId = :createId";
+//			params.put("createId", kfrk.getCreateId());
+//		}else{
+			if(kfrk.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", kfrk.getCreateId());
+				Object cks = kfrkDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TYwrk = null";
 		}
 		String countHql = " select count(*)" + hql;
@@ -282,14 +307,16 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			Set<TCgjhDet> tCgjhs = t.getTCgjhs();
 			if(tCgjhs != null && tCgjhs.size() > 0){
 				String cgjhlshs = "";
-				int i = 0;
 				for(TCgjhDet tc : tCgjhs){
-					cgjhlshs += tc.getTCgjh().getCgjhlsh();
-					if(i < tCgjhs.size() - 1){
-						cgjhlshs += ",";
-					}
-					i++;
+					cgjhlshs = Common.joinString(cgjhlshs, tc.getTCgjh().getCgjhlsh(), ",");
+//					if(cgjhlshs.indexOf(tc.getTCgjh().getCgjhlsh()) < 0){
+//						if(cgjhlshs.length() > 0){
+//							cgjhlshs += ",";
+//						}
+//						cgjhlshs += tc.getTCgjh().getCgjhlsh();
+//					}
 				}
+				
 				c.setCgjhlshs(cgjhlshs);
 			}
 			if(t.getTYwrk() != null){
@@ -321,8 +348,8 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	
 	@Override
 	public DataGrid toYwrk(String kfrklshs){
-		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj from t_kfrk_det t"
-				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
+		String sql = "select t.spbh, sum(t.zdwsl) zdwsl, isnull(MAX(ck.zdwdj), 0) zdwdj, sum(t.cdwsl) cdwsl, isnull(MAX(ck.cdwdj), 0) cdwdj from t_kfrk_det t"
+				+ " left join (select ck.kfrklsh, jh.spbh, jh.zdwdj, jh.cdwdj from t_cgjh_kfrk ck left join t_cgjh_det jh on ck.cgjhdetId = jh.id) ck on t.kfrklsh = ck.kfrklsh and t.spbh = ck.spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(kfrklshs != null && kfrklshs.trim().length() > 0){
@@ -346,6 +373,8 @@ public class KfrkServiceImpl implements KfrkServiceI {
 			String spbh = (String)os[0];
 			BigDecimal zdwsl = new BigDecimal(os[1].toString());
 			BigDecimal zdwdj = new BigDecimal(os[2].toString());
+			BigDecimal cdwsl = new BigDecimal(os[3].toString());
+			BigDecimal cdwdj = new BigDecimal(os[4].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			KfrkDet kd = new KfrkDet();
@@ -358,12 +387,14 @@ public class KfrkServiceImpl implements KfrkServiceI {
 				kd.setCjldwId(sp.getCjldw().getId());
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
+				kd.setCdwsl(cdwsl);
+				kd.setCdwdj(cdwdj);
 				if(sp.getZhxs().compareTo(Constant.BD_ZERO) != 0){
-					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
-					kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
+					//kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					//kd.setCdwdj(zdwdj.multiply(sp.getZhxs()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP)	);
 				}else{
-					kd.setCdwsl(Constant.BD_ZERO);
-					kd.setCdwdj(Constant.BD_ZERO);
+					//kd.setCdwsl(Constant.BD_ZERO);
+					//kd.setCdwdj(Constant.BD_ZERO);
 				}
 			}
 			nl.add(kd);
@@ -373,7 +404,48 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
-	
+
+	@Override
+	public DataGrid loadKfrk(Kfrk kfrk) {
+		DataGrid datagrid = new DataGrid();
+		try {
+            TKfrk tKfrk = kfrkDao.load(TKfrk.class, kfrk.getKfrklsh());
+            if ("1".equals(tKfrk.getIsCj())) {
+                datagrid.setMsg("对应的库房入库已冲减！请重新录入！");
+            } else {
+                kfrk.setGysbh(tKfrk.getGysbh());
+                kfrk.setGysmc(tKfrk.getGysmc());
+                kfrk.setBz(tKfrk.getBz());
+
+                List<KfrkDet> nl = new ArrayList<KfrkDet>();
+                KfrkDet kfrkDet;
+                String hql = "from TSpBgy t where t.depId = :bmbh and t.bgyId = :bgyId and spbh = :spbh";
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("bmbh", kfrk.getKfrklsh().substring(4, 6));
+                params.put("bgyId", kfrk.getCreateId());
+                for (TKfrkDet yd : tKfrk.getTKfrkDets()) {
+                    params.put("spbh", yd.getSpbh());
+                    if (spBgyDao.get(hql, params) != null) {
+                        kfrkDet = new KfrkDet();
+                        BeanUtils.copyProperties(yd, kfrkDet);
+                        kfrkDet.setZdwrksl(yd.getZdwsl());
+                        nl.add(kfrkDet);
+                    }
+                }
+
+                if (nl.size() > 0) {
+                    datagrid.setObj(kfrk);
+                    datagrid.setRows(nl);
+                } else {
+                    datagrid.setMsg("录入的库房入库单不包含此保管员管理品种，请重新录入！");
+                }
+            }
+        }catch (ObjectNotFoundException e) {
+            datagrid.setMsg("对应的库房入库单据不存在！");
+        }
+		return datagrid;
+	}
+
 	@Autowired
 	public void setKfrkDao(BaseDaoI<TKfrk> kfrkDao) {
 		this.kfrkDao = kfrkDao;
@@ -387,11 +459,6 @@ public class KfrkServiceImpl implements KfrkServiceI {
 	@Autowired
 	public void setDetDao(BaseDaoI<TKfrkDet> detDao) {
 		this.detDao = detDao;
-	}
-
-	@Autowired
-	public void setCgjhDao(BaseDaoI<TCgjh> cgjhDao) {
-		this.cgjhDao = cgjhDao;
 	}
 
 	@Autowired
@@ -424,7 +491,12 @@ public class KfrkServiceImpl implements KfrkServiceI {
 		this.hwDao = hwDao;
 	}
 
-	@Autowired
+    @Autowired
+    public void setSpBgyDao(BaseDaoI<TSpBgy> spBgyDao) {
+        this.spBgyDao = spBgyDao;
+    }
+
+    @Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {
 		this.operalogDao = operalogDao;
 	}

@@ -1,15 +1,14 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.User;
+import lnyswz.jxc.bean.Yszz;
 import lnyswz.jxc.service.KhServiceI;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -18,7 +17,6 @@ import com.opensymphony.xwork2.ModelDriven;
 @Action("khAction")
 public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private Kh kh = new Kh();
 	private KhServiceI khService;
 
@@ -79,7 +77,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	public void datagrid() {
 		super.writeJson(khService.datagrid(kh));
 	}
-
 	
 	public void datagridDet() {
 		super.writeJson(khService.datagridDet(kh));
@@ -91,8 +88,6 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	public void existKh() {
 		Json j = new Json();
 		if (khService.existKh(kh)) {
-			j.setMsg("对不起！此客户编号已存在！");
-		} else {
 			j.setSuccess(true);
 		}
 		writeJson(j);
@@ -110,6 +105,18 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 		}
 		writeJson(j);
 	}
+	
+	public void getKhDet(){
+		Json j = new Json();
+		Kh k = khService.getKhDet(kh);
+		if(k != null){
+			j.setSuccess(true);
+			j.setObj(k);
+		} else {
+			j.setMsg("对不起！此客户无授信信息！");
+		}
+		writeJson(j);
+	}
 
 	public void isSxkh(){
 		Json j = new Json();
@@ -124,9 +131,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	 */
 	public void addDet() {
 		Json j = new Json();
-		try {
-			User u = (User)session.get("user");
+		User u = (User)session.get("user");
+		if (u != null) {
 			kh.setUserId(u.getId());
+		}
+		try {
 			Kh k = khService.addDet(kh);
 			j.setSuccess(true);
 			j.setMsg("客户授信维护成功!");
@@ -143,9 +152,11 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	 */
 	public void editDet() {
 		Json j = new Json();
-		try {
-			User u = (User)session.get("user");
+		User u = (User)session.get("user");
+		if (u != null) {
 			kh.setUserId(u.getId());
+		}
+		try {
 			khService.editDet(kh);
 			j.setSuccess(true);
 			j.setMsg("客户授信维护成功!");
@@ -223,6 +234,16 @@ public class KhAction extends BaseAction implements ModelDriven<Kh> {
 	
 	public void listKhByYwy(){
 		writeJson(khService.listKhByYwy(kh));
+	}
+	
+	public void getYszz(){
+		Json j = new Json();
+		Yszz yszz = khService.getYszz(kh.getDepId(), kh.getKhbh(), kh.getYwyId(), null);
+		if(yszz != null){
+			j.setSuccess(true);
+			j.setObj(yszz);
+		}
+		writeJson(j);
 	}
 	
 	public Kh getModel() {

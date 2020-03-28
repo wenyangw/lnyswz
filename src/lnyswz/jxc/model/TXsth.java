@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -24,6 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_xsth")
+@DynamicUpdate(true)
 public class TXsth implements java.io.Serializable {
 
 	private String xsthlsh;
@@ -70,12 +73,32 @@ public class TXsth implements java.io.Serializable {
 	private Integer kpId;
 	private Date kpTime;
 	private String kpName;
+	private String fromRk;
 	private String isHk;
 	private Integer hkId;
 	private Date hkTime;
 	private String needAudit;
 	private String isAudit;
+	private String needAuditXsjj;
+	private String isAuditXsjj;
+	private BigDecimal ysfy;
+	private BigDecimal yysfy;
+	private int payDays;
+	private String verifyCode;
+	private String out;
+	private Integer outId;
+	private String outName;
+	private Date outTime;
+	private String sended;
+	private Integer sendId;
+	private String sendName;
+	private Date sendTime;
+	private String isFp;
+	private String source;
+
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
+	
+	private Set<TYwrkDet> TYwrks = new HashSet<TYwrkDet>(0);
 	
 	public TXsth() {
 	}
@@ -85,8 +108,10 @@ public class TXsth implements java.io.Serializable {
 			int ywyId, String ywymc, String jsfsId, String jsfsmc, String thfs, String shdz, String thr, String ch, 
 			BigDecimal hjje, BigDecimal hjsl, String isLs, String bookmc, String bz, String isZs, String isCancel, 
 			String cjXsthlsh, Integer cancelId, Date cancelTime, String cancelName, Integer lockId, Date lockTime, 
-			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String isHk,
-			Integer hkId, Date hkTime, String needAudit, String isAudit, Set<TXsthDet> TXsthDets, Set<TKfck> TKfcks) {
+			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
+			Integer hkId, Date hkTime, String needAudit, String isAudit, String needAuditXsjj, String isAuditXsjj, BigDecimal ysfy, BigDecimal yysfy,
+			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
+			Date sendTime, String isFp, String source, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -129,15 +154,30 @@ public class TXsth implements java.io.Serializable {
 		this.kpId = kpId;
 		this.kpTime = kpTime;
 		this.kpName = kpName;
+		this.fromFp = fromRk;
 		this.isHk = isHk;
 		this.hkId = hkId;
 		this.hkTime = hkTime;
 		this.needAudit = needAudit;
 		this.isAudit = isAudit;
+		this.needAuditXsjj = needAuditXsjj;
+		this.isAuditXsjj = isAuditXsjj;
+		this.ysfy = ysfy;
+		this.yysfy = yysfy;
+		this.payDays = payDays;
+		this.verifyCode = verifyCode;
+		this.out = out;
+		this.outId = outId;
+		this.outName = outName;
+		this.outTime = outTime;
+		this.sended = sended;
+		this.sendId = sendId;
+		this.sendName = sendName;
+		this.isFp = isFp;
+		this.source = source;
+		this.sendTime = sendTime;
 		this.TXsthDets = TXsthDets;
-//		this.TKfcks = TKfcks;
-//		this.TXskp = TXskp;
-//		this.xsfplsh = xsfplsh;
+		this.TYwrks = TYwrks;
 	}
 
 	@Id
@@ -542,6 +582,15 @@ public class TXsth implements java.io.Serializable {
 		this.kpName = kpName;
 	}
 
+	@Column(name = "fromRk", nullable = false, length = 1)
+	public String getFromRk() {
+		return fromRk;
+	}
+
+	public void setFromRk(String fromRk) {
+		this.fromRk = fromRk;
+	}
+
 	@Column(name = "isHk", nullable = false, length = 1)
 	public String getIsHk() {
 		return this.isHk;
@@ -587,7 +636,153 @@ public class TXsth implements java.io.Serializable {
 	public void setIsAudit(String isAudit) {
 		this.isAudit = isAudit;
 	}
-	
+
+	@Column(name = "needAuditXsjj", nullable = false, length = 1)
+	public String getNeedAuditXsjj() {
+		return needAuditXsjj;
+	}
+
+	public void setNeedAuditXsjj(String needAuditXsjj) {
+		this.needAuditXsjj = needAuditXsjj;
+	}
+
+	@Column(name = "isAuditXsjj", nullable = false, length = 1)
+	public String getIsAuditXsjj() {
+		return isAuditXsjj;
+	}
+
+	public void setIsAuditXsjj(String isAuditXsjj) {
+		this.isAuditXsjj = isAuditXsjj;
+	}
+
+	@Column(name = "ysfy", precision = 18, scale = 2)
+	public BigDecimal getYsfy() {
+		return ysfy;
+	}
+
+	public void setYsfy(BigDecimal ysfy) {
+		this.ysfy = ysfy;
+	}
+
+	@Column(name = "yysfy", precision = 18, scale = 2)
+	public BigDecimal getYysfy() {
+		return yysfy;
+	}
+
+	public void setYysfy(BigDecimal yysfy) {
+		this.yysfy = yysfy;
+	}
+
+	@Column(name = "payDays")
+	public int getPayDays() {
+		return payDays;
+	}
+
+	public void setPayDays(int payDays) {
+		this.payDays = payDays;
+	}
+
+	@Column(name = "verifyCode")
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
+	@Column(name = "out", nullable = false, length = 1)
+	public String getOut() {
+		return out;
+	}
+
+	public void setOut(String out) {
+		this.out = out;
+	}
+
+	@Column(name = "outId")
+	public Integer getOutId() {
+		return outId;
+	}
+
+	public void setOutId(Integer outId) {
+		this.outId = outId;
+	}
+
+	@Column(name = "outName", length = 20)
+	public String getOutName() {
+		return outName;
+	}
+
+	public void setOutName(String outName) {
+		this.outName = outName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "outTime", length = 23)
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	@Column(name = "sended", nullable = false, length = 1)
+	public String getSended() {
+		return sended;
+	}
+
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	@Column(name = "sendId")
+	public Integer getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+
+	@Column(name = "sendName", length = 20)
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "sendTime", length = 23)
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	@Column(name = "isFp", length = 1)
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
+	}
+
+	@Column(name = "source", length = 1)
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)
 	public Set<TXsthDet> getTXsthDets() {
 		return TXsthDets;
@@ -595,6 +790,16 @@ public class TXsth implements java.io.Serializable {
 
 	public void setTXsthDets(Set<TXsthDet> tXsthDets) {
 		TXsthDets = tXsthDets;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "t_ywrk_xsth", joinColumns = { @JoinColumn(name = "xsthlsh", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "ywrkdetId", nullable = false, updatable = false) })
+	public Set<TYwrkDet> getTYwrks() {
+		return this.TYwrks;
+	}
+	
+	public void setTYwrks(Set<TYwrkDet> TYwrks) {
+		this.TYwrks = TYwrks;
 	}
 	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth")

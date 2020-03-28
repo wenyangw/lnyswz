@@ -28,12 +28,13 @@ public class TYwsh implements java.io.Serializable {
 	private String auditLevel;
 	private String isAudit;
 	private String bz;
+	private String source;
 	
 	public TYwsh() {
 	}
 	
 	public TYwsh(long id, String bmbh, String bmmc, String lsh, Date createTime, int createId,
-			String createName, String auditLevel, String isAudit, String bz) {
+			String createName, String auditLevel, String isAudit, String bz, String source) {
 		super();
 		this.id = id;
 		this.lsh = lsh;
@@ -45,6 +46,7 @@ public class TYwsh implements java.io.Serializable {
 		this.auditLevel = auditLevel;
 		this.isAudit = isAudit;
 		this.bz = bz;
+		this.source = source;
 	}
 
 	@Id
@@ -139,5 +141,13 @@ public class TYwsh implements java.io.Serializable {
 	public void setBz(String bz) {
 		this.bz = bz;
 	}
-	
+
+	@Column(name = "source", length = 1)
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 }

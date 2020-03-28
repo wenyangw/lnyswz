@@ -1,6 +1,6 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
+import lnyswz.jxc.util.Export;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,9 @@ import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.SpServiceI;
 import lnyswz.jxc.util.Constant;
+
+import java.util.List;
+
 /**
  * 商品Action
  * @author 王文阳
@@ -21,7 +24,7 @@ import lnyswz.jxc.util.Constant;
 @Namespace("/jxc")
 @Action("spAction")
 public class SpAction extends BaseAction implements ModelDriven<Sp>{
-	private Logger logger = Logger.getLogger(SpAction.class);
+	private static final long serialVersionUID = 1L;
 	private Sp sp = new Sp();
 	private SpServiceI spService;
 	
@@ -82,7 +85,13 @@ public class SpAction extends BaseAction implements ModelDriven<Sp>{
 		}
 		super.writeJson(j);
 	}
-	
+
+	/**
+	 * 导出商品代码到金穗
+	 */
+	public void exportToJs(){
+		Export.toJs(spService.exportToJs(sp));
+	}
 		
 	/**
 	 * 维护专属信息

@@ -48,7 +48,7 @@ public class KfzzServiceImpl implements KfzzServiceI {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 更新库房总账数量
 	 * @param sp
@@ -59,7 +59,7 @@ public class KfzzServiceImpl implements KfzzServiceI {
 	 * @param type
 	 * @param baseDao
 	 */
-	public static void updateKfzzSl(Sp sp, Department dep, Ck ck, Hw hw, String sppc, BigDecimal sl, String type, BaseDaoI<TKfzz> baseDao) {
+	public static void updateKfzzSl(Sp sp, Department dep, Ck ck, Hw hw, String sppc, BigDecimal zsl, BigDecimal csl, String type, BaseDaoI<TKfzz> baseDao) {
 		
 		String hql = "from TKfzz t where t.spbh = :spbh and t.bmbh = :bmbh and t.jzsj = :jzsj";
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -67,24 +67,24 @@ public class KfzzServiceImpl implements KfzzServiceI {
 		params.put("bmbh", dep.getId());
 		params.put("jzsj", DateUtil.getCurrentDateString("yyyyMM"));
 		//总账处理
-		updateKfzz(sp, dep, null, null, null, sl, type, baseDao, hql + " and t.ckId = null and t.hwId = null and t.sppc = null", params);
+		updateKfzz(sp, dep, null, null, null, zsl, csl, type, baseDao, hql + " and t.ckId = null and t.hwId = null and t.sppc = null", params);
 		//总账中仓库入库更新
 		hql += " and t.ckId = :ckId";
 		params.put("ckId", ck.getId());
-		updateKfzz(sp, dep, ck, null, null, sl, type, baseDao, hql + " and t.hwId = null and t.sppc = null", params);
+		updateKfzz(sp, dep, ck, null, null, zsl, csl, type, baseDao, hql + " and t.hwId = null and t.sppc = null", params);
 		//总账中货位入库更新
 		hql += " and t.hwId = :hwId";
 		params.put("hwId", hw.getId());
-		updateKfzz(sp, dep, ck, hw, null, sl, type, baseDao, hql + " and t.sppc = null", params);
+		updateKfzz(sp, dep, ck, hw, null, zsl, csl, type, baseDao, hql + " and t.sppc = null", params);
 		//总账中批次入库处理
 		hql +=  " and t.sppc = :sppc";
 		params.put("sppc", sppc);
-		updateKfzz(sp, dep, ck, hw, sppc, sl, type, baseDao, hql, params);
+		updateKfzz(sp, dep, ck, hw, sppc, zsl, csl, type, baseDao, hql, params);
 		
 	}
 	
 	private static void updateKfzz(Sp sp, Department dep, Ck ck, Hw hw, String sppc,
-			BigDecimal sl, String type, BaseDaoI<TKfzz> baseDao, String hql, Map<String, Object> params) {
+			BigDecimal zsl, BigDecimal csl, String type, BaseDaoI<TKfzz> baseDao, String hql, Map<String, Object> params) {
 		TKfzz tKfzz = baseDao.get(hql, params);
 		if(tKfzz == null){
 			tKfzz = new TKfzz();
@@ -107,19 +107,26 @@ public class KfzzServiceImpl implements KfzzServiceI {
 			}
 			tKfzz.setJzsj(DateUtil.getCurrentDateString("yyyyMM"));
 			if(type.equals(Constant.UPDATE_RK)){
-				tKfzz.setRksl(sl);
+				tKfzz.setRksl(zsl);
+				tKfzz.setCrksl(csl);
 				tKfzz.setCksl(new BigDecimal(0));
+				tKfzz.setCcksl(new BigDecimal(0));
 			}else{
-				tKfzz.setCksl(sl);
+				tKfzz.setCksl(zsl);
+				tKfzz.setCcksl(csl);
 				tKfzz.setRksl(new BigDecimal(0));
+				tKfzz.setCrksl(new BigDecimal(0));
 			}
 			tKfzz.setQcsl(new BigDecimal(0));
+			tKfzz.setCqcsl(new BigDecimal(0));
 			baseDao.save(tKfzz);
 		}else{
 			if(type.equals(Constant.UPDATE_RK)){
-				tKfzz.setRksl(tKfzz.getRksl().add(sl));
+				tKfzz.setRksl(tKfzz.getRksl().add(zsl));
+				tKfzz.setCrksl(tKfzz.getCrksl().add(csl));
 			}else{
-				tKfzz.setCksl(tKfzz.getCksl().add(sl));
+				tKfzz.setCksl(tKfzz.getCksl().add(zsl));
+				tKfzz.setCcksl(tKfzz.getCcksl().add(csl));
 			}
 			
 		}
@@ -129,18 +136,20 @@ public class KfzzServiceImpl implements KfzzServiceI {
 		List<ProBean> resultList = new ArrayList<ProBean>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sql = "select ";
-//		if(hwId != null){
-//			sql += " hwmc, ";
-//		}
 		if(sppc != null){
 			sql += " sppc, hwmc, ";
 		}
-		sql += " qcsl + rksl - cksl from t_kfzz where bmbh = ? and spbh = ? and jzsj = ? and ckId = ? ";
+		sql += " qcsl + rksl - cksl from t_kfzz where bmbh = ? and spbh = ? and jzsj = ?";
 		params.put("0", bmbh);
 		params.put("1", spbh);
 		params.put("2", DateUtil.getCurrentDateString("yyyyMM"));
-		params.put("3", ckId);
-		
+		if(ckId != null) {
+			sql +=  "and ckId = ?";
+			params.put("3", ckId);
+		} else {
+			sql +=  "and ckId is null";
+		}
+
 		if(hwId == null && sppc == null){
 			sql += " and hwId is null and sppc is null ";
 		}
@@ -278,9 +287,9 @@ public class KfzzServiceImpl implements KfzzServiceI {
 //			
 //		}
 //	}
-//	
-//	
-//	
+//
+//
+//
 //	@Override
 //	public void update(Kfzz hfzz) {
 //		// TODO Auto-generated method stub

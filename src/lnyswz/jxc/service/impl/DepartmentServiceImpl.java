@@ -108,7 +108,7 @@ public class DepartmentServiceImpl implements DepartmentServiceI {
 			hql += " where t.id = :id";
 			params.put("id", department.getId());
 		}else{
-			hql += " where t.id < '10'";
+			hql += " where t.id < '09'";
 		}
 		
 		List<TDepartment> l = departmentDao.find(hql, params);
@@ -132,9 +132,10 @@ public class DepartmentServiceImpl implements DepartmentServiceI {
 		}
 		return nl;
 	}
-
+	
 	@Autowired
 	public void setDepartmentDao(BaseDaoI<TDepartment> departmentDao) {
 		this.departmentDao = departmentDao;
 	}
+	
 }

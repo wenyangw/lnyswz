@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+<beans xmlns="http://www.springframework.org/schema/beans" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:tx="http://www.springframework.org/schema/tx" 
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:jaxws="http://cxf.apache.org/jaxws" 
+xsi:schemaLocation="
 http://www.springframework.org/schema/beans 
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
 http://www.springframework.org/schema/tx 
 http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 http://www.springframework.org/schema/aop 
 http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://cxf.apache.org/jaxws 
+http://cxf.apache.org/schemas/jaxws.xsd
 ">
 
 	<!-- JNDI方式配置数据源 -->
@@ -22,7 +29,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<!-- 连接池最大使用连接数量 -->
 		<property name="maxActive" value="20" />
 		<!-- 连接池最大空闲 -->
-		<property name="maxIdle" value="20" />
+<!-- 		<property name="maxIdle" value="20" /> -->
 		<!-- 连接池最小空闲 -->
 		<property name="minIdle" value="0" />
 		<!-- 获取连接最大等待时间 -->
@@ -41,7 +48,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<property name="minEvictableIdleTimeMillis" value="25200000" />
 
 		<!-- 打开removeAbandoned功能 -->
-		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandoned" value="false" />
 		<!-- 1800秒，也就是30分钟 -->
 		<property name="removeAbandonedTimeout" value="1800" />
 		<!-- 关闭abanded连接时输出错误日志 -->
@@ -50,6 +57,14 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<!-- 监控数据库 -->
 		<!-- <property name="filters" value="stat" /> -->
 		<property name="filters" value="mergeStat" />
+
+		<!-- 最慢SQL -->
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter"/>
+				<ref bean="log-filter"/>
+			</list>
+		</property>
 	</bean>
 
 	<!-- 配置hibernate session工厂 -->
@@ -81,10 +96,11 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 
-	<!-- 注解方式配置事物 -->
-	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+	<!-- 注解方式配置事务 -->
+	<!--<tx:annotation-driven transaction-manager="transactionManager" />-->
 
-	<!-- 拦截器方式配置事物 -->
+
+	<!-- 拦截器方式配置事务 -->
 	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" />
@@ -98,7 +114,8 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 			<tx:method name="cancel*" />
 			<tx:method name="complete*" />
 			<tx:method name="create*" />
-			
+			<tx:method name="lg2pr*" />
+
 <!-- 			<tx:method name="repair" /> -->
 <!-- 			<tx:method name="deleteAndRepair" /> -->
 
@@ -116,14 +133,6 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
 	</aop:config>
 
-	<!-- 
-	<aop:config>
-		<aop:pointcut id="logDemoUserPointcut" expression="execution(* sy.service.demo.impl.UserServiceImpl.*(..))" />
-		<aop:aspect ref="demoLogUserService">
-			<aop:around method="aroundLog" pointcut-ref="logDemoUserPointcut" />
-		</aop:aspect>
-	</aop:config>
-	 -->
 
 	<!-- 配置druid监控spring jdbc -->
 	<bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
@@ -135,8 +144,22 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 			</list>
 		</property>
 	</bean>
+	<!-- 慢SQL记录 -->
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<!-- 慢sql时间设置,即执行时间大于200毫秒的都是慢sql -->
+		<property name="slowSqlMillis" value="200"/>
+		<property name="logSlowSql" value="true"/>
+	</bean>
+
+	<bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+		<property name="dataSourceLogEnabled" value="true" />
+		<property name="statementExecutableSqlLogEnable" value="true" />
+	</bean>
+
 	<aop:config>
 		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />
 	</aop:config>
+	
+	<jaxws:endpoint implementor="#webServiceImpl" address="/lg2pr" />
 
 </beans>

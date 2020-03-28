@@ -9,6 +9,8 @@ var jxc_kfck_menuId;
 var kfck_spdg;
 var kfck_dg;
 var kfck_xsthDg;
+var kfck_carDg;
+var kfck_xsthSpDg;
 var editIndex = undefined;
 var kfck_tabs;
 
@@ -41,8 +43,8 @@ $(function(){
 	jxc_kfck_menuId = lnyw.tab_options().id;
 
 	$('#jxc_kfck_layout').layout({
-		fit : true,
-		border : false,
+		fit: true,
+		border: false
 	});
 	
 	kfck_dg = $('#jxc_kfck_dg').datagrid({
@@ -50,22 +52,44 @@ $(function(){
 	    border : false,
 	    singleSelect : true,
 	    remoteSort: false,
-	    fitColumns: true,
+	    //fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
 		pageList : pageList,
-		frozenColumns:[[
-		]],
 		columns:[[
 			{field:'kfcklsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
 	        {field:'khbh',title:'供应商编号',align:'center'},
 	        {field:'khmc',title:'供应商名称',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-	        {field:'ckmc',title:'仓库',align:'center'},
+//	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
+//	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'fhId',title:'分户id',align:'center',hidden:true},
 	        {field:'fhmc',title:'分户',align:'center'},
+            {field:'isFp',title:'分批',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'out',title:'出库',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'sended',title:'收货',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
 	        {field:'thfs',title:'提货方式',align:'center',
 	        	formatter : function(value) {
 					if (value == '1') {
@@ -77,6 +101,7 @@ $(function(){
 	        {field:'thr',title:'送货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
+            {field:'carNum',title:'送货车',align:'center'},
         	{field:'bz',title:'备注',align:'center'},
 //         	{field:'xsthlsh',title:'销售提货流水号',align:'center'},
         	{field:'xsthlshs',title:'销售提货',align:'center',
@@ -156,13 +181,14 @@ $(function(){
 		fit : true,
 	    border : false,
 	    remoteSort: false,
-// 	    fitColumns: true,
+ 	    //fitColumns: true,
 	    pagination : true,
 		pagePosition : 'bottom',
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
 			{field:'id',title:'销售提货DetId',align:'center',checkbox:true},
+            {field:'type',title:'状态',align:'center'},
 			{field:'locked',title:'锁定',align:'center',
 				formatter : function(value) {
 					if (value == '1') {
@@ -174,19 +200,44 @@ $(function(){
         		sorter: function(a,b){
         			a = a == undefined ? 0 : a;
         			b = b == undefined ? 0 : b;
-					return (a-b);  
+					return (a-b);
 				}},
+            {field:'out',title:'出库',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+            {field:'sended',title:'收货',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'createName',title:'创建人',align:'center'},
-	        {field:'khbh',title:'供应商编号',align:'center',hidden:true},
-	        {field:'khmc',title:'供应商名称',align:'center'},
-	        {field:'ywyId',title:'业务员id',align:'center',hidden:true},
-	        {field:'ywymc',title:'业务员',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-	        {field:'ckmc',title:'仓库',align:'center'},
-	        {field:'fhId',title:'分户id',align:'center',hidden:true},
-	        {field:'fhmc',title:'分户',align:'center'},
+	        {field:'thfs',title:'到货方式',align:'center',
+	        	formatter : function(value) {
+					if (value == '1') {
+						return '自提';
+					} else {
+						return '送货';
+					}
+				}},
+	        {field:'khbh',title:'客户编号',align:'center',hidden:true},
+	        {field:'khmc',title:'客户名称',align:'center'},
+            {field:'bz',title:'备注',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+            {field:'bookmc',title:'书名',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
     		{field:'spbh',title:'商品编号',align:'center'},
             {field:'spmc',title:'名称',align:'center'},
             {field:'spcd',title:'产地',align:'center'},
@@ -217,21 +268,24 @@ $(function(){
             	}},
             {field:'cjldwmc',title:'单位2',align:'center'},
             {field:'cdwsl',title:'数量2',align:'center'},
-	        {field:'thfs',title:'到货方式',align:'center',
-	        	formatter : function(value) {
-					if (value == '1') {
-						return '自提';
-					} else {
-						return '送货';
-					}
-				}},
+            {field:'ccksl',title:'已提数量2',align:'center',
+            	formatter: function(value){
+            		return value == 0 ? '' : value;
+            	},
+            	styler:function(){
+            		return 'color:red;';
+            	}},
 	        {field:'thr',title:'提货人',align:'center'},
 	        {field:'ch',title:'车号',align:'center'},
 	        {field:'shdz',title:'送货地址',align:'center'},
-        	{field:'bz',title:'备注',align:'center',
-        		formatter: function(value){
-        			return lnyw.memo(value, 15);
-        		}},
+            {field:'carNum',title:'送货车',align:'center'},
+            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
+            {field:'ywymc',title:'业务员',align:'center'},
+	        {field:'createName',title:'创建人',align:'center'},
+        	{field:'ckId',title:'仓库id',align:'center',hidden:true},
+            {field:'ckmc',title:'仓库',align:'center'},
+            {field:'fhId',title:'分户id',align:'center',hidden:true},
+            {field:'fhmc',title:'分户',align:'center'},
         	{field:'isKp',title:'已开票',align:'center',
         		formatter: function(value){
             		return value == '1' ? '是' : '';
@@ -244,50 +298,136 @@ $(function(){
 	    toolbar:'#jxc_kfck_xsthTb',
 	});
 	lnyw.toolbar(2, kfck_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
-	
-	
-// 	kfck_xsthDg.datagrid({
-//         view: detailview,
-//         detailFormatter:function(index,row){
-//             return '<div style="padding:2px"><table id="ddv-' + index + '"></table></div>';
-//         },
-//         onExpandRow: function(index,row){
-//             $('#ddv-'+index).datagrid({
-//                 url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
-//                 fitColumns:true,
-//                 singleSelect:true,
-//                 rownumbers:true,
-//                 loadMsg:'',
-//                 height:'auto',
-//                 queryParams: {
-//         			xsthlsh: row.xsthlsh,
-//         		},
-//                 columns:[[
-//                     {field:'spbh',title:'商品编号',width:200,align:'center'},
-//                     {field:'spmc',title:'名称',width:100,align:'center'},
-//                     {field:'spcd',title:'产地',width:100,align:'center'},
-//                     {field:'sppp',title:'品牌',width:100,align:'center'},
-//                     {field:'spbz',title:'包装',width:100,align:'center'},
-//                     {field:'zjldwmc',title:'单位1',width:100,align:'center'},
-//                     {field:'zdwsl',title:'数量1',width:100,align:'center'},
-//                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
-//                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
-//                 ]],
-//                 onResize:function(){
-//                 	kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//                 },
-//                 onLoadSuccess:function(){
-//                     setTimeout(function(){
-//                     	kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//                     },0);
-//                 }
-//             });
-//             kfck_xsthDg.datagrid('fixDetailRowHeight',index);
-//         }
-//     });
-	
 
-	//选中列表标签后，装载数据
+    kfck_carDg = $('#jxc_kfck_carDg').datagrid({
+        fit : true,
+        border : false,
+        remoteSort: false,
+// 	    fitColumns: true,
+        pagination : true,
+        pagePosition : 'bottom',
+        pageSize : pageSize,
+        pageList : pageList,
+        columns:[[
+            {field:'xsthlsh',title:'流水号',align:'center'},
+            {field:'createTime',title:'时间',align:'center'},
+            {field:'khbh',title:'客户编号',align:'center',hidden:true},
+            {field:'khmc',title:'客户名称',align:'center'},
+            {field:'ywymc',title:'业务员',align:'center'},
+            {field:'shdz',title:'送货地址',align:'center'},
+            {field:'bz',title:'备注',align:'center'},
+            {field:'hjsl',title:'数量',align:'center'},
+            {field:'carNum',title:'车号',align:'center'}
+        ]],
+        toolbar:'#jxc_kfck_carTb',
+    });
+    lnyw.toolbar(3, kfck_carDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
+
+
+    kfck_xsthSpDg = $('#jxc_kfck_xsthSpDg').datagrid({
+        fit : true,
+        border : false,
+        remoteSort: false,
+// 	    fitColumns: true,
+        pagination : true,
+        pagePosition : 'bottom',
+        pageSize : pageSize,
+        pageList : pageList,
+        columns:[[
+            {field:'needAudit',title:'等级',align:'center',
+                styler: function(value, rowData){
+                    if(rowData.needAudit == rowData.isAudit){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAudit == '9'){
+                        return 'color:red;';
+                    }
+                }},
+            {field:'isAudit',title:'进度',align:'center',
+                styler: function(value, rowData){
+                    if(rowData.needAudit == rowData.isAudit){
+                        return 'color:blue;';
+                    }
+                    if(rowData.isAudit == '9'){
+                        return 'color:red;';
+                    }
+                }},
+            {field:'xsthlsh',title:'流水号',align:'center'},
+            {field:'createTime',title:'时间',align:'center'},
+            {field:'thfs',title:'到货方式',align:'center',
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '自提';
+                    } else {
+                        return '送货';
+                    }
+                }},
+            {field:'khbh',title:'客户编号',align:'center',hidden:true},
+            {field:'khmc',title:'客户名称',align:'center'},
+            {field:'ywyId',title:'业务员id',align:'center',hidden:true},
+            {field:'ywymc',title:'业务员',align:'center'},
+            {field:'ckId',title:'仓库id',align:'center',hidden:true},
+            {field:'ckmc',title:'仓库',align:'center'},
+            {field:'fhId',title:'分户id',align:'center',hidden:true},
+            {field:'fhmc',title:'分户',align:'center'},
+            {field:'thr',title:'提货人',align:'center'},
+            {field:'ch',title:'车号',align:'center'},
+            {field:'shdz',title:'送货地址',align:'center'},
+            {field:'createName',title:'创建人',align:'center'},
+            {field:'bz',title:'备注',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+            {field:'bookmc',title:'书名',align:'center',
+                formatter: function(value){
+                    return lnyw.memo(value, 15);
+                }},
+        ]],
+        //toolbar:'#jxc_kfck_xsthTb',
+    });
+    //lnyw.toolbar(2, kfck_xsthDg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', jxc_kfck_did);
+
+    kfck_xsthSpDg.datagrid({
+        view: detailview,
+        detailFormatter:function(index, row){
+            return '<div style="padding:2px"><table id="kfck-ddv-' + index + '"></table></div>';
+        },
+        onExpandRow: function(index,row){
+            $('#kfck-ddv-'+index).datagrid({
+                url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
+                fitColumns:true,
+                singleSelect:true,
+                rownumbers:true,
+                loadMsg:'',
+                height:'auto',
+                queryParams: {
+                    xsthlsh: row.xsthlsh,
+                },
+                columns:[[
+                    {field:'spbh',title:'商品编号',width:200,align:'center'},
+                    {field:'spmc',title:'名称',width:100,align:'center'},
+                    {field:'spcd',title:'产地',width:100,align:'center'},
+                    {field:'sppp',title:'品牌',width:100,align:'center'},
+                    {field:'spbz',title:'包装',width:100,align:'center'},
+                    {field:'zjldwmc',title:'单位1',width:100,align:'center'},
+                    {field:'zdwsl',title:'数量1',width:100,align:'center'},
+                    {field:'cjldwmc',title:'单位2',width:100,align:'center'},
+                    {field:'cdwsl',title:'数量2',width:100,align:'center'},
+                ]],
+                onResize:function(){
+                    kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+                },
+                onLoadSuccess:function(){
+                    setTimeout(function(){
+                        kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+                    },0);
+                }
+            });
+            kfck_xsthSpDg.datagrid('fixDetailRowHeight',index);
+        }
+    });
+
+    //选中列表标签后，装载数据
 	kfck_tabs = $('#jxc_kfck_tabs').tabs({
 		onSelect: function(title, index){
 			if(index == 1){
@@ -304,10 +444,28 @@ $(function(){
 					queryParams: {
 						bmbh: jxc_kfck_did,
 						fromOther: 'fromKfck',
-						ckId: jxc_kfck_ckCombo.combobox('getValue'),
+						//ckId: jxc_kfck_ckCombo.combobox('getValue'),
 						},
 				});
 			}
+            if(index == 3){
+                kfck_carDg.datagrid({
+                    url: '${pageContext.request.contextPath}/jxc/xsthAction!xsthCarDg.action',
+                    queryParams: {
+                        bmbh: jxc_kfck_did,
+                        ckId: jxc_kfck_ckCombo.combobox('getValue'),
+                    },
+                });
+            }
+            if(index == 4){
+                kfck_xsthSpDg.datagrid({
+                    url: '${pageContext.request.contextPath}/jxc/xsthAction!xsthSpDg.action',
+                    queryParams: {
+                        bmbh: jxc_kfck_did,
+                        //ckId: jxc_kfck_ckCombo.combobox('getValue'),
+                    },
+                });
+            }
 		},
 	});
 	
@@ -369,28 +527,6 @@ $(function(){
         
          
 	});
-	
-	//$('#jxc_kfck_tabs a.tabs-inner').css('height','100px');
-	//$('#jxc_kfck_tabs span.tabs-title').css('white-space','normal');
-	
-// 	$.ajax({
-// 		type: "POST",
-// 		async: false,
-// 		url: '${pageContext.request.contextPath}/jxc/ckAction!listCk.action',
-// 		data: {
-// 			depId: did,
-// 		},
-// 		dataType: 'json',
-// 		success: function(d){
-// 			$('#jxc_kfck_ckId').combobox({
-// 				data : d,
-// 			    valueField: 'id',
-// 				textField: 'ckmc',
-// 				panelHeight: 'auto',
-// 			});
-// 		},
-// 	});
-	
 	
 	//初始化仓库列表
 	jxc_kfck_ckCombo = lnyw.initCombo($("#jxc_kfck_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + jxc_kfck_did);
@@ -583,11 +719,15 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	//var hjzdwsl = 0;
+	//var hjzdwthsl = 0;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
+        //hjzdwsl += this.zdwsl;
+        //hjzdwthsl += this.zdwthsl;
 	});
 	var footerRows = kfck_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
@@ -616,7 +756,10 @@ function saveAll(){
 	effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
 	effectRow['xsthlsh'] = $('input[name=xsthlsh]').val();
 // 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
-	
+
+    effectRow['isFp'] = $('#jxc_kfck_isFp').is(':checked') ? '1' : '0';
+    //effectRow['isFp'] = hjzdwsl != hjzdwthsl ? '1' : '0';
+
 	effectRow['bmbh'] = jxc_kfck_did;
 	effectRow['lxbh'] = jxc_kfck_lx;
 	effectRow['menuId'] = jxc_kfck_menuId;
@@ -626,6 +769,7 @@ function saveAll(){
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
 	//$.ajaxSettings.traditional=true;
+	////MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/kfckAction!save.action',
@@ -638,10 +782,27 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	//如果为送货，保存后询问是否安排车辆
+                if($('#thfs_sh').is(':checked')) {
+                    $.messager.confirm('请确认', '是否安排送货车辆？', function (r) {
+                        if (r) {
+                            setCar(rsp.obj.kfcklsh);
+                        }
+                    });
+                }
+		    	$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
+					if (r) {
+						var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + rsp.obj.kfcklsh + '&bmbh=' + jxc_kfck_did;
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					}
+				});
 			}  
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			////MaskUtil.unmask();
 		}
 	});
 }
@@ -705,7 +866,14 @@ function setEditing(){
 	});
     
   	//初始化商品批次
-	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
+    if (jxc_kfck_did == '05' && $(spbhEditor.target).val().substr(0, 1) == '8') {
+        $(sppcEditor.target).datebox('setValue', moment().date(1).format('YYYY-MM-DD'));
+    } else {
+        var opt = $(sppcEditor.target).datebox('options');
+        opt.disabled = true;
+        $(sppcEditor.target).datebox(opt);
+        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+    }
     
 	//loadEditor();
 	//处理编辑行的换行事件
@@ -772,7 +940,7 @@ function setEditing(){
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
     	if($(zthslEditor.target).val() > 0){
-    		if($(zslEditor.target).val() > ($(zthslEditor.target).val() - $(zytslEditor.target).val())){
+    		if((Number($(zslEditor.target).val()) - (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val()))).toFixed(3) > 0){
     			$.messager.alert("提示", "提货数量大于未提货数量，请重新输入！");
         		$(zslEditor.target).numberbox('setValue', 0);
         		zslEditor.target.focus();
@@ -787,7 +955,9 @@ function setEditing(){
         	}	
     	}
     	
-    	if($(zhxsEditor.target).val() != 0){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
@@ -800,7 +970,9 @@ function setEditing(){
     
   	
     cslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
     		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();
@@ -944,6 +1116,7 @@ function cjKfck(){
 			if(row.isCj != '1'){
 				$.messager.confirm('请确认', '是否要冲减选中的库房出库单？', function(r) {
 					if (r) {
+						////MaskUtil.mask('正在冲减，请等待……');
 						$.ajax({
 							url : '${pageContext.request.contextPath}/jxc/kfckAction!cjKfck.action',
 							data : {
@@ -960,25 +1133,130 @@ function cjKfck(){
 									title : '提示',
 									msg : d.msg
 								});
+							},
+							complete: function(){
+								////MaskUtil.unmask();
 							}
 						});
 					}
 					});
 			}else{
-				$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
+				$.messager.alert('警告', '选中的库房出库记录已被冲减，请重新选择！',  'warning');
 			}
 		}else{
-			$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+			$.messager.alert('警告', '选中的库房出库已进行业务入库，不能被冲减，请重新选择！',  'warning');
 		}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
 }
 
+function updateKfckOut(){
+    //是否isFp，isCj
+    var row = kfck_dg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.isCj == '0'){
+            if(row.isFp == '1'){
+				if(row.out == '0'){
+					$.messager.confirm('请确认', '是否要对选中的出库单进行出库复核？', function(r) {
+						if (r) {
+							$.ajax({
+								url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+								data : {
+									xsthlsh : row.kfcklsh,
+									bmbh: jxc_kfck_did,
+									menuId: jxc_kfck_menuId,
+									type: 'out'
+								},
+								dataType : 'json',
+								success : function(d) {
+									var updateRow = undefined;
+									if(row.thfs == '0'){
+										updateRow = {out: '1'};
+									}else{
+										updateRow = {out: '1', sended: '1'};
+									}
+									kfck_dg.datagrid('updateRow', {
+										index: kfck_dg.datagrid('getRowIndex', row),
+										row: updateRow
+									});
+									$.messager.show({
+										title : '提示',
+										msg : d.msg
+									});
+								},
+							});
+						}
+					});
+				}else{
+					$.messager.alert('警告', '选中的出库单已进行复核操作，请重新选择！',  'warning');
+				}
+            }else{
+                $.messager.alert('警告', '选中的出库单不是分批出库单，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的出库单已冲减，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
+function updateKfckSend(){
+    var row = kfck_dg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.isCj	== '0'){
+            if(row.isFp	== '1'){
+				if(row.out == '1'){
+					if(row.sended == '0'){
+						$.messager.confirm('请确认', '是否要对选中的出库单进行收货确认？', function(r) {
+							if (r) {
+								$.ajax({
+									url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+									data : {
+										xsthlsh : row.kfcklsh,
+										bmbh: jxc_kfck_did,
+										menuId: jxc_kfck_menuId,
+										type: 'send'
+									},
+									dataType : 'json',
+									success : function(d) {
+										kfck_dg.datagrid('updateRow', {
+											index: kfck_dg.datagrid('getRowIndex', row),
+											row: {
+												sended: '1'
+											}
+										});
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									},
+								});
+							}
+						});
+					}else{
+						$.messager.alert('警告', '选中的出库单已进行收货确认操作，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选中的出库单还未进行出库复核，请重新选择！',  'warning');
+				}
+            }else{
+                $.messager.alert('警告', '选中的出库单不是分批出库单，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的出库单已冲减，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
 function searchKfck(){
 	kfck_dg.datagrid('load',{
 		bmbh: jxc_kfck_did,
 		createTime: $('input[name=createTimeKfck]').val(),
+		search: $('input[name=searchKfck]').val(),
 	});
 }
 
@@ -1021,34 +1299,39 @@ function generateKfck(){
 						},
 						dataType : 'json',
 						success : function(d) {
-							kfck_spdg.datagrid('loadData', d.rows);
-							updateFooter();
-							$('input[name=xsthDetIds]').val(xsthDetIdsStr);
+						    if(d.success == false) {
+                                $.messager.alert('提示', d.msg, 'error');
+                            }else{
+                                kfck_spdg.datagrid('loadData', d.rows);
+                                updateFooter();
+                                $('input[name=xsthDetIds]').val(xsthDetIdsStr);
 //							$('input[name=xsthlsh]').val(rows[0].xsthlsh);
-							$('input[name=khbh]').val(rows[0].khbh);
-							$('input[name=khmc]').val(rows[0].khmc);
-							jxc_kfck_ckCombo.combobox('setValue', rows[0].ckId);
-							if(rows[0].isFh == '1'){
-								
-								$('#jxc_kfck_isFh').prop('checked', 'checked');
-								$('.jxc_kfck_isFh').css('display', 'table-cell');
-								jxc_kfck_fhCombo.combobox('setValue', rows[0].fhId);
-							}
-							if(rows[0].thfs == '1'){
-								$('input#thfs_zt').attr('checked', 'checked');
-								$('.thfs_zt').css('display', 'table-cell');
-								$('.thfs_sh').css('display', 'none');
-								$('input[name=thr]').val(rows[0].thr);
-								$('input[name=ch]').val(rows[0].ch);
-							}else{
-								$('input#thfs_sh').attr('checked', 'checked');
-								$('input[name=shdz]').val(rows[0].shdz);
-								$('.thfs_zt').css('display', 'none');
-								$('.thfs_sh').css('display', 'table-cell');
-							}
-						
-							
-							kfck_tabs.tabs('select', 0);
+                                $('input[name=khbh]').val(rows[0].khbh);
+                                $('input[name=khmc]').val(rows[0].khmc);
+                                jxc_kfck_ckCombo.combobox('setValue', (jxc_kfck_did == '04') ? jxc.getCkByKhbh(jxc_kfck_did, '00000000') : rows[0].ckId);
+                                if (rows[0].isFh == '1') {
+
+                                    $('#jxc_kfck_isFh').prop('checked', 'checked');
+                                    $('.jxc_kfck_isFh').css('display', 'table-cell');
+                                    jxc_kfck_fhCombo.combobox('setValue', rows[0].fhId);
+                                }
+                                if (rows[0].thfs == '1') {
+                                    $('input#thfs_zt').attr('checked', 'checked');
+                                    $('.thfs_zt').css('display', 'table-cell');
+                                    $('.thfs_sh').css('display', 'none');
+                                    $('input[name=thr]').val(rows[0].thr);
+                                    $('input[name=ch]').val(rows[0].ch);
+                                } else {
+                                    $('input#thfs_sh').attr('checked', 'checked');
+                                    $('input[name=shdz]').val(rows[0].shdz);
+                                    $('.thfs_zt').css('display', 'none');
+                                    $('.thfs_sh').css('display', 'table-cell');
+                                }
+                                $('input[name=jxc_kfck_bz]').val(rows[0].bz + '//' + rows[0].bookmc);
+
+
+                                kfck_tabs.tabs('select', 0);
+                            }
 						}
 					});
 				}
@@ -1059,15 +1342,40 @@ function generateKfck(){
 	}
 }
 
-function printThd(){
-	var row = kfck_xsthDg.datagrid('getSelected');
+function printKfck(){
+	var row = kfck_dg.datagrid('getSelected');
 	if (row != undefined) {
-		$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
+		$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
 			if (r) {
-				var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did;
+				var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + row.kfcklsh + "&bmbh=" + jxc_kfck_did;
 				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 			}
 		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+function printThd(){
+	var row = kfck_xsthDg.datagrid('getSelected');
+	if (row != undefined) {
+        $.ajax({
+            url:'${pageContext.request.contextPath}/jxc/printAction!getCounts.action',
+            async: false,
+            data:{
+                lsh: row.xsthlsh,
+                type: PRINT_TYPE_XSTH
+            },
+            dataType:'json',
+            success:function(dd){
+                $.messager.confirm('请确认', '是否打印销售提货单？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
+                    if (r) {
+                        var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + '&bmbh=' + jxc_kfck_did + '&type=' + PRINT_TYPE_XSTH;
+                        jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                    }
+                });
+            }
+        });
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
@@ -1083,7 +1391,7 @@ function printXsthByBgy(){
 					url:'${pageContext.request.contextPath}/jxc/xsthAction!getSpBgys.action',
 					async: false,
 					data:{
-						xsthlsh: row.xsthlsh,
+						xsthlsh: row.xsthlsh
 					},
 					dataType:'json',
 					success:function(data){
@@ -1097,12 +1405,25 @@ function printXsthByBgy(){
 				});
 			
 				$.each(bgyIds, function(index){
-					$.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ this.bgyName + '</font>)？', function(r) {
-						if (r) {
-							var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-						}
-					});
+                    $.ajax({
+                        url:'${pageContext.request.contextPath}/jxc/printAction!getCounts.action',
+                        async: false,
+                        data:{
+                            lsh: row.xsthlsh,
+							bgyId: this.bgyId,
+							type: PRINT_TYPE_XSTH_BGY
+                        },
+                        dataType:'json',
+                        success:function(dd){
+                            $.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ bgyIds[index].bgyName + '</font>)？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
+                                if (r) {
+                                    var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId + '&type=' + PRINT_TYPE_XSTH_BGY;
+                                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                                }
+                            });
+                        }
+                    });
+
 				});
 			}
 		});
@@ -1115,7 +1436,7 @@ function printXsthByBgy(){
 function updateThsl(){
 	var row = kfck_xsthDg.datagrid('getSelected');
 	if(row != undefined){
-		if(row.thsl == 0){
+		//if(row.thsl == 0){
 			if(row.isKp != '1'){
 				$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
 					if (thsl != undefined){
@@ -1124,6 +1445,7 @@ function updateThsl(){
 							data : {
 								id : row.id,
 								thsl: thsl,
+								fromOther: '',
 								bmbh : jxc_kfck_did,
 								menuId : jxc_kfck_menuId,
 							},
@@ -1142,9 +1464,9 @@ function updateThsl(){
 			}else{
 				$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
 			}
-		}else{
-			$.messager.alert('警告', '选中的销售提货已修改数量，请重新选择！',  'warning');
-		}
+		//}else{
+		//	$.messager.alert('警告', '选中的销售提货已修改数量，请重新选择！',  'warning');
+		//}
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
@@ -1216,15 +1538,241 @@ function unlockXsth(){
 	}
 }
 
+function updateXsthOut(){
+    var row = kfck_xsthDg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.locked == '1'){
+			if(row.out != '1'){
+				$.messager.confirm('请确认', '是否要对选中的提货单进行出库复核？', function(r) {
+					if (r) {
+						$.ajax({
+							url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+							data : {
+								xsthlsh : row.xsthlsh,
+								bmbh: jxc_kfck_did,
+								menuId: jxc_kfck_menuId,
+								type: 'out'
+							},
+							dataType : 'json',
+							success : function(d) {
+							    var updateRow = undefined;
+							    if(row.thfs == '0'){
+                                    updateRow = {out: '1'};
+                                }else{
+                                    updateRow = {out: '1', sended: '1'};
+                                }
+                                kfck_xsthDg.datagrid('updateRow', {
+                                    index: kfck_xsthDg.datagrid('getRowIndex', row),
+                                    row: updateRow
+                                });
+								$.messager.show({
+									title : '提示',
+									msg : d.msg
+								});
+							},
+						});
+					}
+				});
+			}else{
+				$.messager.alert('警告', '选中的销售提货已进行复核操作，请重新选择！',  'warning');
+			}
+        }else{
+            $.messager.alert('警告', '选中的销售提货未锁定，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
+function updateXsthSend(){
+    var row = kfck_xsthDg.datagrid('getSelected');
+    if (row != undefined) {
+        if(row.out == '1'){
+            if(row.sended == '0'){
+                $.messager.confirm('请确认', '是否要对选中的提货单进行收货确认？', function(r) {
+                    if (r) {
+                        $.ajax({
+                            url : '${pageContext.request.contextPath}/jxc/xsthAction!updateXsthOut.action',
+                            data : {
+                                xsthlsh : row.xsthlsh,
+                                bmbh: jxc_kfck_did,
+                                menuId: jxc_kfck_menuId,
+                                type: 'send'
+                            },
+                            dataType : 'json',
+                            success : function(d) {
+                                kfck_xsthDg.datagrid('updateRow', {
+                                    index: kfck_xsthDg.datagrid('getRowIndex', row),
+                                    row: {
+                                        sended: '1'
+                                    }
+                                });
+                                $.messager.show({
+                                    title : '提示',
+                                    msg : d.msg
+                                });
+                            },
+                        });
+                    }
+                });
+            }else{
+                $.messager.alert('警告', '选中的销售提货已进行收货确认操作，请重新选择！',  'warning');
+            }
+        }else{
+            $.messager.alert('警告', '选中的销售提货未进行出库复核，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
 function searchXsthInKfck(){
 	kfck_xsthDg.datagrid('load',{
 		bmbh: jxc_kfck_did,
 		createTime: $('input[name=createTimeXsthInKfck]').val(),
+		search: $('input[name=searchXsthInKfck]').val(),
 		fromOther: 'fromKfck'
 	});
 }
 
-//////////////////////////////////////////////以上为采购计划列表处理代码
+//////////////////////////////////////////////以上为销售提货列表处理代码
+
+//////////////////////////////////////////////以下为车辆安排列表处理代码
+
+function selectCar(){
+    var rows = kfck_carDg.datagrid("getSelections");
+    if(rows.length){
+        var lsh;
+        if(rows.length == 1){
+            lsh = rows[0].xsthlsh
+		}else{
+            flag = true;
+            $.each(rows, function(){
+                if(this.carNum != ''){
+                    flag = false;
+                }
+            });
+            if(flag){
+				$.each(rows, function () {
+					if(lsh != undefined){
+						lsh = lnyw.fs('{0},{1}', lsh, this.xsthlsh)
+					}else{
+						lsh = this.xsthlsh
+					}
+				});
+            }else{
+                $.messager.alert('警告', '选择多张单据时，必须为未安排车辆！！',  'warning');
+                return;
+            }
+		}
+        setCar(lsh, 'datagrid');
+
+	}else{
+        $.messager.alert('警告', '请至少选择一条记录进行车辆安排！！',  'warning');
+    }
+}
+
+function setCar(lsh, source){
+    var car_dg;
+    var p = $('#jxc_kfck_car_select').dialog({
+        title : '选择车辆',
+        href : '${pageContext.request.contextPath}/jxc/selectCar.jsp',
+        width : 300,
+        height : 400,
+        modal : true,
+        buttons: [{
+            text:'确定',
+            iconCls:'icon-ok',
+            handler:function(){
+				var rows = car_dg.datagrid("getSelections");
+				if(rows.length){
+				    var carIds;
+				    if(rows.length == 1){
+					    carIds = rows[0].id;
+					}else{
+                        $.each(rows, function () {
+                            if(carIds != undefined){
+                                carIds = lnyw.fs('{0},{1}', carIds, this.id);
+                            }else{
+                                carIds = this.id;
+                            }
+                        });
+					}
+                    $.ajax({
+                        url : '${pageContext.request.contextPath}/jxc/carAction!updateCar.action',
+                        data : {
+                            lsh : lsh,
+                            carIds : carIds,
+                        },
+                        dataType : 'json',
+                        success : function(d) {
+                            $.messager.show({
+                                title : '提示',
+                                msg : d.msg
+                            });
+                            if(source == 'datagrid'){
+                                kfck_carDg.datagrid('reload');
+                            }
+                            p.dialog("close");
+                        }
+                    });
+				}
+
+            }
+        }],
+        onLoad : function() {
+            var cars;
+            $.ajax({
+                url : '${pageContext.request.contextPath}/jxc/carAction!getSelectCar.action',
+                data : {
+                    lsh : lsh
+                },
+                dataType : 'json',
+                async: 'false',
+                success : function(d) {
+                    cars = d;
+                    car_dg = $('#kfck_car_dg').datagrid({
+                        url: '${pageContext.request.contextPath}/jxc/carAction!listCar.action',
+                        fit : true,
+                        border : false,
+                        fitColumns: true,
+                        queryParams: {
+                            bmbh: jxc_kfck_did
+                        },
+                        columns:[[
+                            {field:'id',title:'Id',align:'center',checkbox:true},
+                            {field:'carNum',title:'车号',align:'center'},
+                        ]],
+                        onLoadSuccess: function(){
+                            $.each(car_dg.datagrid('getRows'), function(){
+                                var row = this;
+                                if(cars != null) {
+                                    $.each(cars, function () {
+                                        if (this.id == row.id) {
+                                            car_dg.datagrid('checkRow', car_dg.datagrid('getRowIndex', row));
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                    });
+                }
+            });
+
+        }
+    });
+}
+
+
+function searchCarInKfck(){
+    kfck_carDg.datagrid('load',{
+        bmbh: jxc_kfck_did,
+        //createTime: $('input[name=createTimeCarInKfck]').val(),
+        search: $('input[name=searchCarInKfck]').val()
+        //fromOther: 'fromKfck'
+    });
+}
+//////////////////////////////////////////////以上为车辆安排列表处理代码
 
 </script>
 
@@ -1232,11 +1780,12 @@ function searchXsthInKfck(){
 <div id="jxc_kfck_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_kfck_layout' style="height:100%;width=100%">
+        <div id='jxc_kfck_layout' style="height:100%;width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>
-						<th class="read">分户</th><td class="read" colspan="5"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></td>
+						<th class="read">分户</th><td class="read"><input type="checkbox" id="jxc_kfck_isFh" name="isFh" disabled="disabled"></td>
+						<th class="read">分批</th><td class="read" colspan="3"><input type="checkbox" id="jxc_kfck_isFp" name="isFp"></td>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
 						<th class="read">单据号</th><td><div id="kfckLsh" class="read"></div></td>
 					</tr>
@@ -1274,13 +1823,28 @@ function searchXsthInKfck(){
 	<div title="销售提货列表" data-options="closable:false" >
 		<table id='jxc_kfck_xsthDg'></table>
 	</div>
+	<div title="送货车辆安排" data-options="closable:false" >
+		<table id='jxc_kfck_carDg'></table>
+	</div>
+	<div title="未审批提货列表" data-options="closable:false" >
+		<table id='jxc_kfck_xsthSpDg'></table>
+	</div>
 </div>
 
 <div id="jxc_kfck_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、客户编号、名称、备注：<input type="text" name="searchKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchKfck();">查询</a>
 </div>
 <div id="jxc_kfck_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、客户编号、名称、业务员、商品编号、备注：<input type="text" name="searchXsthInKfck" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInKfck();">查询</a>
 </div>
+<div id="jxc_kfck_carTb" style="padding:3px;height:auto">
+	<%--请输入查询起始日期:<input type="text" name="createTimeCarInKfck" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">--%>
+	输入流水号、客户名称：<input type="text" name="searchCarInKfck" style="width:100px">
+	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCarInKfck();">查询</a>
+</div>
+
+<div id="jxc_kfck_car_select"></div>

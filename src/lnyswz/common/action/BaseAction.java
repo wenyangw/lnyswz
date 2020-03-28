@@ -36,6 +36,8 @@ public class BaseAction extends ActionSupport implements RequestAware, SessionAw
 		try {
 			String json = JSON.toJSONStringWithDateFormat(object, "yyyy-MM-dd HH:mm:ss");
 			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+			ServletActionContext.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+
 			ServletActionContext.getResponse().getWriter().write(json);
 			ServletActionContext.getResponse().getWriter().flush();
 			ServletActionContext.getResponse().getWriter().close();

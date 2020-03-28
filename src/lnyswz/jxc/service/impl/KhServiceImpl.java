@@ -1,5 +1,6 @@
 package lnyswz.jxc.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,11 +23,13 @@ import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Kh;
 import lnyswz.jxc.bean.Xskp;
 import lnyswz.jxc.bean.User;
+import lnyswz.jxc.bean.Yszz;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TGys;
 import lnyswz.jxc.model.TKh;
 import lnyswz.jxc.model.TKhDet;
 import lnyswz.jxc.model.TKhlx;
+import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.model.TYszz;
@@ -42,6 +45,7 @@ public class KhServiceImpl implements KhServiceI {
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TKhlx> khlxDao;
 	private BaseDaoI<TYszz> yszzDao;
+	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
@@ -119,6 +123,14 @@ public class KhServiceImpl implements KhServiceI {
 		if(kh.getIsUp() == null){
 			khDet.setIsUp("0");
 		}
+		
+		if(kh.getIsOther() == null){
+			khDet.setIsOther("0");
+		}
+		
+//		if(kh.getIsOther() == null){
+//			khDet.setIsOther("0");
+//		}
 		
 		khDet.setTKh(g);
 		gdt.add(khDet);
@@ -201,13 +213,16 @@ public class KhServiceImpl implements KhServiceI {
 	}
 
 	/**
-	 * 判断客户编号是否重复
+	 * 判断客户编号或客户名称是否重复
 	 */
 	@Override
 	public boolean existKh(Kh kh) {
 		boolean isOK = false;
-		String hql = "from TKh t where t.khbh=" + kh.getKhbh();
-		List<TKh> list = khDao.find(hql);
+		String hql = "from TKh t where t.khbh = :khbh or t.khmc = :khmc";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("khbh", kh.getKhbh());
+		params.put("khmc", kh.getKhmc());
+		List<TKh> list = khDao.find(hql,params);
 		if (list.size() != 0) {
 			isOK = true;
 		}
@@ -220,8 +235,9 @@ public class KhServiceImpl implements KhServiceI {
 	@Override
 	public boolean existKhDet(Kh kh) {
 		boolean isOK = false;
-		String hql = "from TKhDet t where t.TKh.khbh = :khbh and t.ywyId = :ywyId";
+		String hql = "from TKhDet t where t.TDepartment.id = :bmbh and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("bmbh", kh.getDepId());
 		params.put("khbh", kh.getKhbh());
 		params.put("ywyId", kh.getYwyId());
 		
@@ -247,6 +263,23 @@ public class KhServiceImpl implements KhServiceI {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public Kh getKhDet(Kh kh) {
+		String hql = "from TKhDet det where det.TKh.khbh = :khbh and det.TDepartment.id = :depId and det.ywyId = :ywyId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("khbh", kh.getKhbh());
+		params.put("depId", kh.getDepId());
+		params.put("ywyId", kh.getYwyId());
+		TKhDet t = khdetDao.get(hql, params);
+		if(t != null){
+			Kh k = new Kh();
+			BeanUtils.copyProperties(t, k);
+			k.setKhbh(t.getTKh().getKhbh());
+			return k;
+		}
+		return null;
 	}
 	
 	/**
@@ -281,7 +314,6 @@ public class KhServiceImpl implements KhServiceI {
 				Set<TKhDet> khdet = t.getTKhDets();
 				for (TKhDet m : khdet) {
 					if (m.getTDepartment().getId().trim().equals(c.getDepId())) {
-						
 						BeanUtils.copyProperties(m, nc);
 						nc.setDetId(m.getId());
 						if(m.getYwyId() > 0){
@@ -291,7 +323,6 @@ public class KhServiceImpl implements KhServiceI {
 						if(m.getKhlxId() != null){
 							nc.setKhlxmc(khlxDao.load(TKhlx.class, m.getKhlxId()).getKhlxmc());
 						}
-						
 					}
 				}
 			}
@@ -302,7 +333,7 @@ public class KhServiceImpl implements KhServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
-	
+
 	@Override
 	public DataGrid datagridDet(Kh kh) {
 		DataGrid dg = new DataGrid();
@@ -371,6 +402,7 @@ public class KhServiceImpl implements KhServiceI {
 		BeanUtils.copyProperties(t, k);
 		k.setBh(t.getKhbh());
 		k.setMc(t.getKhmc());
+		k.setDist(t.getDist());
 		return k;
 	}
 	
@@ -386,7 +418,7 @@ public class KhServiceImpl implements KhServiceI {
 		Kh k = new Kh();
 		BeanUtils.copyProperties(t, k);
 
-		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh";
+		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh order by t.isDef desc, t.ywyId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("depId", depId);
 		params.put("khbh", khbh);
@@ -525,16 +557,16 @@ public class KhServiceImpl implements KhServiceI {
 //			
 //			khs.add(k);
 //		}
-		for(Kh k : khs){
+		/*for(Kh k : khs){
 			Kh kk = new Kh();
 			kk.setKhbh(k.getKhbh());
 			kk.setKhmc(k.getKhmc());
 			
 			ks.add(kk);
-		}
+		}*/
 		
 		DataGrid dg = new DataGrid();
-		dg.setRows(ks);
+		dg.setRows(khs);
 		return dg;
 	}
 	
@@ -568,7 +600,7 @@ public class KhServiceImpl implements KhServiceI {
 		}
 	}
 	
-	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
+	public static Kh getKhsx(String khbh, String depId, int ywyId, BaseDaoI<TKh> khDao, BaseDaoI<TKhDet> khDetDao, BaseDaoI<TKhlx> khlxDao) {
 		Kh kh = new Kh();
 
 		String hql = "from TKhDet t where t.TDepartment.id = :depId and t.TKh.khbh = :khbh and t.ywyId = :ywyId";
@@ -581,17 +613,48 @@ public class KhServiceImpl implements KhServiceI {
 		if(tKhDet != null){
 			BeanUtils.copyProperties(tKhDet, kh);
 			kh.setKhmc(tKhDet.getTKh().getKhmc());
+			kh.setKhlxId(tKhDet.getKhlxId());
 			kh.setKhlxmc(khlxDao.load(TKhlx.class, tKhDet.getKhlxId()).getKhlxmc());
 		}else{
+			kh.setKhmc(khDao.load(TKh.class, khbh).getKhmc());
 			kh.setKhlxId(Constant.KHLX_XK);
 			kh.setKhlxmc(Constant.KHLX_XK_NAME);
 			kh.setSxje(Constant.BD_ZERO);
 			kh.setSxzq(0);
 			kh.setLsje(Constant.BD_ZERO);
+			//kh.setIsLocked("0");
 		}
 		return kh;
 	}
 
+	public Yszz getYszz(String bmbh, String khbh, int ywyId, String jzsj){
+		Yszz yszz = new Yszz();
+		
+		TYszz tYszz = YszzServiceImpl.getYszz(bmbh, khbh, ywyId, jzsj, yszzDao);
+				
+		if(tYszz != null){
+			BeanUtils.copyProperties(tYszz, yszz);
+		}
+		//客户的临时出库金额以明细为准
+//		String sql = "select cast(SUM((zdwsl - kpsl) * zdwdj) as numeric(18, 2)) thje from v_xsth_without_xskp "
+//				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+//				+ " group by bmbh, khbh, ywyId";
+
+		String sql = "select spje as thje from v_xsth_all_tj where bmbh = ? and khbh = ? and ywyId = ?";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", bmbh);
+		params.put("1", khbh);
+		params.put("2", ywyId);
+		
+		Object thjeO = yszzDao.getBySQL(sql, params);
+		if(thjeO != null){
+			yszz.setThje(new BigDecimal(thjeO.toString()));
+		}else {
+			yszz.setThje(BigDecimal.ZERO);
+		}
+		return yszz;
+	}
+	
 	@Autowired
 	public void setKhDao(BaseDaoI<TKh> khDao) {
 		this.khDao = khDao;
@@ -620,6 +683,11 @@ public class KhServiceImpl implements KhServiceI {
 	@Autowired
 	public void setYszzDao(BaseDaoI<TYszz> yszzDao) {
 		this.yszzDao = yszzDao;
+	}
+
+	@Autowired
+	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
+		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

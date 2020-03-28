@@ -1,20 +1,15 @@
 package lnyswz.jxc.action;
 
-import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ModelDriven;
 
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
-import lnyswz.jxc.bean.Catalog;
 import lnyswz.jxc.bean.User;
-import lnyswz.jxc.service.CatalogServiceI;
 import lnyswz.jxc.service.UserServiceI;
 
 /**
@@ -26,7 +21,6 @@ import lnyswz.jxc.service.UserServiceI;
 @Action(value = "userAction")
 public class UserAction extends BaseAction implements ModelDriven<User>{
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(UserAction.class);
 	private UserServiceI userService;
 	private User user = new User();
 	
@@ -126,11 +120,20 @@ public class UserAction extends BaseAction implements ModelDriven<User>{
 	public void listYwys(){
 		writeJson(userService.listYwys(user.getDid()));
 	}
-	
+	/**
+	 * 获取用户关联业务员账号
+	 */
+	public void listYwyByYwy(){
+		writeJson(userService.listYwyByYwy(user.getId()));
+	}
 	public void listBgys(){
 		User u = (User)session.get("user");
 		user.setIsYwy(u.getIsYwy());
 		writeJson(userService.listBgys(user));
+	}
+	
+	public void getContacts(){
+		writeJson(userService.getContacts(user));
 	}
 	
 	@Override

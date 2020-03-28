@@ -53,6 +53,7 @@ public class TYwrk implements java.io.Serializable {
 	private String isDep;
 	private String depId;
 	private String depName;
+	private String beYwrklsh;
 	private Set<TYwrkDet> TYwrkDets = new HashSet<TYwrkDet>(0);
 	private Set<TKfrk> TKfrks = new HashSet<TKfrk>(0);
 	
@@ -67,7 +68,7 @@ public class TYwrk implements java.io.Serializable {
 	public TYwrk(String ywrklsh, int createId, Date createTime,  String createName, String bmbh, String bmmc,
 			String gysbh, String gysmc, String rklxId, String rklxmc, String ckId, String ckmc, BigDecimal hjje, String bz,
 			String isCj, Date cjTime, Integer cjId, String cjName, String isZs, String isDep, String depId, String depName,
-			Set<TYwrkDet> TYwrkDets, Set<TKfrk> TKfrks, Set<TCgjhDet> TCgjhs, TYwbt TYwbt, TXskp TXskp) {
+			String beYwrklsh, Set<TYwrkDet> TYwrkDets, Set<TKfrk> TKfrks, Set<TCgjhDet> TCgjhs, TYwbt TYwbt, TXskp TXskp) {
 		this.ywrklsh = ywrklsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -89,7 +90,8 @@ public class TYwrk implements java.io.Serializable {
 		this.isZs = isZs;
 		this.isDep = isDep;
 		this.depId = depId;
-		this.depName = depName;		
+		this.depName = depName;
+		this.beYwrklsh = beYwrklsh;
 		this.TYwrkDets = TYwrkDets;
 		this.TKfrks = TKfrks;
 		this.TCgjhs = TCgjhs;
@@ -313,6 +315,15 @@ public class TYwrk implements java.io.Serializable {
 
 	public void setDepName(String depName) {
 		this.depName = depName;
+	}
+
+	@Column(name = "beYwrklsh", length = 12)
+	public String getBeYwrklsh() {
+		return beYwrklsh;
+	}
+
+	public void setBeYwrklsh(String beYwrklsh) {
+		this.beYwrklsh = beYwrklsh;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TYwrk", cascade=CascadeType.ALL)

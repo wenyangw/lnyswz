@@ -1,9 +1,6 @@
 package lnyswz.jxc.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -77,9 +74,14 @@ public class CatalogServiceImpl implements CatalogServiceI {
 	 * 获得所有模块，供选择用，无分页
 	 */
 	@Override
-	public List<Catalog> listCatas() {
+	public List<Catalog> listCatas(String type) {
 		String hql = "from TCatalog t";
-		List<TCatalog> l = catalogDao.find(hql);
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(!type.equals("")) {
+			hql += " where t.type = :type";
+			params.put("type", type);
+		}
+		List<TCatalog> l = catalogDao.find(hql, params);
 		return changeCata(l);
 	}
 

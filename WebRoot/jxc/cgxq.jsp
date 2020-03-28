@@ -134,22 +134,23 @@ $(function(){
 // 	    panelHeight: 'auto',
 // 	});
 	
-	$('input[name=isLs]').click(function(){
-		if($(this).is(':checked')){
-			$('.ls').css('display','table-row');
-			//初始化分户列表
-			if(jxc_cgxq_jsfsCombo == undefined){
-				jxc_cgxq_jsfsCombo = lnyw.initCombo($("#jxc_cgxq_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
-			}else{
-				//jxc_cgxq_jsfsCombo.combobox('selectedIndex', 0);
-			}
-		}else{
-			$('.ls').css('display','none');
-		}
-	});
+	//2015-12-01集团单位订单要统计全部需求，并能区分统一需求还是临时需求，因此客户等信息长期有效
+// 	$('input[name=isLs]').click(function(){
+// 		if($(this).is(':checked')){
+// 			$('.ls').css('display','table-row');
+// 			//初始化分户列表
+// 			if(jxc_cgxq_jsfsCombo == undefined){
+// 				jxc_cgxq_jsfsCombo = lnyw.initCombo($("#jxc_cgxq_jsfsId"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
+// 			}else{
+// 				//jxc_cgxq_jsfsCombo.combobox('selectedIndex', 0);
+// 			}
+// 		}else{
+// 			$('.ls').css('display','none');
+// 		}
+// 	});
 	
-// 	//初始化付款方式列表
-// 	jxc_cgxq_jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
+ 	//初始化付款方式列表
+ 	jxc_cgxq_jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
 });
 
 //以下为商品列表处理代码
@@ -161,9 +162,13 @@ function init(){
 	
 	//清空全部字段
 	$('input').val('');
+	$('#cgxq_xqsj').datebox().datebox('setValue', moment().format('YYYY-MM-DD'));
+	
+	
 	//$('input:checkbox').removeAttr('checked');
 	$('input:checkbox').prop('checked', false);
-	$('.ls').css('display','none');
+	//$('.ls').css('display','none');
+	$('.ls').css('display','block');
 	
 	//收回商品库存信息
 	jxc.hideKc('#jxc_cgxq_layout');
@@ -199,7 +204,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0){
+		if(zslEditor.target.val() > 0){
 			return true;
 		}
 	}
@@ -316,24 +321,37 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+	
 	var footerRows = cgxq_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
 	effectRow['gysbh'] = $('input[name=gysbh]').val();
 	effectRow['gysmc'] = $('input[name=gysmc]').val();
+	effectRow['khbh'] = $('input[name=khbh]').val();
+	effectRow['khmc'] = $('input[name=khmc]').val();
+	effectRow['jsfsId'] = jxc_cgxq_jsfsCombo.combobox('getValue');
+	effectRow['jsfsmc'] = jxc_cgxq_jsfsCombo.combobox('getText');
+	effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
+	effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
+	effectRow['dhsj'] = $('input[name=dhsj]').val();
+	effectRow['xqsj'] = $('input[name=xqsj]').val();
+		
 	if($('input[name=isLs]').is(':checked')){
 		effectRow['isLs'] =  '1';
-		effectRow['khbh'] = $('input[name=khbh]').val();
-		effectRow['khmc'] = $('input[name=khmc]').val();
-		effectRow['jsfsId'] = jxc_cgxq_jsfsCombo.combobox('getValue');
-		effectRow['jsfsmc'] = jxc_cgxq_jsfsCombo.combobox('getText');
-		effectRow['lxr'] = $('input[name=jxc_cgxq_lxr]').val();
-		effectRow['shdz'] = $('input[name=jxc_cgxq_shdz]').val();
-		effectRow['dhsj'] = $('input[name=dhsj]').val();
+		var needA = jxc.getAuditLevelCgxq(did);
+		effectRow['needAudit'] = needA;
+		if(needA != '0'){
+			$.messager.alert('提示', '本次采购需进入' + needA + '级审批流程！', 'warning');
+		}
 	}else{
 		effectRow['isLs'] =  '0';
+		effectRow['needAudit'] = '0';
 	}
-// 	effectRow['xqsj'] = $('input[name=xqsj]').val();
+	if($('input[name=cgxq_isZs]').is(':checked')){
+		effectRow['isZs'] =  '1';
+	}else{
+		effectRow['isZs'] =  '0';
+	}
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 	effectRow['bz'] = $('input[name=jxc_cgxq_bz]').val();
 	effectRow['bmbh'] = did;
@@ -343,6 +361,7 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
+	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/cgxqAction!save.action',
@@ -355,10 +374,21 @@ function saveAll(){
 					msg : '提交成功！'
 				});
 		    	init();
+		    	if(needA == undefined || needA == '0'){
+			    	$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + rsp.obj.cgxqlsh + "&bmbh=" + did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						}
+					});
+		    	}
 			}  
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
+		},
+		complete: function(){
+			//MaskUtil.unmask();
 		}
 	});
 }
@@ -478,9 +508,10 @@ function setEditing(){
      	}
     });
     
+    
     zdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
+    		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL) );
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -491,10 +522,14 @@ function setEditing(){
     });
   	
     cslEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 110){
+    		if($(zhxsEditor.target).val() != 0){
+    			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
+    		}
+    		calculate();
+    	}else{
+    		return false;
     	}
-    	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
      		cdjEditor.target.focus();
@@ -504,20 +539,20 @@ function setEditing(){
         
     //输入次单位单价后，计算金额
     cdjEditor.target.bind('keyup', function(event){
-    	if($(zhxsEditor.target).val() != 0){
-    		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
-    	}
-    	calculate();
+	   	if($(zhxsEditor.target).val() != 0){
+	   		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
+	   	}
+	   	calculate();
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		spjeEditor.target.focus();
      	}
     });
     
-  //输入主销售单价后，计算金额
+  	//输入主销售单价后，计算金额(含税)
     zxsdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(cxsdjEditor.target).numberbox('setValue', $(zxsdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
+    		$(cxsdjEditor.target).numberbox('setValue', $(zxsdjEditor.target).val() * $(zhxsEditor.target).val());
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -526,10 +561,10 @@ function setEditing(){
      	}
     });
     
-  	//输入次销售单价后，计算金额
+  	//输入次销售单价后，计算金额(含税)
     cxsdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
-    		$(zxsdjEditor.target).numberbox('setValue', $(cxsdjEditor.target).val() / (1 + SL) / $(zhxsEditor.target).val());
+    		$(zxsdjEditor.target).numberbox('setValue', $(cxsdjEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
     }).bind('keydown', function(event){
@@ -538,13 +573,13 @@ function setEditing(){
      	}
     });
   	
-  	//输入商品金额后，计算单价
+  	//输入商品金额后，计算销售单价
     spjeEditor.target.bind('keyup', function(event){
     	if($(zslEditor.target).val() != 0){
-    		$(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / (1 + SL) / $(zslEditor.target).val());
+    		$(zxsdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
     	}
    	   	if($(zhxsEditor.target).val() != 0 && $(cslEditor.target).val() != 0){
-    		$(cdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(cslEditor.target).val());
+    		$(cxsdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(cslEditor.target).val());
     	}
     	//更新汇总列
         updateFooter();
@@ -557,10 +592,10 @@ function setEditing(){
     //计算金额
     function calculate(){
     	var spje = 0.0000;
-    	if($(cslEditor.target).val() != 0 && $(cdjEditor.target).val() != 0){
-    		spje = cslEditor.target.val() * cdjEditor.target.val();
+    	if($(cslEditor.target).val() != 0 && $(cxsdjEditor.target).val() != 0){
+    		spje = cslEditor.target.val() * cxsdjEditor.target.val();
     	}else{
-        	spje = zslEditor.target.val() * zdjEditor.target.val() * (1 + SL);   
+        	spje = zslEditor.target.val() * zxsdjEditor.target.val();   
     	}
     		
         $(spjeEditor.target).numberbox('setValue',spje);
@@ -629,6 +664,8 @@ function setValueBySpbh(rowData){
 	zdwIdEditor.target.val(rowData.zjldwId);
 	cdwIdEditor.target.val(rowData.cjldwId);
 	
+	
+	
 	if($(spbhEditor.target).val() != ''){
 		jxc.spInfo($('#jxc_cgxq_layout'), '1', rowData.sppp, rowData.spbz);
 		jxc.showKc('#jxc_cgxq_layout', 
@@ -647,7 +684,7 @@ function setValueBySpbh(rowData){
 function gysLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), 
+		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
 		break;
@@ -684,7 +721,7 @@ function gysLoad(){
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 		break;
@@ -706,6 +743,7 @@ function khLoad(){
 						//设置信息字段值
 						$('input[name=khmc]').val(data.obj.khmc);
 // 						$('input[name=ywyId]').focus();
+						
 					}else{
 						$.messager.alert('提示', '客户信息不存在！', 'error');
 					}
@@ -719,7 +757,7 @@ function khLoad(){
 function addressLoad(){
 	switch(event.keyCode){
 	case 27:
-		jxc.query('客户检索', "", $('input[name=jxc_cgxq_shdz]'), 
+		jxc.query('客户检索', "", $('input[name=jxc_cgxq_shdz]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 		break;
@@ -809,6 +847,25 @@ function addressLoad(){
 // 	}
 // }
 
+function printCgxq(){
+	var row = cgxq_dg.datagrid('getSelected');
+	if (row != undefined) {
+		if(row.needAudit == row.isAudit){
+			$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
+				if (r) {
+					var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + row.cgxqlsh + "&bmbh=" + did;
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				}
+			});
+		}else{
+			$.messager.alert('警告', '选中的需求单还未进行审批，请重新选择择一条记录进行操作！',  'warning');
+		}
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+
 
 //////////////////////////////////////////////以上为采购需求列表处理代码
 
@@ -819,35 +876,45 @@ function addressLoad(){
     <div title="新增记录" data-options="closable:false">
         <div id='jxc_cgxq_layout' style="height:100%;width=100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:180px">		
-				<table class="tinfo">
-					<tr>
-						<th>临时采购</th><td colspan="3"><input type="checkbox" name="isLs" value="1" />
-						<th class="read"></th><td><div id="createDate" class="read"></div></td>
-						<th class="read">单据号</th><td><div id="cgxqLsh" class="read"></div></td>
-					</tr>
-					<tr>
-						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
-						<th class="read">供应商名称</th><td><input name="gysmc" readonly="readonly" size="30"></td>
+				<div class="form_line">
+					<span class="form_label">临时采购<input type="checkbox" name="isLs" value="1" /></span>
+					<span class="form_label">直送<input type="checkbox" name="cgxq_isZs"></span>
+					<span class="read form_label">时间</span>
+					<span id="createDate" class="read"></span>
+					<span class="read form_label">单据号</span>
+					<span id="cgxqLsh" class="read"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">供应商编码</span>
+					<span><input name="gysbh" class="easyui-validatebox"
+						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="6"></span>
+					<span class="read form_label">供应商名称</span>
+					<span><input name="gysmc" readonly="readonly" size="20"></span>
 <!-- 						<th>业务员</th><td><input name="ywyId"></td> -->
-					</tr>
-					<tr class="ls" style="display:none">
-						<th>客户编码</th><td><input name="khbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="8"></td>
-						<th>客户名称</th><td><input name="khmc" readonly="readonly" size="30"></td>
+				</div>
+				<div class="ls form_line" style="display:none">
+					<span class="form_label">客户编码</span>
+					<span><input name="khbh" class="easyui-validatebox"	data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"  size="6"></span>
+					<span class="form_label">客户名称</span>
+					<span><input name="khmc" readonly="readonly" size="20"></span>
 <!-- 						<th>到货方式</th><td><input name="dhfs"></td> -->
-					</tr>
-					<tr class="ls" style="display:none">
-						<th>结算方式</th><td><input id="jxc_cgxq_jsfsId" name="jsfsId"  size="6"></td>
-						<th>到货时间</th><td><input name="dhsj" type="text" class="easyui-my97"  size="10"></td>
-						<th>联系人</th><td><input name="jxc_cgxq_lxr" size="20"></td>
-						<th>送货地址</th><td><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="40"></td>
-<!-- 						<th>需求时间</th><td><input name="xqsj"></td> -->
-					</tr>
-					<tr>
-						<th>备注</th><td colspan="10"><input name="jxc_cgxq_bz" style="width:90%"></td>
-					</tr>
-				</table>
+					<span class="form_label">结算方式</span>
+					<span><input id="jxc_cgxq_jsfsId" name="jsfsId"></span>
+					<span class="form_label">到货时间</span>
+					<span><input name="dhsj" type="text" class="easyui-my97"  size="8"></span>
+				</div>
+				<div class="ls form_line" style="display:none">
+					<span class="form_label">联系人及电话</span>
+					<span><input name="jxc_cgxq_lxr" size="15"></span>
+					<span class="form_label">送货地址</span>
+					<span><input name="jxc_cgxq_shdz" onkeyup="addressLoad()" size="20"></span>
+					<span class="form_label">需求时间</span>
+					<span><input name="xqsj" id="cgxq_xqsj" size="8"></span>
+				</div>
+				<div class="form_line">
+					<span class="form_label">备注</span>
+					<span><input name="jxc_cgxq_bz" style="width:90%"></span>
+				</div>
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_cgxq_spdg'></table>

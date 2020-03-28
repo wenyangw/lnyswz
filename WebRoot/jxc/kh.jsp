@@ -64,12 +64,21 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-	        {field:'khbh',width:100,title:'客户编号'},
+	        {field:'khbh',width:60,title:'客户编号'},
 	        {field:'khmc',width:250,title:'客户名称'},
 	        {field:'ywyId',title:'业务员id', hidden:true},
-	        {field:'ywyName',width:100,title:'业务员'},
+	        {field:'ywyName',width:60,title:'业务员'},
+	        {field:'isDef',width:70,title:'关联业务员',
+	        	formatter : function(value, rowData, rowIndex) {
+		        	if(value == '1'){
+		        		return '是';
+		        	}else{
+		        		return '';
+		        	}				
+				}},
 	        {field:'khlxId',title:'客户类型id', hidden:true},
-	        {field:'khlxmc',width:100,title:'客户类型'},
+	        {field:'khlxmc',width:55,title:'客户类型'},
+            {field:'info',width:100,title:'信息'},
 	        {field:'sxzq',title:'授信账期(天)',
 	        	formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
@@ -78,7 +87,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'sxje',title:'授信金额(元)',width:100,align:'right',
+	        {field:'sxje',title:'授信金额(元)',width:80,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -86,7 +95,7 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-	        {field:'lsje',title:'历史金额',width:100,align:'right',
+	        {field:'lsje',title:'历史金额',width:80,align:'right',
 				formatter : function(value, rowData, rowIndex) {
 		        	if(value==0){
 		        		return '';
@@ -94,8 +103,40 @@ $(function(){
 		        		return value;
 		        	}				
 				}},
-			{field:'isUp',title:'二级审核', width:50,},
+			{field:'isUp',title:'二级审核', width:60,},
 			{field:'postponeDay',title:'限制期', width:50},
+			{field:'isOther',title:'第三方', width:50,
+				formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
+			{field:'limitPer',title:'限额比例',width:80,align:'right',
+				formatter : function(value, rowData, rowIndex) {
+			       	if(value==0){
+			       		return '';
+			       	}else{
+			       		return value;
+			       	}				
+				}},
+			{field:'limitJe',title:'销售限额',width:80,align:'right',
+				formatter : function(value, rowData, rowIndex) {
+			       	if(value==0){
+			      		return '';
+			       	}else{
+			       		return value;
+			       	}				
+				}},
+			{field:'isLocked',title:'锁定', width:50,
+				formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				}},
 	    ]],
 	});
 	
@@ -112,7 +153,7 @@ function appendKhDet() {
 			title : '增加客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 360,
+			height : 500,
 			modal : true,
 			buttons: [{
 	            text:'确定',
@@ -128,6 +169,7 @@ function appendKhDet() {
 	            					url: '${pageContext.request.contextPath}/jxc/khAction!existKhDet.action',
 	            					async: false,
 	            					data : {
+	            						depId: kh_did,
 	            						khbh : $('#khbh').val(),
 	            						ywyId: ywyId.combobox('getValue'),
 	            					},
@@ -207,7 +249,7 @@ function editKhDet(){
 			title : '修改客户授信信息',
 			href : '${pageContext.request.contextPath}/jxc/khDet.jsp',
 			width : 340,
-			height : 360,
+			height : 500,
 			buttons : [ {
 				text : '确定',
 				handler : function() {
@@ -308,20 +350,22 @@ function removeKhDet(){
 function initForm(target){
 	var value = $(target).combobox('getValue');
 	if(value != '01'){
-		$('input[name=sxzq]').removeAttr('disabled');
-		$('input[name=sxje]').removeAttr('disabled');
-		$('input[name=lsje]').removeAttr('disabled');
-		$('input[name=isUp]').removeAttr('disabled');
-		$('input[name=postponeDay]').removeAttr('disabled');
+		$('.sxbj').removeAttr('disabled');
+//		$('input[name=sxzq]').removeAttr('disabled');
+//		$('input[name=sxje]').removeAttr('disabled');
+//		$('input[name=lsje]').removeAttr('disabled');
+//		$('input[name=isUp]').removeAttr('disabled');
+//		$('input[name=postponeDay]').removeAttr('disabled');
 // 		if($('input[name=postponeDay]').val() == ''){
 // 			$('input[name=postponeDay]').val('60');
 // 		}
 	}else{
-		$('input#sxzq').attr('disabled','disabled');
-		$('input[name=sxje]').attr('disabled','disabled');
-		$('input[name=lsje]').attr('disabled','disabled');
-		$('input[name=isUp]').attr('disabled','disabled');
-		$('input[name=postponeDay]').attr('disabled','disabled');
+		$('.sxbj').attr('disabled','disabled');
+		//$('input#sxzq').attr('disabled','disabled');
+		//$('input[name=sxje]').attr('disabled','disabled');
+		//$('input[name=lsje]').attr('disabled','disabled');
+		//$('input[name=isUp]').attr('disabled','disabled');
+		//$('input[name=postponeDay]').attr('disabled','disabled');
 	}
 };
 
@@ -331,9 +375,9 @@ function searchKh(){
 	});
 }
 </script>
-<div id='jxc_kh_layout' style="height:100%;width=100%">
+<div id='jxc_kh_layout' style="height:100%;width:100%;">
 	<div data-options="region:'west',split:true,collapsible:false" style="width:320px">
-		<div id='jxc_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width=100%">
+		<div id='jxc_kh_west' class="easyui-layout" data-options="fit:true, split:false" style="height:100%; width:100%;">
 			请输入查询内容
 			<div data-options="region:'center',title:'客户列表',split:true" style="height:100px;width:250px">		
 				<div id='jxc_kh_dg'></div>

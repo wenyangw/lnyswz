@@ -95,7 +95,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			BeanUtils.copyProperties(kfpdDet, tDet);
 			tDet.setHwmc(hwDao.load(THw.class, kfpdDet.getHwId()).getHwmc());
 			
-			if("".equals(kfpdDet.getCjldwId()) || kfpdDet.getZhxs() == null ||kfpdDet.getZhxs().compareTo(ZERO) == 0){
+			if("".equals(kfpdDet.getCjldwId()) || kfpdDet.getZhxs() == null || kfpdDet.getZhxs().compareTo(ZERO) == 0){
 				tDet.setCdwsl(ZERO);
 				tDet.setZhxs(ZERO);
 				kfpdDet.setZhxs(ZERO);
@@ -112,7 +112,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			hw.setHwmc(tDet.getHwmc());
 
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfpdDet.getSppc(), kfpdDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, kfpdDet.getSppc(), kfpdDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfpd.setTKfpdDets(tDets);
 		kfpdDao.save(tKfpd);		
@@ -169,6 +169,13 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			if(yTDet.getCdwsl() != null){
 				tDet.setCdwsl(yTDet.getCdwsl().negate());
 			}
+
+			if (!("05".equals(tKfpd.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
+				if(!"2019-01-01".equals(tDet.getSppc())) {
+					tDet.setSppc("2019-01-01");
+				}
+			}
+
 			tDet.setTKfpd(tKfpd);
 			tDets.add(tDet);
 			
@@ -180,7 +187,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 			hw.setHwmc(tDet.getHwmc());
 			
 			//更新库房总账
-			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), Constant.UPDATE_RK, kfzzDao);
+			KfzzServiceImpl.updateKfzzSl(sp, dep, ck, hw, tDet.getSppc(), tDet.getZdwsl(), tDet.getCdwsl(), Constant.UPDATE_RK, kfzzDao);
 		}
 		tKfpd.setTKfpdDets(tDets);
 		kfpdDao.save(tKfpd);		
@@ -190,9 +197,10 @@ public class KfpdServiceImpl implements KfpdServiceI {
 	@Override
 	public DataGrid datagrid(Kfpd kfpd) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKfpd t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TKfpd t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", kfpd.getBmbh());
+		params.put("createId", kfpd.getCreateId());
 		if(kfpd.getCreateTime() != null){
 			params.put("createTime", kfpd.getCreateTime()); 
 		}else{
@@ -290,7 +298,7 @@ public class KfpdServiceImpl implements KfpdServiceI {
 				kd.setCjldwmc(sp.getCjldw().getJldwmc());
 				kd.setZhxs(sp.getZhxs());
 				if(sp.getZhxs().compareTo(ZERO) != 0){
-					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_DOWN));
+					kd.setCdwsl(zdwsl.divide(sp.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
 				}else{
 					kd.setCdwsl(ZERO);
 				}

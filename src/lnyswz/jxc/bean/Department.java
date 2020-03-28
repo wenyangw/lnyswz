@@ -1,5 +1,7 @@
 package lnyswz.jxc.bean;
 
+import java.util.List;
+
 /**
  * 部门类
  * @author wangwy
@@ -10,6 +12,11 @@ public class Department{
 	private String id;
 	private String depName;
 	private int orderNum;
+	private String valid;
+	
+	//通讯录根结点
+	private String text;
+	private List<User> children;
 	
 	private int page;
 	private int rows;
@@ -33,6 +40,24 @@ public class Department{
 	}
 	public void setOrderNum(int orderNum) {
 		this.orderNum = orderNum;
+	}
+	public String getValid() {
+		return valid;
+	}
+	public void setValid(String valid) {
+		this.valid = valid;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public List<User> getChildren() {
+		return children;
+	}
+	public void setChildren(List<User> children) {
+		this.children = children;
 	}
 	public int getPage() {
 		return page;

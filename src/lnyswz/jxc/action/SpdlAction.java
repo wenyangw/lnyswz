@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import lnyswz.jxc.service.SpdlServiceI;
 @Namespace("/jxc")
 @Action("spdlAction")
 public class SpdlAction extends BaseAction implements ModelDriven<Spdl>{
-	private Logger logger = Logger.getLogger(SpdlAction.class);
+	private static final long serialVersionUID = 1L;
 	private Spdl spdl = new Spdl();
 	private SpdlServiceI spdlService;
 	

@@ -11,12 +11,16 @@ var ywsh_toDg;
 var ywsh_dg;
 var ywsh_tabs;
 
+var ywsh_tab_index;
+
 var xsthlsh;
 
 $(function(){
 	ywsh_did = lnyw.tab_options().did;
 	ywsh_lx = lnyw.tab_options().lx;
 	ywsh_menuId = lnyw.tab_options().id;
+
+    ywsh_tab_index = 0;
 	
 	$('#jxc_ywsh_layout').layout({
 		fit : true,
@@ -51,8 +55,6 @@ $(function(){
 	                if( fields[i] == 'levels'){
 	                	cc.push('<tr><td colspan="4">&nbsp;</td></tr>');
 	                	cc.push('<tr><th class="read">审批进度</th><th class="read" align="center">审批人</th><th class="read" colspan="2">审批时间</th></tr>');
-	                	console.info('test:' + fields[i]);
-	                	console.info('test1:' + rowData.levels);
 	                	
 	                	var levels = rowData[fields[i]].split(',');
 	                	var names = rowData[fields[i + 1]].split(',');
@@ -80,7 +82,20 @@ $(function(){
 		                		j++;
 		                	}
 		                }else{
-			                cc.push('<th width=20%>' + copts.title + ':</th><td width=30%>' + rowData[fields[i]] + '</td>');
+			                cc.push('<th width=20%>' + copts.title + ':</th>');
+			                if(fields[i] == 'isZs'){
+			                	if(rowData[fields[i]] == '1'){
+			                		if(rowData['hjje'] >= 100000){
+				                		cc.push('<td width=30% style="color:red;">是(需要合同)</td>');
+			                		}else{
+			                			cc.push('<td width=30% style="color:red;">是</td>');
+			                		}
+			                	}else{
+			                		cc.push('<td width=30%>否</td>');
+			                	}
+			                }else{
+			                	cc.push('<td width=30%>' + rowData[fields[i]] + '</td>');
+			                }
 		                }
 	                }else{
 	                	j--;
@@ -117,9 +132,23 @@ $(function(){
 			{field:'bmbh',title:'部门编号',align:'center', hidden:true},
 			{field:'auditName',title:'业务名称',align:'center'},
 			{field:'lsh',title:'流水号',align:'center'},
+			{field:'createTime',title:'开票时间',align:'center'},
 			{field:'ywymc',title:'业务员',align:'center'},
 			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'hjje',title:'销售金额(元)',align:'center'},
+			{field:'isZs',title:'直送',align:'center',
+				formatter : function(value) {
+					if (value == '1') {
+						return '是（需要合同）';
+					} else {
+						return '否';
+					}
+				},
+				styler: function(value){
+					if(value == '1'){
+						return 'color:red;';
+					}
+				}},
 			{field:'bz',title:'备注',align:'center'},
 			{field:'khbh',title:'客户编号',align:'center', hidden:true},
 			{field:'khmc',title:'客户名称',align:'center'},
@@ -141,6 +170,7 @@ $(function(){
 	    		url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
 	    		queryParams: {
 	        		xsthlsh: xsthlsh,
+	        		fromOther: 'ywsh',
 	        	},
 	    		fit : true,
 	    	    border : false,
@@ -148,20 +178,24 @@ $(function(){
 	    	    remoteSort: false,
 //	     	    fitColumns: true,
 	    		columns:[[
-					{field:'spbh',title:'商品编号',width:60,align:'center'},
-					{field:'spmc',title:'名称',width:200,align:'center'},
+					{field:'spbh',title:'商品编号',width:50,align:'center'},
+					{field:'spmc',title:'名称',width:150,align:'center'},
 					{field:'spcd',title:'产地',width:50,align:'center'},
 					{field:'sppp',title:'品牌',width:60,align:'center'},
 					{field:'spbz',title:'包装',width:60,align:'center'},
-					{field:'zjldwmc',title:'单位1',width:50,align:'center'},
+					{field:'zjldwmc',title:'单位1',width:40,align:'center'},
 					{field:'zdwsl',title:'数量1',width:90,align:'center'},
 					{field:'zdwdj',title:'单价1',width:90,align:'center'},
-					{field:'cjldwmc',title:'单位2',width:50,align:'center'},
+					{field:'cjldwmc',title:'单位2',width:40,align:'center'},
 					{field:'cdwsl',title:'数量2',width:90,align:'center'},
 					{field:'cdwdj',title:'单价2',width:90,align:'center'},
 					{field:'spje',title:'金额',width:90,align:'center',
 						formatter: function(value){
 							return lnyw.formatNumberRgx(value);
+						}},
+					{field:'dwcb',title:'毛利率',width:90,align:'center',
+						formatter: function(value){
+							return value + '%';
 						}},
 	    	    ]],
 	    	});
@@ -181,10 +215,12 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'lsh',title:'流水号',align:'center'},
-	        {field:'createTime',title:'时间',align:'center'},
-	        {field:'createName',title:'审批人',align:'center'},
-	        {field:'auditLevel',title:'等级',align:'center'},
-	        {field:'isAudit',title:'结果',align:'center',
+			{field:'khmc',title:'客户名称',align:'center'},
+			{field:'ywymc',title:'业务员',align:'center'},
+	        {field:'createTime',title:'时间',align:'center',width:100},
+	        {field:'createName',title:'审批人',align:'center',width:100},
+	        {field:'auditLevel',title:'等级',align:'center',width:100},
+	        {field:'isAudit',title:'结果',align:'center',width:100,
 	        	formatter: function(value){
         			if(value == '0'){
         				return '拒绝';
@@ -197,7 +233,7 @@ $(function(){
 						return 'color:red;';
 					}
 				}},
-	        {field:'bz',title:'备注',align:'center',
+	        {field:'bz',title:'备注',align:'center',width:100,
         		formatter: function(value){
         			return lnyw.memo(value, 15);
         		}},
@@ -214,14 +250,15 @@ $(function(){
         },
         onExpandRow: function(index,row){
             $('#ywsh-ddv-'+index).datagrid({
-                url:'${pageContext.request.contextPath}/jxc/ywshAction!detDatagrid.action',
+                url:'${pageContext.request.contextPath}/jxc/xsthAction!detDatagrid.action',
                 fitColumns:true,
                 singleSelect:true,
                 rownumbers:true,
                 loadMsg:'',
                 height:'auto',
                 queryParams: {
-        			ywshlsh: row.ywshlsh,
+        			xsthlsh: row.lsh,
+        			fromOther: 'ywsh',
         		},
                 columns:[[
                     {field:'spbh',title:'商品编号',width:200,align:'center'},
@@ -239,6 +276,10 @@ $(function(){
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+       	        	{field:'dwcb',title:'毛利率',width:90,align:'center',
+   						formatter: function(value){
+   							return value + '%';
+   						}},
                 ]],
                 onResize:function(){
                 	ywsh_dg.datagrid('fixDetailRowHeight',index);
@@ -258,14 +299,8 @@ $(function(){
 	//选中列表标签后，装载数据
 	ywsh_tabs = $('#jxc_ywsh_tabs').tabs({
 		onSelect: function(title, index){
-			if(index == 0){
+			if(index == 0 && ywsh_tab_index != index){
  				ywsh_toDg.datagrid('reload');
-// 				ywsh_toDg.datagrid({
-// 					url: '${pageContext.request.contextPath}/jxc/ywshAction!listAudits.action',
-// 					queryParams: {
-// 						bmbh: ywsh_did,
-// 					},
-// 				});
 			}
 			if(index == 1){
 				ywsh_dg.datagrid({
@@ -275,6 +310,7 @@ $(function(){
 					}
 				});
 			}
+            ywsh_tab_index = index;
 		},
 	});
 	
@@ -324,32 +360,50 @@ function init(){
 
 //////////////////////////////////////////////以下为业务审核处理代码
 function audit(){
-	var rows = ywsh_toDg.datagrid('getRows');
-	if(rows.length > 0){
-		$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
-			if (bz != undefined){
-				$.ajax({
-					type: "POST",
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
-					data: {
-						lsh: rows[0].lsh,
-						auditLevel: rows[0].auditLevel,
-						bmbh: ywsh_did,
-						menuId: ywsh_menuId,
-						bz: bz,
-					},
-					dataType: 'json',
-					success: function(d){
-						if(d.success){
-							ywsh_toDg.datagrid('reload');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
+	var selected = ywsh_toDg.datagrid('getRows');
+    if(selected.length > 0){
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
+			data: {
+				bmbh: selected[0].lsh.substr(4, 2),
+				lsh: selected[0].lsh,
+			},
+			dataType: 'json',
+			success: function(d){
+				if(d.obj != undefined){
+					var row = d.obj;
+					$.messager.prompt('请确认', '是否将该笔业务审核通过？', function(bz){
+						if (bz != undefined){
+							$.ajax({
+								type: "POST",
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!audit.action',
+								data: {
+									lsh: row.lsh,
+									auditLevel: row.auditLevel,
+									bmbh: row.lsh.substr(4, 2),
+									menuId: ywsh_menuId,
+									bz: bz,
+								},
+								dataType: 'json',
+								success: function(d){
+									if(d.success){
+										ywsh_toDg.datagrid('reload');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}  
+								},
 							});
-						}  
-					},
-				});
-				
+							
+						}
+					});
+				}else{
+					$.messager.alert('警告', '该单据已审批结束！',  'warning');
+					ywsh_toDg.datagrid('reload');
+				}
 			}
 		});
 	}else{
@@ -358,37 +412,56 @@ function audit(){
 }
 
 function refuse(){
-	var rows = ywsh_toDg.datagrid('getRows');
-	if(rows.length > 0){
-		$.messager.prompt('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(bz){
-			if (bz != undefined){
-				$.ajax({
-					type: "POST",
-					url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
-					data: {
-						lsh: rows[0].lsh,
-						auditLevel: rows[0].auditLevel,
-						bmbh: ywsh_did,
-						menuId: ywsh_menuId,
-						bz: bz,
-					},
-					dataType: 'json',
-					success: function(d){
-						if(d.success){
-							ywsh_toDg.datagrid('reload');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
+	var selected = ywsh_toDg.datagrid('getRows');
+	if(selected.length > 0){
+		$.ajax({
+			type: "POST",
+			async: false,
+			url: '${pageContext.request.contextPath}/jxc/ywshAction!refreshYwsh.action',
+			data: {
+				bmbh: selected[0].lsh.substr(4, 2),
+				lsh: selected[0].lsh
+			},
+			dataType: 'json',
+			success: function(d){
+				if(d.obj != undefined){
+					var row = d.obj;
+					$.messager.prompt('请确认', '<font color="red">是否拒绝将该笔业务审核通过？</font>', function(bz){
+						if (bz != undefined){
+							$.ajax({
+								type: "POST",
+								url: '${pageContext.request.contextPath}/jxc/ywshAction!refuse.action',
+								data: {
+									lsh: row.lsh,
+									auditLevel: row.auditLevel,
+									bmbh: row.lsh.substr(4, 2),
+									menuId: ywsh_menuId,
+									bz: bz,
+								},
+								dataType: 'json',
+								success: function(d){
+									if(d.success){
+										ywsh_toDg.datagrid('reload');
+										$.messager.show({
+											title : '提示',
+											msg : d.msg
+										});
+									}  
+								},
 							});
-						}  
-					},
-				});
-				
+							
+						}
+					});
+				}else{
+					$.messager.alert('警告', '该单据已审批结束！',  'warning');
+					ywsh_toDg.datagrid('reload');
+				}
 			}
 		});
 	}else{
 		$.messager.alert('警告', '没有需要进行审批的业务！',  'warning');
 	}
+	
 }
 //////////////////////////////////////////////以上为业务审核处理代码
 
@@ -405,7 +478,7 @@ function cjYwsh(){
 							url : '${pageContext.request.contextPath}/jxc/ywshAction!cjYwsh.action',
 							data : {
 								ywshlsh : row.ywshlsh,
-								bmbh: did,
+								bmbh: row.ywshlsh,
 								lxbh: lx,
 								menuId : menuId,
 								bz : bz
@@ -461,7 +534,7 @@ function searchYwsh(){
 <!-- 			</div> -->
 <!-- 		</div> -->
     </div>
-    <div title="业务审核列表" data-options="closable:false" >
+    <div title="销售审核列表" data-options="closable:false" >
     	<table id='jxc_ywsh_dg'></table>
     </div>
 </div>

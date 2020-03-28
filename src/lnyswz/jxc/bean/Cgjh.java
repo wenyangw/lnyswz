@@ -26,6 +26,7 @@ public class Cgjh {
 	private String jsfsId;
 	private String jsfsmc;
 	private BigDecimal hjje;
+	private BigDecimal hjsl;
 	private String bz;
 	private String isHt;
 	private String returnHt;
@@ -43,6 +44,12 @@ public class Cgjh {
 	private String needAudit;
 	private String isAudit;
 	private String isZs;
+	private String isNotZs;
+	private String isNb;
+	private String nbjhlsh;
+	
+	private String isLock;
+	private String isBack;
 	
 	private int id;
 	private String spbh;
@@ -63,10 +70,12 @@ public class Cgjh {
 	private BigDecimal spje;
 	//记录库房实际入库
 	private BigDecimal zdwyrsl;
+	private BigDecimal cdwyrsl;
 	//在计划列表中提示库房是否入库
 	private String isKfrk;
 	
 	private String search;
+	private String type;
 	
 	private String lxbh; 
 	private String menuId; 
@@ -76,6 +85,10 @@ public class Cgjh {
 	private int rows;
 	//由采购需求生成计划时，传参数
 	private String cgxqDetIds;
+	//由销售提货(直送)生成计划时，传参数
+	private String xsthDetIds;
+	private String xsthlsh;
+
 	//采购计划列表中，表示与采购需求的关系
 	private String cgxqlshs;
 	//向库房入库导出时，传递参数
@@ -180,6 +193,14 @@ public class Cgjh {
 
 	public void setHjje(BigDecimal hjje) {
 		this.hjje = hjje;
+	}
+
+	public BigDecimal getHjsl() {
+		return hjsl;
+	}
+
+	public void setHjsl(BigDecimal hjsl) {
+		this.hjsl = hjsl;
 	}
 
 	public String getBz() {
@@ -350,6 +371,46 @@ public class Cgjh {
 		this.isZs = isZs;
 	}
 
+	public String getIsNotZs() {
+		return isNotZs;
+	}
+
+	public void setIsNotZs(String isNotZs) {
+		this.isNotZs = isNotZs;
+	}
+
+	public String getIsNb() {
+		return isNb;
+	}
+
+	public void setIsNb(String isNb) {
+		this.isNb = isNb;
+	}
+
+	public String getNbjhlsh() {
+		return nbjhlsh;
+	}
+
+	public void setNbjhlsh(String nbjhlsh) {
+		this.nbjhlsh = nbjhlsh;
+	}
+
+	public String getIsLock() {
+		return isLock;
+	}
+
+	public void setIsLock(String isLock) {
+		this.isLock = isLock;
+	}
+
+	public String getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(String isBack) {
+		this.isBack = isBack;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -494,6 +555,14 @@ public class Cgjh {
 		this.search = search;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getIsKfrk() {
 		return isKfrk;
 	}
@@ -508,6 +577,14 @@ public class Cgjh {
 
 	public void setZdwyrsl(BigDecimal zdwyrsl) {
 		this.zdwyrsl = zdwyrsl;
+	}
+
+	public BigDecimal getCdwyrsl() {
+		return cdwyrsl;
+	}
+
+	public void setCdwyrsl(BigDecimal cdwyrsl) {
+		this.cdwyrsl = cdwyrsl;
 	}
 
 	public String getLxbh() {
@@ -564,6 +641,22 @@ public class Cgjh {
 
 	public void setCgxqDetIds(String cgxqDetIds) {
 		this.cgxqDetIds = cgxqDetIds;
+	}
+
+	public String getXsthDetIds() {
+		return xsthDetIds;
+	}
+
+	public void setXsthDetIds(String xsthDetIds) {
+		this.xsthDetIds = xsthDetIds;
+	}
+
+	public String getXsthlsh() {
+		return xsthlsh;
+	}
+
+	public void setXsthlsh(String xsthlsh) {
+		this.xsthlsh = xsthlsh;
 	}
 
 	public String getCgxqlshs() {

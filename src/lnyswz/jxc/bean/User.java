@@ -21,12 +21,15 @@ public class User {
 	private Date createTime;
 	private Date modifyTime;
 	private Date lastTime;
+	private String valid;
 	private String did;
 	private String dname;
 	private String postId;
 	private String postName;
 	private String csex;
-	
+	private String source;
+	private String text;
+		
 	private int operaId;
 	private String menuId;
 	private String operaDepId;
@@ -114,6 +117,12 @@ public class User {
 	public void setLastTime(Date lastTime) {
 		this.lastTime = lastTime;
 	}
+	public String getValid() {
+		return valid;
+	}
+	public void setValid(String valid) {
+		this.valid = valid;
+	}
 	public String getDid() {
 		return did;
 	}
@@ -143,6 +152,18 @@ public class User {
 	}
 	public void setCsex(String csex) {
 		this.csex = csex;
+	}
+	public String getSource() {
+		return source;
+	}
+	public void setSource(String source) {
+		this.source = source;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
 	}
 	public int getOperaId() {
 		return operaId;

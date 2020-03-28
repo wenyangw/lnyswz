@@ -22,6 +22,10 @@
 			<td><input name="orderNum" class="easyui-numberspinner" style="width:160px;"
         		required="required" data-options="value:1,min:1,max:20,editable:false"></td>
 		</tr>
+		<tr>
+			<th><label for="valid">有效</label></th>
+			<td><input name="valid" type="checkbox" value="1"></td>
+		</tr>
 	</table>
 	</form>
 </div>

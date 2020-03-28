@@ -1,5 +1,7 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_kfck")
+@DynamicUpdate(true)
 public class TKfck implements java.io.Serializable {
 
 	private String kfcklsh;
@@ -46,6 +49,16 @@ public class TKfck implements java.io.Serializable {
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
+	private String thfs;
+	private String isFp;
+	private String out;
+	private Integer outId;
+	private String outName;
+	private Date outTime;
+	private String sended;
+	private Integer sendId;
+	private String sendName;
+	private Date sendTime;
 	private Set<TKfckDet> TKfckDets = new HashSet<TKfckDet>(0);
 	private Set<TXsthDet> TXsths = new HashSet<TXsthDet>(0);
 //	private TXsth TXsth; 
@@ -55,7 +68,8 @@ public class TKfck implements java.io.Serializable {
 
 	public TKfck(String kfcklsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String khbh, String khmc,
 			String ckId, String ckmc, String isFh, String fhId, String fhmc, String thr, String ch, String bz, String cjKfcklsh,
-			String isCj, Date cjTime, Integer cjId, String cjName, Set<TKfckDet> TKfckDets, Set<TXsthDet> TXsths) {
+			String isCj, Date cjTime, Integer cjId, String cjName, String thfs, String isFp, String out, Integer outId, String outName, Date outTime,
+			String sended, Integer sendId, String sendName, Date sendTime, Set<TKfckDet> TKfckDets, Set<TXsthDet> TXsths) {
 		this.kfcklsh = kfcklsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -77,6 +91,16 @@ public class TKfck implements java.io.Serializable {
 		this.cjTime = cjTime;
 		this.cjId = cjId;
 		this.cjName = cjName;
+		this.thfs = thfs;
+		this.isFp = isFp;
+		this.out = out;
+		this.outId = outId;
+		this.outName = outName;
+		this.outTime = outTime;
+		this.sended = sended;
+		this.sendId = sendId;
+		this.sendName = sendName;
+		this.sendTime = sendTime;
 		this.TKfckDets = TKfckDets;
 		this.TXsths = TXsths;
 	}
@@ -271,6 +295,98 @@ public class TKfck implements java.io.Serializable {
 
 	public void setCjName(String cjName) {
 		this.cjName = cjName;
+	}
+
+	@Column(name = "thfs", length = 1)
+	public String getThfs() {
+		return thfs;
+	}
+
+	public void setThfs(String thfs) {
+		this.thfs = thfs;
+	}
+
+	@Column(name = "isFp", length = 1)
+	public String getIsFp() {
+		return isFp;
+	}
+
+	public void setIsFp(String isFp) {
+		this.isFp = isFp;
+	}
+
+	@Column(name = "out", nullable = false, length = 1)
+	public String getOut() {
+		return out;
+	}
+
+	public void setOut(String out) {
+		this.out = out;
+	}
+
+	@Column(name = "outId")
+	public Integer getOutId() {
+		return outId;
+	}
+
+	public void setOutId(Integer outId) {
+		this.outId = outId;
+	}
+
+	@Column(name = "outName", length = 20)
+	public String getOutName() {
+		return outName;
+	}
+
+	public void setOutName(String outName) {
+		this.outName = outName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "outTime", length = 23)
+	public Date getOutTime() {
+		return outTime;
+	}
+
+	public void setOutTime(Date outTime) {
+		this.outTime = outTime;
+	}
+
+	@Column(name = "sended", nullable = false, length = 1)
+	public String getSended() {
+		return sended;
+	}
+
+	public void setSended(String sended) {
+		this.sended = sended;
+	}
+
+	@Column(name = "sendId")
+	public Integer getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(Integer sendId) {
+		this.sendId = sendId;
+	}
+
+	@Column(name = "sendName", length = 20)
+	public String getSendName() {
+		return sendName;
+	}
+
+	public void setSendName(String sendName) {
+		this.sendName = sendName;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "sendTime", length = 23)
+	public Date getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TKfck", cascade=CascadeType.ALL)

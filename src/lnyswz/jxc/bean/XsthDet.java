@@ -32,17 +32,28 @@ public class XsthDet{
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal dwcb;
 	private BigDecimal spse;
 	private BigDecimal sphj;
 	private BigDecimal cksl;
 	private BigDecimal kpsl;
 	private BigDecimal thsl;
+	private BigDecimal qrsl;
+	private String completed;
 	private BigDecimal zdwthsl;
 	private BigDecimal cdwthsl;
 	private BigDecimal zdwytsl;
 	private BigDecimal cdwytsl;
 	private String kfcklshs;
-	
+	private String cgjhlsh;
+
+	private BigDecimal zdwrksl;
+	private BigDecimal cdwrksl;
+	private BigDecimal zdwcksl;
+	private String Shdz;
+	private String Lxr;
+	private BigDecimal zmsl;
+
 	public int getId() {
 		return id;
 	}
@@ -145,6 +156,12 @@ public class XsthDet{
 	public void setSpje(BigDecimal spje) {
 		this.spje = spje;
 	}
+	public BigDecimal getDwcb() {
+		return dwcb;
+	}
+	public void setDwcb(BigDecimal dwcb) {
+		this.dwcb = dwcb;
+	}
 	public BigDecimal getSpse() {
 		return spse;
 	}
@@ -174,6 +191,18 @@ public class XsthDet{
 	}
 	public void setThsl(BigDecimal thsl) {
 		this.thsl = thsl;
+	}
+	public BigDecimal getQrsl() {
+		return qrsl;
+	}
+	public void setQrsl(BigDecimal qrsl) {
+		this.qrsl = qrsl;
+	}
+	public String getCompleted() {
+		return completed;
+	}
+	public void setCompleted(String completed) {
+		this.completed = completed;
 	}
 	public BigDecimal getZdwthsl() {
 		return zdwthsl;
@@ -205,7 +234,54 @@ public class XsthDet{
 	public void setKfcklshs(String kfcklshs) {
 		this.kfcklshs = kfcklshs;
 	}
+	public String getCgjhlsh() {
+		return cgjhlsh;
+	}
+	public void setCgjhlsh(String cgjhlsh) {
+		this.cgjhlsh = cgjhlsh;
+	}
+	public BigDecimal getZdwrksl() {
+		return zdwrksl;
+	}
+	public void setZdwrksl(BigDecimal zdwrksl) {
+		this.zdwrksl = zdwrksl;
+	}
+	public BigDecimal getCdwrksl() {
+		return cdwrksl;
+	}
+	public void setCdwrksl(BigDecimal cdwrksl) {
+		this.cdwrksl = cdwrksl;
+	}
 
+	public BigDecimal getZdwcksl() {
+		return zdwcksl;
+	}
+
+	public void setZdwcksl(BigDecimal zdwcksl) {
+		this.zdwcksl = zdwcksl;
+	}
+
+	public String getShdz() {
+		return Shdz;
+	}
+	public void setShdz(String shdz) {
+		Shdz = shdz;
+	}
+
+	public String getLxr() {
+		return Lxr;
+	}
+	public void setLxr(String lxr) {
+		Lxr = lxr;
+	}
 	
 
+
+	public BigDecimal getZmsl() {
+		return zmsl;
+	}
+
+	public void setZmsl(BigDecimal zmsl) {
+		this.zmsl = zmsl;
+	}
 }

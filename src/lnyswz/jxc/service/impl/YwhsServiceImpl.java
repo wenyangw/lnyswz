@@ -122,7 +122,19 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			tDet.setZspbz(zywhsDet.getSpbz());
 			tDet.setZzjldwId(zywhsDet.getZjldwId());
 			tDet.setZzjldwmc(zywhsDet.getZjldwmc());
+			tDet.setZcjldwId(zywhsDet.getCjldwId());
+			tDet.setZcjldwmc(zywhsDet.getCjldwmc());
+			if(zywhsDet.getZhxs() != null){
+				tDet.setZzhxs(zywhsDet.getZhxs());
+			}else{
+				tDet.setZzhxs(BigDecimal.ZERO);
+			}
 			tDet.setZzdwsl(zywhsDet.getZdwsl());
+			if(zywhsDet.getCdwsl() != null){
+				tDet.setZcdwsl(zywhsDet.getCdwsl());
+			}else{
+				tDet.setZcdwsl(BigDecimal.ZERO);
+			}
 			tDet.setZzdwdj(zywhsDet.getZdwdj());
 			tDet.setZspje(zywhsDet.getSpje());
 			tDet.setZisZs(zywhsDet.getIsZs());
@@ -133,6 +145,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			Sp zsp = new Sp();
 			BeanUtils.copyProperties(zywhsDet, zsp);
 			TSp zTSp = spDao.load(TSp.class, zywhsDet.getSpbh());
+			
 			if(zTSp.getCjldw() != null){
 				zsp.setCjldwId(zTSp.getCjldw().getId());
 				zsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
@@ -141,7 +154,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			
 
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, zywhsDet.getZdwsl(), zywhsDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, zywhsDet.getZdwsl(), tDet.getZcdwsl(), zywhsDet.getSpje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setZdwcb(YwzzServiceImpl.getDwcb(ywhs.getBmbh(), zywhsDet.getSpbh(), ywzzDao));
 			
 			//更新分户账
@@ -160,7 +173,19 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			tDet.setJspbz(jywhsDet.getSpbz());
 			tDet.setJzjldwId(jywhsDet.getZjldwId());
 			tDet.setJzjldwmc(jywhsDet.getZjldwmc());
+			tDet.setJcjldwId(jywhsDet.getCjldwId());
+			tDet.setJcjldwmc(jywhsDet.getCjldwmc());
+			if(jywhsDet.getZhxs() != null){
+				tDet.setJzhxs(jywhsDet.getZhxs());
+			}else{
+				tDet.setJzhxs(BigDecimal.ZERO);
+			}
 			tDet.setJzdwsl(jywhsDet.getZdwsl());
+			if(jywhsDet.getCdwsl() != null){
+				tDet.setJcdwsl(jywhsDet.getCdwsl());
+			}else{
+				tDet.setJcdwsl(BigDecimal.ZERO);
+			}
 			tDet.setJzdwdj(jywhsDet.getZdwdj());
 			tDet.setJspje(jywhsDet.getSpje());
 			tDet.setJisZs(jywhsDet.getIsZs());
@@ -171,13 +196,13 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			BeanUtils.copyProperties(jywhsDet, jsp);
 			TSp jTSp = spDao.load(TSp.class, jywhsDet.getSpbh());
 			if(jTSp.getCjldw() != null){
-				jsp.setCjldwId(zTSp.getCjldw().getId());
-				jsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
+				jsp.setCjldwId(jTSp.getCjldw().getId());
+				jsp.setCjldwmc(jTSp.getCjldw().getJldwmc());
 				jsp.setZhxs(jTSp.getZhxs());
 			}
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, jywhsDet.getZdwsl().negate(), jywhsDet.getSpje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, jywhsDet.getZdwsl().negate(), tDet.getJcdwsl().negate(), jywhsDet.getSpje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
 			tDet.setJdwcb(YwzzServiceImpl.getDwcb(ywhs.getBmbh(), jywhsDet.getSpbh(), ywzzDao));
 			
 			//更新分户账
@@ -249,7 +274,9 @@ public class YwhsServiceImpl implements YwhsServiceI {
 			TYwhsDet tDet = new TYwhsDet();
 			BeanUtils.copyProperties(yTDet, tDet, new String[]{"id"});
 			tDet.setZzdwsl(yTDet.getZzdwsl().negate());
+			tDet.setZcdwsl(yTDet.getZcdwsl().negate());
 			tDet.setJzdwsl(yTDet.getJzdwsl().negate());
+			tDet.setJcdwsl(yTDet.getJcdwsl().negate());
 			tDet.setZspje(yTDet.getZspje().negate());
 			tDet.setJspje(yTDet.getJspje().negate());
 			
@@ -271,7 +298,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				zsp.setCjldwmc(zTSp.getCjldw().getJldwmc());
 			}
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, tDet.getZzdwsl(), tDet.getZspje(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(zsp, dep, ck, tDet.getZzdwsl(), tDet.getZcdwsl(), tDet.getZspje(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新分户账
 			if(yTYwhs.getFhId() != null){
@@ -291,7 +318,7 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				jsp.setCjldwId(jTSp.getCjldw().getId());
 				jsp.setCjldwmc(jTSp.getCjldw().getJldwmc());
 			}
-			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, tDet.getJzdwsl().negate(), tDet.getJspje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(jsp, dep, ck, tDet.getJzdwsl().negate(), tDet.getJcdwsl().negate(), tDet.getJspje().negate(), null, null, Constant.UPDATE_RK, ywzzDao);
 			
 			//更新分户账
 			if(yTYwhs.getFhId() != null){
@@ -371,7 +398,20 @@ public class YwhsServiceImpl implements YwhsServiceI {
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		if(ywhs.getFromOther() != null){
+		if(ywhs.getFromOther() == null) {
+			hql += " and t.createId = :createId";
+			params.put("createId", ywhs.getCreateId());
+		}else{
+			if(ywhs.getBmbh().equals("05")) {
+				String ckSql = "select cks from v_zy_cks where createId = ?";
+				Map<String, Object> ckParams = new HashMap<String, Object>();
+				ckParams.put("0", ywhs.getCreateId());
+				Object cks = ywhsDao.getBySQL(ckSql, ckParams);
+
+				if(cks != null){
+					hql += " and t.ckId in " + cks.toString();
+				}
+			}
 			hql += " and t.isCj = '0' and t.TKfhs = null and t.fhId = null";
 		}
 		String countHql = " select count(*)" + hql;
@@ -410,6 +450,8 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				zc.setSpbz(t.getZspbz());
 				zc.setZjldwmc(t.getZzjldwmc());
 				zc.setZdwsl(t.getZzdwsl());
+				zc.setCjldwmc(t.getZcjldwmc());
+				zc.setCdwsl(t.getZcdwsl());
 				zc.setZdwdj(t.getZzdwdj());
 				zc.setSpje(t.getZspje());
 				zc.setIsZs(t.getZisZs());
@@ -424,7 +466,9 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				jc.setSppp(t.getJsppp());
 				jc.setSpbz(t.getJspbz());
 				jc.setZjldwmc(t.getJzjldwmc());
+				jc.setCjldwmc(t.getJcjldwmc());
 				jc.setZdwsl(t.getJzdwsl());
+				jc.setCdwsl(t.getJcdwsl());
 				jc.setZdwdj(t.getJzdwdj());
 				jc.setSpje(t.getJspje());
 				jc.setIsZs(t.getJisZs());
@@ -483,7 +527,11 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				zc.setSpbz(tYwhsDet.getZspbz());
 				zc.setZjldwId(tYwhsDet.getZzjldwId());
 				zc.setZjldwmc(tYwhsDet.getZzjldwmc());
+				zc.setCjldwId(tYwhsDet.getZcjldwId());
+				zc.setCjldwmc(tYwhsDet.getZcjldwmc());
+				zc.setZhxs(tYwhsDet.getZzhxs());
 				zc.setZdwsl(tYwhsDet.getZzdwsl());
+				zc.setCdwsl(tYwhsDet.getZcdwsl());
 				ywhsDets.add(zc);
 			}
 			if("0".equals(tYwhsDet.getJisZs())){
@@ -496,7 +544,11 @@ public class YwhsServiceImpl implements YwhsServiceI {
 				jc.setSpbz(tYwhsDet.getJspbz());
 				jc.setZjldwId(tYwhsDet.getJzjldwId());
 				jc.setZjldwmc(tYwhsDet.getJzjldwmc());
+				jc.setCjldwId(tYwhsDet.getJcjldwId());
+				jc.setCjldwmc(tYwhsDet.getJcjldwmc());
+				jc.setZhxs(tYwhsDet.getJzhxs());
 				jc.setZdwsl(tYwhsDet.getJzdwsl());
+				jc.setCdwsl(tYwhsDet.getJcdwsl());
 				ywhsDets.add(jc);
 			}
 		}

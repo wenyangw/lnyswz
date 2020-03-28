@@ -20,8 +20,28 @@ $(function(){
 		pageList : pageList,
 		columns:[[
 			{field:'id',title:'记录号',align:'center',checkbox:true},
+			{field:'needAudit',title:'等级',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
+			{field:'isAudit',title:'进度',align:'center',
+				styler: function(value, rowData){
+					if(rowData.needAudit == rowData.isAudit){
+						return 'color:blue;';
+					}
+					if(rowData.isAudit == '9'){
+						return 'color:red;';
+					}
+				}},
 			{field:'cgxqlsh',title:'流水号',align:'center'},
 	        {field:'createTime',title:'时间',align:'center'},
+	        {field:'createName',title:'创建人',align:'center'},
+	        {field:'khmc',title:'客户',align:'center'},
           	{field:'spbh',title:'商品编号',align:'center'},
             {field:'spmc',title:'名称',align:'center'},
             {field:'spcd',title:'产地',align:'center'},
@@ -48,6 +68,10 @@ $(function(){
    				formatter: function(value, row){
                   	return value == 0 ? '' : value;
               	}},
+           	{field:'dbsl',title:'调拨数量',align:'center',
+    				formatter: function(value, row){
+                   	return value == 0 ? '' : value;
+               	}},
             {field:'zdwdj',title:'单价1',align:'center',
                	formatter: function(value){
                		return value == 0 ? '' : value;
@@ -88,7 +112,11 @@ $(function(){
             	formatter: function(value){
             		return value == undefined ? '' : moment(value).format('YYYY-MM-DD');
         		}},
-// 	        {field:'xqsj',title:'需求时间',align:'center'},
+ 	        {field:'xqsj',title:'需求时间',align:'center',
+ 	        	formatter: function(value){
+            		return value == undefined ? '' : moment(value).format('YYYY-MM-DD');
+        		}},
+ 	        
 	        {field:'hjje',title:'金额',align:'center',
             	formatter: function(value){
             		return value == 0 ? '' : value;
@@ -119,6 +147,19 @@ $(function(){
         			b = b == undefined ? 0 : b;
 					return (a-b);  
 				}},
+			{field:'isZs',title:'*直送',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '否';
+					}
+				},
+        		sorter: function(a,b){
+        			a = a == undefined ? 0 : a;
+        			b = b == undefined ? 0 : b;
+					return (a-b);  
+				}},
         	{field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -133,6 +174,19 @@ $(function(){
 					return (a-b);  
 				}},
         	{field:'isRefuse',title:'*退回',align:'center',sortable:true,
+        		formatter : function(value) {
+					if (value == '1') {
+						return '是';
+					} else {
+						return '';
+					}
+				},
+				sorter: function(a,b){
+	        			a = a == undefined ? 0 : a;
+	        			b = b == undefined ? 0 : b;
+						return (a-b);  
+				}},
+			{field:'isComplete',title:'*有货',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
 						return '是';
@@ -297,6 +351,7 @@ function searchCgxq(){
 	cgxq_dg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeCgxq]').val(),
+		search: $('input[name=searchCgxq]').val(),
 	});
 }
 
@@ -308,6 +363,7 @@ function searchCgxq(){
 </div>
 <div id="jxc_cgxq_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeCgxq" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入客户编号、名称，商品编号、名称：<input type="text" name="searchCgxq" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchCgxq();">查询</a>
 </div>
 

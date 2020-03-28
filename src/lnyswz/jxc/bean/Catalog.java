@@ -12,6 +12,7 @@ public class Catalog implements Serializable{
 	private String catName;
 	private int orderNum;
 	private String iconCls;
+	private String type;
 	private int page;
 	private int rows;
 	private String ids;
@@ -40,6 +41,15 @@ public class Catalog implements Serializable{
 	public void setIconCls(String iconCls) {
 		this.iconCls = iconCls;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public int getPage() {
 		return page;
 	}

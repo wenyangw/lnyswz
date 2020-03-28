@@ -12,7 +12,7 @@
 		<tr>
 			<th><label for="gysmc">供应商名称</label></th>
 			<td><input name="gysmc" class="easyui-validatebox"
-				data-options="required:true,missingMessage:'请输入供应商名称',validType:'chinese'"
+				data-options="required:true,missingMessage:'请输入供应商名称'"
 				style="width: 220px;"></td>
 		</tr>
 		<tr>

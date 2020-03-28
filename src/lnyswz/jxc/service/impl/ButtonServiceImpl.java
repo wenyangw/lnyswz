@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +19,13 @@ import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.Button;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.model.TButton;
-import lnyswz.jxc.model.TCatalog;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.TMenu;
 import lnyswz.jxc.model.TRole;
 import lnyswz.jxc.model.TUser;
 import lnyswz.jxc.service.ButtonServiceI;
 import lnyswz.jxc.util.ButtonComparator;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 功能按钮实现类
@@ -35,7 +34,6 @@ import lnyswz.jxc.util.ButtonComparator;
  */
 @Service("buttonService")
 public class ButtonServiceImpl implements ButtonServiceI {
-	private Logger logger = Logger.getLogger(ButtonServiceImpl.class);
 	private BaseDaoI<TButton> buttonDao;
 	private BaseDaoI<TMenu> menuDao;
 	private BaseDaoI<TUser> userDao;
@@ -78,9 +76,10 @@ public class ButtonServiceImpl implements ButtonServiceI {
 	public void delete(String ids) {
 		if (ids != null) {
 			//拆分id
+			TButton t = null;
 			for (String id : ids.split(",")) {
 				if (!id.trim().equals("0")) {
-					TButton t = buttonDao.get(TButton.class, id.trim());
+					t = buttonDao.get(TButton.class, id.trim());
 					if (t != null) {
 						buttonDao.delete(t);
 					}
@@ -147,9 +146,10 @@ public class ButtonServiceImpl implements ButtonServiceI {
 		
 		if (roles != null && roles.size() > 0) {
 			Set<TButton> bs = new HashSet<TButton>();
+			TDepartment d = null;
 			for (TRole role : roles) {
 				//遍历所有角色，获取功能按钮，并删除重复的
-				TDepartment d = role.getTDepartment();
+				d = role.getTDepartment();
 				if(d == null && user.getDid().equals(did)){
 					bs.addAll(role.getTButtons());
 				}
@@ -187,6 +187,7 @@ public class ButtonServiceImpl implements ButtonServiceI {
 			params.put("mid", mid);
 		}
 		String countHql = "select count(id) " + hql;
+		hql = hql + " order by t.TMenu.id, t.tabId, t.orderNum";
 		List<TButton> l = buttonDao.find(hql, params);
 		DataGrid datagrid = new DataGrid();
 		datagrid.setTotal(buttonDao.count(countHql, params));

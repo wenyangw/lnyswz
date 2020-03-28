@@ -63,7 +63,7 @@ public class ShdzServiceImpl implements ShdzServiceI {
 	 */
 	@Override
 	public List<Shdz> listShdz(Shdz shdz) {
-		String hql = "from TShdz t ";
+		String hql = "from TShdz t order by t.orderNum";
 		List<TShdz> list = shdzDao.find(hql);
 		return changeShdz(list);
 	}
@@ -75,6 +75,7 @@ public class ShdzServiceImpl implements ShdzServiceI {
 		// 获得总条数
 		String totalHql = "select count(*) " + hql;
 		// 传入页码、每页条数
+		hql += " order by t.orderNum";
 		List<TShdz> l = shdzDao.find(hql, shdz.getPage(), shdz.getRows());
 		// 处理返回信息
 		dg.setTotal(shdzDao.count(totalHql));
@@ -99,6 +100,7 @@ public class ShdzServiceImpl implements ShdzServiceI {
 		
 		DataGrid dg = new DataGrid();
 		dg.setTotal(shdzDao.count(countHql, params));
+		hql += " order by t.orderNum";
 		dg.setRows(changeShdz(shdzDao.find(hql, params, shdz.getPage(), shdz.getRows())));
 		return dg;
 		

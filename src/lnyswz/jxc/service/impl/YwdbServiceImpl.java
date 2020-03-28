@@ -33,12 +33,14 @@ import lnyswz.jxc.bean.Ywrk;
 import lnyswz.jxc.bean.YwrkDet;
 import lnyswz.jxc.model.TCgjh;
 import lnyswz.jxc.model.TCgjhDet;
+import lnyswz.jxc.model.TCgxqDet;
 import lnyswz.jxc.model.TDepartment;
 import lnyswz.jxc.model.THw;
 import lnyswz.jxc.model.TYwdb;
 import lnyswz.jxc.model.TYwdbDet;
 import lnyswz.jxc.model.TKfzz;
 import lnyswz.jxc.model.TLsh;
+import lnyswz.jxc.model.TLszz;
 import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.model.TYwrk;
@@ -46,6 +48,7 @@ import lnyswz.jxc.model.TYwrkDet;
 import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.YwdbServiceI;
 import lnyswz.jxc.util.Constant;
+import lnyswz.jxc.util.Util;
 
 /**
  * 采购需求实现类
@@ -57,7 +60,9 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	private Logger logger = Logger.getLogger(YwdbServiceImpl.class);
 	private BaseDaoI<TYwdb> ywdbDao;
 	private BaseDaoI<TYwdbDet> detDao;
+	private BaseDaoI<TCgxqDet> cgxqDetDao;
 	private BaseDaoI<TYwzz> ywzzDao;
+	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
 	private BaseDaoI<TSp> spDao;
@@ -74,6 +79,9 @@ public class YwdbServiceImpl implements YwdbServiceI {
 		tYwdb.setBmmc(depDao.load(TDepartment.class, ywdb.getBmbh()).getDepName());
 		
 		tYwdb.setIsCj("0");
+		if(ywdb.getCgxqlsh() != null){
+			tYwdb.setCgxqlsh(ywdb.getCgxqlsh());
+		}
 		
 		//处理商品明细
 		Set<TYwdbDet> tDets = new HashSet<TYwdbDet>();
@@ -81,6 +89,14 @@ public class YwdbServiceImpl implements YwdbServiceI {
 		for(YwdbDet ywdbDet : ywdbDets){
 			TYwdbDet tDet = new TYwdbDet();
 			BeanUtils.copyProperties(ywdbDet, tDet);
+			
+			if(ywdb.getCgxqlsh() != null && ywdb.getCgxqlsh().length() != 0){
+				TCgxqDet tCgxqDet = cgxqDetDao.load(TCgxqDet.class, ywdbDet.getCgxqDetId());
+				tCgxqDet.setDbsl(tCgxqDet.getDbsl().add(ywdbDet.getZdwsl()));
+				if (!("".equals(ywdbDet.getCjldwId()) || ywdbDet.getZhxs() == null || ywdbDet.getZhxs().compareTo(Constant.BD_ZERO) == 0)){
+					tCgxqDet.setCdbsl(tCgxqDet.getCdbsl().add(ywdbDet.getCdwsl()));	
+				}
+			}
 			
 			if("".equals(ywdbDet.getCjldwId()) || ywdbDet.getZhxs() == null || ywdbDet.getZhxs().compareTo(Constant.BD_ZERO) == 0){
 				tDet.setCdwsl(Constant.BD_ZERO);
@@ -104,12 +120,13 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			ckT.setCkmc(tYwdb.getCkmcT());
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, ywdbDet.getZdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 				Constant.UPDATE_DB, ywzzDao);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, ywdbDet.getZdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
-					Constant.UPDATE_DB, ywzzDao);
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), tDet.getCdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+				Constant.UPDATE_DB, ywzzDao);
 		}
 		tYwdb.setTYwdbDets(tDets);
+		
 		ywdbDao.save(tYwdb);		
 		OperalogServiceImpl.addOperalog(ywdb.getCreateId(), ywdb.getBmbh(), ywdb.getMenuId(), tYwdb.getYwdblsh(), "生成业务调拨", operalogDao);
 		
@@ -170,15 +187,33 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			tDet.setTYwdb(tYwdb);
 			tDets.add(tDet);
 			
+			if(yTYwdb.getCgxqlsh() != null && yTYwdb.getCgxqlsh().trim().length() > 0){
+				String cgxqHql = "from TCgxqDet t where t.TCgxq.cgxqlsh = :cgxqlsh and t.spbh = :spbh";
+				Map<String, Object> cgxqParams = new HashMap<String, Object>();
+				cgxqParams.put("cgxqlsh", yTYwdb.getCgxqlsh());
+				cgxqParams.put("spbh", yTDet.getSpbh());
+				TCgxqDet tCgxqDet = cgxqDetDao.get(cgxqHql, cgxqParams);
+				
+				tCgxqDet.setDbsl(tCgxqDet.getDbsl().subtract(yTDet.getZdwsl()));
+				if(yTDet.getCdwsl().compareTo(BigDecimal.ZERO) != 0){
+					tCgxqDet.setCdbsl(tCgxqDet.getCdbsl().subtract(yTDet.getCdwsl()));
+				}
+			}
+			
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(tDet, sp);
 			
 			//更新业务总账
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckF, tDet.getZdwsl().negate(), tDet.getCdwsl().negate(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 					Constant.UPDATE_DB, ywzzDao);
-			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ckT, tDet.getZdwsl(), tDet.getCdwsl(), Constant.BD_ZERO, Constant.BD_ZERO, Constant.BD_ZERO,
 					Constant.UPDATE_DB, ywzzDao);
 		}
+		
+		if(yTYwdb.getCgxqlsh() != null){
+			yTYwdb.setCgxqlsh(null);
+		}
+		
 		tYwdb.setTYwdbDets(tDets);
 		ywdbDao.save(tYwdb);		
 		OperalogServiceImpl.addOperalog(ywdb.getCjId(), ywdb.getBmbh(), ywdb.getMenuId(), tYwdb.getCjYwdblsh() + "/" + tYwdb.getYwdblsh(), "冲减业务调拨", operalogDao);
@@ -187,18 +222,21 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	@Override
 	public DataGrid datagrid(Ywdb ywdb) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime";
+		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywdb.getBmbh());
+		params.put("createId", ywdb.getCreateId());
 		if(ywdb.getCreateTime() != null){
 			params.put("createTime", ywdb.getCreateTime()); 
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
 		if(ywdb.getSearch() != null){
-			hql += " and (t.ywdblsh like :search or t.bz like :search)"; 
-			params.put("search", "%" + ywdb.getSearch() + "%");
-			
+			//hql += " and (t.ywdblsh like :search or t.bz like :search)"; 
+			//params.put("search", "%" + ywdb.getSearch() + "%");
+			hql += " and (" + 
+					Util.getQueryWhere(ywdb.getSearch(), new String[]{"t.ywdblsh", "t.bz"}, params)
+					+ ")";
 		}
 		
 		String countHql = " select count(*)" + hql;
@@ -245,6 +283,12 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			lists.addAll(yw);
 		}
 		
+		List<ProBean> ls = LszzServiceImpl.getZzsl(ywdb.getBmbh(), ywdb.getSpbh(), ywdb.getCkId(), lszzDao);
+		if(ls != null){
+			sl = sl.subtract(new BigDecimal(ls.get(0).getValue()));
+			lists.addAll(ls);
+		}
+		
 		ProBean slBean = new ProBean();
 		slBean.setGroup("可调数量");
 		slBean.setName("数量");
@@ -267,8 +311,18 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	}
 
 	@Autowired
+	public void setCgxqDetDao(BaseDaoI<TCgxqDet> cgxqDetDao) {
+		this.cgxqDetDao = cgxqDetDao;
+	}
+
+	@Autowired
 	public void setYwzzDao(BaseDaoI<TYwzz> ywzzDao) {
 		this.ywzzDao = ywzzDao;
+	}
+
+	@Autowired
+	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
+		this.lszzDao = lszzDao;
 	}
 
 	@Autowired

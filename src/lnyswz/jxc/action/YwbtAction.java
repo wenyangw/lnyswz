@@ -1,12 +1,9 @@
 package lnyswz.jxc.action;
 
-import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -18,6 +15,7 @@ import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.YwbtServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 
 /**
  * 业务补调Action
@@ -28,7 +26,7 @@ import lnyswz.jxc.util.Export;
 @Namespace("/jxc")
 @Action("ywbtAction")
 public class YwbtAction extends BaseAction implements ModelDriven<Ywbt> {
-	private Logger logger = Logger.getLogger(YwbtAction.class);
+	private static final long serialVersionUID = 1L;
 	private Ywbt ywbt = new Ywbt();
 	private YwbtServiceI ywbtService;
 
@@ -56,10 +54,13 @@ public class YwbtAction extends BaseAction implements ModelDriven<Ywbt> {
 		User user = (User) session.get("user");
 		ywbt.setCreateName(user.getRealName());
 		DataGrid dg = ywbtService.printYwbt(ywbt);
-		Export.print(dg, Constant.REPORT_YWBT.get(ywbt.getBmbh()));
+		Export.print(dg, Util.getReportName(ywbt.getBmbh(), "report_ywbt.json"));
+		//Export.print(dg, Constant.REPORT_YWBT.get(ywbt.getBmbh()));
 	}
 	
 	public void datagrid() {
+		User user = (User) session.get("user");
+		ywbt.setCreateId(user.getId());
 		writeJson(ywbtService.datagrid(ywbt));
 	}
 

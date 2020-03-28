@@ -100,6 +100,7 @@ public class SplbServiceImpl implements SplbServiceI {
 			params.put("spdlId", splb.getSpdlId());
 		}
 		String countHql = "select count(id) " + hql;
+		hql += " order by t.idFrom";
 		DataGrid dg = new DataGrid();
 		dg.setTotal(splbDao.count(countHql, params));
 		dg.setRows(changeSplb(splbDao.find(hql, params, splb.getPage(), splb.getRows())));

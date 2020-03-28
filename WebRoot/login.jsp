@@ -4,7 +4,6 @@
 <html>
 <head>
 <jsp:include page="/common/inc.jsp"></jsp:include>
-
 <script type="text/javascript">
 $(function() {
 	var name = "";

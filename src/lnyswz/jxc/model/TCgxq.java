@@ -41,12 +41,15 @@ public class TCgxq implements java.io.Serializable {
 	private String lxr;
 	private String shdz;
 	private Date dhsj;
-	private Integer xqsj;
+	private Date xqsj;
 	private String jsfsId;
 	private String jsfsmc;
 	private BigDecimal hjje;
 	private String bz;
 	private String isLs;
+	private String isZs;
+	private String needAudit;
+	private String isAudit;
 	
 	private Set<TCgxqDet> TCgxqDets = new HashSet<TCgxqDet>(0);
 	
@@ -55,8 +58,8 @@ public class TCgxq implements java.io.Serializable {
 	
 	public TCgxq(String cgxqlsh, int createId, Date createTime, String createName, String bmbh,
 			String bmmc, int ywyId, String ywymc, String gysbh, String gysmc, String khbh, String khmc, String dhfs, String lxr,
-			String shdz, Date dhsj, Integer xqsj, String jsfsId, String jsfsmc, BigDecimal hjje,
-			String bz, String isLs, Set<TCgxqDet> TCgxqDets) {
+			String shdz, Date dhsj, Date xqsj, String jsfsId, String jsfsmc, BigDecimal hjje,
+			String bz, String isLs, String isZs, String needAudit, String isAudit, Set<TCgxqDet> TCgxqDets) {
 		this.cgxqlsh = cgxqlsh;
 		this.createId = createId;
 		this.createTime = createTime;
@@ -79,6 +82,9 @@ public class TCgxq implements java.io.Serializable {
 		this.hjje = hjje;
 		this.bz = bz;
 		this.isLs = isLs;
+		this.isZs = isZs;
+		this.needAudit = needAudit;
+		this.isAudit = isAudit;
 		this.TCgxqDets = TCgxqDets;
 		
 	}
@@ -230,12 +236,13 @@ public class TCgxq implements java.io.Serializable {
 		this.dhsj = dhsj;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "xqsj")
-	public Integer getXqsj() {
+	public Date getXqsj() {
 		return this.xqsj;
 	}
 
-	public void setXqsj(Integer xqsj) {
+	public void setXqsj(Date xqsj) {
 		this.xqsj = xqsj;
 	}
 
@@ -282,6 +289,33 @@ public class TCgxq implements java.io.Serializable {
 
 	public void setIsLs(String isLs) {
 		this.isLs = isLs;
+	}
+	
+	@Column(name = "isZs", nullable = false, length = 1)
+	public String getIsZs() {
+		return isZs;
+	}
+
+	public void setIsZs(String isZs) {
+		this.isZs = isZs;
+	}
+	
+	@Column(name = "needAudit", nullable = false, length = 1)
+	public String getNeedAudit() {
+		return this.needAudit;
+	}
+
+	public void setNeedAudit(String needAudit) {
+		this.needAudit = needAudit;
+	}
+
+	@Column(name = "isAudit", nullable = false, length = 1)
+	public String getIsAudit() {
+		return this.isAudit;
+	}
+
+	public void setIsAudit(String isAudit) {
+		this.isAudit = isAudit;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TCgxq", cascade=CascadeType.ALL)

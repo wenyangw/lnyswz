@@ -52,8 +52,8 @@ $(function(){
 	xskp_menuId = lnyw.tab_options().id;
 	
 	$('#jxc_xskp_layout').layout({
-		fit : true,
-		border : false,
+		fit: true,
+		border: false
 	});
 	
 	xskp_dg = $('#jxc_xskp_dg').datagrid({
@@ -77,7 +77,7 @@ $(function(){
 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
 	        {field:'ckmc',title:'仓库',align:'center'},
 	        {field:'fhId',title:'分户 id',align:'center',hidden:true},
-	        {field:'fhmc',title:'分户',align:'center'},
+	        {field:'fhmc',title:'分户',align:'center', hidden: xskp_did != '04'},
 	        {field:'ywymc',title:'业务员',align:'center'},
 	        {field:'hjje',title:'金额',align:'center',
 	        	formatter: function(value){
@@ -123,7 +123,7 @@ $(function(){
 				}},
 			{field:'cjTime',title:'冲减时间',align:'center'},
         	{field:'cjXskplsh',title:'原销售流水号',align:'center'},
-	        {field:'bookmc',title:'书名',align:'center'},
+	        {field:'bookmc',title:'书名',align:'center', hidden: xskp_did != '04'},
 	        {field:'kpr',title:'制单人',align:'center'},
         	{field:'ywrklsh',title:'内部入库',align:'center'},
 	        {field:'jsfsmc',title:'结算方式',align:'center'},
@@ -187,17 +187,18 @@ $(function(){
 	xskp_xsthDg = $('#jxc_xskp_xsthDg').datagrid({
 		fit : true,
 	    border : false,
-	    //remoteSort: false,
+	    remoteSort: false,
 // 	    fitColumns: true,
 // 	    singleSelect: true, 
 	    pagination : true,
 		pageSize : pageSize,
 		pageList : pageList,
+		frozenColumns:[[
+			]],
 		columns:[[
 			{field:'id',title:'销售提货DetId',align:'center',checkbox:true},
 			{field:'xsthlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
-			{field:'createName',title:'创建人',align:'center'},
 			{field:'khbh',title:'供应商编号',align:'center',hidden:true},
 			{field:'khmc',title:'供应商名称',align:'center'},
 			{field:'ywyId',title:'业务员id',align:'center',hidden:true},
@@ -206,71 +207,8 @@ $(function(){
 			{field:'ckmc',title:'仓库',align:'center'},
 			{field:'fhId',title:'分户id',align:'center',hidden:true},
 			{field:'fhmc',title:'分户',align:'center'},
-			{field:'toFp',title:'*开票',align:'center',sortable:true,
-           		formatter : function(value) {
-   					if (value == '1') {
-   						return '是';
-   					} else {
-   						return '';
-   					}
-   				},
-           		sorter: function(a,b){
-           			a = a == undefined ? 0 : a;
-           			b = b == undefined ? 0 : b;
-   					return (a-b);  
-   				}},
-			{field:'spbh',title:'商品编号',align:'center'},
-			{field:'spmc',title:'名称',align:'center'},
-			{field:'spcd',title:'产地',align:'center'},
-			{field:'sppp',title:'品牌',align:'center'},
-			{field:'spbz',title:'包装',align:'center'},
-			{field:'zjldwmc',title:'单位1',align:'center'},
-			{field:'zdwsl',title:'数量1',align:'center'},
-			{field:'kpsl',title:'开票数量',align:'center',
-				formatter: function(value){
-					return value == 0 ? '' : value;
-				},
-				styler:function(){
-					return 'color:red;';
-				}},
-			{field:'thsl',title:'原提货数量',align:'center',
-				formatter: function(value){
-					return value == 0 ? '' : value;
-				},
-				styler:function(){
-					return 'color:blue;';
-				}},
-			{field:'zdwdj',title:'单价1',align:'center'},
-// 			{field:'zdwytsl',title:'开票数量',align:'center',
-// 				formatter: function(value){
-// 					return value == 0 ? '' : value;
-// 				},
-// 				styler:function(){
-// 					return 'color:red;';
-// 				}},
-			{field:'cjldwmc',title:'单位2',align:'center'},
-			{field:'cdwsl',title:'数量2',align:'center'},
-			{field:'cdwdj',title:'单价2',align:'center'},
-			{field:'bookmc',title:'书名',align:'center',
-				//formatter: function(value){
-				//	return lnyw.memo(value, 15);
-				//}
-			},
-			{field:'bz',title:'备注',align:'center',
-				formatter: function(value){
-					return lnyw.memo(value, 15);
-				}},
-			{field:'thfs',title:'到货方式',align:'center',
-				formatter : function(value) {
-					if (value == '1') {
-						return '自提';
-					} else {
-						return '送货';
-					}
-				}},
-			{field:'thr',title:'提货人',align:'center'},
-			{field:'ch',title:'车号',align:'center'},
-			{field:'shdz',title:'送货地址',align:'center'},
+			{field:'jsfsId',title:'结算方式id',align:'center', hidden:true},
+			{field:'jsfsmc',title:'结算方式',align:'center'},
 			{field:'isZs',title:'*直送',align:'center',sortable:true,
            		formatter : function(value) {
    					if (value == '1') {
@@ -284,6 +222,82 @@ $(function(){
            			b = b == undefined ? 0 : b;
    					return (a-b);  
    				}},
+			{field:'thfs',title:'到货方式',align:'center',
+				formatter : function(value) {
+					if (value == '1') {
+						return '自提';
+					} else {
+						return '送货';
+					}
+				}},
+			{field:'spbh',title:'*商品编号',align:'center',sortable:true,
+	        	sorter: function(a, b){
+	        		return  a - b;
+	        	}},
+			{field:'spmc',title:'名称',align:'center',},
+			{field:'spcd',title:'产地',align:'center'},
+			{field:'sppp',title:'品牌',align:'center'},
+			{field:'spbz',title:'包装',align:'center'},
+			{field:'zjldwmc',title:'单位1',align:'center'},
+			{field:'zdwsl',title:'数量1',align:'center'},
+			{field:'kpsl',title:'开票数量',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:red;';
+				}},
+			{field:'zdwdj',title:'单价1',align:'center'},
+// 			{field:'zdwytsl',title:'开票数量',align:'center',
+// 				formatter: function(value){
+// 					return value == 0 ? '' : value;
+// 				},
+// 				styler:function(){
+// 					return 'color:red;';
+// 				}},
+			{field:'cjldwmc',title:'单位2',align:'center'},
+			{field:'cdwsl',title:'数量2',align:'center'},
+			{field:'ckpsl',title:'开票数量2',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:red;';
+			}},
+			{field:'cdwdj',title:'单价2',align:'center'},
+			{field:'bookmc',title:'书名',align:'center',
+				//formatter: function(value){
+				//	return lnyw.memo(value, 15);
+				//}
+			},
+			{field:'thsl',title:'原提货数量',align:'center',
+				formatter: function(value){
+					return value == 0 ? '' : value;
+				},
+				styler:function(){
+					return 'color:blue;';
+				}},
+			{field:'createName',title:'创建人',align:'center'},
+			{field:'toFp',title:'*开票',align:'center',sortable:true,
+           		formatter : function(value) {
+   					if (value == '1') {
+   						return '是';
+   					} else {
+   						return '';
+   					}
+   				},
+           		sorter: function(a,b){
+           			a = a == undefined ? 0 : a;
+           			b = b == undefined ? 0 : b;
+   					return (a-b);  
+   				}},
+			{field:'bz',title:'备注',align:'center',
+				formatter: function(value){
+					return lnyw.memo(value, 15);
+				}},
+			{field:'thr',title:'提货人',align:'center'},
+			{field:'ch',title:'车号',align:'center'},
+			{field:'shdz',title:'送货地址',align:'center'},
 			{field:'xskplshs',title:'销售开票',align:'center',
 				formatter: function(value){
 					return lnyw.memo(value, 15);
@@ -342,6 +356,7 @@ $(function(){
 					queryParams:{
 						bmbh: xskp_did,
 						createTime: countXskp == 0 ? undefined : $('input[name=createTimeXskp]').val(),
+						xslxId: '01',
 						search: countXskp == 0 ? undefined : $('input[name=searchXskp]').val(),
 					}
 				});
@@ -367,6 +382,7 @@ $(function(){
 	});
 	
 	xskp_spdg = $('#jxc_xskp_spdg').datagrid({
+		width: '100%',
 		fit : true,
 	    border : false,
 	    singleSelect : true,
@@ -433,6 +449,7 @@ $(function(){
         	{field:'zjldwId',title:'主单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'cjldwId',title:'次单位id',width:25,align:'center',editor:'text', hidden:true},
         	{field:'dwcb',title:'成本',width:25,align:'center',editor:'text', hidden:true},
+        	{field:'zmsl',title:'账面数量',width:25,align:'center',editor:'text', hidden:true},
 	    ]],
         onClickRow: clickRow,
         onAfterEdit: function (rowIndex, rowData, changes) {
@@ -451,7 +468,7 @@ $(function(){
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
 	
 	
-	$('input[name=khmc]').change(function(){
+	$('input[name=xskp_khmc]').change(function(){
 // 		var isCheck = true;
 // 		if($('input#sxCheck').is(':checked')){
 // 			isCheck = checkKh();
@@ -459,7 +476,10 @@ $(function(){
 // 		if(isCheck){
 // 			loadKh($('input[name=khbh]').val().trim());
 // 		}
-		loadKh($('input[name=khbh]').val().trim());
+		loadKh($('input[name=xskp_khbh]').val().trim());
+		if($('input[name=xsthDetIds]').val() == ''){
+			jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=xskp_khbh]').val()));
+		}
 	});
 	
 
@@ -469,13 +489,16 @@ $(function(){
 			//初始化分户列表
 			if(jxc_xskp_fhCombo == undefined){
 				jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
-			}else{
-				jxc_xskp_fhCombo.combobox('selectedIndex', 0);
 			}
+//			else{
+//				jxc_xskp_fhCombo.combobox('selectedIndex', 0);
+//			}
+            jxc_xskp_fhCombo.combobox('selectedIndex', 0);
 		}else{
 			$('.fh').css('display','none');
 		}
 	});
+	
 	
 	//初始化仓库列表
 	jxc_xskp_ckCombo = lnyw.initCombo($("#jxc_xskp_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + xskp_did);
@@ -515,7 +538,7 @@ function init(){
 	});
 	
 	//清空全部字段
-	$('input#thfs_zt').attr('ckecked', 'checked');
+	$('input#thfs_zt').attr('checked', 'checked');
 	$('.isSh').css('display','none');
 	$('#info input').val('');
 // 	$('input').val('');
@@ -530,9 +553,12 @@ function init(){
 	//jxc_xskp_ywyCombo.combobox('selectedIndex', 0);
 	//jxc_xskp_jsfsCombo.combobox('selectedIndex', 0);
 	jxc_xskp_jsfsCombo.combobox('setValue', JSFS_QK);
+	jxc_xskp_jsfsCombo.combobox('readonly', false);
 	
 	//收回商品库存信息
-	jxc.hideKc('#jxc_xskp_layout');
+	if(xskp_did != '04'){
+		jxc.hideKc('#jxc_xskp_layout');
+	}
 	//xskp_spdg.datagrid('fitColumns');
 	jxc.spInfo($('#jxc_xskp_layout'), '');
 	
@@ -565,7 +591,7 @@ function rowOk(){
 		return true;
 	}
 	if(keyOk()){
-		if(zslEditor.target.val() >0 ){
+		if(zslEditor.target.val() != 0 ){
 			return true;
 		}
 	}
@@ -637,7 +663,9 @@ function removeRow(){
             .datagrid('deleteRow', editIndex);
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xskp_layout');
+    if(xskp_did != '04'){
+    	jxc.hideKc('#jxc_xskp_layout');
+    }
     //xskp_spdg.datagrid('fitColumns');
 }
 
@@ -645,7 +673,9 @@ function removeRow(){
 function accept(){
     if (rowOk()){
     	xskp_spdg.datagrid('acceptChanges');
-    	jxc.hideKc('#jxc_xskp_layout');
+    	if(xskp_did != '04'){
+    		jxc.hideKc('#jxc_xskp_layout');
+    	}
     	//xskp_spdg.datagrid('fitColumns');
     }
 }
@@ -655,7 +685,9 @@ function cancelAll(){
 	xskp_spdg.datagrid('rejectChanges');
     editIndex = undefined;
     updateFooter();
-    jxc.hideKc('#jxc_xskp_layout');
+    if(xskp_did != '04'){
+    	jxc.hideKc('#jxc_xskp_layout');
+    }
     //xskp_spdg.datagrid('fitColumns');
 }
 
@@ -679,6 +711,54 @@ function saveAll(){
 		return false;
 	}
 	
+	var footerRows_xskp = xskp_spdg.datagrid('getFooterRows');
+		
+	<%--var sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=xskp_khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));--%>
+	<%--if(sxkh_xskp.isLocked == '1'){--%>
+		<%--$.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');--%>
+		<%--return false;--%>
+	<%--}--%>
+
+    var sxkh_xskp = undefined;
+
+	//直接填开发票时考察客户限额
+	if(jxc.notInExcludeKhs(xskp_did, $('input[name=xskp_khbh]').val()) && jxc_xskp_jsfsCombo.combobox('getValue') == JSFS_QK){
+		if(!$('input[name=xsthDetIds]').val()){
+            sxkh_xskp = jxc.isExcess('${pageContext.request.contextPath}', xskp_did, $('input[name=xskp_khbh]').val(), jxc_xskp_ywyCombo.combobox('getValue'));
+            if(sxkh_xskp.isLocked == '1'){
+                $.messager.alert('提示', '该客户已经被限制销售，请联系管理人员！', 'error');
+                return false;
+            }
+			if(sxkh_xskp.khlxId == '02'){
+				if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.sxje) * Number(sxkh_xskp.limitPer)){
+					$.messager.alert('提示', '客户欠款已超出限制比例，请回款后销售！', 'error');
+					return false;
+				}else{
+					if((Number(sxkh_xskp.qkje) + Number(footerRows_xskp[0].sphj)) > Number(sxkh_xskp.limitJe)){
+						$.messager.alert('提示', '客户欠款已超出限制金额，请回款后销售！', 'error');
+						return false;
+					}
+				}
+			}
+		}
+	}
+		
+	var other = undefined;
+	if($('input[name=xsthKhbh]').val() && $('input[name=xsthKhbh]').val() != $('input[name=xskp_khbh]').val()){
+		other = jxc.isOther(
+			'${pageContext.request.contextPath}/jxc/khAction!getKhDet.action', 
+			xskp_did, 
+			$('input[name=xsthKhbh]').val(),
+			$('input[name=xsthYwyId]').val()
+			//jxc_xskp_ywyCombo.combobox('getValue')
+			);
+		if(!other){
+			$.messager.alert('提示', '不允许第三方销售,请重新操作！', 'error');
+			return false;
+		}
+		
+	}
+	
 	var rows = xskp_spdg.datagrid('getRows');
 	var effectRow = new Object();
 	if(rows.length == 1){
@@ -686,23 +766,58 @@ function saveAll(){
 		return false;
 	}
 	var spbhs = undefined;
+	var spbhsZero = undefined;
+	var spbhsBigger = undefined;
 	$.each(rows.slice(0, rows.length - 1), function(){
 		if(this.zdwsl == undefined){
 			$.messager.alert('提示', '商品数据未完成,请继续操作！', 'error');
 			return false;
 		}
+
+        // if($('input[name=xsthDetIds]').val() != '' && !$('input[name=isZs]').is(':checked')){
+		if($('input[name=xsthDetIds]').val() != ''){
+            if(this.zdwsl > this.zmsl){
+                if(spbhsBigger == undefined){
+                    spbhsBigger = '' + this.spbh;
+                }else{
+                    spbhsBigger += ',' + this.spbh;
+                }
+            }
+        }
+
+		if(Number(this.dwcb) == 0){
+			if(spbhsZero == undefined){
+				spbhsZero = '' + this.spbh;
+			}else{
+				spbhsZero += ',' + this.spbh;
+			}
+		}
 		
-		if(this.zdwdj <= this.dwcb){
+		if((Number(this.zdwdj) <= Number(this.dwcb)) || (Number(this.zhxs) == 0 ? false : (Number(this.cdwdj) <= (Number(this.dwcb) * Number(this.zhxs) * (1 + SL))))){
 			if(spbhs == undefined){
 				spbhs = '' + this.spbh;
 			}else{
 				spbhs += ',' + this.spbh;
 			}
 		}
+
 	});
+
+    if(spbhsBigger != undefined){
+        $.messager.alert('错误',  '商品(' + spbhsBigger + ')的销售数量大于库存数量，请确认！', 'error');
+        return false;
+    }
 	
- 	if(spbhs != undefined){
- 		$.messager.confirm('提示', '请确认商品(' + spbhs + ')销售单价小于销售成本！是-继续， 否-返回', function(data){
+ 	if(spbhs != undefined || spbhsZero != undefined){
+		var messZero = '';
+		if(spbhs != undefined){
+			messZero += '<br>请确认商品(' + spbhs + ')销售单价小于销售成本！';
+		}
+		if(spbhsZero != undefined){
+			messZero += '<br>请确认商品(' + spbhsZero + ')库存不为零！';
+		}
+
+ 		$.messager.confirm('提示', messZero + '<br>是-继续， 否-返回', function(data){
  			if(data){
  				save();	
  			}else{
@@ -715,7 +830,7 @@ function saveAll(){
 
 	function save(){
 		//if(!$('input[name=isZs]').is(':checked') && !$('input[name=isFh]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
-		if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == ''){
+		if(!$('input[name=isZs]').is(':checked') && $('input[name=xsthDetIds]').val() == '' && !$('input[name=isFh]').is(':checked')){
 			$.messager.defaults.ok = '是';
 			$.messager.defaults.cancel = '否';
 			$.messager.confirm('确认', '是否同步生成提货单?', function(r){
@@ -762,12 +877,12 @@ function saveAll(){
 		}else{
 			effectRow['fyr'] = jxc_xskp_fyrCombo.combobox('getText');
 		}
-		effectRow['bookmc'] = $('input[name=bookmc]').val();
-		effectRow['khbh'] = $('input[name=khbh]').val();
-		effectRow['khmc'] = $('input[name=khmc]').val();
-		effectRow['sh'] = $('input[name=sh]').val();
-		effectRow['khh'] = $('input[name=khh]').val();
-		effectRow['dzdh'] = $('input[name=dzdh]').val();
+		effectRow['bookmc'] = $('input[name=jxc_xskp_bookmc]').val();
+		effectRow['khbh'] = $('input[name=xskp_khbh]').val();
+		effectRow['khmc'] = $('input[name=xskp_khmc]').val();
+		effectRow['sh'] = $('input[name=xskp_sh]').val();
+		effectRow['khh'] = $('input[name=xskp_khh]').val();
+		effectRow['dzdh'] = $('input[name=xskp_dzdh]').val();
 		effectRow['ckId'] = jxc_xskp_ckCombo.combobox('getValue');
 		effectRow['ckmc'] = jxc_xskp_ckCombo.combobox('getText');
 		effectRow['ywyId'] = jxc_xskp_ywyCombo.combobox('getValue');
@@ -778,6 +893,8 @@ function saveAll(){
 		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
 		effectRow['hjse'] = lnyw.delcommafy(footerRows[0]['spse']); 
 		effectRow['xsthDetIds'] = $('input[name=xsthDetIds]').val();
+		effectRow['xsthKhbh'] = $('input[name=xsthKhbh]').val();
+		//effectRow['xsthYwyId'] = $('input[name=xsthYwyId]').val();
 		effectRow['bmbh'] = xskp_did;
 		effectRow['lxbh'] = xskp_lx;
 		effectRow['menuId'] = xskp_menuId;
@@ -786,11 +903,13 @@ function saveAll(){
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
 		//$.ajaxSettings.traditional=true;
+		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
 			data: effectRow,
 			dataType: 'json',
+			async: false,
 			success: function(rsp){
 				if(rsp.success){
 			    	$.messager.show({
@@ -802,12 +921,16 @@ function saveAll(){
 				$.messager.confirm('请确认', '是否导出销售单据到金穗？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/xskpAction!toJs.action?xskplsh=' + rsp.obj.xskplsh;
-						jxc.toJs(url, rsp.obj.fplxId);
+						//jxc.toJs(url, rsp.obj.fplxId);
+                        jxc.toJs(url, JS_PATH, jxc.getJsFile(rsp.obj.fplxId), '0');
 					}
 				});
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
+			},
+			complete: function(){
+				//MaskUtil.unmask();
 			}
 		});
 	}
@@ -857,7 +980,9 @@ function setEditing(){
     			});
     }else{
     	jxc.spInfo($('#jxc_xskp_layout'), '');
-    	jxc.hideKc('#jxc_xskp_layout');
+    	if(xskp_did != '04'){
+    		jxc.hideKc('#jxc_xskp_layout');
+    	}
     }
     //xskp_spdg.datagrid('fitColumns');
     
@@ -932,8 +1057,8 @@ function setEditing(){
     zslEditor.target.bind('keyup', function(event){
 	    var kcRow = $('#show_spkc').propertygrid("getRows");
 	    
-	    //判断输入数量是否小于可销售数量
-	    //如果开票从提货单生成，不进行判断
+	    //判断输入数量是否小于可销售数量(业务账面数-销售提货数)
+	    //如果开票从提货单生成，不进行判断(业务账面数)
     	var kxssl = undefined;
     	if(kcRow == undefined){
     		kxssl = Number(0);
@@ -945,13 +1070,13 @@ function setEditing(){
     		}
     	}
     	var zsl = Number($(zslEditor.target).val());
-    	if(zsl > kxssl){
+    	if(zsl > kxssl && !$('input[name=xsthDetIds]').val()){
 	   		$.messager.alert("提示", "开票数量不能大于可销售数量，请重新输入！");
     		$(zslEditor.target).numberbox('setValue', 0);
     		zslEditor.target.focus();
     		return false;
     	}
-	    
+    	
 // 	    if($('input[name=xsthDetIds]').val() == ''){
 // 	    	var kxssl = undefined;
 // 	    	if(kcRow == undefined){
@@ -975,7 +1100,9 @@ function setEditing(){
     		zslEditor.target.focus();
     		return false;
     	}
-    	if($(zhxsEditor.target).val() != 0){
+    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
+    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+    			&& $(zhxsEditor.target).val() != 0){
     		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
     	}
     	calculate();
@@ -986,17 +1113,49 @@ function setEditing(){
      	}
     });
     
+    var zdjFocus = true;
     zdjEditor.target.bind('keyup', function(event){
     	if($(zhxsEditor.target).val() != 0){
     		$(cdjEditor.target).numberbox('setValue', $(zdjEditor.target).val() * $(zhxsEditor.target).val() * (1 + SL));
     	}
-    	calculate();
+    	calculate('zdj');
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
-     		cslEditor.target.focus();
-     		return false;
+//         	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
+//         		$.messager.confirm('提示', '请确认销售单价小于销售成本！是-继续， 否-返回', function(data){
+//          			if(data){
+//          				zdjFocus = false;
+//          				cslEditor.target.focus();
+//          				return false;
+//          			}else{
+//          				zdjEditor.target.focus();
+//          			}
+//          			return false;
+//          		});
+//         	}
+        	cslEditor.target.focus();
+			return false;
      	}
+     	
     });
+    
+    
+// 	    zdjEditor.target.bind('blur', function(event){
+// 	    	if(zdjFocus){
+// 	    	if($(zdjEditor.target).val() < $(dwcbEditor.target).val()){
+// 	    		$.messager.confirm('提示', '请确认销售单价小于销售成本！是-继续， 否-返回', function(data){
+// 	     			if(data){
+// 	     				cslEditor.target.focus();
+// 	     			}else{
+// 	     				zdjEditor.target.focus();
+// 	     			}
+// 	     			//return false;
+// 	     		});
+// 	    	}
+// 	    	}
+// 	    });
+    
+
     
 //     cslEditor.target.bind('keyup', function(event){
 //     	if($(zhxsEditor.target).val() != 0){
@@ -1011,10 +1170,17 @@ function setEditing(){
 //     });
     cslEditor.target.bind('keyup', function(event){
     	if((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 190 ){
-    		if($(zhxsEditor.target).val() != 0){
+    		if(($(spbhEditor.target).val().substring(0, 3) < '513'
+        			|| $(spbhEditor.target).val().substring(0, 3) > '518')
+        			&& $(zhxsEditor.target).val() != 0){
     			$(zslEditor.target).numberbox('setValue', $(cslEditor.target).val() * $(zhxsEditor.target).val());
     		}
     		calculate();
+//     		if($(cdjEditor.target).val() == 0 || $(cdjEditor.target).val() == NaN){
+//     			calculate("z");
+//     		}else{	
+//     			calculate("c");
+//     		}
     	}else{
     		return false;
     	}
@@ -1036,7 +1202,7 @@ function setEditing(){
     	if($(zhxsEditor.target).val() != 0){
     		$(zdjEditor.target).numberbox('setValue', $(cdjEditor.target).val() / $(zhxsEditor.target).val() / (1 + SL));
     	}
-    	calculate();
+    	calculate('cdj');
     }).bind('keydown', function(event){
     	if(event.keyCode == 40){
      		sphjEditor.target.focus();
@@ -1061,17 +1227,34 @@ function setEditing(){
     	$(spseEditor.target).numberbox('setValue', $(sphjEditor.target).val() - $(spjeEditor.target).val());
     	$(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
     	if($(zhxsEditor.target).val() != 0){
-	    	$(cdjEditor.target).numberbox('setValue', $(sphjEditor.target).val() / $(cslEditor.target).val());
+	    	$(cdjEditor.target).numberbox('setValue', $(sphjEditor.target).val() / $(cslEditor.target).val() == Infinity ? 0 : $(sphjEditor.target).val() / $(cslEditor.target).val());
     	}
     	updateFooter();
   	}
     
     //计算金额
+    //金额=数量1 * 单价1
+    //数量1，可直接录入，如录数量2,转换
+    //单价1,可直接录入，如录单价2,转换
+    //
     function calculate(){
+//     	var spje = 0;
+//     	var spse = 0;
+//     	var sphj = 0;
+//     	if(type==="z"){
+//     		spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
+//     		spse = (spje * SL).toFixed(2);
+//     		sphj = Number(spje) + Number(spse);
+//     	}else{
+//     		sphj = (cslEditor.target.val() * cdjEditor.target.val()).toFixed(2);
+//     		spje = sphj / (1 + SL);
+//     		spse = sphj - spje;
+//     	}
     	var spje = (zslEditor.target.val() * zdjEditor.target.val()).toFixed(2);
     	var spse = (spje * SL).toFixed(2);
         $(spjeEditor.target).numberbox('setValue', spje);
         $(spseEditor.target).numberbox('setValue', spse);
+        //$(sphjEditor.target).numberbox('setValue', sphj);
         $(sphjEditor.target).numberbox('setValue', Number(spje) + Number(spse));
         //更新汇总列
         updateFooter();
@@ -1101,7 +1284,7 @@ function updateFooter(){
 	
 	xskp_spdg.datagrid('reloadFooter',
 			[{
-				spmc : '合计',
+				spmc : '合计(共' + (rows.length - 1) + '条)',
 				spje : lnyw.formatNumberRgx(hjje.toFixed(2)),
 				spse : lnyw.formatNumberRgx(hjse.toFixed(2)),
 				sphj : lnyw.formatNumberRgx((hjje + hjse).toFixed(2))
@@ -1133,7 +1316,7 @@ function existKey(value, rowIndex){
 
 function formValid(){
 	var message = '';
-	if($('input[name=khmc]').val() == ''){
+	if($('input[name=xskp_khmc]').val() == ''){
 		message += '客户信息<br>';
 	}
 	if(jxc_xskp_ywyCombo.combobox('getValue') == 0){
@@ -1181,19 +1364,19 @@ function checkKh(){
 		url:'${pageContext.request.contextPath}/jxc/khAction!checkKh.action',
 		async: false,
 		data:{
-			khbh: $('input[name=khbh]').val(),
+			khbh: $('input[name=xskp_khbh]').val(),
 			depId: xskp_did,
 		},
 		dataType:'json',
 		success:function(data){
 			if(!data.success){
 				$.messager.alert('提示', data.msg, 'error');
-				$('input[name=khbh]').val('');
-				$('input[name=khmc]').val('');
-				$('input[name=sh]').val('');
-				$('input[name=khh]').val('');
-				$('input[name=dzdh]').val('');
-				$('input[name=khbh]').focus();
+				$('input[name=xskp_khbh]').val('');
+				$('input[name=xskp_khmc]').val('');
+				$('input[name=xskp_sh]').val('');
+				$('input[name=xskp_khh]').val('');
+				$('input[name=xskp_dzdh]').val('');
+				$('input[name=xskp_khbh]').focus();
 				return false;
 			}
 		}
@@ -1216,10 +1399,10 @@ function loadKh(khbh){
 		success:function(data){
 			if(data.success){
 				//设置信息字段值
-				$('input[name=khmc]').val(data.obj.khmc);
-				$('input[name=sh]').val(data.obj.sh);
-				$('input[name=khh]').val(data.obj.khh);
-				$('input[name=dzdh]').val(data.obj.dzdh);
+				$('input[name=xskp_khmc]').val(data.obj.khmc);
+				$('input[name=xskp_sh]').val(data.obj.sh);
+				$('input[name=xskp_khh]').val(data.obj.khh);
+				$('input[name=xskp_dzdh]').val(data.obj.dzdh);
 				jxc_xskp_ywyCombo.combobox('setValue', data.obj.ywyId);
 // 				if(data.obj.isSx == '1'){
 // 					$('input[name=isSx]').prop('checked', 'ckecked');
@@ -1258,7 +1441,7 @@ function khLoad(){
 // 				params += '?isNsr=1';
 // 			}
 // 		}
-		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), 
+		jxc.query('客户检索', $('input[name=xskp_khbh]'), $('input[name=xskp_khmc]'), '',
 				'${pageContext.request.contextPath}/jxc/query.jsp',
 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
 // 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action' + params);
@@ -1266,14 +1449,20 @@ function khLoad(){
 	case 9:
 		break;
 	default:
-		if($('input[name=khbh]').val().trim().length == 0){
-			$('input[name=khmc]').val('');
-			$('input[name=sh]').val('');
-			$('input[name=khh]').val('');
-			$('input[name=dzdh]').val('');
+		if($('input[name=xskp_khbh]').val().trim().length == 0){
+			$('input[name=xskp_khmc]').val('');
+			$('input[name=xskp_sh]').val('');
+			$('input[name=xskp_khh]').val('');
+			$('input[name=xskp_dzdh]').val('');
 		}
-		if($('input[name=khbh]').val().trim().length == 8){
-			loadKh($('input[name=khbh]').val().trim());
+		if($('input[name=xskp_khbh]').val().trim().length == 8){
+			loadKh($('input[name=xskp_khbh]').val().trim());
+			if($('input[name=xsthDetIds]').val() == ''){
+				jxc_xskp_ckCombo.combobox('setValue', jxc.getCkByKhbh(xskp_did, $('input[name=xskp_khbh]').val()));
+			}
+            if (xskp_did === '04' && $('input[name=isFh]').is(':checked')) {
+                jxc.setFh($('input[name=xskp_khbh]').val(), jxc_xskp_fhCombo)
+            }
 		}
 		break;
 	}
@@ -1290,6 +1479,7 @@ function cjXskp(){
 					if(row.fromTh == '1' || (row.xsthlshs == undefined || row.xsthlshs.trim == '')){
 						$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
 							if (bz != undefined) {
+								//MaskUtil.mask('正在冲减，请等待……');
 								$.ajax({
 									url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
 									data : {
@@ -1307,6 +1497,9 @@ function cjXskp(){
 											title : '提示',
 											msg : d.msg
 										});
+									},
+									complete: function(){
+										//MaskUtil.unmask();
 									}
 								});
 							}
@@ -1341,7 +1534,7 @@ function toJs(){
 	    	}
 	    	xskplshs.push(rows[index].xskplsh);
 	    	if(index != 0){
-	    		if(this.khbh != preRow.khbh || this.fhId != preRow.fhId){
+	    		if(this.khbh != preRow.khbh){ // || this.fhId != preRow.fhId
 	    			$.messager.alert('提示', '请选择同一客户或分户的销售发票进行操作！', 'error');
 					flag = false;
 					//return false;
@@ -1356,7 +1549,8 @@ function toJs(){
 				if (r) {
 					var xskplshStr = xskplshs.join(',');
 					var url = lnyw.bp() + '/jxc/xskpAction!toJs.action?xskplsh=' + xskplshStr;
-					jxc.toJs(url, rows[0].fplxId);
+					//jxc.toJs(url, rows[0].fplxId);
+					jxc.toJs(url, JS_PATH, jxc.getJsFile(rows[0].fplxId), '0');
 				}
 			});
 	    }
@@ -1390,6 +1584,11 @@ function printXsqk(){
 	    		flag = false;
 	    		return false;
 	    	}
+	    	if(rows[index].jsfsId != '06'){
+	    		$.messager.alert('提示', '选择的销售发票不是欠款销售，不能打印欠款单！', 'error');
+	    		flag = false;
+	    		return false;
+	    	}
 	    	if(index != 0){
 	    		if(this.khbh != preRow.khbh){
 	    			$.messager.alert('提示', '请选择同一客户的销售发票进行操作！', 'error');
@@ -1405,15 +1604,18 @@ function printXsqk(){
 			$.messager.prompt('请确认', '已选择' + rows.length + '张发票，是否合并打印销售欠款单？\n请填写发票号', function(bz){
 				if (bz != undefined) {
 					if(bz.length > 0){
-				
-				//if (r) {
-						for (var i = 0; i < rows.length; i++) {
-							xskplshs.push(rows[i].xskplsh);
-						}
-						var xskplsh = xskplshs.join(',');
-					
-						var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						$.messager.prompt('请确认', '如发票数目与记录数不符，请输入实际发票数：', function(num){
+							if (num != undefined) {
+								bz += '&lens=' + num;
+							}
+							for (var i = 0; i < rows.length; i++) {
+								xskplshs.push(rows[i].xskplsh);
+							}
+							var xskplsh = xskplshs.join(',');
+						
+							var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						});	
 					}else{
 						$.messager.alert('提示', '必须填写发票号！', 'error');
 					}
@@ -1487,21 +1689,30 @@ function generateXskp(){
 	var xsthDetIds = [];
 	var flag = true;
 	if(rows.length > 0){
-// 		if(rows.length > 1){
-//     		var preRow = undefined;
-// 		    $.each(rows, function(index){
-// 		    	if(index != 0){
-// 		    		if(this.khbh != preRow.khbh){
-// 		    			$.messager.alert('提示', '请选择同一客户的销售提货单的进行开票！', 'error');
-// 						flag = false;
-// 						return false;
-// 		    		}else{
-// 		    			preRow = this;
-// 		    		}
-// 		    	}
-// 		    	preRow = this;
-// 		    });
-//     	}
+ 		if(rows.length > 1){
+     		var preRow = undefined;
+ 		    $.each(rows, function(index){
+ 		    	if(index != 0){
+ 		    		if(this.jsfsId != preRow.jsfsId){
+ 		    			$.messager.alert('提示', '请选择相同结算方式的提货单进行开票！', 'error');
+ 						flag = false;
+ 						return false;
+//  		    		}
+//  		    		else if(this.khbh != preRow.khbh){
+//  		    			$.messager.alert('提示', '请选择同一客户的销售提货单的进行开票！', 'error');
+//  						flag = false;
+//  						return false;
+					}else if(this.ckId != preRow.ckId){
+						$.messager.alert('提示', '请选择相同仓库的提货单进行开票！', 'error');
+ 						flag = false;
+ 						return false;
+ 		    		}else{
+ 		    			preRow = this;
+ 		    		}
+ 		    	}
+ 		    	preRow = this;
+ 		    });
+     	}
 		if(flag){
 			$.messager.confirm('请确认', '是否要将选中记录进行销售开票？', function(r) {
 				if (r) {
@@ -1512,16 +1723,50 @@ function generateXskp(){
 					$.ajax({
 						url : '${pageContext.request.contextPath}/jxc/xsthAction!toXskp.action',
 						data : {
+							bmbh: xskp_did,
+							ckId: rows[0].ckId,
+							khbh: rows[0].khbh,
 							xsthDetIds : xsthDetStr
 						},
 						dataType : 'json',
 						success : function(d) {
-							$('input[name=khbh]').val(rows[0].khbh);
-							$('input[name=khmc]').val(rows[0].khmc);
-							$('input[name=bookmc]').val(rows[0].bookmc);
-							$('input[name=jxc_xskp_bz]').val(rows[0].bz);
+							$('input[name=xskp_khbh]').val(rows[0].khbh);
+							$('input[name=xskp_khmc]').val(rows[0].khmc);
+                            $('input[name=xskp_sh]').val(d.obj.sh);
+                            $('input[name=xskp_khh]').val(d.obj.khh);
+                            $('input[name=xskp_dzdh]').val(d.obj.dzdh);
+                            if(d.obj.isNsr == '1'){
+                                $('input#isNsr').attr('checked', 'checked');
+                                $('input#isNsr').prop('checked', 'checked');
+                            }else{
+                                $('input#isNoNsr').attr('checked', 'checked');
+                                $('input#isNoNsr').prop('checked', 'checked');
+                            }
+                            $('input[name=jxc_xskp_bookmc]').val(rows[rows.length - 1].bookmc);
+							$('input[name=jxc_xskp_bz]').val(rows[rows.length - 1].bz);
 							jxc_xskp_ckCombo.combobox('setValue', rows[0].ckId);
+							if(rows[0].isFh == '1'){
+ 								$('input[name=isFh]').prop('checked', true);
+ 								$('.fh').css('display','table-cell');
+ 								if(jxc_xskp_fhCombo == undefined){
+									jxc_xskp_fhCombo = lnyw.initCombo($("#jxc_xskp_fhId"), 'id', 'fhmc', '${pageContext.request.contextPath}/jxc/fhAction!listFhs.action?depId=' + xskp_did);
+								}
+                                jxc_xskp_fhCombo.combobox('setValue', rows[0].fhId);
+ 							}else{
+ 								$('input[name=isFh]').prop('checked', false);
+ 								$('.fh').css('display','none');
+ 							}
+							
+							$('input[name=isZs]').prop('checked', rows[0].isZs == '1' ? true : false);
 							jxc_xskp_ywyCombo.combobox('setValue', rows[0].ywyId);
+							jxc_xskp_jsfsCombo.combobox('setValue', rows[0].jsfsId);
+							jxc_xskp_jsfsCombo.combobox('readonly', true);
+
+                            if(xskp_did == '04'){
+                                if(jxc_xskp_fyrCombo == undefined){
+                                    jxc_xskp_fyrCombo = lnyw.initCombo($("#jxc_xskp_fyr"), 'fyr', 'fyr', '${pageContext.request.contextPath}/jxc/xskpAction!listFyrs.action?bmbh=' + xskp_did + '&khbh=' + rows[0].khbh);
+								}
+                            }
 							
 // 							if(rows[0].isSx == '1'){
 // 								$('input[name=isSx]').attr('checked', 'ckecked');
@@ -1530,6 +1775,8 @@ function generateXskp(){
 							xskp_spdg.datagrid('loadData', d.rows);
 	 						updateFooter();
 							$('input[name=xsthDetIds]').val(xsthDetStr);
+							$('input[name=xsthKhbh]').val(rows[0].khbh);
+							$('input[name=xsthYwyId]').val(rows[0].ywyId);
 							xskp_tabs.tabs('select', 0);
 						}
 					});
@@ -1559,7 +1806,7 @@ function searchXsthInXskp(){
 <div id="jxc_xskp_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_xskp_layout' style="height:100%;width=100%">
+        <div id='jxc_xskp_layout' style="height:100%;width:100%">
 			<div  class="tinfo" id="info" data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:200px">		
 				<table>
 					<tr>
@@ -1576,14 +1823,14 @@ function searchXsthInXskp(){
 						<th class="read">单据号</th><td><div id="xskpLsh" class="read"></div></td>
 					</tr>
 					<tr>
-						<th>客户编码</th><td><input name="khbh" class="easyui-validatebox"
+						<th>客户编码</th><td><input name="xskp_khbh" class="easyui-validatebox"
 							data-options="validType:['mustLength[8]','integer']" onkeyup="khLoad()"></td>
-						<th class="read">客户名称</th><td colspan="3"  class="read"><input name="khmc" readonly="readonly" style="width:100%"></td>
+						<th class="read">客户名称</th><td colspan="3"  class="read"><input name="xskp_khmc" readonly="readonly" style="width:100%"></td>
 					</tr>
 					<tr>
-						<th class="read">税号</th><td class="read"><input name="sh" readonly="readonly"></td>
-						<th class="read">开户行账号</th><td class="read"><input name="khh" readonly="readonly"></td>
-						<th class="read">地址电话</th><td class="read"><input name="dzdh" readonly="readonly"></td>
+						<th class="read">税号</th><td class="read"><input name="xskp_sh" readonly="readonly"></td>
+						<th class="read">开户行账号</th><td class="read"><input name="xskp_khh" readonly="readonly"></td>
+						<th class="read">地址电话</th><td class="read"><input name="xskp_dzdh" readonly="readonly"></td>
 					</tr>
 					<tr>
 						<th>结算方式</th><td><input id="jxc_xskp_jsfsId" name="jsfsId" type="text"></td>
@@ -1593,7 +1840,7 @@ function searchXsthInXskp(){
 					</tr>
 					<tr>
 						<th>发印人</th><td><input id="jxc_xskp_fyr" name="fyr" type="text"></td>
-						<th>书名</th><td colspan="3"><input name="bookmc" type="text" style="width:71%"></td>
+						<th>书名</th><td colspan="3"><input name="jxc_xskp_bookmc" type="text" style="width:71%"></td>
 						<td colspan="2" align="right">自提<input type="radio" name="thfs" id='thfs_zt' checked="checked" value="1">送货<input type="radio" name="thfs" id="thfs_sh" value="0"></td>
 						<th class="isZt">车号</th><td class="isZt"><input name="ch" size="10"><th class="isZt">提货人</th><td class="isZt"><input name="thr" size="10"></td>
 						<td class="isSh" style="display:none" colspan="2">送货地址<input name="shdz" size="20"></td>
@@ -1603,6 +1850,8 @@ function searchXsthInXskp(){
 					</tr>
 				</table>
 				<input name="xsthDetIds" type="hidden">
+				<input name="xsthKhbh" type="hidden">
+				<input name="xsthYwyId" type="hidden">
 			</div>
 			<div data-options="region:'center',title:'商品信息',split:true" style="width:150px">		
 				<table id='jxc_xskp_spdg'></table>
@@ -1622,11 +1871,11 @@ function searchXsthInXskp(){
 
 <div id="jxc_xskp_tb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXskp" style="width:100px">
+	输入流水号、客户编号、名称、业务员、分户、备注：<input type="text" name="searchXskp" style="xwidth:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXskp();">查询</a>
 </div>
 <div id="jxc_xskp_xsthTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeXsthInXskp" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
-	输入流水号、客户编号、名称、业务员、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
+	输入流水号、客户编号、名称、分户、业务员、书名、备注：<input type="text" name="searchXsthInXskp" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchXsthInXskp();">查询</a>
 </div>

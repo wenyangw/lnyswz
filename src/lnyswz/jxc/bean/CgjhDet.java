@@ -30,13 +30,22 @@ public class CgjhDet {
 	private String shdz;
 	private String lxr;
 	private Date dhsj;
+	private String isLock;
+	private String isBack;
 	private BigDecimal zdwjhsl;
 	private BigDecimal cdwjhsl;
 	private BigDecimal zdwyrsl;
 	private BigDecimal cdwyrsl;
 	
+		
 	//记录直送计划对应的业务入库数量
 	private BigDecimal zdwrksl;
+	
+	private BigDecimal kcsl;
+	//审批时显示的周转率
+	private BigDecimal zzl;
+	//审批时显示的需求内容
+	private String xqs;
 	
 	private String kfrklshs;
 	private String ywrklshs;
@@ -247,6 +256,46 @@ public class CgjhDet {
 
 	public void setDhsj(Date dhsj) {
 		this.dhsj = dhsj;
+	}
+
+	public String getIsLock() {
+		return isLock;
+	}
+
+	public void setIsLock(String isLock) {
+		this.isLock = isLock;
+	}
+
+	public String getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(String isBack) {
+		this.isBack = isBack;
+	}
+
+	public BigDecimal getKcsl() {
+		return kcsl;
+	}
+
+	public void setKcsl(BigDecimal kcsl) {
+		this.kcsl = kcsl;
+	}
+
+	public BigDecimal getZzl() {
+		return zzl;
+	}
+
+	public void setZzl(BigDecimal zzl) {
+		this.zzl = zzl;
+	}
+
+	public String getXqs() {
+		return xqs;
+	}
+
+	public void setXqs(String xqs) {
+		this.xqs = xqs;
 	}
 
 	public String getKfrklshs() {

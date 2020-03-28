@@ -25,6 +25,7 @@ public class Ywbt {
 	private String menuId;
 	private String lxbh;
 	
+	private String gysmc;
 	private String spbh;
 	//前台传入明细json
 	private String datagrid;
@@ -128,6 +129,14 @@ public class Ywbt {
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	public String getGysmc() {
+		return gysmc;
+	}
+
+	public void setGysmc(String gysmc) {
+		this.gysmc = gysmc;
 	}
 
 	public String getSpbh() {

@@ -1,5 +1,8 @@
 package lnyswz.jxc.model;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "t_cgjh_det")
+@DynamicUpdate(true)
 public class TCgjhDet implements java.io.Serializable {
 
 	private int id;
@@ -46,6 +50,8 @@ public class TCgjhDet implements java.io.Serializable {
 	private String shdz;
 	private String lxr;
 	private Date dhsj;
+	private String isLock;
+	private String isBack;
 	
 	private Set<TKfrk> TKfrks = new HashSet<TKfrk>(0);
 	private Set<TYwrk> TYwrks = new HashSet<TYwrk>(0);
@@ -56,7 +62,8 @@ public class TCgjhDet implements java.io.Serializable {
 	public TCgjhDet(int id, TCgjh TCgjh, String spbh, String spmc, String spcd, String sppp, 
 			String spbz, String spdj, String zjldwId, String zjldwmc, String cjldwId, String cjldwmc,
 			BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, BigDecimal zdwdj, BigDecimal cdwdj,
-			BigDecimal spje, String shdz, String lxr, Date dhsj, Set<TKfrk> TKfrks, Set<TYwrk> TYwrks) {
+			BigDecimal spje, String shdz, String lxr, Date dhsj, String isLock, String isBack, 
+			Set<TKfrk> TKfrks, Set<TYwrk> TYwrks) {
 		this.id = id;
 		this.TCgjh = TCgjh;
 		this.spbh = spbh;
@@ -78,6 +85,8 @@ public class TCgjhDet implements java.io.Serializable {
 		this.shdz = shdz;
 		this.lxr = lxr;
 		this.dhsj = dhsj;
+		this.isLock = isLock;
+		this.isBack = isBack;
 		this.TKfrks = TKfrks;
 		this.TYwrks = TYwrks;
 	}
@@ -275,6 +284,24 @@ public class TCgjhDet implements java.io.Serializable {
 		this.dhsj = dhsj;
 	}
 	
+	@Column(name = "isLock", nullable = false, length = 1)
+	public String getIsLock() {
+		return isLock;
+	}
+
+	public void setIsLock(String isLock) {
+		this.isLock = isLock;
+	}
+
+	@Column(name = "isBack", nullable = false, length = 1)
+	public String getIsBack() {
+		return isBack;
+	}
+
+	public void setIsBack(String isBack) {
+		this.isBack = isBack;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TCgjhs")
 	public Set<TKfrk> getTKfrks() {
 		return this.TKfrks;

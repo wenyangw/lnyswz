@@ -1,6 +1,5 @@
 package lnyswz.jxc.action;
 
-import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import com.opensymphony.xwork2.ModelDriven;
 @Action("postAction")
 public class PostAction extends BaseAction implements ModelDriven<Post> {
 	private static final long serialVersionUID = 1L;
-	Logger logger = Logger.getLogger(LoginAction.class);
 	private Post post = new Post();
 	private PostServiceI postService;
 
@@ -30,7 +28,6 @@ public class PostAction extends BaseAction implements ModelDriven<Post> {
 			j.setMsg("增加人员类型成功");
 			j.setObj(r);
 		} catch (Exception e) {
-			// TODO: handle exception
 			j.setMsg("增加人员类型失败");
 			e.printStackTrace();
 		}
