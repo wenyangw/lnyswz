@@ -2086,7 +2086,7 @@ function exportXsht(){
 								var data = {
 										xsthlsh : selected.xsthlsh,
 										bmbh: xsth_did,
-										type: 'rtf'
+										type: 'pdf'
 									};
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
 							}
