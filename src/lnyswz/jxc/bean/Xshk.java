@@ -2,10 +2,6 @@ package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import lnyswz.jxc.model.TXskp;
 
 public class Xshk {
 	private String xshklsh;
@@ -30,7 +26,7 @@ public class Xshk {
 	private Date cancelTime;
 	private String cancelXshklsh;
 	private String xskplshs;
-	
+
 	private int page;
 	private int rows;
 	
@@ -41,8 +37,7 @@ public class Xshk {
 	private String datagrid;
 	private String lxbh; 
 	private String menuId;
-	
-	
+
 	public String getXshklsh() {
 		return xshklsh;
 	}
