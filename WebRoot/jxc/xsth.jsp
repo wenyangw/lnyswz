@@ -1115,7 +1115,8 @@ function saveXsth(){
                     $.messager.alert('提示', '本次提货需进入2级审批流程！', 'warning');
                 } else if (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val())) {
                     var needA = undefined
-					if ($('input[name=jxc_xsth_isZs]').is(':checked')) {
+					// 直送业务进入2级审批，排除ywyId=46
+					if ($('input[name=jxc_xsth_isZs]').is(':checked') && jxc_xsth_ywyCombo.combobox('getValue') != 46) {
 						needA = jxc.auditLevel(xsth_did)['second']
 					} else {
 						needA =	jxc.getAuditLevel(
@@ -1142,33 +1143,8 @@ function saveXsth(){
         } else {
             effectRow['needAudit'] = "0";
         }
-		<%--if(NEED_AUDIT == "1"--%>
-				<%--&& jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) --%>
-				<%--&& $('input[name=xskpDetIds]').val().trim().length == 0--%>
-				<%--&& !$('input[name=isFhth]').is(':checked')){--%>
-			<%--if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){--%>
-				<%--var needA = jxc.getAuditLevel(--%>
-						<%--'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',--%>
-						<%--xsth_did, --%>
-						<%--$('input[name=jxc_xsth_khbh]').val(),--%>
-						<%--jxc_xsth_ywyCombo.combobox('getValue'),--%>
-						<%--JSFS_QK);--%>
-				<%--if(needA != undefined){--%>
-					<%--effectRow['needAudit'] = needA;--%>
-					<%--$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');--%>
-				<%--}else{--%>
-					<%--$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');--%>
-					<%--return false;--%>
-				<%--}--%>
-			<%--}else{--%>
-				<%--effectRow['needAudit'] = "1";--%>
-				<%--$.messager.alert('提示', '本次提货需进入1级审批流程！', 'warning');--%>
-			<%--}--%>
-		<%--}else{--%>
-			<%--effectRow['needAudit'] = "0";--%>
-		<%--}--%>
+
 		//将表头内容传入后台
-	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 		effectRow['isSx'] = '0';
 		effectRow['isZs'] = $('input[name=jxc_xsth_isZs]').is(':checked') ? '1' : '0';
 		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
@@ -1182,7 +1158,6 @@ function saveXsth(){
 		//传入直送
 		effectRow['fromOther'] = xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) ? '' : 'cbs') : '';
 		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
-		//effectRow['isFhth'] = '0';
 		
 		if($('input[name=xskpDetIds]').val().trim().length > 0){
 			effectRow['isLs'] = '0';
@@ -2086,7 +2061,7 @@ function exportXsht(){
 								var data = {
 										xsthlsh : selected.xsthlsh,
 										bmbh: xsth_did,
-										type: 'pdf'
+										type: 'rtf'
 									};
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
 							}
