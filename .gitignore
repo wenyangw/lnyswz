@@ -6,6 +6,8 @@
 *.xls
 /.idea
 
+resources/config.properties
+
 # Compiled class file
 *.class
 

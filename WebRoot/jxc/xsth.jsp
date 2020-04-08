@@ -831,6 +831,7 @@ function init(){
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
  	$('.isFhth').css('display','none');
+    $('input[name=htjs]').val(1);
 	
 	if(jxc.showFh(xsth_did)){
 		$('.fh').css('display', 'inline');
@@ -1175,6 +1176,7 @@ function saveXsth(){
 		effectRow['jsfsmc'] = jxc_xsth_jsfsCombo.combobox('getText');
 		
 		effectRow['thr'] = $('input[name=thr]').val();
+        effectRow['htjs'] = $('input[name=htjs]').val();
 		effectRow['payDays'] = $('input[name=payDays]').val();
 		if($('input#thfs_sh').is(':checked')){
 			effectRow['thfs'] = '0';
@@ -2776,8 +2778,10 @@ function searchFydInXsth(){
 					<span><input name="thr" size="10"></span>
 					<span class="isSh form_label" style="display:none">送货地址</span>
 					<span class="isSh" style="display:none"><input name="jxc_xsth_shdz" size="12"></span>
+                    <span class="form_label">合同结算</span>
+                    <span><input name="htjs" size="4"></span>
 					<span class="form_label">付款天数</span>
-					<span><input name="payDays" size="10"></span>
+					<span><input name="payDays" size="4"></span>
 				</div>
 				<div class='jxc_xsth_bookmc form_line'>
 						<span class="form_label">书名</span>

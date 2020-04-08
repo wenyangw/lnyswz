@@ -95,6 +95,7 @@ public class TXsth implements java.io.Serializable {
 	private Date sendTime;
 	private String isFp;
 	private String source;
+	private int htjs;
 
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
@@ -111,7 +112,7 @@ public class TXsth implements java.io.Serializable {
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
 			Integer hkId, Date hkTime, String needAudit, String isAudit, String needAuditXsjj, String isAuditXsjj, BigDecimal ysfy, BigDecimal yysfy,
 			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
-			Date sendTime, String isFp, String source, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			Date sendTime, String isFp, String source, int htjs, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -175,6 +176,7 @@ public class TXsth implements java.io.Serializable {
 		this.sendName = sendName;
 		this.isFp = isFp;
 		this.source = source;
+		this.htjs = htjs;
 		this.sendTime = sendTime;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
@@ -781,6 +783,15 @@ public class TXsth implements java.io.Serializable {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	@Column(name = "htjs")
+	public int getHtjs() {
+		return htjs;
+	}
+
+	public void setHtjs(int htjs) {
+		this.htjs = htjs;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)

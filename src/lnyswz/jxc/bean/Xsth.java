@@ -74,6 +74,7 @@ public class Xsth {
 	private Date sendTime;
 	private String isFp;
 	private String source;
+	private int htjs;
 		
 	private int id;
 	private String spbh;
@@ -837,5 +838,13 @@ public class Xsth {
 
 	public void setCarNum(String carNum) {
 		this.carNum = carNum;
+	}
+
+	public int getHtjs() {
+		return htjs;
+	}
+
+	public void setHtjs(int htjs) {
+		this.htjs = htjs;
 	}
 }

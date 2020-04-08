@@ -1062,7 +1062,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		Object[] khDet = detDao.getMBySQL(sqlKh, sqlParams);
 		
 		//付款天数，默认现款10天，月结(03)30天，授信按授信期
-		int payDays = 1;
+		int payDays = 0;
 		if(tXsth.getPayDays() != 0){
 			payDays = tXsth.getPayDays(); 
 		}else{
@@ -1121,12 +1121,13 @@ public class XsthServiceImpl implements XsthServiceI {
 		map.put("shdz", tXsth.getShdz() == null ? "" : tXsth.getShdz());
 		map.put("thr", tXsth.getThr() == null ? "" : tXsth.getThr());
 		map.put("payDays", payDays);
+        map.put("htjs", tXsth.getHtjs());
 		map.put("hjje", df.format(tXsth.getHjje()));
 		map.put("hjje_b", AmountToChinese.numberToChinese(hjje_b));
 		map.put("createTime", DateUtil.getYear(tXsth.getCreateTime()) + " 年 " +
 				DateUtil.getMonth(tXsth.getCreateTime()) + " 月 " +
 				DateUtil.getDay(tXsth.getCreateTime()) + " 日");
-
+		
 		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		
