@@ -2,6 +2,7 @@ package lnyswz.jxc.action;
 
 
 import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -432,7 +433,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	public void getYsje(){
 		writeJson(xsthService.getYsje(xsth));
 	}
-	
+
 	@Override
 	public Xsth getModel() {
 		return xsth;
