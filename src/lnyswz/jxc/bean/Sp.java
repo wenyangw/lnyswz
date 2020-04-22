@@ -22,6 +22,7 @@ public class Sp {
 	private String zjldwmc;
 	private String cjldwmc;
 	private String spdwId;
+	private String splbId;
 	private String spdwmc;
 	private int userId;
 	private String depId;
@@ -65,6 +66,15 @@ public class Sp {
 	public void setSpdwId(String spdwId) {
 		this.spdwId = spdwId;
 	}
+
+	public String getSplbId() {
+		return splbId;
+	}
+
+	public void setSplbId(String splbId) {
+		this.splbId = splbId;
+	}
+
 	public String getSpdwmc() {
 		return spdwmc;
 	}

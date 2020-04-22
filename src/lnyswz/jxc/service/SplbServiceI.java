@@ -2,19 +2,22 @@ package lnyswz.jxc.service;
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Splb;
 
 public interface SplbServiceI {
 
-	public Splb add(Splb splb);
+	Splb add(Splb splb);
 
-	public boolean edit(Splb splb);
+	boolean edit(Splb splb);
 
-	public void delete(int id);
+	void delete(int id);
 
-	public List<Splb> listSplbs(Splb splb);
+	List<Splb> listSplbs(Splb splb);
 
-	public DataGrid datagrid(Splb splb);
+	DataGrid datagrid(Splb splb);
+
+	List<JSONObject> getSplbsWithSpdl(Splb splb);
 
 }
