@@ -806,6 +806,7 @@ jxc.spInfo = function(target, type, sppp, spbz){
 
 //商品信息快速查询
 jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjWithS){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -813,83 +814,97 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		height:420,
 		modal : true,
 		onLoad: function(){
-			$('#jxc_spQuery_dg').datagrid({
-				url : urlAction,
-				fit : true,
-			    border : false,
-			    singleSelect : true,
-			    fitColumns: true,
-			    pagination : true,
-				pagePosition : 'bottom',
-				pageSize : 20,
-				pageList : [ 20, 30, 40, 50, 100, 150, 200 ],
-				//将编辑行输入的商品编号传入对话框
-				queryParams:{
-					query : value,
-					depId : depId,
-					ckId : ckId,
-				},
-				columns:[[
-			        {field:'spbh',title:'编号'},
-			        {field:'spmc',title:'名称'},
-			        {field:'spcd',title:'产地'},
-			        {field:'sppp',title:'品牌'},
-			        {field:'spbz',title:'包装'},
-			        {field:'zjldwId',title:'主计量单位id',hidden:true},
-			        {field:'zjldwmc',title:'主计量单位'},
-			        {field:'xsdj',title:'销售单价(无税)', hidden: xsdjWithS ? true : false},
-			        {field:'xsdjs',title:'销售单价(含税)', hidden: xsdjWithS ? false : true,
-		        		formatter: function(value){
-		        			return value == undefined ? '' : value.toFixed(LENGTH_JE) ;
-		        		}	
-			        },
-			        {field:'limitXsdj',title:'最低销价',hidden:true},
-			        {field:'kcsl',title:'库存数量1',
-			        	formatter: function(value){
-		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
-		        		}},
-		        	{field:'dwcb',title:'成本',hidden:true},
-		        	{field:'cjldwId',title:'次计量单位id',hidden:true},
-			        {field:'cjldwmc',title:'次计量单位'},
-			        {field:'ckcsl',title:'库存数量2',
-			        	formatter: function(value){
-		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
-		        		}},
-			        
-			    ]],
-			    toolbar:'#jxc_spQuery_tb',
-			    //双击商品行，返回商品信息并关闭对话框
-			    onDblClickRow: function(rowIndex, rowData){
-			    	//设置编辑行的值
-			    	setValueBySpbh(rowData);
-			    	focusTarget.target.focus();
-					$('#jxc_spQuery').dialog('close');
-			    },    					
-			});
-			var query = $('#jxc_spQuery_tb input');
-	    	query.val(value);
-	    	query.focus();
-	    	//录入查询内容时，即时查询，刷新表格
-	    	var last;
-	    	query.keyup(function(event){
-	    		last = event.timeStamp;
-	    		setTimeout(function(){    //设时延迟0.5s执行
-	                if(last - event.timeStamp == 0){
-	                	$('#jxc_spQuery_dg').datagrid('load', 
-		    				{
-		    					query: query.val(),
-		    					depId: depId,
-		    					ckId: ckId
-		    				});
-	                }
-		    	}, 500);
-	    	});
+            $('#jxc_spQuery_dg').datagrid({
+                url: url,
+                fit: true,
+                border: false,
+                singleSelect: true,
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                pageSize: 20,
+                pageList: [20, 30, 40, 50, 100, 150, 200],
+                //将编辑行输入的商品编号传入对话框
+                queryParams: {
+                    query: value,
+                    depId: depId,
+                    ckId: ckId,
+                },
+                columns: [[
+                    {field: 'spbh', title: '编号'},
+                    {field: 'spmc', title: '名称'},
+                    {field: 'spcd', title: '产地'},
+                    {field: 'sppp', title: '品牌'},
+                    {field: 'spbz', title: '包装'},
+                    {field: 'zjldwId', title: '主计量单位id', hidden: true},
+                    {field: 'zjldwmc', title: '主计量单位'},
+                    {field: 'xsdj', title: '销售单价(无税)', hidden: xsdjWithS ? true : false},
+                    {
+                        field: 'xsdjs', title: '销售单价(含税)', hidden: xsdjWithS ? false : true,
+                        formatter: function (value) {
+                            return value == undefined ? '' : value.toFixed(LENGTH_JE);
+                        }
+                    },
+                    {field: 'limitXsdj', title: '最低销价', hidden: true},
+                    {
+                        field: 'kcsl', title: '库存数量1',
+                        formatter: function (value) {
+                            return value == '0.000' ? '' : value.toFixed(LENGTH_SL);
+                        }
+                    },
+                    {field: 'dwcb', title: '成本', hidden: true},
+                    {field: 'cjldwId', title: '次计量单位id', hidden: true},
+                    {field: 'cjldwmc', title: '次计量单位'},
+                    {
+                        field: 'ckcsl', title: '库存数量2',
+                        formatter: function (value) {
+                            return value == '0.000' ? '' : value.toFixed(LENGTH_SL);
+                        }
+                    },
+
+                ]],
+                toolbar: '#jxc_spQuery_tb',
+                //双击商品行，返回商品信息并关闭对话框
+                onDblClickRow: function (rowIndex, rowData) {
+                    //设置编辑行的值
+                    setValueBySpbh(rowData);
+                    focusTarget.target.focus();
+                    $('#jxc_spQuery').dialog('close');
+                },
+            });
+            var query = $('#jxc_spQuery_tb input');
+            query.val(value);
+            query.focus();
+            //录入查询内容时，即时查询，刷新表格
+            var last;
+            query.keyup(function (event) {
+                last = event.timeStamp;
+                setTimeout(function () {    //设时延迟1s执行
+                    if (last - event.timeStamp == 0) {
+                        // $('#jxc_spQuery_dg').datagrid('load',
+                        //     {
+                        //         query: query.val(),
+                        //         depId: depId,
+                        //         ckId: ckId
+                        //     });
+                        $('#jxc_spQuery_dg').datagrid({
+                            url: urlAction,
+                            queryParams: {
+                                query: query.val(),
+                                depId: depId,
+                                ckId: ckId
+                            }
+                        });
+                    }
+                }, 1000);
+            });
 		},
 	});
 };
 
 //商品信息快速查询
 jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -897,61 +912,75 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 		height:420,
 		modal : true,
 		onLoad: function(){
-			$('#jxc_spQuery_dg').datagrid({
-				url : urlAction,
-				fit : true,
-			    border : false,
-			    singleSelect : true,
-			    fitColumns: true,
-			    pagination : true,
-				pagePosition : 'bottom',
-				pageSize : 10,
-				pageList : [ 10, 15, 20, 25, 30 ],
-				//将编辑行输入的商品编号传入对话框
-				queryParams:{
-					query : value,
-					depId : depId,
-				},
-				columns:[[
-			        {field:'spbh',title:'编号'},
-			        {field:'spmc',title:'名称'},
-			        {field:'spcd',title:'产地'},
-			        {field:'sppp',title:'品牌'},
-			        {field:'spbz',title:'包装'},
-			        {field:'zjldwId',title:'主计量单位id',hidden:true},
-			        {field:'zjldwmc',title:'主计量单位'},
-			        {field:'cjldwId',title:'次计量单位id',hidden:true},
-			        {field:'cjldwmc',title:'次计量单位'},
-			        {field:'zhxs',title:'转换系数',hidden:true},
+            $('#jxc_spQuery_dg').datagrid({
+                url : url,
+                fit : true,
+                border : false,
+                singleSelect : true,
+                fitColumns: true,
+                pagination : true,
+                pagePosition : 'bottom',
+                pageSize : 10,
+                pageList : [ 10, 15, 20, 25, 30 ],
+                //将编辑行输入的商品编号传入对话框
+                queryParams:{
+                	query : value,
+                	depId : depId,
+                },
+                columns:[[
+                    {field:'spbh',title:'编号'},
+                    {field:'spmc',title:'名称'},
+                    {field:'spcd',title:'产地'},
+                    {field:'sppp',title:'品牌'},
+                    {field:'spbz',title:'包装'},
+                    {field:'zjldwId',title:'主计量单位id',hidden:true},
+                    {field:'zjldwmc',title:'主计量单位'},
+                    {field:'cjldwId',title:'次计量单位id',hidden:true},
+                    {field:'cjldwmc',title:'次计量单位'},
+                    {field:'zhxs',title:'转换系数',hidden:true},
 //			        {field:'xsdj',title:'销售单价'},
 //			        {field:'limitXsdj',title:'最低销价',hidden:true},
-			        
-			    ]],
-			    toolbar:'#jxc_spQuery_tb',
-			    //双击商品行，返回商品信息并关闭对话框
-			    onDblClickRow: function(rowIndex, rowData){
-			    	//设置编辑行的值
-			    	eval(setMethod + "(rowData)");
-			    	focusTarget.focus();
-					$('#jxc_spQuery').dialog('close');
-			    },    					
-			});
-			var query = $('#jxc_spQuery_tb input');
-	    	query.val(value);
-	    	query.focus();
-	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_spQuery_dg').datagrid('load', 
-	    				{
-	    					query: query.val(),
-	    					depId: depId});
-	    	});
+
+                ]],
+                toolbar:'#jxc_spQuery_tb',
+                //双击商品行，返回商品信息并关闭对话框
+                onDblClickRow: function(rowIndex, rowData){
+                    //设置编辑行的值
+                    eval(setMethod + "(rowData)");
+                    focusTarget.focus();
+                    $('#jxc_spQuery').dialog('close');
+                },
+            });
+            var query = $('#jxc_spQuery_tb input');
+            query.val(value);
+            query.focus();
+            //录入查询内容时，即时查询，刷新表格
+            var last;
+            query.keyup(function(event){
+                last = event.timeStamp;
+                setTimeout(function () {    //设时延迟1s执行
+                    if (last - event.timeStamp == 0) {
+                        // $('#jxc_spQuery_dg').datagrid('load',
+                        // 		{
+                        // 			query: query.val(),
+                        // 			depId: depId});
+                        $('#jxc_spQuery_dg').datagrid({
+                            url: urlAction,
+                            queryParams: {
+                                query: query.val(),
+                                depId: depId,
+                            }
+                        });
+                    }
+                }, 1000);
+            });
 		},
 	});
 };
 
 //供应商、客户快速查询
 jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
+    var url = $(input_bh).val().trim().length > 0 ? urlAction : ''
 	$('#jxc_query_dialog').dialog({
 		href: urlJsp,
 		title:title,
@@ -960,7 +989,7 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 		modal : true,
 		onLoad: function(){
 			$('#jxc_query_dg').datagrid({
-				url : urlAction,
+				url : url,
 				fit : true,
 			    border : false,
 			    singleSelect : true,
@@ -1004,8 +1033,19 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 	    	query.val($(input_bh).val());
 	    	query.focus();
 	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_query_dg').datagrid('load', {query: query.val()});
+			var last;
+	    	query.keyup(function(event){
+				last = event.timeStamp;
+				setTimeout(function () {    //设时延迟1s执行
+					if (last - event.timeStamp == 0) {
+						// $('#jxc_query_dg').datagrid('load', {query: query.val()});
+						$('#jxc_query_dg').datagrid({
+							url: urlAction,
+							queryParams: {query: query.val()}
+						});
+					}
+				}, 1000);
+
 	    	});
 		},
 	});
