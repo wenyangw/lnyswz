@@ -806,6 +806,7 @@ jxc.spInfo = function(target, type, sppp, spbz){
 
 //商品信息快速查询
 jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjWithS){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -814,7 +815,7 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		modal : true,
 		onLoad: function(){
             $('#jxc_spQuery_dg').datagrid({
-                // url: '',
+                url: url,
                 fit: true,
                 border: false,
                 singleSelect: true,
@@ -824,11 +825,11 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
                 pageSize: 20,
                 pageList: [20, 30, 40, 50, 100, 150, 200],
                 //将编辑行输入的商品编号传入对话框
-                // queryParams: {
-                //     query: value,
-                //     depId: depId,
-                //     ckId: ckId,
-                // },
+                queryParams: {
+                    query: value,
+                    depId: depId,
+                    ckId: ckId,
+                },
                 columns: [[
                     {field: 'spbh', title: '编号'},
                     {field: 'spmc', title: '名称'},
@@ -903,6 +904,7 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 
 //商品信息快速查询
 jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -911,7 +913,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 		modal : true,
 		onLoad: function(){
 			$('#jxc_spQuery_dg').datagrid({
-				// url : urlAction,
+				url : url,
 				fit : true,
 			    border : false,
 			    singleSelect : true,
@@ -921,10 +923,10 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 				pageSize : 10,
 				pageList : [ 10, 15, 20, 25, 30 ],
 				//将编辑行输入的商品编号传入对话框
-				// queryParams:{
-				// 	query : value,
-				// 	depId : depId,
-				// },
+				queryParams:{
+					query : value,
+					depId : depId,
+				},
 				columns:[[
 			        {field:'spbh',title:'编号'},
 			        {field:'spmc',title:'名称'},
@@ -953,7 +955,8 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 	    	query.val(value);
 	    	query.focus();
 	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(event){
+            var last;
+            query.keyup(function(event){
                 last = event.timeStamp;
                 setTimeout(function () {    //设时延迟1s执行
                     if (last - event.timeStamp == 0) {
@@ -966,12 +969,10 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
                             queryParams: {
                                 query: query.val(),
                                 depId: depId,
-                                // ckId: ckId
                             }
                         });
                     }
                 }, 1000);
-
 	    	});
 		},
 	});
@@ -979,6 +980,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 
 //供应商、客户快速查询
 jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
+    var url = $(input_bh).val().trim().length > 0 ? urlAction : ''
 	$('#jxc_query_dialog').dialog({
 		href: urlJsp,
 		title:title,
@@ -987,7 +989,7 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 		modal : true,
 		onLoad: function(){
 			$('#jxc_query_dg').datagrid({
-				url : urlAction,
+				url : url,
 				fit : true,
 			    border : false,
 			    singleSelect : true,
@@ -1031,8 +1033,19 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 	    	query.val($(input_bh).val());
 	    	query.focus();
 	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_query_dg').datagrid('load', {query: query.val()});
+			var last;
+	    	query.keyup(function(event){
+				last = event.timeStamp;
+				setTimeout(function () {    //设时延迟1s执行
+					if (last - event.timeStamp == 0) {
+						// $('#jxc_query_dg').datagrid('load', {query: query.val()});
+						$('#jxc_query_dg').datagrid({
+							url: urlAction,
+							queryParams: {query: query.val()}
+						});
+					}
+				}, 1000);
+
 	    	});
 		},
 	});
