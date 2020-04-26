@@ -875,12 +875,19 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
             var query = $('#jxc_spQuery_tb input');
             query.val(value);
             query.focus();
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
             //录入查询内容时，即时查询，刷新表格
             var last;
             query.keyup(function (event) {
                 last = event.timeStamp;
                 setTimeout(function () {    //设时延迟1s执行
-                    if (last - event.timeStamp == 0) {
+                    if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
                         // $('#jxc_spQuery_dg').datagrid('load',
                         //     {
                         //         query: query.val(),
@@ -954,12 +961,19 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
             var query = $('#jxc_spQuery_tb input');
             query.val(value);
             query.focus();
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
             //录入查询内容时，即时查询，刷新表格
             var last;
             query.keyup(function(event){
                 last = event.timeStamp;
                 setTimeout(function () {    //设时延迟1s执行
-                    if (last - event.timeStamp == 0) {
+                    if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
                         // $('#jxc_spQuery_dg').datagrid('load',
                         // 		{
                         // 			query: query.val(),
@@ -1032,12 +1046,19 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 			var query = $('#jxc_query_tb input');
 	    	query.val($(input_bh).val());
 	    	query.focus();
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
 	    	//录入查询内容时，即时查询，刷新表格
 			var last;
 	    	query.keyup(function(event){
 				last = event.timeStamp;
 				setTimeout(function () {    //设时延迟1s执行
-					if (last - event.timeStamp == 0) {
+					if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
 						// $('#jxc_query_dg').datagrid('load', {query: query.val()});
 						$('#jxc_query_dg').datagrid({
 							url: urlAction,
