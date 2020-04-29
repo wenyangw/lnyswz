@@ -401,7 +401,7 @@ public class SpServiceImpl implements SpServiceI {
 	@Override
 	public DataGrid getSpsByLb(Sp sp) {
 		DataGrid dg = new DataGrid();
-		StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwmc");
+		StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwId, zjldwmc");
 		StringBuffer where = new StringBuffer(" from v_sp_mini where lbid = ?");
 		StringBuffer countSql = new StringBuffer("select count(*)");
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -415,7 +415,7 @@ public class SpServiceImpl implements SpServiceI {
     @Override
     public DataGrid searchSps(Sp sp) {
         DataGrid dg = new DataGrid();
-	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwmc");
+	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwId, zjldwmc");
 	    StringBuffer where = new StringBuffer(" from v_sp_mini where spmc + spcd + sppp like ?");
 	    StringBuffer sqlCount = new StringBuffer("select count(*)");
 	    StringBuffer order = new StringBuffer(" order by spbh");
@@ -439,7 +439,8 @@ public class SpServiceImpl implements SpServiceI {
                 spBean.put("spcd", s[2].toString());
                 spBean.put("sppp", s[3].toString());
                 spBean.put("spbz", s[4].toString());
-                spBean.put("zjldwmc", s[5].toString());
+				spBean.put("zjldwId", s[5].toString());
+                spBean.put("zjldwmc", s[6].toString());
                 results.add(spBean);
             }
         }

@@ -25,6 +25,7 @@ public class Khdd {
     private String xsthlsh;
     private Date xsthTime;
 
+    private String openId;
     private String lxbh;
     private String menuId;
     private String search;
@@ -198,6 +199,14 @@ public class Khdd {
 
     public void setXsthTime(Date xsthTime) {
         this.xsthTime = xsthTime;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     public String getLxbh() {

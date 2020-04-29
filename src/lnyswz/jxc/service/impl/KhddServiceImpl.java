@@ -33,25 +33,36 @@ public class KhddServiceImpl implements KhddServiceI {
 	private BaseDaoI<TKhdd> khddDao;
 	private BaseDaoI<TKhddDet> detDao;
 	private BaseDaoI<TLsh> lshDao;
-	private BaseDaoI<TDepartment> depDao;
+    private BaseDaoI<TKhUser> khUserDao;
+	private BaseDaoI<TUser> ywyDao;
 	private BaseDaoI<TSp> spDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 	@Override
 	public Khdd saveKhdd(Khdd khdd) {
-		String lsh = LshServiceImpl.updateLsh(khdd.getBmbh(), khdd.getLxbh(), lshDao);
+
 		TKhdd tKhdd = new TKhdd();
 		BeanUtils.copyProperties(khdd, tKhdd);
 		tKhdd.setCreateTime(new Date());
-		tKhdd.setKhddlsh(lsh);
-		tKhdd.setBmmc(depDao.load(TDepartment.class, khdd.getBmbh()).getDepName());
+
+		String hql = "from TKhUser t where t.openId = :openId";
+		Map<String, Object> params = new HashMap<String, Object>();
+        params.put("openId", khdd.getOpenId());
+        TKhUser tKhUser = khUserDao.get(hql, params);
+//		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
+        tKhdd.setCreateId(tKhUser.getId());
+		tKhdd.setCreateName(tKhUser.getRealName());
+
+		TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
+		tKhdd.setYwymc(tYwy.getRealName());
+		tKhdd.setBmbh(tYwy.getTDepartment().getId());
+		tKhdd.setBmmc(tYwy.getTDepartment().getDepName());
 		
 		tKhdd.setIsCancel("0");
 		tKhdd.setIsRefuse("0");
 
-		Department dep = new Department();
-		dep.setId(khdd.getBmbh());
-		dep.setDepName(tKhdd.getBmmc());
+        String lsh = LshServiceImpl.updateLsh(tKhdd.getBmbh(), Constant.YWLX_KHDD, lshDao);
+        tKhdd.setKhddlsh(lsh);
 
 		//处理商品明细
 		Set<TKhddDet> tDets = new HashSet<TKhddDet>();
@@ -64,16 +75,13 @@ public class KhddServiceImpl implements KhddServiceI {
 
 				tDet.setTKhdd(tKhdd);
 				tDets.add(tDet);
-
-				Sp sp = new Sp();
-				BeanUtils.copyProperties(khddDet, sp);
 			}
 		}
 		tKhdd.setTKhddDets(tDets);
 		khddDao.save(tKhdd);		
-		OperalogServiceImpl.addOperalog(khdd.getCreateId(), khdd.getBmbh(), khdd.getMenuId(), tKhdd.getKhddlsh(), "保存客户订单", operalogDao);
+		OperalogServiceImpl.addOperalog(tKhdd.getCreateId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "保存客户订单", operalogDao);
 
-		khdd.setKhddlsh(lsh);
+//		khdd.setKhddlsh(lsh);
 		return khdd;
 	}
 	
@@ -89,7 +97,7 @@ public class KhddServiceImpl implements KhddServiceI {
 		tKhdd.setCancelName(khdd.getCancelName());
 		tKhdd.setIsCancel("1");
 
-		OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), khdd.getMenuId(), tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+		OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 	}
 
 	@Override
@@ -104,7 +112,7 @@ public class KhddServiceImpl implements KhddServiceI {
 		tKhdd.setRefuseName(khdd.getRefuseName());
 		tKhdd.setIsRefuse("1");
 
-		OperalogServiceImpl.addOperalog(khdd.getRefuseId(), tKhdd.getBmbh(), khdd.getMenuId(), tKhdd.getKhddlsh(), "退回客户订单", operalogDao);
+		OperalogServiceImpl.addOperalog(khdd.getRefuseId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "退回客户订单", operalogDao);
 	}
 
 	@Override
@@ -118,9 +126,6 @@ public class KhddServiceImpl implements KhddServiceI {
 		DataGrid datagrid = new DataGrid();
 		String hql = " from TKhdd t";
 		Map<String, Object> params = new HashMap<String, Object>();
-//		params.put("bmbh1", "04");
-//      params.put("bmbh2", "05");
-//      params.put("createId", khdd.getCreateId());
 		if(khdd.getCreateTime() != null){
 			params.put("createTime", khdd.getCreateTime()); 
 		}else{
@@ -180,10 +185,15 @@ public class KhddServiceImpl implements KhddServiceI {
 		this.lshDao = lshDao;
 	}
 
-	@Autowired
-	public void setDepDao(BaseDaoI<TDepartment> depDao) {
-		this.depDao = depDao;
-	}
+    @Autowired
+    public void setYwyDao(BaseDaoI<TUser> ywyDao) {
+        this.ywyDao = ywyDao;
+    }
+
+    @Autowired
+    public void setKhUserDao(BaseDaoI<TKhUser> khUserDao) {
+        this.khUserDao = khUserDao;
+    }
 
 	@Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {

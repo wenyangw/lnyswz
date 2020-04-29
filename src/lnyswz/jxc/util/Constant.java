@@ -51,6 +51,10 @@ public interface Constant {
 	public static final String YWLX_XSTH = "05";
 	public static final String YWLX_FYD = "16";
 	public static final String YWLX_XSJJ = "21";
+	public static final String YWLX_KHDD = "22";
+
+	//未经过菜单入口的业务操作
+	public static final String MENU_KHDD = "220000000000";
 
 	//操作人员为业务员
 	public static final String USER_POSTID = "12";
