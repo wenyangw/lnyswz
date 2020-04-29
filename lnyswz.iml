@@ -60,6 +60,5 @@
         <jarDirectory url="file://$MODULE_DIR$/WebRoot/WEB-INF/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="lnyswz" level="project" />
   </component>
 </module>
