@@ -4,18 +4,14 @@ package lnyswz.jxc.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.bean.DataGrid;
-import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.Khdd;
 import lnyswz.jxc.bean.KhddDet;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Sp;
 import lnyswz.jxc.model.*;
 import lnyswz.jxc.service.KhddServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +31,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	private BaseDaoI<TLsh> lshDao;
     private BaseDaoI<TKhUser> khUserDao;
 	private BaseDaoI<TUser> ywyDao;
-	private BaseDaoI<TSp> spDao;
+	private BaseDaoI<TKh> khDao;
 	private BaseDaoI<TOperalog> operalogDao;
 	
 	@Override
@@ -52,8 +48,16 @@ public class KhddServiceImpl implements KhddServiceI {
 //		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
         tKhdd.setCreateId(tKhUser.getId());
 		tKhdd.setCreateName(tKhUser.getRealName());
+		if (tKhUser.getKhbh() != null) {
+			TKh tKh = khDao.load(TKh.class, tKhUser.getKhbh());
+			tKhdd.setKhbh(tKh.getKhbh());
+			tKhdd.setKhmc(tKh.getKhmc());
+		} else {
+			tKhdd.setKhmc(tKhUser.getDwmc());
+		}
 
 		TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
+		tKhdd.setYwyId(tYwy.getId());
 		tKhdd.setYwymc(tYwy.getRealName());
 		tKhdd.setBmbh(tYwy.getTDepartment().getId());
 		tKhdd.setBmmc(tYwy.getTDepartment().getDepName());
@@ -190,15 +194,15 @@ public class KhddServiceImpl implements KhddServiceI {
         this.ywyDao = ywyDao;
     }
 
+	@Autowired
+	public void setKhDao(BaseDaoI<TKh> khDao) {
+		this.khDao = khDao;
+	}
+
     @Autowired
     public void setKhUserDao(BaseDaoI<TKhUser> khUserDao) {
         this.khUserDao = khUserDao;
     }
-
-	@Autowired
-	public void setSpDao(BaseDaoI<TSp> spDao) {
-		this.spDao = spDao;
-	}
 
 	@Autowired
 	public void setOperalogDao(BaseDaoI<TOperalog> operalogDao) {
