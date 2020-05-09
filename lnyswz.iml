@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="EclipseModuleManager">
-    <libelement value="file://D:/Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar" />
-    <libelement value="file://D:/Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar" />
+    <libelement value="file://$MODULE_DIR$/../../Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar" />
+    <libelement value="file://$MODULE_DIR$/../../Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar" />
     <conelement value="org.eclipse.jst.j2ee.internal.web.container" />
     <conelement value="org.eclipse.jst.j2ee.internal.module.container" />
     <src_description expected_position="0">
@@ -34,7 +34,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
+          <root url="jar://C:/apache-tomcat-8.5.38/lib/jsp-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -43,7 +43,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar!/" />
+          <root url="jar://C:/apache-tomcat-8.5.38/lib/servlet-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -90,18 +90,22 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 	
 	@Override
-	public void cancelKhdd(Khdd khdd) {
-		Date now = new Date();
-		//获取原单据信息
-		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+	public String cancelKhdd(Khdd khdd) {
 
-		//更新原单据冲减信息
-		tKhdd.setCancelId(khdd.getCancelId());
-		tKhdd.setCancelTime(now);
-		tKhdd.setCancelName(khdd.getCancelName());
-		tKhdd.setIsCancel("1");
+			Date now = new Date();
+			//获取原单据信息
+			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+			if(khdd.getXsthlsh() == null){
+				return "该订单已处理，请勿取消！";
+			}
+			//更新原单据冲减信息
+			tKhdd.setCancelId(khdd.getCancelId());
+			tKhdd.setCancelTime(now);
+			tKhdd.setCancelName(khdd.getCancelName());
+			tKhdd.setIsCancel("1");
 
-		OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+			OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+			return "";
 	}
 
 	@Override
@@ -119,6 +123,8 @@ public class KhddServiceImpl implements KhddServiceI {
 		OperalogServiceImpl.addOperalog(khdd.getRefuseId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "退回客户订单", operalogDao);
 	}
 
+
+
 	@Override
 	public Khdd getKhdd(Khdd khdd) {
 
@@ -128,30 +134,37 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKhdd t";
+		String hql = " from TKhdd t where t.createTime > :createTime ";
 		Map<String, Object> params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
-			params.put("createTime", khdd.getCreateTime()); 
+			params.put("createTime", khdd.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-
 		if(khdd.getSearch() != null){
-			hql += " and (" + 
+			hql += " and (" +
 					Util.getQueryWhere(khdd.getSearch(), new String[]{"t.khddlsh", "t.bz"}, params)
 					+ ")";
 		}
-		String countHql = " select count(*)" + hql;
-		hql += " order by t.createTime desc";
 		List<TKhdd> l = khddDao.find(hql, params, khdd.getPage(), khdd.getRows());
 		List<Khdd> nl = new ArrayList<Khdd>();
         Khdd c;
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
+			System.out.println(t.getTKhddDets());
+			Set<TKhddDet> tKhddDets = t.getTKhddDets();
+			Set<KhddDet> khddDets = new HashSet<KhddDet>();
+            KhddDet kd;
+            for(TKhddDet tkd : tKhddDets){
+                kd = new KhddDet();
+                BeanUtils.copyProperties(tkd, kd);
+                khddDets.add(kd);
+            }
+            c.setKhddDets(khddDets);
 			nl.add(c);
 		}
-		datagrid.setTotal(khddDao.count(countHql, params));
+//		datagrid.setTotal(khddDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
 	}
