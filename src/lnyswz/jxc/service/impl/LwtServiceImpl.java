@@ -1,12 +1,10 @@
 package lnyswz.jxc.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lnyswz.jxc.model.TXsth;
+import lnyswz.jxc.model.TXsthDet;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 import org.springframework.beans.BeanUtils;
@@ -390,7 +388,6 @@ public class LwtServiceImpl implements LwtServiceI {
 		String hql = " from TXsth where bmbh = :bmbh and isFhth = '0'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", lwt.getBmbh());
-//		params.put("createTime", lwt.getCreateTime());
 
 		if (lwt.getIsYwy() != null) {
 			hql += " and (createId = :ywyId or ywyId = :ywyId)";
@@ -423,9 +420,30 @@ public class LwtServiceImpl implements LwtServiceI {
 		List<TXsth> l = xsthDao.find(hql, params, lwt.getPage(), lwt.getRows());
 
 		List<Lwt> nl = new ArrayList<Lwt>();
+		Lwt c;
+		String detSql;
+		Map<String, Object> detParams;
 		for(TXsth t : l){
-			Lwt c = new Lwt();
+			c = new Lwt();
 			BeanUtils.copyProperties(t, c);
+			c.setNotCancel("0");
+			if ("1".equals(t.getIsCancel()) || "1".equals(t.getLocked())){
+				c.setNotCancel("1");
+			} else {
+				detParams = new HashMap<String, Object>();
+				if ("1".equals(t.getIsZs())) {
+					//是否有cgjhlsh
+					detSql = "select count(*) from t_xsth_det where xsthlsh = ? and cgjhlsh is not null";
+				} else {
+					//是否有cksl或kpsl
+					detSql = "select count(*) from t_xsth_det where xsthlsh = ? and (kpsl > 0 or cksl > 0)";
+				}
+				detParams.put("0", t.getXsthlsh());
+				if (xsthDao.countSQL(detSql, detParams) > 0) {
+					c.setNotCancel("1");
+				}
+			}
+
 			nl.add(c);
 		}
 		datagrid.setTotal(xsthDao.count(countHql, params));
