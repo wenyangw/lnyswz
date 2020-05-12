@@ -60,10 +60,13 @@ public class Lwt {
 	private String jzsj;
 	private String type;
 	private String isCancel;
+	//销售提货是否被库房锁定
+//	private String locked;
 	private String isKcZero;
 	private String lxr;
 	private String khlxId;
 	private String isOther;
+	//客户是否被锁定
 	private String isLocked;
 	private String isDef;
 	private String isUp;
@@ -72,9 +75,15 @@ public class Lwt {
 	private Integer cqDays;
 	private BigDecimal limitPer;
 	private BigDecimal limitJe;
-	
+
+//	private String fromFp;
+//	private String cgjhlsh;
+//	private String isKp;
 	private String xskplsh;
+//	private String isTh;
 	private String lsh;
+
+	private String notCancel;
 
 	private String year;
 	private String month;
@@ -708,11 +717,19 @@ public class Lwt {
 	public void setMxs(List<Lwt> mxs) {
 		this.mxs = mxs;
 	}
-public BigDecimal getByys() {
+	public BigDecimal getByys() {
 		return byys;
 	}
 
 	public void setByys(BigDecimal byys) {
 		this.byys = byys;
+	}
+
+	public String getNotCancel() {
+		return notCancel;
+	}
+
+	public void setNotCancel(String notCancel) {
+		this.notCancel = notCancel;
 	}
 }
