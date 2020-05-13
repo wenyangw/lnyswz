@@ -30,7 +30,6 @@ public class KhUserServiceImpl implements KhUserServiceI {
 		BeanUtils.copyProperties(khUser, t);
 
 		TUser tYwy = ywyDao.load(TUser.class, khUser.getYwyId());
-//		t.setBmbh(tUser.getTDepartment().getId());
 		khUserDao.save(t);
 		khUser.setId(t.getId());
 		OperalogServiceImpl.addOperalog(khUser.getId(), tYwy.getTDepartment().getId(), khUser.getMenuId(), khUser.getId() + "" , "添加客户用户", opeDao);
@@ -45,8 +44,9 @@ public class KhUserServiceImpl implements KhUserServiceI {
 		TKhUser t = khUserDao.load(TKhUser.class, khUser.getId());
 		khUser.setCreateTime(t.getCreateTime());
 		BeanUtils.copyProperties(khUser, t);
+		TUser tYwy = ywyDao.load(TUser.class, khUser.getYwyId());
 		khUserDao.update(t);
-		OperalogServiceImpl.addOperalog(khUser.getCreateId(), t.getBmbh(), khUser.getMenuId(), t.getId() + "" , "修改客户用户", opeDao);
+		OperalogServiceImpl.addOperalog(khUser.getCreateId(), tYwy.getTDepartment().getId(), khUser.getMenuId(), t.getId() + "" , "修改客户用户", opeDao);
 	}
 
 	/**
@@ -55,8 +55,9 @@ public class KhUserServiceImpl implements KhUserServiceI {
 	@Override
 	public void delete(KhUser khUser) {
 		TKhUser t = khUserDao.load(TKhUser.class, khUser.getId());
+		TUser tYwy = ywyDao.load(TUser.class, khUser.getYwyId());
 		khUserDao.delete(t);
-		OperalogServiceImpl.addOperalog(khUser.getCreateId(), t.getBmbh(), khUser.getMenuId(), t.getId() + "" , "删除客户用户", opeDao);
+		OperalogServiceImpl.addOperalog(khUser.getCreateId(), tYwy.getTDepartment().getId(), khUser.getMenuId(), t.getId() + "" , "删除客户用户", opeDao);
 	}
 	
 	/**
