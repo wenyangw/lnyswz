@@ -91,20 +91,17 @@ public class KhddServiceImpl implements KhddServiceI {
 	
 	@Override
 	public String cancelKhdd(Khdd khdd) {
-
-			Date now = new Date();
 			//获取原单据信息
 			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-			if(khdd.getXsthlsh() == null){
+			if(khdd.getXsthlsh() != null){
 				return "该订单已处理，请勿取消！";
 			}
 			//更新原单据冲减信息
 			tKhdd.setCancelId(khdd.getCancelId());
-			tKhdd.setCancelTime(now);
+			tKhdd.setCancelTime(new Date());
 			tKhdd.setCancelName(khdd.getCancelName());
 			tKhdd.setIsCancel("1");
-
-			OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+//			OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 			return "";
 	}
 

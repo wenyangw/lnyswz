@@ -57,8 +57,9 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			khdd.setCancelName(user.getRealName());
 		}
 		try {
-			j.setSuccess(khddService.cancelKhdd(khdd).equals(""));
-			j.setMsg(khddService.cancelKhdd(khdd));
+			String ret = khddService.cancelKhdd(khdd);
+			j.setSuccess(ret.equals(""));
+			j.setMsg(ret);
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");
 			e.printStackTrace();
