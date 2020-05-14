@@ -919,48 +919,47 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 		height:420,
 		modal : true,
 		onLoad: function(){
-            $('#jxc_spQuery_dg').datagrid({
-                url : url,
-                fit : true,
-                border : false,
-                singleSelect : true,
-                fitColumns: true,
-                pagination : true,
-                pagePosition : 'bottom',
-                pageSize : 10,
-                pageList : [ 10, 15, 20, 25, 30 ],
-                //将编辑行输入的商品编号传入对话框
-                queryParams:{
-                	query : value,
-                	depId : depId,
-                },
-                columns:[[
-                    {field:'spbh',title:'编号'},
-                    {field:'spmc',title:'名称'},
-                    {field:'spcd',title:'产地'},
-                    {field:'sppp',title:'品牌'},
-                    {field:'spbz',title:'包装'},
-                    {field:'zjldwId',title:'主计量单位id',hidden:true},
-                    {field:'zjldwmc',title:'主计量单位'},
-                    {field:'cjldwId',title:'次计量单位id',hidden:true},
-                    {field:'cjldwmc',title:'次计量单位'},
-                    {field:'zhxs',title:'转换系数',hidden:true},
+			$('#jxc_spQuery_dg').datagrid({
+				url : url,
+				fit : true,
+			    border : false,
+			    singleSelect : true,
+			    fitColumns: true,
+			    pagination : true,
+				pagePosition : 'bottom',
+				pageSize : 10,
+				pageList : [ 10, 15, 20, 25, 30 ],
+				//将编辑行输入的商品编号传入对话框
+				queryParams:{
+					query : value,
+					depId : depId,
+				},
+				columns:[[
+			        {field:'spbh',title:'编号'},
+			        {field:'spmc',title:'名称'},
+			        {field:'spcd',title:'产地'},
+			        {field:'sppp',title:'品牌'},
+			        {field:'spbz',title:'包装'},
+			        {field:'zjldwId',title:'主计量单位id',hidden:true},
+			        {field:'zjldwmc',title:'主计量单位'},
+			        {field:'cjldwId',title:'次计量单位id',hidden:true},
+			        {field:'cjldwmc',title:'次计量单位'},
+			        {field:'zhxs',title:'转换系数',hidden:true},
 //			        {field:'xsdj',title:'销售单价'},
 //			        {field:'limitXsdj',title:'最低销价',hidden:true},
-
-                ]],
-                toolbar:'#jxc_spQuery_tb',
-                //双击商品行，返回商品信息并关闭对话框
-                onDblClickRow: function(rowIndex, rowData){
-                    //设置编辑行的值
-                    eval(setMethod + "(rowData)");
-                    focusTarget.focus();
-                    $('#jxc_spQuery').dialog('close');
-                },
-            });
-            var query = $('#jxc_spQuery_tb input');
-            query.val(value);
-            query.focus();
+			    ]],
+			    toolbar:'#jxc_spQuery_tb',
+			    //双击商品行，返回商品信息并关闭对话框
+			    onDblClickRow: function(rowIndex, rowData){
+			    	//设置编辑行的值
+			    	eval(setMethod + "(rowData)");
+			    	focusTarget.focus();
+					$('#jxc_spQuery').dialog('close');
+			    },    					
+			});
+			var query = $('#jxc_spQuery_tb input');
+	    	query.val(value);
+	    	query.focus();
 			var flag = true;
 			query.on('compositionstart',function(){
 				flag = false;
@@ -987,7 +986,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
                         });
                     }
                 }, 1000);
-            });
+	    	});
 		},
 	});
 };

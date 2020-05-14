@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,42 @@ public class SplbServiceImpl implements SplbServiceI {
 			nl.add(s);
 		}
 		return nl;
+	}
+
+	@Override
+	public List<JSONObject> getSplbsWithSpdl(Splb splb) {
+//		JSONObject result = new JSONObject();
+		List<JSONObject> results = null;
+		String sqlDl = "select id, spdlmc from v_spdl_mini order by id";
+		List<Object[]> spdls = spdlDao.findBySQL(sqlDl);
+
+		if(spdls.size() > 0) {
+			results = new ArrayList<JSONObject>();
+			JSONObject dlJson = null;
+			for (Object[] dl: spdls) {
+				dlJson = new JSONObject();
+				String sqlLb = "select id, splbmc from v_splb_mini where spdlId = ?";
+				Map<String, Object> paramsLb = new HashMap<String, Object>();
+				paramsLb.put("0", dl[0].toString());
+				List<Object[]> splbs = splbDao.findBySQL(sqlLb, paramsLb);
+				List<JSONObject> lbs = new ArrayList<JSONObject>();
+				if(splbs.size() > 0){
+					JSONObject lbJson = null;
+					for (Object[] lb: splbs) {
+						lbJson = new JSONObject();
+						lbJson.put("id", lb[0].toString());
+						lbJson.put("text", lb[1].toString());
+						lbs.add(lbJson);
+					}
+				}
+				dlJson.put("text", dl[1].toString());
+				dlJson.put("children", lbs);
+				results.add(dlJson);
+			}
+		}
+
+//		result.put("data", results);
+		return results;
 	}
 	
 	@Autowired

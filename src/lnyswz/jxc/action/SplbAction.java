@@ -1,5 +1,6 @@
 package lnyswz.jxc.action;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Splb;
 import lnyswz.jxc.service.SplbServiceI;
+
+import java.util.List;
+
 /**
  * 商品类别Action
  * @author 王文阳
@@ -93,6 +97,24 @@ public class SplbAction extends BaseAction implements ModelDriven<Splb>{
 	 */
 	public void datagrid(){
 		writeJson(splbService.datagrid(splb));
+	}
+
+
+	/**
+	 * 小程序使用
+	 * 返回带有商品大类的商品类别列表
+	 */
+	public void getSplbsWithSpdl() {
+	    Json j = new Json();
+	    try {
+            List<JSONObject> jsonObject = splbService.getSplbsWithSpdl(splb);
+            j.setSuccess(true);
+            j.setObj(jsonObject);
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+
+		writeJson(j);
 	}
 	
 	@Override
