@@ -91,17 +91,26 @@ public class KhddServiceImpl implements KhddServiceI {
 	
 	@Override
 	public String cancelKhdd(Khdd khdd) {
+
+			String hql = "from TKhUser t where t.openId = :openId";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("openId", khdd.getOpenId());
+			TKhUser tKhUser = khUserDao.get(hql, params);
+            TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
+            khdd.setBmbh(tYwy.getTDepartment().getId());
+
 			//获取原单据信息
 			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-			if(khdd.getXsthlsh() != null){
+			System.out.println("----------"+khdd.getXsthlsh()+"-----------"+khdd.getXsthlsh() != null+"----------");
+			if(khdd.getXsthlsh() != null ){
 				return "该订单已处理，请勿取消！";
 			}
 			//更新原单据冲减信息
-			tKhdd.setCancelId(khdd.getCancelId());
+			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
-			tKhdd.setCancelName(khdd.getCancelName());
+			tKhdd.setCancelName(tKhUser.getRealName());
 			tKhdd.setIsCancel("1");
-//			OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+ //			OperalogServiceImpl.addOperalog(khdd.getCancelId(), khdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 			return "";
 	}
 
@@ -130,14 +139,22 @@ public class KhddServiceImpl implements KhddServiceI {
 
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
+
+        String khUserhql = "from TKhUser t where t.openId = :openId";
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("openId", khdd.getOpenId());
+        TKhUser tKhUser = khUserDao.get(khUserhql, params);
+
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKhdd t where t.createTime > :createTime ";
-		Map<String, Object> params = new HashMap<String, Object>();
+		String hql = " from TKhdd t where t.createTime > :createTime and t.khbh = :khbh";
+		params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
 			params.put("createTime", khdd.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
+		params.put("khbh",tKhUser.getKhbh());
 		if(khdd.getSearch() != null){
 			hql += " and (" +
 					Util.getQueryWhere(khdd.getSearch(), new String[]{"t.khddlsh", "t.bz"}, params)
@@ -146,13 +163,12 @@ public class KhddServiceImpl implements KhddServiceI {
 		List<TKhdd> l = khddDao.find(hql, params, khdd.getPage(), khdd.getRows());
 		List<Khdd> nl = new ArrayList<Khdd>();
         Khdd c;
+        KhddDet kd;
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
-			System.out.println(t.getTKhddDets());
 			Set<TKhddDet> tKhddDets = t.getTKhddDets();
 			Set<KhddDet> khddDets = new HashSet<KhddDet>();
-            KhddDet kd;
             for(TKhddDet tkd : tKhddDets){
                 kd = new KhddDet();
                 BeanUtils.copyProperties(tkd, kd);
