@@ -20,6 +20,20 @@
           <root url="file://$MODULE_DIR$/WebRoot" relative="/" />
         </webroots>
       </configuration>
+      <facet type="Struts2" name="Struts 2">
+        <configuration>
+          <propertiesKeys disabled="false" />
+        </configuration>
+      </facet>
+    </facet>
+    <facet type="hibernate" name="Hibernate">
+      <configuration>
+        <datasource-map>
+          <unit-entry name="hibernate.cfg.xml" />
+        </datasource-map>
+        <naming-strategy-map />
+        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/resources/hibernate.cfg.xml" />
+      </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -34,7 +48,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
+          <root url="jar://C:/apache-tomcat-8.5.38/lib/jsp-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -43,13 +57,13 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar!/" />
+          <root url="jar://C:/apache-tomcat-8.5.38/lib/servlet-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
