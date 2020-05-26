@@ -88,7 +88,7 @@ public class KhddServiceImpl implements KhddServiceI {
 //		khdd.setKhddlsh(lsh);
 		return khdd;
 	}
-	
+
 	@Override
 	public String cancelKhdd(Khdd khdd) {
 
@@ -101,17 +101,15 @@ public class KhddServiceImpl implements KhddServiceI {
 
 			//获取原单据信息
 			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-			System.out.println("----------"+khdd.getXsthlsh()+"-----------"+khdd.getXsthlsh() != null+"----------");
-			if(khdd.getXsthlsh() != null ){
-				return "该订单已处理，请勿取消！";
+			if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+				//更新原单据冲减信息
+				tKhdd.setCancelId(tKhUser.getId());
+				tKhdd.setCancelTime(new Date());
+				tKhdd.setCancelName(tKhUser.getRealName());
+				tKhdd.setIsCancel("1");
+				return "";
 			}
-			//更新原单据冲减信息
-			tKhdd.setCancelId(tKhUser.getId());
-			tKhdd.setCancelTime(new Date());
-			tKhdd.setCancelName(tKhUser.getRealName());
-			tKhdd.setIsCancel("1");
- //			OperalogServiceImpl.addOperalog(khdd.getCancelId(), khdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
-			return "";
+			return "该订单已处理，请勿取消！";
 	}
 
 	@Override
@@ -177,7 +175,6 @@ public class KhddServiceImpl implements KhddServiceI {
             c.setKhddDets(khddDets);
 			nl.add(c);
 		}
-//		datagrid.setTotal(khddDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
 	}

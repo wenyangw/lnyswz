@@ -95,6 +95,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	}
 
 	public void getKhdds(){
+		Json j = new Json();
 		User u = (User)session.get("user");
 		if (u != null) {
 			khdd.setCreateId(u.getId());
@@ -102,7 +103,8 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 				khdd.setYwyId(u.getId());
 			}
 		}
-		writeJson(khddService.getKhdds(khdd));
+		j.setObj(khddService.getKhdds(khdd));
+		writeJson(j);
 	}
 
 	public void getKhddDet(){
