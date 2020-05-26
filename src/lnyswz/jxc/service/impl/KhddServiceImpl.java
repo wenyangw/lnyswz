@@ -43,8 +43,8 @@ public class KhddServiceImpl implements KhddServiceI {
 
 		String hql = "from TKhUser t where t.openId = :openId";
 		Map<String, Object> params = new HashMap<String, Object>();
-        params.put("openId", khdd.getOpenId());
-        TKhUser tKhUser = khUserDao.get(hql, params);
+		params.put("openId", khdd.getOpenId());
+		TKhUser tKhUser = khUserDao.get(hql, params);
 //		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
         tKhdd.setCreateId(tKhUser.getId());
 		tKhdd.setCreateName(tKhUser.getRealName());
