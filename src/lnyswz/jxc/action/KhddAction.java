@@ -57,9 +57,9 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			khdd.setCancelName(user.getRealName());
 		}
 		try {
-			khddService.cancelKhdd(khdd);
-			j.setSuccess(true);
-			j.setMsg("取消客户订单成功！");
+			String ret = khddService.cancelKhdd(khdd);
+			j.setSuccess(ret.equals(""));
+			j.setMsg(ret);
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");
 			e.printStackTrace();
@@ -95,6 +95,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	}
 
 	public void getKhdds(){
+		Json j = new Json();
 		User u = (User)session.get("user");
 		if (u != null) {
 			khdd.setCreateId(u.getId());
@@ -102,7 +103,8 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 				khdd.setYwyId(u.getId());
 			}
 		}
-		writeJson(khddService.getKhdds(khdd));
+		j.setObj(khddService.getKhdds(khdd));
+		writeJson(j);
 	}
 
 	public void getKhddDet(){

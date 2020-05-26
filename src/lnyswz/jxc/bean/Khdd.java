@@ -1,6 +1,7 @@
 package lnyswz.jxc.bean;
 
 import java.util.Date;
+import java.util.Set;
 
 public class Khdd {
     private String khddlsh;
@@ -24,6 +25,8 @@ public class Khdd {
     private String refuseName;
     private String xsthlsh;
     private Date xsthTime;
+
+    private Set<KhddDet> khddDets;
 
     private String openId;
     private String lxbh;
@@ -255,5 +258,13 @@ public class Khdd {
 
     public void setRows(int rows) {
         this.rows = rows;
+    }
+
+    public Set<KhddDet> getKhddDets() {
+        return khddDets;
+    }
+
+    public void setKhddDets(Set<KhddDet> khddDets) {
+        this.khddDets = khddDets;
     }
 }

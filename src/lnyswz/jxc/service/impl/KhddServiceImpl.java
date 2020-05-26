@@ -88,20 +88,28 @@ public class KhddServiceImpl implements KhddServiceI {
 //		khdd.setKhddlsh(lsh);
 		return khdd;
 	}
-	
+
 	@Override
-	public void cancelKhdd(Khdd khdd) {
-		Date now = new Date();
-		//获取原单据信息
-		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+	public String cancelKhdd(Khdd khdd) {
 
-		//更新原单据冲减信息
-		tKhdd.setCancelId(khdd.getCancelId());
-		tKhdd.setCancelTime(now);
-		tKhdd.setCancelName(khdd.getCancelName());
-		tKhdd.setIsCancel("1");
+			String hql = "from TKhUser t where t.openId = :openId";
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("openId", khdd.getOpenId());
+			TKhUser tKhUser = khUserDao.get(hql, params);
+            TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
+            khdd.setBmbh(tYwy.getTDepartment().getId());
 
-		OperalogServiceImpl.addOperalog(khdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+			//获取原单据信息
+			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+			if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+				//更新原单据冲减信息
+				tKhdd.setCancelId(tKhUser.getId());
+				tKhdd.setCancelTime(new Date());
+				tKhdd.setCancelName(tKhUser.getRealName());
+				tKhdd.setIsCancel("1");
+				return "";
+			}
+			return "该订单已处理，请勿取消！";
 	}
 
 	@Override
@@ -119,6 +127,8 @@ public class KhddServiceImpl implements KhddServiceI {
 		OperalogServiceImpl.addOperalog(khdd.getRefuseId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "退回客户订单", operalogDao);
 	}
 
+
+
 	@Override
 	public Khdd getKhdd(Khdd khdd) {
 
@@ -127,31 +137,44 @@ public class KhddServiceImpl implements KhddServiceI {
 
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
+
+        String khUserhql = "from TKhUser t where t.openId = :openId";
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        params.put("openId", khdd.getOpenId());
+        TKhUser tKhUser = khUserDao.get(khUserhql, params);
+
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TKhdd t";
-		Map<String, Object> params = new HashMap<String, Object>();
+		String hql = " from TKhdd t where t.createTime > :createTime and t.khbh = :khbh";
+		params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
-			params.put("createTime", khdd.getCreateTime()); 
+			params.put("createTime", khdd.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-
+		params.put("khbh",tKhUser.getKhbh());
 		if(khdd.getSearch() != null){
-			hql += " and (" + 
+			hql += " and (" +
 					Util.getQueryWhere(khdd.getSearch(), new String[]{"t.khddlsh", "t.bz"}, params)
 					+ ")";
 		}
-		String countHql = " select count(*)" + hql;
-		hql += " order by t.createTime desc";
 		List<TKhdd> l = khddDao.find(hql, params, khdd.getPage(), khdd.getRows());
 		List<Khdd> nl = new ArrayList<Khdd>();
         Khdd c;
+        KhddDet kd;
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
+			Set<TKhddDet> tKhddDets = t.getTKhddDets();
+			Set<KhddDet> khddDets = new HashSet<KhddDet>();
+            for(TKhddDet tkd : tKhddDets){
+                kd = new KhddDet();
+                BeanUtils.copyProperties(tkd, kd);
+                khddDets.add(kd);
+            }
+            c.setKhddDets(khddDets);
 			nl.add(c);
 		}
-		datagrid.setTotal(khddDao.count(countHql, params));
 		datagrid.setRows(nl);
 		return datagrid;
 	}
