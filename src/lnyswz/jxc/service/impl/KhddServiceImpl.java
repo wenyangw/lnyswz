@@ -107,6 +107,8 @@ public class KhddServiceImpl implements KhddServiceI {
 				tKhdd.setCancelTime(new Date());
 				tKhdd.setCancelName(tKhUser.getRealName());
 				tKhdd.setIsCancel("1");
+
+
 				return "";
 			}
 			return "该订单已处理，请勿取消！";

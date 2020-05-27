@@ -5,6 +5,7 @@
 /out/
 *.xls
 /.idea
+*.iml
 
 resources/config.properties
 
