@@ -12,6 +12,7 @@ import lnyswz.jxc.model.*;
 import lnyswz.jxc.service.KhddServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,7 +91,8 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Override
-	public String cancelKhdd(Khdd khdd) {
+	public Khdd cancelKhdd(Khdd khdd) {
+
 
 			String hql = "from TKhUser t where t.openId = :openId";
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -107,9 +109,11 @@ public class KhddServiceImpl implements KhddServiceI {
 				tKhdd.setCancelTime(new Date());
 				tKhdd.setCancelName(tKhUser.getRealName());
 				tKhdd.setIsCancel("1");
-				return "";
+				khddDao.update(tKhdd);
+				BeanUtils.copyProperties(tKhdd, khdd);
+				return khdd;
 			}
-			return "该订单已处理，请勿取消！";
+			return null;
 	}
 
 	@Override
@@ -144,29 +148,35 @@ public class KhddServiceImpl implements KhddServiceI {
         params.put("openId", khdd.getOpenId());
         TKhUser tKhUser = khUserDao.get(khUserhql, params);
 
-		DataGrid datagrid = new DataGrid();
-		String hql = " from TKhdd t where t.createTime > :createTime and t.khbh = :khbh";
+        String sql = "select distinct khddlsh from v_khdd where createTime > ? and khbh = ?  and khddlsh+bz+spmc like ?";
 		params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
-			params.put("createTime", khdd.getCreateTime());
+			params.put("0", khdd.getCreateTime());
 		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			params.put("0", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		params.put("khbh",tKhUser.getKhbh());
+		params.put("1",tKhUser.getKhbh());
 		if(khdd.getSearch() != null){
-			hql += " and (" +
-					Util.getQueryWhere(khdd.getSearch(), new String[]{"t.khddlsh", "t.bz"}, params)
+			sql += " and (" +
+					Util.getQuerySQLWhere(khdd.getSearch(), new String[]{"khddlsh", "bz", "spmc"}, params, 0)
 					+ ")";
 		}
-		List<TKhdd> l = khddDao.find(hql, params, khdd.getPage(), khdd.getRows());
+		List<Object[]> lb  = khddDao.findBySQL(sql, params);
+		String lsh= "(" + StringUtils.join(lb,",") + ")";
+
+		DataGrid datagrid = new DataGrid();
+		String hql = " from TKhdd t where khddlsh in " + lsh;
+		List<TKhdd> l = khddDao.find(hql, khdd.getPage(), khdd.getRows());
 		List<Khdd> nl = new ArrayList<Khdd>();
         Khdd c;
         KhddDet kd;
+		Set<TKhddDet> tKhddDets;
+		Set<KhddDet> khddDets;
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
-			Set<TKhddDet> tKhddDets = t.getTKhddDets();
-			Set<KhddDet> khddDets = new HashSet<KhddDet>();
+			tKhddDets = t.getTKhddDets();
+			khddDets = new HashSet<KhddDet>();
             for(TKhddDet tkd : tKhddDets){
                 kd = new KhddDet();
                 BeanUtils.copyProperties(tkd, kd);
