@@ -43,8 +43,8 @@ public class KhddServiceImpl implements KhddServiceI {
 
 		String hql = "from TKhUser t where t.openId = :openId";
 		Map<String, Object> params = new HashMap<String, Object>();
-        params.put("openId", khdd.getOpenId());
-        TKhUser tKhUser = khUserDao.get(hql, params);
+		params.put("openId", khdd.getOpenId());
+		TKhUser tKhUser = khUserDao.get(hql, params);
 //		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
         tKhdd.setCreateId(tKhUser.getId());
 		tKhdd.setCreateName(tKhUser.getRealName());
@@ -107,6 +107,8 @@ public class KhddServiceImpl implements KhddServiceI {
 				tKhdd.setCancelTime(new Date());
 				tKhdd.setCancelName(tKhUser.getRealName());
 				tKhdd.setIsCancel("1");
+
+
 				return "";
 			}
 			return "该订单已处理，请勿取消！";

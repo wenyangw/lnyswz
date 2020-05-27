@@ -378,6 +378,17 @@ public class UserServiceImpl implements UserServiceI {
 		return null;
 	}
 
+	@Override
+	public User checkYwy(User user) {
+		TUser tYwy = userDao.get(TUser.class, user.getId());
+		if (tYwy != null) {
+			if (tYwy.getTDepartment().getId().equals("01") && "1".equals(tYwy.getIsYwy())) {
+				return user;
+			}
+		}
+		return null;
+	}
+
 	@Autowired
 	public void setUserDao(BaseDaoI<TUser> userDao) {
 		this.userDao = userDao;

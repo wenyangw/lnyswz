@@ -135,6 +135,19 @@ public class UserAction extends BaseAction implements ModelDriven<User>{
 	public void getContacts(){
 		writeJson(userService.getContacts(user));
 	}
+
+	/**
+	 * 微信小程序验证注册的业务员是否有效
+	 * @return
+	 */
+	public void checkYwy() {
+		Json  json = new Json();
+		User ywy = userService.checkYwy(user);
+		if(ywy != null) {
+			json.setSuccess(true);
+		}
+		writeJson(json);
+	}
 	
 	@Override
 	public User getModel() {
