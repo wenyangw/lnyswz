@@ -5,9 +5,8 @@
 /out/
 *.xls
 /.idea
-*.iml
 
-resources/config.properties
+# resources/config.properties
 
 # Compiled class file
 *.class
