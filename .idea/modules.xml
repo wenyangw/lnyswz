@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/lnyswz.iml" filepath="$PROJECT_DIR$/.idea/lnyswz.iml" />
       <module fileurl="file://$PROJECT_DIR$/lnyswz.iml" filepath="$PROJECT_DIR$/lnyswz.iml" />
     </modules>
   </component>
