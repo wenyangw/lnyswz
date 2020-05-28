@@ -90,16 +90,17 @@ public class KhddServiceImpl implements KhddServiceI {
 		return khdd;
 	}
 
+	private TKhUser getKhUserByOpenId (String openId){
+ 		String hql = "from TKhUser t where t.openId = :openId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("openId", openId);
+		TKhUser tKhUser = khUserDao.get(hql, params);
+		return tKhUser;
+	}
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 
-
-			String hql = "from TKhUser t where t.openId = :openId";
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("openId", khdd.getOpenId());
-			TKhUser tKhUser = khUserDao.get(hql, params);
-            TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
-            khdd.setBmbh(tYwy.getTDepartment().getId());
+			TKhUser tKhUser = getKhUserByOpenId(khdd.getOpenId());
 
 			//获取原单据信息
 			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
@@ -111,7 +112,7 @@ public class KhddServiceImpl implements KhddServiceI {
 				tKhdd.setIsCancel("1");
 				khddDao.update(tKhdd);
 				BeanUtils.copyProperties(tKhdd, khdd);
-				OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), khdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+				OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 				return khdd;
 			}
 			return null;
@@ -188,7 +189,7 @@ public class KhddServiceImpl implements KhddServiceI {
 				nl.add(c);
 			}
 			String totalHql = "select count(*) from t_khdd t where khddlsh in " + lsh;
-			datagrid.setTotal(khddDao.count(totalHql));
+			datagrid.setTotal(khddDao.countSQL(totalHql));
 			datagrid.setRows(nl);
 		}
 
