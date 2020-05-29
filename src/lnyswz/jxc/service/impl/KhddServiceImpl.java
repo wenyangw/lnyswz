@@ -12,6 +12,7 @@ import lnyswz.jxc.model.*;
 import lnyswz.jxc.service.KhddServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,28 +91,24 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Override
-	public String cancelKhdd(Khdd khdd) {
+	public Khdd cancelKhdd(Khdd khdd) {
 
-			String hql = "from TKhUser t where t.openId = :openId";
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("openId", khdd.getOpenId());
-			TKhUser tKhUser = khUserDao.get(hql, params);
-            TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
-            khdd.setBmbh(tYwy.getTDepartment().getId());
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
-			//获取原单据信息
-			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-			if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
-				//更新原单据冲减信息
-				tKhdd.setCancelId(tKhUser.getId());
-				tKhdd.setCancelTime(new Date());
-				tKhdd.setCancelName(tKhUser.getRealName());
-				tKhdd.setIsCancel("1");
-
-
-				return "";
-			}
-			return "该订单已处理，请勿取消！";
+		//获取原单据信息
+		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+		if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+			//更新原单据冲减信息
+			tKhdd.setCancelId(tKhUser.getId());
+			tKhdd.setCancelTime(new Date());
+			tKhdd.setCancelName(tKhUser.getRealName());
+			tKhdd.setIsCancel("1");
+			khddDao.update(tKhdd);
+			BeanUtils.copyProperties(tKhdd, khdd);
+			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+			return khdd;
+		}
+		return null;
 	}
 
 	@Override
@@ -140,44 +137,51 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
 
-        String khUserhql = "from TKhUser t where t.openId = :openId";
-        Map<String, Object> params = new HashMap<String, Object>();
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
-        params.put("openId", khdd.getOpenId());
-        TKhUser tKhUser = khUserDao.get(khUserhql, params);
-
-		DataGrid datagrid = new DataGrid();
-		String hql = " from TKhdd t where t.createTime > :createTime and t.khbh = :khbh";
-		params = new HashMap<String, Object>();
+		String sql = "select distinct khddlsh from v_khdd where createTime > ? and (khbh = ? or createId = ?)";
+		Map<String, Object> params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
-			params.put("createTime", khdd.getCreateTime());
+			params.put("0", khdd.getCreateTime());
 		}else{
-			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
+			params.put("0", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-		params.put("khbh",tKhUser.getKhbh());
+		params.put("1",tKhUser.getKhbh());
+		params.put("2",tKhUser.getId());
 		if(khdd.getSearch() != null){
-			hql += " and (" +
-					Util.getQueryWhere(khdd.getSearch(), new String[]{"t.khddlsh", "t.bz"}, params)
+			sql += " and (" +
+					Util.getQuerySQLWhere(khdd.getSearch(), new String[]{"khddlsh", "bz", "spmc"}, params, 0)
 					+ ")";
 		}
-		List<TKhdd> l = khddDao.find(hql, params, khdd.getPage(), khdd.getRows());
-		List<Khdd> nl = new ArrayList<Khdd>();
-        Khdd c;
-        KhddDet kd;
-		for(TKhdd t : l){
-			c = new Khdd();
-			BeanUtils.copyProperties(t, c);
-			Set<TKhddDet> tKhddDets = t.getTKhddDets();
-			Set<KhddDet> khddDets = new HashSet<KhddDet>();
-            for(TKhddDet tkd : tKhddDets){
-                kd = new KhddDet();
-                BeanUtils.copyProperties(tkd, kd);
-                khddDets.add(kd);
-            }
-            c.setKhddDets(khddDets);
-			nl.add(c);
+		List<Object[]> lb  = khddDao.findBySQL(sql, params);
+		DataGrid datagrid = new DataGrid();
+		if(lb.size() > 0 ){
+			String lsh= "(" + StringUtils.join(lb,",") + ")";
+			String hql = " from TKhdd t where khddlsh in " + lsh;
+			List<TKhdd> l = khddDao.find(hql, khdd.getPage(), khdd.getRows());
+			List<Khdd> nl = new ArrayList<Khdd>();
+			Khdd c;
+			KhddDet kd;
+			Set<TKhddDet> tKhddDets;
+			Set<KhddDet> khddDets;
+			for(TKhdd t : l){
+				c = new Khdd();
+				BeanUtils.copyProperties(t, c);
+				tKhddDets = t.getTKhddDets();
+				khddDets = new HashSet<KhddDet>();
+				for(TKhddDet tkd : tKhddDets){
+					kd = new KhddDet();
+					BeanUtils.copyProperties(tkd, kd);
+					khddDets.add(kd);
+				}
+				c.setKhddDets(khddDets);
+				nl.add(c);
+			}
+			String totalHql = "select count(*) from t_khdd t where khddlsh in " + lsh;
+			datagrid.setTotal(khddDao.countSQL(totalHql));
+			datagrid.setRows(nl);
 		}
-		datagrid.setRows(nl);
+
 		return datagrid;
 	}
 	

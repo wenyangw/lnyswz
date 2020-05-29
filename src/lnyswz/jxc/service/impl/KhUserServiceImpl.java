@@ -77,6 +77,14 @@ public class KhUserServiceImpl implements KhUserServiceI {
 		}
 		return k;
 	}
+
+	public static TKhUser getKhUserByOpenId (String openId, BaseDaoI<TKhUser> uDao){
+		String hql = "from TKhUser t where t.openId = :openId";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("openId", openId);
+		TKhUser tKhUser = uDao.get(hql, params);
+		return tKhUser;
+	}
 	
 	@Autowired
 	public void setKhUserDao(BaseDaoI<TKhUser> khUserDao) {
