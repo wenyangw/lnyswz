@@ -2,6 +2,7 @@ package lnyswz.jxc.action;
 
 import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Khdd;
 import lnyswz.jxc.bean.User;
@@ -51,7 +52,6 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	 */
 	public void cancelKhdd(){
 		Json j = new Json();
-		User user = (User) session.get("user");
 		try {
 			Khdd k = khddService.cancelKhdd(khdd);
 			if(k != null){
@@ -93,14 +93,12 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 
 	public void getKhdds(){
 		Json j = new Json();
-		User u = (User)session.get("user");
-		if (u != null) {
-			khdd.setCreateId(u.getId());
-			if ("1".equals(u.getIsYwy())) {
-				khdd.setYwyId(u.getId());
-			}
+		DataGrid d = khddService.getKhdds(khdd);
+		if(d != null){
+			j.setObj(d);
+			j.setSuccess(true);
 		}
-		j.setObj(khddService.getKhdds(khdd));
+
 		writeJson(j);
 	}
 
