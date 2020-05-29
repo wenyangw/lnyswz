@@ -90,19 +90,13 @@ public class KhddServiceImpl implements KhddServiceI {
 		return khdd;
 	}
 
-	private TKhUser getKhUserByOpenId (String openId){
- 		String hql = "from TKhUser t where t.openId = :openId";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("openId", openId);
-		TKhUser tKhUser = khUserDao.get(hql, params);
-		return tKhUser;
-	}
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 
-			TKhUser tKhUser = getKhUserByOpenId(khdd.getOpenId());
 
-			//获取原单据信息
+//			TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId());
+		TKhUser tKhUser = new TKhUser();
+		//获取原单据信息
 			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
 			if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
 				//更新原单据冲减信息
