@@ -148,14 +148,13 @@ public class KhddServiceImpl implements KhddServiceI {
 		}
 		params.put("1",tKhUser.getKhbh());
 		params.put("2",tKhUser.getId());
-		if(khdd.getSearch() != null){
-			sql += " and (" +
+		if(khdd.getSearch() != null){			sql += " and (" +
 					Util.getQuerySQLWhere(khdd.getSearch(), new String[]{"khddlsh", "bz", "spmc"}, params, 0)
 					+ ")";
 		}
 		List<Object[]> lb  = khddDao.findBySQL(sql, params);
-		DataGrid datagrid = new DataGrid();
-		if(lb.size() > 0 ){
+		if(lb != null){
+			DataGrid datagrid = new DataGrid();
 			String lsh= "(" + StringUtils.join(lb,",") + ")";
 			String hql = " from TKhdd t where khddlsh in " + lsh;
 			List<TKhdd> l = khddDao.find(hql, khdd.getPage(), khdd.getRows());
@@ -180,9 +179,10 @@ public class KhddServiceImpl implements KhddServiceI {
 			String totalHql = "select count(*) from t_khdd t where khddlsh in " + lsh;
 			datagrid.setTotal(khddDao.countSQL(totalHql));
 			datagrid.setRows(nl);
+			return datagrid;
 		}
 
-		return datagrid;
+		return null;
 	}
 	
 	@Override
