@@ -42,10 +42,8 @@ public class KhddServiceImpl implements KhddServiceI {
 		BeanUtils.copyProperties(khdd, tKhdd);
 		tKhdd.setCreateTime(new Date());
 
-		String hql = "from TKhUser t where t.openId = :openId";
-		Map<String, Object> params = new HashMap<String, Object>();
-        params.put("openId", khdd.getOpenId());
-        TKhUser tKhUser = khUserDao.get(hql, params);
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
+
 //		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
         tKhdd.setCreateId(tKhUser.getId());
 		tKhdd.setCreateName(tKhUser.getRealName());
@@ -93,23 +91,22 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
-//			TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId());
-		TKhUser tKhUser = new TKhUser();
 		//获取原单据信息
-			TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-			if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
-				//更新原单据冲减信息
-				tKhdd.setCancelId(tKhUser.getId());
-				tKhdd.setCancelTime(new Date());
-				tKhdd.setCancelName(tKhUser.getRealName());
-				tKhdd.setIsCancel("1");
-				khddDao.update(tKhdd);
-				BeanUtils.copyProperties(tKhdd, khdd);
-				OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
-				return khdd;
-			}
-			return null;
+		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
+		if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+			//更新原单据冲减信息
+			tKhdd.setCancelId(tKhUser.getId());
+			tKhdd.setCancelTime(new Date());
+			tKhdd.setCancelName(tKhUser.getRealName());
+			tKhdd.setIsCancel("1");
+			khddDao.update(tKhdd);
+			BeanUtils.copyProperties(tKhdd, khdd);
+			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
+			return khdd;
+		}
+		return null;
 	}
 
 	@Override
@@ -138,14 +135,10 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
 
-        Map<String, Object> params = new HashMap<String, Object>();
-
-		String khUserhql = "from TKhUser t where t.openId = :openId";
-        params.put("openId", khdd.getOpenId());
-        TKhUser tKhUser = khUserDao.get(khUserhql, params);
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
         String sql = "select distinct khddlsh from v_khdd where createTime > ? and (khbh = ? or createId = ?)";
-		params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		if(khdd.getCreateTime() != null){
 			params.put("0", khdd.getCreateTime());
 		}else{
