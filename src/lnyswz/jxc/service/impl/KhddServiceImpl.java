@@ -90,7 +90,6 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
-		System.out.println("---------"+tKhUser.getId()+"---------------------");
 
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
