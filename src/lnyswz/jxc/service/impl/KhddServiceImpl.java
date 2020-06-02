@@ -148,7 +148,8 @@ public class KhddServiceImpl implements KhddServiceI {
 		}
 		params.put("1",tKhUser.getKhbh());
 		params.put("2",tKhUser.getId());
-		if(khdd.getSearch() != null){			sql += " and (" +
+		if(khdd.getSearch() != null){
+			sql += " and (" +
 					Util.getQuerySQLWhere(khdd.getSearch(), new String[]{"khddlsh", "bz", "spmc"}, params, 0)
 					+ ")";
 		}
@@ -181,7 +182,6 @@ public class KhddServiceImpl implements KhddServiceI {
 			datagrid.setRows(nl);
 			return datagrid;
 		}
-
 		return null;
 	}
 	
