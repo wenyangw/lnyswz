@@ -56,7 +56,7 @@ public class KhddServiceImpl implements KhddServiceI {
 
 		TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
 		tKhdd.setYwyId(tYwy.getId());
-		tKhdd.setYwymc(tYwy.getRealName());
+        tKhdd.setYwymc(tYwy.getRealName());
 		tKhdd.setBmbh(tYwy.getTDepartment().getId());
 		tKhdd.setBmmc(tYwy.getTDepartment().getDepName());
 		
@@ -90,6 +90,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
+		System.out.println("---------"+tKhUser.getId()+"---------------------");
 
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
