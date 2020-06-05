@@ -159,6 +159,7 @@ public class KhddServiceImpl implements KhddServiceI {
 			KhddDet kd;
 			Set<TKhddDet> tKhddDets;
 			Set<KhddDet> khddDets;
+			/****商品排序未做****/
 			for(TKhdd t : l){
 				c = new Khdd();
 				BeanUtils.copyProperties(t, c);
