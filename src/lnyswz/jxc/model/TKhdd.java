@@ -26,6 +26,10 @@ public class TKhdd {
     private Integer cancelId;
     private Date cancelTime;
     private String cancelName;
+    private String isHandle;
+    private Integer handleId;
+    private Date handleTime;
+    private String handleName;
     private String isRefuse;
     private Integer refuseId;
     private Date refuseTime;
@@ -40,7 +44,7 @@ public class TKhdd {
 
     public TKhdd(String khddlsh, Date createTime, int createId, String createName, String bmbh, String bmmc,
                  String khbh, String khmc, int ywyId, String ywymc, String bz, String isCancel, Integer cancelId, Date cancelTime, String cancelName,
-                 String isRefuse, Integer refuseId, Date refuseTime, String refuseName, String xsthlsh, Date xsthTime,
+                 String isHandle, Integer handleId, Date handleTime, String handleName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName, String xsthlsh, Date xsthTime,
                  Set<TKhddDet> TKhddDets) {
         this.khddlsh = khddlsh;
         this.createTime = createTime;
@@ -57,6 +61,10 @@ public class TKhdd {
         this.cancelId = cancelId;
         this.cancelTime = cancelTime;
         this.cancelName = cancelName;
+        this.isHandle = isHandle;
+        this.handleId = handleId;
+        this.handleTime = handleTime;
+        this.handleName = handleName;
         this.isRefuse = isRefuse;
         this.refuseId = refuseId;
         this.refuseTime = refuseTime;
@@ -204,6 +212,43 @@ public class TKhdd {
 
     public void setCancelName(String cancelName) {
         this.cancelName = cancelName;
+    }
+
+    @Column(name = "isHandle", nullable = false, length = 1)
+    public String getIsHandle() {
+        return this.isHandle;
+    }
+
+    public void setIsHandle(String isHandle) {
+        this.isHandle = isHandle;
+    }
+
+    @Column(name = "handleId")
+    public Integer getHandleId() {
+        return this.handleId;
+    }
+
+    public void setHandleId(Integer handleId) {
+        this.handleId = handleId;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "handleTime", length = 23)
+    public Date getHandleTime() {
+        return this.handleTime;
+    }
+
+    public void setHandleTime(Date handleTime) {
+        this.handleTime = handleTime;
+    }
+
+    @Column(name = "handleName", length = 20)
+    public String getHandleName() {
+        return handleName;
+    }
+
+    public void setHandleName(String handleName) {
+        this.handleName = handleName;
     }
 
     @Column(name = "isRefuse", nullable = false, length = 1)
