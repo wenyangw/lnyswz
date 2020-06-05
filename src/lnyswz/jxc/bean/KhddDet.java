@@ -13,6 +13,13 @@ public class KhddDet {
     private String zjldwId;
     private String zjldwmc;
     private BigDecimal zdwsl;
+    private String cjldwId;
+    private String cjldwmc;
+    private BigDecimal zhxs;
+    private BigDecimal kcsl;
+    private BigDecimal dwcb;
+    private BigDecimal xsdj;
+    private BigDecimal specXsdj;
 
     public int getId() {
         return id;
@@ -92,5 +99,61 @@ public class KhddDet {
 
     public void setZdwsl(BigDecimal zdwsl) {
         this.zdwsl = zdwsl;
+    }
+
+    public String getCjldwId() {
+        return cjldwId;
+    }
+
+    public void setCjldwId(String cjldwId) {
+        this.cjldwId = cjldwId;
+    }
+
+    public String getCjldwmc() {
+        return cjldwmc;
+    }
+
+    public void setCjldwmc(String cjldwmc) {
+        this.cjldwmc = cjldwmc;
+    }
+
+    public BigDecimal getZhxs() {
+        return zhxs;
+    }
+
+    public void setZhxs(BigDecimal zhxs) {
+        this.zhxs = zhxs;
+    }
+
+    public BigDecimal getKcsl() {
+        return kcsl;
+    }
+
+    public void setKcsl(BigDecimal kcsl) {
+        this.kcsl = kcsl;
+    }
+
+    public BigDecimal getDwcb() {
+        return dwcb;
+    }
+
+    public void setDwcb(BigDecimal dwcb) {
+        this.dwcb = dwcb;
+    }
+
+    public BigDecimal getXsdj() {
+        return xsdj;
+    }
+
+    public void setXsdj(BigDecimal xsdj) {
+        this.xsdj = xsdj;
+    }
+
+    public BigDecimal getSpecXsdj() {
+        return specXsdj;
+    }
+
+    public void setSpecXsdj(BigDecimal specXsdj) {
+        this.specXsdj = specXsdj;
     }
 }

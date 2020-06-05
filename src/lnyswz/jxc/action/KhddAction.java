@@ -81,6 +81,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			j.setMsg("退回客户订单成功！");
 		} catch (Exception e) {
 			j.setMsg("退回客户订单失败！");
+
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -95,15 +96,28 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	public void getKhdds(){
 		Json j = new Json();
 		DataGrid d = khddService.getKhdds(khdd);
-		if(d != null){
+
+		if (d != null){
 			j.setObj(d);
 			j.setSuccess(true);
 		}
 		writeJson(j);
 	}
 
+    public void getKhddsByYwy() {
+	    Json j = new Json();
+	    DataGrid d = khddService.getKhddsByYwy(khdd);
+	    if (d != null) {
+            j.setObj(d);
+            j.setSuccess(true);
+        }
+	    writeJson(j);
+    }
+
 	public void getKhddDet(){
-		writeJson(khddService.getKhddDet(khdd));
+	    Json j = new Json();
+	    j.setObj(khddService.getKhddDet(khdd));
+		writeJson(j);
 	}
 
 	@Override

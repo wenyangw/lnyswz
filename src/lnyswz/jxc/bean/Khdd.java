@@ -1,6 +1,7 @@
 package lnyswz.jxc.bean;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class Khdd {
@@ -19,6 +20,10 @@ public class Khdd {
     private Integer cancelId;
     private Date cancelTime;
     private String cancelName;
+    private String isHandle;
+    private Integer handleId;
+    private Date handleTime;
+    private String handleName;
     private String isRefuse;
     private Integer refuseId;
     private Date refuseTime;
@@ -26,12 +31,14 @@ public class Khdd {
     private String xsthlsh;
     private Date xsthTime;
 
-    private Set<KhddDet> khddDets;
+    private List<KhddDet> khddDets;
 
     private String openId;
     private String lxbh;
     private String menuId;
+    private String where;
     private String search;
+    private String status;
     private String datagrid;
     private int page;
     private int rows;
@@ -156,6 +163,38 @@ public class Khdd {
         this.cancelName = cancelName;
     }
 
+    public String getIsHandle() {
+        return isHandle;
+    }
+
+    public void setIsHandle(String isHandle) {
+        this.isHandle = isHandle;
+    }
+
+    public Integer getHandleId() {
+        return handleId;
+    }
+
+    public void setHandleId(Integer handleId) {
+        this.handleId = handleId;
+    }
+
+    public Date getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(Date handleTime) {
+        this.handleTime = handleTime;
+    }
+
+    public String getHandleName() {
+        return handleName;
+    }
+
+    public void setHandleName(String handleName) {
+        this.handleName = handleName;
+    }
+
     public String getIsRefuse() {
         return isRefuse;
     }
@@ -228,12 +267,28 @@ public class Khdd {
         this.menuId = menuId;
     }
 
+    public String getWhere() {
+        return where;
+    }
+
+    public void setWhere(String where) {
+        this.where = where;
+    }
+
     public String getSearch() {
         return search;
     }
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDatagrid() {
@@ -260,11 +315,11 @@ public class Khdd {
         this.rows = rows;
     }
 
-    public Set<KhddDet> getKhddDets() {
+    public List<KhddDet> getKhddDets() {
         return khddDets;
     }
 
-    public void setKhddDets(Set<KhddDet> khddDets) {
+    public void setKhddDets(List<KhddDet> khddDets) {
         this.khddDets = khddDets;
     }
 }

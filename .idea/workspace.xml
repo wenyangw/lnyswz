@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="lnyswz:Web exploded" />
+      <artifact name="lnyswz:war exploded" />
     </artifacts-to-build>
+  </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" line="216" />
   </component>
   <component name="BranchesTreeState">
     <expand>
@@ -25,8 +28,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1f2ac69-d8d8-46c1-9f6b-9317c417a03f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/WebRoot/WEB-INF/lib/ireport-font.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/WebRoot/WEB-INF/lib/xmlbeans-3.1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/lnyswz_Web_exploded.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/39167e44-5031-42c6-bade-ce0b46754405/_metadata_/metadata_i" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/kindeditor-4.1.11/jsp/lib/commons-fileupload-1.2.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/kindeditor-4.1.11/jsp/lib/commons-io-1.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/kindeditor-4.1.11/jsp/lib/json_simple-1.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/ueditor-1.4.3.3/jsp/lib/commons-codec-1.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/ueditor-1.4.3.3/jsp/lib/commons-fileupload-1.3.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/ueditor-1.4.3.3/jsp/lib/commons-io-2.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/ueditor-1.4.3.3/jsp/lib/json.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebRoot/plugins/ueditor-1.4.3.3/jsp/lib/ueditor-1.1.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lnyswz.iml" beforeDir="false" afterPath="$PROJECT_DIR$/lnyswz.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/common/bean/Json.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/common/bean/Json.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/action/LwtAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/action/LwtAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/action/UserAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/action/UserAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/bean/Khdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/bean/Khdd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/bean/KhddDet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/bean/KhddDet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/model/TKhdd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/model/TKhdd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/KhddServiceI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/KhddServiceI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/LwtServiceI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/LwtServiceI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/UserServiceI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/UserServiceI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/UserServiceImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/WebRoot/WEB-INF/classes/" />
@@ -42,10 +78,17 @@
       <file leaf-file-name="KhddServiceImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="134" column="48" lean-forward="true" selection-start-line="134" selection-start-column="48" selection-end-line="134" selection-end-column="48" />
+            <state relative-caret-position="483">
+              <caret line="240" column="22" lean-forward="true" selection-start-line="240" selection-start-column="22" selection-end-line="240" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#2447#2457#0" expanded="true" />
+                <element signature="e#4805#4821#0" expanded="true" />
+                <element signature="e#6757#6773#0" expanded="true" />
+                <element signature="e#7524#7530#0" expanded="true" />
+                <element signature="e#8517#8533#0" expanded="true" />
+                <element signature="e#8814#8823#0" expanded="true" />
+                <element signature="e#9351#9367#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,8 +97,25 @@
       <file leaf-file-name="LwtServiceImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="33" column="47" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="47" />
+            <state relative-caret-position="456">
+              <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KhUserServiceImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1102">
+              <caret line="79" selection-start-line="79" selection-end-line="79" />
+              <folding>
+                <element signature="e#2713#2714#0" expanded="true" />
+                <element signature="e#2746#2747#0" expanded="true" />
+                <element signature="e#2808#2809#0" expanded="true" />
+                <element signature="e#2835#2836#0" expanded="true" />
+                <element signature="e#2901#2902#0" expanded="true" />
+                <element signature="e#2928#2929#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,10 +123,15 @@
       <file leaf-file-name="KhddAction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-21">
-              <caret line="61" column="31" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
+            <state relative-caret-position="1062">
+              <caret line="114" column="5" selection-start-line="114" selection-start-column="5" selection-end-line="114" selection-end-column="5" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lnyswz.iml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lnyswz.iml">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="DataGrid.java" pinned="false" current-in-tab="false">
@@ -98,8 +163,8 @@
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/KhddServiceI.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/resources/config.properties" />
-        <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java" />
+        <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" />
       </list>
     </option>
@@ -123,12 +188,15 @@
     <option name="height" value="877" />
   </component>
   <component name="ProjectId" id="1bCbPqbXQmClrd1XukP4pT4J8P9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -136,12 +204,45 @@
               <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
               <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="jxc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="jxc" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lnyswz" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lnyswz" type="462c0819:PsiDirectoryNode" />
+              <item name="jxc" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+              <item name="impl" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -154,6 +255,7 @@
     <property name="ToolWindowEvent Log.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="jdk.selected.JAVA_MODULE" value="1.6" />
     <property name="last_opened_file_path" value="C:/utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -161,7 +263,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -178,153 +280,35 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Tomcat Server.Unnamed">
-    <configuration name="Tomcat 8.5.38" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 6.0.37" ALTERNATIVE_JRE_ENABLED="false" ALTERNATIVE_JRE_PATH="1.8" nameIsGenerated="true">
-      <option name="UPDATING_POLICY" value="restart-server" />
-      <deployment>
-        <artifact name="lnyswz:Web exploded">
-          <settings>
-            <option name="CONTEXT_PATH" value="/lnyswz_Web_exploded" />
-          </settings>
-        </artifact>
-      </deployment>
+  <component name="RunManager">
+    <configuration default="true" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Remote" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="LOCAL" value="false" />
+      <deployment />
       <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="Unnamed_lnyswz_2" />
+        <data>
+          <option name="targets">
+            <list>
+              <WatchedTargetModelImpl>
+                <option name="name" value="CONTEXT_XML" />
+                <name>CONTEXT_XML</name>
+              </WatchedTargetModelImpl>
+              <StagingTargetModelImpl>
+                <option name="name" value="STAGING" />
+                <name>STAGING</name>
+              </StagingTargetModelImpl>
+            </list>
+          </option>
+          <option name="transportHostId" />
+          <host-id />
+        </data>
       </server-settings>
       <predefined_log_file id="Tomcat" enabled="true" />
-      <predefined_log_file id="Tomcat Catalina" enabled="true" />
-      <predefined_log_file id="Tomcat Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
+      <predefined_log_file id="TOMCAT_LOCALHOST_LOG_ID" enabled="true" />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="50284" />
+        <option name="DEBUG_PORT" value="52591" />
+        <option name="LOCAL" value="false" />
       </RunnerSettings>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <method>
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="lnyswz:Web exploded" />
-        </option>
-      </method>
     </configuration>
-    <configuration name="Unnamed" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 6.0.37" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="1.6">
-      <option name="UPDATING_POLICY" value="restart-server" />
-      <deployment>
-        <artifact name="lnyswz:Web exploded">
-          <settings>
-            <option name="CONTEXT_PATH" value="/" />
-          </settings>
-        </artifact>
-      </deployment>
-      <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="Unnamed_lnyswz" />
-      </server-settings>
-      <predefined_log_file id="Tomcat" enabled="true" />
-      <predefined_log_file id="Tomcat Catalina" enabled="true" />
-      <predefined_log_file id="Tomcat Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Host Manager" enabled="false" />
-      <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="54116" />
-      </RunnerSettings>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
-        <option name="USE_ENV_VARIABLES" value="true" />
-        <STARTUP>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </STARTUP>
-        <SHUTDOWN>
-          <option name="USE_DEFAULT" value="true" />
-          <option name="SCRIPT" value="" />
-          <option name="VM_PARAMETERS" value="" />
-          <option name="PROGRAM_PARAMETERS" value="" />
-        </SHUTDOWN>
-      </ConfigurationWrapper>
-      <method>
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="lnyswz:Web exploded" />
-        </option>
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="Tomcat Server.Unnamed" />
-      <item itemvalue="Tomcat Server.Tomcat 8.5.38" />
-    </list>
   </component>
   <component name="StructuralSearchPlugin">
     <searchConfiguration name="user defined" created="1590564862155" text="findBySQL" recursive="true" caseInsensitive="true" type="JAVA" history="1" />
@@ -387,11 +371,14 @@
       <workItem from="1591002141997" duration="206000" />
       <workItem from="1591075341701" duration="2682000" />
       <workItem from="1591081304164" duration="2631000" />
+      <workItem from="1591323357457" duration="490000" />
+      <workItem from="1591323913737" duration="89000" />
+      <workItem from="1591324052384" duration="7141000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94459000" />
+    <option name="totallyTimeSpent" value="102179000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="886" extended-state="6" />
@@ -410,26 +397,26 @@
       <window_info id="UI Designer" order="4" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4152431" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49967256" weight="0.325887" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49967256" weight="0.32467532" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info id="Image Layers" order="3" />
       <window_info anchor="bottom" id="Java Enterprise" order="11" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4990177" visible="true" weight="0.0" />
       <window_info anchor="bottom" id="Version Control" order="13" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4990177" weight="0.23116884" />
       <window_info anchor="bottom" id="Spring" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info id="Persistence" order="7" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.21625" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21625" />
       <window_info id="Web" order="6" side_tool="true" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info id="Persistence" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.071428575" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.071428575" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -584,20 +571,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2565">
-          <caret line="135" lean-forward="true" selection-start-line="135" selection-end-line="135" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/HwServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1539">
@@ -843,17 +816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="553">
-          <caret line="100" column="14" lean-forward="true" selection-start-line="100" selection-start-column="14" selection-end-line="100" selection-end-column="14" />
-          <folding>
-            <element signature="e#2128#2144#0" expanded="true" />
-            <element signature="e#2558#2574#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-aop-3.2.3.RELEASE.jar!/org/springframework/aop/interceptor/ExposeInvocationInterceptor.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="139">
@@ -924,26 +886,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/lnyswz/jxc/model/TButton.hbm.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="64" selection-start-line="11" selection-start-column="64" selection-end-line="12" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lnyswz.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-21">
-          <caret line="61" column="31" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
+        <state relative-caret-position="1062">
+          <caret line="114" column="5" selection-start-line="114" selection-start-column="5" selection-end-line="114" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="33" column="47" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="47" />
+        <state relative-caret-position="456">
+          <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1102">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
+          <folding>
+            <element signature="e#2713#2714#0" expanded="true" />
+            <element signature="e#2746#2747#0" expanded="true" />
+            <element signature="e#2808#2809#0" expanded="true" />
+            <element signature="e#2835#2836#0" expanded="true" />
+            <element signature="e#2901#2902#0" expanded="true" />
+            <element signature="e#2928#2929#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="134" column="48" lean-forward="true" selection-start-line="134" selection-start-column="48" selection-end-line="134" selection-end-column="48" />
+        <state relative-caret-position="483">
+          <caret line="240" column="22" lean-forward="true" selection-start-line="240" selection-start-column="22" selection-end-line="240" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2447#2457#0" expanded="true" />
+            <element signature="e#4805#4821#0" expanded="true" />
+            <element signature="e#6757#6773#0" expanded="true" />
+            <element signature="e#7524#7530#0" expanded="true" />
+            <element signature="e#8517#8533#0" expanded="true" />
+            <element signature="e#8814#8823#0" expanded="true" />
+            <element signature="e#9351#9367#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -954,7 +948,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>lnyswz:Web exploded</last-edited>
+          <last-edited>lnyswz:war exploded</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1007,7 +1001,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -1015,6 +1008,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>lib</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
