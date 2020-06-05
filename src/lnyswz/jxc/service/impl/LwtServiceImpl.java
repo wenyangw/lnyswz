@@ -322,6 +322,43 @@ public class LwtServiceImpl implements LwtServiceI {
 		dg.setRows(nl);
 		return dg;
 	}
+
+	@Override
+	public Lwt getKhDet(Lwt lwt) {
+		StringBuilder sql = new StringBuilder("select id, bmbh, ywyId, khbh, khmc, lxr, khlxId, sxje, sxzq, lsje, isUp, postponeDay, isOther, limitPer, limitJe, isLocked, isDef, info ");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", lwt.getBmbh());
+		params.put("1", lwt.getYwyId());
+		sql.append(" from dbo.ft_kh_det_ywy(?, ?)");
+
+		Object[] o = lwtDao.getMBySQL(sql.toString(), params);
+
+		Lwt l = null;
+
+		if (o != null) {
+			l = new Lwt();
+			l.setId(o[0].toString());
+			l.setBmbh(o[1].toString());
+			l.setYwyId((Integer)o[2]);
+			l.setKhbh(o[3].toString());
+			l.setKhmc(o[4].toString());
+			l.setLxr(o[5].toString());
+			l.setKhlxId(o[6].toString());
+			l.setSxje(new BigDecimal(o[7].toString()));
+			l.setSxzq((Integer)o[8]);
+			l.setLsje(new BigDecimal(o[9].toString()));
+			l.setIsUp(o[10].toString());
+			l.setPostponeDay((Integer)o[11]);
+			l.setIsOther(o[12].toString());
+			l.setLimitPer(new BigDecimal(o[13].toString()));
+			l.setLimitJe(new BigDecimal(o[14].toString()));
+			l.setIsLocked(o[15].toString());
+			l.setIsDef(o[16].toString());
+			l.setInfo(o[17].toString());
+
+		}
+		return l;
+	}
 	
 	@Override
 	public Long countYwyByYwy(Lwt lwt) {
