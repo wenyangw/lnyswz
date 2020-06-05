@@ -95,7 +95,7 @@ public class KhddServiceImpl implements KhddServiceI {
 
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-		if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+		if(tKhdd.getIsCancel().equals("0") && tKhdd.getIsCancel().equals("0") && (tKhdd.getXsthlsh() == null) && tKhdd.getIsHandle().equals("0")) {
 			//更新原单据冲减信息
 			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
@@ -103,6 +103,7 @@ public class KhddServiceImpl implements KhddServiceI {
 			tKhdd.setIsCancel("1");
 			khddDao.update(tKhdd);
 			BeanUtils.copyProperties(tKhdd, khdd);
+			khdd.setStatus(getStatus(tKhdd));
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 			return khdd;
 		}
@@ -143,46 +144,6 @@ public class KhddServiceImpl implements KhddServiceI {
 		}else{
 			params.put("0", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}
-//		params.put("1",tKhUser.getKhbh());
-//		params.put("2",tKhUser.getId());
-//		if(khdd.getSearch() != null){
-//			sql += " and (" +
-//					Util.getQuerySQLWhere(khdd.getSearch(), new String[]{"khddlsh", "bz", "spmc"}, params, 0)
-//					+ ")";
-//		}
-//		List<Object[]> lb  = khddDao.findBySQL(sql, params);
-//		if(lb != null ){
-//			DataGrid datagrid = new DataGrid();
-//			String lsh= "(" + StringUtils.join(lb,",") + ")";
-//			String hql = " from TKhdd t where khddlsh in " + lsh;
-//			List<TKhdd> l = khddDao.find(hql, khdd.getPage(), khdd.getRows());
-//			List<Khdd> nl = new ArrayList<Khdd>();
-//			Khdd c;
-//			KhddDet kd;
-//			Set<TKhddDet> tKhddDets;
-//			Set<KhddDet> khddDets;
-//			/****商品排序未做****/
-//			for(TKhdd t : l){
-//				c = new Khdd();
-//				BeanUtils.copyProperties(t, c);
-//				tKhddDets = t.getTKhddDets();
-//				khddDets = new HashSet<KhddDet>();
-//				for(TKhddDet tkd : tKhddDets){
-//					kd = new KhddDet();
-//					BeanUtils.copyProperties(tkd, kd);
-//					khddDets.add(kd);
-//				}
-//				c.setKhddDets(khddDets);
-//				nl.add(c);
-//			}
-//			String totalHql = "select count(*) from t_khdd t where khddlsh in " + lsh;
-//			datagrid.setTotal(khddDao.countSQL(totalHql));
-//			datagrid.setRows(nl);
-//			return datagrid;
-//		}
-//		return null;
-//=======
-//		}
 		params.put("1",tKhUser.getKhbh());
 		params.put("2",tKhUser.getId());
 		if(khdd.getSearch() != null){
@@ -227,17 +188,7 @@ public class KhddServiceImpl implements KhddServiceI {
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
-			if (t.getIsCancel().equals("1")) {
-                c.setStatus("已取消");
-            } else if (t.getIsRefuse().equals("1")) {
-                c.setStatus("已退回");
-            } else if (t.getXsthlsh() != null) {
-                c.setStatus("已发货");
-            } else if (t.getIsHandle().equals("1")) {
-                c.setStatus("已处理");
-            } else {
-                c.setStatus("等待处理");
-            }
+			c.setStatus(getStatus(t));
 			if (showDets == true) {
                 c.setKhddDets(getKhddDetBeans(t.getTKhddDets(), false));
             }
@@ -292,6 +243,19 @@ public class KhddServiceImpl implements KhddServiceI {
         return nl;
     }
 
+    public String getStatus(TKhdd t){
+		if (t.getIsCancel().equals("1")) {
+			return "已取消";
+		} else if (t.getIsRefuse().equals("1")) {
+			return "已退回";
+		} else if (t.getXsthlsh() != null) {
+			return "已发货";
+		} else if (t.getIsHandle().equals("1")) {
+			return "已处理";
+		} else {
+			return "等待处理";
+		}
+	}
 	@Autowired
 	public void setKhddDao(BaseDaoI<TKhdd> khddDao) {
 		this.khddDao = khddDao;
