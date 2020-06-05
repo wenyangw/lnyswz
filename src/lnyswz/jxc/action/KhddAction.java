@@ -56,6 +56,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			Khdd k = khddService.cancelKhdd(khdd);
 			if(k != null){
 				j.setObj(k);
+				j.setMsg("取消客户订单！");
 			}
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");

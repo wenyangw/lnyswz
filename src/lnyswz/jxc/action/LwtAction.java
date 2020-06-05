@@ -132,6 +132,7 @@ public class LwtAction extends BaseAction implements
 	public void getKhDet() {
 		Json j = new Json();
 		Lwt l = lwtService.getKhDet(lwt);
+		j.setSuccess(true);
 		j.setObj(l);
 		writeJson(j);
 	}
