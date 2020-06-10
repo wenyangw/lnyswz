@@ -39,9 +39,16 @@
     </properties>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
+<<<<<<< Updated upstream
     <type id="Spring" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+=======
+    <type id="hibernate" />
+    <type id="Python" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+>>>>>>> Stashed changes
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

@@ -7,25 +7,27 @@ import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.User;
 
 public interface UserServiceI {
-	public User login(User user);
+	User login(User user);
 
-	public User add(User user);
+	User add(User user);
 
-	public void edit(User user);
+	void edit(User user);
 	
-	public void delete(User user);
+	void delete(User user);
 	
-	public DataGrid datagrid(User user);
+	DataGrid datagrid(User user);
 	
-	public List<User> listYwys(String depId);
+	List<User> listYwys(String depId);
 	
-	public List<User> listYwyByYwy(int i);
+	List<User> listYwyByYwy(int i);
 
-	public void editPassword(User user);
+	void editPassword(User user);
 
-	public boolean checkPassword(User user);
+	boolean checkPassword(User user);
 
-	public List<User> listBgys(User user);
+	List<User> listBgys(User user);
 
-	public List<Department> getContacts(User user);
+	List<Department> getContacts(User user);
+
+	User checkYwy(User user);
 }

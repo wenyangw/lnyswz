@@ -2,6 +2,7 @@ package lnyswz.jxc.action;
 
 import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
+import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Khdd;
 import lnyswz.jxc.bean.User;
@@ -51,11 +52,11 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	 */
 	public void cancelKhdd(){
 		Json j = new Json();
-		User user = (User) session.get("user");
 		try {
 			Khdd k = khddService.cancelKhdd(khdd);
 			if(k != null){
                 j.setObj(k);
+                j.setSuccess(true);
 			}
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");
@@ -80,6 +81,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			j.setMsg("退回客户订单成功！");
 		} catch (Exception e) {
 			j.setMsg("退回客户订单失败！");
+
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -93,19 +95,29 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 
 	public void getKhdds(){
 		Json j = new Json();
-		User u = (User)session.get("user");
-		if (u != null) {
-			khdd.setCreateId(u.getId());
-			if ("1".equals(u.getIsYwy())) {
-				khdd.setYwyId(u.getId());
-			}
+		DataGrid d = khddService.getKhdds(khdd);
+
+		if (d != null){
+			j.setObj(d);
+			j.setSuccess(true);
 		}
-		j.setObj(khddService.getKhdds(khdd));
 		writeJson(j);
 	}
 
+    public void getKhddsByYwy() {
+	    Json j = new Json();
+	    DataGrid d = khddService.getKhddsByYwy(khdd);
+	    if (d != null) {
+            j.setObj(d);
+            j.setSuccess(true);
+        }
+	    writeJson(j);
+    }
+
 	public void getKhddDet(){
-		writeJson(khddService.getKhddDet(khdd));
+	    Json j = new Json();
+	    j.setObj(khddService.getKhddDet(khdd));
+		writeJson(j);
 	}
 
 	@Override

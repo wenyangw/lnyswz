@@ -2,33 +2,29 @@
   <artifact type="exploded-war" name="lnyswz:Web exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/lnyswz_Web_exploded</output-path>
     <root id="root">
+      <element id="javaee-facet-resources" facet="lnyswz/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="lnyswz" />
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jstl.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/QRCode.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/core-2.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/standard.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/asm-3.3.1.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/cxf-2.7.18.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/iTextAsian.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/javase-2.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jtds-1.2.7.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/ognl-3.0.6.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/antlr-2.7.7.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/dom4j-1.6.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/druid-1.0.7.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/junit-4.8.2.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/druid-1.1.13.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/log4j-1.2.16.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/neethi-3.0.3.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/wsdl4j-1.6.3.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/ueditor-1.1.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/aopalliance-1.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/fastjson-1.1.41.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/iText-2.1.7.js2.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/json_simple-1.1.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/stax2-api-3.1.4.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/commons-io-2.0.1.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/groovy-all-2.0.1.jar" />
@@ -69,9 +65,14 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/spring-context-support-3.2.3.RELEASE.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/hibernate-commons-annotations-4.0.2.Final.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/jboss-transaction-api_1.1_spec-1.0.1.Final.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/ueditor-1.1.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/json_simple-1.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/QRCode.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/core-2.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/javase-2.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/WebRoot/WEB-INF/lib/druid-1.1.5.jar" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="lnyswz/web/Web" />
     </root>
   </artifact>
 </component>
