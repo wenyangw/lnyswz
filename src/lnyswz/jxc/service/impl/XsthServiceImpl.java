@@ -56,6 +56,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
+	private BaseDaoI<TKhddDet> khddDetDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TPrint> printDao;
@@ -67,7 +68,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public Xsth save(Xsth xsth) {
 		TXsth tXsth = new TXsth();
 		//接收前台传入的数据
-		BeanUtils.copyProperties(xsth, tXsth);
+		BeanUtils.copyProperties(xsth, tXsth, new String[]{"id"});
 		// 创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
@@ -306,6 +307,16 @@ public class XsthServiceImpl implements XsthServiceI {
 //						}
 					}
 				}
+			}
+
+			// 将销售提货流水号保存到对应订单中
+			if (xsth.getKhddlsh() != null) {
+				String hqlKhdd = "from TKhddDet t where t.TKhdd.khddlsh = :khddlsh and t.spbh = :spbh";
+				Map<String, Object> paramsKhdd = new HashMap<String, Object>();
+				paramsKhdd.put("khddlsh", xsth.getKhddlsh());
+				paramsKhdd.put("spbh", xsthDet.getSpbh());
+				TKhddDet tKhddDet = khddDetDao.get(hqlKhdd, paramsKhdd);
+				tKhddDet.setXsthlsh(lsh);
 			}
 
 		}
@@ -2387,7 +2398,12 @@ public class XsthServiceImpl implements XsthServiceI {
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
 	}
-	
+
+	@Autowired
+	public void setKhddDetDao(BaseDaoI<TKhddDet> khddDetDao) {
+		this.khddDetDao = khddDetDao;
+	}
+
 	@Autowired
 	public void setUserDao(BaseDaoI<TUser> userDao) {
 		this.userDao = userDao;

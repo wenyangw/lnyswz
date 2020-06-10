@@ -53,6 +53,7 @@ public class BaseAction extends ActionSupport implements RequestAware, SessionAw
 		try {
 			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 			ServletActionContext.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+//			ServletActionContext.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
 
 			ServletActionContext.getResponse().getWriter().write(json);
 			ServletActionContext.getResponse().getWriter().flush();
@@ -64,7 +65,6 @@ public class BaseAction extends ActionSupport implements RequestAware, SessionAw
 
 	protected Map<String, Object> request;
 	protected Map<String, Object> session;
-	
 	public Map<String, Object> getRequest() {
 		return request;
 	}
