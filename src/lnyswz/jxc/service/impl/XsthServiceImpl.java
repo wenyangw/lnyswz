@@ -56,6 +56,9 @@ public class XsthServiceImpl implements XsthServiceI {
 	private BaseDaoI<TYszz> yszzDao;
 	private BaseDaoI<TYwzz> ywzzDao;
 	private BaseDaoI<TFhzz> fhzzDao;
+	private BaseDaoI<TKhdd> khddDao;
+	private BaseDaoI<TKhddDet> khddDetDao;
+	private BaseDaoI<TKhUser> khUserDao;
 	private BaseDaoI<TLszz> lszzDao;
 	private BaseDaoI<TUser> userDao;
 	private BaseDaoI<TPrint> printDao;
@@ -67,7 +70,7 @@ public class XsthServiceImpl implements XsthServiceI {
 	public Xsth save(Xsth xsth) {
 		TXsth tXsth = new TXsth();
 		//接收前台传入的数据
-		BeanUtils.copyProperties(xsth, tXsth);
+		BeanUtils.copyProperties(xsth, tXsth, new String[]{"id"});
 		// 创建流水号
 		String lsh = LshServiceImpl.updateLsh(xsth.getBmbh(), xsth.getLxbh(), lshDao);
 		tXsth.setXsthlsh(lsh);
@@ -181,7 +184,27 @@ public class XsthServiceImpl implements XsthServiceI {
 			//更新授信客户应付金额
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
-		
+
+		// 客户订单无khbh时，更新t_kh_user与t_khdd中的客户信息
+		if ("1".equals(xsth.getNoKhbh())) {
+			TKhdd tKhdd = khddDao.get(TKhdd.class, xsth.getKhddlsh());
+			TKhUser tKhUser = khUserDao.get(TKhUser.class, tKhdd.getCreateId());
+			tKhUser.setKhbh(xsth.getKhbh());
+			tKhdd.setKhbh(xsth.getKhbh());
+			tKhdd.setKhmc(kh.getKhmc());
+
+			String hqlKhdd = "from TKhdd t where t.createId = :createId and t.khbh is null";
+			Map<String, Object> paramsKhdd = new HashMap<String, Object>();
+			paramsKhdd.put("createId", tKhdd.getCreateId());
+			List<TKhdd> tKhdds = khddDao.find(hqlKhdd, paramsKhdd);
+			if (tKhdds != null && tKhdds.size() > 0) {
+				for (TKhdd tk :tKhdds) {
+					tk.setKhbh(xsth.getKhbh());
+					tk.setKhmc(kh.getKhmc());
+				}
+			}
+		}
+
 		//处理商品明细
 		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
 		ArrayList<XsthDet> xsthDets = JSON.parseObject(xsth.getDatagrid(), new TypeReference<ArrayList<XsthDet>>(){});
@@ -306,6 +329,16 @@ public class XsthServiceImpl implements XsthServiceI {
 //						}
 					}
 				}
+			}
+
+			// 将销售提货流水号保存到对应订单中
+			if (xsth.getKhddlsh() != null) {
+				String hqlKhdd = "from TKhddDet t where t.TKhdd.khddlsh = :khddlsh and t.spbh = :spbh";
+				Map<String, Object> paramsKhdd = new HashMap<String, Object>();
+				paramsKhdd.put("khddlsh", xsth.getKhddlsh());
+				paramsKhdd.put("spbh", xsthDet.getSpbh());
+				TKhddDet tKhddDet = khddDetDao.get(hqlKhdd, paramsKhdd);
+				tKhddDet.setXsthlsh(lsh);
 			}
 
 		}
@@ -2387,7 +2420,22 @@ public class XsthServiceImpl implements XsthServiceI {
 	public void setLszzDao(BaseDaoI<TLszz> lszzDao) {
 		this.lszzDao = lszzDao;
 	}
-	
+
+	@Autowired
+	public void setKhddDao(BaseDaoI<TKhdd> khddDao) {
+		this.khddDao = khddDao;
+	}
+
+	@Autowired
+	public void setKhddDetDao(BaseDaoI<TKhddDet> khddDetDao) {
+		this.khddDetDao = khddDetDao;
+	}
+
+	@Autowired
+	public void setKhUserDao(BaseDaoI<TKhUser> khUserDao) {
+		this.khUserDao = khUserDao;
+	}
+
 	@Autowired
 	public void setUserDao(BaseDaoI<TUser> userDao) {
 		this.userDao = userDao;

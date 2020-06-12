@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
@@ -13,7 +14,6 @@ import lnyswz.jxc.service.KhddServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,16 +39,12 @@ public class KhddServiceImpl implements KhddServiceI {
 	
 	@Override
 	public Khdd saveKhdd(Khdd khdd) {
-
 		TKhdd tKhdd = new TKhdd();
 		BeanUtils.copyProperties(khdd, tKhdd);
 		tKhdd.setCreateTime(new Date());
 
-		String hql = "from TKhUser t where t.openId = :openId";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("openId", khdd.getOpenId());
-		TKhUser tKhUser = khUserDao.get(hql, params);
-//		TKhUser tKhUser = khUserDao.load(TKhUser.class, khdd.getCreateId());
+		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
+
         tKhdd.setCreateId(tKhUser.getId());
 		tKhdd.setCreateName(tKhUser.getRealName());
 		if (tKhUser.getKhbh() != null) {
@@ -61,7 +57,7 @@ public class KhddServiceImpl implements KhddServiceI {
 
 		TUser tYwy = ywyDao.load(TUser.class, tKhUser.getYwyId());
 		tKhdd.setYwyId(tYwy.getId());
-		tKhdd.setYwymc(tYwy.getRealName());
+        tKhdd.setYwymc(tYwy.getRealName());
 		tKhdd.setBmbh(tYwy.getTDepartment().getId());
 		tKhdd.setBmmc(tYwy.getTDepartment().getDepName());
 		
@@ -88,18 +84,16 @@ public class KhddServiceImpl implements KhddServiceI {
 		khddDao.save(tKhdd);		
 		OperalogServiceImpl.addOperalog(tKhdd.getCreateId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "保存客户订单", operalogDao);
 
-//		khdd.setKhddlsh(lsh);
 		return khdd;
 	}
 
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
-
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-		if(tKhdd.getXsthlsh() == null && tKhdd.getIsCancel().equals("0")){
+		if(tKhdd.getIsCancel().equals("0") && tKhdd.getIsCancel().equals("0") && (tKhdd.getXsthlsh() == null) && tKhdd.getIsHandle().equals("0")) {
 			//更新原单据冲减信息
 			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
@@ -107,6 +101,7 @@ public class KhddServiceImpl implements KhddServiceI {
 			tKhdd.setIsCancel("1");
 			khddDao.update(tKhdd);
 			BeanUtils.copyProperties(tKhdd, khdd);
+			khdd.setStatus(getStatus(tKhdd));
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 			return khdd;
 		}
@@ -114,7 +109,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Override
-	public void refuseKhdd(Khdd khdd) {
+	public Khdd refuseKhdd(Khdd khdd) {
 		Date now = new Date();
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
@@ -125,20 +120,39 @@ public class KhddServiceImpl implements KhddServiceI {
 		tKhdd.setRefuseName(khdd.getRefuseName());
 		tKhdd.setIsRefuse("1");
 
+		BeanUtils.copyProperties(tKhdd, khdd);
+		khdd.setStatus(getStatus(tKhdd));
 		OperalogServiceImpl.addOperalog(khdd.getRefuseId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "退回客户订单", operalogDao);
+
+		return khdd;
 	}
 
+	@Override
+	public Khdd handleKhdd(Khdd khdd) {
+		Date now = new Date();
+		//获取原单据信息
+		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
 
+		//更新原单据冲减信息
+		tKhdd.setHandleId(khdd.getHandleId());
+		tKhdd.setHandleTime(now);
+		tKhdd.setHandleName(khdd.getHandleName());
+		tKhdd.setIsHandle("1");
+
+		BeanUtils.copyProperties(tKhdd, khdd);
+        khdd.setStatus(getStatus(tKhdd));
+		OperalogServiceImpl.addOperalog(khdd.getHandleId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "处理客户订单", operalogDao);
+
+		return khdd;
+	}
 
 	@Override
 	public Khdd getKhdd(Khdd khdd) {
-
 		return null;
 	}
 
 	@Override
 	public DataGrid getKhdds(Khdd khdd) {
-
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 
 		String sql = "select distinct khddlsh from v_khdd where createTime > ? and (khbh = ? or createId = ?)";
@@ -192,17 +206,7 @@ public class KhddServiceImpl implements KhddServiceI {
 		for(TKhdd t : l){
 			c = new Khdd();
 			BeanUtils.copyProperties(t, c);
-			if (t.getIsCancel().equals("1")) {
-                c.setStatus("已取消");
-            } else if (t.getIsRefuse().equals("1")) {
-                c.setStatus("已退回");
-            } else if (t.getXsthlsh() != null) {
-                c.setStatus("已发货");
-            } else if (t.getIsHandle().equals("1")) {
-                c.setStatus("已处理");
-            } else {
-                c.setStatus("等待处理");
-            }
+			c.setStatus(getStatus(t));
 			if (showDets == true) {
                 c.setKhddDets(getKhddDetBeans(t.getTKhddDets(), false));
             }
@@ -256,6 +260,50 @@ public class KhddServiceImpl implements KhddServiceI {
         }
         return nl;
     }
+
+    public JSONObject getStatus(TKhdd t){
+	    JSONObject j = new JSONObject();
+		if (t.getIsCancel().equals("1")) {
+		    j.put("code", 1);
+		    j.put("info", "已取消");
+			return j;
+		}
+
+		int i = 0;
+		for (TKhddDet tkd: t.getTKhddDets()) {
+		    if (tkd.getXsthlsh() != null) {
+		        i++;
+            }
+        }
+		if (i == 0) {
+            if (t.getIsRefuse().equals("1")) {
+                j.put("code", 2);
+                j.put("info", "已退回");
+                return j;
+            }
+		    if (t.getIsHandle().equals("1")) {
+                j.put("code", 3);
+                j.put("info", "开始处理");
+                return j;
+            } else {
+                j.put("code", 0);
+                j.put("info", "等待处理");
+                return j;
+            }
+
+        }
+
+        if (i != t.getTKhddDets().size() && t.getIsRefuse().equals("0")) {
+            j.put("code", 4);
+            j.put("info", "处理中");
+            return j;
+        } else {
+            j.put("code", 5);
+            j.put("info", "处理完成");
+            return j;
+        }
+
+	}
 
 	@Autowired
 	public void setKhddDao(BaseDaoI<TKhdd> khddDao) {

@@ -19,12 +19,13 @@ public class TKhddDet {
     private String zjldwId;
     private String zjldwmc;
     private BigDecimal zdwsl;
+    private String xsthlsh;
 
     public TKhddDet() {
     }
 
     public TKhddDet(int id, TKhdd TKhdd, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId,
-                    String zjldwmc, BigDecimal zdwsl) {
+                    String zjldwmc, BigDecimal zdwsl, String xsthlsh) {
         this.id = id;
         this.TKhdd = TKhdd;
         this.spbh = spbh;
@@ -35,6 +36,7 @@ public class TKhddDet {
         this.zjldwId = zjldwId;
         this.zjldwmc = zjldwmc;
         this.zdwsl = zdwsl;
+        this.xsthlsh = xsthlsh;
     }
 
     @Id
@@ -128,5 +130,14 @@ public class TKhddDet {
 
     public void setZdwsl(BigDecimal zdwsl) {
         this.zdwsl = zdwsl;
+    }
+
+    @Column(name = "xsthlsh", nullable = true, length = 12)
+    public String getXsthlsh() {
+        return xsthlsh;
+    }
+
+    public void setXsthlsh(String xsthlsh) {
+        this.xsthlsh = xsthlsh;
     }
 }
