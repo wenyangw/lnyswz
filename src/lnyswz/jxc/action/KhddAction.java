@@ -70,22 +70,43 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	 */
 	public void refuseKhdd(){
 		Json j = new Json();
-		User user = (User) session.get("user");
-		if(user != null) {
-			khdd.setRefuseId(user.getId());
-			khdd.setRefuseName(user.getRealName());
-		}
 		try {
-			khddService.refuseKhdd(khdd);
-			j.setSuccess(true);
-			j.setMsg("退回客户订单成功！");
+			Khdd k = khddService.refuseKhdd(khdd);
+			if (k != null) {
+				j.setSuccess(true);
+				j.setMsg("退回客户订单成功！");
+				j.setObj(k);
+			} else {
+				j.setMsg("退回客户订单不成功！");
+			}
 		} catch (Exception e) {
 			j.setMsg("退回客户订单失败！");
-
 			e.printStackTrace();
 		}
 		writeJson(j);
 	}
+
+	/**
+	 * 处理订单
+	 */
+	public void handleKhdd(){
+		Json j = new Json();
+		try {
+			Khdd k = khddService.handleKhdd(khdd);
+			if (k != null) {
+				j.setSuccess(true);
+				j.setMsg("退回客户订单成功！");
+				j.setObj(k);
+			} else {
+				j.setMsg("退回客户订单不成功！");
+			}
+		} catch (Exception e) {
+			j.setMsg("退回客户订单失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
 
 	public void getKhdd(){
 		Json j = new Json();

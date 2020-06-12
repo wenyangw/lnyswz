@@ -325,20 +325,21 @@ public class LwtServiceImpl implements LwtServiceI {
 
 	@Override
 	public Lwt getKhDet(Lwt lwt) {
-		StringBuilder sql = new StringBuilder("select id, bmbh, ywyId, khbh, khmc, lxr, khlxId, sxje, sxzq, lsje, isUp, postponeDay, isOther, limitPer, limitJe, isLocked, isDef, info ");
+		String sql = "select id, bmbh, ywyId, khbh, khmc, lxr, khlxId, sxje, sxzq, lsje, isUp, postponeDay, isOther, limitPer, limitJe, isLocked, isDef, info" +
+				" from dbo.ft_kh_det_ywy(?, ?) where khbh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", lwt.getBmbh());
 		params.put("1", lwt.getYwyId());
-		sql.append(" from dbo.ft_kh_det_ywy(?, ?)");
+		params.put("2", lwt.getKhbh());
 
-		Object[] o = lwtDao.getMBySQL(sql.toString(), params);
+		Object[] o = lwtDao.getMBySQL(sql, params);
 
 		Lwt l = null;
 
 		if (o != null) {
 			l = new Lwt();
 			l.setId(o[0].toString());
-			l.setBmbh(o[1].toString());
+			l.setBmbh(o[1].toString().trim());
 			l.setYwyId((Integer)o[2]);
 			l.setKhbh(o[3].toString());
 			l.setKhmc(o[4].toString());
@@ -355,7 +356,6 @@ public class LwtServiceImpl implements LwtServiceI {
 			l.setIsLocked(o[15].toString());
 			l.setIsDef(o[16].toString());
 			l.setInfo(o[17].toString());
-
 		}
 		return l;
 	}

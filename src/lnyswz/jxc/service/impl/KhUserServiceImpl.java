@@ -85,6 +85,7 @@ public class KhUserServiceImpl implements KhUserServiceI {
 		TKhUser tKhUser = uDao.get(hql, params);
 		return tKhUser;
 	}
+
 	@Autowired
 	public void setKhUserDao(BaseDaoI<TKhUser> khUserDao) {
 		this.khUserDao = khUserDao;

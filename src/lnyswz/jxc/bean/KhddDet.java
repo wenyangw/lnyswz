@@ -13,6 +13,7 @@ public class KhddDet {
     private String zjldwId;
     private String zjldwmc;
     private BigDecimal zdwsl;
+    private String xsthlsh;
     private String cjldwId;
     private String cjldwmc;
     private BigDecimal zhxs;
@@ -99,6 +100,14 @@ public class KhddDet {
 
     public void setZdwsl(BigDecimal zdwsl) {
         this.zdwsl = zdwsl;
+    }
+
+    public String getXsthlsh() {
+        return xsthlsh;
+    }
+
+    public void setXsthlsh(String xsthlsh) {
+        this.xsthlsh = xsthlsh;
     }
 
     public String getCjldwId() {

@@ -124,10 +124,14 @@ public class Xsth {
 	
 	//向销售开票流程导入的提货单号
 	private String xsthlshs;
+	private String noKhbh;
 	
 	private String lxbh;
 	private String menuId;
 	private int bgyId;
+
+	// 由客户订单生成的销售提货
+	private String khddlsh;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -846,5 +850,21 @@ public class Xsth {
 
 	public void setHtjs(int htjs) {
 		this.htjs = htjs;
+	}
+
+	public String getKhddlsh() {
+		return khddlsh;
+	}
+
+	public void setKhddlsh(String khddlsh) {
+		this.khddlsh = khddlsh;
+	}
+
+	public String getNoKhbh() {
+		return noKhbh;
+	}
+
+	public void setNoKhbh(String noKhbh) {
+		this.noKhbh = noKhbh;
 	}
 }
