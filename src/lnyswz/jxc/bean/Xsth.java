@@ -124,6 +124,7 @@ public class Xsth {
 	
 	//向销售开票流程导入的提货单号
 	private String xsthlshs;
+	private String noKhbh;
 	
 	private String lxbh;
 	private String menuId;
@@ -857,5 +858,13 @@ public class Xsth {
 
 	public void setKhddlsh(String khddlsh) {
 		this.khddlsh = khddlsh;
+	}
+
+	public String getNoKhbh() {
+		return noKhbh;
+	}
+
+	public void setNoKhbh(String noKhbh) {
+		this.noKhbh = noKhbh;
 	}
 }

@@ -1,5 +1,7 @@
 package lnyswz.jxc.bean;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +40,7 @@ public class Khdd {
     private String menuId;
     private String where;
     private String search;
-    private String status;
+    private JSONObject status;
     private String datagrid;
     private int page;
     private int rows;
@@ -283,11 +285,11 @@ public class Khdd {
         this.search = search;
     }
 
-    public String getStatus() {
+    public JSONObject getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(JSONObject status) {
         this.status = status;
     }
 

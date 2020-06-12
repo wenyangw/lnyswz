@@ -338,6 +338,7 @@ public class LwtServiceImpl implements LwtServiceI {
 
 		if (o != null) {
 			l = new Lwt();
+			l.setId(o[0].toString());
 			l.setBmbh(o[1].toString().trim());
 			l.setYwyId((Integer)o[2]);
 			l.setKhbh(o[3].toString());

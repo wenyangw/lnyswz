@@ -10,7 +10,8 @@ import java.util.List;
 public interface KhddServiceI {
 	Khdd saveKhdd(Khdd khdd);
 	Khdd cancelKhdd(Khdd khdd);
-	void refuseKhdd(Khdd khdd);
+	Khdd refuseKhdd(Khdd khdd);
+	Khdd handleKhdd(Khdd khdd);
 	Khdd getKhdd(Khdd khdd);
 	DataGrid getKhdds(Khdd khdd);
 	DataGrid getKhddsByYwy(Khdd khdd);
