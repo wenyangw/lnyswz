@@ -5,11 +5,14 @@ import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.Khdd;
+import lnyswz.jxc.bean.KhddDet;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.service.KhddServiceI;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 客户订单Action
@@ -55,9 +58,11 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 		try {
 			Khdd k = khddService.cancelKhdd(khdd);
 			if(k != null){
-                j.setObj(k);
+                j.setMsg("取消客户订单成功！");
                 j.setSuccess(true);
-			}
+			} else {
+                j.setMsg("取消客户订单不成功！");
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,7 +141,11 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 
 	public void getKhddDet(){
 	    Json j = new Json();
-	    j.setObj(khddService.getKhddDet(khdd));
+	    List<KhddDet> l = khddService.getKhddDet(khdd);
+	    if (l != null && l.size() > 0) {
+	    	j.setSuccess(true);
+			j.setObj(l);
+		}
 		writeJson(j);
 	}
 
