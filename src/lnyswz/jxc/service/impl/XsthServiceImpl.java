@@ -185,25 +185,30 @@ public class XsthServiceImpl implements XsthServiceI {
 			YszzServiceImpl.updateYszzJe(dep, kh, ywy, xsth.getHjje(), Constant.UPDATE_YS_TH, yszzDao);
 		}
 
-		// 客户订单无khbh时，更新t_kh_user与t_khdd中的客户信息
-		if ("1".equals(xsth.getNoKhbh())) {
+		// 由客户订单生成的提货单，保存xsthTime
+		if (xsth.getKhddlsh() != null) {
 			TKhdd tKhdd = khddDao.get(TKhdd.class, xsth.getKhddlsh());
-			TKhUser tKhUser = khUserDao.get(TKhUser.class, tKhdd.getCreateId());
-			tKhUser.setKhbh(xsth.getKhbh());
-			tKhdd.setKhbh(xsth.getKhbh());
-			tKhdd.setKhmc(kh.getKhmc());
+			tKhdd.setXsthTime(new Date());
+			// 客户订单无khbh时，更新t_kh_user与t_khdd中的客户信息
+			if ("1".equals(xsth.getNoKhbh())) {
+				TKhUser tKhUser = khUserDao.get(TKhUser.class, tKhdd.getCreateId());
+				tKhUser.setKhbh(xsth.getKhbh());
+				tKhdd.setKhbh(xsth.getKhbh());
+				tKhdd.setKhmc(kh.getKhmc());
 
-			String hqlKhdd = "from TKhdd t where t.createId = :createId and t.khbh is null";
-			Map<String, Object> paramsKhdd = new HashMap<String, Object>();
-			paramsKhdd.put("createId", tKhdd.getCreateId());
-			List<TKhdd> tKhdds = khddDao.find(hqlKhdd, paramsKhdd);
-			if (tKhdds != null && tKhdds.size() > 0) {
-				for (TKhdd tk :tKhdds) {
-					tk.setKhbh(xsth.getKhbh());
-					tk.setKhmc(kh.getKhmc());
+				String hqlKhdd = "from TKhdd t where t.createId = :createId and t.khbh is null";
+				Map<String, Object> paramsKhdd = new HashMap<String, Object>();
+				paramsKhdd.put("createId", tKhdd.getCreateId());
+				List<TKhdd> tKhdds = khddDao.find(hqlKhdd, paramsKhdd);
+				if (tKhdds != null && tKhdds.size() > 0) {
+					for (TKhdd tk :tKhdds) {
+						tk.setKhbh(xsth.getKhbh());
+						tk.setKhmc(kh.getKhmc());
+					}
 				}
 			}
 		}
+
 
 		//处理商品明细
 		Set<TXsthDet> tDets = new HashSet<TXsthDet>();
