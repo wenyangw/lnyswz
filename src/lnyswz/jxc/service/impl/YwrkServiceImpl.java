@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,6 @@ import lnyswz.jxc.util.Util;
  */
 @Service("ywrkService")
 public class YwrkServiceImpl implements YwrkServiceI {
-	private Logger logger = Logger.getLogger(YwrkServiceImpl.class);
 	private BaseDaoI<TYwrk> ywrkDao;
 	private BaseDaoI<TYwrkDet> detDao;
 	private BaseDaoI<TYwzz> ywzzDao;
@@ -112,8 +110,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 					zKfrks.addAll(zYwrk.getTKfrks());
 				}
 				zgYwrks.add(zYwrk);
-				//zYwrk.setBeYwrklsh(ywrklsh);
-				
+
 				for(TYwrkDet tt : zYwrk.getTYwrkDets()){
 					if(zXsths.containsKey(tt.getSpbh())){
 						zXsths.get(tt.getSpbh()).addAll(tt.getTXsths());
@@ -804,18 +801,16 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		String ywrkDetIds= ywrk.getYwrkDetIds();
 		//String sql = "select spbh, zdwsl, thsl thsl, cdwsl, cthsl from t_ywrk_det where zdwsl <> thsl";
 		
-		String sql = "select det.spbh, zdwsl, thsl thsl, cdwsl, cthsl, isnull(xsdj, 0) xsdj"
+		String sql = "select det.spbh, zdwsl, thsl thsl, cdwsl, cthsl, isnull(xsdj, 0) xsdj, isnull(zz.dwcb, 0) dwcb"
 				+ " from v_ywrk det left join t_sp_det sp on sp.depId = det.bmbh and sp.spbh = det.spbh"
+				+ " left join t_ywzz zz on det.bmbh = zz.bmbh and det.spbh = zz.spbh and zz.jzsj = convert(char(6), getDATE(), 112) and zz.ckId is null"
 				+ " where zdwsl <> thsl";
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if(ywrkDetIds != null && ywrkDetIds.trim().length() > 0){
 			sql += " and det.id in (" + ywrkDetIds + ")";
 		}
-		//sql += " group by spbh";
-		
-		System.out.println(sql);
-		
+
 		List<Object[]> l = detDao.findBySQL(sql, params);
 		
 		List<XsthDet> nl = new ArrayList<XsthDet>();
@@ -826,6 +821,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			BigDecimal zdwthsl = new BigDecimal(os[2].toString());
 			BigDecimal cdwrksl = new BigDecimal(os[3].toString());
 			BigDecimal xsdj = new BigDecimal(os[5].toString());
+			BigDecimal dwcb = new BigDecimal(os[6].toString());
 			
 			TSp sp = spDao.get(TSp.class, spbh);
 			XsthDet xd = new XsthDet();
@@ -848,6 +844,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				xd.setZdwdj(xsdj.multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP));
 				xd.setSpje(xd.getZdwdj().multiply(xd.getZdwsl()).setScale(2, BigDecimal.ROUND_HALF_UP));
 			}
+			xd.setDwcb(dwcb);
 			
 			nl.add(xd);
 		}

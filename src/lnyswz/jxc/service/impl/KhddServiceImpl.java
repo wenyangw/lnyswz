@@ -63,6 +63,7 @@ public class KhddServiceImpl implements KhddServiceI {
 		
 		tKhdd.setIsCancel("0");
 		tKhdd.setIsRefuse("0");
+		tKhdd.setIsHandle("0");
 
         String lsh = LshServiceImpl.updateLsh(tKhdd.getBmbh(), Constant.YWLX_KHDD, lshDao);
         tKhdd.setKhddlsh(lsh);
@@ -199,7 +200,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	private DataGrid getKhddsByLsh(Khdd khdd, List<Object[]> lb, Boolean showDets) {
 		DataGrid datagrid = new DataGrid();
 		String lsh= "(" + StringUtils.join(lb,",") + ")";
-		String hql = " from TKhdd t where khddlsh in " + lsh;
+		String hql = " from TKhdd t where khddlsh in " + lsh +  " order by createTime desc";
 		List<TKhdd> l = khddDao.find(hql, khdd.getPage(), khdd.getRows());
 		List<Khdd> nl = new ArrayList<Khdd>();
 		Khdd c;
@@ -208,7 +209,7 @@ public class KhddServiceImpl implements KhddServiceI {
 			BeanUtils.copyProperties(t, c);
 			c.setStatus(getStatus(t));
 			if (showDets == true) {
-                c.setKhddDets(getKhddDetBeans(t.getTKhddDets(), false));
+                c.setKhddDets(getKhddDetBeans(getTKhddDet(c), false));
             }
 
 			nl.add(c);
@@ -221,25 +222,29 @@ public class KhddServiceImpl implements KhddServiceI {
 
 	@Override
 	public List<KhddDet> getKhddDet(Khdd khdd) {
-		String hql = "from TKhddDet t where t.TKhdd.khddlsh = :khddlsh";
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("khddlsh", khdd.getKhddlsh());
-		List<TKhddDet> tKhddDets = detDao.find(hql, params);
-		return getKhddDetBeans(tKhddDets, true);
+        return getKhddDetBeans(getTKhddDet(khdd), true);
 	}
+
+    private List<TKhddDet> getTKhddDet(Khdd khdd) {
+        String hql = "from TKhddDet t where t.TKhdd.khddlsh = :khddlsh order by spbh";
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("khddlsh", khdd.getKhddlsh());
+        return detDao.find(hql, params);
+    }
 
 	private List<KhddDet> getKhddDetBeans(Collection<TKhddDet> tKhddDets, Boolean showMore) {
         List<KhddDet> nl = new ArrayList<KhddDet>();
-        KhddDet c = null;
+        KhddDet c;
         for(TKhddDet t : tKhddDets){
             c = new KhddDet();
             BeanUtils.copyProperties(t, c);
             if (showMore) {
-                String sql = "select cjldwId, cjldwmc, zhxs, kcsl, dwcb, isnull(xsdj, 0) xsdj, isnull(specXsdj, 0) specXsdj" +
-                 " from v_kc_sj_ck t left join t_sp_det d on t.bmbh = d.depId and t.spbh = d.spbh" +
-                 " where t.bmbh = '01' and t.ckId = '02' and t.spbh = ?";
+                String sql = "select cjldwId, cjldwmc, zhxs, kcsl, dwcb, xsdj, specXsdj" +
+					" from ft_khdd_sp('01', '02', ?)";
+
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("0", t.getSpbh());
+
                 Object[] o = khddDao.getMBySQL(sql, params);
                 if (o != null) {
                     c.setCjldwId(o[0].toString());
@@ -290,7 +295,6 @@ public class KhddServiceImpl implements KhddServiceI {
                 j.put("info", "等待处理");
                 return j;
             }
-
         }
 
         if (i != t.getTKhddDets().size() && t.getIsRefuse().equals("0")) {
@@ -316,7 +320,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Autowired
-	public void setLshDao(BaseDaoI<TLsh> lshDao) {
+    	public void setLshDao(BaseDaoI<TLsh> lshDao) {
 		this.lshDao = lshDao;
 	}
 
