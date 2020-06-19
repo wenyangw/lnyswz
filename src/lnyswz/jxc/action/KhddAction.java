@@ -59,7 +59,6 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
                 j.setSuccess(true);
 			}
 		} catch (Exception e) {
-			j.setMsg("取消客户订单失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
