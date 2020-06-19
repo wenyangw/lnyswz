@@ -90,24 +90,26 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Override
-	public Khdd cancelKhdd(Khdd khdd) {
+	public JSONObject cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
-
+		JSONObject j = new JSONObject();
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-		if(tKhdd.getIsCancel().equals("0") && tKhdd.getIsCancel().equals("0") && (tKhdd.getXsthlsh() == null) && tKhdd.getIsHandle().equals("0")) {
+		khdd.setStatus(getStatus(tKhdd));
+		if(khdd.getStatus().get("code").equals(0)) {
 			//更新原单据冲减信息
 			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
 			tKhdd.setCancelName(tKhUser.getRealName());
 			tKhdd.setIsCancel("1");
 			khddDao.update(tKhdd);
-			BeanUtils.copyProperties(tKhdd, khdd);
-			khdd.setStatus(getStatus(tKhdd));
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
-			return khdd;
+			khdd.setStatus(getStatus(tKhdd));
+			j.put("success", "1");
 		}
-		return null;
+		BeanUtils.copyProperties(tKhdd, khdd);
+		j.put("khdd", khdd);
+		return j;
 	}
 
 	@Override
