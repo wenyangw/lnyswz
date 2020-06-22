@@ -56,14 +56,14 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	public void cancelKhdd(){
 		Json j = new Json();
 		try {
-			JSONObject k = khddService.cancelKhdd(khdd);
-			if(k.get("success") != null){
+			Khdd k = khddService.cancelKhdd(khdd);
+			if(k.getIsCancel().equals("1")){
                 j.setMsg("取消客户订单成功！");
                 j.setSuccess(true);
 			} else {
                 j.setMsg("订单已处理，无法取消！");
             }
-            j.setObj(k.get("khdd"));
+            j.setObj(k);
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");
 			e.printStackTrace();

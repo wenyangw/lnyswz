@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface KhddServiceI {
 	Khdd saveKhdd(Khdd khdd);
-	JSONObject cancelKhdd(Khdd khdd);
+	Khdd cancelKhdd(Khdd khdd);
 	Khdd refuseKhdd(Khdd khdd);
 	Khdd handleKhdd(Khdd khdd);
 	Khdd getKhdd(Khdd khdd);

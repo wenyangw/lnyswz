@@ -90,7 +90,7 @@ public class KhddServiceImpl implements KhddServiceI {
 	}
 
 	@Override
-	public JSONObject cancelKhdd(Khdd khdd) {
+	public Khdd cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
 		JSONObject j = new JSONObject();
 		//获取原单据信息
@@ -105,11 +105,10 @@ public class KhddServiceImpl implements KhddServiceI {
 			khddDao.update(tKhdd);
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
 			khdd.setStatus(getStatus(tKhdd));
-			j.put("success", "1");
 		}
 		BeanUtils.copyProperties(tKhdd, khdd);
 		j.put("khdd", khdd);
-		return j;
+		return khdd;
 	}
 
 	@Override
