@@ -92,11 +92,10 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
-		JSONObject j = new JSONObject();
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
 		khdd.setStatus(getStatus(tKhdd));
-		if(khdd.getStatus().get("code").equals(0)) {
+		if(getStatus(tKhdd).get("code").equals(0)) {
 			//更新原单据冲减信息
 			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
@@ -104,10 +103,9 @@ public class KhddServiceImpl implements KhddServiceI {
 			tKhdd.setIsCancel("1");
 			khddDao.update(tKhdd);
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
-			khdd.setStatus(getStatus(tKhdd));
 		}
 		BeanUtils.copyProperties(tKhdd, khdd);
-		j.put("khdd", khdd);
+		khdd.setStatus(getStatus(tKhdd));
 		return khdd;
 	}
 
