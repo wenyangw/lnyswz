@@ -14,6 +14,7 @@ import lnyswz.jxc.service.KhddServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,22 +92,21 @@ public class KhddServiceImpl implements KhddServiceI {
 	@Override
 	public Khdd cancelKhdd(Khdd khdd) {
 		TKhUser tKhUser = KhUserServiceImpl.getKhUserByOpenId(khdd.getOpenId(), khUserDao);
-
 		//获取原单据信息
 		TKhdd tKhdd = khddDao.get(TKhdd.class, khdd.getKhddlsh());
-		if(tKhdd.getIsCancel().equals("0") && tKhdd.getIsCancel().equals("0") && (tKhdd.getXsthlsh() == null) && tKhdd.getIsHandle().equals("0")) {
+		khdd.setStatus(getStatus(tKhdd));
+		if(getStatus(tKhdd).get("code").equals(0)) {
 			//更新原单据冲减信息
 			tKhdd.setCancelId(tKhUser.getId());
 			tKhdd.setCancelTime(new Date());
 			tKhdd.setCancelName(tKhUser.getRealName());
 			tKhdd.setIsCancel("1");
 			khddDao.update(tKhdd);
-			BeanUtils.copyProperties(tKhdd, khdd);
-			khdd.setStatus(getStatus(tKhdd));
 			OperalogServiceImpl.addOperalog(tKhdd.getCancelId(), tKhdd.getBmbh(), Constant.MENU_KHDD, tKhdd.getKhddlsh(), "取消客户订单", operalogDao);
-			return khdd;
 		}
-		return null;
+		BeanUtils.copyProperties(tKhdd, khdd);
+		khdd.setStatus(getStatus(tKhdd));
+		return khdd;
 	}
 
 	@Override
@@ -265,6 +265,7 @@ public class KhddServiceImpl implements KhddServiceI {
         }
         return nl;
     }
+
 
     public JSONObject getStatus(TKhdd t){
 	    JSONObject j = new JSONObject();

@@ -1,5 +1,6 @@
 package lnyswz.jxc.action;
 
+import com.alibaba.fastjson.JSONObject;
 import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
 import lnyswz.common.bean.DataGrid;
@@ -46,7 +47,6 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 			j.setMsg("保存客户订单失败！");
 			e.printStackTrace();
 		}
-
 		writeJson(j);
 	}
 	
@@ -57,13 +57,13 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 		Json j = new Json();
 		try {
 			Khdd k = khddService.cancelKhdd(khdd);
-			if(k != null){
-                j.setObj(k);
+			if(k.getIsCancel().equals("1")){
                 j.setMsg("取消客户订单成功！");
                 j.setSuccess(true);
 			} else {
-                j.setMsg("取消客户订单不成功！");
+                j.setMsg("订单已处理，无法取消！");
             }
+            j.setObj(k);
 		} catch (Exception e) {
 			j.setMsg("取消客户订单失败！");
 			e.printStackTrace();
@@ -123,6 +123,7 @@ public class KhddAction extends BaseAction implements ModelDriven<Khdd>{
 	public void getKhdds(){
 		Json j = new Json();
 		DataGrid d = khddService.getKhdds(khdd);
+
 		if (d != null){
 			j.setObj(d);
 			j.setSuccess(true);
