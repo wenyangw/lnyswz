@@ -25,8 +25,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1f2ac69-d8d8-46c1-9f6b-9317c417a03f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/WebRoot/WEB-INF/classes/" />
@@ -38,14 +38,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/KhUserAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="110" lean-forward="true" selection-start-line="110" selection-end-line="110" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="230">
+              <caret line="30" column="33" lean-forward="true" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="770">
+              <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="33" column="32" lean-forward="true" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -67,12 +82,13 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/resources/config.properties" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/KhddServiceI.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/lnyswz/jxc/action/KhUserAction.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -94,6 +110,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -156,9 +173,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -338,17 +353,17 @@
       <workItem from="1592543952533" duration="7917000" />
       <workItem from="1592558069709" duration="352000" />
       <workItem from="1592793578716" duration="1360000" />
+      <workItem from="1592895053627" duration="1377000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="114106000" />
+    <option name="totallyTimeSpent" value="115945000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1874" height="1096" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21003307" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21223815" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -360,7 +375,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.071428575" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4990177" weight="0.061579652" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.41476092" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.41476092" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -651,13 +666,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="7" lean-forward="true" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/HwServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1482">
@@ -749,13 +757,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/KhddAction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
@@ -798,10 +799,31 @@
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
-          <caret line="110" lean-forward="true" selection-start-line="110" selection-end-line="110" />
+          <caret line="110" selection-start-line="110" selection-end-line="110" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhUserServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="33" column="32" lean-forward="true" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/KhUserAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="30" column="33" lean-forward="true" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="770">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
         </state>
       </provider>
     </entry>
