@@ -41,12 +41,16 @@ public class KhUserServiceImpl implements KhUserServiceI {
 	 */
 	@Override
 	public void edit(KhUser khUser) {
-		TKhUser t = khUserDao.load(TKhUser.class, khUser.getId());
-		khUser.setCreateTime(t.getCreateTime());
-		BeanUtils.copyProperties(khUser, t);
-		TUser tYwy = ywyDao.load(TUser.class, khUser.getYwyId());
-		khUserDao.update(t);
-		OperalogServiceImpl.addOperalog(khUser.getCreateId(), tYwy.getTDepartment().getId(), khUser.getMenuId(), t.getId() + "" , "修改客户用户", opeDao);
+	    String hql = "from TKhUser t where t.openId = :openId";
+	    Map<String, Object> params = new HashMap<String, Object>();
+	    params.put("openId", khUser.getOpenId());
+		TKhUser t = khUserDao.get(hql, params);
+		t.setRealName(khUser.getRealName());
+		t.setPhone(khUser.getPhone());
+		t.setDwmc(khUser.getDwmc());
+
+        TUser tYwy = ywyDao.load(TUser.class, t.getYwyId());
+		OperalogServiceImpl.addOperalog(khUser.getId(), tYwy.getTDepartment().getId(), khUser.getMenuId(), t.getId() + "" , "修改客户用户", opeDao);
 	}
 
 	/**
@@ -65,8 +69,7 @@ public class KhUserServiceImpl implements KhUserServiceI {
 	 */
 	@Override
 	public KhUser checkKhUser(KhUser khUser) {
-		// TODO Auto-generated method stub
-		String sql = " from TKhUser u where u.openId = :openId";
+		String sql = "from TKhUser u where u.openId = :openId";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("openId", khUser.getOpenId());
 		TKhUser t = khUserDao.get(sql, params);
