@@ -34,7 +34,6 @@ public class TKhdd {
     private Integer refuseId;
     private Date refuseTime;
     private String refuseName;
-    private String xsthlsh;
     private Date xsthTime;
 
     private Set<TKhddDet> TKhddDets = new HashSet<TKhddDet>(0);
@@ -44,7 +43,7 @@ public class TKhdd {
 
     public TKhdd(String khddlsh, Date createTime, int createId, String createName, String bmbh, String bmmc,
                  String khbh, String khmc, int ywyId, String ywymc, String bz, String isCancel, Integer cancelId, Date cancelTime, String cancelName,
-                 String isHandle, Integer handleId, Date handleTime, String handleName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName, String xsthlsh, Date xsthTime,
+                 String isHandle, Integer handleId, Date handleTime, String handleName, String isRefuse, Integer refuseId, Date refuseTime, String refuseName, Date xsthTime,
                  Set<TKhddDet> TKhddDets) {
         this.khddlsh = khddlsh;
         this.createTime = createTime;
@@ -69,8 +68,6 @@ public class TKhdd {
         this.refuseId = refuseId;
         this.refuseTime = refuseTime;
         this.refuseName = refuseName;
-
-        this.xsthlsh = xsthlsh;
         this.xsthTime = xsthTime;
         this.TKhddDets = TKhddDets;
     }
@@ -286,15 +283,6 @@ public class TKhdd {
 
     public void setRefuseName(String refuseName) {
         this.refuseName = refuseName;
-    }
-
-    @Column(name = "xsthlsh", length = 12)
-    public String getXsthlsh() {
-        return xsthlsh;
-    }
-
-    public void setXsthlsh(String xsthlsh) {
-        this.xsthlsh = xsthlsh;
     }
 
     @Temporal(TemporalType.TIMESTAMP)
