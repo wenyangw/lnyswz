@@ -181,7 +181,12 @@ public class KhddServiceImpl implements KhddServiceI {
 	public DataGrid getKhddsByYwy(Khdd khdd) {
 		String sql = "select distinct khddlsh from v_khdd where ywyId = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0",khdd.getYwyId());
+		if (khdd.getYwyId() == 67) {
+			params.put("0", 150);
+		} else {
+			params.put("0", khdd.getYwyId());
+		}
+
 		if (khdd.getWhere() != null) {
 			sql += " and " + khdd.getWhere();
 		}
