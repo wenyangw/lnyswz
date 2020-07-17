@@ -326,7 +326,7 @@ public class LwtServiceImpl implements LwtServiceI {
 	@Override
 	public Lwt getKhDet(Lwt lwt) {
 		String sql = "select id, bmbh, ywyId, khbh, khmc, lxr, khlxId, sxje, sxzq, lsje, isUp, postponeDay, isOther, limitPer, limitJe, isLocked, isDef, info, ysje, cqDays" +
-				" from dbo.ft_kh_det_ywy(?, ?, ?)";
+				" from dbo.ft_kh_det_ywy(?, ?) where khbh = ?";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", lwt.getBmbh());
 		params.put("1", lwt.getYwyId());

@@ -26,10 +26,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f1f2ac69-d8d8-46c1-9f6b-9317c417a03f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/resources/config.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/SpServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/SpServiceImpl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/WebRoot/WEB-INF/classes/" />
@@ -41,11 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/config.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="57" lean-forward="true" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
+            <state relative-caret-position="462">
+              <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -53,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/bean/Xsth.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1166">
+            <state relative-caret-position="88">
               <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
             </state>
           </provider>
@@ -62,8 +59,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="332" column="39" lean-forward="true" selection-start-line="332" selection-start-column="39" selection-end-line="332" selection-end-column="39" />
+            <state relative-caret-position="3586">
+              <caret line="176" column="9" selection-start-line="176" selection-start-column="9" selection-end-line="176" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/LwtAction.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="528">
+              <caret line="37" column="51" lean-forward="true" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -85,9 +91,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="8646">
               <caret line="421" column="67" selection-start-line="421" selection-start-column="67" selection-end-line="421" selection-end-column="67" />
-              <folding>
-                <element signature="e#13207#13223#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -101,6 +104,7 @@
       <find>static public</find>
       <find>public static</find>
       <find>getKhddsByLsh</find>
+      <find>dbo.ft_kh_det_ywy</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -118,8 +122,8 @@
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/model/TKhdd.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/SpServiceImpl.java" />
-        <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" />
         <option value="$PROJECT_DIR$/resources/config.properties" />
+        <option value="$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java" />
       </list>
     </option>
   </component>
@@ -141,7 +145,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -187,6 +190,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -370,18 +374,23 @@
       <workItem from="1592895053627" duration="1377000" />
       <workItem from="1593393154515" duration="12649000" />
       <workItem from="1593761047086" duration="2038000" />
-      <workItem from="1593996268349" duration="5591000" />
+      <workItem from="1593996268349" duration="6822000" />
+      <workItem from="1594098687219" duration="3105000" />
+      <workItem from="1594167999792" duration="1771000" />
+      <workItem from="1594359389036" duration="2631000" />
+      <workItem from="1594700623339" duration="2359000" />
+      <workItem from="1594949097147" duration="1185000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136223000" />
+    <option name="totallyTimeSpent" value="148505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21885337" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23042999" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -393,7 +402,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.071428575" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4990177" weight="0.061579652" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.41476092" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.41476092" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -866,6 +875,27 @@
     <entry file="file://$PROJECT_DIR$/WebRoot/jxc/xsfl.jsp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/config.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/bean/Xsth.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3586">
+          <caret line="176" column="9" selection-start-line="176" selection-start-column="9" selection-end-line="176" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/KhddServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3520">
@@ -880,30 +910,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8646">
           <caret line="421" column="67" selection-start-line="421" selection-start-column="67" selection-end-line="421" selection-end-column="67" />
-          <folding>
-            <element signature="e#13207#13223#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/bean/Xsth.java">
+    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/action/LwtAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1166">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lnyswz/jxc/service/impl/LwtServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="332" column="39" lean-forward="true" selection-start-line="332" selection-start-column="39" selection-end-line="332" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/config.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" column="57" lean-forward="true" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
+        <state relative-caret-position="528">
+          <caret line="37" column="51" lean-forward="true" selection-start-line="37" selection-start-column="51" selection-end-line="37" selection-end-column="51" />
         </state>
       </provider>
     </entry>
