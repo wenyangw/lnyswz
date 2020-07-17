@@ -416,7 +416,7 @@ public class SpServiceImpl implements SpServiceI {
     public DataGrid searchSps(Sp sp) {
         DataGrid dg = new DataGrid();
 	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwId, zjldwmc");
-	    StringBuffer where = new StringBuffer(" from v_sp_mini where spmc + spcd + sppp like ?");
+	    StringBuffer where = new StringBuffer(" from v_sp_mini where spbh + spmc + spcd + sppp like ?");
 	    StringBuffer sqlCount = new StringBuffer("select count(*)");
 	    StringBuffer order = new StringBuffer(" order by spbh");
 	    Map<String, Object> params = new HashMap<String, Object>();
