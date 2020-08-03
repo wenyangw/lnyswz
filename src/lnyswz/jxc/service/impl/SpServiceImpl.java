@@ -415,13 +415,19 @@ public class SpServiceImpl implements SpServiceI {
     @Override
     public DataGrid searchSps(Sp sp) {
         DataGrid dg = new DataGrid();
-	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwId, zjldwmc");
-	    StringBuffer where = new StringBuffer(" from v_sp_mini where spbh + spmc + spcd + sppp like ?");
+	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, isnull(sppp, '') sppp, spbz, zjldwId, zjldwmc");
+//	    StringBuffer where = new StringBuffer(" from v_sp_mini where spbh + spmc + spcd + sppp like ?");
+		StringBuffer where = new StringBuffer(" from v_sp_mini");
 	    StringBuffer sqlCount = new StringBuffer("select count(*)");
 	    StringBuffer order = new StringBuffer(" order by spbh");
 	    Map<String, Object> params = new HashMap<String, Object>();
-	    sp.setQuery(sp.getQuery().replace(" ", "%"));
-	    params.put("0", "%" + sp.getQuery() + "%");
+
+//	    sp.setQuery(sp.getQuery().replace(" ", "%"));
+//	    params.put("0", "%" + sp.getQuery() + "%");
+		if (sp.getQuery() != null && sp.getQuery().length() > 0){
+			where.append(" where " + Util.getQuerySQLWhere(sp.getQuery(), new String[]{"spbh", "spmc", "spcd", "sppp"}, params, 0));
+		}
+
 
 	    dg.setRows(getSpsJSONList(spDao.findBySQL(sql.append(where).append(order).toString(), params, sp.getPage(), sp.getRows())));
 	    dg.setTotal(spDao.countSQL(sqlCount.append(where).toString(), params));

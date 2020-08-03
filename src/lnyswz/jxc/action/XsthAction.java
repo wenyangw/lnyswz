@@ -126,6 +126,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 		}
 		writeJson(j);
 	}
+
+	/**
+	 * 修改销售提货数量
+	 */
+	public void updateResl(){
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setCreateName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateResl(xsth);
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("销售提货退货操作成功！");
+		}catch(Exception e){
+			j.setMsg("销售提货退货操作失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
 	
 	/**
 	 * 修改销售提货运费
@@ -299,6 +319,16 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 			Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));
 		}
 		//Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
+	}
+
+	public void printXsthRe() {
+		User user = (User)session.get("user");
+		xsth.setCreateId(user.getId());
+		xsth.setCreateName(user.getRealName());
+		DataGrid dg = xsthService.printXsthRe(xsth);
+
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_re.json"));
+
 	}
 	
 	public void printXsht() {

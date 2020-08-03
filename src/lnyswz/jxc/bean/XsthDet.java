@@ -40,6 +40,7 @@ public class XsthDet{
 	private BigDecimal thsl;
 	private BigDecimal qrsl;
 	private String completed;
+	private BigDecimal resl;
 	private BigDecimal zdwthsl;
 	private BigDecimal cdwthsl;
 	private BigDecimal zdwytsl;
@@ -283,5 +284,13 @@ public class XsthDet{
 
 	public void setZmsl(BigDecimal zmsl) {
 		this.zmsl = zmsl;
+	}
+
+	public BigDecimal getResl() {
+		return resl;
+	}
+
+	public void setResl(BigDecimal resl) {
+		this.resl = resl;
 	}
 }

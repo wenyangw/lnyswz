@@ -257,8 +257,13 @@ public class KhddServiceImpl implements KhddServiceI {
                     c.setZhxs(new BigDecimal(o[2].toString()));
                     c.setKcsl(new BigDecimal(o[3].toString()));
                     c.setDwcb(new BigDecimal(o[4].toString()));
-                    c.setXsdj(new BigDecimal(o[5].toString()));
-                    c.setSpecXsdj(new BigDecimal(o[6].toString()));
+					if ("01".equals(t.getTKhdd().getBmbh()) && (t.getTKhdd().getYwyId() == 115 || t.getTKhdd().getYwyId() == 193)) {
+						c.setXsdj(new BigDecimal(o[6].toString()));
+					} else{
+						c.setXsdj(new BigDecimal(o[5].toString()).multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(4, BigDecimal.ROUND_HALF_UP));
+					}
+//                    c.setXsdj(new BigDecimal(o[5].toString()));
+//                    c.setSpecXsdj(new BigDecimal(o[6].toString()));
                 } else {
                     c.setKcsl(BigDecimal.ZERO);
                     c.setDwcb(BigDecimal.ZERO);
