@@ -249,6 +249,15 @@ $(function(){
         		}},
         	{field:'shbz',title:'审批说明',align:'center'},
         	{field:'payDays',title:'付款天数',align:'center'},
+            {field:'isRe',title:'退货',align:'center',sortable:true,
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+			{field:'rebz',title:'退货说明'}
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
@@ -318,7 +327,7 @@ $(function(){
    	    					if(value != 0){
    	    						return 'color:green;';
    	    					}
-                       	}},	
+                       	}},
                     {field:'zdwdj',title:'单价1',width:100,align:'center'},
                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
@@ -327,6 +336,7 @@ $(function(){
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+					{field:'resl',title:'退货数量',width:100,align:'center'},
        	        	{field:'completed',title:'完成',align:'center',
         	        		formatter : function(value) {
         						if (value == '1') {
@@ -1981,6 +1991,24 @@ function printXsth(){
 	}
 }
 
+function printXsthRe(){
+    var selected = xsth_dg.datagrid('getSelected');
+    if (selected != undefined) {
+        if (selected.isRe == '1'){
+            $.messager.confirm('请确认', '是否打印销售提货单(退货)？', function(r) {
+                if (r) {
+                    var url = lnyw.bp() + '/jxc/xsthAction!printXsthRe.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
+                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                }
+            });
+        }else {
+            $.messager.alert('警告', '选择的销售提货单没有发生退货操作，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
+}
+
 function exportXsth(){
 	var selected = xsth_dg.datagrid('getSelected');
  	if (selected != undefined) {
@@ -2401,8 +2429,86 @@ function confirmThsl(){
 		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 		return false;
 	}
-	
 }
+
+//退货处理
+function returnXsth(){
+	if(detDg != undefined){
+		var detRow = detDg.datagrid('getSelected');
+		if(detRow != null){
+			if(xsthRow.isZs != '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						if(!detRow.resl){
+						    if(detRow.zdwsl > detRow.kpsl) {
+                                $.messager.prompt('请确认', '请录入该商品的退货数量', function(resl){
+                                    if (resl != undefined){
+                                        if(detRow.kpsl + resl < detRow.zdwsl) {
+                                            $.messager.prompt('请确认', '请录入退货备注（同一张单据只记录最后一次输入）', function(rebz){
+                                                if (rebz != undefined){
+                                                    $.ajax({
+                                                        url : '${pageContext.request.contextPath}/jxc/xsthAction!updateResl.action',
+                                                        data : {
+                                                            id : detRow.id,
+                                                            resl: resl,
+                                                            rebz: rebz,
+                                                            fromOther: 'xsth',
+                                                            bmbh : xsth_did,
+                                                            menuId : xsth_menuId,
+                                                        },
+                                                        dataType : 'json',
+                                                        method: 'post',
+                                                        success : function(d) {
+                                                            detDg.datagrid('updateRow', {
+                                                                index: detDg.datagrid('getRowIndex', detRow),
+                                                                row: {
+                                                                    resl: resl
+                                                                }
+                                                            });
+                                                            // xsth_dg.datagrid('updateRow', {
+                                                            //     index: xsth_dg.datagrid('getRowIndex', xsthRow),
+                                                            //     row: {
+                                                            //         rebz: rebz
+                                                            //     }
+                                                            // });
+                                                            $.messager.show({
+                                                                title : '提示',
+                                                                msg : d.msg
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            $.messager.alert('警告', '退货数量不能大于订单数量，请重新操作！',  'warning');
+                                        }
+                                    }
+                                });
+                            }else {
+                                $.messager.alert('警告', '选择的销售提货已完成开票，请重新选择！',  'warning');
+                            }
+						}else{
+							$.messager.alert('警告', '选择的销售提货已发生过退货，请重新选择！',  'warning');
+						}
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			}else{
+				$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
+			}
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+}
+
 
 function completeXsth(){
 	if(detDg != undefined){

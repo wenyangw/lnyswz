@@ -25,10 +25,12 @@ public interface XsthServiceI {
 	DataGrid datagridDet(Xsth xsth);
 	DataGrid getSpkc(Xsth xsth);
 	DataGrid printXsth(Xsth xsth);
+	DataGrid printXsthRe(Xsth xsth);
 	DataGrid printXsht(Xsth xsth);
 	DataGrid printShd(Xsth xsth);
 	DataGrid printXsthByBgy(Xsth xsth);
 	void updateThsl(Xsth xsth);
+	void updateResl(Xsth xsth);
 	void updateLock(Xsth xsth);
 	void updateUnlock(Xsth xsth);
 	void updateShdz(Xsth xsth);

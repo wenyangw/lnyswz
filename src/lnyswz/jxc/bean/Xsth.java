@@ -75,6 +75,8 @@ public class Xsth {
 	private String isFp;
 	private String source;
 	private int htjs;
+	private String isRe;
+	private String rebz;
 		
 	private int id;
 	private String spbh;
@@ -97,6 +99,7 @@ public class Xsth {
 	private BigDecimal kpsl;
 	private BigDecimal ckpsl;
 	private BigDecimal thsl;
+	private BigDecimal resl;
 	private String kfcklshs;
 	
 	private String search;
@@ -701,6 +704,15 @@ public class Xsth {
 	public void setThsl(BigDecimal thsl) {
 		this.thsl = thsl;
 	}
+
+	public BigDecimal getResl() {
+		return resl;
+	}
+
+	public void setResl(BigDecimal resl) {
+		this.resl = resl;
+	}
+
 	public String getKfcklshs() {
 		return kfcklshs;
 	}
@@ -867,4 +879,22 @@ public class Xsth {
 	public void setNoKhbh(String noKhbh) {
 		this.noKhbh = noKhbh;
 	}
+
+	public String getIsRe() {
+		return isRe;
+	}
+
+	public void setIsRe(String isRe) {
+		this.isRe = isRe;
+	}
+
+	public String getRebz() {
+        return rebz;
+    }
+
+
+
+    public void setRebz(String rebz) {
+        this.rebz = rebz;
+    }
 }
