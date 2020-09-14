@@ -2028,7 +2028,7 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsthDet tXsthDet = detDao.load(TXsthDet.class, xsth.getId());
 
 		tXsthDet.setResl(xsth.getResl());
-		reje = tXsthDet.getZdwdj().multiply(xsth.getResl()).setScale(2);
+		reje = tXsthDet.getZdwdj().multiply(xsth.getResl()).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 		//更新修改后数量、金额
 		tXsthDet.setZdwsl(tXsthDet.getZdwsl().subtract(xsth.getResl()));
@@ -2037,7 +2037,7 @@ public class XsthServiceImpl implements XsthServiceI {
             if(tXsthDet.getZhxs().compareTo(BigDecimal.ZERO) != 0){
                 csl = xsth.getResl().divide(tXsthDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP);
                 tXsthDet.setCdwsl(tXsthDet.getCdwsl().subtract(csl));
-                reje = tXsthDet.getCdwdj().multiply(csl).setScale(2);
+                reje = tXsthDet.getCdwdj().multiply(csl).setScale(2, BigDecimal.ROUND_HALF_UP);
             }
         }
 		tXsthDet.setSpje(tXsthDet.getSpje().subtract(reje));
@@ -2046,6 +2046,9 @@ public class XsthServiceImpl implements XsthServiceI {
 		TXsth tXsth = tXsthDet.getTXsth();
 
 		tXsth.setIsRe("1");
+		tXsth.setReId(xsth.getReId());
+		tXsth.setReName(xsth.getReName());
+		tXsth.setReTime(new Date());
 		tXsth.setRebz(xsth.getRebz());
 
 		Sp sp = new Sp();
