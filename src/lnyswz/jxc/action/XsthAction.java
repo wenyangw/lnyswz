@@ -70,15 +70,6 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 			xsth.setCancelId(user.getId());
 			xsth.setCancelName(user.getRealName());
 		}
-//		try {
-//			xsthService.cancelXsth(xsth);
-//			//添加成功
-//			j.setSuccess(true);
-//			j.setMsg("取消销售提货成功！");
-//		} catch (Exception e) {
-//			j.setMsg("取消销售提货失败！");
-//			e.printStackTrace();
-//		}
 		try {
 			j = xsthService.cancelXsth(xsth);
 		} catch (Exception e) {
@@ -132,8 +123,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	 */
 	public void updateResl(){
 		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+		xsth.setReId(user.getId());
+		xsth.setReName(user.getRealName());
 		Json j = new Json();
 		try{
 			xsthService.updateResl(xsth);
@@ -308,12 +299,12 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	public void printXsth() {
-		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+		User u = (User) session.get("user");
+		xsth.setCreateId(u.getId());
+		xsth.setCreateName(u.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 
-		if(xsth.getBmbh().equals("05") && (user.getId() == 19 || user.getId() == 46)){
+		if(xsth.getBmbh().equals("05") && (u.getId() == 19 || u.getId() == 46)){
 			Export.print(dg, Util.getReportName("07", "report_xsth.json"));
 		}else {
 			Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));

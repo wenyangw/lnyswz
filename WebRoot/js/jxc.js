@@ -900,8 +900,12 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
                                 query: query.val(),
                                 depId: depId,
                                 ckId: ckId
-                            }
+                            },
+							onLoadSuccess: function(){
+								query.focus();
+							}
                         });
+
                     }
                 }, 1000);
             });
@@ -982,7 +986,10 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
                             queryParams: {
                                 query: query.val(),
                                 depId: depId,
-                            }
+                            },
+							onLoadSuccess: function(){
+								query.focus();
+							}
                         });
                     }
                 }, 1000);
@@ -1061,7 +1068,10 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 						// $('#jxc_query_dg').datagrid('load', {query: query.val()});
 						$('#jxc_query_dg').datagrid({
 							url: urlAction,
-							queryParams: {query: query.val()}
+							queryParams: {query: query.val()},
+							onLoadSuccess: function(){
+								query.focus();
+							}
 						});
 					}
 				}, 1000);
@@ -1122,8 +1132,7 @@ jxc.queryAddr = function(title, target1, target2, urlJsp, urlAction){
 };
 
 jxc.print = function(url, isPrint, showPrint){
-	console.info(url);
-	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +    
+	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +
 		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
 		' <PARAM NAME="scriptable" VALUE="false">' +   
 		' <PARAM NAME="REPORT_URL" VALUE="'+url+'">' +

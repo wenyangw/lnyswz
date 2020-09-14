@@ -77,6 +77,9 @@ public class Xsth {
 	private int htjs;
 	private String isRe;
 	private String rebz;
+	private Integer reId;
+	private String reName;
+	private Date reTime;
 		
 	private int id;
 	private String spbh;
@@ -896,5 +899,29 @@ public class Xsth {
 
     public void setRebz(String rebz) {
         this.rebz = rebz;
+    }
+
+    public Integer getReId() {
+        return reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
+    }
+
+    public String getReName() {
+        return reName;
+    }
+
+    public void setReName(String reName) {
+        this.reName = reName;
+    }
+
+    public Date getReTime() {
+        return reTime;
+    }
+
+    public void setReTime(Date reTime) {
+        this.reTime = reTime;
     }
 }

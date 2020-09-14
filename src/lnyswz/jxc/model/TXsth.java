@@ -98,6 +98,9 @@ public class TXsth implements java.io.Serializable {
 	private int htjs;
 	private String isRe;
 	private String rebz;
+	private Integer reId;
+	private String reName;
+	private Date reTime;
 
 	private Set<TXsthDet> TXsthDets = new HashSet<TXsthDet>(0);
 	
@@ -114,7 +117,8 @@ public class TXsth implements java.io.Serializable {
 			String lockName, String locked, String toFp, String fromFp, String isKp, Integer kpId, Date kpTime, String kpName, String fromRk, String isHk,
 			Integer hkId, Date hkTime, String needAudit, String isAudit, String needAuditXsjj, String isAuditXsjj, BigDecimal ysfy, BigDecimal yysfy,
 			int payDays, String verifyCode, String out, Integer outId, String outName, Date outTime, String sended, Integer sendId, String sendName,
-			Date sendTime, String isFp, String source, int htjs, String isRe, String rebz, Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
+			Date sendTime, String isFp, String source, int htjs, String isRe, String rebz, Integer reId, String reName, Date reTime,
+            Set<TXsthDet> TXsthDets, Set<TYwrkDet> TYwrks) {
 		this.xsthlsh = xsthlsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -181,6 +185,9 @@ public class TXsth implements java.io.Serializable {
 		this.htjs = htjs;
 		this.isRe = isRe;
 		this.rebz = rebz;
+		this.reId = reId;
+		this.reName = reName;
+		this.reTime = reTime;
 		this.sendTime = sendTime;
 		this.TXsthDets = TXsthDets;
 		this.TYwrks = TYwrks;
@@ -815,6 +822,34 @@ public class TXsth implements java.io.Serializable {
 	public void setRebz(String rebz) {
 		this.rebz = rebz;
 	}
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "reTime", length = 23)
+    public Date getReTime() {
+        return this.reTime;
+    }
+
+    public void setReTime(Date reTime) {
+        this.reTime = reTime;
+    }
+
+    @Column(name = "reId")
+    public Integer getReId() {
+        return this.reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
+    }
+
+    @Column(name = "reName", length = 20)
+    public String getReName() {
+        return reName;
+    }
+
+    public void setReName(String reName) {
+        this.reName = reName;
+    }
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TXsth", cascade=CascadeType.ALL)
 	public Set<TXsthDet> getTXsthDets() {

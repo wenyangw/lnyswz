@@ -220,6 +220,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tXsth.setHjje(hjje);
 			tXsth.setNeedAuditXsjj("0");
 			tXsth.setIsAuditXsjj("0");
+			tXsth.setIsRe("0");
 
 			tXsthDets = new HashSet<TXsthDet>();
 		}else{
@@ -277,6 +278,7 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXsthDet.setDwcb(dwcb.multiply(new BigDecimal(1).add(Constant.SHUILV)));
 				tXsthDet.setQrsl(BigDecimal.ZERO);
 				tXsthDet.setCompleted("0");
+				tXsthDet.setResl(BigDecimal.ZERO);
 				tXsthDets.add(tXsthDet);
 				tXsthDet.setTXsth(tXsth);
 				hjsl = hjsl.add(tDet.getCdwsl());
@@ -1039,6 +1041,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		tXsth.setOut("0");
 		tXsth.setSended("0");
 		tXsth.setIsFp("0");
+		tXsth.setIsRe("0");
 		tXsth.setHjje(tXskp.getHjje().add(tXskp.getHjse()));
 		
 		//默认均为0
@@ -1076,6 +1079,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			tDet.setQrsl(BigDecimal.ZERO);
 			tDet.setDwcb(BigDecimal.ZERO);
 			tDet.setCompleted("0");
+			tDet.setResl(BigDecimal.ZERO);
 			//tDet.setLastRksl(BigDecimal.ZERO);
 			tDet.setTXsth(tXsth);
 //			tDet.setTXskps(tXskps);
