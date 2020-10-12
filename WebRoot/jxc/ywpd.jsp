@@ -511,7 +511,7 @@ function saveAll(){
 		    	$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + rsp.obj.ywpdlsh + '&bmbh=' + did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					}
 				});
 			}  
@@ -853,7 +853,7 @@ function cjYwpd(){
 								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 									if (r) {
 										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + d.obj.pdlxId;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW); 
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 									}
 								});
 							},
@@ -881,7 +881,7 @@ function printYwpd(){
 		$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + row.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + row.pdlxId;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{

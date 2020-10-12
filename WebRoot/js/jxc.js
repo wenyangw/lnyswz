@@ -1131,7 +1131,10 @@ jxc.queryAddr = function(title, target1, target2, urlJsp, urlAction){
 	});
 };
 
-jxc.print = function(url, isPrint, showPrint){
+jxc.print = function(url, isPrint, showPrint, user){
+	if (user != undefined) {
+		url =  url + "&createId=" + user.createId + "&createName=" + jxc.str2u(user.createName);
+	}
 	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +
 		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
 		' <PARAM NAME="scriptable" VALUE="false">' +   
@@ -1273,4 +1276,27 @@ function groupFormatter(fvalue, rows){
 
 jxc.hideKc = function(area){
 	$(area).layout('collapse', 'east');
+};
+
+jxc.str2u = function (str){
+	var ret ="";
+	var ustr = "";
+
+	for(var i=0; i<str.length; i++) {
+
+		var code = str.charCodeAt(i);
+		var code16 = code.toString(16);
+
+		if (code < 0xf) {
+			ustr = "\\u" + "000" + code16;
+		} else if (code < 0xff) {
+			ustr = "\\u" + "00" + code16;
+		} else if (code < 0xfff) {
+			ustr = "\\u" + "0" + code16;
+		} else {
+			ustr = "\\u" + code16;
+		}
+		ret += ustr;
+	}
+	return ret;
 };

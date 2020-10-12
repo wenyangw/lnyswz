@@ -1614,7 +1614,7 @@ function printXsqk(){
 							var xskplsh = xskplshs.join(',');
 						
 							var url = lnyw.bp() + '/jxc/xskpAction!printXsqk.action?xskplsh=' + xskplsh + "&bmbh=" + xskp_did + "&bz=" + bz;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						});	
 					}else{
 						$.messager.alert('提示', '必须填写发票号！', 'error');

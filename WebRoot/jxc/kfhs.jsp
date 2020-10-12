@@ -751,7 +751,7 @@ function printKfhs(){
 	 	$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/kfhsAction!printKfhs.action?kfhslsh=' + selected.kfhslsh + "&bmbh=" + did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{

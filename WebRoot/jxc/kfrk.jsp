@@ -659,7 +659,7 @@ function saveAll(){
 		    	$.messager.confirm('请确认', '是否打印库房入库单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/kfrkAction!printKfrk.action?kfrklsh=' + rsp.obj.kfrklsh + '&bmbh=' + did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					}
 				});
 			}  
@@ -1015,7 +1015,7 @@ function printKfrk(){
 		$.messager.confirm('请确认', '是否打印库房入库单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/kfrkAction!printKfrk.action?kfrklsh=' + row.kfrklsh + '&bmbh=' + did;
-				jxc.print(url, PREVIEW_REPORT, SHOW_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, SHOW_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{

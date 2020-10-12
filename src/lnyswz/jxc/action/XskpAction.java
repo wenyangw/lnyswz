@@ -135,7 +135,8 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 	
 	public void printXsqk() {
 		User user = (User)session.get("user");
-		xskp.setCreateName(user.getRealName());
+//		xskp.setCreateName(user.getRealName());
+		xskp.setCreateName(user == null ? Util.unicodeToString(xskp.getCreateName()) : user.getRealName());
 		DataGrid dg = xskpService.printXsqk(xskp);
 		Export.print(dg, Util.getReportName(xskp.getBmbh(), "report_xsqk.json"));
 		//Export.print(dg, Constant.REPORT_XSQK.get(xskp.getBmbh()));

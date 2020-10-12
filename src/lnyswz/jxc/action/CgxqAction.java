@@ -131,7 +131,8 @@ public class CgxqAction extends BaseAction implements ModelDriven<Cgxq>{
 	}
 	public void printCgxq() {
 		User user = (User) session.get("user");
-		cgxq.setCreateName(user.getRealName());
+//		cgxq.setCreateName(user.getRealName());
+		cgxq.setCreateName(user == null ? Util.unicodeToString(cgxq.getCreateName()) : user.getRealName());
 		DataGrid dg = cgxqService.printCgxq(cgxq);
 		Export.print(dg, Util.getReportName(cgxq.getBmbh(), "report_cgxq.json"));
 		//Export.print(dg, Constant.REPORT_CGXQ.get(cgxq.getBmbh()));

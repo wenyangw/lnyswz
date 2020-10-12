@@ -1142,7 +1142,7 @@ function saveAll(){
 			    	$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
 						if (r) {
 							var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + rsp.obj.cgjhlsh + "&bmbh=" + cgjh_did;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						}
 					});
 		    	}
@@ -1546,7 +1546,7 @@ function printCgjh(){
 			$.messager.confirm('请确认', '是否打印采购计划单？', function(r) {
 				if (r) {
 					var url = lnyw.bp() + '/jxc/cgjhAction!printCgjh.action?cgjhlsh=' + row.cgjhlsh + "&bmbh=" + cgjh_did;
-					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 				}
 			});
 		}else{
@@ -1569,28 +1569,6 @@ function exportCgjh(){
 							//type: 'rtf'
 						};
 					jxc.export('${pageContext.request.contextPath}', '/jxc/cgjhAction!export.action', data);
-// 					$.ajax({	
-// 						url:'${pageContext.request.contextPath}/jxc/cgjhAction!export.action',
-// 						async: false,
-// 						cache: false,
-// 						context:this,	
-// 						data : {
-// 							cgjhlsh : row.cgjhlsh,
-// 							bmbh: cgjh_did,
-// 						},
-// 						success:function(data){
-// 							var json = $.parseJSON(data);
-							
-// 							window.open("${pageContext.request.contextPath}/"+json.obj);
-// 							$.messager.show({
-// 								title : "提示",
-// 								msg : json.msg
-// 							});
-// 						},
-// 						complete: function(){
-// 							//lnyw.MaskUtil.unmask();
-// 						}
-// 					});
 				}
 			});
 		}else{
