@@ -89,7 +89,8 @@ public class YwhsAction extends BaseAction implements ModelDriven<Ywhs> {
 
 	public void printYwhs() {
 		User user = (User) session.get("user");
-		ywhs.setCreateName(user.getRealName());
+//		ywhs.setCreateName(user.getRealName());
+		ywhs.setCreateName(user == null ? Util.unicodeToString(ywhs.getCreateName()) : user.getRealName());
 		DataGrid dg = ywhsService.printYwhs(ywhs);
 		Export.print(dg, Util.getReportName(ywhs.getBmbh(), "report_ywhs.json"));
 		//Export.print(dg, Constant.REPORT_YWHS.get(ywhs.getBmbh()));

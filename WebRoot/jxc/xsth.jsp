@@ -1230,7 +1230,7 @@ function saveXsth(){
 			    	//$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 					//	if (r) {
 					//		var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					//	}
 					//});
 			    	
@@ -1239,7 +1239,7 @@ function saveXsth(){
 				    	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 							}
 						});
 			    	}
@@ -1978,7 +1978,7 @@ function printXsth(){
 					$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 						if (r) {
 							var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did + '&type=' + PRINT_TYPE_XSTH_YW;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						}
 					});
 				}else{
@@ -1998,7 +1998,7 @@ function printXsthRe(){
             $.messager.confirm('请确认', '是否打印销售提货单(退货)？', function(r) {
                 if (r) {
                     var url = lnyw.bp() + '/jxc/xsthAction!printXsthRe.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
-                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
                 }
             });
         }else {
@@ -2058,7 +2058,7 @@ function printXsht(){
 					 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
-								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 							}
 						});
  					//}else{
@@ -2210,7 +2210,7 @@ function printShd(){
 								if (r) {
 								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
 									var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
-									jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+									jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 								}
 							});
 						}
@@ -2258,10 +2258,6 @@ function exportShd(){
 						if(flag){
 							$.messager.confirm('请确认', '是否导出收货确认单？', function(r) {
 								if (r) {
-								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
-									//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
-									//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-									
 									var data = {
 										xsthDetIds : xsthDetIds.join(','),
 										cgjhlsh: detRows[0].cgjhlsh,
@@ -2270,32 +2266,6 @@ function exportShd(){
 										type: 'rtf'
 									};
 									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
-								
-								
-// 									$.ajax({	
-// 										url:'${pageContext.request.contextPath}/jxc/xsthAction!exportShd.action',
-// 										async: false,
-// 										cache: false,
-// 										context:this,	
-// 										data : {
-// 											xsthDetIds : xsthDetIds.join(','),
-// 											cgjhlsh: detRows[0].cgjhlsh,
-// 											bmbh: xsth_did,
-// 										},
-// 										success:function(data){
-// 											var json = $.parseJSON(data);
-											
-// 											window.open("${pageContext.request.contextPath}/" + json.obj);
-											
-// 											$.messager.show({
-// 												title : "提示",
-// 												msg : json.msg
-// 											});
-// 										},
-// 										complete: function(){
-// 											//lnyw.MaskUtil.unmask();
-// 										}
-// 									});
 								}
 							});
 						}

@@ -148,7 +148,7 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 
 	public void printYwrk() {
 		User user = (User) session.get("user");
-		ywrk.setCreateName(user.getRealName());
+		ywrk.setCreateName(user == null ? Util.unicodeToString(ywrk.getCreateName()) : user.getRealName());
 		DataGrid dg = ywrkService.printYwrk(ywrk);
 		Export.print(dg, Util.getReportName(ywrk.getBmbh(), "report_ywrk.json"));
 		//Export.print(dg, Constant.REPORT_YWRK.get(ywrk.getBmbh()));
@@ -156,7 +156,8 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 	
 	public void printKfrk() {
 		User user = (User) session.get("user");
-		ywrk.setCreateName(user.getRealName());
+//		ywrk.setCreateName(user.getRealName());
+		ywrk.setCreateName(user == null ? Util.unicodeToString(ywrk.getCreateName()) : user.getRealName());
 		DataGrid dg = ywrkService.printKfrk(ywrk);
 		Export.print(dg, Util.getReportName(ywrk.getBmbh(), "report_kfrk.json"));
 		//Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));

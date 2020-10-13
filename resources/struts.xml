@@ -30,6 +30,7 @@
 	<constant name="struts.allowed.action.names" value="[a-zA-Z0-9._!/\-]*" />
 		
 	<package name="lnyswz" extends="struts-default">
+<!--		<global-allowed-methods>regex:([A-Za-z0-9_$]*)</global-allowed-methods>-->
 		<!-- 配置自定义拦截器LoginedCheckInterceptor -->
 <!--         <interceptors> -->
 <!--             <interceptor name="loginedCheck" class="lnyswz.common.interceptor.LoginedCheckInterceptor"/> -->

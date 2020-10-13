@@ -495,7 +495,7 @@ function cjYwsh(){
 								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
 									if (r) {
 										var url = lnyw.bp() + '/jxc/ywshAction!printYwsh.action?ywshlsh=' + d.obj.ywshlsh + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 									}
 								});
 							}

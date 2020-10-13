@@ -71,7 +71,8 @@ public class YwpdAction extends BaseAction implements ModelDriven<Ywpd> {
 	
 	public void printYwpd() {
 		User user = (User) session.get("user");
-		ywpd.setCreateName(user.getRealName());
+//		ywpd.setCreateName(user.getRealName());
+		ywpd.setCreateName(user == null ? Util.unicodeToString(ywpd.getCreateName()) : user.getRealName());
 		DataGrid dg = ywpdService.printYwpd(ywpd);
 		Export.print(dg, Util.getReportName(ywpd.getBmbh(), "report_ywpd.json"));
 		//Export.print(dg, Constant.REPORT_YWPD.get(ywpd.getBmbh()));

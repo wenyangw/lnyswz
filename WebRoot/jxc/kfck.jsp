@@ -793,7 +793,7 @@ function saveAll(){
 		    	$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + rsp.obj.kfcklsh + '&bmbh=' + jxc_kfck_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					}
 				});
 			}  
@@ -1348,7 +1348,7 @@ function printKfck(){
 		$.messager.confirm('请确认', '是否打印库房出库单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/kfckAction!printKfck.action?kfcklsh=' + row.kfcklsh + "&bmbh=" + jxc_kfck_did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{
@@ -1371,7 +1371,7 @@ function printThd(){
                 $.messager.confirm('请确认', '是否打印销售提货单？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
                     if (r) {
                         var url = lnyw.bp() + '/jxc/xsthAction!printThd.action?xsthlsh=' + row.xsthlsh + '&bmbh=' + jxc_kfck_did + '&type=' + PRINT_TYPE_XSTH;
-                        jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                        jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
                     }
                 });
             }
@@ -1418,7 +1418,7 @@ function printXsthByBgy(){
                             $.messager.confirm('请确认', '是否打印销售提货单(<font color="red">'+ bgyIds[index].bgyName + '</font>)？<br />这是第' + (dd.obj + 1) + '次打印。', function(r) {
                                 if (r) {
                                     var url = lnyw.bp() + '/jxc/xsthAction!printXsthByBgy.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + jxc_kfck_did + "&bgyId=" + bgyIds[index].bgyId + '&type=' + PRINT_TYPE_XSTH_BGY;
-                                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+                                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
                                 }
                             });
                         }

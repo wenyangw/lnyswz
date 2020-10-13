@@ -52,7 +52,8 @@ public class YwbtAction extends BaseAction implements ModelDriven<Ywbt> {
 
 	public void printYwbt() {
 		User user = (User) session.get("user");
-		ywbt.setCreateName(user.getRealName());
+//		ywbt.setCreateName(user.getRealName());
+		ywbt.setCreateName(user == null ? Util.unicodeToString(ywbt.getCreateName()) : user.getRealName());
 		DataGrid dg = ywbtService.printYwbt(ywbt);
 		Export.print(dg, Util.getReportName(ywbt.getBmbh(), "report_ywbt.json"));
 		//Export.print(dg, Constant.REPORT_YWBT.get(ywbt.getBmbh()));

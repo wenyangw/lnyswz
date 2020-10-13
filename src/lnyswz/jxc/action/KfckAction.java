@@ -86,7 +86,8 @@ public class KfckAction extends BaseAction implements ModelDriven<Kfck>{
 	
 	public void printKfck() {
 		User user = (User)session.get("user");
-		kfck.setCreateName(user.getRealName());
+//		kfck.setCreateName(user.getRealName());
+		kfck.setCreateName(user == null ? Util.unicodeToString(kfck.getCreateName()) : user.getRealName());
 		DataGrid dg = kfckService.printKfck(kfck);
 		Export.print(dg, Util.getReportName(kfck.getBmbh(), "report_kfck.json"));
 		//Export.print(dg, Constant.REPORT_KFCK.get(kfck.getBmbh()));

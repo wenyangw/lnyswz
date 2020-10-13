@@ -75,7 +75,8 @@ public class XshkAction extends BaseAction implements ModelDriven<Xshk>{
 	
 	public void printXshk() {
 		User user = (User)session.get("user");
-		xshk.setCreateName(user.getRealName());
+//		xshk.setCreateName(user.getRealName());
+		xshk.setCreateName(user == null ? Util.unicodeToString(xshk.getCreateName()) : user.getRealName());
 		DataGrid dg = xshkService.printXshk(xshk);
 		Export.print(dg, Util.getReportName(xshk.getBmbh(), "report_xshk.json"));
 		//Export.print(dg, Constant.REPORT_XSHK.get(xshk.getBmbh()));

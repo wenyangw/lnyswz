@@ -176,7 +176,6 @@ public class CgjhServiceImpl implements CgjhServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cgjhlsh", cgjh.getCgjhlsh());
 		List<TCgjhDet> tCgjhDets = detDao.find(hql, params);
-		
 		List<CgjhDet> nl = new ArrayList<CgjhDet>();
 		for (TCgjhDet yd : tCgjhDets) {
 			CgjhDet cgjhDet = new CgjhDet();

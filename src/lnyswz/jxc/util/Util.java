@@ -4,6 +4,8 @@ package lnyswz.jxc.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -85,5 +87,21 @@ public class Util {
 		if (result.endsWith("/"))
 			result = result.substring(0, result.length() - 1);// 不包含最后的"/"
 		return result;
+	}
+
+	/**
+	 * unicode转中文
+	 * @param str
+	 * @return
+	 */
+	public static String unicodeToString(String str) {
+		Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");
+		Matcher matcher = pattern.matcher(str);
+		char ch;
+		while (matcher.find()) {
+			ch = (char) Integer.parseInt(matcher.group(2), 16);
+			str = str.replace(matcher.group(1), ch+"" );
+		}
+		return str;
 	}
 }

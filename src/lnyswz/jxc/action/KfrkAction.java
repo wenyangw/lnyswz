@@ -90,7 +90,8 @@ public class KfrkAction extends BaseAction implements ModelDriven<Kfrk>{
 
 	public void printKfrk() {
 		User user = (User)session.get("user");
-		kfrk.setCreateName(user.getRealName());
+//		kfrk.setCreateName(user.getRealName());
+		kfrk.setCreateName(user == null ? Util.unicodeToString(kfrk.getCreateName()) : user.getRealName());
 		DataGrid dg = kfrkService.printKfrk(kfrk);
 		Export.print(dg, Util.getReportName(kfrk.getBmbh(), "report_kfrk.json"));
 	}

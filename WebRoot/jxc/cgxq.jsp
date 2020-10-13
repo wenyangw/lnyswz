@@ -378,7 +378,7 @@ function saveAll(){
 			    	$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
 						if (r) {
 							var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + rsp.obj.cgxqlsh + "&bmbh=" + did;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						}
 					});
 		    	}
@@ -854,7 +854,7 @@ function printCgxq(){
 			$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
 				if (r) {
 					var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + row.cgxqlsh + "&bmbh=" + did;
-					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 				}
 			});
 		}else{
