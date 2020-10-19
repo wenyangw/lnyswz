@@ -2413,7 +2413,7 @@ function returnXsth(){
 						    if(detRow.zdwsl > detRow.kpsl) {
                                 $.messager.prompt('请确认', '请录入该商品的退货数量', function(resl){
                                     if (resl != undefined){
-                                        if(detRow.kpsl + resl < detRow.zdwsl) {
+                                        if(detRow.kpsl + parseInt(resl) <= detRow.zdwsl) {
                                             $.messager.prompt('请确认', '请录入退货备注（同一张单据只记录最后一次输入）', function(rebz){
                                                 if (rebz != undefined){
                                                     $.ajax({
@@ -2435,12 +2435,13 @@ function returnXsth(){
                                                                     resl: resl
                                                                 }
                                                             });
-                                                            // xsth_dg.datagrid('updateRow', {
-                                                            //     index: xsth_dg.datagrid('getRowIndex', xsthRow),
-                                                            //     row: {
-                                                            //         rebz: rebz
-                                                            //     }
-                                                            // });
+                                                            xsth_dg.datagrid('updateRow', {
+                                                                index: xsth_dg.datagrid('getRowIndex', xsthRow),
+                                                                row: {
+                                                                    rebz: rebz,
+                                                                    isRe: '1'
+                                                                }
+                                                            });
                                                             $.messager.show({
                                                                 title : '提示',
                                                                 msg : d.msg
