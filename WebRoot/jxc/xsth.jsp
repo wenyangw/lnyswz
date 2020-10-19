@@ -2406,7 +2406,7 @@ function returnXsth(){
 	if(detDg != undefined){
 		var detRow = detDg.datagrid('getSelected');
 		if(detRow != null){
-			if(xsthRow.isZs != '1'){
+			// if(xsthRow.isZs != '1'){
 				if(xsthRow.isCancel == '0'){
 					if(xsthRow.needAudit == xsthRow.isAudit){
 						if(!detRow.resl){
@@ -2466,9 +2466,9 @@ function returnXsth(){
 				}else{
 					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
 				}
-			}else{
-				$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
-			}
+			// }else{
+			// 	$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
+			// }
 		}else{
 			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 			return false;
