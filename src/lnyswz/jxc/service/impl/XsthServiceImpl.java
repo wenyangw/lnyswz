@@ -1673,7 +1673,7 @@ public class XsthServiceImpl implements XsthServiceI {
 			}
 			//hql += " and t.TXsth.isZs = '0'";
 			//hql += " and t.zdwsl <> (select isnull(sum(tkd.zdwsl), 0) from TKfckDet tkd where tkd.TKfck in elements(t.TKfcks) and tkd.spbh = t.spbh)";
-			hql += " and t.zdwsl <> t.cksl";
+			hql += " and t.zdwsl + t.resl <> t.cksl";
 		}
 		
 		String countHql = "select count(id) " + hql;
