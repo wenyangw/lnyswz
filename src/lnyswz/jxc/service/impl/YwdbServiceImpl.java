@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
+import lnyswz.jxc.util.Export;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +25,6 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Hw;
-import lnyswz.jxc.bean.Xskp;
-import lnyswz.jxc.bean.Ywdb;
-import lnyswz.jxc.bean.YwdbDet;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TCgjh;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TCgxqDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.THw;
-import lnyswz.jxc.model.TYwdb;
-import lnyswz.jxc.model.TYwdbDet;
-import lnyswz.jxc.model.TKfzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TLszz;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSp;
-import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
-import lnyswz.jxc.model.TYwzz;
 import lnyswz.jxc.service.YwdbServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
@@ -267,6 +246,46 @@ public class YwdbServiceImpl implements YwdbServiceI {
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
+		datagrid.setRows(nl);
+		return datagrid;
+	}
+
+	@Override
+	public DataGrid printYwdb(Ywdb ywdb) {
+		DataGrid datagrid = new DataGrid();
+		Export.createCode(ywdb.getYwdblsh());
+		TYwdb tYwdb = ywdbDao.load(TYwdb.class, ywdb.getYwdblsh());
+
+		List<YwdbDet> nl = new ArrayList<YwdbDet>();
+		BigDecimal hj = Constant.BD_ZERO;
+		YwdbDet ywdbDet = null;
+		for (TYwdbDet yd : tYwdb.getTYwdbDets()) {
+			ywdbDet = new YwdbDet();
+			BeanUtils.copyProperties(yd, ywdbDet);
+			nl.add(ywdbDet);
+		}
+		int num = nl.size();
+		if (num < Constant.REPORT_NUMBER) {
+			for (int i = 0; i < (Constant.REPORT_NUMBER - num); i++) {
+				nl.add(new YwdbDet());
+			}
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", "业   务   调   拨   单");
+		map.put("ywdblsh", ywdb.getYwdblsh());
+		map.put("bmmc", tYwdb.getBmmc());
+		map.put("printName", ywdb.getCreateName());
+		map.put("createTime", DateUtil.dateToString(tYwdb.getCreateTime(), DateUtil.DATETIME_NOSECOND_PATTERN));
+		map.put("printTime", DateUtil.dateToString(new Date()));
+		map.put("ckmcF", tYwdb.getCkmcF());
+		map.put("ckmcT", tYwdb.getCkmcT());
+		map.put("bz", tYwdb.getBz());
+//		String codePath = Util.getRootPath() + Constant.CODE_PATH + kfck.getKfcklsh() + ".png";
+		//map.put("codeFile", codePath.replace("/","\\"));
+//		map.put("codeFile", codePath);
+
+		datagrid.setObj(map);
 		datagrid.setRows(nl);
 		return datagrid;
 	}
