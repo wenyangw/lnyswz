@@ -79,7 +79,7 @@ $(function(){
 
 });
 
-function appendUser() {
+function appendUser1() {
 	$.ajax({
 		url:'${pageContext.request.contextPath}/jxc/khUserAction!add.action',
 		async: false,
@@ -106,7 +106,7 @@ function appendUser() {
 	});
 }
 
-function appendUser1() {
+function appendUser() {
 	var p = $('#admin_user_addDialog');
 	p.dialog({
 		title : '增加用户',

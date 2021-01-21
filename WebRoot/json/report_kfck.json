@@ -6,5 +6,9 @@
   {
 	"bmbh" : "05",
 	"report" : "kfck_report_s_ns"
+  },
+  {
+    "bmbh" : "21",
+    "report" : "kfck_report_s_ns"
   }
 ]

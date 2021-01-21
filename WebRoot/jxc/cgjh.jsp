@@ -1872,7 +1872,7 @@ function lockSpInCgjh(){
 		if(cgjh_detRow != null){
 			if(cgjh_detRow.isLock == '0'){
 				if(cgjh_detRow.isBack == '0'){
-					if(cgjh_detRow.zdwyrsl != undefined){
+					// if(cgjh_detRow.zdwyrsl != undefined){
 						$.messager.confirm('请确认', '您是否要锁定选中的采购计划商品品种？', function(r) {
 							if (r) {
 								$.ajax({
@@ -1901,9 +1901,9 @@ function lockSpInCgjh(){
 								});
 							}
 						});
-					}else{
-						$.messager.alert('警告', '选择的商品记录还未到货，只能做取消操作，请重新选择！',  'warning');
-					}
+					// }else{
+					// 	$.messager.alert('警告', '选择的商品记录还未到货，只能做取消操作，请重新选择！',  'warning');
+					// }
 				}else{
 					$.messager.alert('警告', '选择的商品记录已被取消，请重新选择！',  'warning');
 				}

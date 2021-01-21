@@ -109,8 +109,9 @@ public class KfckServiceImpl implements KfckServiceI {
 		//处理商品明细
 		Set<TKfckDet> tDets = new HashSet<TKfckDet>();
 		ArrayList<KfckDet> kfckDets = JSON.parseObject(kfck.getDatagrid(), new TypeReference<ArrayList<KfckDet>>(){});
+		TKfckDet tDet = null;
 		for(KfckDet kfckDet : kfckDets){
-			TKfckDet tDet = new TKfckDet();
+			tDet = new TKfckDet();
 			BeanUtils.copyProperties(kfckDet, tDet);
 			Sp sp = new Sp();
 			BeanUtils.copyProperties(kfckDet, sp);
@@ -168,6 +169,8 @@ public class KfckServiceImpl implements KfckServiceI {
 						}
 					}
 				}
+			} else {
+				tDet.setLastThsl(BigDecimal.ZERO);
 			}
 			
 			tDets.add(tDet);
@@ -476,7 +479,7 @@ public class KfckServiceImpl implements KfckServiceI {
 				nl.add(new KfckDet());
 			}
 		}
-		String bz = "";
+		String bz = tKfck.getBz();
 		if(tXsth != null){
 			bz = tXsth.getXsthlsh();
 			if(tKfck.getBz() != null && tKfck.getBz().trim().length() > 0){

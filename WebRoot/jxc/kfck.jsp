@@ -17,6 +17,8 @@ var kfck_tabs;
 var jxc_kfck_ckCombo;
 var jxc_kfck_fhCombo;
 
+const KFCK_NOYW_BMBH = '21'
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -477,7 +479,7 @@ $(function(){
 	    autoRowHeight: false,
 	    showFooter: true,
 		columns:[[
-	        {field:'spbh',title:'商品编号',width:25,align:'center',editor:'textRead'},
+	        {field:'spbh',title:'商品编号',width:25,align:'center',editor: jxc_kfck_did !== KFCK_NOYW_BMBH ? 'textRead' : 'text'},
 	        {field:'spmc',title:'商品名称',width:100,align:'center',editor:'textRead'},
 	        {field:'spcd',title:'产地',width:25,align:'center',editor:'textRead'},
 	        {field:'sppp',title:'品牌',width:25,align:'center',editor:'text',hidden:true},
@@ -496,8 +498,8 @@ $(function(){
 	        	}},
 	        {field:'sppc',title:'批次',width:25,align:'center',editor:'datebox'},
 	        {field:'zjldwmc',title:'单位1',width:15,align:'center',editor:'textRead'},
-	        {field:'zdwthsl',title:'开单数量1',width:20,align:'center',editor:'textRead'},
-	        {field:'zdwytsl',title:'已提数量1',width:20,align:'center',editor:'textRead'},
+	        {field:'zdwthsl',title:'开单数量1',width:20,align:'center',editor:'textRead', hidden: jxc_kfck_did === KFCK_NOYW_BMBH},
+	        {field:'zdwytsl',title:'已提数量1',width:20,align:'center',editor:'textRead', hidden: jxc_kfck_did === KFCK_NOYW_BMBH},
 	        {field:'zdwsl',title:'提货数量1',width:25,align:'center',
 	        	editor:{
 	        		type:'numberbox',
@@ -506,8 +508,8 @@ $(function(){
 	        			precision: LENGTH_SL,
 	        		}}},
 	        {field:'cjldwmc',title:'单位2',width:15,align:'center',editor:'textRead'},
-	        {field:'cdwthsl',title:'开单数量2',width:25,align:'center',editor:'textRead'},
-	        {field:'cdwytsl',title:'已提数量2',width:25,align:'center',editor:'textRead'},
+	        {field:'cdwthsl',title:'开单数量2',width:25,align:'center',editor:'textRead', hidden: jxc_kfck_did === KFCK_NOYW_BMBH},
+	        {field:'cdwytsl',title:'已提数量2',width:25,align:'center',editor:'textRead', hidden: jxc_kfck_did === KFCK_NOYW_BMBH},
 	        {field:'cdwsl',title:'提货数量2',width:25,align:'center',
 	        		editor:{
         				type:'numberbox',
@@ -535,7 +537,17 @@ $(function(){
 	
 	//初始化创建时间
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
-	
+
+    $('input[name=thfs]').click(function(){
+        if($('input#thfs_sh').is(':checked')){
+            $('.thfs_sh').css('display','inline');
+            $('.thfs_zt').css('display','none');
+        }else{
+            $('.thfs_sh').css('display','none');
+            $('.thfs_zt').css('display','inline');
+            $('.thfs_sh input').val('');
+        }
+    });
 
 	//初始化信息
 	init();
@@ -569,7 +581,15 @@ function init(){
 	
 	jxc_kfck_ckCombo.combobox("selectedIndex", 0);
 	jxc_kfck_fhCombo.combobox("selectedIndex", 0);
-	
+
+	if (jxc_kfck_did === KFCK_NOYW_BMBH) {
+	    $('input[name="khbh"]').removeAttr('disabled')
+        $('input[name="ckId"]').removeAttr('disabled')
+        $('input[name="thfs"]').removeAttr('disabled')
+        $('input[name="thr"]').removeAttr('disabled')
+        $('input[name="ch"]').removeAttr('disabled')
+        $('input[name="shdz"]').removeAttr('disabled')
+    }
 
 	//初始化流水号
 	$.ajax({
@@ -840,7 +860,6 @@ function setEditing(){
     			{
     				bmbh : jxc_kfck_did, 
     				ckId : jxc_kfck_ckCombo.combobox('getValue'),
-    				fhId : jxc_kfck_fhCombo.combobox('getValue'),
     				spbh : $(spbhEditor.target).val(),
 //     				hwId : $(hwIdEditor.target).val(), 
 //     				sppc : $(sppcEditor.target).val(), 
@@ -893,73 +912,77 @@ function setEditing(){
 	});
 	
     //处理商品编号按键事件
-//     spbhEditor.target.bind('keydown', function(event){
+    spbhEditor.target.bind('keydown', function(event){
 //     	//按Tab键,根据商品编号获取商品信息
-//     	if(event.keyCode == 9){
-//     		if($(this).val().trim().length == 7){
-//     			if(!existKey($(this).val(), editIndex)){
-//     				$.ajax({
-//     					url:'${pageContext.request.contextPath}/jxc/spAction!loadSp.action',
-//     					async: false,
-//     					context:this,
-//     					data:{
-//     						spbh: $(this).val(),
-//     						depId : jxc_kfck_did,
-//     					},
-//     					dataType:'json',
-//     					success:function(data){
-//     						if(data.success){
-//     							//设置信息字段值
-//     							setValueBySpbh(data.obj);
-//     							sppcEditor.target.focus();
-//     						}else{
-//     							$.messager.alert('提示', '商品编号不存在！', 'error');
-//     						}
-//     					}
-//     				});
-//     			}else{
-//     				$.messager.alert('提示', '商品编号只能出现一次，请重新输入！', 'error');
-//     			}
-//     		}else{
-//     			$.messager.alert('提示', '商品编号必须是7位，请重新输入！', 'error');
-//     		}
-//     		return false;
-//     	}
-//     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
-//     	if(event.keyCode == 27){
-//     		jxc.spQuery($(spbhEditor.target).val(),
-//     				jxc_kfck_did,
-//     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
-//     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
-//     				hwIdEditor);
-// 			sppcEditor.target.focus();
-//     		return false;
-//     	}
-//     });
+     	if(event.keyCode == 9){
+     		if($(this).val().trim().length == 7){
+     			if(!existKey($(this).val(), editIndex)){
+     				$.ajax({
+    					url:'${pageContext.request.contextPath}/jxc/spAction!loadSp.action',
+     					async: false,
+     					context:this,
+     					data:{
+     						spbh: $(this).val(),
+     						depId : jxc_kfck_did,
+     					},
+     					dataType:'json',
+     					success:function(data){
+     						if(data.success){
+     							//设置信息字段值
+     							setValueBySpbh(data.obj);
+     							sppcEditor.target.focus();
+     						}else{
+     							$.messager.alert('提示', '商品编号不存在！', 'error');
+     						}
+     					}
+     				});
+     			}else{
+     				$.messager.alert('提示', '商品编号只能出现一次，请重新输入！', 'error');
+     			}
+     		}else{
+     			$.messager.alert('提示', '商品编号必须是7位，请重新输入！', 'error');
+     		}
+     		return false;
+     	}
+     	//按ESC键，弹出对话框，可以按商品编号或名称查询，双击商品行返回信息
+     	if(event.keyCode == 27){
+     		jxc.spQuery($(spbhEditor.target).val(),
+     				jxc_kfck_did,
+     				undefined,
+     				'${pageContext.request.contextPath}/jxc/spQuery.jsp',
+     				'${pageContext.request.contextPath}/jxc/spAction!spDg.action',
+     				hwIdEditor);
+ 			sppcEditor.target.focus();
+     		return false;
+     	}
+     });
     
     //输入主单位数量后，计算次单位数量
     zslEditor.target.bind('keyup', function(event){
-    	if($(zthslEditor.target).val() > 0){
-    		if((Number($(zslEditor.target).val()) - (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val()))).toFixed(3) > 0){
-    			$.messager.alert("提示", "提货数量大于未提货数量，请重新输入！");
-        		$(zslEditor.target).numberbox('setValue', 0);
-        		zslEditor.target.focus();
-        		return false;
-    		}
-    	}else{
-    		if($(zslEditor.target).val() < ($(zthslEditor.target).val() - $(zytslEditor.target).val())){
-        		$.messager.alert("提示", "输入的提货数量不在未提货数量范围内，请重新输入！");
-        		$(zslEditor.target).numberbox('setValue', 0);
-        		zslEditor.target.focus();
-        		return false;
-        	}	
-    	}
-    	
-    	if(($(spbhEditor.target).val().substring(0, 3) < '513'
-    			|| $(spbhEditor.target).val().substring(0, 3) > '518')
-    			&& $(zhxsEditor.target).val() != 0){
-    		$(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
-    	}
+        if (jxc_kfck_did !== KFCK_NOYW_BMBH) {
+            if ($(zthslEditor.target).val() > 0) {
+                if ((Number($(zslEditor.target).val()) - (Number($(zthslEditor.target).val()) - Number($(zytslEditor.target).val()))).toFixed(3) > 0) {
+                    $.messager.alert("提示", "提货数量大于未提货数量，请重新输入！");
+                    $(zslEditor.target).numberbox('setValue', 0);
+                    zslEditor.target.focus();
+                    return false;
+                }
+            } else {
+                if ($(zslEditor.target).val() < ($(zthslEditor.target).val() - $(zytslEditor.target).val())) {
+                    $.messager.alert("提示", "输入的提货数量不在未提货数量范围内，请重新输入！");
+                    $(zslEditor.target).numberbox('setValue', 0);
+                    zslEditor.target.focus();
+                    return false;
+                }
+            }
+        } else {
+            checkKc(zslEditor.target)
+        }
+        if (($(spbhEditor.target).val().substring(0, 3) < '513'
+            || $(spbhEditor.target).val().substring(0, 3) > '518')
+            && $(zhxsEditor.target).val() != 0) {
+            $(cslEditor.target).numberbox('setValue', $(zslEditor.target).val() / $(zhxsEditor.target).val());
+        }
     	calculate();
     }).bind('keydown', function(event){
      	if(event.keyCode == 9){
@@ -982,7 +1005,26 @@ function setEditing(){
      		return false;
      	}
     });
-        
+
+    function checkKc(target){
+        //判断提货数量是否大于库存数量
+        var kcRow = $('#show_spkc').propertygrid("getRows");
+        var kxssl = undefined;
+        if(kcRow == undefined){
+            kxssl = Number(0);
+        }else{
+            kxssl = Number(kcRow[0].value);
+        }
+        var zsl = Number($(zslEditor.target).val());
+        if(zsl > kxssl){
+            $.messager.alert("提示", "提货数量不能大于库存数量，请重新输入！");
+            $(zslEditor.target).numberbox('setValue', 0);
+            $(cslEditor.target).numberbox('setValue', 0);
+            $(target).focus();
+            return false;
+        }
+
+    }
     
     //计算金额
     function calculate(){
@@ -1055,6 +1097,15 @@ function setValueBySpbh(rowData){
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
 	jxc.spInfo($('#jxc_kfck_layout'), '1', rowData.sppp, rowData.spbz);
+    jxc.showKc('#jxc_kfck_layout',
+        '${pageContext.request.contextPath}/jxc/kfckAction!getSpkc.action',
+        {
+            bmbh : jxc_kfck_did,
+            ckId : jxc_kfck_ckCombo.combobox('getValue'),
+            spbh : $(spbhEditor.target).val(),
+//     				hwId : $(hwIdEditor.target).val(),
+//     				sppc : $(sppcEditor.target).val(),
+        });
 	//初始化货位，将返回商品的货位设为默认值
 	$.ajax({
 		type: "POST",
@@ -1074,38 +1125,74 @@ function setValueBySpbh(rowData){
 	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
 }
 
-// function khLoad(){
-// 	switch(event.keyCode){
-// 	case 27:
-// 		jxc.query('供应商检索', $('input[name=khbh]'), $('input[name=khmc]'), 
-// 				'${pageContext.request.contextPath}/jxc/query.jsp',
-// 				'${pageContext.request.contextPath}/jxc/khAction!khDg.action');
-// 		break;
-// 	case 9:
-// 		break;
-// 	default:
-// 		if($('input[name=khbh]').val().trim().length == 8){
-// 			$.ajax({
-// 				url:'${pageContext.request.contextPath}/jxc/khAction!loadGys.action',
-// 				async: false,
-// 				context:this,
-// 				data:{
-// 					khbh: $('input[name=khbh]').val().trim(),
-// 				},
-// 				dataType:'json',
-// 				success:function(data){
-// 					if(data.success){
-// 						//设置信息字段值
-// 						$('input[name=khmc]').val(data.obj.khmc);
-// 					}else{
-// 						$.messager.alert('提示', '供应商信息不存在！', 'error');
-// 					}
-// 				}
-// 			});
-// 		}
-// 		break;
-// 	}
-// }
+//根据客户编码获取客户详细信息
+function loadKh(khbh){
+    $.ajax({
+        url:'${pageContext.request.contextPath}/jxc/khAction!loadKh.action',
+        async: false,
+        cache: false,
+        context:this,
+        data:{
+            khbh: khbh,
+            depId: jxc_kfck_did,
+        },
+        dataType:'json',
+        success:function(data){
+            if(data.success){
+                //设置信息字段值
+                $('input[name=khmc]').val(data.obj.khmc);
+//				$('input[name=sh]').val(data.obj.sh);
+//				$('input[name=khh]').val(data.obj.khh);
+//				$('input[name=dzdh]').val(data.obj.dzdh);
+//                 jxc_xsth_ywyCombo.combobox('setValue', data.obj.ywyId);
+//				if(data.obj.isSx == '1'){
+//					$('input[name=isSx]').prop('checked', 'ckecked');
+//				}
+            }else{
+                $.messager.alert('提示', '客户信息不存在！', 'error');
+            }
+        }
+    });
+}
+
+function khLoad(){
+    switch(event.keyCode){
+	case 27:
+		jxc.query('客户检索', $('input[name=khbh]'), $('input[name=khmc]'), '',
+			'${pageContext.request.contextPath}/jxc/query.jsp',
+			'${pageContext.request.contextPath}/jxc/khAction!khDg.action?depId=' + jxc_kfck_did);
+		break;
+ 	case 9:
+		break;
+	default:
+        if($('input[name=khbh]').val().trim().length == 0){
+            $('input[name=khmc]').val('');
+        }
+        if($('input[name=khbh]').val().trim().length == 8) {
+            loadKh($('input[name=khbh]').val().trim());
+        }
+		<%--if($('input[name=khbh]').val().trim().length == 8){--%>
+		<%--	$.ajax({--%>
+ 		<%--		url:'${pageContext.request.contextPath}/jxc/khAction!load.action',--%>
+ 		<%--		async: false,--%>
+ 		<%--		context:this,--%>
+ 		<%--		data:{--%>
+ 		<%--			khbh: $('input[name=khbh]').val().trim(),--%>
+ 		<%--		},--%>
+ 		<%--		dataType:'json',--%>
+ 		<%--		success:function(data){--%>
+ 		<%--			if(data.success){--%>
+ 		<%--				//设置信息字段值--%>
+ 		<%--				$('input[name=khmc]').val(data.obj.khmc);--%>
+ 		<%--			}else{--%>
+ 		<%--				$.messager.alert('提示', '客户信息不存在！', 'error');--%>
+ 		<%--			}--%>
+ 		<%--		}--%>
+ 		<%--	});--%>
+ 		<%--}--%>
+ 		break;
+ 	}
+}
 //////////////////////////////////////////////以上为商品列表处理代码
 
 //////////////////////////////////////////////以下为库房出库列表处理代码
@@ -1791,8 +1878,8 @@ function searchCarInKfck(){
 					</tr>
 					<tr>
 						<th class="read">客户编号</th><td><input name="khbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" class="read" size="8" disabled="disabled"></td>
-						<th class="read">供应商名称</th><td class="read" colspan="5"><input name="khmc" disabled="disabled" size="50"></td>
+							data-options="validType:['mustLength[8]','integer']" class="read"  disabled="disabled" size="8" onkeyup="khLoad()"></td>
+						<th class="read">客户名称</th><td class="read" colspan="5"><input name="khmc" disabled="disabled" size="50"></td>
 						<th class="read jxc_kfck_isFh" style="display:none">分户</th><td class="read jxc_kfck_isFh" style="display:none"><input id="jxc_kfck_fhId" name="fhId" disabled="disabled" size="8"></td>
 					</tr>
 					<tr>

@@ -702,7 +702,14 @@ function setEditing(){
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_kfrk_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
-    	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}', did, $(spbhEditor.target).val());
+    	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}/jxc/kfckAction!getSpkc.action',
+			{
+				bmbh : did,
+				ckId : jxc_kfrk_ckCombo.combobox('getValue'),
+				spbh : $(spbhEditor.target).val()
+			}
+		);
+
     }else{
     	jxc.spInfo($('#jxc_kfrk_layout'), '');
     	jxc.hideKc('#jxc_kfrk_layout');
@@ -900,7 +907,13 @@ function setValueBySpbh(rowData){
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
 	jxc.spInfo($('#jxc_kfrk_layout'), '1', rowData.sppp, rowData.spbz);
-	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}', did, $(spbhEditor.target).val());
+	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}/jxc/kfckAction!getSpkc.action',
+		{
+			bmbh : did,
+			ckId : jxc_kfrk_ckCombo.combobox('getValue'),
+			spbh : $(spbhEditor.target).val()
+		}
+	);
 	
 	//初始化货位，将返回商品的货位设为默认值
 	$.ajax({

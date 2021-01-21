@@ -224,7 +224,7 @@ public interface Constant {
 	public static final Map<String, String> BMKHH = new HashMap<String, String>(){{
 		put("01","招商银行沈阳分行兴顺支行");
 		put("04","招商银行沈阳分行兴顺支行");
-		put("05","招商银行沈阳分行兴顺支行");
+		put("05","招商银行沈阳分行营业部");
 		put("07","招商银行沈阳分行兴顺支行");
 		put("08","广发行大连沙河口支行");
 	}};
@@ -232,7 +232,7 @@ public interface Constant {
 	public static final Map<String, String> BMZH = new HashMap<String, String>(){{
 		put("01","124902659610503");
 		put("04","240885411110001");
-		put("05","124902099110602");
+		put("05","124902099110403");
 		put("07","240885411110001");
 		put("08","133071516010005170");
 	}};
@@ -255,8 +255,8 @@ public interface Constant {
 	
 	public static final Map<String, String> XSKP_SKR = new HashMap<String, String>(){{
 		put("01","胡秀颖");
-		put("04","刘金艳");
-		put("05","任晓楠");
+		put("04","赵清尘");
+		put("05","刘金艳");
 		put("07","刘金艳");
 		put("08","王鑫");
 	}};
