@@ -142,6 +142,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}else{
 				if(ywrkDet.getCjldwId() != null && ywrkDet.getCjldwId() != "" && ywrkDet.getCjldwId().trim().length() != 0){
 					tDet.setCthsl(tDet.getThsl().divide(tDet.getZhxs(), 3, BigDecimal.ROUND_HALF_UP));
+				} else {
+					tDet.setCthsl(Constant.BD_ZERO);
 				}
 			}
 			

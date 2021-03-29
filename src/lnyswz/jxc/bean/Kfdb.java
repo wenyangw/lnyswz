@@ -3,9 +3,9 @@ package lnyswz.jxc.bean;
 import java.util.Date;
 
 
-public class Ywdb{
+public class Kfdb {
 
-	private String ywdblsh;
+	private String kfdblsh;
 	private Date createTime;
 	private int createId;
 	private String createName;
@@ -16,19 +16,15 @@ public class Ywdb{
 	private String ckIdT;
 	private String ckmcT;
 	private String bz;
-	private String cjYwdblsh;
+	private String cjKfdblsh;
 	private String isCj;
 	private Date cjTime;
 	private Integer cjId;
 	private String cjName;
-	private String cgxqlsh;
-	
+
 	private String search;
-	private String fromOther;
-	
-	private String spbh;
-	private String ckId;
-	
+
+	private String ywdblsh;
 	private String datagrid;
 	private String lxbh;
 	private String menuId;
@@ -36,15 +32,15 @@ public class Ywdb{
 	private int page;
 	private int rows;
 	
-	public Ywdb() {
+	public Kfdb() {
 	}
 
-	public String getYwdblsh() {
-		return ywdblsh;
+	public String getKfdblsh() {
+		return kfdblsh;
 	}
 
-	public void setYwdblsh(String ywdblsh) {
-		this.ywdblsh = ywdblsh;
+	public void setKfdblsh(String kfdblsh) {
+		this.kfdblsh = kfdblsh;
 	}
 
 	public Date getCreateTime() {
@@ -127,12 +123,12 @@ public class Ywdb{
 		this.bz = bz;
 	}
 
-	public String getCjYwdblsh() {
-		return cjYwdblsh;
+	public String getCjKfdblsh() {
+		return cjKfdblsh;
 	}
 
-	public void setCjYwdblsh(String cjYwdblsh) {
-		this.cjYwdblsh = cjYwdblsh;
+	public void setCjKfdblsh(String cjKfdblsh) {
+		this.cjKfdblsh = cjKfdblsh;
 	}
 
 	public String getIsCj() {
@@ -167,14 +163,6 @@ public class Ywdb{
 		this.cjName = cjName;
 	}
 
-	public String getCgxqlsh() {
-		return cgxqlsh;
-	}
-
-	public void setCgxqlsh(String cgxqlsh) {
-		this.cgxqlsh = cgxqlsh;
-	}
-
 	public String getSearch() {
 		return search;
 	}
@@ -183,28 +171,12 @@ public class Ywdb{
 		this.search = search;
 	}
 
-	public String getFromOther() {
-		return fromOther;
+	public String getYwdblsh() {
+		return ywdblsh;
 	}
 
-	public void setFromOther(String fromOther) {
-		this.fromOther = fromOther;
-	}
-
-	public String getSpbh() {
-		return spbh;
-	}
-
-	public void setSpbh(String spbh) {
-		this.spbh = spbh;
-	}
-
-	public String getCkId() {
-		return ckId;
-	}
-
-	public void setCkId(String ckId) {
-		this.ckId = ckId;
+	public void setYwdblsh(String ywdblsh) {
+		this.ywdblsh = ywdblsh;
 	}
 
 	public String getDatagrid() {

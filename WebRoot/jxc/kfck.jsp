@@ -891,7 +891,7 @@ function setEditing(){
         var opt = $(sppcEditor.target).datebox('options');
         opt.disabled = true;
         $(sppcEditor.target).datebox(opt);
-        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+        $(sppcEditor.target).datebox('setValue', SPPC);
     }
     
 	//loadEditor();

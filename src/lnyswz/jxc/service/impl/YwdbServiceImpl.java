@@ -201,12 +201,18 @@ public class YwdbServiceImpl implements YwdbServiceI {
 	@Override
 	public DataGrid datagrid(Ywdb ywdb) {
 		DataGrid datagrid = new DataGrid();
-		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime and t.createId = :createId";
+		String hql = " from TYwdb t where t.bmbh = :bmbh and t.createTime > :createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("bmbh", ywdb.getBmbh());
-		params.put("createId", ywdb.getCreateId());
+		if("fromKfdb".equals(ywdb.getFromOther())){
+			hql += " and t.kfdblsh is null";
+		} else {
+			hql += " and t.createId = :createId";
+			params.put("createId", ywdb.getCreateId());
+		}
+
 		if(ywdb.getCreateTime() != null){
-			params.put("createTime", ywdb.getCreateTime()); 
+			params.put("createTime", ywdb.getCreateTime());
 		}else{
 			params.put("createTime", DateUtil.stringToDate(DateUtil.getFirstDateInMonth(new Date())));
 		}

@@ -710,6 +710,7 @@ function saveAll(){
 		$.messager.alert('提示', msg + '填写不完整,请继续操作！', 'error');
 		return false;
 	}
+	updateFooter();
 	
 	var footerRows_xskp = xskp_spdg.datagrid('getFooterRows');
 		
@@ -1208,7 +1209,7 @@ function setEditing(){
      		sphjEditor.target.focus();
      	}
     });
-  	
+
   	//输入合计金额后，计算单价
     sphjEditor.target.bind('keyup', function(event){
     	if(event.keyCode == 9){

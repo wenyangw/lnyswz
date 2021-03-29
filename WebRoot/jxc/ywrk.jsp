@@ -1531,7 +1531,7 @@ function searchXskpInYwrk(){
 <div id="jxc_ywrk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
 	
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_ywrk_layout' style="height:100%;width=100%">
+        <div id='jxc_ywrk_layout' style="height:100%;width:100%">
 			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:150px">		
 				<table class="tinfo">
 					<tr>

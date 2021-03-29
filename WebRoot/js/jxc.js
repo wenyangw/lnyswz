@@ -13,7 +13,10 @@ var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
 //销售加价率
-var NEED_AUDIT_XSJJ = '0'
+var NEED_AUDIT_XSJJ = '0';
+
+// 库房批次
+var SPPC = '2019-01-01';
 
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';

@@ -1260,6 +1260,7 @@ function saveXsth(){
 
 //处理编辑行
 function setEditing(){
+	console.info('setEditing')
 	//加载字段
 	var editors = xsth_spdg.datagrid('getEditors', editIndex);
 	spbhEditor = editors[0];
@@ -1369,6 +1370,8 @@ function setEditing(){
     
     //输入主单位数量后，计算金额
     zslEditor.target.bind('keyup', function(event){
+    	console.info(zslEditor.target.val());
+
     	if(event.keyCode == 9){
      		return false;
      	}
@@ -1691,6 +1694,17 @@ function setValueBySpbh(rowData){
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
+
+	console.info(zslEditor.target)
+	// 2021-01-27 增加 更改商品后，单价、数量清零，防止录入后修改错误
+	kpslEditor.target.val(0);
+	thslEditor.target.val(0);
+	zslEditor.target.val(0);
+	zdjEditor.target.val(0);
+	cslEditor.target.val(0);
+	cdjEditor.target.val(0);
+	spjeEditor.target.val(0);
+
 	//文达印刷业务员为公司(天女)、公司(天狮)时取销售单价
 	if(xsth_did == '01' && (jxc_xsth_ywyCombo.combobox('getValue') == 115 || jxc_xsth_ywyCombo.combobox('getValue') == 193)){
 		zdjEditor.target.val(rowData.specXsdj);

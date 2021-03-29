@@ -242,8 +242,8 @@ public class KfhsServiceImpl implements KfhsServiceI {
 			BeanUtils.copyProperties(yTDet, sp);
 
 			if (!("05".equals(tKfhs.getBmbh()) && "8".equals(tDet.getSpbh().substring(0, 1)))) {
-				if(!"2019-01-01".equals(tDet.getSppc())) {
-					tDet.setSppc("2019-01-01");
+				if(!Constant.SPPC.equals(tDet.getSppc())) {
+					tDet.setSppc(Constant.SPPC);
 				}
 			}
 			
