@@ -244,13 +244,15 @@ jxc.auditLevelCgjh = function(bmbh){
 		return level;
 		break;
 	case '04':
-		level['first'] = '2';
-		level['second'] = '0';
+		level['first'] = '1';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '05':
 		level['first'] = '1';
-		level['second'] = '0';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '07':
@@ -318,12 +320,29 @@ jxc.getAuditLevelCgjh = function(bmbh, hjje){
 	switch(bmbh){
 		case '01':
 			//文达印刷金额大于30000元二级审批，主管经理
-			if(hjje <= 30000){
+			if (hjje <= 30000) {
 				return jxc.auditLevelCgjh(bmbh)['first'];
-			}else{
+			}
+			if (hjje > 30000) {
 				return jxc.auditLevelCgjh(bmbh)['second'];
 			}
 			break;
+        case '04':
+        case '05':
+            // 文达纸业、出版教材
+            // 金额小于10万，一级审批，部门经理
+            // 金额大于10万小于30万，二级审批，主管经理
+            // 金额大于30万，三级审批，总经理
+            if (hjje <= 100000) {
+                return jxc.auditLevelCgjh(bmbh)['first'];
+            }
+            if (hjje > 100000) {
+                return jxc.auditLevelCgjh(bmbh)['second'];
+            }
+            // if (hjje > 300000) {
+            //     return jxc.auditLevelCgjh(bmbh)['third'];
+            // }
+            break;
 		default:
 			return jxc.auditLevelCgjh(bmbh)['first'];
 	}
