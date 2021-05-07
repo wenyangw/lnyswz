@@ -315,6 +315,9 @@ public interface Constant {
 	public static final String UPDATE_YS_KP_TH = "3";
 	public static final String UPDATE_HK = "4";
 	public static final String UPDATE_HK_LS = "5";
+
+	public static final String UPDATE_YF_RK = "0";
+	public static final String UPDATE_YF_FK = "1";
 	
 	
 	

@@ -901,7 +901,7 @@ function printCgxq(){
 					<span class="form_label">结算方式</span>
 					<span><input id="jxc_cgxq_jsfsId" name="jsfsId"></span>
 					<span class="form_label">到货时间</span>
-					<span><input name="dhsj" type="text" class="easyui-my97"  size="8"></span>
+					<span><input name="dhsj" type="text" class="easyui-my97" size="8"></span>
 				</div>
 				<div class="ls form_line" style="display:none">
 					<span class="form_label">联系人及电话</span>

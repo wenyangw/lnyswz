@@ -615,14 +615,20 @@ $(function(){
 			$('input[name=shdz]').val('');
 		}
 	});
-	
+
 	//初始化入库类型列表
 	//jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
 	jxc_ywrk_rklxCombo = lnyw.initCombo($("#jxc_ywrk_rklxId"), 'id', 'rklxmc', '${pageContext.request.contextPath}/jxc/rklxAction!listRklx.action');
 	
 	//初始化仓库列表
 	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + ywrk_did);
-	
+
+	jxc_ywrk_rklxCombo.combobox({
+		onChange(newValue) {
+			$('.rkfs_zs').css("display", newValue === '01' ? 'table-cell' : 'none');
+			// $('#jxc_ywrk_fpDate').datebox('setValue', moment().format('YYYY-MM-DD'));
+		}
+	});
 
 	//初始化信息
 	init();
@@ -646,7 +652,9 @@ function init(){
 
 	jxc_ywrk_ckCombo.combobox('selectedIndex', 0);
 	jxc_ywrk_rklxCombo.combobox('selectedIndex', 0);
-	
+
+	$('#jxc_ywrk_fpDate').my97('setValue', moment().format('YYYY-MM-DD'));
+
 	//初始化流水号
 	$.ajax({
 		type: "POST",
@@ -841,11 +849,12 @@ function saveAll(){
 	effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
 	effectRow['rklxmc'] = jxc_ywrk_rklxCombo.combobox('getText');
 	effectRow['bz'] = $('input[name=jxc_ywrk_bz]').val();
-	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']); 
+	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
 	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
 	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
 	effectRow['ywrklshs'] = $('input[name=ywrklshs]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
+	effectRow['fpDate'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpDate]').val() : undefined;
 	effectRow['bmbh'] = ywrk_did;
 	effectRow['lxbh'] = ywrk_lx;
 	effectRow['menuId'] = ywrk_menuId;
@@ -1552,6 +1561,7 @@ function searchXskpInYwrk(){
 					</tr>
 					<tr>
 						<th>备注</th><td colspan="7"><input name="jxc_ywrk_bz" style="width:90%"></td>
+						<th class="rkfs_zs">发票日期</th><td class="rkfs_zs"><input name="jxc_ywrk_fpDate" id="jxc_ywrk_fpDate"  class="easyui-my97" type="text" size="8"></td>
 					</tr>
 				</table>
 				<input name="xskplsh" type="hidden">

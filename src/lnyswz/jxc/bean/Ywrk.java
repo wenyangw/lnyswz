@@ -23,6 +23,7 @@ public class Ywrk {
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
+	private BigDecimal yfje;
 	private String bz;
 	private String cjYwrklsh;
 	private String isCj;
@@ -35,6 +36,7 @@ public class Ywrk {
 	private String depId;
 	private String depName;
 	private String beYwrklsh;
+	private Date fpDate;
 	private String menuId;
 	private String lxbh;
 	
@@ -157,6 +159,14 @@ public class Ywrk {
 		this.hjje = hjje;
 	}
 
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
+	}
+
 	public String getBz() {
 		return bz;
 	}
@@ -276,6 +286,14 @@ public class Ywrk {
 
 	public void setBeYwrklsh(String beYwrklsh) {
 		this.beYwrklsh = beYwrklsh;
+	}
+
+	public Date getFpDate() {
+		return fpDate;
+	}
+
+	public void setFpDate(Date fpDate) {
+		this.fpDate = fpDate;
 	}
 
 	public String getLxbh() {

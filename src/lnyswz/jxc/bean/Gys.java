@@ -22,7 +22,16 @@ public class Gys {
 	private int userId;
 	private String bh;
 	private String mc;
-	
+
+	public Gys(){
+
+	}
+
+	public Gys(String gysbh, String gysmc) {
+		this.gysbh = gysbh;
+		this.gysmc = gysmc;
+	}
+
 	// 王文阳 2013.10.08
 	// 获得供应商选择表单的查询条件
 	private String query;

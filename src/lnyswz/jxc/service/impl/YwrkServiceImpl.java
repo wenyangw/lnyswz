@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,25 +23,6 @@ import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.ProBean;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Ck;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.KfrkDet;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.XsthDet;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TCgjhDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSpDet;
-import lnyswz.jxc.model.TXskp;
-import lnyswz.jxc.model.TXsth;
-import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.YwrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
@@ -57,6 +40,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TXskp> xskpDao;
 	private BaseDaoI<TXsth> xsthDao;
+	private BaseDaoI<TYfzz> yfzzDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TSpDet> spDetDao;
@@ -72,14 +56,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		TYwrk tYwrk = new TYwrk();
 		BeanUtils.copyProperties(ywrk, tYwrk);
 
-//		String ywrklsh = LshServiceImpl.updateLsh(ywrk.getBmbh(), ywrk.getLxbh(), lshDao);
-//		tYwrk.setYwrklsh(ywrklsh);
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
 
 		tYwrk.setIsCj("0");
-		
-		
-		
+		tYwrk.setYfje(BigDecimal.ZERO);
+
 		Department dep = new Department();
 		dep.setId(ywrk.getBmbh());
 		dep.setDepName(tYwrk.getBmmc());
@@ -87,6 +68,8 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Ck ck = new Ck();
 		ck.setId(ywrk.getCkId());
 		ck.setCkmc(tYwrk.getCkmc());
+
+
 		
 		
 		//从暂估入库传入
@@ -225,14 +208,17 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				}
 			}
 		}
-		
-		
+
 		if(zgYwrks != null){
 			for(TYwrk zz : zgYwrks){ 
 				zz.setBeYwrklsh(ywrklsh);
 			}
 		}
-		
+
+		if (Constant.RKLX_ZS.equals(ywrk.getRklxId())) {
+			YfzzServiceImpl.updateYfzzJe(dep, new Gys(ywrk.getGysbh(), ywrk.getGysmc()), ywrk.getHjje(), Constant.UPDATE_YF_RK, yfzzDao);
+		}
+
 		OperalogServiceImpl.addOperalog(ywrk.getCreateId(), ywrk.getBmbh(), ywrk.getMenuId(), ywrklsh, 
 				"生成业务入库单", operalogDao);
 		
@@ -894,6 +880,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Autowired
 	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
 		this.xsthDao = xsthDao;
+	}
+
+	@Autowired
+	public void setYfzzDao(BaseDaoI<TYfzz> yfzzDao) {
+		this.yfzzDao = yfzzDao;
 	}
 
 	@Autowired
