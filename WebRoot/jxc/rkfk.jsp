@@ -32,41 +32,45 @@ $(function(){
 		border : false,
 	});
 	
-	$('#jxc_rkfk_gysLayout').layout({
-		fit : true,
-		border : false,
-	});
+	// $('#jxc_rkfk_gysLayout').layout({
+	// 	fit : true,
+	// 	border : false,
+	// });
 	
 	//初始化业务员列表
 	<%--jxc_rkfk_ywyCombo = lnyw.initCombo($("#jxc_rkfk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + rkfk_did);--%>
 	
 	rkfk_gysDg = $('#jxc_rkfk_gysDg').datagrid({
+		url : '${pageContext.request.contextPath}/jxc/ywrkAction!listGysYf.action',
+		queryParams :{
+			bmbh : rkfk_did,
+		},
 		fit : true,
 	    border : false,
 	    singleSelect : true,
 		columns:[[
-	        {field:'gysbh',title:'供应商编号',width:60,
+	        {field:'gysbh',title:'编号',width:60,
 	        	hfilter:{type:'textbox',},
 	        },
-	        {field:'gysmc',title:'供应商名称',width:200},
+	        {field:'gysmc',title:'名称',width:200},
 	    ]],
 	    toolbar:'#jxc_rkfk_gysTb',
 	    onSelect: function(rowIndex, rowData){
 	    	$('#gysbh').html(rowData.gysbh);
 	 		$('#gysmc').html(rowData.gysmc);
 			// $('#khlx').html('');
-			$('#sxzq').html('');
-			$('#sxje').html('');
-			$('#yfje').html('');
+			$('#sxzq').html(rowData.sxzq);
+			$('#sxje').html(rowData.sxje);
+			$('#yfje').html(rowData.yfje);
 			// $('#lsje').html('');
 
 			rkfk_ywrkDg.datagrid('load', {
-    			bmbh:rkfk_did,
-    			gysbh:rowData.gysbh
-    			// ywyId: jxc_rkfk_ywyCombo.combobox('getValue'),
+    			bmbh: rkfk_did,
+    			gysbh: rowData.gysbh
 	    	});
 	    }
 	});
+	rkfk_gysDg.datagrid('enableFilter');
 	
 	rkfk_dg = $('#jxc_rkfk_dg').datagrid({
 		fit : true,
@@ -164,15 +168,15 @@ $(function(){
     });
 		
 	rkfk_ywrkDg = $('#jxc_rkfk_ywrkDg').datagrid({
-		url:'${pageContext.request.contextPath}/jxc/ywrkAction!getYwrkNoFk.action',
-		queryParams:{
-			bmbh:rkfk_did,
+		url: '${pageContext.request.contextPath}/jxc/ywrkAction!listYwrkNoFk.action',
+		queryParams: {
+			bmbh: rkfk_did,
 		},
-		fit : true,
-	    border : false,
-	    singleSelect : true,
-		columns:[[
-	        {field:'ywrklsh',title:'流水号',width:100,align:'center'},
+		fit: true,
+	    border: false,
+	    singleSelect: true,
+		columns: [[
+	        {field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
 	        {field:'createTime',title:'发票时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
@@ -216,14 +220,14 @@ $(function(){
 	        	}},
 	    ]],
 	    onLoadSuccess:function(data){
-	    	if($('#gysbh').html() != ''){
-				// $('#khlx').html(data.obj.khlxmc);
-				$('#sxzq').html(data.obj.sxzq + '天');
-				$('#sxje').html(data.obj.sxje + '元');
-				$('#yfzje').html(data.obj.yfzje == 0 ? '' : data.obj.yfzje + '元');
-				$('#yfje').html(data.obj.ysje == 0 ? '' : data.obj.yfje + '元');
-				// $('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
-	    	}
+	    	// if($('#gysbh').html() != ''){
+			// 	// $('#khlx').html(data.obj.khlxmc);
+			// 	$('#sxzq').html(data.obj.sxzq + '天');
+			// 	$('#sxje').html(data.obj.sxje + '元');
+			// 	$('#yfzje').html(data.obj.yfzje == 0 ? '' : data.obj.yfzje + '元');
+			// 	$('#yfje').html(data.obj.ysje == 0 ? '' : data.obj.yfje + '元');
+			// 	// $('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
+	    	// }
 	    	rows = rkfk_ywrkDg.datagrid('getRows');
 		}
 	});
@@ -600,15 +604,15 @@ function searchRkfk(){
 <div id="jxc_rkfk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
 		<div id='jxc_rkfk_layout' style="height:100%;width:100%;">
-			<div data-options="region:'west',title:'客户',split:true" style="height:100%;width:300px">
-				<div id='jxc_rkfk_gysLayout' style="height:100%;width:100%;">
+			<div data-options="region:'west',title:'供应商',split:true" style="height:100%;width:300px">
+<%--				<div id='jxc_rkfk_gysLayout' style="height:100%;width:100%;">--%>
 <%--					<div data-options="region:'north',title:'业务员',split:true" style="height:80px;width:100%">--%>
 <%--						请选择业务员：<input id="jxc_rkfk_ywyId" name="ywyId" size="16">--%>
 <%--					</div>--%>
-					<div data-options="region:'center',title:'客户',split:true" style="height:100%;width:100%">
-						<div id="jxc_rkfk_khDg"></div>
+					<div data-options="region:'center',title:'供应商',split:true" style="height:100%;width:100%">
+						<div id="jxc_rkfk_gysDg"></div>
 					</div>
-				</div>
+<%--				</div>--%>
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
 		    	<div id='jxc_rkfk_ywrkLayout' style="height:100%;width:100%;">

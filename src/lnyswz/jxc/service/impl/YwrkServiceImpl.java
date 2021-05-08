@@ -2,13 +2,9 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
@@ -59,7 +55,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		tYwrk.setBmmc(depDao.load(TDepartment.class, ywrk.getBmbh()).getDepName());
 
 		tYwrk.setIsCj("0");
-		tYwrk.setYfje(BigDecimal.ZERO);
+		tYwrk.setFkje(BigDecimal.ZERO);
 
 		Department dep = new Department();
 		dep.setId(ywrk.getBmbh());
@@ -851,7 +847,69 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		BeanUtils.copyProperties(tYwrk, y);
 		return y;
 	}
-	
+
+	@Override
+	public List<Gys> listGysYf(Ywrk ywrk) {
+		String sql = "select ywrk.gysbh, ywrk.gysmc, isnull(dt.sxzq, 0) sxzq, isnull(dt.sxje, 0) sxje, isnull(yf.qcje, 0) + isnull(yf.rkje, 0) - isnull(yf.fkje, 0) yfje " +
+				" from (select distinct bmbh, gysbh, gysmc from t_ywrk where isCj = '0' and rklxId = ? and bmbh = ? and createTime > ?) ywrk" +
+				" left join t_gys_det dt on ywrk.bmbh = dt.depId and ywrk.gysbh = dt.gysbh" +
+				" left join t_yfzz yf on ywrk.bmbh = yf.bmbh and ywrk.gysbh = yf.gysbh and jzsj = CONVERT(char(6), getDate(), 112)";
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", Constant.RKLX_ZS);
+		params.put("1", ywrk.getBmbh());
+
+		Calendar cal = Calendar.getInstance();
+//		cal.set(cal.get(Calendar.YEAR) - 1, cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
+		cal.add(Calendar.YEAR, -1);
+		params.put("2", cal.getTime());
+
+		List<Object[]> list = ywrkDao.findBySQL(sql, params);
+		List<Gys> gyses = new ArrayList<Gys>();
+
+		if (list.size() == 0) {
+			return gyses;
+		}
+
+		Gys gys = null;
+		for (Object[] y : list) {
+			gys = new Gys();
+			gys.setGysbh(y[0].toString());
+			gys.setGysmc(y[1].toString());
+			gys.setSxzq(Integer.parseInt(y[2].toString()));
+			gys.setSxje(new BigDecimal(y[3].toString()));
+			gys.setYfje(new BigDecimal(y[4].toString()));
+			gyses.add(gys);
+		}
+		return gyses;
+	}
+
+	@Override
+	public List<Ywrk> listYwrkNoFk(Ywrk ywrk) {
+		String hql = "from TYwrk where isCj = '0' and rklxId = :rklxId and bmbh = :bmbh and gysbh = :gysbh and hjje <> fkje order by createTime desc";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("rklxId", Constant.RKLX_ZS);
+		params.put("bmbh", ywrk.getBmbh());
+		params.put("gysbh", ywrk.getGysbh());
+		List<TYwrk> list = ywrkDao.find(hql, params);
+		List<Ywrk> ywrks = new ArrayList<Ywrk>();
+
+		if (list.size() == 0) {
+			return ywrks;
+		}
+
+		Ywrk y = null;
+		for (TYwrk tYwrk : list) {
+			y = new Ywrk();
+			y.setCreateTime(tYwrk.getCreateTime());
+			y.setYwrklsh(tYwrk.getYwrklsh());
+			y.setHjje(tYwrk.getHjje());
+			ywrks.add(y);
+		}
+
+		return ywrks;
+	}
+
 	@Autowired
 	public void setYwrkDao(BaseDaoI<TYwrk> ywrkDao) {
 		this.ywrkDao = ywrkDao;

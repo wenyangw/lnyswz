@@ -17,6 +17,7 @@ public class Gys {
 	private String lxr;
 	private int sxzq;
 	private BigDecimal sxje;
+	private BigDecimal yfje;
 	private String detId;
 	private String menuId;
 	private int userId;
@@ -146,6 +147,14 @@ public class Gys {
 
 	public void setSxje(BigDecimal sxje) {
 		this.sxje = sxje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	public String getDetId() {

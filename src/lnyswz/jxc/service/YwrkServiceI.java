@@ -1,23 +1,29 @@
 package lnyswz.jxc.service;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Ywrk;
+
+import java.util.List;
 
 
 public interface YwrkServiceI {
-	public Ywrk save(Ywrk ywrk);
-	public Ywrk cjYwrk(Ywrk ywrk);
-//	public void updateComplete(Ywrk ywrk);
-	public DataGrid datagrid(Ywrk ywrk);
-	public DataGrid detDatagrid(String ywrklsh);
-	public DataGrid toKfrk(String ywrklsh);
-	public DataGrid toYwbt(String ywrklsh);
-	public DataGrid printYwrk(Ywrk ywrk);
-	public DataGrid getSpkc(Ywrk ywrk);
-	public DataGrid datagridDet(Ywrk ywrk);
-	public DataGrid ywrkmx(Ywrk ywrk);
-	public DataGrid toXsth(Ywrk ywrk);
-	public DataGrid changeYwrk(Ywrk ywrk);
-	public DataGrid printKfrk(Ywrk ywrk);
-	public Ywrk getYwrk(Ywrk ywrk);
+	Ywrk save(Ywrk ywrk);
+	Ywrk cjYwrk(Ywrk ywrk);
+//	void updateComplete(Ywrk ywrk);
+	DataGrid datagrid(Ywrk ywrk);
+	DataGrid detDatagrid(String ywrklsh);
+	DataGrid toKfrk(String ywrklsh);
+	DataGrid toYwbt(String ywrklsh);
+	DataGrid printYwrk(Ywrk ywrk);
+	DataGrid getSpkc(Ywrk ywrk);
+	DataGrid datagridDet(Ywrk ywrk);
+	DataGrid ywrkmx(Ywrk ywrk);
+	DataGrid toXsth(Ywrk ywrk);
+	DataGrid changeYwrk(Ywrk ywrk);
+	DataGrid printKfrk(Ywrk ywrk);
+	Ywrk getYwrk(Ywrk ywrk);
+	List<Gys> listGysYf(Ywrk ywrk);
+
+	List<Ywrk> listYwrkNoFk(Ywrk ywrk);
 }

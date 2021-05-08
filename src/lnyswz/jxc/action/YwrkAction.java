@@ -163,6 +163,15 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		//Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
 	}
 
+	public void listGysYf() {
+		super.writeJson(ywrkService.listGysYf(ywrk));
+	}
+
+	public void listYwrkNoFk() {
+		super.writeJson(ywrkService.listYwrkNoFk(ywrk));
+	}
+
+
 
 	
 	@Override

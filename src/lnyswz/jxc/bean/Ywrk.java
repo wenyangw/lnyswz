@@ -23,7 +23,7 @@ public class Ywrk {
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
-	private BigDecimal yfje;
+	private BigDecimal fkje;
 	private String bz;
 	private String cjYwrklsh;
 	private String isCj;
@@ -159,12 +159,12 @@ public class Ywrk {
 		this.hjje = hjje;
 	}
 
-	public BigDecimal getYfje() {
-		return yfje;
+	public BigDecimal getFkje() {
+		return fkje;
 	}
 
-	public void setYfje(BigDecimal yfje) {
-		this.yfje = yfje;
+	public void setFkje(BigDecimal fkje) {
+		this.fkje = fkje;
 	}
 
 	public String getBz() {
