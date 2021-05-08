@@ -176,14 +176,15 @@ $(function(){
 	    border: false,
 	    singleSelect: true,
 		columns: [[
-	        {field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
-	        {field:'createTime',title:'发票时间',width:100,align:'center',
+			{field: 'lsh', checkbox: true},
+			{field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
+			{field:'createTime',title:'发票时间',width:100,align:'center',
 	        	formatter:function(value){
 	        		return moment(value).format('YYYY-MM-DD');
 	        	}},
 	        {field:'payTime',title:'应付款时间',width:100,align:'center',
-	        	formatter:function(value){
-	        		return moment(value).format('YYYY-MM-DD');
+	        	formatter:function(value, rowData){
+	        		return moment(rowData.createTime).add(30, 'd').format('YYYY-MM-DD');
 	        	},
 	        	styler:function(value){
 	        		if(moment().subtract('days', 1).isAfter(value)){
@@ -193,11 +194,7 @@ $(function(){
 	        {field:'hjje',title:'发票金额',width:100,align:'center'},
 	        {field:'fkedje',title:'已付金额',width:100,align:'center',
 	        	formatter:function(value){
-	        		if(value == 0){
-	        			return '';
-	        		}else{
-	        			return value;
-	        		}
+	        	    return 	value == 0 ? '' : value;
 	        	},
 	        	styler:function(value){
 	        		if(value != 0){
@@ -207,11 +204,7 @@ $(function(){
 	        },
 	        {field:'fkje',title:'本次付款金额',width:100,align:'center',
 	        	formatter:function(value){
-	        		if(value == 0){
-	        			return '';
-	        		}else{
-	        			return value;
-	        		}
+	        		return value == 0 ? '' : value;
 	        	},
 	        	styler:function(value){
 	        		if(value != 0){
@@ -219,6 +212,9 @@ $(function(){
 	        		}
 	        	}},
 	    ]],
+		onCheck: function(index, row) {
+			console.info(row);
+		},
 	    onLoadSuccess:function(data){
 	    	// if($('#gysbh').html() != ''){
 			// 	// $('#khlx').html(data.obj.khlxmc);
@@ -276,35 +272,28 @@ $(function(){
 		setTimeout(function () {
 			if (lastTime - event.timeStamp == 0) {
 
-				//如付款为历史陈欠，不处理下面的代码
-				// if($('input[name=isLs]').is(':checked')){
-				// 	return false;
-				// }
-
 				countFk = 0;
 				//本次付款金额
 				je = Number($('#fkje').val());
 				if(rows != undefined){
 					$.each(rows, function(index){
-						if(je != 0){
-							countFk++;
-						} else {
-							return false;
-						}
+						if (je == 0) {
+                            return false;
+                        }
+                        countFk++;
+
 						//每行付款金额
 						lastFkje = 0;
 						//每行未付款金额
 						var wfkje = rows[index].hjje - rows[index].fkedje;
-						if(je > wfkje){
-							lastFkje = wfkje;
-						}else{
-							lastFkje = je;
-						}
+                        lastFkje = je > wfkje ? wfkje : je;
+
 						je -= lastFkje;
 						rkfk_ywrkDg.datagrid('updateRow', {
 							index:index,
 							row: {
 								fkje: lastFkje.toFixed(4),
+								lsh: true
 							}
 						});
 					});

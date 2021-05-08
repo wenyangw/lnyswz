@@ -58,6 +58,7 @@ public class Ywrk {
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal fkedje;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -66,6 +67,7 @@ public class Ywrk {
 	
 	private String xskplsh;
 
+	private String lsh;
 	private String ywrklshs;
 	private String kfrklshs;
 	private String ywbtlsh;
@@ -535,5 +537,20 @@ public class Ywrk {
 	public void setYwbtlsh(String ywbtlsh) {
 		this.ywbtlsh = ywbtlsh;
 	}
-	
+
+	public BigDecimal getFkedje() {
+		return fkedje;
+	}
+
+	public void setFkedje(BigDecimal fkedje) {
+		this.fkedje = fkedje;
+	}
+
+	public String getLsh() {
+		return lsh;
+	}
+
+	public void setLsh(String lsh) {
+		this.lsh = lsh;
+	}
 }

@@ -2,8 +2,6 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import lnyswz.jxc.bean.*;
@@ -895,15 +893,17 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		List<Ywrk> ywrks = new ArrayList<Ywrk>();
 
 		if (list.size() == 0) {
-			return ywrks;
+			return null;
 		}
 
 		Ywrk y = null;
 		for (TYwrk tYwrk : list) {
 			y = new Ywrk();
 			y.setCreateTime(tYwrk.getCreateTime());
+			y.setLsh(tYwrk.getYwrklsh());
 			y.setYwrklsh(tYwrk.getYwrklsh());
 			y.setHjje(tYwrk.getHjje());
+			y.setFkedje(tYwrk.getFkje());
 			ywrks.add(y);
 		}
 
