@@ -174,9 +174,11 @@ $(function(){
 		},
 		fit: true,
 	    border: false,
-	    singleSelect: true,
+	    // singleSelect: true,
+        checkOnSelect: false,
+        // selectOnCheck: false,
 		columns: [[
-			{field: 'lsh', checkbox: true},
+			{field: 'lsh', checkbox: true, hidden: true},
 			{field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
 			{field:'createTime',title:'发票时间',width:100,align:'center',
 	        	formatter:function(value){
@@ -212,8 +214,20 @@ $(function(){
 	        		}
 	        	}},
 	    ]],
-		onCheck: function(index, row) {
-			console.info(row);
+		onCheck: function(index) {
+			console.info($('input#fkfs_zx').val());
+			if ($('input#fkfs_zx').val() === '0') {
+				console.info('check')
+				$('tr[datagrid-row-index=' + index + ']').addClass('datagrid-row-jxc');
+				recal();
+			}
+		},
+		onUncheck: function(index) {
+			if ($('input#fkfs_zx').val() === '0') {
+				console.info('uncheck');
+				$('tr[datagrid-row-index=' + index + ']').removeClass('datagrid-row-jxc');
+				recal();
+			}
 		},
 	    onLoadSuccess:function(data){
 	    	// if($('#gysbh').html() != ''){
@@ -224,7 +238,8 @@ $(function(){
 			// 	$('#yfje').html(data.obj.ysje == 0 ? '' : data.obj.yfje + '元');
 			// 	// $('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
 	    	// }
-	    	rows = rkfk_ywrkDg.datagrid('getRows');
+			// rows = rkfk_ywrkDg.datagrid('getRows');
+	    	// rows = rkfk_ywrkDg.datagrid($('input#fkfs_sx').val() === '1' ? 'getRows' : 'getChecked');
 		}
 	});
 	//根据权限，动态加载功能按钮
@@ -234,11 +249,12 @@ $(function(){
 	ywrk_tabs = $('#jxc_rkfk_tabs').tabs({
 		onSelect: function(title, index){
 			if(index == 0){
-				rkfk_ywrkDg.datagrid('load', {
-    				bmbh:rkfk_did,
-    				gysbh:$('#gysbh').html(),
-    				// ywyId: jxc_rkfk_ywyCombo.combobox('getValue'),
-	    		});
+				if($('#gysbh').html() != '') {
+					rkfk_ywrkDg.datagrid('load', {
+						bmbh: rkfk_did,
+						gysbh: $('#gysbh').html(),
+					});
+				}
 			}
 			if(index == 1){
 				rkfk_dg.datagrid({
@@ -253,53 +269,49 @@ $(function(){
 			}
 		},
 	});
-	
-	<%--jxc_rkfk_ywyCombo.combobox({--%>
-	<%--	onSelect: function(){--%>
-	<%--		rkfk_khDg.datagrid({--%>
-	<%--			url : '${pageContext.request.contextPath}/jxc/khAction!listKhByYwy.action',--%>
-	<%--	 		queryParams :{--%>
-	<%--	 			depId : rkfk_did,--%>
-	<%--	 			ywyId: jxc_rkfk_ywyCombo.combobox('getValue')--%>
-	<%--	 		},--%>
-	<%--		});--%>
-	<%--		rkfk_khDg.datagrid('enableFilter');--%>
-	<%--	}--%>
-	<%--});--%>
-	
+
+	$('input[name=fkfs]').click(function(){
+		rkfk_ywrkDg.datagrid($(this).val() === '0' ? 'showColumn' : 'hideColumn', 'lsh').datagrid('reload');
+		rows = rkfk_ywrkDg.datagrid($(this).val() === '0' ? 'getChecked' : 'getRows');
+	});
+
 	$('#fkje').keyup(function(event) {
 		var lastTime = event.timeStamp;
 		setTimeout(function () {
 			if (lastTime - event.timeStamp == 0) {
-
-				countFk = 0;
-				//本次付款金额
-				je = Number($('#fkje').val());
-				if(rows != undefined){
-					$.each(rows, function(index){
-						if (je == 0) {
-                            return false;
-                        }
-                        countFk++;
-
-						//每行付款金额
-						lastFkje = 0;
-						//每行未付款金额
-						var wfkje = rows[index].hjje - rows[index].fkedje;
-                        lastFkje = je > wfkje ? wfkje : je;
-
-						je -= lastFkje;
-						rkfk_ywrkDg.datagrid('updateRow', {
-							index:index,
-							row: {
-								fkje: lastFkje.toFixed(4),
-								lsh: true
-							}
-						});
-					});
-				}else{
-					$.messager.alert('提示', '付款的客户没有入库记录！', 'error');
+				if ($('input#fkfs_sx').val() === '1') {
+					recal();
 				}
+                // calfk(rows)
+				// countFk = 0;
+				// //本次付款金额
+				// je = Number($('#fkje').val());
+				// if(rows != undefined){
+				// 	$.each(rows, function(index){
+				// 		if (je == 0) {
+                //             return false;
+                //         }
+                //         countFk++;
+                //
+				// 		//每行付款金额
+				// 		lastFkje = 0;
+				// 		//每行未付款金额
+				// 		var wfkje = rows[index].hjje - rows[index].fkedje;
+                //         lastFkje = je > wfkje ? wfkje : je;
+                //
+				// 		je -= lastFkje;
+				// 		rkfk_ywrkDg.datagrid('updateRow', {
+				// 			index: index,
+				// 			row: {
+				// 				fkje: lastFkje.toFixed(4),
+				// 				lsh: true
+				// 			}
+				// 		});
+                //         rkfk_ywrkDg.datagrid('checkRow', index);
+				// 	});
+				// }else{
+				// 	$.messager.alert('提示', '付款的客户没有入库记录！', 'error');
+				// }
 			}
 		}, 1000);
 	});
@@ -362,6 +374,47 @@ function init(){
 		},
 	});
 	
+}
+
+function recal() {
+	if(Number($('#fkje').val()) > 0) {
+		if ($('input#fkfs_zx').val() === '0') {
+			rows = rkfk_ywrkDg.datagrid('getChecked');
+		}
+		calfk(rows);
+	}
+}
+
+function calfk(rows1) {
+	console.info(rows1);
+    countFk = 0;
+    //本次付款金额
+    je = Number($('#fkje').val());
+    if(rows1 != undefined){
+        $.each(rows1, function(index){
+            if (je == 0) {
+                return false;
+            }
+            countFk++;
+
+            //每行付款金额
+            lastFkje = 0;
+            //每行未付款金额
+            var wfkje = rows1[index].hjje - rows1[index].fkedje;
+            lastFkje = je > wfkje ? wfkje : je;
+
+            je -= lastFkje;
+            rkfk_ywrkDg.datagrid('updateRow', {
+                index: index,
+                row: {
+                    fkje: lastFkje.toFixed(4)
+                }
+            });
+            // rkfk_ywrkDg.datagrid('checkRow', index);
+        });
+    }else{
+        $.messager.alert('提示', '付款的客户没有入库记录！', 'error');
+    }
 }
 
 function selectGys(rowData){
@@ -590,6 +643,16 @@ function searchRkfk(){
 //////////////////////////////////////////////以上为入库付款列表处理代码
 
 </script>
+
+<style>
+	#jxc_rkfk_ywrkLayout .datagrid-row-selected {
+		background-color: white;
+	}
+	#jxc_rkfk_ywrkLayout .datagrid-row-jxc {
+		background-color: #FBEC88;
+	}
+
+</style>
 <div id="jxc_rkfk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
 		<div id='jxc_rkfk_layout' style="height:100%;width:100%;">
@@ -605,7 +668,7 @@ function searchRkfk(){
 			</div>
 	    	<div data-options="region:'center',title:'明细',split:true, fit:true" style="height:100%;width:100%">
 		    	<div id='jxc_rkfk_ywrkLayout' style="height:100%;width:100%;">
-					<div data-options="region:'north',title:'商品分类',split:true" style="height:140px;width:100%">
+					<div data-options="region:'north',title:'商品分类',split:true" style="height:160px;width:100%">
 						<table class="tinfo">
 							<tr>
 								<td></td>
@@ -635,6 +698,14 @@ function searchRkfk(){
 								<th>付款日期</th><td><input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px"></td>
 <%--								<th>历史付款</th><td><input name="isLs" type="checkbox"></td>--%>
 							</tr>
+                            <tr>
+                                <td></td>
+                                <th colspan="4">
+                                    顺序<input type="radio" name="fkfs" value="1" id="fkfs_sx" checked="checked">
+                                    &nbsp;&nbsp;
+                                    自选<input type="radio" name="fkfs" value="0" id="fkfs_zx"></td>
+                                </th>
+                            </tr>
 						</table>
 					</div>
 					<div data-options="region:'center',title:'商品分类',split:true" style="height:100%;width:100%">
