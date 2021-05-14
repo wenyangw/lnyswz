@@ -24,6 +24,7 @@ public class Ywrk {
 	private String ckmc;
 	private BigDecimal hjje;
 	private BigDecimal fkje;
+	private BigDecimal yfje;
 	private String bz;
 	private String cjYwrklsh;
 	private String isCj;
@@ -167,6 +168,14 @@ public class Ywrk {
 
 	public void setFkje(BigDecimal fkje) {
 		this.fkje = fkje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	public String getBz() {

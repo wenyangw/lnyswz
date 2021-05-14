@@ -168,6 +168,7 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 	}
 
 	public void listYwrkNoFk() {
+
 		super.writeJson(ywrkService.listYwrkNoFk(ywrk));
 	}
 

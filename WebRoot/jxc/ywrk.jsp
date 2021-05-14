@@ -2,7 +2,9 @@
 	pageEncoding="utf-8"%>
 
 
+
 <script type="text/javascript">
+    // TODO
 var ywrk_did;
 var ywrk_lx;
 var ywrk_menuId;
@@ -76,9 +78,9 @@ $(function(){
 	        		return  a > b;
 	        	}},
 	        {field:'gysmc',title:'供应商名称',align:'center'},
-	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
+
 	        {field:'ckmc',title:'仓库名称',align:'center'},
-	        {field:'rklxId',title:'入库类型id',align:'center',hidden:true},
+
 	        {field:'rklxmc',title:'*入库方式',align:'center',sortable:true,
 	        	sorter: function(a, b){
 	        		return  a > b;
@@ -87,6 +89,15 @@ $(function(){
 	        	formatter: function(value){
 	        		return lnyw.formatNumberRgx(value);
 	        	}},
+            {field:'fkje',title:'已付金额',align:'center',
+                formatter: function(value, rowData){
+                    return value !== 0 ? lnyw.formatNumberRgx(value) : (rowData.rklxId === '01' ? '' : '-');
+                },
+                styler: function(index, rowData) {
+                    if (rowData.hjje == rowData.fkje) {
+                        return 'color: red;';
+                    }
+                }},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);
@@ -134,7 +145,27 @@ $(function(){
 			{field:'cjTime',title:'冲减时间',align:'center'},
         	{field:'cjYwrklsh',title:'原业务入库流水号',align:'center'},
         	{field:'beYwrklsh',title:'暂估入库流水号',align:'center'},
+            {field:'ckId',title:'仓库id',align:'center',hidden:true},
+            {field:'rklxId',title:'入库类型id',align:'center',hidden:true},
 	    ]],
+
+        onLoadSuccess: function() {
+			// $(this).datagrid('reload');
+            // var table = $(this).prev().find('table'),
+            //     posDivs = table.eq(0).find('div.datagrid-cell')//表头用来定位用的div
+            //     , bodyFirstDivs = table.eq(1).find('tr:eq(0) div') //内容第一行用来设置宽度的div，以便设置和表头一样的宽度
+            //     , orderHeader = posDivs.map(function (index) {return { index: index, left: $(this).position().left} }); //计算表头的左边位置，以便重新排序和内容行单元格循序一致
+            // orderHeader.sort(function (a, b) { return a.left - b.left; }); //对表头位置排序
+			// setTimeout(function () {//延时设置宽度，因为easyui执行完毕回调后有后续的处理，会去掉内容行用来设置宽度的div的css width属性
+			// 	for (var i = 0; i < orderHeader.length; i++) {
+			// 		if (bodyFirstDivs.eq(i).css('width') > posDivs.eq(orderHeader[i].index).css('width')) {
+			// 			bodyFirstDivs.eq(i).css('width', posDivs.eq(orderHeader[i].index).css('width'));
+			// 		} else {
+			// 			posDivs.eq(orderHeader[i].index).css('width', bodyFirstDivs.eq(i).css('width'));
+			// 		}
+            //     }
+            // }, 50);
+        },
 	    toolbar:'#jxc_ywrk_tb',
 	});
 	lnyw.toolbar(1, ywrk_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
@@ -855,6 +886,7 @@ function saveAll(){
 	effectRow['ywrklshs'] = $('input[name=ywrklshs]').val();
 	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
 	effectRow['fpDate'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpDate]').val() : undefined;
+	// effectRow['fpno'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpno]').val() : undefined;
 	effectRow['bmbh'] = ywrk_did;
 	effectRow['lxbh'] = ywrk_lx;
 	effectRow['menuId'] = ywrk_menuId;
@@ -1562,6 +1594,7 @@ function searchXskpInYwrk(){
 					<tr>
 						<th>备注</th><td colspan="7"><input name="jxc_ywrk_bz" style="width:90%"></td>
 						<th class="rkfs_zs">发票日期</th><td class="rkfs_zs"><input name="jxc_ywrk_fpDate" id="jxc_ywrk_fpDate"  class="easyui-my97" type="text" size="8"></td>
+<%--						<th class="rkfs_zs">发票号</th><td class="rkfs_zs"><input name="jxc_ywrk_fpno" id="jxc_ywrk_fpno" type="text" size="8"></td>--%>
 					</tr>
 				</table>
 				<input name="xskplsh" type="hidden">

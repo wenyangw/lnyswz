@@ -3,24 +3,24 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-filter.js"></script>
 <script type="text/javascript">
-var rkfk_did;
-var rkfk_lx;
-var rkfk_menuId;
-var rkfk_gysDg;
-var rkfk_dg;
-var rkfk_ywrkDg;
+let rkfk_did;
+let rkfk_lx;
+let rkfk_menuId;
+let rkfk_gysDg;
+let rkfk_dg;
+let rkfk_ywrkDg;
 // var jxc_rkfk_ywyCombo;
 
 //入库列表所有行
-var rows;
+let rows;
+
 
 //本次付款对应入库笔数
-var countFk;
-var countRkfk;
-var countYwrkInRkfk;
+let countFk;
+// let countRkfk;
 //每行付款后剩余金额
-var je;
-var lastFkje;
+let je;
+// var lastFkje;
 
 $(function(){
 	rkfk_did = lnyw.tab_options().did;
@@ -36,10 +36,7 @@ $(function(){
 	// 	fit : true,
 	// 	border : false,
 	// });
-	
-	//初始化业务员列表
-	<%--jxc_rkfk_ywyCombo = lnyw.initCombo($("#jxc_rkfk_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + rkfk_did);--%>
-	
+
 	rkfk_gysDg = $('#jxc_rkfk_gysDg').datagrid({
 		url : '${pageContext.request.contextPath}/jxc/ywrkAction!listGysYf.action',
 		queryParams :{
@@ -48,6 +45,7 @@ $(function(){
 		fit : true,
 	    border : false,
 	    singleSelect : true,
+		idField: 'gysbh',
 		columns:[[
 	        {field:'gysbh',title:'编号',width:60,
 	        	hfilter:{type:'textbox',},
@@ -55,14 +53,17 @@ $(function(){
 	        {field:'gysmc',title:'名称',width:200},
 	    ]],
 	    toolbar:'#jxc_rkfk_gysTb',
+		onLoadSuccess: function() {
+			if ($('#gysbh').html() !== '') {
+				rkfk_gysDg.datagrid('selectRow', rkfk_gysDg.datagrid('getRowIndex', $('#gysbh').html()));
+			}
+		},
 	    onSelect: function(rowIndex, rowData){
 	    	$('#gysbh').html(rowData.gysbh);
 	 		$('#gysmc').html(rowData.gysmc);
-			// $('#khlx').html('');
 			$('#sxzq').html(rowData.sxzq);
 			$('#sxje').html(rowData.sxje);
 			$('#yfje').html(rowData.yfje);
-			// $('#lsje').html('');
 
 			rkfk_ywrkDg.datagrid('load', {
     			bmbh: rkfk_did,
@@ -93,8 +94,6 @@ $(function(){
 	        	}},	
 	        {field:'gysbh',title:'客户编号',width:100,align:'center',hidden:true},
 	        {field:'gysmc',title:'客户名称',width:300,align:'center'},
-	        // {field:'ywyId',title:'业务员id',width:100,align:'center',hidden:true},
-	        // {field:'ywymc',title:'业务员',width:100,align:'center'},
 	        {field:'fkje',title:'付款金额',width:100,align:'center'},
 	        {field:'isYf',title:'预付',align:'center',
 	        	formatter : function(value) {
@@ -104,14 +103,6 @@ $(function(){
 						return '';
 					}
 				}},
-	        // {field:'isLs',title:'历史',align:'center',
-	        // 	formatter : function(value) {
-			// 		if (value == '1') {
-			// 			return '是';
-			// 		} else {
-			// 			return '';
-			// 		}
-			// 	}},
 	        {field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -153,6 +144,7 @@ $(function(){
                     {field:'createTime',title:'入库时间',width:200,align:'center'},
                     {field:'hjje',title:'入库金额',width:100,align:'center'},
                     {field:'fkje',title:'付款金额',width:100,align:'center'},
+					{field:'bz',title:'备注'},
                 ]],
                 onResize:function(){
                 	rkfk_dg.datagrid('fixDetailRowHeight',index);
@@ -166,17 +158,13 @@ $(function(){
             rkfk_dg.datagrid('fixDetailRowHeight',index);
         }
     });
-		
+
+
 	rkfk_ywrkDg = $('#jxc_rkfk_ywrkDg').datagrid({
 		url: '${pageContext.request.contextPath}/jxc/ywrkAction!listYwrkNoFk.action',
-		queryParams: {
-			bmbh: rkfk_did,
-		},
 		fit: true,
 	    border: false,
-	    // singleSelect: true,
         checkOnSelect: false,
-        // selectOnCheck: false,
 		columns: [[
 			{field: 'lsh', checkbox: true, hidden: true},
 			{field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
@@ -186,10 +174,10 @@ $(function(){
 	        	}},
 	        {field:'payTime',title:'应付款时间',width:100,align:'center',
 	        	formatter:function(value, rowData){
-	        		return moment(rowData.createTime).add(30, 'd').format('YYYY-MM-DD');
+	        		return moment(rowData.createTime).add($('#sxzq').html(), 'd').format('YYYY-MM-DD');
 	        	},
-	        	styler:function(value){
-	        		if(moment().subtract('days', 1).isAfter(value)){
+	        	styler:function(value, rowData){
+					if(moment().subtract('days', 1).isAfter(this.formatter(value, rowData))){
 	        			return 'color:red;';
 	        		}
 	        	}},
@@ -213,33 +201,21 @@ $(function(){
 	        			return 'color:red;';
 	        		}
 	        	}},
+			{field:'bz',title:'备注'},
 	    ]],
 		onCheck: function(index) {
-			console.info($('input#fkfs_zx').val());
-			if ($('input#fkfs_zx').val() === '0') {
-				console.info('check')
-				$('tr[datagrid-row-index=' + index + ']').addClass('datagrid-row-jxc');
-				recal();
-			}
+			$('tr[datagrid-row-index=' + index + ']').addClass('datagrid-row-jxc');
+			calfk();
 		},
 		onUncheck: function(index) {
-			if ($('input#fkfs_zx').val() === '0') {
-				console.info('uncheck');
-				$('tr[datagrid-row-index=' + index + ']').removeClass('datagrid-row-jxc');
-				recal();
-			}
-		},
-	    onLoadSuccess:function(data){
-	    	// if($('#gysbh').html() != ''){
-			// 	// $('#khlx').html(data.obj.khlxmc);
-			// 	$('#sxzq').html(data.obj.sxzq + '天');
-			// 	$('#sxje').html(data.obj.sxje + '元');
-			// 	$('#yfzje').html(data.obj.yfzje == 0 ? '' : data.obj.yfzje + '元');
-			// 	$('#yfje').html(data.obj.ysje == 0 ? '' : data.obj.yfje + '元');
-			// 	// $('#lsje').html(data.obj.lsje == 0 ? '' : data.obj.lsje + '元');
-	    	// }
-			// rows = rkfk_ywrkDg.datagrid('getRows');
-	    	// rows = rkfk_ywrkDg.datagrid($('input#fkfs_sx').val() === '1' ? 'getRows' : 'getChecked');
+			$('tr[datagrid-row-index=' + index + ']').removeClass('datagrid-row-jxc');
+			$(this).datagrid('updateRow', {
+				index:  index,
+				row: {
+					fkje: 0
+				}
+			})
+			calfk();
 		}
 	});
 	//根据权限，动态加载功能按钮
@@ -250,111 +226,70 @@ $(function(){
 		onSelect: function(title, index){
 			if(index == 0){
 				if($('#gysbh').html() != '') {
-					rkfk_ywrkDg.datagrid('load', {
-						bmbh: rkfk_did,
-						gysbh: $('#gysbh').html(),
-					});
+					reload_gys()
 				}
 			}
 			if(index == 1){
 				rkfk_dg.datagrid({
 					url: '${pageContext.request.contextPath}/jxc/rkfkAction!datagrid.action',
+					// queryParams:{
+					// 	bmbh: rkfk_did,
+					// 	createTime: countRkfk == 0 ? undefined : $('input[name=createTimeRkfk]').val(),
+					// 	search: countRkfk == 0 ? undefined : $('input[name=searchRkfk]').val(),
+					// }
+
 					queryParams:{
 						bmbh: rkfk_did,
-						createTime: countRkfk == 0 ? undefined : $('input[name=createTimeRkfk]').val(),
-						search: countRkfk == 0 ? undefined : $('input[name=searchRkfk]').val(),
+						createTime: $('input[name=createTimeRkfk]').val(),
+						search: $('input[name=searchRkfk]').val(),
 					}
 				});
-				countRkfk++;
+				// countRkfk++;
 			}
 		},
 	});
 
 	$('input[name=fkfs]').click(function(){
-		rkfk_ywrkDg.datagrid($(this).val() === '0' ? 'showColumn' : 'hideColumn', 'lsh').datagrid('reload');
-		rows = rkfk_ywrkDg.datagrid($(this).val() === '0' ? 'getChecked' : 'getRows');
+		countFk = 0;
+		je = 0;
+		rows = undefined;
+		if ($(this).val() === '0') {
+			rkfk_ywrkDg.datagrid('showColumn', 'lsh').datagrid('reload');
+			$('#fkhj').html('');
+		} else {
+			rkfk_ywrkDg.datagrid('hideColumn', 'lsh');
+			calfk();
+		}
 	});
 
 	$('#fkje').keyup(function(event) {
 		var lastTime = event.timeStamp;
 		setTimeout(function () {
 			if (lastTime - event.timeStamp == 0) {
-				if ($('input#fkfs_sx').val() === '1') {
-					recal();
-				}
-                // calfk(rows)
-				// countFk = 0;
-				// //本次付款金额
-				// je = Number($('#fkje').val());
-				// if(rows != undefined){
-				// 	$.each(rows, function(index){
-				// 		if (je == 0) {
-                //             return false;
-                //         }
-                //         countFk++;
-                //
-				// 		//每行付款金额
-				// 		lastFkje = 0;
-				// 		//每行未付款金额
-				// 		var wfkje = rows[index].hjje - rows[index].fkedje;
-                //         lastFkje = je > wfkje ? wfkje : je;
-                //
-				// 		je -= lastFkje;
-				// 		rkfk_ywrkDg.datagrid('updateRow', {
-				// 			index: index,
-				// 			row: {
-				// 				fkje: lastFkje.toFixed(4),
-				// 				lsh: true
-				// 			}
-				// 		});
-                //         rkfk_ywrkDg.datagrid('checkRow', index);
-				// 	});
-				// }else{
-				// 	$.messager.alert('提示', '付款的客户没有入库记录！', 'error');
-				// }
+				calfk();
 			}
 		}, 1000);
 	});
 	
-	// jxc_rkfk_ywyCombo.combobox('selectedIndex', 0);
 	//初始化信息
 	init();
 	
-	// $('input[name=isLs]').click(function(){
- 	// 	if($('input[name=isLs]').is(':checked')){
-	// 		if($('#lsje').html() == ''){
-	// 			$.messager.alert('警告', '该客户无历史陈欠！',  'warning');
-	// 			$('input[name=isLs]').removeAttr('checked');
-	// 			$('input[name=isLs]').removeProp('checked');
-	// 			return false;
-	// 		}
-	// 		//清除已填写的销售发票明细数据
-	// 		var rows = rkfk_ywrkDg.datagrid('getRows');
-	// 		if(rows != undefined){
-	// 			$.each(rows, function(index){
-	// 				rkfk_ywrkDg.datagrid('updateRow', {
-	// 					index:index,
-	// 					row: {
-	// 						hkje: 0,
-	// 					}
-	// 				});
-	// 			});
-	// 		}
-	// 	}
-	// });
-	
-	
 });
 
-//以下为商品列表处理代码
+// 初始化
 function init(){
 	//清空全部字段
 	$('input[name=fkje]').val('');
+	$('#fkhj').html('');
 	
-	$('input:checkbox').prop('checked', false);
+	$('input#fkfs_sx').attr('checked', 'checked');
+
+	$('#payTime').my97('setValue', moment().format('YYYY-MM-DD'));
 
 	rows = undefined;
-	
+	countFk = 0;
+	je = 0;
+
 	//初始化创建时间
 	$('#createDate').html(moment().format('YYYY年MM月DD日'));
 	
@@ -376,114 +311,93 @@ function init(){
 	
 }
 
-function recal() {
-	if(Number($('#fkje').val()) > 0) {
-		if ($('input#fkfs_zx').val() === '0') {
-			rows = rkfk_ywrkDg.datagrid('getChecked');
-		}
-		calfk(rows);
-	}
+function reload_gys() {
+	rkfk_gysDg.datagrid('reload');
 }
 
-function calfk(rows1) {
-	console.info(rows1);
+function calfk() {
+	//本次付款金额
+	je = Number($('#fkje').val());
+	if(je >= 0) {
+		if ($('input[name=fkfs]:checked').val() === '1') {
+			rows = rkfk_ywrkDg.datagrid('getRows');
+		} else {
+			rows = rkfk_ywrkDg.datagrid('getChecked');
+		}
+	}
+
     countFk = 0;
-    //本次付款金额
-    je = Number($('#fkje').val());
-    if(rows1 != undefined){
-        $.each(rows1, function(index){
-            if (je == 0) {
-                return false;
+	let fkhj = 0;
+    if(rows != undefined){
+        $.each(rows, function(index){
+            if (!(je == 0  && $('input[name=fkfs]:checked').val() === '1')) {
+				// return false;
+				countFk++;
             }
-            countFk++;
 
             //每行付款金额
             lastFkje = 0;
             //每行未付款金额
-            var wfkje = rows1[index].hjje - rows1[index].fkedje;
+            let wfkje = rows[index].hjje - rows[index].fkedje;
+
             lastFkje = je > wfkje ? wfkje : je;
 
-            je -= lastFkje;
+            je = je - lastFkje;
             rkfk_ywrkDg.datagrid('updateRow', {
-                index: index,
+                index: $('input[name=fkfs]:checked').val() === '1' ? index : rkfk_ywrkDg.datagrid('getRowIndex', rows[index]),
                 row: {
-                    fkje: lastFkje.toFixed(4)
+                    fkje: lastFkje.toFixed(2)
                 }
             });
-            // rkfk_ywrkDg.datagrid('checkRow', index);
+			if (lastFkje == 0  && $('input[name=fkfs]:checked').val() === '0') {
+				rkfk_ywrkDg.datagrid('uncheckRow', rkfk_ywrkDg.datagrid('getRowIndex', rows[index]));
+			} else {
+				fkhj += lastFkje;
+			}
         });
     }else{
         $.messager.alert('提示', '付款的客户没有入库记录！', 'error');
     }
-}
-
-function selectGys(rowData){
-	rkfk_ywrkDg.datagrid({
-		url:'${pageContext.request.contextPath}/jxc/ywrkAction!getYwrkNoFk.action',
-		queryParams:{
-			bmbh:rkfk_did,
-			gysbh:rowData.gysbh
-		},
-		onBeforeLoad: function(){
-			$('#gysbh').html(row.gysbh);
-			$('#gysmc').html(row.gysmc);
-		},
-		onLoadSuccess:function(data){
-			// $('#khlx').html(data.obj.khlxmc);
-			$('#sxzq').html(data.obj.sxzq + '天');
-			$('#sxje').html(data.obj.sxje + '元');
-			$('#yfje').html(data.obj.ysje == 0 ? '' : data.obj.ysje + '元');
-			// $('#lsje').html(data.obj.yfje == 0 ? '' : data.obj.yfje + '元');
-		}
-	});
+	$('#fkhj').html('(' + fkhj.toFixed(2) + ')');
 }
 
 //提交数据到后台
 function saveAll(){
-	var gysbh = $('#gysbh').html();
-	var fkje = $('#fkje').val();
-	// var lsje = $('#lsje').html();
-	
+	let gysbh = $('#gysbh').html();
+	let fkje = $('#fkje').val();
+
 	if(gysbh == ''){
 		$.messager.alert('提示', '没有选中供应商进行付款,请重新操作！', 'error');
-		return false;
+		return;
 	}
 	if(fkje == ''){
 		$.messager.alert('提示', '没有输入付款金额,请重新操作！', 'error');
-		return false;
+		return;
 	}
-	// if($('input[name=isLs]').is(':checked')){
-	// 	if(Number(lsje) < Number(hkje)){
-	// 		$.messager.alert('警告', '付款金额不能大于历史陈欠！',  'warning');
-	// 		$('#hkje').html('');
-	// 		$('#hkje').focus();
-	// 		return false;
-	// 	}
-	// }
-	
+
+	if ($('input[name=fkfs]:checked').val() === '0' && rkfk_ywrkDg.datagrid('getRows').length > rows.length && je > 0) {
+		$.messager.alert('提示', '自选方式下不充许有金额与记录未匹配！', 'error');
+		return;
+	}
+
 	var effectRow = new Object();
-	var rows = rkfk_ywrkDg.datagrid('getRows');
+	// var rows = rkfk_ywrkDg.datagrid('getRows');
 	//将表头内容传入后台
 	effectRow['gysbh'] = gysbh;
 	effectRow['gysmc'] = $('#gysmc').html();
-	// effectRow['ywyId'] = jxc_rkfk_ywyCombo.combobox('getValue');
-	// effectRow['ywymc'] = jxc_rkfk_ywyCombo.combobox('getText');
-	
+
 	effectRow['fkje'] = fkje;
 	effectRow['payTime'] = $('input[name=payTime]').val();
-	effectRow['lastFkje'] = rows.size > 0 ? rows[countFk - 1].fkje : 0;
+	// effectRow['lastFkje'] = rows.size > 0 ? rows[countFk - 1].fkje : 0;
 	effectRow['isYf'] = je > 0 ? '1' : '0';
 	effectRow['yfje'] = je.toFixed(2);
-	// effectRow['isLs'] = $('input[name=isLs]').is(':checked') ? '1' : '0';
-	
+
 	effectRow['bmbh'] = rkfk_did;
 	effectRow['lxbh'] = rkfk_lx;
 	effectRow['menuId'] = rkfk_menuId;
 		
-	//将表格中的数据去掉最后一个空行后，转换为json格式
-	if(countHk > 0){
-		effectRow['datagrid'] = JSON.stringify(rkfk_ywrkDg.datagrid('getRows').slice(0, countHk));
-	}
+	effectRow['datagrid'] = JSON.stringify($('input[name=fkfs]:checked').val() === '1' && countFk > 0 ? rows.slice(0, countFk) : rows);
+
 	//提交到action
 	$.ajax({
 		type: "POST",
@@ -496,13 +410,9 @@ function saveAll(){
 					title : '提示',
 					msg : '提交成功！'
 				});
+				reload_gys();
 		    	init();
-		    	rkfk_ywrkDg.datagrid('load', {
-	    			bmbh: rkfk_did,
-	    			gysbh: $('#gysbh').html(),
-	    			// ywyId: jxc_rkfk_ywyCombo.combobox('getValue'),
-		    	});
-			}  
+			}
 		},
 		error: function(){
 			$.messager.alert("提示", "提交错误了！");
@@ -598,38 +508,36 @@ function exportRkfk(){
 
 //////////////////////////////////////////////以下为销售付款列表处理代码
 function cancelRkfk(){
-	var row = rkfk_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCancel != '1'){
-			$.messager.confirm('请确认', '是否要取消选中的入库付款？', function(r){
-				if(r) {
-					$.ajax({
-						url : '${pageContext.request.contextPath}/jxc/rkfkAction!cancelRkfk.action',
-						data : {
-							rkfklsh : row.rkfklsh,
-							bmbh: rkfk_did,
-							lxbh: rkfk_lx,
-							menuId: rkfk_menuId,
-						},
-						method: 'post',
-						dataType : 'json',
-						success : function(d) {
-							rkfk_dg.datagrid('load');
-							rkfk_dg.datagrid('unselectAll');
-							$.messager.show({
-								title : '提示',
-								msg : d.msg
-							});
-						}
+	let row = rkfk_dg.datagrid('getSelected');
+	if (row == undefined) {
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return;
+	}
+	if(row.isCancel === '1') {
+		$.messager.alert('警告', '选中的入库付款记录已被冲减，请重新选择！',  'warning');
+		return;
+	}
+	$.messager.confirm('请确认', '是否要取消选中的入库付款？', function(r){
+		if(r) {
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/rkfkAction!cancelRkfk.action',
+				data : {
+					rkfklsh : row.rkfklsh,
+					bmbh: rkfk_did,
+					lxbh: rkfk_lx,
+					menuId: rkfk_menuId,
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
 					});
 				}
 			});
-		}else{
-			$.messager.alert('警告', '选中的入库付款记录已被冲减，请重新选择！',  'warning');
 		}
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
-	}
+	});
 }
 
 function searchRkfk(){
@@ -651,8 +559,8 @@ function searchRkfk(){
 	#jxc_rkfk_ywrkLayout .datagrid-row-jxc {
 		background-color: #FBEC88;
 	}
-
 </style>
+
 <div id="jxc_rkfk_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
 		<div id='jxc_rkfk_layout' style="height:100%;width:100%;">
@@ -694,8 +602,12 @@ function searchRkfk(){
 <%--								<th>历史应收:</th><td style="width:100px"><div id="lsje"></div></td>--%>
 							</tr>
 							<tr>
-								<th>付款金额</th><td><input id="fkje" name="fkje" type="text" size="8">元</td>
-								<th>付款日期</th><td><input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px"></td>
+								<th>付款金额</th><td colspan="2"><input id="fkje" name="fkje" type="text" size="8"><span id="fkhj" style="color:blue;"></span>元</td>
+								<th>付款日期</th>
+								<td>
+<%--									<input type="text" name="payTime" id="payTime" class="easyui-datebox" data-options="value: moment().format('YYYY-MM-DD')" style="width:100px">--%>
+									<input type="text" name="payTime" id="payTime"  class="easyui-my97" size="8">
+								</td>
 <%--								<th>历史付款</th><td><input name="isLs" type="checkbox"></td>--%>
 							</tr>
                             <tr>
@@ -724,13 +636,13 @@ function searchRkfk(){
 	输入流水号、供应商：<input type="text" name="searchRkfk" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchRkfk();">查询</a>
 </div>
-<div id='jxc_rkfk_dateDialog'>
-<br>
-<center>
-<input type="text" name="selectTime" class="easyui-my97" data-options="dateFmt:'yyyy年MM月',minDate:'{%y-1}-%M-%d',maxDate:'%y-%M-%d',vel:'selectTime'" style="width:100px">
-</center>
-<input id="selectTime" type="hidden"/>
-</div>
+<%--<div id='jxc_rkfk_dateDialog'>--%>
+<%--<br>--%>
+<%--<center>--%>
+<%--<input type="text" name="selectTime" class="easyui-my97" data-options="dateFmt:'yyyy年MM月',minDate:'{%y-1}-%M-%d',maxDate:'%y-%M-%d',vel:'selectTime'" style="width:100px">--%>
+<%--</center>--%>
+<%--<input id="selectTime" type="hidden"/>--%>
+<%--</div>--%>
 
 
 	

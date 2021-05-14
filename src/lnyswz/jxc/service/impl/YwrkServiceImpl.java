@@ -2,6 +2,7 @@ package lnyswz.jxc.service.impl;
 
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import lnyswz.jxc.bean.*;
@@ -34,6 +35,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	private BaseDaoI<TKfrk> kfrkDao;
 	private BaseDaoI<TXskp> xskpDao;
 	private BaseDaoI<TXsth> xsthDao;
+	private BaseDaoI<TRkfk> rkfkDao;
 	private BaseDaoI<TYfzz> yfzzDao;
 	private BaseDaoI<TCgjhDet> cgjhDetDao;
 	private BaseDaoI<TLsh> lshDao;
@@ -54,6 +56,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 
 		tYwrk.setIsCj("0");
 		tYwrk.setFkje(BigDecimal.ZERO);
+		tYwrk.setYfje(BigDecimal.ZERO);
 
 		Department dep = new Department();
 		dep.setId(ywrk.getBmbh());
@@ -63,8 +66,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		ck.setId(ywrk.getCkId());
 		ck.setCkmc(tYwrk.getCkmc());
 
-
-		
 		
 		//从暂估入库传入
 		Set<TYwrk> zgYwrks = null;
@@ -209,8 +210,20 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 		}
 
+		// 正式入库，处理应付款
 		if (Constant.RKLX_ZS.equals(ywrk.getRklxId())) {
+			// 保存入库金额到t_yfzz
 			YfzzServiceImpl.updateYfzzJe(dep, new Gys(ywrk.getGysbh(), ywrk.getGysmc()), ywrk.getHjje(), Constant.UPDATE_YF_RK, yfzzDao);
+
+			// 对供应商的应付款存在预付
+			// 验证t_yfzz的应付金额，与下面获取有预付金额的应付操作，意思一样，是否可以保留下面的
+			BigDecimal yfje = YfzzServiceImpl.getYfje(ywrk.getBmbh(), ywrk.getGysbh(), DateUtil.getCurrentDateString("yyyyMM"), yfzzDao);
+			if (yfje.compareTo(BigDecimal.ZERO) < 0) {
+//				List<TRkfk> rkfks = RkfkServiceImpl.listRkfksWithYf(tYwrk.getBmbh(), ywrk.getGysbh(), rkfkDao);
+
+			}
+			List<TRkfk> rkfks = RkfkServiceImpl.listRkfksWithYf(ywrk.getBmbh(), ywrk.getGysbh(), rkfkDao);
+			System.out.println(rkfks.size());
 		}
 
 		OperalogServiceImpl.addOperalog(ywrk.getCreateId(), ywrk.getBmbh(), ywrk.getMenuId(), ywrklsh, 
@@ -884,7 +897,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 
 	@Override
 	public List<Ywrk> listYwrkNoFk(Ywrk ywrk) {
-		String hql = "from TYwrk where isCj = '0' and rklxId = :rklxId and bmbh = :bmbh and gysbh = :gysbh and hjje <> fkje order by createTime desc";
+		String hql = "from TYwrk where isCj = '0' and rklxId = :rklxId and bmbh = :bmbh and gysbh = :gysbh and hjje <> fkje order by fpDate";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("rklxId", Constant.RKLX_ZS);
 		params.put("bmbh", ywrk.getBmbh());
@@ -899,11 +912,12 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		Ywrk y = null;
 		for (TYwrk tYwrk : list) {
 			y = new Ywrk();
-			y.setCreateTime(tYwrk.getCreateTime());
+			y.setCreateTime(tYwrk.getFpDate());
 			y.setLsh(tYwrk.getYwrklsh());
 			y.setYwrklsh(tYwrk.getYwrklsh());
 			y.setHjje(tYwrk.getHjje());
 			y.setFkedje(tYwrk.getFkje());
+			y.setBz(tYwrk.getBz());
 			ywrks.add(y);
 		}
 
@@ -938,6 +952,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Autowired
 	public void setXsthDao(BaseDaoI<TXsth> xsthDao) {
 		this.xsthDao = xsthDao;
+	}
+
+	@Autowired
+	public void setRkfkDao(BaseDaoI<TRkfk> rkfkDao) {
+		this.rkfkDao = rkfkDao;
 	}
 
 	@Autowired
