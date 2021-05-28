@@ -42,6 +42,7 @@ public class TYwrk implements java.io.Serializable {
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
+	private BigDecimal hjse;
 	private BigDecimal fkje;
 	private BigDecimal yfje;
 	private String bz;
@@ -69,7 +70,7 @@ public class TYwrk implements java.io.Serializable {
 	}
 
 	public TYwrk(String ywrklsh, int createId, Date createTime,  String createName, String bmbh, String bmmc,
-			String gysbh, String gysmc, String rklxId, String rklxmc, String ckId, String ckmc, BigDecimal hjje, BigDecimal fkje,
+			String gysbh, String gysmc, String rklxId, String rklxmc, String ckId, String ckmc, BigDecimal hjje, BigDecimal hjse, BigDecimal fkje,
 			BigDecimal yfje, String bz, String isCj, Date cjTime, Integer cjId, String cjName, String isZs, String isDep, String depId, String depName,
 			String beYwrklsh, Date fpDate, Set<TYwrkDet> TYwrkDets, Set<TKfrk> TKfrks, Set<TCgjhDet> TCgjhs, TYwbt TYwbt, TXskp TXskp) {
 		this.ywrklsh = ywrklsh;
@@ -85,6 +86,7 @@ public class TYwrk implements java.io.Serializable {
 		this.ckId = ckId;
 		this.ckmc = ckmc;
 		this.hjje = hjje;
+		this.hjse = hjse;
 		this.fkje = fkje;
 		this.yfje = yfje;
 		this.bz = bz;
@@ -222,6 +224,15 @@ public class TYwrk implements java.io.Serializable {
 
 	public void setHjje(BigDecimal hjje) {
 		this.hjje = hjje;
+	}
+
+	@Column(name = "hjse", precision = 18, scale = 2)
+	public BigDecimal getHjse() {
+		return hjse;
+	}
+
+	public void setHjse(BigDecimal hjse) {
+		this.hjse = hjse;
 	}
 
 	@Column(name = "fkje", precision = 18, scale = 2)

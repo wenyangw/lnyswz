@@ -18,13 +18,18 @@ public class Ywrk {
 	private String bmmc;
 	private String gysbh;
 	private String gysmc;
+	private String gysbhb;
+	private String gysmcb;
 	private String rklxId;
 	private String rklxmc;
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
+	private BigDecimal hjse;
 	private BigDecimal fkje;
 	private BigDecimal yfje;
+	private BigDecimal hjjea;
+	private BigDecimal hjjeb;
 	private String bz;
 	private String cjYwrklsh;
 	private String isCj;
@@ -160,6 +165,14 @@ public class Ywrk {
 
 	public void setHjje(BigDecimal hjje) {
 		this.hjje = hjje;
+	}
+
+	public BigDecimal getHjse() {
+		return hjse;
+	}
+
+	public void setHjse(BigDecimal hjse) {
+		this.hjse = hjse;
 	}
 
 	public BigDecimal getFkje() {
@@ -561,5 +574,37 @@ public class Ywrk {
 
 	public void setLsh(String lsh) {
 		this.lsh = lsh;
+	}
+
+	public String getGysbhb() {
+		return gysbhb;
+	}
+
+	public void setGysbhb(String gysbhb) {
+		this.gysbhb = gysbhb;
+	}
+
+	public String getGysmcb() {
+		return gysmcb;
+	}
+
+	public void setGysmcb(String gysmcb) {
+		this.gysmcb = gysmcb;
+	}
+
+	public BigDecimal getHjjea() {
+		return hjjea;
+	}
+
+	public void setHjjea(BigDecimal hjjea) {
+		this.hjjea = hjjea;
+	}
+
+	public BigDecimal getHjjeb() {
+		return hjjeb;
+	}
+
+	public void setHjjeb(BigDecimal hjjeb) {
+		this.hjjeb = hjjeb;
 	}
 }

@@ -13,17 +13,21 @@ public class TFkRk implements java.io.Serializable {
 	private String ywrklsh;
 	private BigDecimal fkje;
 	private String isYf;
-	private TRkfk TRkfk;
+	private Integer deleted;
+	private String rkfklsh;
+//	private TRkfk TRkfk;
 	
 	public TFkRk() {
 	}
 
-	public TFkRk(int id, String ywrklsh, BigDecimal fkje, String isYf, TRkfk TRkfk) {
+	public TFkRk(int id, String ywrklsh, BigDecimal fkje, String isYf, Integer deleted, String rkfklsh) {
 		this.id = id;
 		this.ywrklsh = ywrklsh;
 		this.fkje = fkje;
 		this.isYf = isYf;
-		this.TRkfk = TRkfk;
+		this.deleted = deleted;
+		this.rkfklsh = rkfklsh;
+//		this.TRkfk = TRkfk;
 	}
 
 	@Id
@@ -64,13 +68,31 @@ public class TFkRk implements java.io.Serializable {
 		this.isYf = isYf;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rkfklsh", nullable = false)
-	public TRkfk getTRkfk() {
-		return this.TRkfk;
+	@Column(name = "deleted", nullable = false)
+	public Integer getDeleted() {
+		return deleted;
 	}
 
-	public void setTRkfk(TRkfk TRkfk) {
-		this.TRkfk = TRkfk;
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
 	}
+
+	@Column(name = "rkfklsh", nullable = false, length = 12)
+	public String getRkfklsh() {
+		return rkfklsh;
+	}
+
+	public void setRkfklsh(String rkfklsh) {
+		this.rkfklsh = rkfklsh;
+	}
+
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "rkfklsh", nullable = false)
+//	public TRkfk getTRkfk() {
+//		return this.TRkfk;
+//	}
+//
+//	public void setTRkfk(TRkfk TRkfk) {
+//		this.TRkfk = TRkfk;
+//	}
 }

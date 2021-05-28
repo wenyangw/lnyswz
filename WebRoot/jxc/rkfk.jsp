@@ -61,9 +61,25 @@ $(function(){
 	    onSelect: function(rowIndex, rowData){
 	    	$('#gysbh').html(rowData.gysbh);
 	 		$('#gysmc').html(rowData.gysmc);
-			$('#sxzq').html(rowData.sxzq);
-			$('#sxje').html(rowData.sxje);
-			$('#yfje').html(rowData.yfje);
+
+			$.ajax({
+				type: "POST",
+				url: '${pageContext.request.contextPath}/jxc/gysAction!getGysSx.action',
+
+				data: {
+					depId: rkfk_did,
+					gysbh: rowData.gysbh
+				},
+				dataType: 'json',
+				success: function(rsp){
+					$('#sxzq').html(rsp.sxzq);
+					$('#sxje').html(rsp.sxje);
+					$('#yfje').html(rsp.yfje);
+				},
+				// error: function(){
+				// 	$.messager.alert("提示", "提交错误了！");
+				// }
+			});
 
 			rkfk_ywrkDg.datagrid('load', {
     			bmbh: rkfk_did,

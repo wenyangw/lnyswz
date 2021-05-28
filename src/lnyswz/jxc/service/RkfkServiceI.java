@@ -8,5 +8,5 @@ public interface RkfkServiceI {
 	void cancelRkfk(Rkfk rkfk);
 	DataGrid datagrid(Rkfk rkfk);
 	DataGrid detDatagrid(Rkfk rkfk);
-//	DataGrid printRkfk(Rkfk rkfk);
+	boolean canCancel(String rkfklsh);
 }

@@ -16,8 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -46,8 +44,6 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		String lsh = LshServiceImpl.updateLsh(rkfk.getBmbh(), rkfk.getLxbh(), lshDao);
 		tRkfk.setRkfklsh(lsh);
 		tRkfk.setCreateTime(new Date());
-//		tRkfk.setCreateId(rkfk.getCreateId());
-//		tRkfk.setCreateName(rkfk.getCreateName());
 		tRkfk.setIsCancel("0");
 
 		String depName = depDao.load(TDepartment.class, rkfk.getBmbh()).getDepName();
@@ -77,26 +73,24 @@ public class RkfkServiceImpl implements RkfkServiceI {
 				tFkRk = new TFkRk();
 				tFkRk.setYwrklsh(y.getYwrklsh());
 				tFkRk.setFkje(y.getFkje());
-				tFkRk.setTRkfk(tRkfk);
+//				tFkRk.setTRkfk(tRkfk);
+				tFkRk.setRkfklsh(lsh);
 				tFkRk.setIsYf("0");
+				tFkRk.setDeleted(0);
 				tFkRks.add(tFkRk);
 				fkRkDao.save(tFkRk);
 
 				tYwrk = ywrkDao.load(TYwrk.class, y.getYwrklsh());
 				tYwrk.setFkje(tYwrk.getFkje().add(y.getFkje()));
-				//更新销售开票回款标志
-//				tYwrk.setIsHk("1");
 			}
-			tRkfk.setTFkRks(tFkRks);
+//			tRkfk.setTFkRks(tFkRks);
 		}
 		YfzzServiceImpl.updateYfzzJe(dep, gys, tRkfk.getFkje(), Constant.UPDATE_YF_FK, yfzzDao);
-//		}else{
-//			YfzzServiceImpl.updateYfzzJe(dep, gys, ywy, tRkfk.getHkje(), Constant.UPDATE_HK_LS, yfzzDao);
-//		}
+
 				
-//		OperalogServiceImpl.addOperalog(rkfk.getCreateId(), rkfk.getBmbh(), rkfk.getMenuId(), tRkfk.getRkfklsh(), 
-//				"生成销售提货单", operalogDao);
-//		
+		OperalogServiceImpl.addOperalog(rkfk.getCreateId(), rkfk.getBmbh(), rkfk.getMenuId(), tRkfk.getRkfklsh(),
+				"保存入库付款", operalogDao);
+
 		Rkfk rRkfk = new Rkfk();
 		rRkfk.setRkfklsh(lsh);
 		return rRkfk;
@@ -109,6 +103,7 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		
 		//获取原单据信息
 		TRkfk yTRkfk = rkfkDao.load(TRkfk.class, rkfk.getRkfklsh());
+
 		//新增冲减单据信息
 		TRkfk tRkfk = new TRkfk();
 		BeanUtils.copyProperties(yTRkfk, tRkfk, new String[]{"TFkRks"});
@@ -138,46 +133,26 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		gys.setGysbh(tRkfk.getGysbh());
 		gys.setGysmc(tRkfk.getGysmc());
 
-//		if(yTRkfk.getIsLs().equals("0")){
-
 		//更新供应商应付金额
 		YfzzServiceImpl.updateYfzzJe(dep, gys, tRkfk.getFkje(), Constant.UPDATE_YF_FK, yfzzDao);
 
-		//String hql = "from TFkRk t where t.rkfklsh = :rkfklsh order by t.ywrklsh desc";
-		//Map<String, Object> params = new HashMap<String, Object>();
-		//params.put("rkfklsh", yTRkfk.getRkfklsh());
-		//List<TFkRk> tFkRks = fkRkDao.find(hql, params);
-		Set<TFkRk> tFkRks = yTRkfk.getTFkRks();
+//		Set<TFkRk> tFkRks = yTRkfk.getTFkRks();
+		List<TFkRk> tFkRks = FkRkServiceImpl.listByRkfk(yTRkfk.getRkfklsh(), fkRkDao);
 		for(TFkRk tFkRk : tFkRks){
 			TYwrk tYwrk = ywrkDao.load(TYwrk.class, tFkRk.getYwrklsh());
 			tYwrk.setFkje(tYwrk.getFkje().subtract(tFkRk.getFkje()));
 			if("1".equals(tFkRk.getIsYf())) {
 				tYwrk.setYfje(tYwrk.getYfje().subtract(tFkRk.getFkje()));
 			}
-//			if(tYwrk.getFkje().compareTo(tYwrk.getYfje()) == 0){
-//				tYwrk.setIsHk("0");
-//			}
-			//删除与销售开票的关联
-			//tFkRk.getTRkfk().getTFkRks().remove(tFkRk);
-			//tFkRk.setTRkfk(null);
-			//fkRkDao.delete(tFkRk);
+			tFkRk.setDeleted(1);
 		}
 
-		Iterator<TFkRk> it = tFkRks.iterator();
-		while(it.hasNext()){
-			//CheckWork checkWork = it.next();
-			TFkRk t = it.next();
-			//t.getTRkfk().getTFkRks().remove(t);
-			//t.setTRkfk(null);
-			fkRkDao.delete(t);
-			//it.remove();
-		}
-			
-	        
-			//yTRkfk.setHkje(null);
-//		}else{
-//			YfzzServiceImpl.updateYfzzJe(dep, gys, ywy, tRkfk.getHkje(), Constant.UPDATE_HK_LS, yfzzDao);
+//		Iterator<TFkRk> it = tFkRks.iterator();
+//		while(it.hasNext()){
+//			TFkRk t = it.next();
+//			fkRkDao.delete(t);
 //		}
+			
 		rkfkDao.save(tRkfk);
 		
 		OperalogServiceImpl.addOperalog(rkfk.getCancelId(), rkfk.getBmbh(), rkfk.getMenuId(), tRkfk.getCancelRkfklsh() + "/" + tRkfk.getRkfklsh(), 
@@ -295,7 +270,8 @@ public class RkfkServiceImpl implements RkfkServiceI {
 	public DataGrid detDatagrid(Rkfk rkfk) {
 		DataGrid datagrid = new DataGrid();
 		TRkfk tRkfk = rkfkDao.load(TRkfk.class, rkfk.getRkfklsh());
-		Set<TFkRk> tFkRks = tRkfk.getTFkRks();
+//		Set<TFkRk> tFkRks = tRkfk.getTFkRks();
+		List<TFkRk> tFkRks = FkRkServiceImpl.listByRkfk(tRkfk.getRkfklsh(), fkRkDao);
 		List<Ywrk> ywrks = new ArrayList<Ywrk>();
 		Ywrk ywrk = null;
 		TYwrk tYwrk = null;
@@ -311,6 +287,12 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		}
 		datagrid.setRows(ywrks);
 		return datagrid;
+	}
+
+	@Override
+	public boolean canCancel(String rkfklsh) {
+		TRkfk tRkfk = rkfkDao.load(TRkfk.class, rkfklsh);
+		return "0".equals(tRkfk.getIsCancel());
 	}
 
 	public static List<TRkfk> listRkfksWithYf(String bmbh, String gysbh, BaseDaoI<TRkfk> dao) {

@@ -3,19 +3,13 @@ package lnyswz.jxc.action;
 
 import com.opensymphony.xwork2.ModelDriven;
 import lnyswz.common.action.BaseAction;
-import lnyswz.common.bean.DataGrid;
 import lnyswz.common.bean.Json;
-import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.User;
 import lnyswz.jxc.bean.Rkfk;
 import lnyswz.jxc.service.RkfkServiceI;
-import lnyswz.jxc.util.Export;
-import lnyswz.jxc.util.Util;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Date;
 
 /**
  * 销售回款Action
@@ -60,7 +54,14 @@ public class RkfkAction extends BaseAction implements ModelDriven<Rkfk>{
 		rkfk.setCancelName(user.getRealName());
 		Json j = new Json();
 		try{
-			rkfkService.cancelRkfk(rkfk);		
+			// 是否已取消
+			if (rkfkService.canCancel(rkfk.getRkfklsh()) != true) {
+				j.setSuccess(false);
+				j.setMsg("入库付款已取消！");
+				writeJson(j);
+				return;
+			}
+			rkfkService.cancelRkfk(rkfk);
 			//添加成功
 			j.setSuccess(true);
 			j.setMsg("取消入库付款成功！");

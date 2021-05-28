@@ -17,10 +17,12 @@ $(function(){
 							method: 'post',
 							dataType : 'json',
 							success : function(d) {
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
+								$.messager.alert('信息', d.msg, 'info');
+								// $.messager.show({
+								// 	title : '提示',
+								// 	msg : d.msg
+
+								// });
 							}
 						});
 					}

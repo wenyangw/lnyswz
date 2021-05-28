@@ -580,67 +580,72 @@ public class XskpServiceImpl implements XskpServiceI {
 			User ywy = new User();
 			ywy.setId(xskp.getYwyId());
 			ywy.setRealName(xskp.getYwymc());
+			// 正数销售
+			if (hjje.compareTo(BigDecimal.ZERO) > 0) {
+				BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
+				//有预付金额
+				if (ysje.compareTo(BigDecimal.ZERO) < 0) {
+					List<Xshk> xshks = getXshkWithYfje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId());
+					//                Set<THkKp> tHkKps = new HashSet<THkKp>();
+					THkKp tHkKp = null;
+					TXshk tXshk = null;
+					BigDecimal hkje = hjje;
+					for (Xshk xshk : xshks) {
+						if (hkje.compareTo(BigDecimal.ZERO) == 0) {
+							break;
+						}
+						tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
 
-			BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
-			//有预付金额
-			if(ysje.compareTo(BigDecimal.ZERO) < 0){
-				List<Xshk> xshks = getXshkWithYfje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId());
-//                Set<THkKp> tHkKps = new HashSet<THkKp>();
-				THkKp tHkKp = null;
-				TXshk tXshk = null;
-				BigDecimal hkje = hjje;
-				for(Xshk xshk : xshks) {
-					if (hkje.compareTo(BigDecimal.ZERO) == 0) {
-						break;
+						tHkKp = new THkKp();
+						tHkKp.setXskplsh(lsh);
+						tHkKp.setTXshk(tXshk);
+						tHkKp.setIsYf("1");
+						if (hkje.compareTo(xshk.getYfje()) > 0) {
+							tHkKp.setHkje(xshk.getYfje());
+							tXshk.setYfje(BigDecimal.ZERO);
+							hkje = hkje.subtract(xshk.getYfje());
+						} else {
+							tHkKp.setHkje(hkje);
+							tXshk.setYfje(xshk.getYfje().subtract(hkje));
+							hkje = BigDecimal.ZERO;
+						}
+
+
+						//                    tHkKps.add(tHkKp);
+						hkKpDao.save(tHkKp);
 					}
-					tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
 
-					tHkKp = new THkKp();
-					tHkKp.setXskplsh(lsh);
-					tHkKp.setTXshk(tXshk);
-					tHkKp.setIsYf("1");
-					if(hkje.compareTo(xshk.getYfje()) > 0){
-						tHkKp.setHkje(xshk.getYfje());
-						tXshk.setYfje(BigDecimal.ZERO);
-						hkje = hkje.subtract(xshk.getYfje());
-					}else{
-						tHkKp.setHkje(hkje);
-						tXshk.setYfje(xshk.getYfje().subtract(hkje));
-						hkje = BigDecimal.ZERO;
-					}
-
-
-//                    tHkKps.add(tHkKp);
-					hkKpDao.save(tHkKp);
+					tXskp.setHkje(hjje.subtract(hkje));
+					tXskp.setYfje(hjje.subtract(hkje));
+					tXskp.setIsHk("0");
 				}
 
-				tXskp.setHkje(hjje.subtract(hkje));
-				tXskp.setYfje(hjje.subtract(hkje));
-				tXskp.setIsHk("0");
-			}
-			if(xsthDetIds == null || xsthDetIds.equals("")){
-				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
-			}else{
-				//YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
-
-				//第三方开票要处理两个客户的数据
-				if(!xskp.getKhbh().equals(xskp.getXsthKhbh())){
-					//yszz中kpje为新客户
+				if (xsthDetIds == null || xsthDetIds.equals("")) {
 					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+				} else {
+					//YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
 
-					//yszz中thje为原客户
-					TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
-					kh.setKhbh(xskp.getXsthKhbh());
-					kh.setKhmc(yTKh.getKhmc());
+					//第三方开票要处理两个客户的数据
+					if (!xskp.getKhbh().equals(xskp.getXsthKhbh())) {
+						//yszz中kpje为新客户
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
 
-					//暂不考虑不同业务员的第三方开票
-					//TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
-					//ywy.setId(xskp.getXsthYwyId());
-					//ywy.setRealName(yUser.getRealName());
-					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
-				}else{
-					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+						//yszz中thje为原客户
+						TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
+						kh.setKhbh(xskp.getXsthKhbh());
+						kh.setKhmc(yTKh.getKhmc());
+
+						//暂不考虑不同业务员的第三方开票
+						//TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
+						//ywy.setId(xskp.getXsthYwyId());
+						//ywy.setRealName(yUser.getRealName());
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
+					} else {
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+					}
 				}
+			} else {
+				tXskp.setHkje(hjje);
 			}
 		}
 

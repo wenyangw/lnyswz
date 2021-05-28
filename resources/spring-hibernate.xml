@@ -115,6 +115,7 @@ http://cxf.apache.org/schemas/jaxws.xsd
 			<tx:method name="complete*" />
 			<tx:method name="create*" />
 			<tx:method name="lg2pr*" />
+			<tx:method name="get*" />
 
 <!-- 			<tx:method name="repair" /> -->
 <!-- 			<tx:method name="deleteAndRepair" /> -->

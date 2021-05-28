@@ -23,6 +23,8 @@ public interface GysServiceI {
 
 	List<Gys> listGys(Gys gys);
 
+	Gys getGysSx(Gys gys);
+
 	/**
 	 * 王文阳 2013.10.08 获得供应商信息
 	 */
