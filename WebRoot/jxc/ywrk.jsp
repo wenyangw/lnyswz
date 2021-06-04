@@ -659,6 +659,11 @@ $(function(){
 			$('.rkfs_zs').css("display", newValue === '01' ? 'table-cell' : 'none');
             $('.rkfs_zsrow').css("display", newValue === '01' ? 'table-row' : 'none');
 			// $('#jxc_ywrk_fpDate').datebox('setValue', moment().format('YYYY-MM-DD'));
+            if (newValue !== '01') {
+                $('input[name=jxc_ywrk_gysbh2]').val('');
+                $('input[name=jxc_ywrk_gysmc2]').val('');
+                $('#jxc_ywrk_hjje2').numberbox('setValue', '');
+            }
 		}
 	});
 
@@ -860,7 +865,7 @@ function saveAll(){
 
 	if (jxc_ywrk_rklxCombo.combobox('getValue') == '01') {
 		if (($('#jxc_ywrk_hjje1').numberbox('getValue') === '' || $('#jxc_ywrk_hjje1').numberbox('getValue') === '0.00')
-				|| ($('input[name=jxc_ywrk_gysbh2]').val() !== '' && ($('#jxc_ywrk_hjje2').numberbox('getValue') === '' || $('#jxc_ywrk_hjje2').numberbox('getValue') === '0.00')))
+			|| ($('input[name=jxc_ywrk_gysbh2]').val() !== '' && ($('#jxc_ywrk_hjje2').numberbox('getValue') === '' || $('#jxc_ywrk_hjje2').numberbox('getValue') === '0.00')))
 		{
 			$.messager.alert('提示', '正式入库请填写供应商对应的金额！', 'error');
 			return false;
@@ -1611,13 +1616,13 @@ function searchXskpInYwrk(){
 						<th>供应商编码</th><td><input name="jxc_ywrk_gysbh" class="easyui-validatebox"
 							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad('jxc_ywrk_gysbh', 'jxc_ywrk_gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_ywrk_gysmc" readonly="readonly" size="50"></td>
-                        <th>金额</th><td><input type="text" name="jxc_ywrk_hjje1" id="jxc_ywrk_hjje1" class="easyui-numberbox" value="0" data-options="min:0,precision:2" size="8"></td>
+                        <th>金额</th><td><input type="text" name="jxc_ywrk_hjje1" id="jxc_ywrk_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>
                     <tr class="rkfs_zsrow">
                         <th>供应商编码2</th><td><input name="jxc_ywrk_gysbh2" class="easyui-validatebox"
                                                  data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad('jxc_ywrk_gysbh2', 'jxc_ywrk_gysmc2')" size="8"></td>
                         <th class="read">供应商名称2</th><td colspan="3"><input name="jxc_ywrk_gysmc2" readonly="readonly" size="50"></td>
-                        <th>金额2</th><td><input type="text" name="jxc_ywrk_hjje2" id="jxc_ywrk_hjje2" class="easyui-numberbox" value="0" data-options="min:0,precision:2" size="8"></td>
+                        <th>金额2</th><td><input type="text" name="jxc_ywrk_hjje2" id="jxc_ywrk_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
                     </tr>
 					<tr>
 						<th>仓库</th><td><input id="jxc_ywrk_ckId" name="jxc_ywrk_ckId" type="text" size="8"></td>

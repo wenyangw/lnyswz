@@ -119,6 +119,7 @@ $(function(){
 						return '';
 					}
 				}},
+			{field:'ywlsh',title:'相关业务',width:100},
 	        {field:'isCancel',title:'*状态',align:'center',sortable:true,
         		formatter : function(value) {
 					if (value == '1') {
@@ -182,7 +183,7 @@ $(function(){
 	    border: false,
         checkOnSelect: false,
 		columns: [[
-			{field: 'lsh', checkbox: true, hidden: true},
+			{field: 'ywrkId', checkbox: true, hidden: true},
 			{field: 'ywrklsh', title: '流水号', width: 100, align: 'center'},
 			{field:'createTime',title:'发票时间',width:100,align:'center',
 	        	formatter:function(value){
@@ -378,7 +379,7 @@ function calfk() {
 }
 
 //提交数据到后台
-function saveAll(){
+function saveRkfk(){
 	let gysbh = $('#gysbh').html();
 	let fkje = $('#fkje').val();
 
@@ -531,6 +532,10 @@ function cancelRkfk(){
 	}
 	if(row.isCancel === '1') {
 		$.messager.alert('警告', '选中的入库付款记录已被冲减，请重新选择！',  'warning');
+		return;
+	}
+	if(row.createId === 999) {
+		$.messager.alert('警告', '系统自动生成的付款，请到对应业务流程进行取消操作！',  'warning');
 		return;
 	}
 	$.messager.confirm('请确认', '是否要取消选中的入库付款？', function(r){

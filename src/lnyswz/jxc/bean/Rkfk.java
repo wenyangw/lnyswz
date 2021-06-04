@@ -22,6 +22,8 @@ public class Rkfk {
 	private Date cancelTime;
 	private String cancelRkfklsh;
 	private String ywrklshs;
+	private String bz;
+	private String ywlsh;
 
 	private int page;
 	private int rows;
@@ -29,6 +31,7 @@ public class Rkfk {
 	private String search;
 	private String type;
 	private Date selectTime;
+	private long ywrkId;
 
 	private String datagrid;
 	private String lxbh; 
@@ -138,6 +141,23 @@ public class Rkfk {
 	public void setCancelRkfklsh(String cancelRkfklsh) {
 		this.cancelRkfklsh = cancelRkfklsh;
 	}
+
+	public String getBz() {
+		return bz;
+	}
+
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+
+	public String getYwlsh() {
+		return ywlsh;
+	}
+
+	public void setYwlsh(String ywlsh) {
+		this.ywlsh = ywlsh;
+	}
+
 	public String getYwrklshs() {
 		return ywrklshs;
 	}
@@ -180,6 +200,15 @@ public class Rkfk {
 	public void setSelectTime(Date selectTime) {
 		this.selectTime = selectTime;
 	}
+
+	public long getYwrkId() {
+		return ywrkId;
+	}
+
+	public void setYwrkId(long ywrkId) {
+		this.ywrkId = ywrkId;
+	}
+
 	public String getLxbh() {
 		return lxbh;
 	}

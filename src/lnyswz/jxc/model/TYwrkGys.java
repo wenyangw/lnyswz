@@ -23,7 +23,7 @@ public class TYwrkGys implements java.io.Serializable {
 	private BigDecimal hjje;
 	private BigDecimal fkje;
 	private BigDecimal yfje;
-	private String bz;
+	private String ywbtlsh;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -90,12 +90,12 @@ public class TYwrkGys implements java.io.Serializable {
 		this.yfje = yfje;
 	}
 
-	@Column(name = "bz", length = 100)
-	public String getBz() {
-		return this.bz;
+	@Column(name = "ywbtlsh", length = 12)
+	public String getYwbtlsh() {
+		return this.ywbtlsh;
 	}
 
-	public void setBz(String bz) {
-		this.bz = bz;
+	public void setYwbtlsh(String ywbtlsh) {
+		this.ywbtlsh = ywbtlsh;
 	}
 }

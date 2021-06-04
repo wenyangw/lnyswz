@@ -1,9 +1,11 @@
 package lnyswz.jxc.service;
 
 import lnyswz.common.bean.DataGrid;
+import lnyswz.jxc.bean.Department;
 import lnyswz.jxc.bean.Gys;
 import lnyswz.jxc.bean.Ywrk;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,5 +27,7 @@ public interface YwrkServiceI {
 	Ywrk getYwrk(Ywrk ywrk);
 	List<Gys> listGysYf(Ywrk ywrk);
 
-	List<Ywrk> listYwrkNoFk(Ywrk ywrk);
+//	List<Ywrk> listYwrkNoFk(Ywrk ywrk);
+
+
 }

@@ -11,24 +11,11 @@ import java.math.BigDecimal;
 public class TFkRk implements java.io.Serializable {
 	private int id;
 	private String ywrklsh;
+	private long ywrkId;
 	private BigDecimal fkje;
 	private String isYf;
 	private Integer deleted;
 	private String rkfklsh;
-//	private TRkfk TRkfk;
-	
-	public TFkRk() {
-	}
-
-	public TFkRk(int id, String ywrklsh, BigDecimal fkje, String isYf, Integer deleted, String rkfklsh) {
-		this.id = id;
-		this.ywrklsh = ywrklsh;
-		this.fkje = fkje;
-		this.isYf = isYf;
-		this.deleted = deleted;
-		this.rkfklsh = rkfklsh;
-//		this.TRkfk = TRkfk;
-	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -48,6 +35,15 @@ public class TFkRk implements java.io.Serializable {
 
 	public void setYwrklsh(String ywrklsh) {
 		this.ywrklsh = ywrklsh;
+	}
+
+	public long getYwrkId() {
+		return ywrkId;
+	}
+
+	@Column(name = "ywrkId", nullable = false)
+	public void setYwrkId(long ywrkId) {
+		this.ywrkId = ywrkId;
 	}
 
 	@Column(name = "fkje", precision = 18, scale = 2)

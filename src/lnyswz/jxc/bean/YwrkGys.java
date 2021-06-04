@@ -12,7 +12,7 @@ public class YwrkGys {
 	private BigDecimal hjje;
 	private BigDecimal fkje;
 	private BigDecimal yfje;
-	private String bz;
+	private String ywbtlsh;
 
 	public long getId() {
 		return id;
@@ -70,11 +70,11 @@ public class YwrkGys {
 		this.yfje = yfje;
 	}
 
-	public String getBz() {
-		return this.bz;
+	public String getYwbtlsh() {
+		return ywbtlsh;
 	}
 
-	public void setBz(String bz) {
-		this.bz = bz;
+	public void setYwbtlsh(String ywbtlsh) {
+		this.ywbtlsh = ywbtlsh;
 	}
 }

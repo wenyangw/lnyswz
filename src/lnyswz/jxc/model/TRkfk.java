@@ -30,6 +30,8 @@ public class TRkfk implements java.io.Serializable {
 	private String cancelName;
 	private Date cancelTime;
 	private String cancelRkfklsh;
+	private String bz;
+	private String ywlsh;
 //	private Set<TFkRk> TFkRks = new HashSet<TFkRk>(0);
 
 	@Id
@@ -189,7 +191,25 @@ public class TRkfk implements java.io.Serializable {
 		this.cancelRkfklsh = cancelRkfklsh;
 	}
 
-//	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "TRkfk")
+	@Column(name = "bz")
+	public String getBz() {
+		return bz;
+	}
+
+	public void setBz(String bz) {
+		this.bz = bz;
+	}
+
+	@Column(name = "ywlsh", length = 12)
+	public String getYwlsh() {
+		return ywlsh;
+	}
+
+	public void setYwlsh(String ywlsh) {
+		this.ywlsh = ywlsh;
+	}
+
+	//	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "TRkfk")
 //	public Set<TFkRk> getTFkRks() {
 //		return this.TFkRks;
 //	}

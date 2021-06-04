@@ -11,8 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import lnyswz.jxc.bean.*;
+import lnyswz.jxc.model.*;
+import lnyswz.jxc.service.RkServiceI;
+import lnyswz.jxc.service.YwrkServiceI;
 import org.apache.log4j.Logger;
 import org.apache.struts2.components.Bean;
+import org.hibernate.Session;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,26 +28,10 @@ import com.alibaba.fastjson.TypeReference;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.common.util.DateUtil;
-import lnyswz.jxc.bean.Department;
-import lnyswz.jxc.bean.Sp;
-import lnyswz.jxc.bean.Xsth;
-import lnyswz.jxc.bean.Ywbt;
-import lnyswz.jxc.bean.YwbtDet;
-import lnyswz.jxc.bean.Ywrk;
-import lnyswz.jxc.bean.YwrkDet;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TKfrk;
-import lnyswz.jxc.model.TOperalog;
-import lnyswz.jxc.model.TSpDet;
-import lnyswz.jxc.model.TYwbt;
-import lnyswz.jxc.model.TYwbtDet;
-import lnyswz.jxc.model.TYwrk;
-import lnyswz.jxc.model.TYwrkDet;
-import lnyswz.jxc.model.TYwzz;
-import lnyswz.jxc.model.TLsh;
-import lnyswz.jxc.model.TSp;
 import lnyswz.jxc.service.YwbtServiceI;
 import lnyswz.jxc.util.Constant;
+
+import static org.apache.cxf.tools.java2wsdl.processor.internal.SpringServiceBuilderFactory.getApplicationContext;
 
 /**
  * 业务补调实现类
@@ -52,6 +41,7 @@ import lnyswz.jxc.util.Constant;
 @Service("ywbtService")
 public class YwbtServiceImpl implements YwbtServiceI {
 	private Logger logger = Logger.getLogger(YwbtServiceImpl.class);
+	private RkServiceI rkService;
 	private BaseDaoI<TYwbt> ywbtDao;
 	private BaseDaoI<TYwbtDet> detDao;
 	private BaseDaoI<TYwzz> ywzzDao;
@@ -105,8 +95,15 @@ public class YwbtServiceImpl implements YwbtServiceI {
 			
 		}
 		tYwbt.setTYwbtDets(tDets);
-		ywbtDao.save(tYwbt);		
-		
+		ywbtDao.save(tYwbt);
+
+		// 处理应付
+		rkService.saveYf(dep, new Gys(ywbt.getGysbh(), ywbt.getGysmc()), ywbt.getHjjea(), ywbt.getYwrklsh(), lsh,"业务补调");
+
+		if (!"".equals(ywbt.getGysbhb())) {
+			rkService.saveYf(dep, new Gys(ywbt.getGysbhb(), ywbt.getGysmcb()), ywbt.getHjjeb(), ywbt.getYwrklsh(), lsh,"业务补调");
+		}
+
 		OperalogServiceImpl.addOperalog(ywbt.getCreateId(), ywbt.getBmbh(), ywbt.getMenuId(), tYwbt.getYwbtlsh(), 
 				"生成业务补调单", operalogDao);
 		
@@ -216,7 +213,12 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		datagrid.setRows(nl);
 		return datagrid;
 	}
-	
+
+	@Autowired
+	public void setRkService(RkServiceI rkService) {
+		this.rkService = rkService;
+	}
+
 	@Autowired
 	public void setYwbtDao(BaseDaoI<TYwbt> ywbtDao) {
 		this.ywbtDao = ywbtDao;

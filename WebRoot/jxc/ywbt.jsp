@@ -373,6 +373,13 @@ function saveAll(){
 	effectRow['bz'] = $('input[name=jxc_ywbt_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['btje']);
 
+	effectRow['gysbh'] = $('input[name=jxc_ywbt_gysbh]').val();
+	effectRow['gysmc'] = $('input[name=jxc_ywbt_gysmc]').val();
+	effectRow['gysbhb'] = $('input[name=jxc_ywbt_gysbh2]').val();
+	effectRow['gysmcb'] = $('input[name=jxc_ywbt_gysmc2]').val();
+	effectRow['hjjea'] = $('#jxc_ywbt_hjje1').numberbox('getValue');
+	effectRow['hjjeb'] = $('#jxc_ywbt_hjje2').numberbox('getValue');
+
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
 	effectRow['menuId'] = menuId;
@@ -514,8 +521,15 @@ function generateYwbt(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						console.info(d.obj);
 						ywbt_spdg.datagrid('loadData', d.rows);
 						$('input[name=ywrklsh]').val(row.ywrklsh);
+						$('input[name=jxc_ywbt_gysbh]').val(d.obj[0].gysbh);
+						$('input[name=jxc_ywbt_gysmc]').val(d.obj[0].gysmc);
+						if (d.obj.length > 1) {
+							$('input[name=jxc_ywbt_gysbh2]').val(d.obj[1].gysbh);
+							$('input[name=jxc_ywbt_gysmc2]').val(d.obj[1].gysmc);
+						}
 						updateFooter();
 						ywbt_tabs.tabs('select', 0);
 					}
@@ -542,8 +556,8 @@ function searchYwrkInYwbt(){
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_ywbt_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_ywbt_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:105px">		
+        <div id='jxc_ywbt_layout' style="height:100%;width:100%;">
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:160px">
 				<table class="tinfo">
 					<tr>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
@@ -553,7 +567,17 @@ function searchYwrkInYwbt(){
 						<th>业务入库流水号</th><td><input name="ywrklsh" disabled="disabled" size="12"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td><input name="jxc_ywbt_bz" size="100" ></td>
+						<th class="read">供应商编码</th><td><input name="jxc_ywbt_gysbh" readonly="readonly" size="8"></td>
+						<th class="read">供应商名称</th><td><input name="jxc_ywbt_gysmc" readonly="readonly" size="50"></td>
+						<th>金额</th><td><input type="text" name="jxc_ywbt_hjje1" id="jxc_ywbt_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
+					</tr>
+					<tr>
+						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" readonly="readonly" size="8"></td>
+						<th class="read">供应商名称2</th><td><input name="jxc_ywbt_gysmc2" readonly="readonly" size="50"></td>
+						<th>金额2</th><td><input type="text" name="jxc_ywbt_hjje2" id="jxc_ywbt_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
+					</tr>
+					<tr>
+						<th>备注</th><td colspan="4"><input name="jxc_ywbt_bz" size="100" ></td>
 					</tr>
 				</table>
 			</div>

@@ -25,9 +25,6 @@ public class Ywrk {
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
-	private BigDecimal hjse;
-	private BigDecimal fkje;
-	private BigDecimal yfje;
 	private BigDecimal hjjea;
 	private BigDecimal hjjeb;
 	private String bz;
@@ -47,6 +44,10 @@ public class Ywrk {
 	private String lxbh;
 	
 	private String search;
+
+	private long ywrkId;
+	private BigDecimal fkje;
+	private BigDecimal yfje;
 	
 	private int id;
 	private String spbh;
@@ -165,30 +166,6 @@ public class Ywrk {
 
 	public void setHjje(BigDecimal hjje) {
 		this.hjje = hjje;
-	}
-
-	public BigDecimal getHjse() {
-		return hjse;
-	}
-
-	public void setHjse(BigDecimal hjse) {
-		this.hjse = hjse;
-	}
-
-	public BigDecimal getFkje() {
-		return fkje;
-	}
-
-	public void setFkje(BigDecimal fkje) {
-		this.fkje = fkje;
-	}
-
-	public BigDecimal getYfje() {
-		return yfje;
-	}
-
-	public void setYfje(BigDecimal yfje) {
-		this.yfje = yfje;
 	}
 
 	public String getBz() {
@@ -606,5 +583,29 @@ public class Ywrk {
 
 	public void setHjjeb(BigDecimal hjjeb) {
 		this.hjjeb = hjjeb;
+	}
+
+	public long getYwrkId() {
+		return ywrkId;
+	}
+
+	public void setYwrkId(long ywrkId) {
+		this.ywrkId = ywrkId;
+	}
+
+	public BigDecimal getFkje() {
+		return fkje;
+	}
+
+	public void setFkje(BigDecimal fkje) {
+		this.fkje = fkje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 }

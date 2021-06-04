@@ -9,13 +9,17 @@ import lnyswz.common.util.DateUtil;
 import lnyswz.jxc.bean.*;
 import lnyswz.jxc.model.*;
 import lnyswz.jxc.service.RkfkServiceI;
+import lnyswz.jxc.service.YwrkServiceI;
 import lnyswz.jxc.util.Constant;
 import lnyswz.jxc.util.Util;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -25,9 +29,10 @@ import java.util.*;
  */
 @Service("rkfkService")
 public class RkfkServiceImpl implements RkfkServiceI {
-	private Logger logger = Logger.getLogger(RkfkServiceImpl.class);
+	private YwrkServiceI ywrkService;
 	private BaseDaoI<TRkfk> rkfkDao;
 	private BaseDaoI<TYwrk> ywrkDao;
+	private BaseDaoI<TYwrkGys> ywrkGysDao;
 	private BaseDaoI<TFkRk> fkRkDao;
 	private BaseDaoI<TLsh> lshDao;
 	private BaseDaoI<TDepartment> depDao;
@@ -68,22 +73,21 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		if(ywrks != null && ywrks.size() > 0){
 			Set<TFkRk> tFkRks = new HashSet<TFkRk>();
 			TFkRk tFkRk = null;
-			TYwrk tYwrk = null;
+			TYwrkGys tYwrkGys = null;
 			for(Ywrk y : ywrks){
 				tFkRk = new TFkRk();
 				tFkRk.setYwrklsh(y.getYwrklsh());
+				tFkRk.setYwrkId(y.getYwrkId());
 				tFkRk.setFkje(y.getFkje());
-//				tFkRk.setTRkfk(tRkfk);
 				tFkRk.setRkfklsh(lsh);
 				tFkRk.setIsYf("0");
 				tFkRk.setDeleted(0);
 				tFkRks.add(tFkRk);
 				fkRkDao.save(tFkRk);
 
-				tYwrk = ywrkDao.load(TYwrk.class, y.getYwrklsh());
-				tYwrk.setFkje(tYwrk.getFkje().add(y.getFkje()));
+				tYwrkGys = ywrkGysDao.load(TYwrkGys.class, y.getYwrkId());
+				tYwrkGys.setFkje(tYwrkGys.getFkje().add(y.getFkje()));
 			}
-//			tRkfk.setTFkRks(tFkRks);
 		}
 		YfzzServiceImpl.updateYfzzJe(dep, gys, tRkfk.getFkje(), Constant.UPDATE_YF_FK, yfzzDao);
 
@@ -95,6 +99,8 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		rRkfk.setRkfklsh(lsh);
 		return rRkfk;
 	}
+
+
 
 	@Override
 	public void cancelRkfk(Rkfk rkfk) {
@@ -138,11 +144,12 @@ public class RkfkServiceImpl implements RkfkServiceI {
 
 //		Set<TFkRk> tFkRks = yTRkfk.getTFkRks();
 		List<TFkRk> tFkRks = FkRkServiceImpl.listByRkfk(yTRkfk.getRkfklsh(), fkRkDao);
+		TYwrkGys tYwrkGys = null;
 		for(TFkRk tFkRk : tFkRks){
-			TYwrk tYwrk = ywrkDao.load(TYwrk.class, tFkRk.getYwrklsh());
-			tYwrk.setFkje(tYwrk.getFkje().subtract(tFkRk.getFkje()));
+			tYwrkGys = ywrkGysDao.load(TYwrkGys.class, tFkRk.getYwrkId());
+			tYwrkGys.setFkje(tYwrkGys.getFkje().subtract(tFkRk.getFkje()));
 			if("1".equals(tFkRk.getIsYf())) {
-				tYwrk.setYfje(tYwrk.getYfje().subtract(tFkRk.getFkje()));
+				tYwrkGys.setYfje(tYwrkGys.getYfje().subtract(tFkRk.getFkje()));
 			}
 			tFkRk.setDeleted(1);
 		}
@@ -256,8 +263,9 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		
 		List<TRkfk> l = rkfkDao.find(hql, params, rkfk.getPage(), rkfk.getRows());
 		List<Rkfk> nl = new ArrayList<Rkfk>();
+		Rkfk c = null;
 		for(TRkfk t : l){
-			Rkfk c = new Rkfk();
+			c = new Rkfk();
 			BeanUtils.copyProperties(t, c);
 			nl.add(c);
 		}
@@ -304,6 +312,10 @@ public class RkfkServiceImpl implements RkfkServiceI {
 		return dao.find(hql, params);
 
 	}
+	@Autowired
+	public void setYwrkService(YwrkServiceI ywrkService) {
+		this.ywrkService = ywrkService;
+	}
 
 	@Autowired
 	public void setRkfkDao(BaseDaoI<TRkfk> rkfkDao) {
@@ -313,6 +325,11 @@ public class RkfkServiceImpl implements RkfkServiceI {
 	@Autowired
 	public void setYwrkDao(BaseDaoI<TYwrk> ywrkDao) {
 		this.ywrkDao = ywrkDao;
+	}
+
+	@Autowired
+	public void setYwrkGysDao(BaseDaoI<TYwrkGys> ywrkGysDao) {
+		this.ywrkGysDao = ywrkGysDao;
 	}
 
 	@Autowired

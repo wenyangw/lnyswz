@@ -16,10 +16,11 @@ import java.util.Map;
  */
 @Service("fkRkService")
 public class FkRkServiceImpl implements FkRkServiceI {
-	public static List<TFkRk> listByYwrk(String ywrklsh, BaseDaoI<TFkRk> fkRkDao) {
-		String hql = "from TFkRk t where t.ywrklsh = :ywrklsh and t.deleted = 0";
+	public static List<TFkRk> listByYwrk(String ywrklsh, long ywrkId, BaseDaoI<TFkRk> fkRkDao) {
+		String hql = "from TFkRk t where t.ywrklsh = :ywrklsh and t.ywrkId = :ywrkId and t.deleted = 0";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ywrklsh", ywrklsh);
+		params.put("ywrkId", ywrkId);
 		return fkRkDao.find(hql, params);
 	}
 	public static List<TFkRk> listByRkfk(String rkfklsh, BaseDaoI<TFkRk> fkRkDao) {

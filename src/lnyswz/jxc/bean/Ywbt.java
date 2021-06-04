@@ -19,13 +19,19 @@ public class Ywbt {
 	private BigDecimal hjje;
 	private String bz;
 	private String ywrklsh;
-	
+
+	private BigDecimal hjjea;
+	private BigDecimal hjjeb;
+
 	private String search;
 	
 	private String menuId;
 	private String lxbh;
-	
+
+	private String gysbh;
 	private String gysmc;
+	private String gysbhb;
+	private String gysmcb;
 	private String spbh;
 	//前台传入明细json
 	private String datagrid;
@@ -107,6 +113,22 @@ public class Ywbt {
 		this.ywrklsh = ywrklsh;
 	}
 
+	public BigDecimal getHjjea() {
+		return hjjea;
+	}
+
+	public void setHjjea(BigDecimal hjjea) {
+		this.hjjea = hjjea;
+	}
+
+	public BigDecimal getHjjeb() {
+		return hjjeb;
+	}
+
+	public void setHjjeb(BigDecimal hjjeb) {
+		this.hjjeb = hjjeb;
+	}
+
 	public String getSearch() {
 		return search;
 	}
@@ -131,12 +153,36 @@ public class Ywbt {
 		this.menuId = menuId;
 	}
 
+	public String getGysbh() {
+		return gysbh;
+	}
+
+	public void setGysbh(String gysbh) {
+		this.gysbh = gysbh;
+	}
+
 	public String getGysmc() {
 		return gysmc;
 	}
 
 	public void setGysmc(String gysmc) {
 		this.gysmc = gysmc;
+	}
+
+	public String getGysbhb() {
+		return gysbhb;
+	}
+
+	public void setGysbhb(String gysbhb) {
+		this.gysbhb = gysbhb;
+	}
+
+	public String getGysmcb() {
+		return gysmcb;
+	}
+
+	public void setGysmcb(String gysmcb) {
+		this.gysmcb = gysmcb;
 	}
 
 	public String getSpbh() {
