@@ -91,7 +91,8 @@ $(function(){
 	        	}},
             {field:'fkje',title:'已付金额',align:'center',
                 formatter: function(value, rowData){
-                    return value !== 0 ? lnyw.formatNumberRgx(value) : (rowData.rklxId === '01' ? '' : '-');
+                	return value;
+            	// return value !== 0 ? lnyw.formatNumberRgx(value) : (rowData.rklxId === '01' ? '' : '-');
                 },
                 styler: function(index, rowData) {
                     if (rowData.hjje == rowData.fkje) {

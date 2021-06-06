@@ -149,16 +149,20 @@ public class RkServiceImpl implements RkServiceI {
 
 	@Override
 	public List<Ywrk> listYwrkNoFk(Ywrk ywrk) {
-//		String hql = "from TYwrk where isCj = '0' and rklxId = :rklxId and bmbh = :bmbh and gysbh = :gysbh and (hjje + hjse) <> fkje order by fpDate";
-		String sql = "select fpDate, rk.ywrklsh, rkgys.id, rkgys.hjje, rkgys.fkje, rk.bz" +
-				" from t_ywrk rk" + " left join t_ywrk_gys rkgys on rk.ywrklsh = rkgys.ywrklsh" +
-				" where rklxId = ? and isCj = '0' and rkgys.id is not null and rkgys.hjje <> rkgys.fkje and bmbh = ? and rkgys.gysbh = ?" +
+		String sql = "select id, ywrklsh, fpDate, hjje, fkje, bz" +
+				" from" +
+				" (select id, rkgys.ywrklsh, rk.bmbh, rkgys.gysbh, rk.fpDate, rkgys.hjje, rkgys.fkje, rk.bz from t_ywrk_gys rkgys" +
+				" left join t_ywrk rk on rkgys.ywrklsh = rk.ywrklsh" +
+				" where rkgys.hjje <> fkje and rkgys.ywbtlsh is null and rk.isCj = '0'" +
+				" union all" +
+				" select id, rkgys.ywrklsh, bt.bmbh, rkgys.gysbh, bt.createTime, rkgys.hjje, rkgys.fkje, '补调' + rkgys.ywbtlsh from t_ywrk_gys rkgys" +
+				" left join t_ywbt bt on rkgys.ywbtlsh = bt.ywbtlsh" +
+				" where  rkgys.hjje <> fkje and rkgys.ywbtlsh is not null) mx" +
+				" where bmbh = ? and gysbh = ?" +
 				" order by fpDate";
-
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", Constant.RKLX_ZS);
-		params.put("1", ywrk.getBmbh());
-		params.put("2", ywrk.getGysbh());
+		params.put("0", ywrk.getBmbh());
+		params.put("1", ywrk.getGysbh());
 		List<Object[]> list = ywrkDao.findBySQL(sql, params);
 
 		if (list == null || list.size() == 0) {
@@ -169,10 +173,9 @@ public class RkServiceImpl implements RkServiceI {
 		Ywrk y = null;
 		for (Object[] o : list) {
 			y = new Ywrk();
-			y.setCreateTime(DateUtil.stringToDate(o[0].toString()));
-//			y.setLsh(o[1].toString());
+			y.setYwrkId(Long.parseLong(o[0].toString()));
 			y.setYwrklsh(o[1].toString());
-			y.setYwrkId(Long.parseLong(o[2].toString()));
+			y.setCreateTime(DateUtil.stringToDate(o[2].toString()));
 			y.setHjje(new BigDecimal(o[3].toString()));
 			y.setFkedje(new BigDecimal(o[4].toString()));
 			y.setBz(o[5].toString());

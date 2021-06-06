@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
+s<%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
 
@@ -364,7 +364,19 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
-	
+
+	if ($('input[name=jxc_ywbt_gysbh2]').val() !== '') {
+		if ($('#jxc_ywbt_hjje2').numberbox('getValue') === '' || $('#jxc_ywbt_hjje2').numberbox('getValue') === '0.00') {
+			$.messager.alert('提示', '请填写供应商2对应的金额！', 'error');
+			return false;
+		}
+	} else {
+		if ($('#jxc_ywbt_hjje1').numberbox('getValue') === '' || $('#jxc_ywbt_hjje1').numberbox('getValue') === '0.00') {
+			$.messager.alert('提示', '请填写供应商对应的金额！', 'error');
+			return false;
+		}
+	}
+
 	var footerRows = ywbt_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -572,7 +584,7 @@ function searchYwrkInYwbt(){
 						<th>金额</th><td><input type="text" name="jxc_ywbt_hjje1" id="jxc_ywbt_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>
 					<tr>
-						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" readonly="readonly" size="8"></td>
+						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" onkeyup="gysLoad('jxc_ywbt_gysbh2', 'jxc_ywbt_gysmc2')" size="8"></td>
 						<th class="read">供应商名称2</th><td><input name="jxc_ywbt_gysmc2" readonly="readonly" size="50"></td>
 						<th>金额2</th><td><input type="text" name="jxc_ywbt_hjje2" id="jxc_ywbt_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>

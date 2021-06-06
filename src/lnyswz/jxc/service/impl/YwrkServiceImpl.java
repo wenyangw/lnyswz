@@ -349,6 +349,11 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		        TRkfk tRkfk = rkfkDao.get(hql, params);
 		        Rkfk rkfk = new Rkfk();
 		        rkfk.setRkfklsh(tRkfk.getRkfklsh());
+		        rkfk.setBmbh(tRkfk.getBmbh());
+		        rkfk.setLxbh(Constant.YWLX_RKFK);
+		        rkfk.setCancelId(ywrk.getCjId());
+		        rkfk.setCancelName(ywrk.getCjName());
+		        rkfk.setMenuId(ywrk.getMenuId());
 		        rkfkService.cancelRkfk(rkfk);
             }
 		}

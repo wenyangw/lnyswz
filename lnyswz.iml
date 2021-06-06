@@ -23,13 +23,13 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar!/" />
+          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/jsp-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -38,7 +38,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
+          <root url="jar://C:/Utilitie/apache-tomcat-6.0.37/lib/servlet-api.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
