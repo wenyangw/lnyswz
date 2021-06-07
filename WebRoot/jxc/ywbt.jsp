@@ -1,4 +1,4 @@
-s<%@ page language="java" contentType="text/html; charset=utf-8"
+<%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 
 
@@ -494,6 +494,8 @@ function updateFooter(){
 	ywbt_spdg.datagrid('reloadFooter', [{spmc : spmc_footer, btje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE))}]);
 }
 
+
+
 //////////////////////////////////////////////以上为商品列表处理代码
 
 //////////////////////////////////////////////以下为业务补调列表处理代码
@@ -533,7 +535,10 @@ function generateYwbt(){
 					},
 					dataType : 'json',
 					success : function(d) {
-						console.info(d.obj);
+						if (d.obj.length == 0) {
+							$.messager.alert('警告', '因启用应付功能，部分数据不完整，请联系信息技术部！',  'warning');
+							return;
+						}
 						ywbt_spdg.datagrid('loadData', d.rows);
 						$('input[name=ywrklsh]').val(row.ywrklsh);
 						$('input[name=jxc_ywbt_gysbh]').val(d.obj[0].gysbh);
@@ -557,6 +562,7 @@ function searchYwrkInYwbt(){
 	ywbt_ywrkDg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeYwrkInYwbt]').val(),
+		search: $('input[name=searchYwrkInYwbt]').val(),
 		fromOther: 'fromYwbt'
 	});
 }
@@ -584,7 +590,7 @@ function searchYwrkInYwbt(){
 						<th>金额</th><td><input type="text" name="jxc_ywbt_hjje1" id="jxc_ywbt_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>
 					<tr>
-						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" onkeyup="gysLoad('jxc_ywbt_gysbh2', 'jxc_ywbt_gysmc2')" size="8"></td>
+						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" onkeyup="jxc.gysLoad('jxc_ywbt_gysbh2', 'jxc_ywbt_gysmc2')" size="8"></td>
 						<th class="read">供应商名称2</th><td><input name="jxc_ywbt_gysmc2" readonly="readonly" size="50"></td>
 						<th>金额2</th><td><input type="text" name="jxc_ywbt_hjje2" id="jxc_ywbt_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>
@@ -615,6 +621,7 @@ function searchYwrkInYwbt(){
 </div>
 <div id="jxc_ywbt_ywrkTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeYwrkInYwbt" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商、备注：<input type="text" name="searchYwrkInYwbt" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwrkInYwbt();">查询</a>
 </div>
 

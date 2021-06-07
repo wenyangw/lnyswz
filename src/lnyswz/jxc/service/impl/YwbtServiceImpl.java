@@ -98,9 +98,11 @@ public class YwbtServiceImpl implements YwbtServiceI {
 		ywbtDao.save(tYwbt);
 
 		// 处理应付
-		rkService.saveYf(dep, new Gys(ywbt.getGysbh(), ywbt.getGysmc()), ywbt.getHjjea(), ywbt.getYwrklsh(), lsh,"业务补调");
+		if (!"".equals(ywbt.getGysbh()) && ywbt.getHjjea() != null) {
+			rkService.saveYf(dep, new Gys(ywbt.getGysbh(), ywbt.getGysmc()), ywbt.getHjjea(), ywbt.getYwrklsh(), lsh, "业务补调");
+		}
 
-		if (!"".equals(ywbt.getGysbhb())) {
+		if (!"".equals(ywbt.getGysbhb()) && ywbt.getHjjeb() != null) {
 			rkService.saveYf(dep, new Gys(ywbt.getGysbhb(), ywbt.getGysmcb()), ywbt.getHjjeb(), ywbt.getYwrklsh(), lsh,"业务补调");
 		}
 

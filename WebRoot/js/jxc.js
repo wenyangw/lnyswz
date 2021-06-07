@@ -935,6 +935,45 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 	});
 };
 
+jxc.gysLoad = function(gysbh, gysmc){
+	const gysbh_t = $('input[name=' + gysbh + ']');
+	const gysmc_t = $('input[name=' + gysmc + ']');
+	switch(event.keyCode){
+		case 27:
+			// jxc.query('供应商检索', $('input[name=jxc_ywrk_gysbh]'), $('input[name=jxc_ywrk_gysmc]'), '',
+			jxc.query('供应商检索', gysbh_t, gysmc_t, '',
+				lnyw.bp() + '/jxc/query.jsp',
+				lnyw.bp() + '/jxc/gysAction!gysDg.action');
+			break;
+		case 9:
+			break;
+		default:
+			if(gysbh_t.val().trim().length == 0){
+				gysc_t.val('');
+			}
+			if(gysbh_t.val().trim().length == 8){
+				$.ajax({
+					url: lnyw.bp() + '/jxc/gysAction!loadGys.action',
+					async: false,
+					context:this,
+					data:{
+						gysbh: gysbh_t.val().trim(),
+					},
+					dataType:'json',
+					success:function(data){
+						if(data.success){
+							//设置信息字段值
+							gysmc_t.val(data.obj.gysmc);
+						}else{
+							$.messager.alert('提示', '供应商信息不存在！', 'error');
+						}
+					}
+				});
+			}
+			break;
+	}
+}
+
 //商品信息快速查询
 jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget){
     var url = value.trim().length > 0 ? urlAction : ''

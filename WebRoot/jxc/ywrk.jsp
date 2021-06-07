@@ -655,18 +655,18 @@ $(function(){
 	//初始化仓库列表
 	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + ywrk_did);
 
-	jxc_ywrk_rklxCombo.combobox({
-		onChange(newValue) {
-			$('.rkfs_zs').css("display", newValue === '01' ? 'table-cell' : 'none');
-            $('.rkfs_zsrow').css("display", newValue === '01' ? 'table-row' : 'none');
-			// $('#jxc_ywrk_fpDate').datebox('setValue', moment().format('YYYY-MM-DD'));
-            if (newValue !== '01') {
-                $('input[name=jxc_ywrk_gysbh2]').val('');
-                $('input[name=jxc_ywrk_gysmc2]').val('');
-                $('#jxc_ywrk_hjje2').numberbox('setValue', '');
-            }
-		}
-	});
+	// jxc_ywrk_rklxCombo.combobox({
+	// 	onChange(newValue) {
+	// 		// $('.rkfs_zs').css("display", newValue === '01' ? 'table-cell' : 'none');
+    //         // $('.rkfs_zsrow').css("display", newValue === '01' ? 'table-row' : 'none');
+	// 		// $('#jxc_ywrk_fpDate').datebox('setValue', moment().format('YYYY-MM-DD'));
+    //         // if (newValue !== '01') {
+    //         //     $('input[name=jxc_ywrk_gysbh2]').val('');
+    //         //     $('input[name=jxc_ywrk_gysmc2]').val('');
+    //         //     $('#jxc_ywrk_hjje2').numberbox('setValue', '');
+    //         // }
+	// 	}
+	// });
 
 	//初始化信息
 	init();
@@ -1238,44 +1238,6 @@ function setValueBySpbh(rowData){
 			});
 }
 
-function gysLoad(gysbh, gysmc){
-    const gysbh_t = $('input[name=' + gysbh + ']');
-    const gysmc_t = $('input[name=' + gysmc + ']');
-	switch(event.keyCode){
-	case 27:
-		// jxc.query('供应商检索', $('input[name=jxc_ywrk_gysbh]'), $('input[name=jxc_ywrk_gysmc]'), '',
-        jxc.query('供应商检索', gysbh_t, gysmc_t, '',
-				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
-		break;
-	case 9:
-		break;
-	default:
-		if(gysbh_t.val().trim().length == 0){
-			gysc_t.val('');
-		}
-		if(gysbh_t.val().trim().length == 8){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
-				async: false,
-				context:this,
-				data:{
-					gysbh: gysbh_t.val().trim(),
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						//设置信息字段值
-						gysmc_t.val(data.obj.gysmc);
-					}else{
-						$.messager.alert('提示', '供应商信息不存在！', 'error');
-					}
-				}
-			});
-		}
-		break;
-	}
-}
 //////////////////////////////////////////////以上为商品列表处理代码
 
 //////////////////////////////////////////////以下为业务入库划列表处理代码
@@ -1615,13 +1577,13 @@ function searchXskpInYwrk(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="jxc_ywrk_gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad('jxc_ywrk_gysbh', 'jxc_ywrk_gysmc')" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('jxc_ywrk_gysbh', 'jxc_ywrk_gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_ywrk_gysmc" readonly="readonly" size="50"></td>
                         <th>金额</th><td><input type="text" name="jxc_ywrk_hjje1" id="jxc_ywrk_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
 					</tr>
                     <tr class="rkfs_zsrow">
                         <th>供应商编码2</th><td><input name="jxc_ywrk_gysbh2" class="easyui-validatebox"
-                                                 data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad('jxc_ywrk_gysbh2', 'jxc_ywrk_gysmc2')" size="8"></td>
+                                                 data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('jxc_ywrk_gysbh2', 'jxc_ywrk_gysmc2')" size="8"></td>
                         <th class="read">供应商名称2</th><td colspan="3"><input name="jxc_ywrk_gysmc2" readonly="readonly" size="50"></td>
                         <th>金额2</th><td><input type="text" name="jxc_ywrk_hjje2" id="jxc_ywrk_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
                     </tr>

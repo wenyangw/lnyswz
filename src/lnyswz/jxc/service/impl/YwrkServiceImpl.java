@@ -391,7 +391,6 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			}
 		}
 		if(ywrk.getFromOther() != null){
-
 			hql += " and t.isCj = '0'";
 			if(Constant.YWRK_FROM_YWBT.equals(ywrk.getFromOther())){
 				hql += " and t.rklxId = :rklxId and t.TYwbt is null";
@@ -400,19 +399,22 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				hql += " and t.isZs = '0' and t.TKfrks is empty";
 			}
 		}else{
-			//hql += " and t.createId = :createId";
-			//params.put("createId", ywrk.getCreateId());
-			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
-				//hql += " and (t.ywrklsh like :search or t.gysbh like :search or t.gysmc like :search or t.bz like :search)";
-				//params.put("search", "%" + ywrk.getSearch() + "%");
-				hql += " and (" + 
-						Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.ywrklsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
-						+ ")";
-			}else{
+//			if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
+			if(ywrk.getSearch() == null || ywrk.getSearch().length() == 0){
+//				hql += " and (" +
+//						Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.ywrklsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+//						+ ")";
+//			}else{
 				hql += " or (t.bmbh = :bmbh and t.rklxId = :rklxId and t.isCj = '0')";
 				params.put("rklxId", Constant.RKLX_ZG);
 			}
 		}
+		if(ywrk.getSearch() != null && ywrk.getSearch().length() > 0){
+			hql += " and (" +
+					Util.getQueryWhere(ywrk.getSearch(), new String[]{"t.ywrklsh", "t.gysbh", "t.gysmc", "t.bz"}, params)
+					+ ")";
+		}
+
 		String countHql = " select count(*)" + hql;
 		hql += " order by t.createTime desc";
 		List<TYwrk> l = ywrkDao.find(hql, params, ywrk.getPage(), ywrk.getRows());
