@@ -31,11 +31,6 @@ $(function(){
 		fit : true,
 		border : false,
 	});
-	
-	// $('#jxc_rkfk_gysLayout').layout({
-	// 	fit : true,
-	// 	border : false,
-	// });
 
 	rkfk_gysDg = $('#jxc_rkfk_gysDg').datagrid({
 		url : '${pageContext.request.contextPath}/jxc/ywrkAction!listGysYf.action',
@@ -75,6 +70,8 @@ $(function(){
 					$('#sxzq').html(rsp.sxzq);
 					$('#sxje').html(rsp.sxje);
 					$('#yfje').html(rsp.yfje);
+					$('#fkje').val('');
+					$('#fkhj').html('');
 				},
 				// error: function(){
 				// 	$.messager.alert("提示", "提交错误了！");
@@ -271,10 +268,10 @@ $(function(){
 		je = 0;
 		rows = undefined;
 		if ($(this).val() === '0') {
-			rkfk_ywrkDg.datagrid('showColumn', 'lsh').datagrid('reload');
+			rkfk_ywrkDg.datagrid('showColumn', 'ywrkId').datagrid('reload');
 			$('#fkhj').html('');
 		} else {
-			rkfk_ywrkDg.datagrid('hideColumn', 'lsh');
+			rkfk_ywrkDg.datagrid('hideColumn', 'ywrkId');
 			calfk();
 		}
 	});
@@ -343,7 +340,7 @@ function calfk() {
 		}
 	}
 
-    countFk = 0;
+	countFk = 0;
 	let fkhj = 0;
     if(rows != undefined){
         $.each(rows, function(index){
@@ -390,6 +387,15 @@ function saveRkfk(){
 	if(fkje == ''){
 		$.messager.alert('提示', '没有输入付款金额,请重新操作！', 'error');
 		return;
+	}
+
+	let yfje = Number($('#yfje').html());
+	if ((rows == undefined || rows.length == 0) && yfje > 0) {
+		if (fkje > yfje) {
+			$.messager.alert('提示', '无明细付款，付款金额不能大于应付金额，请重新录入！', 'error');
+			return;
+		}
+		je = 0;
 	}
 
 	if ($('input[name=fkfs]:checked').val() === '0' && rkfk_ywrkDg.datagrid('getRows').length > rows.length && je > 0) {

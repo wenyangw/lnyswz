@@ -649,27 +649,30 @@ $(function(){
 	});
 
 	//初始化入库类型列表
-	//jsfsCombo = lnyw.initCombo($("input[name=jsfsId]"), 'id', 'jsmc', '${pageContext.request.contextPath}/jxc/jsfsAction!listJsfs.action');
-	jxc_ywrk_rklxCombo = lnyw.initCombo($("#jxc_ywrk_rklxId"), 'id', 'rklxmc', '${pageContext.request.contextPath}/jxc/rklxAction!listRklx.action');
+	jxc_ywrk_rklxCombo = lnyw.initCombo($("#jxc_ywrk_rklxId"), 'id', 'rklxmc', '${pageContext.request.contextPath}/jxc/rklxAction!listRklx.action')
+		.combobox({
+			onSelect: function(record) {
+				$('.rkfs_zs').css("display", record.id === '01' ? 'table-cell' : 'none');
+				$('.rkfs_zsrow').css("display", record.id === '01' ? 'table-row' : 'none');
+
+				if (record.id !== '01') {
+					$('input[name=jxc_ywrk_gysbh2]').val('');
+					$('input[name=jxc_ywrk_gysmc2]').val('');
+					$('#jxc_ywrk_hjje2').numberbox('setValue', '');
+				} else {
+					$('#jxc_ywrk_fpDate').my97('setValue', moment().format('YYYY-MM-DD'));
+				}
+			}
+		});
 	
 	//初始化仓库列表
 	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + ywrk_did);
 
-	// jxc_ywrk_rklxCombo.combobox({
-	// 	onChange(newValue) {
-	// 		// $('.rkfs_zs').css("display", newValue === '01' ? 'table-cell' : 'none');
-    //         // $('.rkfs_zsrow').css("display", newValue === '01' ? 'table-row' : 'none');
-	// 		// $('#jxc_ywrk_fpDate').datebox('setValue', moment().format('YYYY-MM-DD'));
-    //         // if (newValue !== '01') {
-    //         //     $('input[name=jxc_ywrk_gysbh2]').val('');
-    //         //     $('input[name=jxc_ywrk_gysmc2]').val('');
-    //         //     $('#jxc_ywrk_hjje2').numberbox('setValue', '');
-    //         // }
-	// 	}
-	// });
-
 	//初始化信息
 	init();
+
+
+
 });
 
 //以下为商品列表处理代码
@@ -715,6 +718,7 @@ function init(){
 	//清空合计内容
 	ywrk_spdg.datagrid('reloadFooter',[{}]);
 }
+
 
 function depChange(bmbh){
 	if($('input[name=isDep]').is(':checked')){

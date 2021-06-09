@@ -913,25 +913,27 @@ public class YwrkServiceImpl implements YwrkServiceI {
 	@Override
 	public List<Gys> listGysYf(Ywrk ywrk) {
 		String sql = "select ywrk.gysbh, ywrk.gysmc, isnull(dt.sxzq, 0) sxzq, isnull(dt.sxje, 0) sxje, isnull(yf.qcje, 0) + isnull(yf.rkje, 0) - isnull(yf.fkje, 0) yfje " +
-				" from (select bmbh, gysbh, gysmc from t_ywrk where isCj = '0' and rklxId = ? and bmbh = ? and createTime > ?" +
+				" from (select bmbh, gysbh, gysmc from t_yfzz where bmbh = ? and jzsj = CONVERT(char(6), getDate(), 112)" +
+//				" select bmbh, gysbh, gysmc from t_ywrk where isCj = '0' and rklxId = ? and bmbh = ? and createTime > ?" +
 				" union" +
 				" select bmbh, rkgys.gysbh, rkgys.gysmc from t_ywrk rk" +
 				" left join t_ywrk_gys rkgys on rk.ywrklsh = rkgys.ywrklsh" +
-				" where rkgys.gysbh is not null and isCj = '0' and rklxId = ? and bmbh = ? and createTime > ?) ywrk" +
+				" where rkgys.gysbh is not null and isCj = '0' and rklxId = '01' and bmbh = ?  and rkgys.hjje <> rkgys.fkje) ywrk" +
 				" left join t_gys_det dt on ywrk.bmbh = dt.depId and ywrk.gysbh = dt.gysbh" +
 				" left join t_yfzz yf on ywrk.bmbh = yf.bmbh and ywrk.gysbh = yf.gysbh and jzsj = CONVERT(char(6), getDate(), 112)";
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("0", Constant.RKLX_ZS);
-		params.put("3", Constant.RKLX_ZS);
+//		params.put("0", Constant.RKLX_ZS);
+//		params.put("3", Constant.RKLX_ZS);
+		params.put("0", ywrk.getBmbh());
 		params.put("1", ywrk.getBmbh());
-		params.put("4", ywrk.getBmbh());
+//		params.put("4", ywrk.getBmbh());
 
-		Calendar cal = Calendar.getInstance();
+//		Calendar cal = Calendar.getInstance();
 //		cal.set(cal.get(Calendar.YEAR) - 1, cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-		cal.add(Calendar.YEAR, -1);
-		params.put("2", cal.getTime());
-		params.put("5", cal.getTime());
+//		cal.add(Calendar.YEAR, -1);
+//		params.put("2", cal.getTime());
+//		params.put("5", cal.getTime());
 
 		List<Object[]> list = ywrkDao.findBySQL(sql, params);
 		List<Gys> gyses = new ArrayList<Gys>();

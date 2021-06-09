@@ -159,7 +159,7 @@ public class RkServiceImpl implements RkServiceI {
 				" left join t_ywbt bt on rkgys.ywbtlsh = bt.ywbtlsh" +
 				" where  rkgys.hjje <> fkje and rkgys.ywbtlsh is not null) mx" +
 				" where bmbh = ? and gysbh = ?" +
-				" order by fpDate";
+				" order by fpDate, ywrklsh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", ywrk.getBmbh());
 		params.put("1", ywrk.getGysbh());
