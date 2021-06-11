@@ -89,16 +89,40 @@ $(function(){
 	        	formatter: function(value){
 	        		return lnyw.formatNumberRgx(value);
 	        	}},
-            {field:'fkje',title:'已付金额',align:'center',
-                formatter: function(value, rowData){
-                	return value;
-            	// return value !== 0 ? lnyw.formatNumberRgx(value) : (rowData.rklxId === '01' ? '' : '-');
-                },
-                styler: function(index, rowData) {
-                    if (rowData.hjje == rowData.fkje) {
-                        return 'color: red;';
-                    }
-                }},
+			{field:'ywrkGyses',title:'发票金额',align:'center',
+				formatter: function(value, rowData){
+					if (rowData.rklxId != RKLX_ZS) {
+						return '-';
+					}
+					let title = '';
+					let hjje = 0;
+					let fkje = 0;
+					if (value != undefined) {
+						if (value.length == 1) {
+							fkje = value[0].fkje;
+							hjje = value[0].hjje;
+							title = '已付：' + lnyw.formatNumberRgx(fkje);
+						} else {
+							let i;
+							for (i = 0; i < value.length; i++) {
+								if (i != 0) {
+									title += '；';
+								}
+								title += value[i].gysmc + '，金额：' + lnyw.formatNumberRgx(value[i].hjje) + '，已付：' + lnyw.formatNumberRgx(value[i].fkje);
+								hjje += value[i].hjje;
+								fkje += value[i].fkje;
+							}
+						}
+						let style = '';
+						if (hjje == fkje) {
+							style = " style='color:red;'";
+						}
+						if (hjje != fkje && fkje > 0) {
+							style = " style='color:blue;'";
+						}
+						return "<span" + style + " title='" + title + "'>" + lnyw.formatNumberRgx(hjje) + "</span>";
+					}
+				}},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
         			return lnyw.memo(value, 15);

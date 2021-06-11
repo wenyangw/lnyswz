@@ -2,6 +2,8 @@ package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 采购需求类
@@ -82,6 +84,7 @@ public class Ywrk {
 	private String cgjhDetIds;
 	//由直送业务入库生成提货单时传入的参数
 	private String ywrkDetIds;
+	private List<YwrkGys> ywrkGyses;
 	
 	//--采购计划直送导入流水号
 	private String cgjhlshs;
@@ -607,5 +610,13 @@ public class Ywrk {
 
 	public void setYfje(BigDecimal yfje) {
 		this.yfje = yfje;
+	}
+
+	public List<YwrkGys> getYwrkGyses() {
+		return ywrkGyses;
+	}
+
+	public void setYwrkGyses(List<YwrkGys> ywrkGyses) {
+		this.ywrkGyses = ywrkGyses;
 	}
 }

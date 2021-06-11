@@ -454,6 +454,25 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			if(t.getTYwbt() != null){
 				c.setYwbtlsh(t.getTYwbt().getYwbtlsh());
 			}
+			if (Constant.RKLX_ZS.equals(t.getRklxId())) {
+			    String ygHql = "from TYwrkGys t where t.ywrklsh = :ywrklsh and t.ywbtlsh is null";
+			    Map<String, Object> ygParams = new HashMap<>();
+			    ygParams.put("ywrklsh", t.getYwrklsh());
+			    List<TYwrkGys> ywrkGysList = ywrkGysDao.find(ygHql, ygParams);
+			    List<YwrkGys> ywrkGyses = null;
+			    YwrkGys ywrkGys = null;
+			    if (ywrkGysList.size() > 0) {
+			    	ywrkGyses = new ArrayList<>();
+			    	for (TYwrkGys tyg: ywrkGysList) {
+			    		ywrkGys = new YwrkGys();
+			    		ywrkGys.setGysmc(tyg.getGysmc());
+			    		ywrkGys.setHjje(tyg.getHjje());
+			    		ywrkGys.setFkje(tyg.getFkje());
+			    		ywrkGyses.add(ywrkGys);
+					}
+					c.setYwrkGyses(ywrkGyses);
+                }
+            }
 			nl.add(c);
 		}
 		datagrid.setTotal(ywrkDao.count(countHql, params));

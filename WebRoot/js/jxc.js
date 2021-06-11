@@ -23,7 +23,12 @@ var PRINT_TYPE_XSTH_BGY = '81';
 var PRINT_TYPE_XSTH = '82';
 var PRINT_TYPE_XSTH_YW = '83';
 
+// 业务入库类型
+var RKLX_ZS = '01';
+
 var JS_PATH = 'C:/lnyswz/';
+
+
 
 jxc.getJsFile = function(type){
     switch(type){
