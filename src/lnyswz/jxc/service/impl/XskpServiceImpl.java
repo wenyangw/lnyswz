@@ -1271,7 +1271,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			//r += spmc;
 			r.append(spmc);
 		}
-		if(spcd != null){	
+		if(spcd != null && (!"NULL".equals(spcd) && !"".equals(spcd.trim()))){
 			//r += "(" + spcd + ")";
 			r.append("(" + spcd + ")");
 		}
@@ -1286,7 +1286,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}else{
 			r += spmc;
 		}
-		if(spcd != null && spcd.length() > 0){	
+		if(spcd != null && spcd.length() > 0 && (!"NULL".equals(spcd) && !"".equals(spcd.trim()))){
 			r += "(" + spcd + ")";
 		}
 		if(sppp != null && sppp.length() > 0){	
@@ -1727,7 +1727,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		List<TXskpDet> tDets = detDao.find(hql, params);
 		
 		List<XskpDet> nl = new ArrayList<XskpDet>();
-		
+
 		for(TXskpDet tDet : tDets){
 			XskpDet det = new XskpDet();
 			BeanUtils.copyProperties(tDet, det, new String[]{"id"});
