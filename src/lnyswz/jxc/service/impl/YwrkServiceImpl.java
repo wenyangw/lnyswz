@@ -459,18 +459,29 @@ public class YwrkServiceImpl implements YwrkServiceI {
 			    Map<String, Object> ygParams = new HashMap<>();
 			    ygParams.put("ywrklsh", t.getYwrklsh());
 			    List<TYwrkGys> ywrkGysList = ywrkGysDao.find(ygHql, ygParams);
-			    List<YwrkGys> ywrkGyses = null;
-			    YwrkGys ywrkGys = null;
 			    if (ywrkGysList.size() > 0) {
-			    	ywrkGyses = new ArrayList<>();
-			    	for (TYwrkGys tyg: ywrkGysList) {
-			    		ywrkGys = new YwrkGys();
-			    		ywrkGys.setGysmc(tyg.getGysmc());
-			    		ywrkGys.setHjje(tyg.getHjje());
-			    		ywrkGys.setFkje(tyg.getFkje());
-			    		ywrkGyses.add(ywrkGys);
+			        String title = "";
+			        BigDecimal hjje = BigDecimal.ZERO;
+			        BigDecimal fkje = BigDecimal.ZERO;
+			        String style = "";
+			    	for (int i = 0; i < ywrkGysList.size(); i++) {
+			    	    if (i != 0 ) {
+			    	        title += "；";
+                        }
+			    	    title += ywrkGysList.get(i).getGysmc() + "，金额：" + ywrkGysList.get(i).getHjje() + "，已付：" + ywrkGysList.get(i).getFkje();
+			    	    hjje = hjje.add(ywrkGysList.get(i).getHjje());
+			    	    fkje = fkje.add(ywrkGysList.get(i).getFkje());
 					}
-					c.setYwrkGyses(ywrkGyses);
+			    	if (hjje.compareTo(fkje) == 0) {
+			    	    style = "style='color:red;'";
+                    } else {
+			    	    if (fkje.compareTo(BigDecimal.ZERO) > 0) {
+                            style = "style='color:blue;'";
+                        }
+                    }
+
+			    	c.setFpje(hjje);
+			    	c.setFpInfo("<span " + style + " title='" + title + "'>" + hjje + "</span>");
                 }
             }
 			nl.add(c);

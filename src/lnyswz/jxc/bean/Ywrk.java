@@ -50,6 +50,8 @@ public class Ywrk {
 	private long ywrkId;
 	private BigDecimal fkje;
 	private BigDecimal yfje;
+	private BigDecimal fpje;
+	private String fpInfo;
 	
 	private int id;
 	private String spbh;
@@ -618,5 +620,21 @@ public class Ywrk {
 
 	public void setYwrkGyses(List<YwrkGys> ywrkGyses) {
 		this.ywrkGyses = ywrkGyses;
+	}
+
+	public BigDecimal getFpje() {
+		return fpje;
+	}
+
+	public void setFpje(BigDecimal fpje) {
+		this.fpje = fpje;
+	}
+
+	public String getFpInfo() {
+		return fpInfo;
+	}
+
+	public void setFpInfo(String fpInfo) {
+		this.fpInfo = fpInfo;
 	}
 }

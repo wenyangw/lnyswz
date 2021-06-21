@@ -2,9 +2,7 @@
 	pageEncoding="utf-8"%>
 
 
-
 <script type="text/javascript">
-    // TODO
 var ywrk_did;
 var ywrk_lx;
 var ywrk_menuId;
@@ -89,39 +87,12 @@ $(function(){
 	        	formatter: function(value){
 	        		return lnyw.formatNumberRgx(value);
 	        	}},
-			{field:'ywrkGyses',title:'发票金额',align:'center',
+			{field:'fpje',title:'发票金额',align:'center',
 				formatter: function(value, rowData){
 					if (rowData.rklxId != RKLX_ZS) {
 						return '-';
 					}
-					let title = '';
-					let hjje = 0;
-					let fkje = 0;
-					if (value != undefined) {
-						if (value.length == 1) {
-							fkje = value[0].fkje;
-							hjje = value[0].hjje;
-							title = '已付：' + lnyw.formatNumberRgx(fkje);
-						} else {
-							let i;
-							for (i = 0; i < value.length; i++) {
-								if (i != 0) {
-									title += '；';
-								}
-								title += value[i].gysmc + '，金额：' + lnyw.formatNumberRgx(value[i].hjje) + '，已付：' + lnyw.formatNumberRgx(value[i].fkje);
-								hjje += value[i].hjje;
-								fkje += value[i].fkje;
-							}
-						}
-						let style = '';
-						if (hjje == fkje) {
-							style = " style='color:red;'";
-						}
-						if (hjje != fkje && fkje > 0) {
-							style = " style='color:blue;'";
-						}
-						return "<span" + style + " title='" + title + "'>" + lnyw.formatNumberRgx(hjje) + "</span>";
-					}
+					return rowData.fpInfo;
 				}},
 	        {field:'bz',title:'备注',align:'center',
         		formatter: function(value){
@@ -173,24 +144,6 @@ $(function(){
             {field:'ckId',title:'仓库id',align:'center',hidden:true},
             {field:'rklxId',title:'入库类型id',align:'center',hidden:true},
 	    ]],
-
-        onLoadSuccess: function() {
-			// $(this).datagrid('reload');
-            // var table = $(this).prev().find('table'),
-            //     posDivs = table.eq(0).find('div.datagrid-cell')//表头用来定位用的div
-            //     , bodyFirstDivs = table.eq(1).find('tr:eq(0) div') //内容第一行用来设置宽度的div，以便设置和表头一样的宽度
-            //     , orderHeader = posDivs.map(function (index) {return { index: index, left: $(this).position().left} }); //计算表头的左边位置，以便重新排序和内容行单元格循序一致
-            // orderHeader.sort(function (a, b) { return a.left - b.left; }); //对表头位置排序
-			// setTimeout(function () {//延时设置宽度，因为easyui执行完毕回调后有后续的处理，会去掉内容行用来设置宽度的div的css width属性
-			// 	for (var i = 0; i < orderHeader.length; i++) {
-			// 		if (bodyFirstDivs.eq(i).css('width') > posDivs.eq(orderHeader[i].index).css('width')) {
-			// 			bodyFirstDivs.eq(i).css('width', posDivs.eq(orderHeader[i].index).css('width'));
-			// 		} else {
-			// 			posDivs.eq(orderHeader[i].index).css('width', bodyFirstDivs.eq(i).css('width'));
-			// 		}
-            //     }
-            // }, 50);
-        },
 	    toolbar:'#jxc_ywrk_tb',
 	});
 	lnyw.toolbar(1, ywrk_dg, '${pageContext.request.contextPath}/admin/buttonAction!buttons.action', ywrk_did);
@@ -265,19 +218,6 @@ $(function(){
         			return lnyw.memo(value, 15);
         		}},
         	{field:'cgjhlshs',title:'采购计划',align:'center',width:80},
-//         	{field:'isCj',title:'状态',align:'center',sortable:true,
-//         		formatter : function(value) {
-// 					if (value == '1') {
-// 						return '已冲减';
-// 					} else {
-// 						return '正常';
-// 					}
-// 				},
-//         		sorter: function(a,b){
-//         			a = a == undefined ? 0 : a;
-//         			b = b == undefined ? 0 : b;
-// 					return (a-b);  
-// 				}},
 	    ]],
 	    toolbar:'#jxc_ywrk_kfrkTb',
 	});
@@ -335,16 +275,6 @@ $(function(){
 		pageSize : pageSize,
 		pageList : pageList,
 		columns:[[
-// 			{field:'cgjhlsh',title:'流水号',align:'center'},
-// 	        {field:'createTime',title:'时间',align:'center'},
-// 	        {field:'gysbh',title:'供应商编号',align:'center'},
-// 	        {field:'gysmc',title:'供应商名称',align:'center'},
-// 	        {field:'ckId',title:'仓库id',align:'center',hidden:true},
-// 	        {field:'ckmc',title:'仓库名称',align:'center'},
-//         	{field:'bz',title:'备注',align:'center',
-//         		formatter: function(value){
-//         			return lnyw.memo(value, 15);
-//         		}},
 			{field:'id',title:'detId',align:'center', checkbox:true},
 			{field:'cgjhlsh',title:'流水号',align:'center'},
 			{field:'createTime',title:'时间',align:'center'},
@@ -671,7 +601,7 @@ $(function(){
 			$('input[name=shdz]').val('');
 		}
 	});
-
+	
 	//初始化入库类型列表
 	jxc_ywrk_rklxCombo = lnyw.initCombo($("#jxc_ywrk_rklxId"), 'id', 'rklxmc', '${pageContext.request.contextPath}/jxc/rklxAction!listRklx.action')
 		.combobox({
@@ -691,12 +621,10 @@ $(function(){
 	
 	//初始化仓库列表
 	jxc_ywrk_ckCombo = lnyw.initCombo($("#jxc_ywrk_ckId"), 'id', 'ckmc', '${pageContext.request.contextPath}/jxc/ckAction!listCk.action?depId=' + ywrk_did);
+	
 
 	//初始化信息
 	init();
-
-
-
 });
 
 //以下为商品列表处理代码
@@ -742,7 +670,6 @@ function init(){
 	//清空合计内容
 	ywrk_spdg.datagrid('reloadFooter',[{}]);
 }
-
 
 function depChange(bmbh){
 	if($('input[name=isDep]').is(':checked')){
@@ -1560,6 +1487,8 @@ function toYwrk(){
 						depChange(row.bmbh);
 						$('input[name=jxc_ywrk_gysbh]').val(jxc.otherBm(ywrk_did)['gysbh']);
 						$('input[name=jxc_ywrk_gysmc]').val(jxc.otherBm(ywrk_did)['gysmc']);
+                        $('#jxc_ywrk_hjje1').numberbox('setValue', row.hjje + row.hjse);
+
 						var bz = row.bz.trim().length == 0 ? '' : '/' + row.bz.trim();
 						$('input[name=jxc_ywrk_bz]').val(row.xskplsh + bz);
 						$('input[name=xskplsh]').val(row.xskplsh);
