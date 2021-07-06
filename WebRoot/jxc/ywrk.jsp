@@ -819,19 +819,24 @@ function saveAll(){
 		}
 	});
 
+	var footerRows = ywrk_spdg.datagrid('getFooterRows');
 	if (jxc_ywrk_rklxCombo.combobox('getValue') == '01') {
 		if (($('#jxc_ywrk_hjje1').numberbox('getValue') === '' || $('#jxc_ywrk_hjje1').numberbox('getValue') === '0.00')
 			|| ($('input[name=jxc_ywrk_gysbh2]').val() !== '' && ($('#jxc_ywrk_hjje2').numberbox('getValue') === '' || $('#jxc_ywrk_hjje2').numberbox('getValue') === '0.00')))
 		{
 			$.messager.alert('提示', '正式入库请填写供应商对应的金额！', 'error');
 			return false;
+		} else {
+			let hjje1 = $('#jxc_ywrk_hjje1').numberbox('getValue') === '' ? 0 : $('#jxc_ywrk_hjje1').numberbox('getValue');
+			let hjje2 = $('#jxc_ywrk_hjje2').numberbox('getValue') === '' ? 0 : $('#jxc_ywrk_hjje2').numberbox('getValue');
+			let spje = footerRows[0]['spje'];
+			if (Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
+				$.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
+				return false;
+			}
 		}
-		// TODO
-		// 验证金额与明细是否一致，能自动的自动填写
 	}
 
-
-	var footerRows = ywrk_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
 	if($('input[name=jxc_ywrk_isZs]').is(':checked')){

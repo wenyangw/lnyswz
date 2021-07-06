@@ -640,6 +640,21 @@ public class YwrkServiceImpl implements YwrkServiceI {
 				nl.add(new YwrkDet());
 			}
 		}
+
+		String ygHql = "from TYwrkGys t where t.ywrklsh = :ywrklsh and t.ywbtlsh is null";
+		Map<String, Object> ygParams = new HashMap<>();
+		ygParams.put("ywrklsh", tYwrk.getYwrklsh());
+		List<TYwrkGys> ywrkGysList = ywrkGysDao.find(ygHql, ygParams);
+		BigDecimal fpje = BigDecimal.ZERO;
+		if (ywrkGysList.size() > 0) {
+			for (TYwrkGys tYwrkGys : ywrkGysList) {
+				fpje = fpje.add(tYwrkGys.getHjje());
+			}
+		} else {
+			fpje = tYwrk.getHjje().multiply(new BigDecimal(1).add(Constant.SHUILV)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+		
+		
 //		Ywrk ywrk = new Ywrk();
 //		BeanUtils.copyProperties(yk, ywrk);
 //		ywrk.setKfrklshs(kfrklsh);
@@ -657,6 +672,7 @@ public class YwrkServiceImpl implements YwrkServiceI {
 		map.put("gysbh", tYwrk.getGysbh());
 		map.put("rklxmc", tYwrk.getRklxmc());
 		map.put("hjje", tYwrk.getHjje());
+		map.put("fpje", fpje);
 		map.put("bz", tYwrk.getBz());
 		map.put("kfrklsh", kfrklsh);
 		if (tYwrk.getIsZs().equals("1")) {
