@@ -364,7 +364,19 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
-	
+
+	if ($('input[name=jxc_ywbt_gysbh2]').val() !== '') {
+		if ($('#jxc_ywbt_hjje2').numberbox('getValue') === '' || $('#jxc_ywbt_hjje2').numberbox('getValue') === '0.00') {
+			$.messager.alert('提示', '请填写供应商2对应的金额！', 'error');
+			return false;
+		}
+	} else {
+		if ($('#jxc_ywbt_hjje1').numberbox('getValue') === '' || $('#jxc_ywbt_hjje1').numberbox('getValue') === '0.00') {
+			$.messager.alert('提示', '请填写供应商对应的金额！', 'error');
+			return false;
+		}
+	}
+
 	var footerRows = ywbt_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -372,6 +384,13 @@ function saveAll(){
 	effectRow['ywrklsh'] = $('input[name=ywrklsh]').val();
 	effectRow['bz'] = $('input[name=jxc_ywbt_bz]').val();
 	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['btje']);
+
+	effectRow['gysbh'] = $('input[name=jxc_ywbt_gysbh]').val();
+	effectRow['gysmc'] = $('input[name=jxc_ywbt_gysmc]').val();
+	effectRow['gysbhb'] = $('input[name=jxc_ywbt_gysbh2]').val();
+	effectRow['gysmcb'] = $('input[name=jxc_ywbt_gysmc2]').val();
+	effectRow['hjjea'] = $('#jxc_ywbt_hjje1').numberbox('getValue');
+	effectRow['hjjeb'] = $('#jxc_ywbt_hjje2').numberbox('getValue');
 
 	effectRow['bmbh'] = did;
 	effectRow['lxbh'] = lx;
@@ -475,6 +494,8 @@ function updateFooter(){
 	ywbt_spdg.datagrid('reloadFooter', [{spmc : spmc_footer, btje : lnyw.formatNumberRgx(hjje.toFixed(LENGTH_JE))}]);
 }
 
+
+
 //////////////////////////////////////////////以上为商品列表处理代码
 
 //////////////////////////////////////////////以下为业务补调列表处理代码
@@ -514,8 +535,18 @@ function generateYwbt(){
 					},
 					dataType : 'json',
 					success : function(d) {
+						if (d.obj.length == 0) {
+							$.messager.alert('警告', '因启用应付功能，部分数据不完整，请联系信息技术部！',  'warning');
+							return;
+						}
 						ywbt_spdg.datagrid('loadData', d.rows);
 						$('input[name=ywrklsh]').val(row.ywrklsh);
+						$('input[name=jxc_ywbt_gysbh]').val(d.obj[0].gysbh);
+						$('input[name=jxc_ywbt_gysmc]').val(d.obj[0].gysmc);
+						if (d.obj.length > 1) {
+							$('input[name=jxc_ywbt_gysbh2]').val(d.obj[1].gysbh);
+							$('input[name=jxc_ywbt_gysmc2]').val(d.obj[1].gysmc);
+						}
 						updateFooter();
 						ywbt_tabs.tabs('select', 0);
 					}
@@ -531,6 +562,7 @@ function searchYwrkInYwbt(){
 	ywbt_ywrkDg.datagrid('load',{
 		bmbh: did,
 		createTime: $('input[name=createTimeYwrkInYwbt]').val(),
+		search: $('input[name=searchYwrkInYwbt]').val(),
 		fromOther: 'fromYwbt'
 	});
 }
@@ -542,8 +574,8 @@ function searchYwrkInYwbt(){
 <!-- tabPosition:'left', headerWidth:'35' -->
 <div id="jxc_ywbt_tabs" class="easyui-tabs" data-options="fit:true, border:false," style="width:100%;height:100%;">
     <div title="新增记录" data-options="closable:false">
-        <div id='jxc_ywbt_layout' style="height:100%;width=100%">
-			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:105px">		
+        <div id='jxc_ywbt_layout' style="height:100%;width:100%;">
+			<div data-options="region:'north',title:'单据信息',border:false,collapsible:false" style="width:100%;height:160px">
 				<table class="tinfo">
 					<tr>
 						<th class="read">时间</th><td><div id="createDate" class="read"></div></td>
@@ -553,7 +585,17 @@ function searchYwrkInYwbt(){
 						<th>业务入库流水号</th><td><input name="ywrklsh" disabled="disabled" size="12"></td>
 					</tr>
 					<tr>
-						<th>备注</th><td><input name="jxc_ywbt_bz" size="100" ></td>
+						<th class="read">供应商编码</th><td><input name="jxc_ywbt_gysbh" readonly="readonly" size="8"></td>
+						<th class="read">供应商名称</th><td><input name="jxc_ywbt_gysmc" readonly="readonly" size="50"></td>
+						<th>金额</th><td><input type="text" name="jxc_ywbt_hjje1" id="jxc_ywbt_hjje1" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
+					</tr>
+					<tr>
+						<th class="read">供应商编码2</th><td><input name="jxc_ywbt_gysbh2" onkeyup="jxc.gysLoad('jxc_ywbt_gysbh2', 'jxc_ywbt_gysmc2')" size="8"></td>
+						<th class="read">供应商名称2</th><td><input name="jxc_ywbt_gysmc2" readonly="readonly" size="50"></td>
+						<th>金额2</th><td><input type="text" name="jxc_ywbt_hjje2" id="jxc_ywbt_hjje2" class="easyui-numberbox" value="0" data-options="precision:2" size="8"></td>
+					</tr>
+					<tr>
+						<th>备注</th><td colspan="4"><input name="jxc_ywbt_bz" size="100" ></td>
 					</tr>
 				</table>
 			</div>
@@ -579,6 +621,7 @@ function searchYwrkInYwbt(){
 </div>
 <div id="jxc_ywbt_ywrkTb" style="padding:3px;height:auto">
 	请输入查询起始日期:<input type="text" name="createTimeYwrkInYwbt" class="easyui-datebox" data-options="value: moment().date(1).format('YYYY-MM-DD')" style="width:100px">
+	输入流水号、供应商、备注：<input type="text" name="searchYwrkInYwbt" style="width:100px">
 	<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchYwrkInYwbt();">查询</a>
 </div>
 

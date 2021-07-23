@@ -54,6 +54,7 @@ public class TYwrk implements java.io.Serializable {
 	private String depId;
 	private String depName;
 	private String beYwrklsh;
+	private Date fpDate;
 	private Set<TYwrkDet> TYwrkDets = new HashSet<TYwrkDet>(0);
 	private Set<TKfrk> TKfrks = new HashSet<TKfrk>(0);
 	
@@ -66,9 +67,9 @@ public class TYwrk implements java.io.Serializable {
 	}
 
 	public TYwrk(String ywrklsh, int createId, Date createTime,  String createName, String bmbh, String bmmc,
-			String gysbh, String gysmc, String rklxId, String rklxmc, String ckId, String ckmc, BigDecimal hjje, String bz,
-			String isCj, Date cjTime, Integer cjId, String cjName, String isZs, String isDep, String depId, String depName,
-			String beYwrklsh, Set<TYwrkDet> TYwrkDets, Set<TKfrk> TKfrks, Set<TCgjhDet> TCgjhs, TYwbt TYwbt, TXskp TXskp) {
+			String gysbh, String gysmc, String rklxId, String rklxmc, String ckId, String ckmc, BigDecimal hjje,
+			String bz, String isCj, Date cjTime, Integer cjId, String cjName, String isZs, String isDep, String depId, String depName,
+			String beYwrklsh, Date fpDate, Set<TYwrkDet> TYwrkDets, Set<TKfrk> TKfrks, Set<TCgjhDet> TCgjhs, TYwbt TYwbt, TXskp TXskp) {
 		this.ywrklsh = ywrklsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -92,6 +93,7 @@ public class TYwrk implements java.io.Serializable {
 		this.depId = depId;
 		this.depName = depName;
 		this.beYwrklsh = beYwrklsh;
+		this.fpDate = fpDate;
 		this.TYwrkDets = TYwrkDets;
 		this.TKfrks = TKfrks;
 		this.TCgjhs = TCgjhs;
@@ -324,6 +326,16 @@ public class TYwrk implements java.io.Serializable {
 
 	public void setBeYwrklsh(String beYwrklsh) {
 		this.beYwrklsh = beYwrklsh;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fpDate", length = 23)
+	public Date getFpDate() {
+		return fpDate;
+	}
+
+	public void setFpDate(Date fpDate) {
+		this.fpDate = fpDate;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TYwrk", cascade=CascadeType.ALL)

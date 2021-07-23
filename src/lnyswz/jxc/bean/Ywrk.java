@@ -2,6 +2,8 @@ package lnyswz.jxc.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 采购需求类
@@ -18,11 +20,15 @@ public class Ywrk {
 	private String bmmc;
 	private String gysbh;
 	private String gysmc;
+	private String gysbhb;
+	private String gysmcb;
 	private String rklxId;
 	private String rklxmc;
 	private String ckId;
 	private String ckmc;
 	private BigDecimal hjje;
+	private BigDecimal hjjea;
+	private BigDecimal hjjeb;
 	private String bz;
 	private String cjYwrklsh;
 	private String isCj;
@@ -35,10 +41,17 @@ public class Ywrk {
 	private String depId;
 	private String depName;
 	private String beYwrklsh;
+	private Date fpDate;
 	private String menuId;
 	private String lxbh;
 	
 	private String search;
+
+	private long ywrkId;
+	private BigDecimal fkje;
+	private BigDecimal yfje;
+	private BigDecimal fpje;
+	private String fpInfo;
 	
 	private int id;
 	private String spbh;
@@ -56,6 +69,7 @@ public class Ywrk {
 	private BigDecimal zdwdj;
 	private BigDecimal cdwdj;
 	private BigDecimal spje;
+	private BigDecimal fkedje;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -64,6 +78,7 @@ public class Ywrk {
 	
 	private String xskplsh;
 
+	private String lsh;
 	private String ywrklshs;
 	private String kfrklshs;
 	private String ywbtlsh;
@@ -71,6 +86,7 @@ public class Ywrk {
 	private String cgjhDetIds;
 	//由直送业务入库生成提货单时传入的参数
 	private String ywrkDetIds;
+	private List<YwrkGys> ywrkGyses;
 	
 	//--采购计划直送导入流水号
 	private String cgjhlshs;
@@ -276,6 +292,14 @@ public class Ywrk {
 
 	public void setBeYwrklsh(String beYwrklsh) {
 		this.beYwrklsh = beYwrklsh;
+	}
+
+	public Date getFpDate() {
+		return fpDate;
+	}
+
+	public void setFpDate(Date fpDate) {
+		this.fpDate = fpDate;
 	}
 
 	public String getLxbh() {
@@ -517,5 +541,100 @@ public class Ywrk {
 	public void setYwbtlsh(String ywbtlsh) {
 		this.ywbtlsh = ywbtlsh;
 	}
-	
+
+	public BigDecimal getFkedje() {
+		return fkedje;
+	}
+
+	public void setFkedje(BigDecimal fkedje) {
+		this.fkedje = fkedje;
+	}
+
+	public String getLsh() {
+		return lsh;
+	}
+
+	public void setLsh(String lsh) {
+		this.lsh = lsh;
+	}
+
+	public String getGysbhb() {
+		return gysbhb;
+	}
+
+	public void setGysbhb(String gysbhb) {
+		this.gysbhb = gysbhb;
+	}
+
+	public String getGysmcb() {
+		return gysmcb;
+	}
+
+	public void setGysmcb(String gysmcb) {
+		this.gysmcb = gysmcb;
+	}
+
+	public BigDecimal getHjjea() {
+		return hjjea;
+	}
+
+	public void setHjjea(BigDecimal hjjea) {
+		this.hjjea = hjjea;
+	}
+
+	public BigDecimal getHjjeb() {
+		return hjjeb;
+	}
+
+	public void setHjjeb(BigDecimal hjjeb) {
+		this.hjjeb = hjjeb;
+	}
+
+	public long getYwrkId() {
+		return ywrkId;
+	}
+
+	public void setYwrkId(long ywrkId) {
+		this.ywrkId = ywrkId;
+	}
+
+	public BigDecimal getFkje() {
+		return fkje;
+	}
+
+	public void setFkje(BigDecimal fkje) {
+		this.fkje = fkje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
+	}
+
+	public List<YwrkGys> getYwrkGyses() {
+		return ywrkGyses;
+	}
+
+	public void setYwrkGyses(List<YwrkGys> ywrkGyses) {
+		this.ywrkGyses = ywrkGyses;
+	}
+
+	public BigDecimal getFpje() {
+		return fpje;
+	}
+
+	public void setFpje(BigDecimal fpje) {
+		this.fpje = fpje;
+	}
+
+	public String getFpInfo() {
+		return fpInfo;
+	}
+
+	public void setFpInfo(String fpInfo) {
+		this.fpInfo = fpInfo;
+	}
 }

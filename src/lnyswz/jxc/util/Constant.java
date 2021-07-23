@@ -52,6 +52,8 @@ public interface Constant {
 	public static final String YWLX_FYD = "16";
 	public static final String YWLX_XSJJ = "21";
 	public static final String YWLX_KHDD = "22";
+	// 入库付款
+	public static final String YWLX_RKFK = "18";
 
 	//未经过菜单入口的业务操作
 	public static final String MENU_KHDD = "220000000000";
@@ -315,6 +317,9 @@ public interface Constant {
 	public static final String UPDATE_YS_KP_TH = "3";
 	public static final String UPDATE_HK = "4";
 	public static final String UPDATE_HK_LS = "5";
+
+	public static final String UPDATE_YF_RK = "0";
+	public static final String UPDATE_YF_FK = "1";
 	
 	
 	

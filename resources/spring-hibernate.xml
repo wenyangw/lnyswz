@@ -99,6 +99,7 @@ http://cxf.apache.org/schemas/jaxws.xsd
 	<!-- 注解方式配置事务 -->
 	<!--<tx:annotation-driven transaction-manager="transactionManager" />-->
 
+<!--	<aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true" />-->
 
 	<!-- 拦截器方式配置事务 -->
 	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
@@ -115,6 +116,7 @@ http://cxf.apache.org/schemas/jaxws.xsd
 			<tx:method name="complete*" />
 			<tx:method name="create*" />
 			<tx:method name="lg2pr*" />
+			<tx:method name="get*" />
 
 <!-- 			<tx:method name="repair" /> -->
 <!-- 			<tx:method name="deleteAndRepair" /> -->
@@ -128,10 +130,13 @@ http://cxf.apache.org/schemas/jaxws.xsd
 			<tx:method name="*" propagation="NEVER" />
 		</tx:attributes>
 	</tx:advice>
+
 	<aop:config>
 		<aop:pointcut id="transactionPointcut" expression="execution(* lnyswz.jxc.service..*Impl.*(..))" />
 		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
 	</aop:config>
+
+
 
 
 	<!-- 配置druid监控spring jdbc -->
@@ -159,7 +164,8 @@ http://cxf.apache.org/schemas/jaxws.xsd
 	<aop:config>
 		<aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />
 	</aop:config>
-	
+
+
 	<jaxws:endpoint implementor="#webServiceImpl" address="/lg2pr" />
 
 </beans>

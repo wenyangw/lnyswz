@@ -12,6 +12,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lnyswz.jxc.service.RkServiceI;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -43,6 +44,7 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 	private static final long serialVersionUID = 1L;
 	private Ywrk ywrk = new Ywrk();
 	private YwrkServiceI ywrkService;
+	private RkServiceI rkService;
 	
 	/**
 	 * 保存数据
@@ -163,6 +165,16 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		//Export.print(dg, Constant.REPORT_KFRK.get(ywrk.getBmbh()));
 	}
 
+	public void listGysYf() {
+		super.writeJson(ywrkService.listGysYf(ywrk));
+	}
+
+	public void listYwrkNoFk() {
+
+		super.writeJson(rkService.listYwrkNoFk(ywrk));
+	}
+
+
 
 	
 	@Override
@@ -175,4 +187,8 @@ public class YwrkAction extends BaseAction implements ModelDriven<Ywrk> {
 		this.ywrkService = ywrkService;
 	}
 
+	@Autowired
+	public void setRkService(RkServiceI rkService) {
+		this.rkService = rkService;
+	}
 }

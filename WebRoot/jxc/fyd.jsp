@@ -1537,7 +1537,7 @@ function searchXskpInFyd(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="jxc_fyd_gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('jxc_fyd_gysbh', 'jxc_fyd_gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_fyd_gysmc" readonly="readonly" size="50"></td>
 					</tr>
 					<tr>

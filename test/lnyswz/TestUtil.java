@@ -13,9 +13,8 @@ public class TestUtil {
 		//BigDecimal a2 = new BigDecimal("2.76");
 		//System.out.println(a1.multiply(a2));
 		//System.out.println(a1.multiply(a2).setScale(2, BigDecimal.Ro));
-		Date d = new Date();
-		System.out.println("DDD:" + d);
-		System.out.println(DateUtil.getDay(d).compareTo("22") < 0);
+
+		System.out.println(DateUtil.getCurrentDateString("yyyyMM"));
 	}
 
 }
