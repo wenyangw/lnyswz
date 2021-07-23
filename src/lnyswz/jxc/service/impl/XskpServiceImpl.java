@@ -1912,6 +1912,13 @@ public class XskpServiceImpl implements XskpServiceI {
 
         return xshks;
     }
+
+	@Override
+	public Xskp getXskp(Xskp xskp){
+		TXskp tXskp = xskpDao.load(TXskp.class, xskp.getXskplsh());
+		xskp.setIsCj(tXskp.getIsCj());
+		return xskp;
+	}
 	
 	
 	@Autowired

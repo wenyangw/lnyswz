@@ -1473,53 +1473,53 @@ function khLoad(){
 //////////////////////////////////////////////以下为销售开票列表处理代码
 function cjXskp(){
 	var row = xskp_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCj != '1'){
-			if(row.isHk == '0'){
-				if(row.ywrklsh == undefined){
-					if(row.fromTh == '1' || (row.xsthlshs == undefined || row.xsthlshs.trim == '')){
-						$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
-							if (bz != undefined) {
-								//MaskUtil.mask('正在冲减，请等待……');
-								$.ajax({
-									url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
-									data : {
-										xskplsh : row.xskplsh,
-										bmbh: xskp_did,
-										lxbh: xskp_lx,
-										bz: bz,
-									},
-									method: 'post',
-									dataType : 'json',
-									success : function(d) {
-										xskp_dg.datagrid('load');
-										xskp_dg.datagrid('unselectAll');
-										$.messager.show({
-											title : '提示',
-											msg : d.msg
-										});
-									},
-									complete: function(){
-										//MaskUtil.unmask();
-									}
-								});
-							}
-						});
-					}else{
-						$.messager.alert('警告', '选中的销售记录已进行提货，请重新选择！',  'warning');
-					}
-				}else{
-					$.messager.alert('警告', '选中的销售记录已进行内部入库，请重新选择！',  'warning');
-				}
-			}else{
-				$.messager.alert('警告', '选中的销售记录已进行还款，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的销售开票记录已被冲减，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return;
 	}
+	if(row.isCj === '1'){
+		$.messager.alert('警告', '选中的销售开票记录已被冲减，请重新选择！',  'warning');
+		return;
+	}
+	if(row.isHk == '1'){
+		$.messager.alert('警告', '选中的销售记录已进行还款，请重新选择！',  'warning');
+		return;
+	}
+	if(row.ywrklsh != undefined){
+		$.messager.alert('警告', '选中的销售记录已进行内部入库，请重新选择！',  'warning');
+		return;
+	}
+	if(!(row.fromTh == '1' || (row.xsthlshs == undefined || row.xsthlshs.trim == ''))){
+		$.messager.alert('警告', '选中的销售记录已进行提货，请重新选择！',  'warning');
+		return;
+	}
+	$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
+		if (bz != undefined) {
+			//MaskUtil.mask('正在冲减，请等待……');
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
+				data : {
+					xskplsh : row.xskplsh,
+					bmbh: xskp_did,
+					lxbh: xskp_lx,
+					bz: bz,
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					xskp_dg.datagrid('load');
+					xskp_dg.datagrid('unselectAll');
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+				},
+				complete: function(){
+					//MaskUtil.unmask();
+				}
+			});
+		}
+	});
 }
 
 function toJs(){
