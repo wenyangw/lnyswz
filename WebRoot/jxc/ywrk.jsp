@@ -100,7 +100,7 @@ $(function(){
         		}},
         	{field:'kfrklshs',title:'库房入库',align:'center',
            		formatter: function(value){
-           			return lnyw.memo(value, 15);
+					return lnyw.memo(value, 15);
            		}},
         	{field:'cgjhlshs',title:'采购计划',align:'center',
            		formatter: function(value){
