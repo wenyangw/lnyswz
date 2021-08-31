@@ -365,17 +365,17 @@ function saveAll(){
 		return false;
 	}
 
-	if ($('input[name=jxc_ywbt_gysbh2]').val() !== '') {
-		if ($('#jxc_ywbt_hjje2').numberbox('getValue') === '' || $('#jxc_ywbt_hjje2').numberbox('getValue') === '0.00') {
-			$.messager.alert('提示', '请填写供应商2对应的金额！', 'error');
-			return false;
-		}
-	} else {
+	// if ($('input[name=jxc_ywbt_gysbh2]').val() !== '') {
+	// 	if ($('#jxc_ywbt_hjje2').numberbox('getValue') === '' || $('#jxc_ywbt_hjje2').numberbox('getValue') === '0.00') {
+	// 		$.messager.alert('提示', '请填写供应商2对应的金额！', 'error');
+	// 		return false;
+	// 	}
+	// } else {
 		if ($('#jxc_ywbt_hjje1').numberbox('getValue') === '' || $('#jxc_ywbt_hjje1').numberbox('getValue') === '0.00') {
 			$.messager.alert('提示', '请填写供应商对应的金额！', 'error');
 			return false;
 		}
-	}
+	// }
 
 	var footerRows = ywbt_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
