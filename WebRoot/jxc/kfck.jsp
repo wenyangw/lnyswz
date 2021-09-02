@@ -1522,41 +1522,46 @@ function printXsthByBgy(){
 
 function updateThsl(){
 	var row = kfck_xsthDg.datagrid('getSelected');
-	if(row != undefined){
+	if(row == undefined){
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return;
+	}
 		//if(row.thsl == 0){
-			if(row.isKp != '1'){
-				$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
-					if (thsl != undefined){
-						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/xsthAction!updateThsl.action',
-							data : {
-								id : row.id,
-								thsl: thsl,
-								fromOther: '',
-								bmbh : jxc_kfck_did,
-								menuId : jxc_kfck_menuId,
-							},
-							dataType : 'json',
-							success : function(d) {
-								kfck_xsthDg.datagrid('reload');
-								kfck_xsthDg.datagrid('unselectAll');
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
-							}
+		// 	if(row.isKp != '1'){
+		$.messager.prompt('请确认', '是否要修改提货数量？请输入', function(thsl){
+			if (thsl != undefined){
+				if (thsl < row.kpsl || thsl < row.cksl) {
+					$.messager.alert('警告', '修改数量不能小于已开票数量或已出库数量！',  'warning');
+					return;
+				}
+				$.ajax({
+					url : '${pageContext.request.contextPath}/jxc/xsthAction!updateThsl.action',
+					data : {
+						id : row.id,
+						thsl: thsl,
+						fromOther: '',
+						bmbh : jxc_kfck_did,
+						menuId : jxc_kfck_menuId,
+					},
+					dataType : 'json',
+					success : function(d) {
+						kfck_xsthDg.datagrid('reload');
+						kfck_xsthDg.datagrid('unselectAll');
+						$.messager.show({
+							title : '提示',
+							msg : d.msg
 						});
 					}
 				});
-			}else{
-				$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
 			}
+		});
+			// }else{
+			// 	$.messager.alert('警告', '选中的销售提货已开发票，不允许修改数量，请重新选择！',  'warning');
+			// }
 		//}else{
 		//	$.messager.alert('警告', '选中的销售提货已修改数量，请重新选择！',  'warning');
 		//}
-	}else{
-		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
-	}
+
 }
 
 function lockXsth(){
