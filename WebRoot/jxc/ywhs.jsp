@@ -920,7 +920,7 @@ function saveAll(){
 		    	$.messager.confirm('请确认', '是否打印业务调号单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/ywhsAction!printYwhs.action?ywhslsh=' + rsp.obj.ywhslsh + '&bmbh=' + did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					}
 				});
 			}  
@@ -1149,7 +1149,7 @@ function cjYwhs(){
 								$.messager.confirm('请确认', '是否打印业务调号单？', function(r) {
 									if (r) {
 										var url = lnyw.bp() + '/jxc/ywhsAction!printYwhs.action?ywhslsh=' + d.obj.ywhslsh  + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 									}
 								});
 							},
@@ -1176,7 +1176,7 @@ function printYwhs(){
 		$.messager.confirm('请确认', '是否打印业务调号单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/ywhsAction!printYwhs.action?ywhslsh=' + row.ywhslsh + '&bmbh=' + did;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{

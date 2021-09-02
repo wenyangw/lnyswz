@@ -249,6 +249,15 @@ $(function(){
         		}},
         	{field:'shbz',title:'审批说明',align:'center'},
         	{field:'payDays',title:'付款天数',align:'center'},
+            {field:'isRe',title:'退货',align:'center',sortable:true,
+                formatter : function(value) {
+                    if (value == '1') {
+                        return '是';
+                    } else {
+                        return '';
+                    }
+                }},
+			{field:'rebz',title:'退货说明'}
 	    ]],
 	    toolbar:'#jxc_xsth_tb',
 	});
@@ -318,7 +327,7 @@ $(function(){
    	    					if(value != 0){
    	    						return 'color:green;';
    	    					}
-                       	}},	
+                       	}},
                     {field:'zdwdj',title:'单价1',width:100,align:'center'},
                     {field:'cjldwmc',title:'单位2',width:100,align:'center'},
                     {field:'cdwsl',title:'数量2',width:100,align:'center'},
@@ -327,6 +336,7 @@ $(function(){
         	        	formatter: function(value){
         	        		return lnyw.formatNumberRgx(value);
         	        	}},
+					{field:'resl',title:'退货数量',width:100,align:'center'},
        	        	{field:'completed',title:'完成',align:'center',
         	        		formatter : function(value) {
         						if (value == '1') {
@@ -831,6 +841,7 @@ function init(){
 	$('.isSh').css('display','none');
 	$('.isFh').css('display','none');
  	$('.isFhth').css('display','none');
+    $('input[name=htjs]').val(1);
 	
 	if(jxc.showFh(xsth_did)){
 		$('.fh').css('display', 'inline');
@@ -1115,7 +1126,8 @@ function saveXsth(){
                     $.messager.alert('提示', '本次提货需进入2级审批流程！', 'warning');
                 } else if (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val())) {
                     var needA = undefined
-					if ($('input[name=jxc_xsth_isZs]').is(':checked')) {
+					// 直送业务进入2级审批，排除ywyId=46
+					if ($('input[name=jxc_xsth_isZs]').is(':checked') && jxc_xsth_ywyCombo.combobox('getValue') != 46) {
 						needA = jxc.auditLevel(xsth_did)['second']
 					} else {
 						needA =	jxc.getAuditLevel(
@@ -1142,33 +1154,8 @@ function saveXsth(){
         } else {
             effectRow['needAudit'] = "0";
         }
-		<%--if(NEED_AUDIT == "1"--%>
-				<%--&& jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) --%>
-				<%--&& $('input[name=xskpDetIds]').val().trim().length == 0--%>
-				<%--&& !$('input[name=isFhth]').is(':checked')){--%>
-			<%--if(jxc_xsth_jsfsCombo.combobox('getValue') == JSFS_QK){--%>
-				<%--var needA = jxc.getAuditLevel(--%>
-						<%--'${pageContext.request.contextPath}/jxc/xskpAction!getLatestXs.action',--%>
-						<%--xsth_did, --%>
-						<%--$('input[name=jxc_xsth_khbh]').val(),--%>
-						<%--jxc_xsth_ywyCombo.combobox('getValue'),--%>
-						<%--JSFS_QK);--%>
-				<%--if(needA != undefined){--%>
-					<%--effectRow['needAudit'] = needA;--%>
-					<%--$.messager.alert('提示', '本次提货需进入' + needA + '级审批流程！', 'warning');--%>
-				<%--}else{--%>
-					<%--$.messager.alert('提示', '该客户授信已超期,禁止继续销售！', 'error');--%>
-					<%--return false;--%>
-				<%--}--%>
-			<%--}else{--%>
-				<%--effectRow['needAudit'] = "1";--%>
-				<%--$.messager.alert('提示', '本次提货需进入1级审批流程！', 'warning');--%>
-			<%--}--%>
-		<%--}else{--%>
-			<%--effectRow['needAudit'] = "0";--%>
-		<%--}--%>
+
 		//将表头内容传入后台
-	// 	effectRow['isSx'] = $('input[name=isSx]').is(':checked') ? '1' : '0';
 		effectRow['isSx'] = '0';
 		effectRow['isZs'] = $('input[name=jxc_xsth_isZs]').is(':checked') ? '1' : '0';
 		effectRow['toFp'] = $('input[name=toFp]').is(':checked') ? '1' : '0';
@@ -1182,7 +1169,6 @@ function saveXsth(){
 		//传入直送
 		effectRow['fromOther'] = xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, $('input[name=jxc_xsth_khbh]').val()) ? '' : 'cbs') : '';
 		effectRow['isFhth'] = $('input[name=isFhth]').is(':checked') ? '1' : '0';
-		//effectRow['isFhth'] = '0';
 		
 		if($('input[name=xskpDetIds]').val().trim().length > 0){
 			effectRow['isLs'] = '0';
@@ -1200,6 +1186,7 @@ function saveXsth(){
 		effectRow['jsfsmc'] = jxc_xsth_jsfsCombo.combobox('getText');
 		
 		effectRow['thr'] = $('input[name=thr]').val();
+        effectRow['htjs'] = $('input[name=htjs]').val();
 		effectRow['payDays'] = $('input[name=payDays]').val();
 		if($('input#thfs_sh').is(':checked')){
 			effectRow['thfs'] = '0';
@@ -1243,7 +1230,7 @@ function saveXsth(){
 			    	//$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 					//	if (r) {
 					//		var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					//		jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					//	}
 					//});
 			    	
@@ -1252,7 +1239,7 @@ function saveXsth(){
 				    	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + rsp.obj.xsthlsh + "&bmbh=" + xsth_did;
-								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 							}
 						});
 			    	}
@@ -1273,6 +1260,7 @@ function saveXsth(){
 
 //处理编辑行
 function setEditing(){
+	console.info('setEditing')
 	//加载字段
 	var editors = xsth_spdg.datagrid('getEditors', editIndex);
 	spbhEditor = editors[0];
@@ -1382,6 +1370,8 @@ function setEditing(){
     
     //输入主单位数量后，计算金额
     zslEditor.target.bind('keyup', function(event){
+    	console.info(zslEditor.target.val());
+
     	if(event.keyCode == 9){
      		return false;
      	}
@@ -1704,6 +1694,17 @@ function setValueBySpbh(rowData){
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
+
+	console.info(zslEditor.target)
+	// 2021-01-27 增加 更改商品后，单价、数量清零，防止录入后修改错误
+	kpslEditor.target.val(0);
+	thslEditor.target.val(0);
+	zslEditor.target.val(0);
+	zdjEditor.target.val(0);
+	cslEditor.target.val(0);
+	cdjEditor.target.val(0);
+	spjeEditor.target.val(0);
+
 	//文达印刷业务员为公司(天女)、公司(天狮)时取销售单价
 	if(xsth_did == '01' && (jxc_xsth_ywyCombo.combobox('getValue') == 115 || jxc_xsth_ywyCombo.combobox('getValue') == 193)){
 		zdjEditor.target.val(rowData.specXsdj);
@@ -1991,7 +1992,7 @@ function printXsth(){
 					$.messager.confirm('请确认', '是否打印销售提货单？', function(r) {
 						if (r) {
 							var url = lnyw.bp() + '/jxc/xsthAction!printXsth.action?xsthlsh=' + row.xsthlsh + "&bmbh=" + xsth_did + '&type=' + PRINT_TYPE_XSTH_YW;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						}
 					});
 				}else{
@@ -2002,6 +2003,24 @@ function printXsth(){
 	}else{
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 	}
+}
+
+function printXsthRe(){
+    var selected = xsth_dg.datagrid('getSelected');
+    if (selected != undefined) {
+        if (selected.isRe == '1'){
+            $.messager.confirm('请确认', '是否打印销售提货单(退货)？', function(r) {
+                if (r) {
+                    var url = lnyw.bp() + '/jxc/xsthAction!printXsthRe.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
+                    jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
+                }
+            });
+        }else {
+            $.messager.alert('警告', '选择的销售提货单没有发生退货操作，请重新选择！',  'warning');
+        }
+    }else{
+        $.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+    }
 }
 
 function exportXsth(){
@@ -2053,7 +2072,7 @@ function printXsht(){
 					 	$.messager.confirm('请确认', '是否打印销售合同？', function(r) {
 							if (r) {
 								var url = lnyw.bp() + '/jxc/xsthAction!printXsht.action?xsthlsh=' + selected.xsthlsh + "&bmbh=" + xsth_did;
-								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+								jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 							}
 						});
  					//}else{
@@ -2086,7 +2105,7 @@ function exportXsht(){
 								var data = {
 										xsthlsh : selected.xsthlsh,
 										bmbh: xsth_did,
-										type: 'rtf'
+										type: 'pdf'
 									};
 								jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportXsht.action', data);
 							}
@@ -2205,7 +2224,7 @@ function printShd(){
 								if (r) {
 								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
 									var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
-									jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+									jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 								}
 							});
 						}
@@ -2253,10 +2272,6 @@ function exportShd(){
 						if(flag){
 							$.messager.confirm('请确认', '是否导出收货确认单？', function(r) {
 								if (r) {
-								//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthlsh=' + xsthRow.xsthlsh + "&cgjhlsh=" + detRow.cgjhlsh + "&bmbh=" + xsth_did;
-									//var url = lnyw.bp() + '/jxc/xsthAction!printShd.action?xsthDetIds=' + xsthDetIds.join(',') + "&cgjhlsh=" + detRows[0].cgjhlsh + "&bmbh=" + xsth_did;
-									//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
-									
 									var data = {
 										xsthDetIds : xsthDetIds.join(','),
 										cgjhlsh: detRows[0].cgjhlsh,
@@ -2265,32 +2280,6 @@ function exportShd(){
 										type: 'rtf'
 									};
 									jxc.export('${pageContext.request.contextPath}', '/jxc/xsthAction!exportShd.action', data);
-								
-								
-// 									$.ajax({	
-// 										url:'${pageContext.request.contextPath}/jxc/xsthAction!exportShd.action',
-// 										async: false,
-// 										cache: false,
-// 										context:this,	
-// 										data : {
-// 											xsthDetIds : xsthDetIds.join(','),
-// 											cgjhlsh: detRows[0].cgjhlsh,
-// 											bmbh: xsth_did,
-// 										},
-// 										success:function(data){
-// 											var json = $.parseJSON(data);
-											
-// 											window.open("${pageContext.request.contextPath}/" + json.obj);
-											
-// 											$.messager.show({
-// 												title : "提示",
-// 												msg : json.msg
-// 											});
-// 										},
-// 										complete: function(){
-// 											//lnyw.MaskUtil.unmask();
-// 										}
-// 									});
 								}
 							});
 						}
@@ -2424,8 +2413,87 @@ function confirmThsl(){
 		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 		return false;
 	}
-	
 }
+
+//退货处理
+function returnXsth(){
+	if(detDg != undefined){
+		var detRow = detDg.datagrid('getSelected');
+		if(detRow != null){
+			// if(xsthRow.isZs != '1'){
+				if(xsthRow.isCancel == '0'){
+					if(xsthRow.needAudit == xsthRow.isAudit){
+						if(!detRow.resl){
+						    if(detRow.zdwsl > detRow.kpsl) {
+                                $.messager.prompt('请确认', '请录入该商品的退货数量', function(resl){
+                                    if (resl != undefined){
+                                        if(detRow.kpsl + parseInt(resl) <= detRow.zdwsl) {
+                                            $.messager.prompt('请确认', '请录入退货备注（同一张单据只记录最后一次输入）', function(rebz){
+                                                if (rebz != undefined){
+                                                    $.ajax({
+                                                        url : '${pageContext.request.contextPath}/jxc/xsthAction!updateResl.action',
+                                                        data : {
+                                                            id : detRow.id,
+                                                            resl: resl,
+                                                            rebz: rebz,
+                                                            fromOther: 'xsth',
+                                                            bmbh : xsth_did,
+                                                            menuId : xsth_menuId,
+                                                        },
+                                                        dataType : 'json',
+                                                        method: 'post',
+                                                        success : function(d) {
+                                                            detDg.datagrid('updateRow', {
+                                                                index: detDg.datagrid('getRowIndex', detRow),
+                                                                row: {
+                                                                    resl: resl
+                                                                }
+                                                            });
+                                                            xsth_dg.datagrid('updateRow', {
+                                                                index: xsth_dg.datagrid('getRowIndex', xsthRow),
+                                                                row: {
+                                                                    rebz: rebz,
+                                                                    isRe: '1'
+                                                                }
+                                                            });
+                                                            $.messager.show({
+                                                                title : '提示',
+                                                                msg : d.msg
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            $.messager.alert('警告', '退货数量不能大于订单数量，请重新操作！',  'warning');
+                                        }
+                                    }
+                                });
+                            }else {
+                                $.messager.alert('警告', '选择的销售提货已完成开票，请重新选择！',  'warning');
+                            }
+						}else{
+							$.messager.alert('警告', '选择的销售提货已发生过退货，请重新选择！',  'warning');
+						}
+					}else{
+						$.messager.alert('警告', '选择的销售提货记录还未审批，请重新选择！',  'warning');
+					}
+				}else{
+					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
+				}
+			// }else{
+			// 	$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
+			// }
+		}else{
+			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+			return false;
+		}
+	}else{
+		$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
+		return false;
+	}
+}
+
 
 function completeXsth(){
 	if(detDg != undefined){
@@ -2801,8 +2869,10 @@ function searchFydInXsth(){
 					<span><input name="thr" size="10"></span>
 					<span class="isSh form_label" style="display:none">送货地址</span>
 					<span class="isSh" style="display:none"><input name="jxc_xsth_shdz" size="12"></span>
+                    <span class="form_label">合同结算</span>
+                    <span><input name="htjs" size="4"></span>
 					<span class="form_label">付款天数</span>
-					<span><input name="payDays" size="10"></span>
+					<span><input name="payDays" size="4"></span>
 				</div>
 				<div class='jxc_xsth_bookmc form_line'>
 						<span class="form_label">书名</span>

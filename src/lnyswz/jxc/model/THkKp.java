@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_xshk_xskp")
 public class THkKp implements java.io.Serializable {
-
 	private int id;
 	private String xskplsh;
 	private BigDecimal hkje;

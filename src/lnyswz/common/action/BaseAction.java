@@ -3,6 +3,7 @@ package lnyswz.common.action;
 import java.io.IOException;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -33,10 +34,26 @@ public class BaseAction extends ActionSupport implements RequestAware, SessionAw
 	 * @throws IOException
 	 */
 	public void writeJson(Object object) {
+		String json = JSON.toJSONStringWithDateFormat(object, "yyyy-MM-dd HH:mm:ss");
+		writeOut(json);
+	}
+
+	/**
+	 * 将JSONObject对象转换成JSON字符串，并响应回前台
+	 *
+	 * @param jsonObject
+	 * @throws IOException
+	 */
+	public void writeJsonJ(JSONObject jsonObject) {
+		String json = jsonObject.toJSONString();
+		writeOut(json);
+	}
+
+	private void writeOut(String json){
 		try {
-			String json = JSON.toJSONStringWithDateFormat(object, "yyyy-MM-dd HH:mm:ss");
 			ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
 			ServletActionContext.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+//			ServletActionContext.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
 
 			ServletActionContext.getResponse().getWriter().write(json);
 			ServletActionContext.getResponse().getWriter().flush();
@@ -45,10 +62,9 @@ public class BaseAction extends ActionSupport implements RequestAware, SessionAw
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected Map<String, Object> request;
 	protected Map<String, Object> session;
-	
 	public Map<String, Object> getRequest() {
 		return request;
 	}

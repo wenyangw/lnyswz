@@ -22,7 +22,6 @@ public class FhAction extends BaseAction implements ModelDriven<Fh> {
 	 */
 	public void add() {
 		Fh r = fhService.add(fh);
-		System.out.println("进入");
 		Json j = new Json();
 		try {
 			j.setSuccess(true);

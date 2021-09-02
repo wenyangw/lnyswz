@@ -13,14 +13,22 @@ var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
 //销售加价率
-var NEED_AUDIT_XSJJ = '0'
+var NEED_AUDIT_XSJJ = '0';
+
+// 库房批次
+var SPPC = '2019-01-01';
 
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';
 var PRINT_TYPE_XSTH = '82';
 var PRINT_TYPE_XSTH_YW = '83';
 
+// 业务入库类型
+var RKLX_ZS = '01';
+
 var JS_PATH = 'C:/lnyswz/';
+
+
 
 jxc.getJsFile = function(type){
     switch(type){
@@ -241,13 +249,15 @@ jxc.auditLevelCgjh = function(bmbh){
 		return level;
 		break;
 	case '04':
-		level['first'] = '2';
-		level['second'] = '0';
+		level['first'] = '1';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '05':
 		level['first'] = '1';
-		level['second'] = '0';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '07':
@@ -315,12 +325,29 @@ jxc.getAuditLevelCgjh = function(bmbh, hjje){
 	switch(bmbh){
 		case '01':
 			//文达印刷金额大于30000元二级审批，主管经理
-			if(hjje <= 30000){
+			if (hjje <= 30000) {
 				return jxc.auditLevelCgjh(bmbh)['first'];
-			}else{
+			}
+			if (hjje > 30000) {
 				return jxc.auditLevelCgjh(bmbh)['second'];
 			}
 			break;
+        case '04':
+        case '05':
+            // 文达纸业、出版教材
+            // 金额小于10万，一级审批，部门经理
+            // 金额大于10万小于30万，二级审批，主管经理
+            // 金额大于30万，三级审批，总经理
+            if (hjje <= 100000) {
+                return jxc.auditLevelCgjh(bmbh)['first'];
+            }
+            if (hjje > 100000) {
+                return jxc.auditLevelCgjh(bmbh)['second'];
+            }
+            // if (hjje > 300000) {
+            //     return jxc.auditLevelCgjh(bmbh)['third'];
+            // }
+            break;
 		default:
 			return jxc.auditLevelCgjh(bmbh)['first'];
 	}
@@ -806,6 +833,7 @@ jxc.spInfo = function(target, type, sppp, spbz){
 
 //商品信息快速查询
 jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjWithS){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -813,83 +841,147 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		height:420,
 		modal : true,
 		onLoad: function(){
-			$('#jxc_spQuery_dg').datagrid({
-				url : urlAction,
-				fit : true,
-			    border : false,
-			    singleSelect : true,
-			    fitColumns: true,
-			    pagination : true,
-				pagePosition : 'bottom',
-				pageSize : 20,
-				pageList : [ 20, 30, 40, 50, 100, 150, 200 ],
-				//将编辑行输入的商品编号传入对话框
-				queryParams:{
-					query : value,
-					depId : depId,
-					ckId : ckId,
-				},
-				columns:[[
-			        {field:'spbh',title:'编号'},
-			        {field:'spmc',title:'名称'},
-			        {field:'spcd',title:'产地'},
-			        {field:'sppp',title:'品牌'},
-			        {field:'spbz',title:'包装'},
-			        {field:'zjldwId',title:'主计量单位id',hidden:true},
-			        {field:'zjldwmc',title:'主计量单位'},
-			        {field:'xsdj',title:'销售单价(无税)', hidden: xsdjWithS ? true : false},
-			        {field:'xsdjs',title:'销售单价(含税)', hidden: xsdjWithS ? false : true,
-		        		formatter: function(value){
-		        			return value == undefined ? '' : value.toFixed(LENGTH_JE) ;
-		        		}	
-			        },
-			        {field:'limitXsdj',title:'最低销价',hidden:true},
-			        {field:'kcsl',title:'库存数量1',
-			        	formatter: function(value){
-		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
-		        		}},
-		        	{field:'dwcb',title:'成本',hidden:true},
-		        	{field:'cjldwId',title:'次计量单位id',hidden:true},
-			        {field:'cjldwmc',title:'次计量单位'},
-			        {field:'ckcsl',title:'库存数量2',
-			        	formatter: function(value){
-		        			return value == '0.000' ? '' : value.toFixed(LENGTH_SL) ;
-		        		}},
-			        
-			    ]],
-			    toolbar:'#jxc_spQuery_tb',
-			    //双击商品行，返回商品信息并关闭对话框
-			    onDblClickRow: function(rowIndex, rowData){
-			    	//设置编辑行的值
-			    	setValueBySpbh(rowData);
-			    	focusTarget.target.focus();
-					$('#jxc_spQuery').dialog('close');
-			    },    					
-			});
-			var query = $('#jxc_spQuery_tb input');
-	    	query.val(value);
-	    	query.focus();
-	    	//录入查询内容时，即时查询，刷新表格
-	    	var last;
-	    	query.keyup(function(event){
-	    		last = event.timeStamp;
-	    		setTimeout(function(){    //设时延迟0.5s执行
-	                if(last - event.timeStamp == 0){
-	                	$('#jxc_spQuery_dg').datagrid('load', 
-		    				{
-		    					query: query.val(),
-		    					depId: depId,
-		    					ckId: ckId
-		    				});
-	                }
-		    	}, 500);
-	    	});
+            $('#jxc_spQuery_dg').datagrid({
+                url: url,
+                fit: true,
+                border: false,
+                singleSelect: true,
+                fitColumns: true,
+                pagination: true,
+                pagePosition: 'bottom',
+                pageSize: 20,
+                pageList: [20, 30, 40, 50, 100, 150, 200],
+                //将编辑行输入的商品编号传入对话框
+                queryParams: {
+                    query: value,
+                    depId: depId,
+                    ckId: ckId,
+                },
+                columns: [[
+                    {field: 'spbh', title: '编号'},
+                    {field: 'spmc', title: '名称'},
+                    {field: 'spcd', title: '产地'},
+                    {field: 'sppp', title: '品牌'},
+                    {field: 'spbz', title: '包装'},
+                    {field: 'zjldwId', title: '主计量单位id', hidden: true},
+                    {field: 'zjldwmc', title: '主计量单位'},
+                    {field: 'xsdj', title: '销售单价(无税)', hidden: xsdjWithS ? true : false},
+                    {
+                        field: 'xsdjs', title: '销售单价(含税)', hidden: xsdjWithS ? false : true,
+                        formatter: function (value) {
+                            return value == undefined ? '' : value.toFixed(LENGTH_JE);
+                        }
+                    },
+                    {field: 'limitXsdj', title: '最低销价', hidden: true},
+                    {
+                        field: 'kcsl', title: '库存数量1',
+                        formatter: function (value) {
+                            return value == '0.000' ? '' : value.toFixed(LENGTH_SL);
+                        }
+                    },
+                    {field: 'dwcb', title: '成本', hidden: true},
+                    {field: 'cjldwId', title: '次计量单位id', hidden: true},
+                    {field: 'cjldwmc', title: '次计量单位'},
+                    {
+                        field: 'ckcsl', title: '库存数量2',
+                        formatter: function (value) {
+                            return value == '0.000' ? '' : value.toFixed(LENGTH_SL);
+                        }
+                    },
+
+                ]],
+                toolbar: '#jxc_spQuery_tb',
+                //双击商品行，返回商品信息并关闭对话框
+                onDblClickRow: function (rowIndex, rowData) {
+                    //设置编辑行的值
+                    setValueBySpbh(rowData);
+                    focusTarget.target.focus();
+                    $('#jxc_spQuery').dialog('close');
+                },
+            });
+            var query = $('#jxc_spQuery_tb input');
+            query.val(value);
+            query.focus();
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
+            //录入查询内容时，即时查询，刷新表格
+            var last;
+            query.keyup(function (event) {
+                last = event.timeStamp;
+                setTimeout(function () {    //设时延迟1s执行
+                    if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
+                        // $('#jxc_spQuery_dg').datagrid('load',
+                        //     {
+                        //         query: query.val(),
+                        //         depId: depId,
+                        //         ckId: ckId
+                        //     });
+                        $('#jxc_spQuery_dg').datagrid({
+                            url: urlAction,
+                            queryParams: {
+                                query: query.val(),
+                                depId: depId,
+                                ckId: ckId
+                            },
+							onLoadSuccess: function(){
+								query.focus();
+							}
+                        });
+
+                    }
+                }, 1000);
+            });
 		},
 	});
 };
 
+jxc.gysLoad = function(gysbh, gysmc){
+	const gysbh_t = $('input[name=' + gysbh + ']');
+	const gysmc_t = $('input[name=' + gysmc + ']');
+	switch(event.keyCode){
+		case 27:
+			// jxc.query('供应商检索', $('input[name=jxc_ywrk_gysbh]'), $('input[name=jxc_ywrk_gysmc]'), '',
+			jxc.query('供应商检索', gysbh_t, gysmc_t, '',
+				lnyw.bp() + '/jxc/query.jsp',
+				lnyw.bp() + '/jxc/gysAction!gysDg.action');
+			break;
+		case 9:
+			break;
+		default:
+			if(gysbh_t.val().trim().length == 0){
+				gysc_t.val('');
+			}
+			if(gysbh_t.val().trim().length == 8){
+				$.ajax({
+					url: lnyw.bp() + '/jxc/gysAction!loadGys.action',
+					async: false,
+					context:this,
+					data:{
+						gysbh: gysbh_t.val().trim(),
+					},
+					dataType:'json',
+					success:function(data){
+						if(data.success){
+							//设置信息字段值
+							gysmc_t.val(data.obj.gysmc);
+						}else{
+							$.messager.alert('提示', '供应商信息不存在！', 'error');
+						}
+					}
+				});
+			}
+			break;
+	}
+}
+
 //商品信息快速查询
 jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget){
+    var url = value.trim().length > 0 ? urlAction : ''
 	$('#jxc_spQuery').dialog({
 		href: urlJsp,
 		title:'商品查询',
@@ -898,7 +990,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 		modal : true,
 		onLoad: function(){
 			$('#jxc_spQuery_dg').datagrid({
-				url : urlAction,
+				url : url,
 				fit : true,
 			    border : false,
 			    singleSelect : true,
@@ -925,7 +1017,6 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 			        {field:'zhxs',title:'转换系数',hidden:true},
 //			        {field:'xsdj',title:'销售单价'},
 //			        {field:'limitXsdj',title:'最低销价',hidden:true},
-			        
 			    ]],
 			    toolbar:'#jxc_spQuery_tb',
 			    //双击商品行，返回商品信息并关闭对话框
@@ -939,12 +1030,35 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 			var query = $('#jxc_spQuery_tb input');
 	    	query.val(value);
 	    	query.focus();
-	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_spQuery_dg').datagrid('load', 
-	    				{
-	    					query: query.val(),
-	    					depId: depId});
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
+            //录入查询内容时，即时查询，刷新表格
+            var last;
+            query.keyup(function(event){
+                last = event.timeStamp;
+                setTimeout(function () {    //设时延迟1s执行
+                    if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
+                        // $('#jxc_spQuery_dg').datagrid('load',
+                        // 		{
+                        // 			query: query.val(),
+                        // 			depId: depId});
+                        $('#jxc_spQuery_dg').datagrid({
+                            url: urlAction,
+                            queryParams: {
+                                query: query.val(),
+                                depId: depId,
+                            },
+							onLoadSuccess: function(){
+								query.focus();
+							}
+                        });
+                    }
+                }, 1000);
 	    	});
 		},
 	});
@@ -952,6 +1066,7 @@ jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget
 
 //供应商、客户快速查询
 jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
+    var url = $(input_bh).val().trim().length > 0 ? urlAction : ''
 	$('#jxc_query_dialog').dialog({
 		href: urlJsp,
 		title:title,
@@ -960,7 +1075,7 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 		modal : true,
 		onLoad: function(){
 			$('#jxc_query_dg').datagrid({
-				url : urlAction,
+				url : url,
 				fit : true,
 			    border : false,
 			    singleSelect : true,
@@ -1003,9 +1118,30 @@ jxc.query = function(title, input_bh, input_mc, input_dist, urlJsp, urlAction){
 			var query = $('#jxc_query_tb input');
 	    	query.val($(input_bh).val());
 	    	query.focus();
+			var flag = true;
+			query.on('compositionstart',function(){
+				flag = false;
+			})
+			query.on('compositionend',function(){
+				flag = true;
+			})
 	    	//录入查询内容时，即时查询，刷新表格
-	    	query.keyup(function(){
-	    		$('#jxc_query_dg').datagrid('load', {query: query.val()});
+			var last;
+	    	query.keyup(function(event){
+				last = event.timeStamp;
+				setTimeout(function () {    //设时延迟1s执行
+					if (last - event.timeStamp == 0 && flag && query.val().trim().length > 0) {
+						// $('#jxc_query_dg').datagrid('load', {query: query.val()});
+						$('#jxc_query_dg').datagrid({
+							url: urlAction,
+							queryParams: {query: query.val()},
+							onLoadSuccess: function(){
+								query.focus();
+							}
+						});
+					}
+				}, 1000);
+
 	    	});
 		},
 	});
@@ -1061,9 +1197,11 @@ jxc.queryAddr = function(title, target1, target2, urlJsp, urlAction){
 	});
 };
 
-jxc.print = function(url, isPrint, showPrint){
-	console.info(url);
-	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +    
+jxc.print = function(url, isPrint, showPrint, user){
+	if (user != undefined) {
+		url =  url + "&createId=" + user.createId + "&createName=" + jxc.str2u(user.createName);
+	}
+	var appletStr = '<APPLET ID="JrPrt" NAME="JrPrt" CODE="lnyswz/common/applet/JRPrinterApplet.class" CODEBASE="applets" ARCHIVE="reportprint.jar,commons-logging-1.1.1.jar,commons-collections-3.2.1.jar" WIDTH="0" HEIGHT="0" MAYSCRIPT> ' +
 		' <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">' +   
 		' <PARAM NAME="scriptable" VALUE="false">' +   
 		' <PARAM NAME="REPORT_URL" VALUE="'+url+'">' +
@@ -1204,4 +1342,27 @@ function groupFormatter(fvalue, rows){
 
 jxc.hideKc = function(area){
 	$(area).layout('collapse', 'east');
+};
+
+jxc.str2u = function (str){
+	var ret ="";
+	var ustr = "";
+
+	for(var i=0; i<str.length; i++) {
+
+		var code = str.charCodeAt(i);
+		var code16 = code.toString(16);
+
+		if (code < 0xf) {
+			ustr = "\\u" + "000" + code16;
+		} else if (code < 0xff) {
+			ustr = "\\u" + "00" + code16;
+		} else if (code < 0xfff) {
+			ustr = "\\u" + "0" + code16;
+		} else {
+			ustr = "\\u" + code16;
+		}
+		ret += ustr;
+	}
+	return ret;
 };

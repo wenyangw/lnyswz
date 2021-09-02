@@ -230,15 +230,17 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 	
 	public void printCgjh() {
 		User user = (User) session.get("user");
-		cgjh.setCreateName(user.getRealName());
+//		cgjh.setCreateName(user.getRealName());
+		cgjh.setCreateName(user == null ? Util.unicodeToString(cgjh.getCreateName()) : user.getRealName());
 		DataGrid dg = cgjhService.printCgjh(cgjh);
 		Export.print(dg, Util.getReportName(cgjh.getBmbh(), "report_cgjh.json"));
 		//Export.print(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()));
 	}
-	
+
 	public void export() {
 		User user = (User) session.get("user");
 		cgjh.setCreateName(user.getRealName());
+//		cgjh.setCreateName(user == null ? Util.unicodeToString(cgjh.getCreateName()) : user.getRealName());
 		Json j = new Json();
 		String type = Export.getExportType(cgjh.getType());
 		String location = "/export/cgjh_" + cgjh.getCgjhlsh() + "_" + DateUtil.dateToStringWithTime(new Date(),"yyyyMMddHHmmss") + "." + type;

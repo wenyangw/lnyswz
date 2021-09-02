@@ -8,7 +8,6 @@ public class KhUser {
 	private String realName;
 	private String phone;
 	private String openId;
-	private String bmbh;
 	private String khbh;
 	private String dwmc;
 	private int ywyId;
@@ -47,12 +46,6 @@ public class KhUser {
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
-	}
-	public String getBmbh() {
-		return bmbh;
-	}
-	public void setBmbh(String bmbh) {
-		this.bmbh = bmbh;
 	}
 	public String getKhbh() {
 		return khbh;

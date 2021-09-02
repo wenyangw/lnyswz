@@ -378,7 +378,7 @@ function saveAll(){
 			    	$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
 						if (r) {
 							var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + rsp.obj.cgxqlsh + "&bmbh=" + did;
-							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						}
 					});
 		    	}
@@ -681,43 +681,6 @@ function setValueBySpbh(rowData){
 	
 }
 
-function gysLoad(){
-	switch(event.keyCode){
-	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
-				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
-		break;
-	case 9:
-		break;
-	default:
-		if($('input[name=gysbh]').val().trim().length == 0){
-			$('input[name=gysmc]').val('');
-		}
-		if($('input[name=gysbh]').val().trim().length == 8){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
-				async: false,
-				context:this,
-				data:{
-					gysbh: $('input[name=gysbh]').val().trim(),
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						//设置信息字段值
-						$('input[name=gysmc]').val(data.obj.gysmc);
-						$('input[name=ywyId]').focus();
-					}else{
-						$.messager.alert('提示', '供应商信息不存在！', 'error');
-					}
-				}
-			});
-		}
-		break;
-	}
-}
-
 function khLoad(){
 	switch(event.keyCode){
 	case 27:
@@ -854,7 +817,7 @@ function printCgxq(){
 			$.messager.confirm('请确认', '是否打印采购需求单？', function(r) {
 				if (r) {
 					var url = lnyw.bp() + '/jxc/cgxqAction!printCgxq.action?cgxqlsh=' + row.cgxqlsh + "&bmbh=" + did;
-					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+					jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 				}
 			});
 		}else{
@@ -887,7 +850,7 @@ function printCgxq(){
 				<div class="form_line">
 					<span class="form_label">供应商编码</span>
 					<span><input name="gysbh" class="easyui-validatebox"
-						data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="6"></span>
+						data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('gysbh', 'gysmc')" size="6"></span>
 					<span class="read form_label">供应商名称</span>
 					<span><input name="gysmc" readonly="readonly" size="20"></span>
 <!-- 						<th>业务员</th><td><input name="ywyId"></td> -->
@@ -901,7 +864,7 @@ function printCgxq(){
 					<span class="form_label">结算方式</span>
 					<span><input id="jxc_cgxq_jsfsId" name="jsfsId"></span>
 					<span class="form_label">到货时间</span>
-					<span><input name="dhsj" type="text" class="easyui-my97"  size="8"></span>
+					<span><input name="dhsj" type="text" class="easyui-my97" size="8"></span>
 				</div>
 				<div class="ls form_line" style="display:none">
 					<span class="form_label">联系人及电话</span>

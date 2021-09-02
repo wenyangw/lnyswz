@@ -1,6 +1,7 @@
 package lnyswz.jxc.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.bean.Sp;
 
@@ -8,16 +9,19 @@ import java.util.List;
 
 public interface SpServiceI {
 
-	public Sp add(Sp sp);
-	public void edit(Sp sp);
-	public void delete(Sp sp);
-	public List<String> exportToJs(Sp sp);
-	public DataGrid datagrid(Sp sp);
-	public boolean existSp(Sp sp);
-	public void editSpDet(Sp sp);
-	public void deleteSpDet(Sp sp);
-	public Sp loadSp(String spbh, String depId);
-	public DataGrid spDg(Sp sp);
-	public DataGrid getSpkc(Sp sp);
-	public DataGrid datagridBgy(Sp sp);
+	Sp add(Sp sp);
+	void edit(Sp sp);
+	void delete(Sp sp);
+	List<String> exportToJs(Sp sp);
+	DataGrid datagrid(Sp sp);
+	boolean existSp(Sp sp);
+	void editSpDet(Sp sp);
+	void deleteSpDet(Sp sp);
+	Sp loadSp(String spbh, String depId);
+	DataGrid spDg(Sp sp);
+	DataGrid getSpkc(Sp sp);
+	DataGrid datagridBgy(Sp sp);
+	DataGrid getSpsByLb(Sp sp);
+    DataGrid searchSps(Sp sp);
+
 }

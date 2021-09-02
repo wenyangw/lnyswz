@@ -865,7 +865,7 @@ function saveAll(){
 		    	$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 					if (r) {
 						var url = lnyw.bp() + '/jxc/fydAction!printFyd.action?fydlsh=' + rsp.obj.fydlsh + '&bmbh=' + fyd_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 					}
 				});
 			}  
@@ -1234,7 +1234,7 @@ function cjFyd(){
 								$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 									if (r) {
 										var url = lnyw.bp() + '/jxc/fydAction!printFyd.action?fydlsh=' + d.obj.fydlsh + '&bmbh=' + fyd_did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 									}
 								});
 							},
@@ -1261,7 +1261,7 @@ function printFyd(){
 		$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/fydAction!printFyd.action?fydlsh=' + row.fydlsh + '&bmbh=' + row.bmbh;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{
@@ -1276,7 +1276,7 @@ function printKfrk(){
 		$.messager.confirm('请确认', '是否打印库房入库单？', function(r) {
 			if (r) {
 				var url = lnyw.bp() + '/jxc/fydAction!printKfrk.action?fydlsh=' + row.fydlsh + '&bmbh=' + row.bmbh;
-				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 			}
 		});
 	}else{
@@ -1537,7 +1537,7 @@ function searchXskpInFyd(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="jxc_fyd_gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('jxc_fyd_gysbh', 'jxc_fyd_gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td colspan="3"><input name="jxc_fyd_gysmc" readonly="readonly" size="50"></td>
 					</tr>
 					<tr>

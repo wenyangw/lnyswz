@@ -25,7 +25,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "t_xshk")
 public class TXshk implements java.io.Serializable {
-
 	private String xshklsh;
 	private Date createTime;
 	private int createId;

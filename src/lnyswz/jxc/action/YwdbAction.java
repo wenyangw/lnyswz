@@ -1,6 +1,9 @@
 package lnyswz.jxc.action;
 
 
+import lnyswz.common.bean.DataGrid;
+import lnyswz.jxc.util.Export;
+import lnyswz.jxc.util.Util;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +75,13 @@ public class YwdbAction extends BaseAction implements ModelDriven<Ywdb>{
 	
 	public void detDatagrid(){
 		writeJson(ywdbService.detDatagrid(ywdb.getYwdblsh()));
+	}
+
+	public void printYwdb() {
+		User user = (User)session.get("user");
+		ywdb.setCreateName(user == null ? Util.unicodeToString(ywdb.getCreateName()) : user.getRealName());
+		DataGrid dg = ywdbService.printYwdb(ywdb);
+		Export.print(dg, Util.getReportName(ywdb.getBmbh(), "report_ywdb.json"));
 	}
 	
 	public void getSpkc(){

@@ -267,45 +267,48 @@ $(function(){
 		}
 	});
 	
-	$('#hkje').keyup(function() {
-		
-		//如回款为历史陈欠，不处理下面的代码
-		if($('input[name=isLs]').is(':checked')){
-			return false;
-		}
-		
-		countHk = 0;
-		//本次回款金额
-		je = Number($('#hkje').val());
-		if(rows != undefined){
-			$.each(rows, function(index){
-				if(je != 0){
-					countHk++;
+	$('#hkje').keyup(function(event) {
+		var lastTime = event.timeStamp;
+		setTimeout(function () {
+			if (lastTime - event.timeStamp == 0) {
+
+				//如回款为历史陈欠，不处理下面的代码
+				if($('input[name=isLs]').is(':checked')){
+					return false;
 				}
-				//每行回款金额
-				lastHkje = 0;
-				//每行未回款金额
-				var whkje = rows[index].hjje - rows[index].hkedje;
-				if(je > whkje){
-					lastHkje = whkje;
+
+				countHk = 0;
+				//本次回款金额
+				je = Number($('#hkje').val());
+				if(rows != undefined){
+					$.each(rows, function(index){
+						if(je != 0){
+							countHk++;
+						} else {
+							return false;
+						}
+						//每行回款金额
+						lastHkje = 0;
+						//每行未回款金额
+						var whkje = rows[index].hjje - rows[index].hkedje;
+						if(je > whkje){
+							lastHkje = whkje;
+						}else{
+							lastHkje = je;
+						}
+						je -= lastHkje;
+						xshk_xskpDg.datagrid('updateRow', {
+							index:index,
+							row: {
+								hkje: lastHkje.toFixed(4),
+							}
+						});
+					});
 				}else{
-					lastHkje = je;
+					$.messager.alert('提示', '回款的客户没有销售记录！', 'error');
 				}
-				je -= lastHkje;
-				xshk_xskpDg.datagrid('updateRow', {
-					index:index,
-					row: {
-						hkje: lastHkje.toFixed(4),
-					}
-				});
-				
-// 				if(je == 0){
-// 					return false;
-// 				}
-			});
-		}else{
-			$.messager.alert('提示', '回款的客户没有销售记录！', 'error');
-		}
+			}
+		}, 1000);
 	});
 	
 	jxc_xshk_ywyCombo.combobox('selectedIndex', 0);
@@ -478,7 +481,7 @@ function printXshk(){
 					var selectTime = $('input#selectTime').val();
 					if(selectTime != ''){
 						var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
+						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
 						dialog.dialog('close');
 					}else{
 						$.messager.alert('提示', '请选择打印时间！', 'error');
@@ -517,8 +520,6 @@ function exportXshk(){
 				handler : function() {
 					var selectTime = $('input#selectTime').val();
 					if(selectTime != ''){
-						//var url = lnyw.bp() + '/jxc/xshkAction!printXshk.action?bmbh=' + xshk_did + '&khbh=' + khbh + "&ywyId=" + ywyId + "&selectTime=" + selectTime;
-						//jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW);
 						var data = {
 								bmbh: xshk_did,
 								khbh: khbh,
@@ -527,33 +528,6 @@ function exportXshk(){
 								//type: 'rtf'
 							};
 						jxc.export('${pageContext.request.contextPath}', '/jxc/xshkAction!exportXshk.action', data);
-						
-// 						$.ajax({	
-// 							url:'${pageContext.request.contextPath}/jxc/xshkAction!exportXshk.action',
-// 							async: false,
-// 							cache: false,
-// 							context:this,	
-// 							data : {
-// 								bmbh: xshk_did,
-// 								khbh: khbh,
-// 								ywyId: ywyId,
-// 								selectTime: selectTime
-// 							},
-// 							success:function(data){
-// 								var json = $.parseJSON(data);
-								
-// 								window.open("${pageContext.request.contextPath}/"+json.obj);
-								
-// 								$.messager.show({
-// 									title : "提示",
-// 									msg : json.msg
-// 								});
-// 							},
-// 							complete: function(){
-// 								//lnyw.MaskUtil.unmask();
-// 							}
-// 						});
-						
 						dialog.dialog('close');
 					}else{
 						$.messager.alert('提示', '请选择打印时间！', 'error');

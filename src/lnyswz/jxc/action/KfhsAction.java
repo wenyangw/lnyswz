@@ -72,7 +72,8 @@ public class KfhsAction extends BaseAction implements ModelDriven<Kfhs> {
 	
 	public void printKfhs() {
 		User user = (User)session.get("user");
-		kfhs.setCreateName(user.getRealName());
+//		kfhs.setCreateName(user.getRealName());
+		kfhs.setCreateName(user == null ? Util.unicodeToString(kfhs.getCreateName()) : user.getRealName());
 		DataGrid dg = kfhsService.printKfhs(kfhs);
 		Export.print(dg, Util.getReportName(kfhs.getBmbh(), "report_kfhs.json"));
 		//Export.print(dg, Constant.REPORT_KFHS.get(kfhs.getBmbh()));

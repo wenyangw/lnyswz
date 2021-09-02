@@ -74,6 +74,12 @@ public class Xsth {
 	private Date sendTime;
 	private String isFp;
 	private String source;
+	private int htjs;
+	private String isRe;
+	private String rebz;
+	private Integer reId;
+	private String reName;
+	private Date reTime;
 		
 	private int id;
 	private String spbh;
@@ -96,6 +102,7 @@ public class Xsth {
 	private BigDecimal kpsl;
 	private BigDecimal ckpsl;
 	private BigDecimal thsl;
+	private BigDecimal resl;
 	private String kfcklshs;
 	
 	private String search;
@@ -123,10 +130,14 @@ public class Xsth {
 	
 	//向销售开票流程导入的提货单号
 	private String xsthlshs;
+	private String noKhbh;
 	
 	private String lxbh;
 	private String menuId;
 	private int bgyId;
+
+	// 由客户订单生成的销售提货
+	private String khddlsh;
 	
 	//前台传入明细json
 	private String datagrid;
@@ -696,6 +707,15 @@ public class Xsth {
 	public void setThsl(BigDecimal thsl) {
 		this.thsl = thsl;
 	}
+
+	public BigDecimal getResl() {
+		return resl;
+	}
+
+	public void setResl(BigDecimal resl) {
+		this.resl = resl;
+	}
+
 	public String getKfcklshs() {
 		return kfcklshs;
 	}
@@ -838,4 +858,70 @@ public class Xsth {
 	public void setCarNum(String carNum) {
 		this.carNum = carNum;
 	}
+
+	public int getHtjs() {
+		return htjs;
+	}
+
+	public void setHtjs(int htjs) {
+		this.htjs = htjs;
+	}
+
+	public String getKhddlsh() {
+		return khddlsh;
+	}
+
+	public void setKhddlsh(String khddlsh) {
+		this.khddlsh = khddlsh;
+	}
+
+	public String getNoKhbh() {
+		return noKhbh;
+	}
+
+	public void setNoKhbh(String noKhbh) {
+		this.noKhbh = noKhbh;
+	}
+
+	public String getIsRe() {
+		return isRe;
+	}
+
+	public void setIsRe(String isRe) {
+		this.isRe = isRe;
+	}
+
+	public String getRebz() {
+        return rebz;
+    }
+
+
+
+    public void setRebz(String rebz) {
+        this.rebz = rebz;
+    }
+
+    public Integer getReId() {
+        return reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
+    }
+
+    public String getReName() {
+        return reName;
+    }
+
+    public void setReName(String reName) {
+        this.reName = reName;
+    }
+
+    public Date getReTime() {
+        return reTime;
+    }
+
+    public void setReTime(Date reTime) {
+        this.reTime = reTime;
+    }
 }

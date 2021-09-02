@@ -41,6 +41,7 @@ public class TXsthDet implements java.io.Serializable {
 	private BigDecimal qrsl;
 	private String completed;
 	//private BigDecimal lastRksl;
+	private BigDecimal resl;
 	
 	private Set<TKfck> TKfcks;
 	private Set<TXskp> TXskps;
@@ -52,7 +53,7 @@ public class TXsthDet implements java.io.Serializable {
 	public TXsthDet(int id, TXsth TXsth, String spbh, String spmc, String spcd, String sppp, String spbz, String zjldwId, 
 			String zjldwmc, String cjldwId, String cjldwmc, BigDecimal zhxs, BigDecimal zdwsl, BigDecimal cdwsl, 
 			BigDecimal zdwdj, BigDecimal cdwdj,	BigDecimal spje, BigDecimal dwcb, BigDecimal cksl, BigDecimal ccksl, BigDecimal kpsl, BigDecimal ckpsl,
-			BigDecimal thsl, BigDecimal qrsl, String completed, Set<TKfck> TKfcks, Set<TXskp> TXskps, TCgjh TCgjh) {
+			BigDecimal thsl, BigDecimal qrsl, String completed, BigDecimal resl, Set<TKfck> TKfcks, Set<TXskp> TXskps, TCgjh TCgjh) {
 		this.id = id;
 		this.TXsth = TXsth;
 		this.spbh = spbh;
@@ -78,6 +79,7 @@ public class TXsthDet implements java.io.Serializable {
 		this.thsl = thsl;
 		this.qrsl = qrsl;
 		this.completed = completed;
+		this.resl = resl;
 		//this.lastRksl = lastRksl;
 		this.TKfcks = TKfcks;
 		this.TXskps = TXskps;
@@ -310,6 +312,15 @@ public class TXsthDet implements java.io.Serializable {
 
 	public void setCompleted(String completed) {
 		this.completed = completed;
+	}
+
+	@Column(name = "resl", precision = 18, scale = 3)
+	public BigDecimal getResl() {
+		return resl;
+	}
+
+	public void setResl(BigDecimal resl) {
+		this.resl = resl;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "TXsths")

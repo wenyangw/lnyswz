@@ -44,7 +44,7 @@ public class KhUserAction extends BaseAction implements ModelDriven<KhUser> {
 			j.setSuccess(true);
 			j.setMsg("编辑客户用户成功！");
 		} catch (Exception e) {
-			j.setMsg(" 编辑客户用户失败！");
+			j.setMsg("编辑客户用户失败！");
 		}
 		writeJson(j);
 	}
@@ -69,11 +69,11 @@ public class KhUserAction extends BaseAction implements ModelDriven<KhUser> {
 	 */
 	public void checkKhUser(){
 		Json j = new Json();
-			KhUser r = khUserService.checkKhUser(khUser);
-			if(r != null) {
-				j.setSuccess(true);
-				j.setObj(r);
-			}  	
+        KhUser r = khUserService.checkKhUser(khUser);
+        if(r != null) {
+            j.setSuccess(true);
+            j.setObj(r);
+        }
 		writeJson(j);
 	}
 

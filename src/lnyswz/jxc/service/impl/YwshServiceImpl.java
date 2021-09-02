@@ -532,10 +532,12 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setTimes(times);
 		}
 		
-		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
-				+ " from v_xs_latest AS mx"
-				+ " where bmbh = ? and khbh = ? and ywyId = ?"
-				+ " order by bmbh, khbh, ywyId, createTime";
+//		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
+		String sql_latest = "select top 1 createTime, hjje, bmbh, cqDays, bmmc, khbh, khmc, ywyId, ywymc, lsh"
+//				+ " from v_xs_latest AS mx"
+				+ " from dbo.xs_latest(?, ?, ?) AS mx"
+//				+ " where bmbh = ? and khbh = ? and ywyId = ?"
+				+ " order by createTime";
 		
 		Map<String, Object> params_latest = new HashMap<String, Object>();
 		params_latest.put("0", bmbh);
@@ -592,10 +594,11 @@ public class YwshServiceImpl implements YwshServiceI {
 
 		y.setYsje(YszzServiceImpl.getYsje(bmbh, khbh, ywyId, null, yszzDao));
 
-		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
-				+ " from v_xs_latest AS mx"
-				+ " where bmbh = ? and khbh = ? and ywyId = ?"
-				+ " order by bmbh, khbh, ywyId, createTime";
+//		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
+		String sql_latest = "select top 1 createTime, hjje, bmbh, cqDays, bmmc, khbh, khmc, ywyId, ywymc, lsh"
+//				+ " from v_xs_latest AS mx"
+				+ " from dbo.xs_latest(?, ?, ?) AS mx"
+				+ " order by createTime";
 
 		Map<String, Object> params_latest = new HashMap<String, Object>();
 //		params_latest.put("0", ywsh.getBmbh());
@@ -690,10 +693,11 @@ public class YwshServiceImpl implements YwshServiceI {
 			y.setTimes(times);
 		}
 		
-		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
-				+ " from v_xs_latest AS mx"
-				+ " where bmbh = ? and khbh = ? and ywyId = ?"
-				+ " order by bmbh, khbh, ywyId, createTime";
+//		String sql_latest = "select top 1 createTime, hjje, lsh, DATEDIFF(day, dbo.returnPayTime(bmbh, khbh, ywyId,createTime), GETDATE())"
+		String sql_latest = "select top 1 createTime, hjje, bmbh, cqDays, bmmc, khbh, khmc, ywyId, ywymc, lsh"
+//				+ " from v_xs_latest AS mx"
+				+ " from dbo.xs_latest(?, ?, ?) AS mx"
+				+ " order by createTime";
 		
 		Map<String, Object> params_latest = new HashMap<String, Object>();
 //		params_latest.put("0", ywsh.getBmbh());

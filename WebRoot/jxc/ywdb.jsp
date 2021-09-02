@@ -804,6 +804,21 @@ function cjYwdb(){
 	}
 }
 
+function printYwdb(){
+	var row = ywdb_dg.datagrid('getSelected');
+	if (row != undefined) {
+		$.messager.confirm('请确认', '是否打印业务调拨单？', function(r) {
+			if (r) {
+				var url = lnyw.bp() + '/jxc/ywdbAction!printYwdb.action?ywdblsh=' + row.ywdblsh + "&bmbh=" + ywdb_did;
+				jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
+			}
+		});
+	}else{
+		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+	}
+}
+
+
 function searchYwdb(){
 	ywdb_dg.datagrid('load',{
 		bmbh: ywdb_did,

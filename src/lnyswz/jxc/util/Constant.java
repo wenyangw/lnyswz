@@ -51,12 +51,19 @@ public interface Constant {
 	public static final String YWLX_XSTH = "05";
 	public static final String YWLX_FYD = "16";
 	public static final String YWLX_XSJJ = "21";
+	public static final String YWLX_KHDD = "22";
+	// 入库付款
+	public static final String YWLX_RKFK = "18";
+
+	//未经过菜单入口的业务操作
+	public static final String MENU_KHDD = "220000000000";
 
 	//操作人员为业务员
 	public static final String USER_POSTID = "12";
 	
 	public static final String CBS_LIST = "'21010798','21010017','21010036','21010082','21010010','21010011','21010014','21010080','21010081','21010463','21010940','21010245','21010078','11011364','21010055'";
-	
+
+	public static final String SPPC = "2019-01-01";
 
 	//库房入库单
 //	public static final Map<String, String> REPORT_KFRK = new HashMap<String, String>(){{
@@ -220,7 +227,7 @@ public interface Constant {
 	public static final Map<String, String> BMKHH = new HashMap<String, String>(){{
 		put("01","招商银行沈阳分行兴顺支行");
 		put("04","招商银行沈阳分行兴顺支行");
-		put("05","招商银行沈阳分行兴顺支行");
+		put("05","招商银行沈阳分行营业部");
 		put("07","招商银行沈阳分行兴顺支行");
 		put("08","广发行大连沙河口支行");
 	}};
@@ -228,7 +235,7 @@ public interface Constant {
 	public static final Map<String, String> BMZH = new HashMap<String, String>(){{
 		put("01","124902659610503");
 		put("04","240885411110001");
-		put("05","124902099110602");
+		put("05","124902099110403");
 		put("07","240885411110001");
 		put("08","133071516010005170");
 	}};
@@ -251,8 +258,8 @@ public interface Constant {
 	
 	public static final Map<String, String> XSKP_SKR = new HashMap<String, String>(){{
 		put("01","胡秀颖");
-		put("04","刘金艳");
-		put("05","任晓楠");
+		put("04","赵清尘");
+		put("05","刘金艳");
 		put("07","刘金艳");
 		put("08","王鑫");
 	}};
@@ -310,6 +317,9 @@ public interface Constant {
 	public static final String UPDATE_YS_KP_TH = "3";
 	public static final String UPDATE_HK = "4";
 	public static final String UPDATE_HK_LS = "5";
+
+	public static final String UPDATE_YF_RK = "0";
+	public static final String UPDATE_YF_FK = "1";
 	
 	
 	

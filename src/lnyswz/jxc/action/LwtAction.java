@@ -1,5 +1,6 @@
 package lnyswz.jxc.action;
 
+import lnyswz.common.bean.Json;
 import lnyswz.jxc.bean.User;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -126,6 +127,16 @@ public class LwtAction extends BaseAction implements
 			}
 		}
 		writeJson(lwtService.getXsths(lwt));
+	}
+
+	public void getKhDet() {
+		Json j = new Json();
+		Lwt l = lwtService.getKhDet(lwt);
+		if(l != null) {
+			j.setSuccess(true);
+			j.setObj(l);
+		}
+		writeJson(j);
 	}
 
 	public Lwt getModel() {

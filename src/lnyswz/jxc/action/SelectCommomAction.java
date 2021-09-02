@@ -82,10 +82,10 @@ public class SelectCommomAction extends BaseAction implements
 			location = "/excel/"
 					+ u.getUserName()
 					+ DateUtil.dateToStringWithTime(new Date(),
-							"yyyyMMddHHmmss") + ".xls";
+							"yyyyMMddHHmmss") + ".xlsx";
 			String address = Export.getRootPath() + location;
 			out = new FileOutputStream(address);
-			ex.exportExcel(headers, dataset, out,hidNum);
+			ex.exportExcel(headers, dataset, out, hidNum);
 			out.close();
 			dataset.clear();
 			dataset = null;

@@ -1,5 +1,6 @@
 package lnyswz.jxc.action;
 
+import lnyswz.common.bean.DataGrid;
 import lnyswz.jxc.util.Export;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -184,6 +185,14 @@ public class SpAction extends BaseAction implements ModelDriven<Sp>{
 	public void getSpKc(){
 		writeJson(spService.getSpkc(sp));
 	}
+
+	public void getSpsByLb() {
+		writeJson(spService.getSpsByLb(sp));
+	}
+
+	public void searchSps() {
+	    writeJson(spService.searchSps(sp));
+    }
 	
 	@Override
 	public Sp getModel() {

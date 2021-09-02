@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +60,9 @@ public class SpServiceImpl implements SpServiceI {
 			if(spdw != null){
 				t.setTSpdw(spdw);
 			}
+		}
+		if (sp.getSpcd().equals("NULL") || sp.getSpcd().trim().equals("")) {
+			t.setSpcd("");
 		}
 		//设置商品计量单位
 		setJldw(t, sp);
@@ -395,8 +400,63 @@ public class SpServiceImpl implements SpServiceI {
 		}
 		return null;
 	}
-	
-	@Autowired
+
+	@Override
+	public DataGrid getSpsByLb(Sp sp) {
+		DataGrid dg = new DataGrid();
+		StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, sppp, spbz, zjldwId, zjldwmc");
+		StringBuffer where = new StringBuffer(" from v_sp_mini where lbid = ?");
+		StringBuffer countSql = new StringBuffer("select count(*)");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("0", sp.getSplbId());
+        dg.setRows(getSpsJSONList(spDao.findBySQL(sql.append(where).toString(), params, sp.getPage(), sp.getRows())));
+        dg.setTotal(spDao.countSQL(countSql.append(where).toString(), params));
+
+		return dg;
+	}
+
+    @Override
+    public DataGrid searchSps(Sp sp) {
+        DataGrid dg = new DataGrid();
+	    StringBuffer sql = new StringBuffer("select spbh, spmc, spcd, isnull(sppp, '') sppp, spbz, zjldwId, zjldwmc");
+//	    StringBuffer where = new StringBuffer(" from v_sp_mini where spbh + spmc + spcd + sppp like ?");
+		StringBuffer where = new StringBuffer(" from v_sp_mini");
+	    StringBuffer sqlCount = new StringBuffer("select count(*)");
+	    StringBuffer order = new StringBuffer(" order by spbh");
+	    Map<String, Object> params = new HashMap<String, Object>();
+
+//	    sp.setQuery(sp.getQuery().replace(" ", "%"));
+//	    params.put("0", "%" + sp.getQuery() + "%");
+		if (sp.getQuery() != null && sp.getQuery().length() > 0){
+			where.append(" where " + Util.getQuerySQLWhere(sp.getQuery(), new String[]{"spbh", "spmc", "spcd", "sppp"}, params, 0));
+		}
+
+
+	    dg.setRows(getSpsJSONList(spDao.findBySQL(sql.append(where).append(order).toString(), params, sp.getPage(), sp.getRows())));
+	    dg.setTotal(spDao.countSQL(sqlCount.append(where).toString(), params));
+        return dg;
+    }
+
+    private List<JSONObject> getSpsJSONList(List<Object[]> list) {
+        List<JSONObject> results = new ArrayList<JSONObject>();
+        if (list.size() > 0) {
+            JSONObject spBean = null;
+            for (Object[] s : list) {
+                spBean = new JSONObject();
+                spBean.put("spbh", s[0].toString());
+                spBean.put("spmc", s[1].toString());
+                spBean.put("spcd", s[2].toString());
+                spBean.put("sppp", s[3].toString());
+                spBean.put("spbz", s[4].toString());
+				spBean.put("zjldwId", s[5].toString());
+                spBean.put("zjldwmc", s[6].toString());
+                results.add(spBean);
+            }
+        }
+        return results;
+    }
+
+    @Autowired
 	public void setSpDao(BaseDaoI<TSp> spDao) {
 		this.spDao = spDao;
 	}

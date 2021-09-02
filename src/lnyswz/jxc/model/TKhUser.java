@@ -23,7 +23,6 @@ public class TKhUser implements java.io.Serializable {
 	private String realName;
 	private String phone;
 	private String openId;
-	private String bmbh;
 	private String khbh;
 	private String dwmc;
 	private int ywyId;
@@ -34,13 +33,12 @@ public class TKhUser implements java.io.Serializable {
 	public TKhUser() {
 	}
 
-	public TKhUser(int id, String userName, String realName, String phone, String openId, String bmbh, String khbh, String dwmc, int ywyId, Date createTime, Date lastTime, String isValid ) {
+	public TKhUser(int id, String userName, String realName, String phone, String openId, String khbh, String dwmc, int ywyId, Date createTime, Date lastTime, String isValid ) {
 		this.id = id;
 		this.userName = userName;
 		this.realName = realName;
 		this.phone = phone;
 		this.openId = openId;
-		this.bmbh = bmbh;
 		this.khbh = khbh;
 		this.dwmc = dwmc;
 		this.ywyId = ywyId;
@@ -96,15 +94,6 @@ public class TKhUser implements java.io.Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
-	}
-
-	@Column(name = "bmbh", unique = false, length = 2)
-	public String getBmbh() {
-		return bmbh;
-	}
-
-	public void setBmbh(String bmbh) {
-		this.bmbh = bmbh;
 	}
 
 	@Column(name = "khbh", unique = false, length = 8)

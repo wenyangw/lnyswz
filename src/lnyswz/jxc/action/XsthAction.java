@@ -2,6 +2,7 @@ package lnyswz.jxc.action;
 
 
 import java.util.Date;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,15 +70,6 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 			xsth.setCancelId(user.getId());
 			xsth.setCancelName(user.getRealName());
 		}
-//		try {
-//			xsthService.cancelXsth(xsth);
-//			//添加成功
-//			j.setSuccess(true);
-//			j.setMsg("取消销售提货成功！");
-//		} catch (Exception e) {
-//			j.setMsg("取消销售提货失败！");
-//			e.printStackTrace();
-//		}
 		try {
 			j = xsthService.cancelXsth(xsth);
 		} catch (Exception e) {
@@ -121,6 +113,26 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 			j.setMsg("修改销售提货数量成功！");
 		}catch(Exception e){
 			j.setMsg("修改销售提货数量失败！");
+			e.printStackTrace();
+		}
+		writeJson(j);
+	}
+
+	/**
+	 * 修改销售提货数量
+	 */
+	public void updateResl(){
+		User user = (User)session.get("user");
+		xsth.setReId(user.getId());
+		xsth.setReName(user.getRealName());
+		Json j = new Json();
+		try{
+			xsthService.updateResl(xsth);
+			//添加成功
+			j.setSuccess(true);
+			j.setMsg("销售提货退货操作成功！");
+		}catch(Exception e){
+			j.setMsg("销售提货退货操作失败！");
 			e.printStackTrace();
 		}
 		writeJson(j);
@@ -287,22 +299,39 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	}
 	
 	public void printXsth() {
-		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+		User user = (User) session.get("user");
+
+		if (user != null) {
+			xsth.setCreateId(user.getId());
+		}
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
+
 		DataGrid dg = xsthService.printXsth(xsth);
 
-		if(xsth.getBmbh().equals("05") && (user.getId() == 19 || user.getId() == 46)){
+		if(xsth.getBmbh().equals("05") && (xsth.getCreateId() == 19 || xsth.getCreateId() == 46)){
 			Export.print(dg, Util.getReportName("07", "report_xsth.json"));
 		}else {
 			Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth.json"));
 		}
 		//Export.print(dg, Constant.REPORT_XSTH.get(xsth.getBmbh()));
 	}
+
+	public void printXsthRe() {
+		User user = (User)session.get("user");
+		if (user != null) {
+			xsth.setCreateId(user.getId());
+		}
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
+		DataGrid dg = xsthService.printXsthRe(xsth);
+
+		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_re.json"));
+
+	}
 	
 	public void printXsht() {
 		User user = (User)session.get("user");
-		xsth.setCreateName(user.getRealName());
+//		xsth.setCreateName(user.getRealName());
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
 		DataGrid dg = xsthService.printXsht(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsht.json"));
 		//Export.print(dg, Constant.REPORT_XSHT.get(xsth.getBmbh()));
@@ -341,7 +370,8 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printShd() {
 		User user = (User)session.get("user");
-		xsth.setCreateName(user.getRealName());
+//		xsth.setCreateName(user.getRealName());
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
 		DataGrid dg = xsthService.printShd(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_shqr.json"));
 		//Export.print(dg, Constant.REPORT_SHQR.get(xsth.getBmbh()));
@@ -364,8 +394,9 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printThd() {
 		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+//		xsth.setCreateId(user.getId());
+//		xsth.setCreateName(user.getRealName());
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
 		DataGrid dg = xsthService.printXsth(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_kf.json"));
 		//Export.print(dg, Constant.REPORT_XSTH_KF.get(xsth.getBmbh()));
@@ -373,8 +404,12 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	
 	public void printXsthByBgy() {
 		User user = (User)session.get("user");
-		xsth.setCreateId(user.getId());
-		xsth.setCreateName(user.getRealName());
+//		xsth.setCreateId(user.getId());
+//		xsth.setCreateName(user.getRealName());
+		if (user != null) {
+			xsth.setCreateId(user.getId());
+		}
+		xsth.setCreateName(user == null ? Util.unicodeToString(xsth.getCreateName()) : user.getRealName());
 		DataGrid dg = xsthService.printXsthByBgy(xsth);
 		Export.print(dg, Util.getReportName(xsth.getBmbh(), "report_xsth_bgy.json"));
 		//Export.print(dg, Constant.REPORT_XSTH_BGY.get(xsth.getBmbh()));
@@ -432,7 +467,7 @@ public class XsthAction extends BaseAction implements ModelDriven<Xsth>{
 	public void getYsje(){
 		writeJson(xsthService.getYsje(xsth));
 	}
-	
+
 	@Override
 	public Xsth getModel() {
 		return xsth;
