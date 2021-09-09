@@ -32,7 +32,7 @@ var fydRow;
 var detDg;
 var fydDetDg;
 
-let ywyIndex;
+var ywyIndex;
 
 //编辑行字段
 var spbhEditor;   

@@ -390,9 +390,9 @@ lnyw.stringToList = function(value) {
 };
 
 lnyw.getObjIndexByValue = function(array, param) {
-	let prop = Object.keys(param)[0];
-	let value = param[prop];
-	let i = -1;
+	var prop = Object.keys(param)[0];
+	var value = param[prop];
+	var i = -1;
 
 	$.each(array, function(index, e) {
 		if (e[prop] === value) {

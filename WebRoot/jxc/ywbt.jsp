@@ -378,9 +378,9 @@ function saveAll(){
 	// }
 
 	var footerRows = ywbt_spdg.datagrid('getFooterRows');
-	let hjje1 = $('#jxc_ywbt_hjje1').numberbox('getValue') === '' ? 0 : $('#jxc_ywbt_hjje1').numberbox('getValue');
-	let hjje2 = $('#jxc_ywbt_hjje2').numberbox('getValue') === '' ? 0 : $('#jxc_ywbt_hjje2').numberbox('getValue');
-	let btje = footerRows[0]['btje'];
+	var hjje1 = $('#jxc_ywbt_hjje1').numberbox('getValue') === '' ? 0 : $('#jxc_ywbt_hjje1').numberbox('getValue');
+	var hjje2 = $('#jxc_ywbt_hjje2').numberbox('getValue') === '' ? 0 : $('#jxc_ywbt_hjje2').numberbox('getValue');
+	var btje = footerRows[0]['btje'];
 	if (Math.abs(hjje1 + hjje2 - (btje * (1 + SL)).toFixed(2)) > 1) {
 		$.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
 		return false;

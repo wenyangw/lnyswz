@@ -3,23 +3,23 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/datagrid-filter.js"></script>
 <script type="text/javascript">
-let rkfk_did;
-let rkfk_lx;
-let rkfk_menuId;
-let rkfk_gysDg;
-let rkfk_dg;
-let rkfk_ywrkDg;
+var rkfk_did;
+var rkfk_lx;
+var rkfk_menuId;
+var rkfk_gysDg;
+var rkfk_dg;
+var rkfk_ywrkDg;
 // var jxc_rkfk_ywyCombo;
 
 //入库列表所有行
-let rows;
+var rows;
 
 
 //本次付款对应入库笔数
-let countFk;
+var countFk;
 // let countRkfk;
 //每行付款后剩余金额
-let je;
+var je;
 // var lastFkje;
 
 $(function(){
@@ -341,7 +341,7 @@ function calfk() {
 	}
 
 	countFk = 0;
-	let fkhj = 0;
+	var fkhj = 0;
     if(rows != undefined){
         $.each(rows, function(index){
             if (!(je == 0  && $('input[name=fkfs]:checked').val() === '1')) {
@@ -352,7 +352,7 @@ function calfk() {
             //每行付款金额
             lastFkje = 0;
             //每行未付款金额
-            let wfkje = rows[index].hjje - rows[index].fkedje;
+            var wfkje = rows[index].hjje - rows[index].fkedje;
 
             lastFkje = je > wfkje ? wfkje : je;
 
@@ -377,8 +377,8 @@ function calfk() {
 
 //提交数据到后台
 function saveRkfk(){
-	let gysbh = $('#gysbh').html();
-	let fkje = $('#fkje').val();
+	var gysbh = $('#gysbh').html();
+	var fkje = $('#fkje').val();
 
 	if(gysbh == ''){
 		$.messager.alert('提示', '没有选中供应商进行付款,请重新操作！', 'error');
@@ -389,7 +389,7 @@ function saveRkfk(){
 		return;
 	}
 
-	let yfje = Number($('#yfje').html());
+	var yfje = Number($('#yfje').html());
 	if ((rows == undefined || rows.length == 0) && yfje > 0) {
 		if (fkje > yfje) {
 			$.messager.alert('提示', '无明细付款，付款金额不能大于应付金额，请重新录入！', 'error');
@@ -531,7 +531,7 @@ function exportRkfk(){
 
 //////////////////////////////////////////////以下为销售付款列表处理代码
 function cancelRkfk(){
-	let row = rkfk_dg.datagrid('getSelected');
+	var row = rkfk_dg.datagrid('getSelected');
 	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
 		return;
