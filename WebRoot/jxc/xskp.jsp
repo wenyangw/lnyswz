@@ -50,7 +50,7 @@ $(function(){
 	xskp_did = lnyw.tab_options().did;
 	xskp_lx = lnyw.tab_options().lx;
 	xskp_menuId = lnyw.tab_options().id;
-	
+
 	$('#jxc_xskp_layout').layout({
 		fit: true,
 		border: false

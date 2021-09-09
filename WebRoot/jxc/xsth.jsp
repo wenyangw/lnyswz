@@ -32,6 +32,8 @@ var fydRow;
 var detDg;
 var fydDetDg;
 
+let ywyIndex;
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -54,6 +56,7 @@ var cjldwIdEditor;
 var dwcbEditor;
 
 $(function(){
+
 	xsth_did = lnyw.tab_options().did;
 	xsth_lx = lnyw.tab_options().lx;
 	xsth_menuId = lnyw.tab_options().id;
@@ -739,6 +742,19 @@ $(function(){
 	
 	//初始化业务员列表
 	jxc_xsth_ywyCombo = lnyw.initCombo($("#jxc_xsth_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xsth_did);
+	$.ajax({
+		type: "POST",
+		url: '${pageContext.request.contextPath}/admin/userAction!listYwys.action',
+		data: {
+			did: xsth_did,
+		},
+		dataType: 'json',
+		success: function(d){
+			ywyIndex = lnyw.getObjIndexByValue(d, {id: userId});
+			jxc_xsth_ywyCombo.combobox('selectedIndex', ywyIndex != -1 ? ywyIndex : 0);
+		},
+	});
+
 	jxc_xsth_ywyCombo.combobox({
 		onSelect: function(rec){
 			updateJsfs();
@@ -861,9 +877,15 @@ function init(){
 		//$('#jxc_xsth_layout').layout('collapse', 'east');
 	}
 	jxc.spInfo($('#jxc_xsth_layout'), '');
-	
+
+
 	jxc_xsth_ckCombo.combobox('selectedIndex', 0);
-	jxc_xsth_ywyCombo.combobox('selectedIndex', 0);
+	// jxc_xsth_ywyCombo.combobox('selectedIndex', 0);
+
+	jxc_xsth_ywyCombo.combobox('selectedIndex', ywyIndex != -1 ? ywyIndex : 0);
+	// jxc_xsth_ywyCombo.combobox('setValue', userId);
+	// jxc_xsth_ywyCombo.combobox('select', userName);
+
 	jxc_xsth_jsfsCombo.combobox('setValue', JSFS_QK);
 	
 	//初始化流水号
@@ -1260,7 +1282,6 @@ function saveXsth(){
 
 //处理编辑行
 function setEditing(){
-	console.info('setEditing')
 	//加载字段
 	var editors = xsth_spdg.datagrid('getEditors', editIndex);
 	spbhEditor = editors[0];
@@ -1370,7 +1391,6 @@ function setEditing(){
     
     //输入主单位数量后，计算金额
     zslEditor.target.bind('keyup', function(event){
-    	console.info(zslEditor.target.val());
 
     	if(event.keyCode == 9){
      		return false;
@@ -1695,7 +1715,6 @@ function setValueBySpbh(rowData){
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
 
-	console.info(zslEditor.target)
 	// 2021-01-27 增加 更改商品后，单价、数量清零，防止录入后修改错误
 	kpslEditor.target.val(0);
 	thslEditor.target.val(0);
