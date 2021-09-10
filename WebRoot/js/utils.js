@@ -395,7 +395,7 @@ lnyw.getObjIndexByValue = function(array, param) {
 	var i = -1;
 
 	$.each(array, function(index, e) {
-		if (e[prop] === value) {
+		if ((typeof e[prop] === 'number' && e[prop] === value) || (typeof e[prop] != 'number' && e[prop].indexOf(value) >= 0)) {
 			i = index;
 			return;
 		}

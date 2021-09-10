@@ -751,6 +751,9 @@ $(function(){
 		dataType: 'json',
 		success: function(d){
 			ywyIndex = lnyw.getObjIndexByValue(d, {id: userId});
+			if (ywyIndex === -1) {
+                ywyIndex = lnyw.getObjIndexByValue(d, {realName: userName});
+            }
 			jxc_xsth_ywyCombo.combobox('selectedIndex', ywyIndex != -1 ? ywyIndex : 0);
 		},
 	});
