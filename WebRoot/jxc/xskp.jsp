@@ -1210,6 +1210,33 @@ function setEditing(){
      	}
     });
 
+    //输入不含税金额后，计算相应数据
+    spjeEditor.target.bind('keyup', function(event){
+        if(event.keyCode == 9){
+            return false;
+        }
+        changeSpje1();
+    }).bind('keydown', function(event){
+        changeSpje1();
+        if(event.keyCode == 40){
+            //spjeEditor.target.focus();
+        }
+    });
+
+    function changeSpje1(){
+        $(spseEditor.target).numberbox('setValue', $(spjeEditor.target).val() * SL);
+        $(sphjEditor.target).numberbox('setValue', Number($(spjeEditor.target).val()) + Number($(spseEditor.target).val()));
+        $(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
+        if($(zhxsEditor.target).val() != 0){
+            $(cdjEditor.target).numberbox('setValue',
+                $(sphjEditor.target).val() / $(cslEditor.target).val() == Infinity
+                    ? 0 :
+                    $(sphjEditor.target).val() / $(cslEditor.target).val());
+        }
+        updateFooter();
+    }
+
+
   	//输入合计金额后，计算单价
     sphjEditor.target.bind('keyup', function(event){
     	if(event.keyCode == 9){
@@ -1224,6 +1251,7 @@ function setEditing(){
     });
   	
   	function changeSpje(){
+  	    console.info("hhhh")
   		$(spjeEditor.target).numberbox('setValue', $(sphjEditor.target).val() / (1 + SL));
     	$(spseEditor.target).numberbox('setValue', $(sphjEditor.target).val() - $(spjeEditor.target).val());
     	$(zdjEditor.target).numberbox('setValue', $(spjeEditor.target).val() / $(zslEditor.target).val());
