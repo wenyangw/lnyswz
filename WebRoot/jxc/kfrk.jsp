@@ -974,52 +974,49 @@ function setValueBySpbh(rowData){
 //////////////////////////////////////////////以下为库房入库划列表处理代码
 function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCj != '1' || !row.cjKfrklsh){
-			if(row.ywrklsh == null){
-				if(row.isCj != '1'){
-					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
-						if (bz != undefined){
-							//MaskUtil.mask('正在冲减，请等待……');
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/kfrkAction!cjKfrk.action',
-								data : {
-									kfrklsh : row.kfrklsh,
-									bmbh: did,
-									lxbh: lx,
-									menuId : menuId,
-									bz : bz,
-								},
-								method: 'post',
-								dataType : 'json',
-								success : function(d) {
-									if(d.success) {
-										kfrk_dg.datagrid('reload');
-										kfrk_dg.datagrid('unselectAll');
-									}
-									$.messager.show({
-										title : '提示',
-										msg : d.msg
-									});
-								},
-								complete: function(){
-									//MaskUtil.unmask();
-								}
-							});
-						}
-						});
-				}else{
-					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
-				}
-			}else{
-				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return;
 	}
+	if(row.isCj == '1' || row.cjKfrklsh){
+		$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
+		return;
+	}
+	if(row.ywrklsh != null){
+		$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+		return;
+	}
+
+	$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
+		if (bz != undefined){
+			//MaskUtil.mask('正在冲减，请等待……');
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/kfrkAction!cjKfrk.action',
+				data : {
+					kfrklsh : row.kfrklsh,
+					bmbh: did,
+					lxbh: lx,
+					menuId : menuId,
+					bz : bz,
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					if(d.success) {
+						kfrk_dg.datagrid('reload');
+						kfrk_dg.datagrid('unselectAll');
+					}
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+				},
+				complete: function(){
+					//MaskUtil.unmask();
+				}
+			});
+		}
+	});
 }
 
 function printKfrk(){
