@@ -789,6 +789,9 @@ function cancelAll(){
 
 //提交数据到后台
 function saveAll(){
+	var jxc_ywrk_saveBtn = $(event.path[2]);
+	jxc_ywrk_saveBtn.linkbutton('disable');
+
 	var msg = formValid();
 	if(msg == ''){
 		//编辑行是否完成
@@ -911,6 +914,7 @@ function saveAll(){
 		},
 		complete: function(){
 			//MaskUtil.unmask();
+			jxc_ywrk_saveBtn.linkbutton('enable');
 		}
 	});
 }

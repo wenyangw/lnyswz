@@ -34,6 +34,8 @@ var fydDetDg;
 
 var ywyIndex;
 
+var jxc_xsth_saveBtn;
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -1041,7 +1043,12 @@ function cancelAll(){
 
 //提交数据到后台
 function saveXsth(){
-	
+
+    jxc_xsth_saveBtn = $(event.path[2]);
+    jxc_xsth_saveBtn.linkbutton("disable");
+
+    // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
+
 	var msg = formValid();
 	if(msg == ''){
 		//编辑行是否完成
@@ -1275,9 +1282,12 @@ function saveXsth(){
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
+
 			},
 			complete: function(){
 				//MaskUtil.unmask();
+                jxc_xsth_saveBtn.linkbutton('enable');
+                // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
 			}
 		});
 	}
