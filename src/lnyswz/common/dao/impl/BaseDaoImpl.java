@@ -52,7 +52,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public T get(String hql) {
-        Query q = this.getCurrentSession().createQuery(hql);
+        Query q = this.getCurrentSession().createQuery(prepareStr(hql));
         List<T> l = q.list();
         if (l != null && l.size() > 0) {
             return l.get(0);
@@ -62,7 +62,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public T get(String hql, Map<String, Object> params) {
-        Query q = getQuery(hql, params);
+        Query q = getSearchQuery(hql, params);
         List<T> l = q.list();
         if (l != null && l.size() > 0) {
             return l.get(0);
@@ -87,19 +87,19 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<T> find(String hql) {
-        Query q = this.getCurrentSession().createQuery(hql);
+        Query q = this.getCurrentSession().createQuery(prepareStr(hql));
         return q.list();
     }
 
     @Override
     public List<T> find(String hql, Map<String, Object> params) {
-        Query q = getQuery(hql, params);
+        Query q = getSearchQuery(hql, params);
         return q.list();
     }
 
     @Override
     public List<T> find(String hql, Map<String, Object> params, int page, int rows) {
-        Query q = getQuery(hql, params);
+        Query q = getSearchQuery(hql, params);
         return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
     }
 
@@ -113,27 +113,43 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
         return q;
     }
 
+    private Query getSearchQuery(String hql, Map<String, Object> params) {
+        boolean flag = hql.toLowerCase().indexOf("like") >= 0;
+        Query q = this.getCurrentSession().createQuery(hql);
+        if (params != null && !params.isEmpty()) {
+            for (String key : params.keySet()) {
+                if (flag && params.get(key).toString().indexOf("[") >= 0) {
+                    q.setParameter(key, params.get(key).toString().replace("[", "_"));
+                } else {
+                    q.setParameter(key, params.get(key));
+                }
+            }
+        }
+
+        return q;
+    }
+
     @Override
     public List<T> find(String hql, int page, int rows) {
-        Query q = this.getCurrentSession().createQuery(hql);
+        Query q = this.getCurrentSession().createQuery(prepareStr(hql));
         return q.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
     }
 
     @Override
     public Long count(String hql) {
-        Query q = this.getCurrentSession().createQuery(hql);
+        Query q = this.getCurrentSession().createQuery(prepareStr(hql));
         return (Long) q.uniqueResult();
     }
 
     @Override
     public Long countBySQL(String sql) {
-        SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+        SQLQuery query = this.getCurrentSession().createSQLQuery(prepareStr(sql));
         return getLong(query.list().get(0));
     }
 
     @Override
     public Long count(String hql, Map<String, Object> params) {
-        Query q = getQuery(hql, params);
+        Query q = getSearchQuery(hql, params);
         return (Long) q.uniqueResult();
     }
 
@@ -171,9 +187,24 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
         return query;
     }
 
+    private SQLQuery getSearchQueryBySQL(String sql, Map<String, Object> params) {
+        boolean flag = sql.toLowerCase().indexOf("like") >= 0;
+        SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+        if (params != null && !params.isEmpty()) {
+            for (String key : params.keySet()) {
+                if (flag && params.get(key).toString().indexOf("[") >= 0) {
+                    query.setParameter(Integer.valueOf(key), params.get(key).toString().replace("[", "_"));
+                } else {
+                    query.setParameter(Integer.valueOf(key), params.get(key));
+                }
+            }
+        }
+        return query;
+    }
+
     @Override
     public Object[] getMBySQL(String sql, Map<String, Object> params) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         List<Object[]> l = query.list();
         if (l != null && l.size() > 0) {
             return l.get(0);
@@ -183,7 +214,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public Object getBySQL(String sql, Map<String, Object> params) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         List<Object[]> l = query.list();
         if (l != null && l.size() > 0) {
             return l.get(0);
@@ -207,24 +238,23 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
             }
         }
         return query.list().get(0);
-
     }
 
     @Override
     public List<Object[]> findBySQL(String sql) {
-        return this.getCurrentSession().createSQLQuery(sql)
+        return this.getCurrentSession().createSQLQuery(prepareStr(sql))
                 .list();
     }
 
     @Override
     public Long countSQL(String sql) {
-        SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+        SQLQuery query = this.getCurrentSession().createSQLQuery(prepareStr(sql));
         return getLong(query.list().get(0));
     }
 
     @Override
     public Long countSQL(String sql, Map<String, Object> params) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         return getLong(query.list().get(0));
     }
 
@@ -235,7 +265,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<Object> findOneBySQL(String sql) {
-        SQLQuery query = this.getCurrentSession().createSQLQuery(sql);
+        SQLQuery query = this.getCurrentSession().createSQLQuery(prepareStr(sql));
         List<Object> q = query.list();
         if (q != null && q.size() > 0) {
             return q;
@@ -245,7 +275,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<Object> findOneBySQL(String sql, Map<String, Object> params) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         List<Object> q = query.list();
         if (q != null && q.size() > 0) {
             return q;
@@ -255,7 +285,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<Object[]> findBySQL(String sql, Map<String, Object> params) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         List<Object[]> q = query.list();
         if (q != null && q.size() > 0) {
             return q;
@@ -265,7 +295,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<Object[]> findBySQL(String sql, Map<String, Object> params, int page, int rows) {
-        SQLQuery query = getQueryBySQL(sql, params);
+        SQLQuery query = getSearchQueryBySQL(sql, params);
         List<Object[]> q = query.setFirstResult((page - 1) * rows).setMaxResults(rows).list();
         if (q != null) {
             return q;
@@ -275,7 +305,7 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<Object[]> findBySQL(String sql, int page, int rows) {
-        return this.getCurrentSession().createSQLQuery(sql)
+        return this.getCurrentSession().createSQLQuery(prepareStr(sql))
                 .setFirstResult((page - 1) * rows)
                 .setMaxResults(rows)
                 .list();
@@ -283,20 +313,26 @@ public class BaseDaoImpl<T> implements BaseDaoI<T> {
 
     @Override
     public List<T> findBySQL(String sql, T o) {
-        return this.getCurrentSession().createSQLQuery(sql)
+        return this.getCurrentSession().createSQLQuery(prepareStr(sql))
                 .addEntity(o.getClass())
                 .list();
     }
 
     @Override
     public List<T> findBySQL(String sql, T o, int page, int rows) {
-        return this.getCurrentSession().createSQLQuery(sql)
+        return this.getCurrentSession().createSQLQuery(prepareStr(sql))
                 .addEntity(o.getClass())
                 .setFirstResult((page - 1) * rows)
                 .setMaxResults(rows)
                 .list();
     }
 
+    private String prepareStr(String str) {
+        if (str.indexOf("like") >= 0 && str.indexOf("[") >= 0) {
+            return str.replace("[", "_");
+        }
+        return str;
+    }
 //	@Override
 //	public List<Object[]> findBySQL(String sql, Map<String, Object> returns) {
 //		SQLQuery query = this.getCurrentSession().createSQLQuery(sql);

@@ -832,10 +832,12 @@ function saveAll(){
 
 			var spje = lnyw.delcommafy(footerRows[0]['spje'])
 
-            if(Number(hjje1 + hjje2) !== Number(spje) && Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
-                $.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
-                return false;
-            }
+			//if (ywrk_did != '04') {
+				if (Number(hjje1 + hjje2) !== Number(spje) && Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
+					$.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
+					return false;
+				}
+			//}
 		}
 	}
 
