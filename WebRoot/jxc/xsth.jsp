@@ -1044,8 +1044,8 @@ function cancelAll(){
 //提交数据到后台
 function saveXsth(){
 
-    jxc_xsth_saveBtn = $(event.path[2]);
-    jxc_xsth_saveBtn.linkbutton("disable");
+	// jxc_xsth_saveBtn = $(event.path[2]);
+	// jxc_xsth_saveBtn.linkbutton("disable");
 
     // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
 
@@ -1105,6 +1105,10 @@ function saveXsth(){
 			}
 		}
 	}
+
+	// jxc_xsth_saveBtn = $(event.path[2]);
+	// $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
+
 
 	var needAuditXsjj = 0;
 	var spbhXsjj = new Array();
@@ -1286,7 +1290,8 @@ function saveXsth(){
 			},
 			complete: function(){
 				//MaskUtil.unmask();
-                jxc_xsth_saveBtn.linkbutton('enable');
+                // jxc_xsth_saveBtn.linkbutton('enable');
+				// $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
                 // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
 			}
 		});

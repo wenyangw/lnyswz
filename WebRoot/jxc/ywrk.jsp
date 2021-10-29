@@ -789,8 +789,7 @@ function cancelAll(){
 
 //提交数据到后台
 function saveAll(){
-	var jxc_ywrk_saveBtn = $(event.path[2]);
-	jxc_ywrk_saveBtn.linkbutton('disable');
+
 
 	var msg = formValid();
 	if(msg == ''){
@@ -823,6 +822,7 @@ function saveAll(){
 	});
 
 	var footerRows = ywrk_spdg.datagrid('getFooterRows');
+	var flag = false;
 	if (jxc_ywrk_rklxCombo.combobox('getValue') == '01') {
 		if (($('#jxc_ywrk_hjje1').numberbox('getValue') === '' || $('#jxc_ywrk_hjje1').numberbox('getValue') === '0.00')
 			|| ($('input[name=jxc_ywrk_gysbh2]').val() !== '' && ($('#jxc_ywrk_hjje2').numberbox('getValue') === '' || $('#jxc_ywrk_hjje2').numberbox('getValue') === '0.00')))
@@ -836,87 +836,109 @@ function saveAll(){
 			var spje = lnyw.delcommafy(footerRows[0]['spje'])
 
 			//if (ywrk_did != '04') {
-				if (Number(hjje1 + hjje2) !== Number(spje) && Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
-					$.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
-					return false;
+			// 	if (Number(hjje1 + hjje2) !== Number(spje) && Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
+				if (Math.abs(hjje1 + hjje2 - (spje * (1 + SL)).toFixed(2)) > 1) {
+					flag = true;
+					// $.messager.alert('提示', '发票金额与明细总额相差过大，请核对确认！', 'error');
+					// return false;
+
 				}
 			//}
 		}
 	}
 
-	var effectRow = new Object();
-	//将表头内容传入后台
-	if($('input[name=jxc_ywrk_isZs]').is(':checked')){
-		effectRow['isZs'] =  '1';
-		effectRow['shdz'] =  $('input[name=shdz]').val();
-	}else{
-		effectRow['isZs'] =  '0';
+
+	if (flag) {
+		$.messager.confirm('请确认', '发票金额与明细总额相等或相差过大，请核对后，确认是否继续！', function(r) {
+			if (r) {
+				saveYwrk();
+			} else {
+				return false;
+			}
+		});
+	} else {
+		saveYwrk();
 	}
-	if($('input[name=isDep]').is(':checked')){
-		effectRow['isDep'] =  '1';
-		effectRow['depId'] =  jxc_ywrk_depCombo.combobox('getValue');
-		effectRow['depName'] =  jxc_ywrk_depCombo.combobox('getText');
-	}else{
-		effectRow['isDep'] =  '0';
-	}
-	
-	effectRow['gysbh'] = $('input[name=jxc_ywrk_gysbh]').val();
-	effectRow['gysmc'] = $('input[name=jxc_ywrk_gysmc]').val();
-    effectRow['gysbhb'] = $('input[name=jxc_ywrk_gysbh2]').val();
-    effectRow['gysmcb'] = $('input[name=jxc_ywrk_gysmc2]').val();
-    effectRow['hjjea'] = $('#jxc_ywrk_hjje1').numberbox('getValue');
-    effectRow['hjjeb'] = $('#jxc_ywrk_hjje2').numberbox('getValue');
-	effectRow['ckId'] = jxc_ywrk_ckCombo.combobox('getValue');
-	effectRow['ckmc'] = jxc_ywrk_ckCombo.combobox('getText');
-	effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
-	effectRow['rklxmc'] = jxc_ywrk_rklxCombo.combobox('getText');
-	effectRow['bz'] = $('input[name=jxc_ywrk_bz]').val();
-	effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
-    // effectRow['hjse'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('#jxc_ywrk_hjse').numberbox('getValue') : 0;
-	effectRow['xskplsh'] = $('input[name=xskplsh]').val();
-	effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
-	effectRow['ywrklshs'] = $('input[name=ywrklshs]').val();
-	effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
-	effectRow['fpDate'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpDate]').val() : undefined;
-	// effectRow['fpno'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpno]').val() : undefined;
-	effectRow['bmbh'] = ywrk_did;
-	effectRow['lxbh'] = ywrk_lx;
-	effectRow['menuId'] = ywrk_menuId;
-	
-	
-	//将表格中的数据去掉最后一个空行后，转换为json格式
-	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
-	//提交到action
-	//$.ajaxSettings.traditional=true;
-	//MaskUtil.mask('正在保存，请等待……');
-	$.ajax({
-		type: "POST",
-		url: '${pageContext.request.contextPath}/jxc/ywrkAction!save.action',
-		data: effectRow,
-		dataType: 'json',
-		success: function(rsp){
-			if(rsp.success){
-		    	$.messager.show({
-					title : '提示',
-					msg : '提交成功！'
-				});
-		    	init();
-		    	$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
-					if (r) {
-						var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + rsp.obj.ywrklsh + '&bmbh=' + ywrk_did;
-						jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
-					}
-				});
-			}  
-		},
-		error: function(){
-			$.messager.alert("提示", "提交错误了！");
-		},
-		complete: function(){
-			//MaskUtil.unmask();
-			jxc_ywrk_saveBtn.linkbutton('enable');
+
+	function saveYwrk() {
+		// var jxc_ywrk_saveBtn = $(event.path[2]);
+        var jxc_ywrk_saveBtn = $('#7681456e-fdcf-453a-848b-af54618bff29');
+		jxc_ywrk_saveBtn.linkbutton('disable');
+
+		var effectRow = new Object();
+		//将表头内容传入后台
+		if($('input[name=jxc_ywrk_isZs]').is(':checked')){
+			effectRow['isZs'] =  '1';
+			effectRow['shdz'] =  $('input[name=shdz]').val();
+		}else{
+			effectRow['isZs'] =  '0';
 		}
-	});
+		if($('input[name=isDep]').is(':checked')){
+			effectRow['isDep'] =  '1';
+			effectRow['depId'] =  jxc_ywrk_depCombo.combobox('getValue');
+			effectRow['depName'] =  jxc_ywrk_depCombo.combobox('getText');
+		}else{
+			effectRow['isDep'] =  '0';
+		}
+
+		effectRow['gysbh'] = $('input[name=jxc_ywrk_gysbh]').val();
+		effectRow['gysmc'] = $('input[name=jxc_ywrk_gysmc]').val();
+		effectRow['gysbhb'] = $('input[name=jxc_ywrk_gysbh2]').val();
+		effectRow['gysmcb'] = $('input[name=jxc_ywrk_gysmc2]').val();
+		effectRow['hjjea'] = $('#jxc_ywrk_hjje1').numberbox('getValue');
+		effectRow['hjjeb'] = $('#jxc_ywrk_hjje2').numberbox('getValue');
+		effectRow['ckId'] = jxc_ywrk_ckCombo.combobox('getValue');
+		effectRow['ckmc'] = jxc_ywrk_ckCombo.combobox('getText');
+		effectRow['rklxId'] = jxc_ywrk_rklxCombo.combobox('getValue');
+		effectRow['rklxmc'] = jxc_ywrk_rklxCombo.combobox('getText');
+		effectRow['bz'] = $('input[name=jxc_ywrk_bz]').val();
+		effectRow['hjje'] = lnyw.delcommafy(footerRows[0]['spje']);
+		// effectRow['hjse'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('#jxc_ywrk_hjse').numberbox('getValue') : 0;
+		effectRow['xskplsh'] = $('input[name=xskplsh]').val();
+		effectRow['kfrklshs'] = $('input[name=kfrklshs]').val();
+		effectRow['ywrklshs'] = $('input[name=ywrklshs]').val();
+		effectRow['cgjhDetIds'] = $('input[name=cgjhDetIds]').val();
+		effectRow['fpDate'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpDate]').val() : undefined;
+		// effectRow['fpno'] = jxc_ywrk_rklxCombo.combobox('getValue') === '01' ? $('input[name=jxc_ywrk_fpno]').val() : undefined;
+		effectRow['bmbh'] = ywrk_did;
+		effectRow['lxbh'] = ywrk_lx;
+		effectRow['menuId'] = ywrk_menuId;
+
+
+		//将表格中的数据去掉最后一个空行后，转换为json格式
+		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
+		//提交到action
+		//$.ajaxSettings.traditional=true;
+		//MaskUtil.mask('正在保存，请等待……');
+		$.ajax({
+			type: "POST",
+			url: '${pageContext.request.contextPath}/jxc/ywrkAction!save.action',
+			data: effectRow,
+			dataType: 'json',
+			success: function(rsp){
+				if(rsp.success){
+					$.messager.show({
+						title : '提示',
+						msg : '提交成功！'
+					});
+					init();
+					$.messager.confirm('请确认', '是否打印业务入库单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/ywrkAction!printYwrk.action?ywrklsh=' + rsp.obj.ywrklsh + '&bmbh=' + ywrk_did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
+						}
+					});
+				}
+			},
+			error: function(){
+				$.messager.alert("提示", "提交错误了！");
+			},
+			complete: function(){
+				//MaskUtil.unmask();
+				jxc_ywrk_saveBtn.linkbutton('enable');
+			}
+		});
+	}
 }
 
 //处理编辑行
@@ -1231,6 +1253,10 @@ function cjYwrk(){
 	$.messager.prompt('请确认', '是否要冲减选中的业务入库单？请填写备注', function(bz){
 		if (bz != undefined){
 			//MaskUtil.mask('正在冲减，请等待……');
+
+			var jxc_ywrk_cjBtn = $('#a223d801-eadb-4fb4-8a99-d007ca5cf963');
+			jxc_ywrk_cjBtn.linkbutton('disable');
+
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/ywrkAction!cjYwrk.action',
 				data : {
@@ -1258,6 +1284,7 @@ function cjYwrk(){
 				},
 				complete: function(){
 					//MaskUtil.unmask();
+					jxc_ywrk_cjBtn.linkbutton('enable');
 				}
 			});
 		}

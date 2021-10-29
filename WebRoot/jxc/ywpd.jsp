@@ -474,6 +474,9 @@ function saveAll(){
 			return false;
 		}
 	});
+	var jxc_ywpd_saveBtn = $('#f72b7fa3-8e42-4002-9a84-14c5f66fea0c');
+	jxc_ywpd_saveBtn.linkbutton('disable');
+
 	var footerRows = ywpd_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -521,6 +524,7 @@ function saveAll(){
 		},
 		complete: function(){
 			//MaskUtil.unmask();
+			jxc_ywpd_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -826,52 +830,56 @@ function getDwcb(spbh){
 
 function cjYwpd(){
 	var row = ywpd_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCj != '1'){
-			if(row.kfpdlsh == undefined){
-				$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
-					if (bz != undefined){
-						//MaskUtil.mask('正在冲减，请等待……');
-						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/ywpdAction!cjYwpd.action',
-							data : {
-								ywpdlsh : row.ywpdlsh,
-								bmbh: did,
-								lxbh: lx,
-								menuId : menuId,
-								bz : bz
-							},
-							method: 'post',
-							dataType : 'json',
-							success : function(d) {
-						 		ywpd_dg.datagrid('load');
-								ywpd_dg.datagrid('unselectAll');
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
-								$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
-									if (r) {
-										var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + d.obj.pdlxId;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
-									}
-								});
-							},
-							complete: function(){
-								//MaskUtil.unmask();
-							}
-						});
-					}
-				});
-			}else{
-				$.messager.alert('警告', '选中的业务盘点已由库房处理，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的业务盘点记录已被冲减，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return false;
 	}
+	if(row.isCj == '1') {
+		$.messager.alert('警告', '选中的业务盘点记录已被冲减，请重新选择！',  'warning');
+		return false;
+	}
+	if(row.kfpdlsh != undefined) {
+		$.messager.alert('警告', '选中的业务盘点已由库房处理，请重新选择！',  'warning');
+		return false;
+	}
+	$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
+		if (bz != undefined){
+			//MaskUtil.mask('正在冲减，请等待……');
+			var jxc_ywpd_cjBtn = $('#fa10a68e-6b8a-4b85-9a5a-5356a774f40e');
+			jxc_ywpd_cjBtn.linkbutton('disable');
+
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/ywpdAction!cjYwpd.action',
+				data : {
+					ywpdlsh : row.ywpdlsh,
+					bmbh: did,
+					lxbh: lx,
+					menuId : menuId,
+					bz : bz
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					ywpd_dg.datagrid('load');
+					ywpd_dg.datagrid('unselectAll');
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+					$.messager.confirm('请确认', '是否打印业务盘点单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/ywpdAction!printYwpd.action?ywpdlsh=' + d.obj.ywpdlsh + '&bmbh=' + did + '&pdlxId=' + d.obj.pdlxId;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
+						}
+					});
+				},
+				complete: function(){
+					//MaskUtil.unmask();
+					jxc_ywpd_cjBtn.linkbutton('enable');
+				}
+			});
+		}
+	});
 }
 
 

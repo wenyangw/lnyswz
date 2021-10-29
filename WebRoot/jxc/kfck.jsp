@@ -749,6 +749,10 @@ function saveAll(){
         //hjzdwsl += this.zdwsl;
         //hjzdwthsl += this.zdwthsl;
 	});
+
+	var jxc_kfck_saveBtn = $('#74eefe89-a3f7-40c3-92c2-e202d98611e6');
+	jxc_kfck_saveBtn.linkbutton('disable');
+
 	var footerRows = kfck_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -823,6 +827,7 @@ function saveAll(){
 		},
 		complete: function(){
 			////MaskUtil.unmask();
+			jxc_kfck_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -1198,44 +1203,49 @@ function khLoad(){
 //////////////////////////////////////////////以下为库房出库列表处理代码
 function cjKfck(){
 	var row = kfck_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.xskplsh == null){
-			if(row.isCj != '1'){
-				$.messager.confirm('请确认', '是否要冲减选中的库房出库单？', function(r) {
-					if (r) {
-						////MaskUtil.mask('正在冲减，请等待……');
-						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/kfckAction!cjKfck.action',
-							data : {
-								kfcklsh : row.kfcklsh,
-								bmbh: jxc_kfck_did,
-								lxbh: jxc_kfck_lx,
-								menuId: jxc_kfck_menuId,
-							},
-							dataType : 'json',
-							success : function(d) {
-								kfck_dg.datagrid('load');
-								kfck_dg.datagrid('unselectAll');
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
-							},
-							complete: function(){
-								////MaskUtil.unmask();
-							}
-						});
-					}
-					});
-			}else{
-				$.messager.alert('警告', '选中的库房出库记录已被冲减，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的库房出库已进行业务入库，不能被冲减，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return false;
 	}
+	if(row.xskplsh != null) {
+		$.messager.alert('警告', '选中的库房出库已开票，不能被冲减，请重新选择！',  'warning');
+		return false;
+	}
+	if(row.isCj == '1') {
+		$.messager.alert('警告', '选中的库房出库记录已被冲减，请重新选择！',  'warning');
+		return false;
+	}
+	$.messager.confirm('请确认', '是否要冲减选中的库房出库单？', function(r) {
+		if (r) {
+			////MaskUtil.mask('正在冲减，请等待……');
+
+			var jxc_kfck_cjBtn = $('#27b29082-ac97-443f-835b-355941923105');
+			jxc_kfck_cjBtn.linkbutton('disable');
+
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/kfckAction!cjKfck.action',
+				data : {
+					kfcklsh : row.kfcklsh,
+					bmbh: jxc_kfck_did,
+					lxbh: jxc_kfck_lx,
+					menuId: jxc_kfck_menuId,
+				},
+				dataType : 'json',
+				success : function(d) {
+					kfck_dg.datagrid('load');
+					kfck_dg.datagrid('unselectAll');
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+				},
+				complete: function(){
+					////MaskUtil.unmask();
+					jxc_kfck_cjBtn.linkbutton('enable');
+				}
+			});
+		}
+	});
 }
 
 function updateKfckOut(){
