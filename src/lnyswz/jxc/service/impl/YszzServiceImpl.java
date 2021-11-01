@@ -225,7 +225,11 @@ public class YszzServiceImpl implements YszzServiceI {
 	 * @return
 	 */
 	public static Object[] getLatestXs(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-		String sql = "select top 1 t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
+//		String sql = "select top 1 t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
+		String sql = "select top 1 bmbh, khbh, lsh, createTime, payTime, hjje, cqDays, bmmc, khmc, ywyId, ywymc"
+//				+ " from v_xs_latest AS mx"
+				+ " from dbo.xs_latest(?, ?, ?) AS mx"
+				+ " order by createTime";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", khbh);
@@ -244,7 +248,12 @@ public class YszzServiceImpl implements YszzServiceI {
 	 * @return
 	 */
 	public static List<Object[]> getLatestXses(String bmbh, String khbh, int ywyId, BaseDaoI<TYszz> yszzDao){
-		String sql = "select t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime, t.hjje from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
+//		String sql = "select t.bmbh, t.khbh, t.lsh, t.createTime, t.payTime, t.hjje from v_xs_latest t where t.bmbh = ? and t.khbh = ? and t.ywyId = ? order by t.createTime";
+		String sql = "select bmbh, khbh, lsh, createTime, payTime, hjje, cqDays, bmmc, khmc, ywyId, ywymc"
+//				+ " from v_xs_latest AS mx"
+				+ " from dbo.xs_latest(?, ?, ?) AS mx"
+				+ " order by createTime";
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("0", bmbh);
 		params.put("1", khbh);

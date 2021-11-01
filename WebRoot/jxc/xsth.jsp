@@ -32,6 +32,10 @@ var fydRow;
 var detDg;
 var fydDetDg;
 
+var ywyIndex;
+
+var jxc_xsth_saveBtn;
+
 //编辑行字段
 var spbhEditor;   
 var spmcEditor;
@@ -54,6 +58,7 @@ var cjldwIdEditor;
 var dwcbEditor;
 
 $(function(){
+
 	xsth_did = lnyw.tab_options().did;
 	xsth_lx = lnyw.tab_options().lx;
 	xsth_menuId = lnyw.tab_options().id;
@@ -739,6 +744,22 @@ $(function(){
 	
 	//初始化业务员列表
 	jxc_xsth_ywyCombo = lnyw.initCombo($("#jxc_xsth_ywyId"), 'id', 'realName', '${pageContext.request.contextPath}/admin/userAction!listYwys.action?did=' + xsth_did);
+	$.ajax({
+		type: "POST",
+		url: '${pageContext.request.contextPath}/admin/userAction!listYwys.action',
+		data: {
+			did: xsth_did,
+		},
+		dataType: 'json',
+		success: function(d){
+			ywyIndex = lnyw.getObjIndexByValue(d, {id: userId});
+			if (ywyIndex === -1) {
+                ywyIndex = lnyw.getObjIndexByValue(d, {realName: userName});
+            }
+			jxc_xsth_ywyCombo.combobox('selectedIndex', ywyIndex != -1 ? ywyIndex : 0);
+		},
+	});
+
 	jxc_xsth_ywyCombo.combobox({
 		onSelect: function(rec){
 			updateJsfs();
@@ -861,9 +882,15 @@ function init(){
 		//$('#jxc_xsth_layout').layout('collapse', 'east');
 	}
 	jxc.spInfo($('#jxc_xsth_layout'), '');
-	
+
+
 	jxc_xsth_ckCombo.combobox('selectedIndex', 0);
-	jxc_xsth_ywyCombo.combobox('selectedIndex', 0);
+	// jxc_xsth_ywyCombo.combobox('selectedIndex', 0);
+
+	jxc_xsth_ywyCombo.combobox('selectedIndex', ywyIndex != -1 ? ywyIndex : 0);
+	// jxc_xsth_ywyCombo.combobox('setValue', userId);
+	// jxc_xsth_ywyCombo.combobox('select', userName);
+
 	jxc_xsth_jsfsCombo.combobox('setValue', JSFS_QK);
 	
 	//初始化流水号
@@ -1016,7 +1043,12 @@ function cancelAll(){
 
 //提交数据到后台
 function saveXsth(){
-	
+
+	// jxc_xsth_saveBtn = $(event.path[2]);
+	// jxc_xsth_saveBtn.linkbutton("disable");
+
+    // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
+
 	var msg = formValid();
 	if(msg == ''){
 		//编辑行是否完成
@@ -1073,6 +1105,10 @@ function saveXsth(){
 			}
 		}
 	}
+
+	// jxc_xsth_saveBtn = $(event.path[2]);
+	// $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
+
 
 	var needAuditXsjj = 0;
 	var spbhXsjj = new Array();
@@ -1250,9 +1286,13 @@ function saveXsth(){
 			},
 			error: function(){
 				$.messager.alert("提示", "提交错误了！");
+
 			},
 			complete: function(){
 				//MaskUtil.unmask();
+                // jxc_xsth_saveBtn.linkbutton('enable');
+				// $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
+                // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
 			}
 		});
 	}
@@ -1369,6 +1409,7 @@ function setEditing(){
     
     //输入主单位数量后，计算金额
     zslEditor.target.bind('keyup', function(event){
+
     	if(event.keyCode == 9){
      		return false;
      	}
@@ -1691,6 +1732,16 @@ function setValueBySpbh(rowData){
 	zjldwIdEditor.target.val(rowData.zjldwId);
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	dwcbEditor.target.val(rowData.dwcb);
+
+	// 2021-01-27 增加 更改商品后，单价、数量清零，防止录入后修改错误
+	kpslEditor.target.val(0);
+	thslEditor.target.val(0);
+	zslEditor.target.val(0);
+	zdjEditor.target.val(0);
+	cslEditor.target.val(0);
+	cdjEditor.target.val(0);
+	spjeEditor.target.val(0);
+
 	//文达印刷业务员为公司(天女)、公司(天狮)时取销售单价
 	if(xsth_did == '01' && (jxc_xsth_ywyCombo.combobox('getValue') == 115 || jxc_xsth_ywyCombo.combobox('getValue') == 193)){
 		zdjEditor.target.val(rowData.specXsdj);
@@ -2406,14 +2457,14 @@ function returnXsth(){
 	if(detDg != undefined){
 		var detRow = detDg.datagrid('getSelected');
 		if(detRow != null){
-			if(xsthRow.isZs != '1'){
+			// if(xsthRow.isZs != '1'){
 				if(xsthRow.isCancel == '0'){
 					if(xsthRow.needAudit == xsthRow.isAudit){
 						if(!detRow.resl){
 						    if(detRow.zdwsl > detRow.kpsl) {
                                 $.messager.prompt('请确认', '请录入该商品的退货数量', function(resl){
                                     if (resl != undefined){
-                                        if(detRow.kpsl + resl < detRow.zdwsl) {
+                                        if(detRow.kpsl + parseInt(resl) <= detRow.zdwsl) {
                                             $.messager.prompt('请确认', '请录入退货备注（同一张单据只记录最后一次输入）', function(rebz){
                                                 if (rebz != undefined){
                                                     $.ajax({
@@ -2435,12 +2486,13 @@ function returnXsth(){
                                                                     resl: resl
                                                                 }
                                                             });
-                                                            // xsth_dg.datagrid('updateRow', {
-                                                            //     index: xsth_dg.datagrid('getRowIndex', xsthRow),
-                                                            //     row: {
-                                                            //         rebz: rebz
-                                                            //     }
-                                                            // });
+                                                            xsth_dg.datagrid('updateRow', {
+                                                                index: xsth_dg.datagrid('getRowIndex', xsthRow),
+                                                                row: {
+                                                                    rebz: rebz,
+                                                                    isRe: '1'
+                                                                }
+                                                            });
                                                             $.messager.show({
                                                                 title : '提示',
                                                                 msg : d.msg
@@ -2466,9 +2518,9 @@ function returnXsth(){
 				}else{
 					$.messager.alert('警告', '选择的销售提货记录已经取消，请重新选择！',  'warning');
 				}
-			}else{
-				$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
-			}
+			// }else{
+			// 	$.messager.alert('警告', '选择的销售提货记录是直送业务，请重新选择！',  'warning');
+			// }
 		}else{
 			$.messager.alert('警告', '请选择商品明细记录进行操作！',  'warning');
 			return false;

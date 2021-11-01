@@ -61,6 +61,9 @@ public class SpServiceImpl implements SpServiceI {
 				t.setTSpdw(spdw);
 			}
 		}
+		if (sp.getSpcd().equals("NULL") || sp.getSpcd().trim().equals("")) {
+			t.setSpcd("");
+		}
 		//设置商品计量单位
 		setJldw(t, sp);
 		spDao.save(t);

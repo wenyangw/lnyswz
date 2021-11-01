@@ -622,6 +622,10 @@ function saveAll(){
 			return false;
 		}
 	});
+
+	var jxc_kfrk_saveBtn  = $('#c66441d8-d4b0-4518-9641-ea4491ce6c38');
+	jxc_kfrk_saveBtn.linkbutton('disable');
+
 	var footerRows = kfrk_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -669,6 +673,7 @@ function saveAll(){
 		},
 		complete: function(){
 			//MaskUtil.unmask();
+			jxc_kfrk_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -702,7 +707,14 @@ function setEditing(){
     
     if($(spbhEditor.target).val() != ''){
     	jxc.spInfo($('#jxc_kfrk_layout'), '1', $(spppEditor.target).val(), $(spbzEditor.target).val());
-    	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}', did, $(spbhEditor.target).val());
+    	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}/jxc/kfckAction!getSpkc.action',
+			{
+				bmbh : did,
+				ckId : jxc_kfrk_ckCombo.combobox('getValue'),
+				spbh : $(spbhEditor.target).val()
+			}
+		);
+
     }else{
     	jxc.spInfo($('#jxc_kfrk_layout'), '');
     	jxc.hideKc('#jxc_kfrk_layout');
@@ -730,7 +742,7 @@ function setEditing(){
         var opt = $(sppcEditor.target).datebox('options');
         opt.disabled = true;
         $(sppcEditor.target).datebox(opt);
-        $(sppcEditor.target).datebox('setValue', '2019-01-01');
+        $(sppcEditor.target).datebox('setValue', SPPC);
     }
     
 	//loadEditor();
@@ -900,7 +912,13 @@ function setValueBySpbh(rowData){
 	cjldwIdEditor.target.val(rowData.cjldwId);
 	
 	jxc.spInfo($('#jxc_kfrk_layout'), '1', rowData.sppp, rowData.spbz);
-	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}', did, $(spbhEditor.target).val());
+	jxc.showKc('#jxc_kfrk_layout', '${pageContext.request.contextPath}/jxc/kfckAction!getSpkc.action',
+		{
+			bmbh : did,
+			ckId : jxc_kfrk_ckCombo.combobox('getValue'),
+			spbh : $(spbhEditor.target).val()
+		}
+	);
 	
 	//初始化货位，将返回商品的货位设为默认值
 	$.ajax({
@@ -920,93 +938,94 @@ function setValueBySpbh(rowData){
 	$(sppcEditor.target).datebox('setValue', moment().format('YYYY-MM-DD'));
 }
 
-function gysLoad(){
-	switch(event.keyCode){
-	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
-				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
-		break;
-	case 9:
-		break;
-	default:
-		if($('input[name=gysbh]').val().trim().length == 0){
-			$('input[name=gysmc]').val('');
-		}
-		if($('input[name=gysbh]').val().trim().length == 8){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
-				async: false,
-				context:this,
-				data:{
-					gysbh: $('input[name=gysbh]').val().trim(),
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						//设置信息字段值
-						$('input[name=gysmc]').val(data.obj.gysmc);
-						$('input[name=shry]').focus();
-					}else{
-						$.messager.alert('提示', '供应商信息不存在！', 'error');
-					}
-				}
-			});
-		}
-		break;
-	}
-}
+<%--function gysLoad(){--%>
+<%--	switch(event.keyCode){--%>
+<%--	case 27:--%>
+<%--		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',--%>
+<%--				'${pageContext.request.contextPath}/jxc/query.jsp',--%>
+<%--				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');--%>
+<%--		break;--%>
+<%--	case 9:--%>
+<%--		break;--%>
+<%--	default:--%>
+<%--		if($('input[name=gysbh]').val().trim().length == 0){--%>
+<%--			$('input[name=gysmc]').val('');--%>
+<%--		}--%>
+<%--		if($('input[name=gysbh]').val().trim().length == 8){--%>
+<%--			$.ajax({--%>
+<%--				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',--%>
+<%--				async: false,--%>
+<%--				context:this,--%>
+<%--				data:{--%>
+<%--					gysbh: $('input[name=gysbh]').val().trim(),--%>
+<%--				},--%>
+<%--				dataType:'json',--%>
+<%--				success:function(data){--%>
+<%--					if(data.success){--%>
+<%--						//设置信息字段值--%>
+<%--						$('input[name=gysmc]').val(data.obj.gysmc);--%>
+<%--						$('input[name=shry]').focus();--%>
+<%--					}else{--%>
+<%--						$.messager.alert('提示', '供应商信息不存在！', 'error');--%>
+<%--					}--%>
+<%--				}--%>
+<%--			});--%>
+<%--		}--%>
+<%--		break;--%>
+<%--	}--%>
+<%--}--%>
 //////////////////////////////////////////////以上为商品列表处理代码
 
 //////////////////////////////////////////////以下为库房入库划列表处理代码
 function cjKfrk(){
 	var row = kfrk_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isCj != '1' || !row.cjKfrklsh){
-			if(row.ywrklsh == null){
-				if(row.isCj != '1'){
-					$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
-						if (bz != undefined){
-							//MaskUtil.mask('正在冲减，请等待……');
-							$.ajax({
-								url : '${pageContext.request.contextPath}/jxc/kfrkAction!cjKfrk.action',
-								data : {
-									kfrklsh : row.kfrklsh,
-									bmbh: did,
-									lxbh: lx,
-									menuId : menuId,
-									bz : bz,
-								},
-								method: 'post',
-								dataType : 'json',
-								success : function(d) {
-									if(d.success) {
-										kfrk_dg.datagrid('reload');
-										kfrk_dg.datagrid('unselectAll');
-									}
-									$.messager.show({
-										title : '提示',
-										msg : d.msg
-									});
-								},
-								complete: function(){
-									//MaskUtil.unmask();
-								}
-							});
-						}
-						});
-				}else{
-					$.messager.alert('警告', '选中的库房入库记录已被冲减，请重新选择！',  'warning');
-				}
-			}else{
-				$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return;
 	}
+	if(row.isCj == '1' || row.cjKfrklsh){
+		$.messager.alert('警告', '选中的库房入库单已冲减，请重新选择！',  'warning');
+		return;
+	}
+	if(row.ywrklsh != null){
+		$.messager.alert('警告', '选中的库房入库已进行业务入库，不能被冲减，请重新选择！',  'warning');
+		return;
+	}
+
+	$.messager.prompt('请确认', '是否要冲减选中的库房入库单？请填写备注', function(bz){
+		if (bz != undefined){
+			//MaskUtil.mask('正在冲减，请等待……');
+			var jxc_kfrk_cjBtn = $('#d5f20004-634e-4c4c-842a-2cd73aebc03d');
+			jxc_kfrk_cjBtn.linkbutton('disable');
+
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/kfrkAction!cjKfrk.action',
+				data : {
+					kfrklsh : row.kfrklsh,
+					bmbh: did,
+					lxbh: lx,
+					menuId : menuId,
+					bz : bz,
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					if(d.success) {
+						kfrk_dg.datagrid('reload');
+						kfrk_dg.datagrid('unselectAll');
+					}
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+				},
+				complete: function(){
+					//MaskUtil.unmask();
+					jxc_kfrk_cjBtn.linkbutton('enable');
+				}
+			});
+		}
+	});
 }
 
 function printKfrk(){
@@ -1139,7 +1158,7 @@ function searchYwrkInKfrk(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('gysbh', 'gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td><input name="gysmc" readonly="readonly" size="50"></td>
 						<th>仓库</th><td><input id="jxc_kfrk_ckId" name="ckId" size="8"></td>
 					</tr>

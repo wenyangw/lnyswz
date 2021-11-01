@@ -1,11 +1,10 @@
 package lnyswz.jxc.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
+
+import lnyswz.jxc.model.*;
+import lnyswz.jxc.util.Constant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,6 @@ import org.springframework.stereotype.Service;
 import lnyswz.common.bean.DataGrid;
 import lnyswz.common.dao.BaseDaoI;
 import lnyswz.jxc.bean.Gys;
-import lnyswz.jxc.model.TDepartment;
-import lnyswz.jxc.model.TGys;
-import lnyswz.jxc.model.TGysDet;
-import lnyswz.jxc.model.TOperalog;
 import lnyswz.jxc.service.GysServiceI;
 
 @Service("gysService")
@@ -25,6 +20,7 @@ public class GysServiceImpl implements GysServiceI {
 	private BaseDaoI<TGys> gysDao;
 	private BaseDaoI<TGysDet> gysdetDao;
 	private BaseDaoI<TDepartment> depDao;
+	private BaseDaoI<TYfzz> yfzzDao;
 	private BaseDaoI<TOperalog> opeDao;
 
 	/**
@@ -238,6 +234,33 @@ public class GysServiceImpl implements GysServiceI {
 		dg.setRows(changeGys(gysDao.find(hql, params, gys.getPage(), gys.getRows())));
 		return dg;
 	}
+
+	@Override
+	public Gys getGysSx(Gys gys) {
+		Gys g = new Gys();
+		g.setGysbh(gys.getGysbh());
+		TGys tGys = gysDao.load(TGys.class, gys.getGysbh());
+		g.setGysmc(tGys.getGysmc());
+
+		BigDecimal yfje = YfzzServiceImpl.getYfje(gys.getDepId(), gys.getGysbh(), null, yfzzDao);
+		g.setYfje(yfje);
+
+		String hql = "from TGysDet t where t.TDepartment.id = :depId and t.TGys.gysbh = :gysbh";
+		Map<String, Object> params = new HashMap<>();
+		params.put("depId", gys.getDepId());
+		params.put("gysbh", gys.getGysbh());
+		TGysDet tGysDet = gysdetDao.get(hql, params);
+
+		if (tGysDet == null) {
+			return g;
+		}
+
+		g.setSxzq(tGysDet.getSxzq());
+		g.setSxje(tGysDet.getSxje());
+
+		return g;
+
+	}
 	
 
 	@Autowired
@@ -254,6 +277,11 @@ public class GysServiceImpl implements GysServiceI {
 	public void setDepDao(BaseDaoI<TDepartment> depDao) {
 		this.depDao = depDao;
 	}
+	@Autowired
+	public void setYfzzDao(BaseDaoI<TYfzz> yfzzDao) {
+		this.yfzzDao = yfzzDao;
+	}
+
 	@Autowired
 	public void setOpeDao(BaseDaoI<TOperalog> opeDao) {
 		this.opeDao = opeDao;

@@ -451,7 +451,7 @@ public class CgjhServiceImpl implements CgjhServiceI {
 	@Override
 	public DataGrid detDatagrid(Cgjh cgjh) {
 		DataGrid datagrid = new DataGrid();
-		String hql = "from TCgjhDet t where t.TCgjh.cgjhlsh = :cgjhlsh";
+		String hql = "from TCgjhDet t where t.TCgjh.cgjhlsh = :cgjhlsh order by spbh";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cgjhlsh", cgjh.getCgjhlsh());
 		List<TCgjhDet> l = detDao.find(hql, params);

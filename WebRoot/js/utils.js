@@ -389,6 +389,26 @@ lnyw.stringToList = function(value) {
 	}
 };
 
+lnyw.getObjIndexByValue = function(array, param) {
+	var prop = Object.keys(param)[0];
+	var value = param[prop];
+	var i = -1;
+
+	$.each(array, function(index, e) {
+		if ((typeof e[prop] === 'number' && e[prop] === value) || (typeof e[prop] != 'number' && e[prop].indexOf(value) >= 0)) {
+			i = index;
+			return;
+		}
+	});
+	return i;
+
+	// return array.findIndex(function(e){ e[prop] === value});
+
+	// return $.grep(array, function(e){ e[prop] === value });
+
+	// return array ? array.map((x) => { return x[prop] }).indexOf(value) : -1
+}
+
 //选择combobox第几项
 $.extend($.fn.combobox.methods, {
     selectedIndex: function (jq, index) {

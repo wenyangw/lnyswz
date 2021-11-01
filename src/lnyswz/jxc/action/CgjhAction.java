@@ -236,7 +236,7 @@ public class CgjhAction extends BaseAction implements ModelDriven<Cgjh>{
 		Export.print(dg, Util.getReportName(cgjh.getBmbh(), "report_cgjh.json"));
 		//Export.print(dg, Constant.REPORT_CGJH.get(cgjh.getBmbh()));
 	}
-	
+
 	public void export() {
 		User user = (User) session.get("user");
 		cgjh.setCreateName(user.getRealName());

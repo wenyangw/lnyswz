@@ -13,14 +13,22 @@ var NEED_AUDIT = '1';
 var AUDIT_REFUSE = '9';
 
 //销售加价率
-var NEED_AUDIT_XSJJ = '0'
+var NEED_AUDIT_XSJJ = '0';
+
+// 库房批次
+var SPPC = '2019-01-01';
 
 //记录打印记录类型
 var PRINT_TYPE_XSTH_BGY = '81';
 var PRINT_TYPE_XSTH = '82';
 var PRINT_TYPE_XSTH_YW = '83';
 
+// 业务入库类型
+var RKLX_ZS = '01';
+
 var JS_PATH = 'C:/lnyswz/';
+
+
 
 jxc.getJsFile = function(type){
     switch(type){
@@ -241,13 +249,15 @@ jxc.auditLevelCgjh = function(bmbh){
 		return level;
 		break;
 	case '04':
-		level['first'] = '2';
-		level['second'] = '0';
+		level['first'] = '1';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '05':
 		level['first'] = '1';
-		level['second'] = '0';
+		level['second'] = '2';
+        level['third'] = '3';
 		return level;
 		break;
 	case '07':
@@ -315,12 +325,29 @@ jxc.getAuditLevelCgjh = function(bmbh, hjje){
 	switch(bmbh){
 		case '01':
 			//文达印刷金额大于30000元二级审批，主管经理
-			if(hjje <= 30000){
+			if (hjje <= 30000) {
 				return jxc.auditLevelCgjh(bmbh)['first'];
-			}else{
+			}
+			if (hjje > 30000) {
 				return jxc.auditLevelCgjh(bmbh)['second'];
 			}
 			break;
+        case '04':
+        case '05':
+            // 文达纸业、出版教材
+            // 金额小于10万，一级审批，部门经理
+            // 金额大于10万小于30万，二级审批，主管经理
+            // 金额大于30万，三级审批，总经理
+            if (hjje <= 100000) {
+                return jxc.auditLevelCgjh(bmbh)['first'];
+            }
+            if (hjje > 100000) {
+                return jxc.auditLevelCgjh(bmbh)['second'];
+            }
+            // if (hjje > 300000) {
+            //     return jxc.auditLevelCgjh(bmbh)['third'];
+            // }
+            break;
 		default:
 			return jxc.auditLevelCgjh(bmbh)['first'];
 	}
@@ -912,6 +939,45 @@ jxc.spQuery = function(value, depId, ckId, urlJsp, urlAction, focusTarget, xsdjW
 		},
 	});
 };
+
+jxc.gysLoad = function(gysbh, gysmc){
+	const gysbh_t = $('input[name=' + gysbh + ']');
+	const gysmc_t = $('input[name=' + gysmc + ']');
+	switch(event.keyCode){
+		case 27:
+			// jxc.query('供应商检索', $('input[name=jxc_ywrk_gysbh]'), $('input[name=jxc_ywrk_gysmc]'), '',
+			jxc.query('供应商检索', gysbh_t, gysmc_t, '',
+				lnyw.bp() + '/jxc/query.jsp',
+				lnyw.bp() + '/jxc/gysAction!gysDg.action');
+			break;
+		case 9:
+			break;
+		default:
+			if(gysbh_t.val().trim().length == 0){
+				gysc_t.val('');
+			}
+			if(gysbh_t.val().trim().length == 8){
+				$.ajax({
+					url: lnyw.bp() + '/jxc/gysAction!loadGys.action',
+					async: false,
+					context:this,
+					data:{
+						gysbh: gysbh_t.val().trim(),
+					},
+					dataType:'json',
+					success:function(data){
+						if(data.success){
+							//设置信息字段值
+							gysmc_t.val(data.obj.gysmc);
+						}else{
+							$.messager.alert('提示', '供应商信息不存在！', 'error');
+						}
+					}
+				});
+			}
+			break;
+	}
+}
 
 //商品信息快速查询
 jxc.spHsQuery = function(value, depId, urlJsp, urlAction, setMethod, focusTarget){

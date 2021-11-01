@@ -50,13 +50,12 @@ public class XskpServiceImpl implements XskpServiceI {
 	private BaseDaoI<TOperalog> operalogDao;
 	
 
-	@Override
-	public Xskp save(Xskp xskp) {
+
+	public Xskp save2(Xskp xskp) {
 		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
 		//获取前台传递的销售提货记录号
 		String xsthDetIds = xskp.getXsthDetIds();
 		BigDecimal hjje = xskp.getHjje().add(xskp.getHjse());
-
 		//是否需要生成销售提货
 		boolean needXsth = "1".equals(xskp.getNeedXsth());
 		
@@ -158,14 +157,6 @@ public class XskpServiceImpl implements XskpServiceI {
 				tXskp.setHkje(hjje.subtract(hkje));
 				tXskp.setYfje(hjje.subtract(hkje));
 				tXskp.setIsHk("0");
-//				BigDecimal hkje = BigDecimal.ZERO;
-//				if(hjje.compareTo(ysje.abs()) > 0){
-//					hkje = ysje.abs();
-//				}else{
-//					hkje = hjje;
-//				}
-//				tXskp.setHkje(hkje);
-//				tXskp.setYfje(hkje);
 			}
 			if(xsthDetIds == null || xsthDetIds.equals("")){
 				YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
@@ -355,6 +346,333 @@ public class XskpServiceImpl implements XskpServiceI {
 		OperalogServiceImpl.addOperalog(xskp.getCreateId(), xskp.getBmbh(), xskp.getMenuId(), tXskp.getXskplsh(), 
 				"生成销售开票单", operalogDao);
 		
+		Xskp rXskp = new Xskp();
+		rXskp.setXskplsh(lsh);
+		rXskp.setFplxId(tXskp.getFplxId());
+		return rXskp;
+	}
+
+	@Override
+	public Xskp save(Xskp xskp) {
+		String lsh = LshServiceImpl.updateLsh(xskp.getBmbh(), xskp.getLxbh(), lshDao);
+
+
+
+		TXskp tXskp = new TXskp();
+		BeanUtils.copyProperties(xskp, tXskp);
+		tXskp.setCreateTime(new Date());
+		tXskp.setCreateName(xskp.getCreateName());
+		tXskp.setXskplsh(lsh);
+		tXskp.setIsCj("0");
+		tXskp.setYfje(BigDecimal.ZERO);
+		tXskp.setXslxId("01");
+		tXskp.setXslxmc("销售");
+		tXskp.setNeedAudit("0");
+		tXskp.setIsAudit("0");
+		tXskp.setIsHk("0");
+
+		String bmmc = depDao.get(TDepartment.class, xskp.getBmbh()).getDepName();
+		tXskp.setBmmc(bmmc);
+
+		Department dep = new Department();
+		dep.setId(xskp.getBmbh());
+		dep.setDepName(bmmc);
+
+		Ck ck = new Ck();
+		ck.setId(xskp.getCkId());
+		ck.setCkmc(xskp.getCkmc());
+
+		Kh kh = new Kh();
+		kh.setKhbh(xskp.getKhbh());
+		kh.setKhmc(xskp.getKhmc());
+
+		BigDecimal spje = BigDecimal.ZERO;
+		BigDecimal spse = BigDecimal.ZERO;
+		BigDecimal hjsl = BigDecimal.ZERO;
+
+		//是否需要生成销售提货
+		boolean needXsth = "1".equals(xskp.getNeedXsth());
+
+		//获取前台传递的销售提货记录号
+		String xsthDetIds = xskp.getXsthDetIds();
+		Set<TXsthDet> xsthDets = null;
+		Set<String> thdlshs = null;
+		int[] intDetIds = null;
+		//如果从销售提货生成的销售开票，进行关联
+		if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
+			tXskp.setFromTh("1");
+
+			String[] strDetIds = xsthDetIds.split(",");
+			intDetIds = new int[strDetIds.length];
+			thdlshs = new HashSet<String>();
+			xsthDets = new HashSet<TXsthDet>();
+			int i = 0;
+			for(String detId : strDetIds){
+				intDetIds[i] = Integer.valueOf(detId);
+				i++;
+			}
+			Arrays.sort(intDetIds);
+		}else{
+			tXskp.setFromTh("0");
+		}
+
+		//生成销售提货表头数据
+		TXsth tXsth = null;
+		//生成销售提货明细集合
+		Set<TXsthDet> tXsthDets = null;
+		if(needXsth){
+			tXskp.setIsTh("1");
+
+			tXsth = new TXsth();
+			BeanUtils.copyProperties(tXskp, tXsth);
+			tXsth.setXsthlsh(LshServiceImpl.updateLsh(xskp.getBmbh(), Constant.XSTH_LX, lshDao));
+			tXsth.setToFp("1");
+			tXsth.setFromFp("1");
+			tXsth.setIsKp("1");
+			tXsth.setLocked("0");
+			tXsth.setIsCancel("0");
+			tXsth.setIsFh("1".equals(xskp.getIsFh()) ? "1" : "0");
+			tXsth.setIsFhth("0");
+			tXsth.setIsLs("0");
+			tXsth.setFromRk("0");
+			tXsth.setOut("0");
+			tXsth.setSended("0");
+			tXsth.setIsFp("0");
+//			tXsth.setHjje(hjje);
+			tXsth.setNeedAuditXsjj("0");
+			tXsth.setIsAuditXsjj("0");
+			tXsth.setIsRe("0");
+
+			tXsthDets = new HashSet<TXsthDet>();
+		}else{
+			tXskp.setIsTh("0");
+		}
+
+		Fh fh = null;
+		if("1".equals(xskp.getIsFh()) && (xsthDetIds == null || xsthDetIds.equals(""))) {
+			fh = new Fh();
+			fh.setId(xskp.getFhId());
+			fh.setFhmc(xskp.getFhmc());
+		}
+
+		//处理商品明细
+		Set<TXskpDet> tDets = new HashSet<TXskpDet>();
+		ArrayList<XskpDet> xskpDets = JSON.parseObject(xskp.getDatagrid(), new TypeReference<ArrayList<XskpDet>>(){});
+		TXskpDet tDet = null;
+		Sp sp = null;
+		TXsthDet tXsthDet = null;
+		TXsthDet xsthDet = null;
+		for(XskpDet xskpDet : xskpDets){
+			tDet = new TXskpDet();
+			BeanUtils.copyProperties(xskpDet, tDet);
+			if("".equals(xskpDet.getCjldwId()) || xskpDet.getCjldwId() == null || null == xskpDet.getZhxs()){
+				tDet.setCdwdj(BigDecimal.ZERO);
+				tDet.setCdwsl(BigDecimal.ZERO);
+				tDet.setZhxs(BigDecimal.ZERO);
+			}else{
+				if(xskpDet.getZhxs() != null && xskpDet.getZhxs().compareTo(BigDecimal.ZERO) == 0){
+					tDet.setCdwdj(BigDecimal.ZERO);
+					tDet.setCdwsl(BigDecimal.ZERO);
+				}
+			}
+			tDet.setLastThsl(BigDecimal.ZERO);
+			tDet.setcLastThsl(BigDecimal.ZERO);
+			tDet.setThsl(BigDecimal.ZERO);
+			tDet.setTXskp(tXskp);
+
+			spje = spje.add(tDet.getSpje());
+			spse = spse.add(tDet.getSpse());
+
+			sp = new Sp();
+			BeanUtils.copyProperties(xskpDet, sp);
+
+			//获得单位成本
+			BigDecimal dwcb = YwzzServiceImpl.getDwcb(xskp.getBmbh(), xskpDet.getSpbh(), ywzzDao);
+			tDet.setXscb(dwcb.multiply(xskpDet.getZdwsl()));
+
+			tDets.add(tDet);
+
+			//生成销售提货明细数据
+			if(needXsth){
+				tDet.setLastThsl(xskpDet.getZdwsl());
+				tDet.setThsl(xskpDet.getZdwsl());
+
+				tXsthDet = new TXsthDet();
+				BeanUtils.copyProperties(tDet, tXsthDet, new String[]{"id"});
+				tXsthDet.setCksl(BigDecimal.ZERO);
+				tXsthDet.setCcksl(BigDecimal.ZERO);
+				tXsthDet.setKpsl(tDet.getZdwsl());
+				tXsthDet.setCkpsl(tDet.getZdwsl());
+				tXsthDet.setThsl(BigDecimal.ZERO);
+				//tXsthDet.setLastRksl(BigDecimal.ZERO);
+				//发票单价不含税，提货单单价含税
+				tXsthDet.setZdwdj(tDet.getZdwdj().multiply(new BigDecimal(1).add(Constant.SHUILV)));
+				//提货单只有金额字段，要将发票中金额与税额相加
+				tXsthDet.setSpje(tDet.getSpje().add(tDet.getSpse()));
+				tXsthDet.setDwcb(dwcb.multiply(new BigDecimal(1).add(Constant.SHUILV)));
+				tXsthDet.setQrsl(BigDecimal.ZERO);
+				tXsthDet.setCompleted("0");
+				tXsthDet.setResl(BigDecimal.ZERO);
+				tXsthDets.add(tXsthDet);
+				tXsthDet.setTXsth(tXsth);
+				hjsl = hjsl.add(tDet.getCdwsl());
+			}
+
+			//更新业务总账
+			YwzzServiceImpl.updateYwzzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje(), tDet.getSpse(), tDet.getXscb(), Constant.UPDATE_CK, ywzzDao);
+
+			//更新分户
+			if("1".equals(xskp.getIsFh()) && (xsthDetIds == null || xsthDetIds.equals(""))){
+				FhzzServiceImpl.updateFhzzSl(sp, dep, fh, tDet.getZdwsl(), Constant.UPDATE_RK, fhzzDao);
+			}
+
+			//从销售提货生成销售开票，更新临时总账
+			if(xsthDetIds != null && xsthDetIds.trim().length() > 0){
+				LszzServiceImpl.updateLszzSl(sp, dep, ck, tDet.getZdwsl(), tDet.getCdwsl(), tDet.getSpje().add(tDet.getSpse()), Constant.UPDATE_CK, lszzDao);
+			}
+
+//			TXsthDet tXsthDet = xsthDetDao.load(TXsthDet.class, Integer.valueOf(detId));
+			if(intDetIds != null){
+				BigDecimal kpsl = xskpDet.getZdwsl();
+				BigDecimal ckpsl = BigDecimal.ZERO;
+				if(xskpDet.getCdwsl() != null){
+					ckpsl = xskpDet.getCdwsl();
+				}
+				for(int detId : intDetIds){
+					xsthDet = xsthDetDao.load(TXsthDet.class, detId);
+					thdlshs.add(xsthDet.getTXsth().getXsthlsh());
+					if(xskpDet.getSpbh().equals(xsthDet.getSpbh())){
+						BigDecimal wksl = xsthDet.getZdwsl().subtract(xsthDet.getKpsl());
+						BigDecimal cwksl = xsthDet.getCdwsl().subtract(xsthDet.getCkpsl());
+						xsthDets.add(xsthDet);
+						if(kpsl.compareTo(wksl) == 1){
+							xsthDet.setKpsl(xsthDet.getKpsl().add(wksl));
+							xsthDet.setCkpsl(xsthDet.getCkpsl().add(cwksl));
+							kpsl = kpsl.subtract(wksl);
+							ckpsl = ckpsl.subtract(cwksl);
+						}else{
+							xsthDet.setKpsl(xsthDet.getKpsl().add(kpsl));
+							xsthDet.setCkpsl(xsthDet.getCkpsl().add(ckpsl));
+							tDet.setLastThsl(kpsl);
+							tDet.setcLastThsl(ckpsl);
+							break;
+						}
+					}
+				}
+			}
+
+		}
+
+		BigDecimal hjje = spje.add(spse);
+
+		tXskp.setHjje(spje);
+		tXskp.setHjse(spse);
+		if(tXskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+			tXskp.setHkje(BigDecimal.ZERO);
+		}else{
+			tXskp.setHkje(hjje);
+		}
+
+
+		//授信客户，并且未从销售提货导入，更新应收
+		//if("1".equals(xskp.getIsSx())){
+		if(xskp.getJsfsId().equals(Constant.XSKP_JSFS_QK)){
+			User ywy = new User();
+			ywy.setId(xskp.getYwyId());
+			ywy.setRealName(xskp.getYwymc());
+			// 正数销售
+			if (hjje.compareTo(BigDecimal.ZERO) > 0) {
+				BigDecimal ysje = YszzServiceImpl.getYsjeNoLs(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId(), null, yszzDao);
+				//有预付金额
+				if (ysje.compareTo(BigDecimal.ZERO) < 0) {
+					List<Xshk> xshks = getXshkWithYfje(xskp.getBmbh(), xskp.getKhbh(), xskp.getYwyId());
+					//                Set<THkKp> tHkKps = new HashSet<THkKp>();
+					THkKp tHkKp = null;
+					TXshk tXshk = null;
+					BigDecimal hkje = hjje;
+					for (Xshk xshk : xshks) {
+						if (hkje.compareTo(BigDecimal.ZERO) == 0) {
+							break;
+						}
+						tXshk = xshkDao.get(TXshk.class, xshk.getXshklsh());
+
+						tHkKp = new THkKp();
+						tHkKp.setXskplsh(lsh);
+						tHkKp.setTXshk(tXshk);
+						tHkKp.setIsYf("1");
+						if (hkje.compareTo(xshk.getYfje()) > 0) {
+							tHkKp.setHkje(xshk.getYfje());
+							tXshk.setYfje(BigDecimal.ZERO);
+							hkje = hkje.subtract(xshk.getYfje());
+						} else {
+							tHkKp.setHkje(hkje);
+							tXshk.setYfje(xshk.getYfje().subtract(hkje));
+							hkje = BigDecimal.ZERO;
+						}
+
+
+						//                    tHkKps.add(tHkKp);
+						hkKpDao.save(tHkKp);
+					}
+
+					tXskp.setHkje(hjje.subtract(hkje));
+					tXskp.setYfje(hjje.subtract(hkje));
+					tXskp.setIsHk("0");
+				}
+
+				if (xsthDetIds == null || xsthDetIds.equals("")) {
+					YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+				} else {
+					//YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+
+					//第三方开票要处理两个客户的数据
+					if (!xskp.getKhbh().equals(xskp.getXsthKhbh())) {
+						//yszz中kpje为新客户
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP, yszzDao);
+
+						//yszz中thje为原客户
+						TKh yTKh = khDao.load(TKh.class, xskp.getXsthKhbh());
+						kh.setKhbh(xskp.getXsthKhbh());
+						kh.setKhmc(yTKh.getKhmc());
+
+						//暂不考虑不同业务员的第三方开票
+						//TUser yUser = userDao.load(TUser.class, xskp.getXsthYwyId());
+						//ywy.setId(xskp.getXsthYwyId());
+						//ywy.setRealName(yUser.getRealName());
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje.negate(), Constant.UPDATE_YS_TH, yszzDao);
+					} else {
+						YszzServiceImpl.updateYszzJe(dep, kh, ywy, hjje, Constant.UPDATE_YS_KP_TH, yszzDao);
+					}
+				}
+			} else {
+				tXskp.setHkje(hjje);
+			}
+		}
+
+		tXskp.setTXsths(xsthDets);
+		tXskp.setTXskpDets(tDets);
+		if(thdlshs != null){
+			tXskp.setBz(xskp.getBz() + thdlshs.toString());
+		}
+
+
+		//保存销售提货数据
+		if(needXsth){
+			tXskp.setTXsths(tXsthDets);
+			tXsth.setHjje(hjje);
+			tXsth.setHjsl(hjsl);
+			tXsth.setTXsthDets(tXsthDets);
+			xsthDao.save(tXsth);
+
+			Export.createCode(tXsth.getXsthlsh());
+		}
+
+		//保存单据
+		xskpDao.save(tXskp);
+
+		OperalogServiceImpl.addOperalog(xskp.getCreateId(), xskp.getBmbh(), xskp.getMenuId(), tXskp.getXskplsh(),
+				"生成销售开票单", operalogDao);
+
 		Xskp rXskp = new Xskp();
 		rXskp.setXskplsh(lsh);
 		rXskp.setFplxId(tXskp.getFplxId());
@@ -953,7 +1271,7 @@ public class XskpServiceImpl implements XskpServiceI {
 			//r += spmc;
 			r.append(spmc);
 		}
-		if(spcd != null){	
+		if(spcd != null && (!"NULL".equals(spcd) && !"".equals(spcd.trim()))){
 			//r += "(" + spcd + ")";
 			r.append("(" + spcd + ")");
 		}
@@ -968,7 +1286,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		}else{
 			r += spmc;
 		}
-		if(spcd != null && spcd.length() > 0){	
+		if(spcd != null && spcd.length() > 0 && (!"NULL".equals(spcd) && !"".equals(spcd.trim()))){
 			r += "(" + spcd + ")";
 		}
 		if(sppp != null && sppp.length() > 0){	
@@ -1409,7 +1727,7 @@ public class XskpServiceImpl implements XskpServiceI {
 		List<TXskpDet> tDets = detDao.find(hql, params);
 		
 		List<XskpDet> nl = new ArrayList<XskpDet>();
-		
+
 		for(TXskpDet tDet : tDets){
 			XskpDet det = new XskpDet();
 			BeanUtils.copyProperties(tDet, det, new String[]{"id"});
@@ -1594,6 +1912,13 @@ public class XskpServiceImpl implements XskpServiceI {
 
         return xshks;
     }
+
+	@Override
+	public Xskp getXskp(Xskp xskp){
+		TXskp tXskp = xskpDao.load(TXskp.class, xskp.getXskplsh());
+		xskp.setIsCj(tXskp.getIsCj());
+		return xskp;
+	}
 	
 	
 	@Autowired

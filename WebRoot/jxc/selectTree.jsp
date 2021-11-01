@@ -94,7 +94,7 @@ $(function(){
 			}
 			//循环data数据 拼写字符串
 			if(isNeedDepTree=="true"){
-				if(did>='09'){
+				if(did>='09' && did != '21'){
 					star += '<tr>';
 					star += '<th   class="query_field" align="left">部门 </th>';
 					star += '<td   class="query_ope" align="left"> </td><td  class="query_int" >&#12288;<input id="select_tree_dep_' + query  + '" class="inputval"  name="select_tree_depName" style="width:104px;" ></td>';
@@ -168,7 +168,7 @@ $(function(){
 // 		openSelectDid='y';
 
 	if(isNeedDepTree=="true"){
-		if(did >= '09'){
+		if(did >= '09' && did != '21'){
 			$('#select_tree_dep_' + query).combobox({
 					    url:'${pageContext.request.contextPath}/admin/departmentAction!listYws.action?id=' + did ,
 					    valueField:'id',

@@ -1449,42 +1449,42 @@ function setValueBySpbh(rowData){
 			});
 }
 
-function gysLoad(){
-	switch(event.keyCode){
-	case 27:
-		jxc.query('供应商检索', $('input[name=jxc_cgjh_gysbh]'), $('input[name=jxc_cgjh_gysmc]'), '',
-				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
-		break;
-	case 9:
-		break;
-	default:
-		if($('input[name=jxc_cgjh_gysbh]').val().trim().length == 0){
-			$('input[name=jxc_cgjh_gysmc]').val('');
-		}
-		if($('input[name=jxc_cgjh_gysbh]').val().trim().length == 8){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
-				async: false,
-				context:this,
-				data:{
-					gysbh: $('input[name=jxc_cgjh_gysbh]').val().trim(),
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						//设置信息字段值
-						$('input[name=jxc_cgjh_gysmc]').val(data.obj.gysmc);
-						$('input[name=ywyId]').focus();
-					}else{
-						$.messager.alert('提示', '供应商信息不存在！', 'error');
-					}
-				}
-			});
-		}
-		break;
-	}
-}
+<%--function gysLoad(){--%>
+<%--	switch(event.keyCode){--%>
+<%--	case 27:--%>
+<%--		jxc.query('供应商检索', $('input[name=jxc_cgjh_gysbh]'), $('input[name=jxc_cgjh_gysmc]'), '',--%>
+<%--				'${pageContext.request.contextPath}/jxc/query.jsp',--%>
+<%--				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');--%>
+<%--		break;--%>
+<%--	case 9:--%>
+<%--		break;--%>
+<%--	default:--%>
+<%--		if($('input[name=jxc_cgjh_gysbh]').val().trim().length == 0){--%>
+<%--			$('input[name=jxc_cgjh_gysmc]').val('');--%>
+<%--		}--%>
+<%--		if($('input[name=jxc_cgjh_gysbh]').val().trim().length == 8){--%>
+<%--			$.ajax({--%>
+<%--				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',--%>
+<%--				async: false,--%>
+<%--				context:this,--%>
+<%--				data:{--%>
+<%--					gysbh: $('input[name=jxc_cgjh_gysbh]').val().trim(),--%>
+<%--				},--%>
+<%--				dataType:'json',--%>
+<%--				success:function(data){--%>
+<%--					if(data.success){--%>
+<%--						//设置信息字段值--%>
+<%--						$('input[name=jxc_cgjh_gysmc]').val(data.obj.gysmc);--%>
+<%--						$('input[name=ywyId]').focus();--%>
+<%--					}else{--%>
+<%--						$.messager.alert('提示', '供应商信息不存在！', 'error');--%>
+<%--					}--%>
+<%--				}--%>
+<%--			});--%>
+<%--		}--%>
+<%--		break;--%>
+<%--	}--%>
+<%--}--%>
 
 
 //////////////////////////////////////////////以上为商品列表处理代码
@@ -1566,7 +1566,7 @@ function exportCgjh(){
 					var data = {
 							cgjhlsh : row.cgjhlsh,
 							bmbh: cgjh_did,
-							//type: 'rtf'
+							type: 'rtf'
 						};
 					jxc.export('${pageContext.request.contextPath}', '/jxc/cgjhAction!export.action', data);
 				}
@@ -1872,7 +1872,7 @@ function lockSpInCgjh(){
 		if(cgjh_detRow != null){
 			if(cgjh_detRow.isLock == '0'){
 				if(cgjh_detRow.isBack == '0'){
-					if(cgjh_detRow.zdwyrsl != undefined){
+					// if(cgjh_detRow.zdwyrsl != undefined){
 						$.messager.confirm('请确认', '您是否要锁定选中的采购计划商品品种？', function(r) {
 							if (r) {
 								$.ajax({
@@ -1901,9 +1901,9 @@ function lockSpInCgjh(){
 								});
 							}
 						});
-					}else{
-						$.messager.alert('警告', '选择的商品记录还未到货，只能做取消操作，请重新选择！',  'warning');
-					}
+					// }else{
+					// 	$.messager.alert('警告', '选择的商品记录还未到货，只能做取消操作，请重新选择！',  'warning');
+					// }
 				}else{
 					$.messager.alert('警告', '选择的商品记录已被取消，请重新选择！',  'warning');
 				}
@@ -2291,7 +2291,7 @@ function createCgjhFromCgjh(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="jxc_cgjh_gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('jxc_cgjh_gysbh', 'jxc_cgjh_gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td class="read"><input name="jxc_cgjh_gysmc" readonly="readonly" size="50"></td>
 <!-- 						<th>业务员</th><td><input name="ywyId"></td> -->
 						<th>结算方式</th><td><input id="jxc_cgjh_jsfsId" name="jsfsId" size="8"></td>

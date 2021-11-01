@@ -535,42 +535,42 @@ function setValueBySpbh(rowData){
 			});
 }
 
-function gysLoad(){
-	switch(event.keyCode){
-	case 27:
-		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',
-				'${pageContext.request.contextPath}/jxc/query.jsp',
-				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');
-		break;
-	case 9:
-		break;
-	default:
-		if($('input[name=gysbh]').val().trim().length == 0){
-			$('input[name=gysmc]').val('');
-		}
-		if($('input[name=gysbh]').val().trim().length == 8){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',
-				async: false,
-				context:this,
-				data:{
-					gysbh: $('input[name=gysbh]').val().trim(),
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.success){
-						//设置信息字段值
-						$('input[name=gysmc]').val(data.obj.gysmc);
-						$('input[name=shry]').focus();
-					}else{
-						$.messager.alert('提示', '供应商信息不存在！', 'error');
-					}
-				}
-			});
-		}
-		break;
-	}
-}
+<%--function gysLoad(){--%>
+<%--	switch(event.keyCode){--%>
+<%--	case 27:--%>
+<%--		jxc.query('供应商检索', $('input[name=gysbh]'), $('input[name=gysmc]'), '',--%>
+<%--				'${pageContext.request.contextPath}/jxc/query.jsp',--%>
+<%--				'${pageContext.request.contextPath}/jxc/gysAction!gysDg.action');--%>
+<%--		break;--%>
+<%--	case 9:--%>
+<%--		break;--%>
+<%--	default:--%>
+<%--		if($('input[name=gysbh]').val().trim().length == 0){--%>
+<%--			$('input[name=gysmc]').val('');--%>
+<%--		}--%>
+<%--		if($('input[name=gysbh]').val().trim().length == 8){--%>
+<%--			$.ajax({--%>
+<%--				url:'${pageContext.request.contextPath}/jxc/gysAction!loadGys.action',--%>
+<%--				async: false,--%>
+<%--				context:this,--%>
+<%--				data:{--%>
+<%--					gysbh: $('input[name=gysbh]').val().trim(),--%>
+<%--				},--%>
+<%--				dataType:'json',--%>
+<%--				success:function(data){--%>
+<%--					if(data.success){--%>
+<%--						//设置信息字段值--%>
+<%--						$('input[name=gysmc]').val(data.obj.gysmc);--%>
+<%--						$('input[name=shry]').focus();--%>
+<%--					}else{--%>
+<%--						$.messager.alert('提示', '供应商信息不存在！', 'error');--%>
+<%--					}--%>
+<%--				}--%>
+<%--			});--%>
+<%--		}--%>
+<%--		break;--%>
+<%--	}--%>
+<%--}--%>
 
 function loadKfrk() {
     if ($('input[name=bgrk_lsh]').val().trim().length == 12){
@@ -682,7 +682,7 @@ function searchBgrk(){
 					</tr>
 					<tr>
 						<th>供应商编码</th><td><input name="gysbh" class="easyui-validatebox"
-							data-options="validType:['mustLength[8]','integer']" onkeyup="gysLoad()" size="8"></td>
+							data-options="validType:['mustLength[8]','integer']" onkeyup="jxc.gysLoad('gysbh', 'gysmc')" size="8"></td>
 						<th class="read">供应商名称</th><td><input name="gysmc" readonly="readonly" size="50"></td>
 					</tr>
 					<tr>

@@ -151,6 +151,10 @@ public class GysAction extends BaseAction implements ModelDriven<Gys> {
 		writeJson(gysService.gysDg(gys));
 	}
 
+	public void getGysSx() {
+		writeJson(gysService.getGysSx(gys));
+	}
+
 	public Gys getModel() {
 		return gys;
 	}

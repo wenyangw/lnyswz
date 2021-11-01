@@ -24,6 +24,7 @@ public class Ywdb{
 	private String cgxqlsh;
 	
 	private String search;
+	private String fromOther;
 	
 	private String spbh;
 	private String ckId;
@@ -180,6 +181,14 @@ public class Ywdb{
 
 	public void setSearch(String search) {
 		this.search = search;
+	}
+
+	public String getFromOther() {
+		return fromOther;
+	}
+
+	public void setFromOther(String fromOther) {
+		this.fromOther = fromOther;
 	}
 
 	public String getSpbh() {

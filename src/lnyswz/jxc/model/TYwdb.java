@@ -42,6 +42,7 @@ public class TYwdb implements java.io.Serializable {
 	private Integer cjId;
 	private String cjName;
 	private String cgxqlsh;
+	private String kfdblsh;
 	
 	private Set<TYwdbDet> TYwdbDets = new HashSet<TYwdbDet>(0);
 	
@@ -49,8 +50,8 @@ public class TYwdb implements java.io.Serializable {
 	}
 
 	public TYwdb(String ywdblsh, Date createTime, int createId, String createName, String bmbh, String bmmc, String ckIdF, String ckmcF, 
-			String ckIdT, String ckmcT, String bz, String cjYwdblsh, String isCj, Date cjTime, Integer cjId, String cjName,	String cgxqlsh, 
-			Set<TYwdbDet> TYwdbDets) {
+			String ckIdT, String ckmcT, String bz, String cjYwdblsh, String isCj, Date cjTime, Integer cjId, String cjName,	String cgxqlsh,
+			String kfdblsh,	Set<TYwdbDet> TYwdbDets) {
 		this.ywdblsh = ywdblsh;
 		this.createTime = createTime;
 		this.createId = createId;
@@ -68,6 +69,7 @@ public class TYwdb implements java.io.Serializable {
 		this.cjId = cjId;
 		this.cjName = cjName;
 		this.cgxqlsh = cgxqlsh;
+		this.kfdblsh = kfdblsh;
 		this.TYwdbDets = TYwdbDets;
 	}
 
@@ -225,6 +227,15 @@ public class TYwdb implements java.io.Serializable {
 
 	public void setCgxqlsh(String cgxqlsh) {
 		this.cgxqlsh = cgxqlsh;
+	}
+
+	@Column(name = "kfdblsh", length = 12)
+	public String getKfdblsh() {
+		return kfdblsh;
+	}
+
+	public void setKfdblsh(String kfdblsh) {
+		this.kfdblsh = kfdblsh;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "TYwdb", cascade=CascadeType.ALL)

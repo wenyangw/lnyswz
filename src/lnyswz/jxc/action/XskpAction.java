@@ -78,10 +78,16 @@ public class XskpAction extends BaseAction implements ModelDriven<Xskp>{
 		xskp.setCjName(user.getRealName());
 		Json j = new Json();
 		try{
-			xskpService.cjXskp(xskp);		
-			//添加成功
-			j.setSuccess(true);
-			j.setMsg("冲减销售开票成功！");
+			Xskp x = xskpService.getXskp(xskp);
+			if ("1".equals(x.getIsCj())) {
+				j.setSuccess(false);
+				j.setMsg("该笔销售开票已冲减，不要重复提交!");
+			} else {
+				xskpService.cjXskp(xskp);
+				//添加成功
+				j.setSuccess(true);
+				j.setMsg("冲减销售开票成功！");
+			}
 		}catch(Exception e){
 			j.setMsg("冲减销售开票失败！");
 			e.printStackTrace();

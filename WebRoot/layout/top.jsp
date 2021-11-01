@@ -2,8 +2,12 @@
 	pageEncoding="utf-8"%>
 
 <script type="text/javascript">
+	var userId;
+	var userName;
 $(function(){
 	$('#dateShow').html(moment().format('YYYY年MM月DD日'));
+	userId = Number($('input[name="userId"]').val());
+	userName = $('span#userName').html();
 });
 function editPassword(){
 		var p = $('#top_editPasswordDialog');
@@ -71,7 +75,7 @@ function editPassword(){
  <div class="logo">
 	<div id="dateShow"></div>			 
 	<div id="menubutton" align="right">
-	 	欢迎您：${user.realName },  </font><br>
+		欢迎您：<span id="userName">${user.realName }</span>,  </font><br><input type="hidden" name="userId" value="${user.id}" />
 		<a href="#" class="easyui-menubutton" 
 			data-options="menu:'#control_panel'">功能设置</a>
 	</div>

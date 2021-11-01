@@ -1,10 +1,11 @@
+/.idea
 /.settings
 /WebRoot/WEB-INF/classes/*
 /.classpath
 /.project
 /out/
 *.xls
-/.idea/
+
 
 # resources/config.properties
 

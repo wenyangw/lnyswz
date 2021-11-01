@@ -18,5 +18,9 @@
   {
 	"bmbh" : "08",
 	"report" : "kfrk_report_s"
+  },
+  {
+    "bmbh" : "21",
+    "report" : "kfrk_report_s"
   }
 ]

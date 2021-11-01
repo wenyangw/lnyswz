@@ -17,12 +17,22 @@ public class Gys {
 	private String lxr;
 	private int sxzq;
 	private BigDecimal sxje;
+	private BigDecimal yfje;
 	private String detId;
 	private String menuId;
 	private int userId;
 	private String bh;
 	private String mc;
-	
+
+	public Gys(){
+
+	}
+
+	public Gys(String gysbh, String gysmc) {
+		this.gysbh = gysbh;
+		this.gysmc = gysmc;
+	}
+
 	// 王文阳 2013.10.08
 	// 获得供应商选择表单的查询条件
 	private String query;
@@ -137,6 +147,14 @@ public class Gys {
 
 	public void setSxje(BigDecimal sxje) {
 		this.sxje = sxje;
+	}
+
+	public BigDecimal getYfje() {
+		return yfje;
+	}
+
+	public void setYfje(BigDecimal yfje) {
+		this.yfje = yfje;
 	}
 
 	public String getDetId() {
