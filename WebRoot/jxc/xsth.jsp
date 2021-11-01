@@ -1046,7 +1046,6 @@ function saveXsth(){
 
 	// jxc_xsth_saveBtn = $(event.path[2]);
 	// jxc_xsth_saveBtn.linkbutton("disable");
-
     // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("disable");
 
 	var msg = formValid();
@@ -1191,6 +1190,8 @@ function saveXsth(){
             effectRow['needAudit'] = "0";
         }
 
+		lnyw.MaskUtil.mask('正在保存，请等待……');
+
 		//将表头内容传入后台
 		effectRow['isSx'] = '0';
 		effectRow['isZs'] = $('input[name=jxc_xsth_isZs]').is(':checked') ? '1' : '0';
@@ -1249,7 +1250,6 @@ function saveXsth(){
 		//将表格中的数据去掉最后一个空行后，转换为json格式
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
-		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xsthAction!save.action',
@@ -1289,7 +1289,7 @@ function saveXsth(){
 
 			},
 			complete: function(){
-				//MaskUtil.unmask();
+				lnyw.MaskUtil.unmask();
                 // jxc_xsth_saveBtn.linkbutton('enable');
 				// $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
                 // $("#059558fa-3db8-454c-9f2e-4e4441c12971").linkbutton("enable");
@@ -1958,53 +1958,53 @@ function cancelXsth(){
 			dataType: 'json',
 			success: function(d){
 				var row = d.obj;
-				if(row.isCancel != '1'){
-		 			if(row.locked == '0'){
-		 			    if(row.cgjhlsh == undefined){
-							if(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == ''){
-								if(row.isTh != '1'){
-									$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
-										if (r) {
-											//MaskUtil.mask('正在取消，请稍等……');
-											$.ajax({
-												url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
-												data : {
-													xsthlsh : row.xsthlsh,
-													fromOther: xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs') : '',
-													bmbh : xsth_did,
-													menuId : xsth_menuId,
-													lxbh: xsth_lx,
-												},
-												dataType : 'json',
-												success : function(d) {
-													xsth_dg.datagrid('load');
-													xsth_dg.datagrid('unselectAll');
-													$.messager.show({
-														title : '提示',
-														msg : d.msg
-													});
-												},
-												complete: function(){
-													//MaskUtil.unmask();
-												}
-											});
-										}
-									});
-								}else{
-									$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
-								}
-							}else{
-								$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
+				if(row.isCancel == '1') {
+					$.messager.alert('警告', '选中的销售提货记录已被取消，请重新选择！',  'warning');
+					return false;
+				}
+				if(row.locked != '0') {
+					$.messager.alert('警告', '选中的销售提货记录已被库房锁定，请重新选择！',  'warning');
+					return false;
+				}
+				if(row.cgjhlsh != undefined) {
+					$.messager.alert('警告', '选中的销售提货已由计划员进行处理，不能取消！',  'warning');
+					return false;
+				}
+				if(!(row.fromFp == '1' || row.xskplsh == undefined || row.xskplsh == '')) {
+					$.messager.alert('警告', '选中的销售提货记录已开票，不能取消！',  'warning');
+					return false;
+				}
+				if(row.isTh == '1') {
+					$.messager.alert('警告', '选中的销售提货记录已经出库，不能取消！',  'warning');
+					return false;
+				}
+				$.messager.confirm('请确认', '您要取消选中的销售提货单？', function(r) {
+					if (r) {
+						lnyw.MaskUtil.mask('正在冲减，请等待……');
+						$.ajax({
+							url : '${pageContext.request.contextPath}/jxc/xsthAction!cancelXsth.action',
+							data : {
+								xsthlsh : row.xsthlsh,
+								fromOther: xsth_did === '04' ? (jxc.notInExcludeKhs(xsth_did, selected.khbh) ? '' : 'cbs') : '',
+								bmbh : xsth_did,
+								menuId : xsth_menuId,
+								lxbh: xsth_lx,
+							},
+							dataType : 'json',
+							success : function(d) {
+								xsth_dg.datagrid('load');
+								xsth_dg.datagrid('unselectAll');
+								$.messager.show({
+									title : '提示',
+									msg : d.msg
+								});
+							},
+							complete: function(){
+								lnyw.MaskUtil.unmask();
 							}
-                        }else{
-                            $.messager.alert('警告', '选中的销售提货已由计划员进行处理，不能取消！',  'warning');
-                        }
-		 			}else{
-		 				$.messager.alert('警告', '选中的销售提货记录已被库房锁定，请重新选择！',  'warning');
-		 			}
-		 		}else{
-		 			$.messager.alert('警告', '选中的销售提货记录已被取消，请重新选择！',  'warning');
-		 		}
+						});
+					}
+				});
 			},
 		});
  	}else{

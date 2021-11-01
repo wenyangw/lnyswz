@@ -885,6 +885,11 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
+
+	// var jxc_ywhs_saveBtn = $('#48ded138-6d1e-41ce-a041-86d1f1ebdafe');
+	// jxc_ywhs_saveBtn.linkbutton('disable');
+	lnyw.MaskUtil.mask('正在保存，请等待……');
+
 	var footerRows = ywhs_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -904,7 +909,7 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows);
 	//提交到action
-	lnyw.MaskUtil.mask('正在保存，请等待……');
+
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/ywhsAction!save.action',
@@ -930,6 +935,7 @@ function saveAll(){
 		},
 		complete: function(){
 			lnyw.MaskUtil.unmask();
+			// jxc_ywhs_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -1122,52 +1128,57 @@ function setValueBySpbh(rowDate){
 
 function cjYwhs(){
 	var row = ywhs_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.kfhslsh == undefined){
-			if(row.isCj != '1'){
-				$.messager.prompt('请确认', '是否要冲减选中的业务调号单？请填写备注', function(bz){
-					//if (bz){
-						lnyw.MaskUtil.mask('正在冲减，请等待……');
-						$.ajax({
-							url : '${pageContext.request.contextPath}/jxc/ywhsAction!cjYwhs.action',
-							data : {
-								ywhslsh : row.ywhslsh,
-								bmbh: did,
-								lxbh: lx,
-								menuId : menuId,
-								bz : bz
-							},
-							method: 'post',
-							dataType : 'json',
-							success : function(d) {
-								ywhs_dg.datagrid('load');
-								ywhs_dg.datagrid('unselectAll');
-								$.messager.show({
-									title : '提示',
-									msg : d.msg
-								});
-								$.messager.confirm('请确认', '是否打印业务调号单？', function(r) {
-									if (r) {
-										var url = lnyw.bp() + '/jxc/ywhsAction!printYwhs.action?ywhslsh=' + d.obj.ywhslsh  + '&bmbh=' + did;
-										jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
-									}
-								});
-							},
-							complete: function(){
-								lnyw.MaskUtil.unmask();
-							}
-						});
-					//}
-				});
-			}else{
-				$.messager.alert('警告', '选中的业务调号单已被冲减，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的业务调号单已被库房入库，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择一条记录进行操作！',  'warning');
+		return false;
 	}
+	if(row.kfhslsh != undefined) {
+		$.messager.alert('警告', '选中的业务调号单已被库房入库，请重新选择！',  'warning');
+		return false;
+	}
+	if(row.isCj == '1') {
+		$.messager.alert('警告', '选中的业务调号单已被冲减，请重新选择！',  'warning');
+		return false;
+	}
+	$.messager.prompt('请确认', '是否要冲减选中的业务调号单？请填写备注', function(bz){
+		//if (bz){
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
+
+			// var jxc_ywhs_cjBtn = $('#e71da00b-308a-41e8-a329-4d57f01cac11');
+			// jxc_ywhs_cjBtn.linkbutton('disable');
+
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/ywhsAction!cjYwhs.action',
+				data : {
+					ywhslsh : row.ywhslsh,
+					bmbh: did,
+					lxbh: lx,
+					menuId : menuId,
+					bz : bz
+				},
+				method: 'post',
+				dataType : 'json',
+				success : function(d) {
+					ywhs_dg.datagrid('load');
+					ywhs_dg.datagrid('unselectAll');
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+					$.messager.confirm('请确认', '是否打印业务调号单？', function(r) {
+						if (r) {
+							var url = lnyw.bp() + '/jxc/ywhsAction!printYwhs.action?ywhslsh=' + d.obj.ywhslsh  + '&bmbh=' + did;
+							jxc.print(url, PREVIEW_REPORT, HIDE_PRINT_WINDOW, {createId: ${user.id}, createName: "${user.realName}"});
+						}
+					});
+				},
+				complete: function(){
+					lnyw.MaskUtil.unmask();
+					// jxc_ywhs_cjBtn.linkbutton('disable');
+				}
+			});
+		//}
+	});
 }
 
 function printYwhs(){

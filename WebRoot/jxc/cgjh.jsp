@@ -1087,6 +1087,9 @@ function saveAll(){
 			return false;
 		}
 	});
+
+	lnyw.MaskUtil.mask('正在保存，请等待……');
+
 	var footerRows = cgjh_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -1124,7 +1127,6 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
-	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/cgjhAction!save.action',
@@ -1152,7 +1154,7 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			//MaskUtil.unmask();
+			lnyw.MaskUtil.unmask();
 		}
 	});
 }
@@ -1492,51 +1494,51 @@ function setValueBySpbh(rowData){
 //////////////////////////////////////////////以下为采购计划列表处理代码
 function cancelCgjh(){
 	var row = cgjh_dg.datagrid('getSelected');
-	if (row != undefined) {
-		if(row.isKfrk != '1'){
-			if(row.isCancel != '1'){
-				if(!(row.nbjhlsh != undefined && row.isNb == '1')){
-					if(row.isCompleted != '1'){
-						$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
-							if (r) {
-								//MaskUtil.mask('正在取消，请等待……');
-								$.ajax({
-									url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
-									data : {
-										cgjhlsh : row.cgjhlsh,
-										bmbh : cgjh_did,
-										menuId : cgjh_menuId,
-									},
-									dataType : 'json',
-									success : function(d) {
-										cgjh_dg.datagrid('reload');
-										cgjh_dg.datagrid('unselectAll');
-										$.messager.show({
-											title : '提示',
-											msg : d.msg
-										});
-									},
-									complete: function(){
-										//MaskUtil.unmask();
-									}
-								});
-							}
-						});
-					}else{
-						$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
-					}
-                }else{
-                    $.messager.alert('警告', '选中的采购计划已由' + row.gysmc + '进行处理，不能取消！',  'warning');
-                }
-			}else{
-				$.messager.alert('警告', '选中的采购计划已被取消，请重新选择！',  'warning');
-			}
-		}else{
-			$.messager.alert('警告', '选中的采购计划已进行库房入库，不能取消，请重新选择！',  'warning');
-		}
-	}else{
+	if (row == undefined) {
 		$.messager.alert('警告', '请选择最少一条记录进行操作！',  'warning');
+		return false;
 	}
+	if(row.isKfrk == '1') {
+		$.messager.alert('警告', '选中的采购计划已进行库房入库，不能取消，请重新选择！',  'warning');
+		return false;
+	}
+	if(row.isCancel == '1') {
+		$.messager.alert('警告', '选中的采购计划已被取消，请重新选择！',  'warning');
+		return false;
+	}
+	if(row.nbjhlsh != undefined && row.isNb == '1') {
+		$.messager.alert('警告', '选中的采购计划已由' + row.gysmc + '进行处理，不能取消！',  'warning');
+		return false;
+	}
+	if(row.isCompleted == '1') {
+		$.messager.alert('警告', '选中的采购计划已完成，不能取消！',  'warning');
+		return false;
+	}
+	$.messager.confirm('请确认', '您要取消选中的采购计划单？', function(r) {
+		if (r) {
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
+			$.ajax({
+				url : '${pageContext.request.contextPath}/jxc/cgjhAction!cancel.action',
+				data : {
+					cgjhlsh : row.cgjhlsh,
+					bmbh : cgjh_did,
+					menuId : cgjh_menuId,
+				},
+				dataType : 'json',
+				success : function(d) {
+					cgjh_dg.datagrid('reload');
+					cgjh_dg.datagrid('unselectAll');
+					$.messager.show({
+						title : '提示',
+						msg : d.msg
+					});
+				},
+				complete: function(){
+					lnyw.MaskUtil.unmask();
+				}
+			});
+		}
+	});
 }
 
 function printCgjh(){

@@ -474,8 +474,9 @@ function saveAll(){
 			return false;
 		}
 	});
-	var jxc_ywpd_saveBtn = $('#f72b7fa3-8e42-4002-9a84-14c5f66fea0c');
-	jxc_ywpd_saveBtn.linkbutton('disable');
+	lnyw.MaskUtil.mask('正在保存，请等待……');
+	// var jxc_ywpd_saveBtn = $('#f72b7fa3-8e42-4002-9a84-14c5f66fea0c');
+	// jxc_ywpd_saveBtn.linkbutton('disable');
 
 	var footerRows = ywpd_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
@@ -523,8 +524,8 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			//MaskUtil.unmask();
-			jxc_ywpd_saveBtn.linkbutton('enable');
+			lnyw.MaskUtil.unmask();
+			// jxc_ywpd_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -844,9 +845,9 @@ function cjYwpd(){
 	}
 	$.messager.prompt('请确认', '是否要冲减选中的业务盘点？请填写备注', function(bz){
 		if (bz != undefined){
-			//MaskUtil.mask('正在冲减，请等待……');
-			var jxc_ywpd_cjBtn = $('#fa10a68e-6b8a-4b85-9a5a-5356a774f40e');
-			jxc_ywpd_cjBtn.linkbutton('disable');
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
+			// var jxc_ywpd_cjBtn = $('#fa10a68e-6b8a-4b85-9a5a-5356a774f40e');
+			// jxc_ywpd_cjBtn.linkbutton('disable');
 
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/ywpdAction!cjYwpd.action',
@@ -874,8 +875,8 @@ function cjYwpd(){
 					});
 				},
 				complete: function(){
-					//MaskUtil.unmask();
-					jxc_ywpd_cjBtn.linkbutton('enable');
+					lnyw.MaskUtil.unmask();
+					// jxc_ywpd_cjBtn.linkbutton('enable');
 				}
 			});
 		}

@@ -862,8 +862,9 @@ function saveAll(){
 
 	function saveYwrk() {
 		// var jxc_ywrk_saveBtn = $(event.path[2]);
-        var jxc_ywrk_saveBtn = $('#7681456e-fdcf-453a-848b-af54618bff29');
-		jxc_ywrk_saveBtn.linkbutton('disable');
+        // var jxc_ywrk_saveBtn = $('#7681456e-fdcf-453a-848b-af54618bff29');
+		// jxc_ywrk_saveBtn.linkbutton('disable');
+		lnyw.MaskUtil.mask('正在保存，请等待……');
 
 		var effectRow = new Object();
 		//将表头内容传入后台
@@ -934,8 +935,8 @@ function saveAll(){
 				$.messager.alert("提示", "提交错误了！");
 			},
 			complete: function(){
-				//MaskUtil.unmask();
-				jxc_ywrk_saveBtn.linkbutton('enable');
+				lnyw.MaskUtil.unmask();
+				// jxc_ywrk_saveBtn.linkbutton('enable');
 			}
 		});
 	}
@@ -1252,10 +1253,9 @@ function cjYwrk(){
 	}
 	$.messager.prompt('请确认', '是否要冲减选中的业务入库单？请填写备注', function(bz){
 		if (bz != undefined){
-			//MaskUtil.mask('正在冲减，请等待……');
-
-			var jxc_ywrk_cjBtn = $('#a223d801-eadb-4fb4-8a99-d007ca5cf963');
-			jxc_ywrk_cjBtn.linkbutton('disable');
+			// var jxc_ywrk_cjBtn = $('#a223d801-eadb-4fb4-8a99-d007ca5cf963');
+			// jxc_ywrk_cjBtn.linkbutton('disable');
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
 
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/ywrkAction!cjYwrk.action',
@@ -1283,8 +1283,8 @@ function cjYwrk(){
 					});
 				},
 				complete: function(){
-					//MaskUtil.unmask();
-					jxc_ywrk_cjBtn.linkbutton('enable');
+					// jxc_ywrk_cjBtn.linkbutton('enable');
+					lnyw.MaskUtil.unmask();
 				}
 			});
 		}

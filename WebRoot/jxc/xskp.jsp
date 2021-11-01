@@ -846,6 +846,8 @@ function saveAll(){
 	}
 	
 	function doSave(){
+		lnyw.MaskUtil.mask('正在保存，请等待……');
+
 		var footerRows = xskp_spdg.datagrid('getFooterRows');
 		//将表头内容传入后台
 		if($('input#isNsr').is(':checked')){
@@ -904,7 +906,6 @@ function saveAll(){
 		effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 		//提交到action
 		//$.ajaxSettings.traditional=true;
-		//MaskUtil.mask('正在保存，请等待……');
 		$.ajax({
 			type: "POST",
 			url: '${pageContext.request.contextPath}/jxc/xskpAction!save.action',
@@ -931,7 +932,7 @@ function saveAll(){
 				$.messager.alert("提示", "提交错误了！");
 			},
 			complete: function(){
-				//MaskUtil.unmask();
+				lnyw.MaskUtil.unmask();
 			}
 		});
 	}
@@ -1523,7 +1524,7 @@ function cjXskp(){
 	}
 	$.messager.prompt('请确认', '是否要冲减选中的销售开票单？请填写备注', function(bz){
 		if (bz != undefined) {
-			//MaskUtil.mask('正在冲减，请等待……');
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/xskpAction!cjXskp.action',
 				data : {
@@ -1543,7 +1544,7 @@ function cjXskp(){
 					});
 				},
 				complete: function(){
-					//MaskUtil.unmask();
+					lnyw.MaskUtil.unmask();
 				}
 			});
 		}

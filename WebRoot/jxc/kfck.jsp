@@ -750,8 +750,9 @@ function saveAll(){
         //hjzdwthsl += this.zdwthsl;
 	});
 
-	var jxc_kfck_saveBtn = $('#74eefe89-a3f7-40c3-92c2-e202d98611e6');
-	jxc_kfck_saveBtn.linkbutton('disable');
+	// var jxc_kfck_saveBtn = $('#74eefe89-a3f7-40c3-92c2-e202d98611e6');
+	// jxc_kfck_saveBtn.linkbutton('disable');
+	lnyw.MaskUtil.mask('正在保存，请等待……');
 
 	var footerRows = kfck_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
@@ -826,8 +827,8 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			////MaskUtil.unmask();
-			jxc_kfck_saveBtn.linkbutton('enable');
+			lnyw.MaskUtil.unmask();
+			// jxc_kfck_saveBtn.linkbutton('enable');
 		}
 	});
 }
@@ -1217,10 +1218,9 @@ function cjKfck(){
 	}
 	$.messager.confirm('请确认', '是否要冲减选中的库房出库单？', function(r) {
 		if (r) {
-			////MaskUtil.mask('正在冲减，请等待……');
-
-			var jxc_kfck_cjBtn = $('#27b29082-ac97-443f-835b-355941923105');
-			jxc_kfck_cjBtn.linkbutton('disable');
+			lnyw.MaskUtil.mask('正在冲减，请等待……');
+			// var jxc_kfck_cjBtn = $('#27b29082-ac97-443f-835b-355941923105');
+			// jxc_kfck_cjBtn.linkbutton('disable');
 
 			$.ajax({
 				url : '${pageContext.request.contextPath}/jxc/kfckAction!cjKfck.action',
@@ -1240,8 +1240,8 @@ function cjKfck(){
 					});
 				},
 				complete: function(){
-					////MaskUtil.unmask();
-					jxc_kfck_cjBtn.linkbutton('enable');
+					lnyw.MaskUtil.unmask();
+					// jxc_kfck_cjBtn.linkbutton('enable');
 				}
 			});
 		}

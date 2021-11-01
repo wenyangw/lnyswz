@@ -321,7 +321,9 @@ function saveAll(){
 		$.messager.alert('提示', '未添加商品数据,请继续操作！', 'error');
 		return false;
 	}
-	
+
+	lnyw.MaskUtil.mask('正在保存，请等待……');
+
 	var footerRows = cgxq_spdg.datagrid('getFooterRows');
 	var effectRow = new Object();
 	//将表头内容传入后台
@@ -361,7 +363,6 @@ function saveAll(){
 	//将表格中的数据去掉最后一个空行后，转换为json格式
 	effectRow['datagrid'] = JSON.stringify(rows.slice(0, rows.length - 1));
 	//提交到action
-	//MaskUtil.mask('正在保存，请等待……');
 	$.ajax({
 		type: "POST",
 		url: '${pageContext.request.contextPath}/jxc/cgxqAction!save.action',
@@ -388,7 +389,7 @@ function saveAll(){
 			$.messager.alert("提示", "提交错误了！");
 		},
 		complete: function(){
-			//MaskUtil.unmask();
+			lnyw.MaskUtil.unmask();
 		}
 	});
 }
